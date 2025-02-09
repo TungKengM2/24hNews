@@ -25,6 +25,6 @@
         </div>
         <button type="submit">Sign Up</button>
     </form>
-    <a href="{{ route('login') }}">Login</a>
+    <a href="{{ route('signup') }}">Login</a>
 </body>
 </html>
