@@ -13,7 +13,7 @@
   transition: 3s;
 }
 .login-container {
-  margin-top: 8%;
+  margin-top: 70px;
   border: 1px solid #CCD1D1;
   border-radius: 5px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -81,6 +81,45 @@
   position: relative;
 }
 
+.form-group i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+.btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            width: 250px;
+        }
+        .btn img {
+            margin-right: 10px;
+            height: 24px;
+            width: 24px;
+        }
+        .btn-google {
+            background-color: #db4437;
+            margin: 10px;
+            width: 320px;
+        }
+        .btn-facebook {
+            background-color: royalblue;
+            width: 320px;
+            margin: 10px;
+
+        }
+
 </style>
 <body>
 <div class="container login-container">
@@ -94,28 +133,41 @@
           <h3>Register</h3>
           <form method="POST" action="{{ route('login') }}">
             @csrf
-            <div class="mb-3">
-            <label class="form-label">Username</label>
-            <input type="text" name="username" class="form-control" placeholder="Choose a username" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Phone</label>
-            <input type="text" name="phone" class="form-control" placeholder="Enter your phone number" maxlength="15">
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Profile Image</label>
-            <input type="file" name="image" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input type="password" name="password" class="form-control" placeholder="Create a password" required>
-        </div>
+            <div class="form-group">
+              <i class="fas fa-user"></i>
+              <input type="text" class="form-control" name="username" placeholder="Username">
+            </div>
+            <div class="form-group">
+              <i class="fas fa-phone"></i>
+              <input type="text" class="form-control" name="phone" placeholder="Phone">
+            </div>
+            <div class="form-group">
+              <i class="fas fa-image"></i>
+              <input type="file" class="form-control" name="image" placeholder="Profile Image">
+            </div>
+            <div class="form-group">
+              <i class="fas fa-envelope"></i>
+              <input type="email" class="form-control" name="email" placeholder="Email">
+            </div>
+            <div class="form-group">
+              <i class="fas fa-lock"></i>
+              <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" onclick="window.location.href='{{ route('signup') }}'">Sign Up</button>
+            </div>
+            <div class="login social" >
+                <h4 class="text-center">Đăng kí cách khác</h4>
+                <button class="btn btn-google" >
+                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Icon">
+                    Login with Google
+                </button>
+                <button class="btn btn-facebook" >
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Icon">
+                    Login with Facebook
+                </button>
+            </div>
           </form>
-          <button class="btn btn-primary" onclick="window.location.href='{{ route('signup') }}'">Sign Up</button>
         </div>
       </div>
     </div>
