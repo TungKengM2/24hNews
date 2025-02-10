@@ -11,14 +11,17 @@
     body {
   font-family: 'Montserrat', sans-serif;
   transition: 3s;
+  margin: 0;
+  padding: auto;
 }
 
 .login-container {
-  margin-top: 10%;
+  margin-top: 70px;
   border: 1px solid #CCD1D1;
   border-radius: 5px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   max-width: 50%;
+
 }
 
 .ads {
@@ -48,7 +51,7 @@
 
 .profile-img img {
   border-radius: 50%;
-  /* animation: mymove 2s infinite; */
+
 }
 
 @keyframes mymove {
@@ -97,6 +100,38 @@
   text-decoration: none;
   font-size: 14px;
 }
+//
+.btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            width: 250px;
+        }
+        .btn img {
+            margin-right: 10px;
+            height: 24px;
+            width: 24px;
+        }
+        .btn-google {
+            background-color: #db4437;
+            margin: 10px;
+            width: 320px;
+        }
+        .btn-facebook {
+            background-color: royalblue;
+            width: 320px;
+            margin: 10px;
+
+        }
+
 
 </style>
 <body>
@@ -125,6 +160,17 @@
             </div>
             <div class="form-group">
               <button type="button" class="btn btn-primary btn-lg btn-block">Sign In</button>
+            </div>
+            <div class="login social" >
+
+                <button class="btn btn-google" >
+                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Icon">
+                    Login with Google
+                </button>
+                <button class="btn btn-facebook" >
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Icon">
+                    Login with Facebook
+                </button>
             </div>
             <div class="form-group forget-password">
                 <a href="#">Forget Password</a>
