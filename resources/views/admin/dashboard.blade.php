@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sidebar With Bootstrap</title>
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=account_circle" />
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <style>
@@ -194,12 +196,129 @@
                 </a>
             </div>
         </aside>
+        <div class="navbar-collapse collapse">
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item dropdown">
+                    <a href="#" data-bs-toggle="dropdown" class="">
+                        <span class="material-symbols-outlined">
+                            account_circle
+                            </span>
+                        luanaz123
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end rounded">
+                        <a href="#" class="dropdown-item">Profile</a>
+                        <a href="#" class="dropdown-item">Setting</a>
+
+                    </div>
+                </li>
+            </ul>
+        </div>
         <div class="main p-3">
-            <div class="text-center">
-                <h1>
-                    Sidebar Bootstrap 5
-                </h1>
-            </div>
+            <main class="content px-3 py-4">
+                <div class="container-fluid">
+                    <div class="mb-3">
+
+                        <div class="row">
+                            <div class="col-12 col-md-4 ">
+                                <div class="card border-0">
+                                    <div class="card-body py-4">
+                                        <h5 class="mb-2 fw-bold">
+                                            Memebers Progress
+                                        </h5>
+                                        <p class="mb-2 fw-bold">
+                                            $72,540
+                                        </p>
+                                        <div class="mb-0">
+                                            <span class="badge text-success me-2">
+                                                +9.0%
+                                            </span>
+                                            <span class=" fw-bold">
+                                                Since Last Month
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 ">
+                                <div class="card  border-0">
+                                    <div class="card-body py-4">
+                                        <h5 class="mb-2 fw-bold">
+                                            Memebers Progress
+                                        </h5>
+                                        <p class="mb-2 fw-bold">
+                                            $72,540
+                                        </p>
+                                        <div class="mb-0">
+                                            <span class="badge text-success me-2">
+                                                +9.0%
+                                            </span>
+                                            <span class="fw-bold">
+                                                Since Last Month
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 ">
+                                <div class="card border-0">
+                                    <div class="card-body py-4">
+                                        <h5 class="mb-2 fw-bold">
+                                            Memebers Progress
+                                        </h5>
+                                        <p class="mb-2 fw-bold">
+                                            $72,540
+                                        </p>
+                                        <div class="mb-0">
+                                            <span class="badge text-success me-2">
+                                                +9.0%
+                                            </span>
+                                            <span class="fw-bold">
+                                                Since Last Month
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="fw-bold fs-4 my-3">Avg. Agent Earnings
+                        </h3>
+                        <div class="row">
+                            <div class="col-12">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr class="highlight">
+                                            <th scope="col">#</th>
+                                            <th scope="col">First</th>
+                                            <th scope="col">Last</th>
+                                            <th scope="col">Handle</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>Mark</td>
+                                            <td>Otto</td>
+                                            <td>@mdo</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">2</th>
+                                            <td>Jacob</td>
+                                            <td>Thornton</td>
+                                            <td>@fat</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">3</th>
+                                            <td colspan="2">Larry the Bird</td>
+                                            <td>@twitter</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
