@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
@@ -8,71 +8,85 @@
     <title>Sidebar With Bootstrap</title>
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=account_circle" />
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-        ::after,
-        ::before {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+::after,
+::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        a {
-            text-decoration: none;
-        }
+a {
+    text-decoration: none;
+}
 
-        li {
-            list-style: none;
-        }
+li {
+    list-style: none;
+}
 
-        h1 {
-            font-weight: 600;
-            font-size: 1.5rem;
-        }
+body {
+    font-family: 'Poppins', sans-serif;
+}
 
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
+.wrapper {
+    display: flex;
+}
 
-        .wrapper {
-            display: flex;
-        }
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+    background-color: #fff;
+    min-width: 0;
+}
 
-        .main {
-            min-height: 100vh;
-            width: 100%;
-            overflow: hidden;
-            transition: all 0.35s ease-in-out;
-            background-color: #fafbfe;
-        }
+#sidebar {
+    width: 300px;
+    min-width: 70px;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
+    background-color: #0e2238;
+    display: flex;
+    flex-direction: column;
+}
 
-        #sidebar {
-            width: 260px;
-            min-width: 260px;
-            z-index: 1000;
-            transition: all .25s ease-in-out;
-            background-color: #0e2238;
-            display: flex;
-            flex-direction: column;
-        }
+#sidebar.expand {
+    width: 260px;
+    min-width: 260px;
+}
 
-        .toggle-btn {
-            background-color: transparent;
-            cursor: pointer;
-            border: 0;
-            padding: 1rem 1.5rem;
-        }
+.toggle-btn {
+    background-color: transparent;
+    cursor: pointer;
+    border: 0;
+    padding: 1rem 1.5rem;
+}
 
-        .toggle-btn i {
-            font-size: 1.5rem;
-            color: #FFF;
-        }
+.toggle-btn i {
+    font-size: 1.5rem;
+    color: #FFF;
+}
 
-        .sidebar-logo {
+
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.sidebar-logo {
             margin: auto 0;
             padding: 20px 50px;
         }
@@ -124,6 +138,24 @@
         .sidebar-footer {
             margin: 1rem 1.625rem;
         }
+
+.navbar {
+    background-color: #f5f5f5;
+    box-shadow: 0 0 2rem 0 rgba(33, 37, 41, .1);
+}
+
+.navbar-expand .navbar-collapse {
+    min-width: 200px;
+}
+
+.avatar {
+    height: 40px;
+    width: 40px;
+}
+
+
+
+@media (min-width: 768px) {}
     </style>
 </head>
 
@@ -196,25 +228,30 @@
                 </a>
             </div>
         </aside>
-        <div class="navbar-collapse collapse">
-            <ul class="navbar-nav ms-auto">
+        <div class="main">
+            <nav class="navbar navbar-expand px-4 py-3">
+                <form action="#" class="d-none d-sm-inline-block">
 
-                <li class="nav-item dropdown">
-                    <a href="#" data-bs-toggle="dropdown" class="">
-                        <span class="material-symbols-outlined">
-                            account_circle
-                            </span>
-                        luanaz123
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end rounded">
-                        <a href="#" class="dropdown-item">Profile</a>
-                        <a href="#" class="dropdown-item">Setting</a>
+                </form>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav ms-auto">
 
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="main p-3">
+                        <li class="nav-item dropdown">
+                            <a href="#" data-bs-toggle="dropdown" class="">
+                                <span class="material-symbols-outlined">
+                                    account_circle
+                                    </span>
+                                luanaz123
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end rounded">
+                                <a href="#" class="dropdown-item">Profile</a>
+                                <a href="#" class="dropdown-item">Setting</a>
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
             <main class="content px-3 py-4">
                 <div class="container-fluid">
                     <div class="mb-3">
@@ -319,9 +356,13 @@
                     </div>
                 </div>
             </main>
+
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
 </body>
 
 </html>
