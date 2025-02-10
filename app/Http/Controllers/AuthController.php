@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     public function showLoginForm()
@@ -16,10 +16,17 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validate([
+            'email' =>'required|email',
+            'password' => 'required',
+        ]);
 
-        if (Auth::attempt($credentials)) {
-            return redirect()->intended('/admin/dashboard');
+        if (Auth::attempt($credentials, $request->has('remember'))) {
+            $user = Auth::user();
+            
+            return $user->role_id == 1
+                ? redirect()->intended('/24hNews/resources/views/admin/dashboard.blade.php')
+                : redirect()->intended('/');
         }
 
         return back()->withErrors([
@@ -34,26 +41,40 @@ class AuthController extends Controller
 
     public function signup(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
+        $validator = Validator::make($request->all(),[
+            'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        User::create([
-            'name' => $request->name,
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();    
+        }
+
+        if (User::where('email', $request->email)->exists()) {
+            return back()->withErrors(['email' => 'This email is already registered.'])->withInput();
+        }
+
+        $user = User::create([
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role_id' => 2, // Mặc định là user
         ]);
 
-        Auth::attempt($request->only('email', 'password'));
+        Auth::login($user);
 
-        return redirect()->intended('/admin/dashboard');
+        return redirect('/');
+        // Auth::attempt($request->only('email', 'password'));
+
+        // return redirect()->intended('/admin/dashboard');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
-        return redirect('/');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/')->with('status', 'You have been logged out.');
     }
 }
