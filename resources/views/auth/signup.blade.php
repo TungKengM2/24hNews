@@ -1,55 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #4b0082, #3a0ca3);
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px;
-            color: white;
-            width: 400px;
-        }
-        .form-control {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            border-radius: 20px;
-        }
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-        .btn-primary {
-            background: #007bff;
-            border: none;
-            border-radius: 20px;
-            font-weight: bold;
-        }
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-    </style>
+    <title>Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-<body>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<style>
+    body {
+  font-family: 'Montserrat', sans-serif;
+  transition: 3s;
+}
 
-<div class="card">
-    <h3 class="text-center">Sign Up</h3>
-    <form action="{{ route('signup') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="mb-3">
+.login-container {
+  margin-top: 8%;
+  border: 1px solid #CCD1D1;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  max-width: 50%;
+}
+
+.ads {
+  background-color: #A569BD;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+}
+
+.ads h1 {
+  margin-top: 20%;
+}
+.ads .img img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  object-fit: cover; /* Added this line */
+}
+
+#fl {
+  font-weight: 600;
+}
+
+#sl {
+  font-weight: 100 !important;
+}
+
+.profile-img {
+  text-align: center;
+}
+
+.profile-img img {
+  border-radius: 50%;
+  /* animation: mymove 2s infinite; */
+}
+
+@keyframes mymove {
+  from {border: 1px solid #F2F3F4;}
+  to {border: 8px solid #F2F3F4;}
+}
+
+.login-form {
+  padding: 15px;
+}
+
+.login-form h3 {
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.form-control {
+  font-size: 14px;
+  padding-left: 30px;
+  border-radius: 25px; /* Added this line */
+}
+
+.form-group {
+  position: relative;
+}
+
+</style>
+<body>
+<div class="container login-container">
+      <div class="row">
+        <div class="col-md-6 ads">
+          <div class="img">
+            <img src="https://i.imgur.com/HWuWWE9.jpeg" alt="">
+          </div>
+        </div>
+        <div class="col-md-6 login-form">
+          <h3>Register</h3>
+          <form method="POST" action="{{ route('login') }}">
+            @csrf
+            <div class="mb-3">
             <label class="form-label">Username</label>
             <input type="text" name="username" class="form-control" placeholder="Choose a username" required>
         </div>
@@ -69,10 +115,10 @@
             <label class="form-label">Password</label>
             <input type="password" name="password" class="form-control" placeholder="Create a password" required>
         </div>
-        <button class="btn btn-primary" onclick="window.location.href='{{ route('signup') }}'">Sign Up</button>
-    </form>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+          </form>
+          <button class="btn btn-primary" onclick="window.location.href='{{ route('signup') }}'">Sign Up</button>
+        </div>
+      </div>
+    </div>
 </body>
 </html>
