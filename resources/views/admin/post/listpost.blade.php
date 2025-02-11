@@ -19,23 +19,6 @@
     margin: 0;
     padding: 0;
 }
-
-a {
-    text-decoration: none;
-}
-
-li {
-    list-style: none;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-}
-
-.wrapper {
-    display: flex;
-}
-
 .main {
     display: flex;
     flex-direction: column;
@@ -47,20 +30,6 @@ body {
     min-width: 0;
 }
 
-#sidebar {
-    width: 300px;
-    min-width: 70px;
-    z-index: 1000;
-    transition: all .25s ease-in-out;
-    background-color: #0e2238;
-    display: flex;
-    flex-direction: column;
-}
-
-#sidebar.expand {
-    width: 260px;
-    min-width: 260px;
-}
 
 .toggle-btn {
     background-color: transparent;
@@ -121,14 +90,6 @@ body {
             border-left: 3px solid #3b7ddd;
         }
 
-        .sidebar-item {
-            position: relative;
-        }
-
-        .sidebar-dropdown {
-            display: none;
-        }
-
         .sidebar-item:hover .sidebar-dropdown {
             display: block;
             background-color: #0e2238;
@@ -153,7 +114,9 @@ body {
     width: 40px;
 }
 
-
+a {
+    text-decoration: none; /* Ensure no underline on links */
+}
 
 @media (min-width: 768px) {}
     </style>
@@ -253,14 +216,33 @@ body {
                         <h3 class="fw-bold fs-4 my-3">Avg. Agent Earnings
                         </h3>
                         <div class="row">
+                            <div class="col-12 mb-3">
+                                <button class="btn btn-primary" onclick="window.location.href='/admin/post/createpost'">
+                                    <i class="lni lni-plus"></i>
+                                </button>
+                                <button class="btn btn-primary">
+                                    <a href="" class="text-white">
+                                        <i class="lni lni-list"></i>
+                                        <span>Categories</span>
+                                    </a>
+                                </button>
+                            </div>
                             <div class="col-12">
                                 <table class="table table-striped">
                                     <thead>
                                         <tr class="highlight">
                                             <th scope="col">#</th>
-                                            <th scope="col">First</th>
-                                            <th scope="col">Last</th>
-                                            <th scope="col">Handle</th>
+                                            <th scope="col">title</th>
+                                            <th scope="col">slug</th>
+                                            <th scope="col">content</th>
+                                            <th scope="col">preview content</th>
+                                            <th scope="col">contains sensitive content</th>
+                                            <th scope="col">author</th>
+                                            <th scope="col">category</th>
+                                            <th scope="col">thumbnail</th>
+                                            <th scope="col">views</th>
+                                            <th scope="col">action</th>
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -269,17 +251,16 @@ body {
                                             <td>Mark</td>
                                             <td>Otto</td>
                                             <td>@mdo</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td colspan="2">Larry the Bird</td>
-                                            <td>@twitter</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>@mdo</td>
+                                            <td>
+                                                <a href="#" class="text-primary me-2"><i class="lni lni-pencil"></i></a>
+                                                <a href="#" class="text-danger"><i class="lni lni-trash-can"></i></a>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>

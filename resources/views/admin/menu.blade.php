@@ -109,6 +109,7 @@ body {
             font-size: 0.9rem;
             white-space: nowrap;
             border-left: 3px solid transparent;
+            text-decoration: none; /* Ensure no underline on menu links */
         }
 
         .sidebar-link i {
