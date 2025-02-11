@@ -26,8 +26,10 @@
         @enderror
 
         <label>
-            <input type="checkbox" name="remember"> Ghi nhớ đăng nhập
-        </label>
+          <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
+          Ghi nhớ đăng nhập
+      </label>
+  
 
         <button type="submit">Đăng nhập</button>
     </form>
