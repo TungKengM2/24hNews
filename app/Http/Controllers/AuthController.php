@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+
 class AuthController extends Controller
 {
     public function showLoginForm()
@@ -25,7 +27,7 @@ class AuthController extends Controller
             $user = Auth::user();
             
             return $user->role_id == 1
-                ? redirect()->intended('/24hNews/resources/views/admin/dashboard.blade.php')
+                ? redirect()->intended('/admin/dashboard')
                 : redirect()->intended('/');
         }
 
@@ -39,35 +41,81 @@ class AuthController extends Controller
         return view('auth.signup');
     }
 
-    public function signup(Request $request)
+    public function processSignup(Request $request)
     {
         $validator = Validator::make($request->all(),[
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
+            'phone'    => 'required|string|max:15',
             'password' => 'required|string|min:8|confirmed',
+            'terms'    => 'accepted'
+
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();    
         }
+        
+        $otp = rand(100000,999999);
 
-        if (User::where('email', $request->email)->exists()) {
-            return back()->withErrors(['email' => 'This email is already registered.'])->withInput();
+         // Lưu dữ liệu đăng ký và OTP vào session
+
+        session([
+            'signup_data' => $request->only('username', 'email', 'password','phone'),
+            'signup_otp' => $otp,
+        ]);
+
+        // Gửi OTP qua email
+        Mail::raw("Your OTP for registration is: $otp", function ($message) use ($request) {
+            $message->to($request->email)
+                    ->subject('Your OTP for registration');
+        });
+
+         // Chuyển hướng đến form nhập OTP
+        return redirect()->route('otp.verify.form')->with('status', 'OTP has been sent to your email.');
+   
+        
+    }
+    // Hiển thị form  nhập otp
+
+    public function showOtpForm() {
+        return view('auth.verify-otp');
+    }
+
+    // Xử lý xác nhân otp
+
+    public function verifyOtp(Request $request){
+        $request->validate([
+            'otp'=>'required|numeric'
+        ]);
+
+        $sessionOtp = session('signup_otp');
+        if ($request->otp != $sessionOtp) {
+            return back()->withErrors(['otp' => "OTP is incorrect"])->withInput();
         }
 
+        $signupData = session('signup_data');
+        if (!$signupData) {
+            return redirect()->route('signup')->withErrors(['email' => 'Dữ liệu đăng ký hết hạn, vui lòng đăng ký lại.']);
+        }
+
+        //Tạo tài khoản
         $user = User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_id' => 2, // Mặc định là user
-        ]);
+             'username' => $signupData['username'],
+             'email' => $signupData['email'],
+             'phone'    => $signupData['phone'],
+             'password' => Hash::make($signupData['password']),
+             'role_id' => 4, // Mặc định là user
+             ]);
+        
+        //xóa dữ liệu tạm trong session
+        session()->forget(['signup_data', 'signup_otp']);
+
+        // ĐĂng nhập người dùng
 
         Auth::login($user);
 
-        return redirect('/');
-        // Auth::attempt($request->only('email', 'password'));
-
-        // return redirect()->intended('/admin/dashboard');
+        return redirect('/')->with('status', 'Đăng ký thành công');
     }
 
     public function logout(Request $request)
