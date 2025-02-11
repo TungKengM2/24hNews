@@ -15,4 +15,12 @@ class AdminDashboardController extends Controller
     {
         return view('admin.dashboard');
     }
+    public function showListPost()
+    {
+        return view('admin.post.listpost');
+    }
+    public function showCreatePost()
+    {
+        return view('admin.post.createpost');
+    }
 }
