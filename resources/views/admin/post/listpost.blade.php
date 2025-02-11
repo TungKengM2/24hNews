@@ -258,7 +258,7 @@ a {
                                             <td>@mdo</td>
                                             <td>@mdo</td>
                                             <td>
-                                                <a href="#" class="text-primary me-2"><i class="lni lni-pencil"></i></a>
+                                                <a href="/admin/post/editpost" class="text-primary me-2"><i class="lni lni-pencil"></i></a>
                                                 <a href="#" class="text-danger"><i class="lni lni-trash-can"></i></a>
                                             </td>
                                         </tr>

@@ -23,4 +23,8 @@ class AdminDashboardController extends Controller
     {
         return view('admin.post.createpost');
     }
+    public function showEditPost()
+    {
+        return view('admin.post.editpost');
+    }
 }
