@@ -12,6 +12,7 @@ class AdminDashboardController extends Controller
      * @return \Illuminate\View\View
      */
     public function index()
+    // POST
     {
         return view('admin.dashboard');
     }
@@ -26,5 +27,18 @@ class AdminDashboardController extends Controller
     public function showEditPost()
     {
         return view('admin.post.editpost');
+    }
+    // CATEGORY
+    public function showListCategory()
+    {
+        return view('admin.categories.listcategories');
+    }
+    public function showCreateCategory()
+    {
+        return view('admin.categories.createcategories');
+    }
+    public function showEditCategory()
+    {
+        return view('admin.categories.editcategories');
     }
 }

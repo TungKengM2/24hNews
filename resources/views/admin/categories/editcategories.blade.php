@@ -36,8 +36,8 @@
 <body>
     <div class="wrapper">
     @include('admin.menu')
-    <div class="container mt-5 ">
-        <h2 class="mb-4">Create New Post</h2>
+    <div class="container mt-5">
+        <h2 class="mb-4">Edit Category</h2>
         <form action="/admin/post/store" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">

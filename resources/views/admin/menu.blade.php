@@ -50,6 +50,8 @@ body {
 #sidebar {
     width: 300px;
     min-width: 70px;
+    position: relative;
+    min-height: 100vh;
     z-index: 1000;
     transition: all .25s ease-in-out;
     background-color: #0e2238;
@@ -176,9 +178,15 @@ body {
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
+                    <a href="/admin/dashboard" class="sidebar-link">
                         <i class="lni lni-agenda"></i>
                         <span>Post</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/admin/categories/listcategories" class="sidebar-link">
+                        <i class="lni lni-list"></i>
+                        <span>Categories</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
