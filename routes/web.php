@@ -52,6 +52,5 @@ Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showRes
     ->name('password.reset');
 
 // Xử lý cập nhật mật khẩu mới
- Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
-     ->name('password.update');
-
+Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
+    ->name('password.update');
