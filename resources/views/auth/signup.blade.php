@@ -14,7 +14,6 @@
             </ul>
         </div>
     @endif
-
     <form action="{{ route('signup.process') }}" method="POST">
         @csrf
         <label>Username:</label>
