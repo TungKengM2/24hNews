@@ -1,4 +1,45 @@
-<!DOCTYPE html>
+@extends('layouts.app')
+
+@section('title', 'Đăng nhập')
+
+@section('content')
+    <h2>Đăng nhập</h2>
+
+    @if (session('status'))
+        <div class="alert alert-success">{{ session('status') }}</div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+    <form action="{{ route('login') }}" method="POST">
+        @csrf
+        <label>Email</label>
+        <input type="email" name="email" required value="{{ old('email') }}">
+
+        <label>Mật khẩu</label>
+        <input type="password" name="password" required>
+
+        @error('email')
+            <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
+
+        <label>
+          <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
+          Ghi nhớ đăng nhập
+      </label>
+  
+
+        <button type="submit">Đăng nhập</button>
+    </form>
+
+    <p><a href="{{ route('password.request') }}">Quên mật khẩu?</a></p>
+    <p>Chưa có tài khoản? <a href="{{ route('signup') }}">Đăng ký</a></p>
+@endsection
+
+
+{{-- <!DOCTYPE html>
 <html>
 <head>
     <title>Login</title>
@@ -197,4 +238,4 @@
   });
 </script>
 </body>
-</html>
+</html> --}}
