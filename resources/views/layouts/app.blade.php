@@ -14,7 +14,7 @@
         }
         .container {
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
             margin: 50px auto;
             background: white;
             padding: 20px;
@@ -34,10 +34,15 @@
             background-color: #f8d7da;
             color: #721c24;
         }
+        form {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
         input, button {
             width: 100%;
             padding: 10px;
-            margin: 5px 0;
+            margin: 5px ;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
@@ -49,12 +54,43 @@
         button:hover {
             background: #0056b3;
         }
+        .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        cursor: pointer;
+        width: 250px;
+    }
+    .btn img {
+        margin-right: 10px;
+        height: 24px;
+        width: 24px;
+    }
+    .btn-google {
+        background-color: #db4437;
+        margin: 10px;
+        width: 320px;
+    }
+    .btn-facebook {
+        background-color: royalblue;
+        width: 320px;
+        margin: 10px;
+    }
     </style>
 </head>
 <body>
 
     <div class="container">
-        @yield('content')
+        <form>
+            @yield('content')
+        </form>
     </div>
 
 </body>
