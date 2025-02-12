@@ -43,7 +43,7 @@
 @endsection
 
 
-{{-- <!DOCTYPE html>
+<!-- {{-- <!DOCTYPE html>
 <html>
 <head>
     <title>Login</title>
@@ -218,4 +218,4 @@
       </div>
     </div>
 </body>
-</html> --}}
+</html> --}} -->
