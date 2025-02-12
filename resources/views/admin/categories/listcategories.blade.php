@@ -19,6 +19,9 @@
     margin: 0;
     padding: 0;
 }
+.wrapper {
+    display: flex;
+}
 .main {
     display: flex;
     flex-direction: column;
@@ -123,101 +126,14 @@ a {
 </head>
 
 <body>
-        <div class="main">
-            <nav class="navbar navbar-expand px-4 py-3">
-                <form action="#" class="d-none d-sm-inline-block">
-
-                </form>
-                <div class="navbar-collapse collapse">
-                    <ul class="navbar-nav ms-auto">
-
-                        <li class="nav-item dropdown">
-                            <a href="#" data-bs-toggle="dropdown" class="">
-                                <span class="material-symbols-outlined">
-                                    account_circle
-                                    </span>
-                                luanaz123
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end rounded">
-                                <a href="#" class="dropdown-item">Profile</a>
-                                <a href="#" class="dropdown-item">Setting</a>
-
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-            <main class="content px-3 py-4">
+    <div class="wrapper">
+        @include('admin.menu')
+        <main class="content px-3 py-4">
                 <div class="container-fluid">
                     <div class="mb-3">
-
-                        <div class="row">
-                            <div class="col-12 col-md-4 ">
-                                <div class="card border-0">
-                                    <div class="card-body py-4">
-                                        <h5 class="mb-2 fw-bold">
-                                            Memebers Progress
-                                        </h5>
-                                        <p class="mb-2 fw-bold">
-                                            $72,540
-                                        </p>
-                                        <div class="mb-0">
-                                            <span class="badge text-success me-2">
-                                                +9.0%
-                                            </span>
-                                            <span class=" fw-bold">
-                                                Since Last Month
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-4 ">
-                                <div class="card  border-0">
-                                    <div class="card-body py-4">
-                                        <h5 class="mb-2 fw-bold">
-                                            Memebers Progress
-                                        </h5>
-                                        <p class="mb-2 fw-bold">
-                                            $72,540
-                                        </p>
-                                        <div class="mb-0">
-                                            <span class="badge text-success me-2">
-                                                +9.0%
-                                            </span>
-                                            <span class="fw-bold">
-                                                Since Last Month
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-4 ">
-                                <div class="card border-0">
-                                    <div class="card-body py-4">
-                                        <h5 class="mb-2 fw-bold">
-                                            Memebers Progress
-                                        </h5>
-                                        <p class="mb-2 fw-bold">
-                                            $72,540
-                                        </p>
-                                        <div class="mb-0">
-                                            <span class="badge text-success me-2">
-                                                +9.0%
-                                            </span>
-                                            <span class="fw-bold">
-                                                Since Last Month
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h3 class="fw-bold fs-4 my-3">Avg. Agent Earnings
-                        </h3>
                         <div class="row">
                             <div class="col-12 mb-3">
-                                <button class="btn btn-primary" onclick="window.location.href='/admin/post/createpost'">
+                                <button class="btn btn-primary" onclick="window.location.href='/admin/categories/createcategories'">
                                     <i class="lni lni-plus"></i>
                                 </button>
                             </div>
@@ -252,7 +168,7 @@ a {
                                             <td>@mdo</td>
                                             <td>@mdo</td>
                                             <td>
-                                                <a href="/admin/post/editpost" class="text-primary me-2"><i class="lni lni-pencil"></i></a>
+                                                <a href="/admin/categories/editcategories" class="text-primary me-2"><i class="lni lni-pencil"></i></a>
                                                 <a href="#" class="text-danger"><i class="lni lni-trash-can"></i></a>
                                             </td>
                                         </tr>
@@ -262,9 +178,9 @@ a {
                         </div>
                     </div>
                 </div>
-            </main>
-
-        </div>
+        </main>
+    </div>
+          
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>

@@ -23,7 +23,6 @@
         .container {
             width: 100%;
             background-color: #fff;
-            padding: 2rem;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-left: 300px; 
@@ -79,10 +78,6 @@
             <div class="mb-3">
                 <label for="thumbnail" class="form-label">Thumbnail</label>
                 <input type="file" class="form-control" id="thumbnail" name="thumbnail" required>
-            </div>
-            <div class="mb-3">
-                <label for="word_document" class="form-label">Upload Word Document</label>
-                <input type="file" class="form-control" id="word_document" name="word_document" accept=".doc,.docx">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
