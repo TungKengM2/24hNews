@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\ProfileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,6 +23,9 @@ Route::get('/', function () {
 
 
 
+// Route for profile
+Route::get('user/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::post('user/profile', [ProfileController::class, 'update'])->name('profile.update');
 
 // Routes for login and signup
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
