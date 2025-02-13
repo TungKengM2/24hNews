@@ -34,7 +34,7 @@ Route::get('/admin/categories/editcategories', [AdminDashboardController::class,
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup');
-Route::post('/signup', [AuthController::class, 'signup'])->name('signup.process');
+Route::post('/signup', [AuthController::class, 'processSignup'])->name('signup.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/verify-otp', [AuthController::class, 'showOtpForm'])->name('otp.verify.form');
