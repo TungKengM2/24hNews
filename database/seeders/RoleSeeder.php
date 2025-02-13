@@ -14,6 +14,7 @@
          */
         public function run(): void
         {
+
             DB::table('roles')->insert([
                 [
                     'name' => 'admin',
@@ -23,8 +24,8 @@
                 ],
 
                 [
-                    'name' => 'journalist',
-                    'description' => 'Journalist',
+                    'name' => 'author',
+                    'description' => 'Author',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
@@ -50,6 +51,8 @@
                 ]
 
             ]);
+
         }
+
 
     }
