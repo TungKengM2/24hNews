@@ -13,6 +13,14 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
+
     <form action="{{ route('login') }}" method="POST">
         @csrf
         <label>Email</label>
@@ -26,10 +34,9 @@
         @enderror
 
         <label>
-          <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
-          Ghi nhớ đăng nhập
-      </label>
-  
+            <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
+            Ghi nhớ đăng nhập
+        </label>
 
         <button type="submit">Đăng nhập</button>
     </form>
@@ -37,6 +44,7 @@
     <p><a href="{{ route('password.request') }}">Quên mật khẩu?</a></p>
     <p>Chưa có tài khoản? <a href="{{ route('signup') }}">Đăng ký</a></p>
 @endsection
+
 
 
 {{-- <!DOCTYPE html>
