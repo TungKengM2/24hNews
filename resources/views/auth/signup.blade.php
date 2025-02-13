@@ -1,4 +1,50 @@
-<!DOCTYPE html>
+@extends('layouts.app')
+
+@section('title', 'Đăng ký')
+
+@section('content')
+    <h2>Đăng ký tài khoản</h2>
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('signup.process') }}" method="POST">
+        @csrf
+        <label>Username:</label>
+        <input type="text" name="username" value="{{ old('username') }}" required>
+
+        <label>Email:</label>
+        <input type="email" name="email" value="{{ old('email') }}" required>
+
+        <label>phone:</label>
+        <input type="tel" name="phone" value="{{ old('phone') }}" required>
+
+        <label>Mật khẩu:</label>
+        <input type="password" name="password" required>
+
+        <label>Xác nhận mật khẩu:</label>
+        <input type="password" name="password_confirmation" required>
+
+        <label>
+            <input type="checkbox" name="terms" {{ old('terms') ? 'checked' : '' }} required>
+            Tôi đồng ý với <a href="#">điều khoản sử dụng</a>
+        </label>
+
+        <button type="submit">Đăng ký</button>
+    </form>
+
+    <p>Nếu đã có tài khoản, hãy <a href="{{ route('login') }}">đăng nhập</a>.</p>
+@endsection
+
+
+{{-- <!DOCTYPE html>
 <html>
 <head>
     <title>Login</title>
@@ -173,4 +219,4 @@
       </div>
     </div>
 </body>
-</html>
+</html> --}}
