@@ -24,8 +24,8 @@
                 ],
 
                 [
-                    'name' => 'author',
-                    'description' => 'Author',
+                    'name' => 'article',
+                    'description' => 'Article',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
