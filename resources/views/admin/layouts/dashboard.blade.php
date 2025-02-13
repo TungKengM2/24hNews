@@ -17,9 +17,11 @@
 
             @include('admin.layouts.partials.menusidebar')
 
+            <div class="main">
+                @include('admin.layouts.partials.header')
 
         @include('admin.layouts.partials.sidebar')
-
+            </div>
     </div>
     <div>
         @include('admin.layouts.partials.footer')
