@@ -1,24 +1,55 @@
 <?php
 
-namespace Database\Seeders;
+    namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+    use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+    use Illuminate\Database\Seeder;
+    use Illuminate\Support\Facades\DB;
 
-
-class RoleSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    class RoleSeeder extends Seeder
     {
-        DB::table('roles')->insert([
-            ['name' => 'admin', 'description' => 'Admin'],
-            ['name' => 'editor', 'description' => 'Biên tập viên'],
-            ['name' => 'writer', 'description' => 'Người viết bài'],
-            ['name' => 'user', 'description' => 'Người dùng thường'],
-        ]);
+
+        /**
+         * Run the database seeds.
+         */
+        public function run(): void
+        {
+            DB::table('roles')->insert([
+                [
+                    'name' => 'admin',
+                    'description' => 'Administrator',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+
+                [
+                    'name' => 'journalist',
+                    'description' => 'Journalist',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'name' => 'moderator',
+                    'description' => 'Moderator',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+
+                [
+                    'name' => 'user',
+                    'description' => 'User',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+
+                [
+                    'name' => 'guest',
+                    'description' => 'Guest',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+
+            ]);
+        }
+
     }
-}
