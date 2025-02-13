@@ -21,7 +21,7 @@ class User extends Authenticatable implements CanResetPasswordContract
      */
     protected $primaryKey = 'user_id'; // Định danh khóa chính
 
-    protected $fillable = [
+    protected $fillable = [     
         'username',
         'email',
         'password',
