@@ -193,9 +193,9 @@
 <body>
 
     <div class="container">
-        <form>
+        <div>
             @yield('content')
-        </form>
+        </div>
     </div>
 
 </body>
