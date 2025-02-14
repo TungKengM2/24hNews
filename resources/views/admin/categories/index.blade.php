@@ -173,23 +173,24 @@
                                             <td>@mdo</td>
                                             <td>@mdo</td> --}}
                                             <td>
-                                                <a class="btn btn-warning" href="{{ route('categories.edit', $category) }}">
+                                                <a class="btn btn-warning"
+                                                    href="{{ route('categories.edit', $category) }}">
                                                     Sửa</a>
-                                                    <form
-                                                        action="{{ route('categories.destroy', $category) }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button class="btn btn-danger"
-                                                            onclick="return confirm('Bạn có chắc chắn muốn xoá không?')"
-                                                            type="submit">Xóa</button>
-                                                    </form>
+                                                <form action="{{ route('categories.destroy', $category) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-danger"
+                                                        onclick="return confirm('Bạn có chắc chắn muốn xoá không?')"
+                                                        type="submit">Xóa</button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
 
                                 </tbody>
                             </table>
+                            {{ $categories->Links() }}
                         </div>
                     </div>
                 </div>
