@@ -23,9 +23,9 @@ Route::get('/', function () {
 // admin
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 // post
-Route::get('/admin/post/createpost', [AdminDashboardController::class, 'showCreatePost'])->name('admin.post.createpost');
-Route::get('/admin/post/listpost', [AdminDashboardController::class, 'showListPost'])->name('admin.post.listpost');
-Route::get('/admin/post/editpost', [AdminDashboardController::class, 'showEditPost'])->name('admin.post.editpost');
+Route::get('/admin/post/createpost', [AdminDashboardController::class, 'showCreatePost'])->name('admin.posts.createpost');
+Route::get('/admin/post/listpost', [AdminDashboardController::class, 'showListPost'])->name('admin.pages.posts.listpost');
+Route::get('/admin/post/editpost', [AdminDashboardController::class, 'showEditPost'])->name('admin.posts.editpost');
 // category
 Route::get('/admin/categories/listcategories', [AdminDashboardController::class, 'showListCategory'])->name('admin.categories.listcategories');
 Route::get('/admin/categories/createcategories', [AdminDashboardController::class, 'showCreateCategory'])->name('admin.categories.createcategory');
