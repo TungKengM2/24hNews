@@ -180,7 +180,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('admin.posts.listpost') }}" class="sidebar-link">
+                    <a href="{{ route('admin.articles.index') }}" class="sidebar-link">
                         <i class="lni lni-agenda"></i>
                         <span>Article</span>
                     </a>

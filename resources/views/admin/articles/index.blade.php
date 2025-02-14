@@ -221,7 +221,7 @@
                     <div class="row">
                         <div class="col-12 mb-3">
                             <h1>Thêm mới bài viết</h1>
-                            <a class="btn btn-primary" href="{{ route('articles.create') }}">
+                            <a class="btn btn-primary" href="{{ route('admin.articles.create') }}">
                                 <i class="lni lni-plus"></i>
                             </a>
                         </div>
