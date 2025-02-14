@@ -18,15 +18,15 @@ class AdminDashboardController extends Controller
     }
     public function showListPost()
     {
-        return view('admin.pages.posts.listpost');
+        return view('admin.articles.index');
     }
     public function showCreatePost()
     {
-        return view('admin.pages.posts.createpost');
+        return view('admin.articles.create');
     }
     public function showEditPost()
     {
-        return view('admin.posts.editpost');
+        return view('admin.articles.edit');
     }
     // CATEGORY
     public function showListCategory()
