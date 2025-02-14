@@ -7,7 +7,6 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\ProfileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,14 +24,11 @@ Route::get('/', function () {
 // admin
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-// post
-Route::get('/admin/post/createpost', [AdminDashboardController::class, 'showCreatePost'])->name('admin.articles.create');
-Route::get('/admin/post/listpost', [AdminDashboardController::class, 'showListPost'])->name('admin.articles.index');
-Route::get('/admin/post/editpost', [AdminDashboardController::class, 'showEditPost'])->name('admin.articles.edit');
-// category
-// Route::get('/admin/categories/listcategories', [AdminDashboardController::class, 'showListCategory'])->name('admin.categories.listcategories');
-// Route::get('/admin/categories/createcategories', [AdminDashboardController::class, 'showCreateCategory'])->name('admin.categories.createcategory');
-// Route::get('/admin/categories/editcategories', [AdminDashboardController::class, 'showEditCategory'])->name('admin.categories.editcategory');
+
+Route::prefix('admin')->group(function () {
+    Route::resource('articles', ArticleController::class);
+});
+
 Route::prefix('admin')->group(function () {
     Route::resource('categories', CategoryController::class);
 });
