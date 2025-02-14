@@ -18,6 +18,12 @@
         </a>
     </li>
     <li class="sidebar-item">
+        <a href="#" class="sidebar-link">
+            <i class="lni lni-list"></i>
+            <span>Category</span>
+        </a>
+    </li>
+    <li class="sidebar-item">
         <a href="#" class="sidebar-link has-dropdown">
             <i class="lni lni-protection"></i>
             <span>Chức Năng </span>
