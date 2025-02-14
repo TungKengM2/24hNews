@@ -14,7 +14,7 @@ class AdminDashboardController extends Controller
     public function index()
     // POST
     {
-        return view('admin.dashboard');
+        return view('admin.layouts.dashboard');
     }
     public function showListPost()
     {
