@@ -26,7 +26,6 @@ return new class extends Migration
             $table->timestamp('banned_until')->nullable();
             $table->timestamps(); // Tự động thêm created_at và updated_at
         });
-
     }
 
     /**
