@@ -167,7 +167,7 @@ body {
     <aside id="sidebar">
             <div class="d-flex">
                 <div class="sidebar-logo">
-                    <a href="#">logo 24hnews</a>
+                    <img src="{{ asset('images/logo.png') }}" class="img-fluid" alt="Logo 24H News">
                 </div>
             </div>
             <ul class="sidebar-nav">
