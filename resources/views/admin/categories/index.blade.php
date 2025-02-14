@@ -132,7 +132,8 @@
 <body>
     <div class="wrapper">
         @include('admin.menu')
-        <main class="content px-3 py-4">
+        <main class="content px-3 py-4 w-100">
+            @include('admin.header')
             <div class="container-fluid">
                 <div class="mb-3">
                     <div class="row">

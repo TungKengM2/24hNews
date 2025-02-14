@@ -69,7 +69,7 @@
             background-color: transparent;
             cursor: pointer;
             border: 0;
-            padding: 1rem 1.5rem;
+
         }
 
         .toggle-btn i {
