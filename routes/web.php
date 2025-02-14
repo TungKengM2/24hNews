@@ -20,7 +20,6 @@ use App\Http\Controllers\ProfileController;
 Route::get('/', function () {
     return view('welcome');
 });
-<<<<<<< HEAD
 // admin
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 // post
@@ -31,14 +30,6 @@ Route::get('/admin/post/editpost', [AdminDashboardController::class, 'showEditPo
 Route::get('/admin/categories/listcategories', [AdminDashboardController::class, 'showListCategory'])->name('admin.categories.listcategories');
 Route::get('/admin/categories/createcategories', [AdminDashboardController::class, 'showCreateCategory'])->name('admin.categories.createcategory');
 Route::get('/admin/categories/editcategories', [AdminDashboardController::class, 'showEditCategory'])->name('admin.categories.editcategory');
-=======
-
-
-
-// Route for profile
-Route::get('user/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::post('user/profile', [ProfileController::class, 'update'])->name('profile.update');
->>>>>>> b40651a287046173023a3d9c53d8f7d22977aa38
 
 // Routes for login and signup
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
