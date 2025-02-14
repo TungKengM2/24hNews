@@ -14,8 +14,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::all(); // Fetch articles from the database
-        return view('admin.articles.index', compact('articles')); // Pass articles to the view
+        $articles = Article::with('author', 'category', 'approver')->paginate(10);
+        return view('admin.articles.index', compact('articles'));
     }
 
     /**
