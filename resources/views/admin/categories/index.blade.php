@@ -179,14 +179,17 @@
                                             <td class="d-flex">
                                                 <a class="btn btn-warning me-2"
                                                     href="{{ route('categories.edit', $category) }}">
-                                                    Sửa</a>
+                                                    sửa
+                                                </a>
                                                 <form action="{{ route('categories.destroy', $category) }}"
                                                     method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="btn btn-danger"
                                                         onclick="return confirm('Bạn có chắc chắn muốn xoá không?')"
-                                                        type="submit">Xóa</button>
+                                                        type="submit">
+                                                        xóa
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>
