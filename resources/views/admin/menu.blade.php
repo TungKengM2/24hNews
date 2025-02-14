@@ -178,7 +178,7 @@ body {
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="/admin/dashboard" class="sidebar-link">
+                    <a href="{{ route('admin.posts.listpost') }}" class="sidebar-link">
                         <i class="lni lni-agenda"></i>
                         <span>Post</span>
                     </a>
