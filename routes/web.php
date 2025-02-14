@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\ProfileController;
@@ -22,14 +24,19 @@ Route::get('/', function () {
 });
 // admin
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
 // post
 Route::get('/admin/post/createpost', [AdminDashboardController::class, 'showCreatePost'])->name('admin.posts.createpost');
 Route::get('/admin/post/listpost', [AdminDashboardController::class, 'showListPost'])->name('admin.pages.posts.listpost');
 Route::get('/admin/post/editpost', [AdminDashboardController::class, 'showEditPost'])->name('admin.posts.editpost');
 // category
-Route::get('/admin/categories/listcategories', [AdminDashboardController::class, 'showListCategory'])->name('admin.categories.listcategories');
-Route::get('/admin/categories/createcategories', [AdminDashboardController::class, 'showCreateCategory'])->name('admin.categories.createcategory');
-Route::get('/admin/categories/editcategories', [AdminDashboardController::class, 'showEditCategory'])->name('admin.categories.editcategory');
+// Route::get('/admin/categories/listcategories', [AdminDashboardController::class, 'showListCategory'])->name('admin.categories.listcategories');
+// Route::get('/admin/categories/createcategories', [AdminDashboardController::class, 'showCreateCategory'])->name('admin.categories.createcategory');
+// Route::get('/admin/categories/editcategories', [AdminDashboardController::class, 'showEditCategory'])->name('admin.categories.editcategory');
+Route::prefix('admin')->group(function () {
+    Route::resource('categories', CategoryController::class);
+});
+
 
 // Routes for login and signup
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -61,5 +68,5 @@ Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showRes
     ->name('password.reset');
 
 // Xử lý cập nhật mật khẩu mới
- Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
-     ->name('password.update');
+Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
+    ->name('password.update');
