@@ -8,6 +8,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cookie;
+
+
 
 class AuthController extends Controller
 {
@@ -123,6 +126,8 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        Cookie::queue(Cookie::forget('remember_web_'.Auth::getDefaultDriver()));
+
         return redirect('/')->with('status', 'You have been logged out.');
     }
 }

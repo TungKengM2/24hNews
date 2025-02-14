@@ -14,7 +14,6 @@
             </ul>
         </div>
     @endif
-
     <form action="{{ route('signup.process') }}" method="POST">
         @csrf
         <label>Username:</label>
@@ -44,7 +43,7 @@
 @endsection
 
 
-{{-- <!DOCTYPE html>
+<!-- {{-- <!DOCTYPE html>
 <html>
 <head>
     <title>Login</title>
@@ -219,4 +218,4 @@
       </div>
     </div>
 </body>
-</html> --}}
+</html> --}} -->
