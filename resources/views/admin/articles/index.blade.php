@@ -127,29 +127,7 @@
 
 <body>
     <div class="main">
-        <nav class="navbar navbar-expand px-4 py-3">
-            <form action="#" class="d-none d-sm-inline-block">
-
-            </form>
-            <div class="navbar-collapse collapse">
-                <ul class="navbar-nav ms-auto">
-
-                    <li class="nav-item dropdown">
-                        <a href="#" data-bs-toggle="dropdown" class="">
-                            <span class="material-symbols-outlined">
-                                account_circle
-                            </span>
-                            luanaz123
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end rounded">
-                            <a href="#" class="dropdown-item">Profile</a>
-                            <a href="#" class="dropdown-item">Setting</a>
-
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        @include('admin.layouts.partials.header')
         <main class="content px-3 py-4">
             <div class="container-fluid">
                 <div class="mb-3">
@@ -295,11 +273,11 @@
                                             <td>
                                                 <a href="{{ route('articles.show', $article) }}"
                                                     class="btn btn-info btn-sm">
-                                                    Show
+                                                   xem
                                                 </a>
                                                 <a href="{{ route('articles.edit', $article) }}"
                                                     class="btn btn-warning btn-sm">
-                                                    Edit
+                                                    sửa
                                                 </a>
                                                 <form action="{{ route('articles.destroy', $article) }}"
                                                     method="POST" class="d-inline">
@@ -307,7 +285,7 @@
                                                     @method('DELETE')
                                                     <button class="btn btn-danger btn-sm"
                                                         onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
-                                                        Delete
+                                                        Xoá 
                                                     </button>
                                                 </form>
                                             </td>
