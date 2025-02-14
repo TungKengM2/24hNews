@@ -221,9 +221,13 @@
                     <div class="row">
                         <div class="col-12 mb-3">
                             <h1>Thêm mới bài viết</h1>
+                            <a class="btn btn-secondary" href="{{ route('admin.dashboard') }}">
+                                <i class="lni lni-arrow-left"></i> Back to Dashboard
+                            </a>
                             <a class="btn btn-primary" href="{{ route('articles.create') }}">
                                 <i class="lni lni-plus"></i>
                             </a>
+                           
                         </div>
                         <div class="col-12">
                             <table class="table table-striped">
