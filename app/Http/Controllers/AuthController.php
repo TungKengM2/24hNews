@@ -28,10 +28,19 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->has('remember'))) {
             $user = Auth::user();
-            
-            return $user->role_id == 1
-                ? redirect()->intended('/admin/dashboard')
-                : redirect()->intended('/');
+
+            if ($user->role_id == 1) {
+                return redirect()->intended('/admin/dashboard');
+            } elseif ($user->role_id == 2) {
+                return redirect()->intended('/article/dashboard');
+            } elseif ($user->role_id == 3) {
+                return redirect()->intended('/moderator/dashboard');
+            } elseif ($user->role_id == 4) {
+                return redirect()->intended('/user/dashboard');
+            }
+            else {
+                return redirect()->intended('/');
+            }
         }
 
         return back()->withErrors([
@@ -56,9 +65,9 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();    
+            return back()->withErrors($validator)->withInput();
         }
-        
+
         $otp = rand(100000,999999);
 
          // Lưu dữ liệu đăng ký và OTP vào session
@@ -76,8 +85,8 @@ class AuthController extends Controller
 
          // Chuyển hướng đến form nhập OTP
         return redirect()->route('otp.verify.form')->with('status', 'OTP has been sent to your email.');
-   
-        
+
+
     }
     // Hiển thị form  nhập otp
 
@@ -85,7 +94,7 @@ class AuthController extends Controller
         return view('auth.verify-otp');
     }
 
-    // Xử lý xác nhân otp
+    // Xử lý xác nhận otp
 
     public function verifyOtp(Request $request){
         $request->validate([
@@ -110,7 +119,7 @@ class AuthController extends Controller
              'password' => Hash::make($signupData['password']),
              'role_id' => 4, // Mặc định là user
              ]);
-        
+
         //xóa dữ liệu tạm trong session
         session()->forget(['signup_data', 'signup_otp']);
 
