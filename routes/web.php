@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
 /*
@@ -26,9 +27,13 @@ Route::get('/admin/post/createpost', [AdminDashboardController::class, 'showCrea
 Route::get('/admin/post/listpost', [AdminDashboardController::class, 'showListPost'])->name('admin.post.listpost');
 Route::get('/admin/post/editpost', [AdminDashboardController::class, 'showEditPost'])->name('admin.post.editpost');
 // category
-Route::get('/admin/categories/listcategories', [AdminDashboardController::class, 'showListCategory'])->name('admin.categories.listcategories');
-Route::get('/admin/categories/createcategories', [AdminDashboardController::class, 'showCreateCategory'])->name('admin.categories.createcategory');
-Route::get('/admin/categories/editcategories', [AdminDashboardController::class, 'showEditCategory'])->name('admin.categories.editcategory');
+// Route::get('/admin/categories/listcategories', [AdminDashboardController::class, 'showListCategory'])->name('admin.categories.listcategories');
+// Route::get('/admin/categories/createcategories', [AdminDashboardController::class, 'showCreateCategory'])->name('admin.categories.createcategory');
+// Route::get('/admin/categories/editcategories', [AdminDashboardController::class, 'showEditCategory'])->name('admin.categories.editcategory');
+Route::prefix('admin')->group(function () {
+    Route::resource('categories', CategoryController::class);
+});
+
 
 // Routes for login and signup
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

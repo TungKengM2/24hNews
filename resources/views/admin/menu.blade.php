@@ -184,7 +184,7 @@ body {
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="/admin/categories/listcategories" class="sidebar-link">
+                    <a href="{{ route('categories.index') }}" class="sidebar-link">
                         <i class="lni lni-list"></i>
                         <span>Categories</span>
                     </a>
