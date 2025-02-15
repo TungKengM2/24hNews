@@ -2,12 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
+<<<<<<< HEAD
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ForgotPasswordController;
+=======
+>>>>>>> 51935cb064edef6dbcb23053729cf84919301f1b
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\ForgotPasswordController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,9 +24,13 @@ use App\Http\Controllers\ResetPasswordController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/article/{id}', [ArticleController::class, 'showw'])->name('articles.article');
+
+
 // admin
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
