@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('approvals', function (Blueprint $table) {
             $table->id('approval_id');
-            $table->foreignId('article_id')->constrained('articles', 'article_id');
-            $table->foreignId('approved_by')->constrained('users', 'user_id');
+            $table->foreignId('article_id')->nullable()->constrained('articles', 'article_id');
+            $table->foreignId('approved_by')->nullable()->constrained('users', 'user_id');
+            $table->enum('type', ['article', 'role_upgrade'])->default('article');
+            $table->string('requested_role')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->boolean('auto_reviewed')->default(false);
             $table->text('remarks');
