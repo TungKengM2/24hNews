@@ -205,7 +205,7 @@
                             <a class="btn btn-primary" href="{{ route('articles.create') }}">
                                 <i class="lni lni-plus"></i>
                             </a>
-                           
+
                         </div>
                         <div class="col-12">
                             <table class="table table-striped">
@@ -272,20 +272,29 @@
                                             </td>
                                             <td>
                                                 <a href="{{ route('articles.show', $article) }}"
-                                                    class="btn btn-info btn-sm">
-                                                   xem
-                                                </a>
+                                                    class="btn btn-info btn-sm">Show</a>
                                                 <a href="{{ route('articles.edit', $article) }}"
-                                                    class="btn btn-warning btn-sm">
-                                                    sửa
-                                                </a>
-                                                <form action="{{ route('articles.destroy', $article) }}"
-                                                    method="POST" class="d-inline">
+                                                    class="btn btn-warning btn-sm">Edit</a>
+
+                                                @if ($article->status === 'pending')
+                                                    <form action="{{ route('articles.approve', $article) }}"
+                                                        method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="btn btn-success btn-sm"
+                                                            onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
+                                                            Approve
+                                                        </button>
+                                                    </form>
+                                                @endif
+
+                                                <form action="{{ route('articles.destroy', $article) }}" method="POST"
+                                                    class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="btn btn-danger btn-sm"
                                                         onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
-                                                        Xoá 
+                                                        Delete
                                                     </button>
                                                 </form>
                                             </td>

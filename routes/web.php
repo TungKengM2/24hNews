@@ -24,11 +24,13 @@ Route::get('/', function () {
 // admin
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-
+//article
+Route::patch('/articles/{article}/approve', [ArticleController::class, 'approve'])->name('articles.approve');
 Route::prefix('admin')->group(function () {
     Route::resource('articles', ArticleController::class);
 });
 
+//category
 Route::prefix('admin')->group(function () {
     Route::resource('categories', CategoryController::class);
 });
