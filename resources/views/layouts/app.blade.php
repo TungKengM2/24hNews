@@ -45,13 +45,13 @@
             background-color: #f8d7da;
             color: #721c24;
         }
-        .form-section {
+        /* .form-section {
             width: 50%;
             border-top-right-radius: 5px;
             border-bottom-right-radius: 5px;
             background-color: #f8f9fa;
             border: 1px solid #ccc;
-        }
+        } */
         .profile-img {
             text-align: center;
         }
@@ -59,7 +59,7 @@
         .profile-img img {
         border-radius: 50%;
          }
-        input[type="email"], input[type="password"] {
+        input[type="email"], input[type="password"], input[type="text"], input[type="tel"] {
             width: 100%;
             padding: 5px;
             margin: 5px 0;
