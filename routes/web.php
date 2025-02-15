@@ -5,11 +5,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
-<<<<<<< HEAD
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ForgotPasswordController;
-=======
->>>>>>> 51935cb064edef6dbcb23053729cf84919301f1b
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ForgotPasswordController;
