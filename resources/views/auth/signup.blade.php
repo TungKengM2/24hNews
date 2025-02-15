@@ -1,49 +1,5 @@
-@extends('layouts.app')
-
-@section('title', 'Đăng ký')
-
-@section('content')
-    <h2>Đăng ký tài khoản</h2>
-
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    <form action="{{ route('signup.process') }}" method="POST">
-        @csrf
-        <label>Username:</label>
-        <input type="text" name="username" value="{{ old('username') }}" required>
-
-        <label>Email:</label>
-        <input type="email" name="email" value="{{ old('email') }}" required>
-
-        <label>phone:</label>
-        <input type="tel" name="phone" value="{{ old('phone') }}" required>
-
-        <label>Mật khẩu:</label>
-        <input type="password" name="password" required>
-
-        <label>Xác nhận mật khẩu:</label>
-        <input type="password" name="password_confirmation" required>
-
-        <label>
-            <input type="checkbox" name="terms" {{ old('terms') ? 'checked' : '' }} required>
-            Tôi đồng ý với <a href="#">điều khoản sử dụng</a>
-        </label>
-
-        <button type="submit">Đăng ký</button>
-    </form>
-
-    <p>Nếu đã có tài khoản, hãy <a href="{{ route('login') }}">đăng nhập</a>.</p>
-@endsection
-
-
-<!-- {{-- <!DOCTYPE html>
+<<<<<<< HEAD
+<!DOCTYPE html>
 <html>
 <head>
     <title>Login</title>
@@ -57,7 +13,6 @@
   font-family: 'Montserrat', sans-serif;
   transition: 3s;
 }
-
 .login-container {
   margin-top: 70px;
   border: 1px solid #CCD1D1;
@@ -65,157 +20,78 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   max-width: 50%;
 }
+=======
+@extends('layouts.app')
 
-.ads {
-  background-color: #A569BD;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  color: #fff;
-  padding: 15px;
-  text-align: center;
-}
+@section('title', 'Đăng ký')
+>>>>>>> ab90c292c2e51dcf8c7cf171548ae4975f260007
 
-.ads h1 {
-  margin-top: 20%;
-}
-.ads .img img {
-  width: 100%;
-  height: auto;
-  border-radius: 5px;
-  object-fit: cover; /* Added this line */
-}
-
-#fl {
-  font-weight: 600;
-}
-
-#sl {
-  font-weight: 100 !important;
-}
-
-.profile-img {
-  text-align: center;
-}
-
-.profile-img img {
-  border-radius: 50%;
-  /* animation: mymove 2s infinite; */
-}
-
-@keyframes mymove {
-  from {border: 1px solid #F2F3F4;}
-  to {border: 8px solid #F2F3F4;}
-}
-
-.login-form {
-  padding: 15px;
-}
-
-.login-form h3 {
-  text-align: center;
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-
-.form-control {
-  font-size: 14px;
-  padding-left: 30px;
-  border-radius: 25px; /* Added this line */
-}
-
-.form-group {
-  position: relative;
-}
-
-.form-group i {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #aaa;
-}
-
-.btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 20px;
-            margin: 10px;
-            border: none;
-            border-radius: 4px;
-            color: #fff;
-            text-decoration: none;
-            font-size: 16px;
-            cursor: pointer;
-            width: 250px;
-        }
-        .btn img {
-            margin-right: 10px;
-            height: 24px;
-            width: 24px;
-        }
-        .btn-google {
-            background-color: #db4437;
-            margin: 10px;
-            width: 320px;
-        }
-        .btn-facebook {
-            background-color: royalblue;
-            width: 320px;
-            margin: 10px;
-
-        }
-
-</style>
-<body>
+@section('content')
 <div class="container login-container">
-      <div class="row">
+    <div class="row">
         <div class="col-md-6 ads">
-          <div class="img">
-            <img src="https://i.imgur.com/HWuWWE9.jpeg" alt="">
-          </div>
+            <h3>Đăng ký</h3>
+            <div class="img">
+                <img src="https://i.imgur.com/HWuWWE9.jpeg" alt="">
+            </div>
         </div>
-        <div class="col-md-6 login-form">
-          <h3>Register</h3>
-          <form method="POST" action="{{ route('login') }}">
-            @csrf
-            <div class="form-group">
-              <i class="fas fa-user"></i>
-              <input type="text" class="form-control" name="username" placeholder="Username">
-            </div>
-            <div class="form-group">
-              <i class="fas fa-phone"></i>
-              <input type="text" class="form-control" name="phone" placeholder="Phone">
-            </div>
-            <div class="form-group">
-              <i class="fas fa-image"></i>
-              <input type="file" class="form-control" name="image" placeholder="Profile Image">
-            </div>
-            <div class="form-group">
-              <i class="fas fa-envelope"></i>
-              <input type="email" class="form-control" name="email" placeholder="Email">
-            </div>
-            <div class="form-group">
-              <i class="fas fa-lock"></i>
-              <input type="password" class="form-control" name="password" id="password" placeholder="Password">
-            </div>
-            <div class="form-group">
-                <button class="btn btn-primary" onclick="window.location.href='{{ route('signup') }}'">Sign Up</button>
-            </div>
-            <div class="login social" >
-                <h4 class="text-center">Đăng kí cách khác</h4>
-                <button class="btn btn-google" >
-                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Icon">
-                    Login with Google
-                </button>
-                <button class="btn btn-facebook" >
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Icon">
-                    Login with Facebook
-                </button>
-            </div>
-          </form>
+        <div class="col-md-6 form-section">
+            
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <form action="{{ route('signup.process') }}" method="POST" >
+                @csrf
+                <div class="form-group">
+                    <input type="text" class="form-control" name="username" value="{{ old('username') }}" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" class="form-control" name="phone" value="{{ old('phone') }}" placeholder="Phone" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" name="password" placeholder="Mật khẩu" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" name="password_confirmation" placeholder="Xác nhận mật khẩu" required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="terms" {{ old('terms') ? 'checked' : '' }} required>
+                        Tôi đồng ý với <a href="#">điều khoản sử dụng</a>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Đăng ký</button>
+                </div>
+                <div class="login social">
+                    <h4 class="text-center">Đăng kí cách khác</h4>
+                    <button class="btn btn-google">
+                        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Icon">
+                        Login with Google
+                    </button>
+                    <button class="btn btn-facebook">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Icon">
+                        Login with Facebook
+                    </button>
+                </div>
+            </form>
+            <p>Nếu đã có tài khoản, hãy <a href="{{ route('login') }}">đăng nhập</a>.</p>
         </div>
-      </div>
     </div>
+<<<<<<< HEAD
+>>>>>>> 5bc7477ebbf9827de9628170d54bf671a325500d
 </body>
-</html> --}} -->
+</html>
+=======
+</div>
+@endsection
+>>>>>>> ab90c292c2e51dcf8c7cf171548ae4975f260007
