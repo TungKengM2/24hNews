@@ -17,7 +17,7 @@
 <body>
     <div class="wrapper">
         @include('admin.layouts.partials.menusidebar')
-        <div class="main">
+        <div class="main p-2">
             @include('admin.layouts.partials.header')
             <h1>Chỉnh sửa bài viết</h1>
 
