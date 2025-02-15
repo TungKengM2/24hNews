@@ -15,6 +15,7 @@
           href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css"/>
     {{--    <script src="https://cdn.ckbox.io/ckbox/2.6.1/ckbox.js" crossorigin></script>--}}
     <script src="{{ asset('js/ckeditor.js') }}"></script>
+    <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
