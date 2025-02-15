@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Models\Article;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Models\ArticleHistory;
+
 
 class ArticleController extends Controller
 {
@@ -163,25 +163,7 @@ class ArticleController extends Controller
         return redirect()->route('articles.index')->with('success', 'Bài viết đã bị xóa!');
     }
     
-    public function showw($article_id)
-{
-    // Kiểm tra bài viết có tồn tại không
-    $article = Article::where('article_id', $article_id)
-                      ->where('status', 'approved')
-                      ->firstOrFail();
-
-    // Ghi nhận lượt xem
-    ArticleHistory::recordView($article);
-
-    // Lấy các bài viết cùng danh mục
-    $relatedArticles = Article::where('category_id', $article->category_id)
-                              ->where('article_id', '!=', $article->article_id)
-                              ->where('status', 'approved')
-                              ->limit(5)
-                              ->get();
-
-    return view('articles.article', compact('article', 'relatedArticles'));
-}
+   
 }
 
 
