@@ -65,14 +65,30 @@ class UserController extends Controller
     {
         $request->validate([
             'username' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'role' => 'required|string',
+            'phone' => 'required|string|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'role_id' => 'required|integer',
+            'is_promoted' => 'required|boolean',
+            'violations_count' => 'required|integer',
+            'banned_until' => 'required|date',
+            'created_at' => 'required|date',
+            'updated_at' => 'required|date',
         ]);
 
         $user->update([
             'username' => $request->username,
+            'phone' => $request->phone,
+            'image' => $request->image,
             'email' => $request->email,
-            'role' => $request->role,
+            'password' => bcrypt($request->password),
+            'role_id' => $request->role_id,
+            'is_promoted' => $request->is_promoted,
+            'violations_count' => $request->violations_count,
+            'banned_until' => $request->banned_until,
+            'created_at' => $request->created_at,
+            'updated_at' => $request->updated_at,
         ]);
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
