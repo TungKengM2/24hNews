@@ -68,6 +68,7 @@
                     <div class="mb-3">
                         <label for="content" class="form-label">Content</label>
                         <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+                        <input type="file" id="fileInput" accept=".docx" style="margin-top: 10px;">
                     </div>
                     <div class="mb-3">
                         <label for="preview_content" class="form-label">Preview Content</label>
@@ -135,6 +136,28 @@
                 </form>
             </div>
         </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
+        <script>
+            document.getElementById('fileInput').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const arrayBuffer = e.target.result;
+                        mammoth.extractRawText({
+                                arrayBuffer: arrayBuffer
+                            })
+                            .then(function(result) {
+                                document.getElementById('content').value = result.value;
+                            })
+                            .catch(function(error) {
+                                console.error('Error reading file:', error);
+                            });
+                    };
+                    reader.readAsArrayBuffer(file);
+                }
+            });
+        </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
         </script>

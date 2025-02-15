@@ -29,6 +29,20 @@ class ArticleController extends Controller
 
         return view('admin.articles.create', compact('categories', 'authors', 'approvers'));
     }
+    public function approve(Article $article)
+    {
+        if ($article->status !== 'pending') {
+            return redirect()->back()->with('error', 'Bài viết không hợp lệ để duyệt.');
+        }
+
+        $article->update([
+            'status' => 'published',
+            'approved_by' => auth()->id(), // Lưu ID admin duyệt bài
+        ]);
+
+        return redirect()->back()->with('success', 'Bài viết đã được duyệt.');
+    }
+
 
     /**
      * Store a newly created resource in storage.
