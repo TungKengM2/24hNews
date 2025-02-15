@@ -16,7 +16,7 @@
 
 <body>
     <div class="wrapper">
-        @include('admin.menu')
+        @include('admin.layouts.partials.menusidebar')
         <div class="main">
             @include('admin.layouts.partials.header')
             <div class="container-fluid">
