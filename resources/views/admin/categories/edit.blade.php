@@ -11,38 +11,15 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=account_circle" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .wrapper {
-            display: flex;
-            margin: 0px;
-        }
-
-        .container {
-            width: 100%;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-left: 300px;
-        }
-
-        .form-label {
-            font-weight: 600;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
 </head>
 
 <body>
     <div class="wrapper">
-        @include('admin.menu')
-        <div class="container mt-5 ">
-            <div class="card p-2">
+        @include('admin.layouts.partials.menusidebar')
+        <div class="main">
+            @include('admin.layouts.partials.header')
+            <div class="container-fluid">
                 <h2 class="mb-4">Edit Category</h2>
                 <form action="{{ route('categories.update', $category) }}" method="POST" enctype="multipart/form-data">
                     @csrf

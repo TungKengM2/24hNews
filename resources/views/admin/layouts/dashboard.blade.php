@@ -19,7 +19,9 @@
 
             <div class="main">
                 @include('admin.layouts.partials.header')
-
+                <div class="content">
+                    @yield('content')
+                </div>
         @include('admin.layouts.partials.sidebar')
             </div>
     </div>

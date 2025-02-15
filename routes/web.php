@@ -4,10 +4,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ArticleController;
+<<<<<<< HEAD
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\AdminDashboardController;
+=======
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ResetPasswordController;
+>>>>>>> c87870a5d7fe9e07f1122248806ac8579629b78d
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,25 +35,17 @@ Route::get('/article/{id}', [ArticleController::class, 'showw'])->name('articles
 // admin
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-// post
-// Route::get('/admin/post/createpost', [AdminDashboardController::class, 'showCreatePost'])->name('admin.post.createpost');
-// Route::get('/admin/post/listpost', [AdminDashboardController::class, 'showListPost'])->name('admin.post.listpost');
-// Route::get('/admin/post/editpost', [AdminDashboardController::class, 'showEditPost'])->name('admin.post.editpost');
+//article
+Route::patch('/articles/{article}/approve', [ArticleController::class, 'approve'])->name('articles.approve');
 Route::prefix('admin')->group(function () {
     Route::resource('articles', ArticleController::class);
 });
 
-// category
-// Route::get('/admin/categories/listcategories', [AdminDashboardController::class, 'showListCategory'])->name('admin.categories.listcategories');
-// Route::get('/admin/categories/createcategories', [AdminDashboardController::class, 'showCreateCategory'])->name('admin.categories.createcategory');
-// Route::get('/admin/categories/editcategories', [AdminDashboardController::class, 'showEditCategory'])->name('admin.categories.editcategory');
+//category
 Route::prefix('admin')->group(function () {
     Route::resource('categories', CategoryController::class);
 });
 
-// Route for profile
-Route::get('user/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::post('user/profile', [ProfileController::class, 'update'])->name('profile.update');
 
 // Routes for login and signup
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
