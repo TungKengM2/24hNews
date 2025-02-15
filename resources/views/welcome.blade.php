@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
+
 <html lang="en">
 
 <head>
@@ -261,7 +261,9 @@ body {
 
 
                                     <h3 class="article-title">
-                                        <a href="{{ url('/article/' . $article->article_id) }}">{{ $article->title }}</a>
+                                        <a href="{{ route('client.articles.article', $article->article_id) }}">{{ $article->title }}</a>
+
+
                                     </h3>
                                     <p class="text-muted">Lượt xem: {{ $article->views }}</p>
                                     <p class="article-summary">
@@ -277,7 +279,7 @@ body {
                                         </a>
                                         <form id="login-form" action="{{ route('login') }}" method="GET" style="display: none;"></form>
                                     @else
-                                        <a href="{{ url('/article/' . $article->article_id) }}" class="read-more">Read More</a>
+                                        <a href="{{ route('client.articles.article', $article->article_id) }}" class="read-more">Read More</a>
                                     @endif
                                 </article>
                             @endforeach
@@ -322,11 +324,3 @@ body {
     </footer>
 </body>
 
-=======
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
- <head></head>
-   <body>
-       <h1>Đây là page Trang chủ</h1>
-   </body>
->>>>>>> c87870a5d7fe9e07f1122248806ac8579629b78d
-</html>
