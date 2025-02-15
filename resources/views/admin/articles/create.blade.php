@@ -85,7 +85,7 @@
         @include('admin.layouts.partials.menusidebar')
         <div class="container">
             @include('admin.layouts.partials.header')
-            <div class="card">
+            <div class="card p-2">
                 <h2 class="mb-4">Create New Post</h2>
 
                 @if ($errors->any())

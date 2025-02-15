@@ -1,30 +1,6 @@
-<<<<<<< HEAD
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-</head>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<style>
-    body {
-  font-family: 'Montserrat', sans-serif;
-  transition: 3s;
-}
-.login-container {
-  margin-top: 70px;
-  border: 1px solid #CCD1D1;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  max-width: 50%;
-}
-=======
 @extends('layouts.app')
 
 @section('title', 'Đăng ký')
->>>>>>> ab90c292c2e51dcf8c7cf171548ae4975f260007
 
 @section('content')
 <div class="container login-container">
@@ -36,7 +12,7 @@
             </div>
         </div>
         <div class="col-md-6 form-section">
-            
+
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -87,11 +63,10 @@
             <p>Nếu đã có tài khoản, hãy <a href="{{ route('login') }}">đăng nhập</a>.</p>
         </div>
     </div>
-<<<<<<< HEAD
->>>>>>> 5bc7477ebbf9827de9628170d54bf671a325500d
+
 </body>
 </html>
-=======
+
 </div>
 @endsection
->>>>>>> ab90c292c2e51dcf8c7cf171548ae4975f260007
+
