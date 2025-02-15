@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
@@ -77,3 +78,5 @@ Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showRes
 // Xử lý cập nhật mật khẩu mới
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
     ->name('password.update');
+
+// hiển thị
