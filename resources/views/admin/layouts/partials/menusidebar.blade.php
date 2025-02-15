@@ -6,7 +6,7 @@
             </div>
             <ul class="sidebar-nav">
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
+                    <a href="{{ route('users.index') }}" class="sidebar-link">
                         <i class="lni lni-user"></i>
                         <span>Người dùng</span>
                     </a>

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
 /*
@@ -33,6 +34,10 @@ Route::prefix('admin')->group(function () {
 //category
 Route::prefix('admin')->group(function () {
     Route::resource('categories', CategoryController::class);
+});
+//users
+Route::prefix('admin')->group(function () {
+    Route::resource('users', UserController::class);
 });
 
 
