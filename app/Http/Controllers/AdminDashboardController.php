@@ -15,8 +15,6 @@ class AdminDashboardController extends Controller
     // POST
     {
         return view('admin.layouts.dashboard');
-<<<<<<< HEAD
-=======
     }
     public function showListPost()
     {
@@ -42,6 +40,5 @@ class AdminDashboardController extends Controller
     public function showEditCategory()
     {
         return view('admin.categories.editcategories');
->>>>>>> ab90c292c2e51dcf8c7cf171548ae4975f260007
     }
 }
