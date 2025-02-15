@@ -226,8 +226,8 @@ body {
                     <li><a href="#">Sports</a></li>
                     <li><a href="#">Entertainment</a></li>
                     <li><a href="#">Health</a></li>
-                    <li><a href="#">Sign Up</a></li>
-                    <li><a href="#">Login</a></li>
+                    <li><a href="{{ url('/signup') }}">Sign Up</a></li>
+                    <li><a href="{{ url('/login') }}">Login</a></li>
                 </ul>
             </nav>
         </div>
@@ -249,41 +249,42 @@ body {
 
             <div class="row">
 
-                <div class="content col-9">
 
+                <div class="content col-9">
                     <section class="latest-articles">
                         <h2 class="section-title">Latest Articles</h2>
                         <div class="articles-grid">
-                            <article class="article">
-                                <img src="https://static-images.vnncdn.net/vps_images_publish/000001/000003/2025/2/14/thang-94101.jpg?width=760&s=T7qREKSqoZytrnaCwlyk_A" alt="Article Image">
-                                <h3 class="article-title">Article Title 1</h3>
-                                <p class="article-summary">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-                                <a href="#" class="read-more">Read More</a>
-                            </article>
+                            @foreach ($articles as $article)
+                                <article class="article">
+                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="{{ $article->title }}" height="200" width="404">
 
-                            <article class="article">
-                                <img src="https://static-images.vnncdn.net/vps_images_publish/000001/000003/2025/2/14/thang-94101.jpg?width=760&s=T7qREKSqoZytrnaCwlyk_A" alt="Article Image">
-                                <h3 class="article-title">Article Title 2</h3>
-                                <p class="article-summary">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
-                                <a href="#" class="read-more">Read More</a>
-                            </article>
 
-                            <article class="article">
-                                <img src="https://static-images.vnncdn.net/vps_images_publish/000001/000003/2025/2/14/thang-94101.jpg?width=760&s=T7qREKSqoZytrnaCwlyk_A" alt="Article Image">
-                                <h3 class="article-title">Article Title 3</h3>
-                                <p class="article-summary">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat...</p>
-                                <a href="#" class="read-more">Read More</a>
-                            </article>
-
-                            <article class="article">
-                                <img src="https://static-images.vnncdn.net/vps_images_publish/000001/000003/2025/2/14/thang-94101.jpg?width=760&s=T7qREKSqoZytrnaCwlyk_A" alt="Article Image">
-                                <h3 class="article-title">Article Title 4</h3>
-                                <p class="article-summary">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur...</p>
-                                <a href="#" class="read-more">Read More</a>
-                            </article>
+                                    <h3 class="article-title">
+                                        <a href="{{ url('/article/' . $article->article_id) }}">{{ $article->title }}</a>
+                                    </h3>
+                                    <p class="text-muted">Lượt xem: {{ $article->views }}</p>
+                                    <p class="article-summary">
+                                        @if(Auth::check())
+                                            {{ Str::limit($article->content, 70, '...') }}
+                                        @else
+                                            {{ Str::limit($article->content, 50, '...') }}
+                                        @endif
+                                    </p>
+                                    @if(!Auth::check())
+                                        <a href="{{ route('login') }}" class="read-more" onclick="event.preventDefault(); document.getElementById('login-form').submit();">
+                                            Đăng nhập để đọc tiếp
+                                        </a>
+                                        <form id="login-form" action="{{ route('login') }}" method="GET" style="display: none;"></form>
+                                    @else
+                                        <a href="{{ url('/article/' . $article->article_id) }}" class="read-more">Read More</a>
+                                    @endif
+                                </article>
+                            @endforeach
                         </div>
                     </section>
                 </div>
+                
+                
 
                 <aside class="sidebar col-3">
                     <section class="news-categories">
