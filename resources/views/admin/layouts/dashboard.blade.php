@@ -11,10 +11,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
-<<<<<<< HEAD
-=======
-
->>>>>>> ab90c292c2e51dcf8c7cf171548ae4975f260007
 </head>
 <body>
     <div class="wrapper">
@@ -23,7 +19,9 @@
 
             <div class="main">
                 @include('admin.layouts.partials.header')
-
+                <div class="content">
+                    @yield('content')
+                </div>
         @include('admin.layouts.partials.sidebar')
             </div>
     </div>
