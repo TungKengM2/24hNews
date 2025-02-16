@@ -82,4 +82,4 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
 
 Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])->name('author.dashboard');
 Route::get('/moderator/users', [UserManagementController::class, 'index'])->name('author.users');
-Route::get('/moderator/articles', [AuthorArticleController::class, 'index'])->name('author.articles');
+Route::get('/moderator/articles', [ModeratorArticleController::class, 'index'])->name('author.articles');
