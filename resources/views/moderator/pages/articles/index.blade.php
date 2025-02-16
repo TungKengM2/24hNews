@@ -16,18 +16,18 @@
 <body>
     <div class="wrapper">
 
-            @include('author.layouts.partials.menusidebar')
+            @include('moderator.layouts.partials.menusidebar')
 
             <div class="main">
-                @include('author.layouts.partials.header')
+                @include('moderator.layouts.partials.header')
                 <div class="content">
                     @yield('content')
                 </div>
-        @include('author.pages.articles.listarticle')
+        @include('moderator.pages.articles.listarticle')
             </div>
     </div>
     <div>
-        @include('author.layouts.partials.footer')
+        @include('moderator.layouts.partials.footer')
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 </body>
