@@ -8,6 +8,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\Author\AuthorDashboard;
+use App\Http\Controllers\Author\UserManagement;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -73,3 +75,9 @@ Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showRes
 // Xử lý cập nhật mật khẩu mới
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
     ->name('password.update');
+
+// author
+
+
+Route::get('/author/dashboard', [AuthorDashboard::class, 'index'])->name('author.dashboard');
+Route::get('/author/users', [UserManagement::class, 'index'])->name('author.users');
