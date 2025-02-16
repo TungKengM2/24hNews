@@ -16,7 +16,6 @@ import {
     Subscript,
     Superscript,
     Underline,
-    Title,
     CodeBlock,
     Image,
     ImageUpload,
@@ -68,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 Subscript,
                 Superscript,
                 Underline,
-                Title,
+                // Title,
                 CodeBlock,
                 ExportPdf,
                 CloudServices,
@@ -221,9 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
             menuBar: {
                 isVisible: true,
             },
-            title: {
-                placeholder: 'My custom placeholder for the title',
-            },
+
             fontFamily: {
                 supportAllValues: true,
             },
