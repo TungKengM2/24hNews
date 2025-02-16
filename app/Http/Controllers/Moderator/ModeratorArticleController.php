@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Author;
+namespace App\Http\Controllers\Moderator;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use Illuminate\Http\Request;
 
-class AuthorArticleController extends Controller
+class ModeratorArticleController extends Controller
 {
     public function index()
     {
         // $articles = Article::where('author_id', auth()->user()->user_id)->get();
-        return view('author.pages.articles.index');
+        return view('moderator.pages.articles.index');
     }
 }

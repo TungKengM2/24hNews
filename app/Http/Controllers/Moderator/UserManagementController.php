@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Author;
+namespace App\Http\Controllers\Moderator;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -10,6 +10,6 @@ class UserManagementController extends Controller
 {
     public function index()
     {
-        return view('author.pages.users.index');
+        return view('moderator.pages.users.index');
     }
 }
