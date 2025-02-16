@@ -12,12 +12,13 @@ class HomeController extends Controller
     public function index()
     {
 
-        $articles = Article::latest()->get();
+        // $articles = Article::latest()->get();
 
-    
-        return view('welcome', compact('articles'));
+
+        // return view('welcome', compact('articles'));
+        return view('welcome');
     }
-    
 
-    
+
+
 }
