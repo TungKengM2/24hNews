@@ -26,8 +26,9 @@ class ArticleUserController extends Controller
             'viewed_at' => now(),
         ]);
     } catch (\Exception $e) {
-        report($e);
+        dd($e->getMessage());
     }
+    
 
     // Lấy bài viết liên quan
     $relatedArticles = Article::where('category_id', $article->category_id)
