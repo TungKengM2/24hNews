@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
-<html lang="en">
-
+<html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,68 +79,5 @@
       </div>
   </main>
 
-
-                                    <h3 class="article-title">
-                                        <a href="{{ route('client.articles.article', $article->article_id) }}">{{ $article->title }}</a>
-
-
-                                    </h3>
-                                    <p class="text-muted">Lượt xem: {{ $article->views }}</p>
-                                    <p class="article-summary">
-                                        @if(Auth::check())
-                                            {{ Str::limit($article->content, 70, '...') }}
-                                        @else
-                                            {{ Str::limit($article->content, 50, '...') }}
-                                        @endif
-                                    </p>
-                                    @if(!Auth::check())
-                                        <a href="{{ route('login') }}" class="read-more" onclick="event.preventDefault(); document.getElementById('login-form').submit();">
-                                            Đăng nhập để đọc tiếp
-                                        </a>
-                                        <form id="login-form" action="{{ route('login') }}" method="GET" style="display: none;"></form>
-                                    @else
-                                        <a href="{{ route('client.articles.article', $article->article_id) }}" class="read-more">Read More</a>
-                                    @endif
-                                </article>
-                            @endforeach
-                        </div>
-                    </section>
-                </div>
-                
-                
-
-                <aside class="sidebar col-3">
-                    <section class="news-categories">
-                        <h2 class="section-title">News Categories</h2>
-                        <div class="categories-list">
-                            <div class="category">
-                                <h3 class="category-title">World</h3>
-                                <p class="category-summary">Latest news from around the world...</p>
-                            </div>
-                            <div class="category">
-                                <h3 class="category-title">Technology</h3>
-                                <p class="category-summary">New advancements in technology...</p>
-                            </div>
-                            <div class="category">
-                                <h3 class="category-title">Sports</h3>
-                                <p class="category-summary">Updates on sports events...</p>
-                            </div>
-                            <div class="category">
-                                <h3 class="category-title">Entertainment</h3>
-                                <p class="category-summary">Latest entertainment news...</p>
-                            </div>
-                        </div>
-                    </section>
-                </aside>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 News Today. All rights reserved.</p>
-        </div>
-    </footer>
 </body>
-
+</html>
