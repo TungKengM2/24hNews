@@ -37,48 +37,7 @@
         .form-label {
             font-weight: 600;
         }
-
-        .form-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .form-group .lni,
-        .form-group .material-symbols-outlined {
-            margin-right: 10px;
-            font-size: 1.5rem;
-        }
-
-        .form-group-half {
-            width: 50%;
-            padding-right: 10px;
-        }
-
-        .form-group-full {
-            width: 100%;
-        }
-
-        .card {
-            padding: 20px;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .btn-secondary {
-            margin-left: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .form-group-half {
-                width: 100%;
-                padding-right: 0;
-            }
-        }
-    </style> --}}
+    </style>
 </head>
 <body>
 <div class="wrapper">
