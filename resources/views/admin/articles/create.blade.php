@@ -161,76 +161,75 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
 </script>
-{{--<script src="https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.umd.js"></script>--}}
-{{--<script>--}}
-{{--    // Import CKEditor 5 plugins and editor--}}
-{{--    const {--}}
-{{--        ClassicEditor,--}}
-{{--        Essentials,--}}
-{{--        Paragraph,--}}
-{{--        Bold,--}}
-{{--        Italic,--}}
-{{--        Font,--}}
-{{--        Indent, BlockQuote,--}}
-{{--        Emoji, Mention, TextTransformation, Code, Strikethrough, Subscript, Superscript, Underline,--}}
-{{--    } = CKEDITOR;--}}
+<script src="https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.umd.js"></script>
+<script>
+    // Import CKEditor 5 plugins and editor
+    const {
+        ClassicEditor,
+        Essentials,
+        Paragraph,
+        Bold,
+        Italic,
+        Font,
+        Indent, BlockQuote,
+        Emoji, Mention, TextTransformation, Code, Strikethrough, Subscript, Superscript, Underline,
+    } = CKEDITOR;
 
-{{--    // Initialize CKEditor 5--}}
-{{--    ClassicEditor--}}
-{{--        .create(document.querySelector('#editor'), {--}}
-{{--            licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDA4NzM1OTksImp0aSI6IjU3NjMyMzYyLThjYzktNGI5OS04YTk4LTA3YTQ0NTRhOTk2OSIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImY3ODMxZjUwIn0.8zMtmfSOdINS8gAXMt-u-ORW6jDDZLl5fJejawSrIC7aeWgLGNiBwgApykggy8_Z789xYoaJ4aygTNI0YniwRA',--}}
+    // Initialize CKEditor 5
+    ClassicEditor
+        .create(document.querySelector('#editor'), {
+            licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDA4NzM1OTksImp0aSI6IjU3NjMyMzYyLThjYzktNGI5OS04YTk4LTA3YTQ0NTRhOTk2OSIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImY3ODMxZjUwIn0.8zMtmfSOdINS8gAXMt-u-ORW6jDDZLl5fJejawSrIC7aeWgLGNiBwgApykggy8_Z789xYoaJ4aygTNI0YniwRA',
 
-{{--            // Plugins to include--}}
-{{--            plugins: [--}}
-{{--                Essentials, Paragraph, Bold, Italic, Font, Indent, BlockQuote, Emoji, Mention, TextTransformation, Code, Strikethrough, Subscript, Superscript,--}}
-{{--                Underline,--}}
-{{--            ],--}}
+            // Plugins to include
+            plugins: [
+                Essentials, Paragraph, Bold, Italic, Font, Indent, BlockQuote, Emoji, Mention, TextTransformation, Code, Strikethrough, Subscript, Superscript,
+                Underline,
+            ],
 
-{{--            // Toolbar configuration--}}
-{{--            toolbar: {--}}
-{{--                items: [--}}
-{{--                    'undo', 'redo', 'emoji',--}}
-{{--                    '|',--}}
-{{--                    'heading',--}}
-{{--                    '|',--}}
-{{--                    'fontfamily', 'fontsize', 'fontColor', 'fontBackgroundColor',--}}
-{{--                    '|',--}}
-{{--                    'bold', 'italic', 'strikethrough', 'subscript', 'superscript', 'code',--}}
-{{--                    '|',--}}
-{{--                    'link', 'uploadImage', 'blockQuote', 'codeBlock',--}}
-{{--                    '|',--}}
-{{--                    'bulletedList', 'numberedList', 'todoList', 'outdent', 'indent',--}}
-{{--                ],--}}
-{{--                shouldNotGroupWhenFull: false,--}}
-{{--            },--}}
-{{--            menuBar: {--}}
-{{--                isVisible: true,--}}
-{{--            },--}}
-{{--            heading: {--}}
-{{--                options: [--}}
-{{--                    { modelElement: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },--}}
-{{--                    { modelElement: 'heading1', viewElement: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },--}}
-{{--                    { modelElement: 'heading2', viewElement: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },--}}
-{{--                    { modelElement: 'heading', viewElement: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },--}}
-{{--                ],--}}
-{{--            },--}}
+            // Toolbar configuration
+            toolbar: {
+                items: [
+                    'undo', 'redo', 'emoji',
+                    '|',
+                    'heading',
+                    '|',
+                    'fontfamily', 'fontsize', 'fontColor', 'fontBackgroundColor',
+                    '|',
+                    'bold', 'italic', 'strikethrough', 'subscript', 'superscript', 'code',
+                    '|',
+                    'link', 'uploadImage', 'blockQuote', 'codeBlock',
+                    '|',
+                    'bulletedList', 'numberedList', 'todoList', 'outdent', 'indent',
+                ],
+                shouldNotGroupWhenFull: false,
+            },
+            menuBar: {
+                isVisible: true,
+            },
+            heading: {
+                options: [
+                    { modelElement: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                    { modelElement: 'heading1', viewElement: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                    { modelElement: 'heading2', viewElement: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                    { modelElement: 'heading', viewElement: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+                ],
+            },
 
-{{--        })--}}
-{{--        .then(editor => {--}}
-{{--            console.log('CKEditor initialized:', editor);--}}
+        })
+        .then(editor => {
+            console.log('CKEditor initialized:', editor);
 
-{{--            const form = document.querySelector('form');--}}
-{{--            form.addEventListener('submit', () => {--}}
-{{--                const contentTextarea = document.querySelector('#content');--}}
-{{--                if (contentTextarea) {--}}
-{{--                    contentTextarea.value = editor.getData();--}}
-{{--                }--}}
-{{--            });--}}
-{{--        })--}}
-{{--        .catch(error => {--}}
-{{--            console.error('Error initializing CKEditor:', error);--}}
-{{--        });--}}
-{{--</script>--}}
-
+            const form = document.querySelector('form');
+            form.addEventListener('submit', () => {
+                const contentTextarea = document.querySelector('#content');
+                if (contentTextarea) {
+                    contentTextarea.value = editor.getData();
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error initializing CKEditor:', error);
+        });
+</script>
 </body>
 </html>
