@@ -113,7 +113,6 @@ Route::get('/reset-password/{token}',
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
     ->name('password.update');
 
-<<<<<<< HEAD
 // author
 Route::get('/author/dashboard', [AuthorDashboard::class, 'index'])->name('author.dashboard');
 Route::get('/author/users', [UserManagement::class, 'index'])->name('author.users');
@@ -121,8 +120,8 @@ Route::get('/author/users', [UserManagement::class, 'index'])->name('author.user
 // writer
 Route::get('/writer/dashboard', [WriterDashboard::class, 'index'])->name('writer.dashboard');
 Route::get('/writer/articles', [ArticleManagement::class, 'index'])->name('writer.articles');
-=======
+
+// profile
 Route::post('/profile/request-author-role',
     [ProfileController::class, 'requestAuthorRole'])
     ->name('profile.request-author-role');
->>>>>>> 223c15f6e66cae01d07d384a7165637def384945
