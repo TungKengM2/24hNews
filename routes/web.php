@@ -1,31 +1,21 @@
 <?php
 
-<<<<<<< HEAD
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\HomeController;
-=======
 use App\Http\Controllers\AdminDashboardController;
->>>>>>> 223c15f6e66cae01d07d384a7165637def384945
 use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
-<<<<<<< HEAD
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\Author\UserManagement;
 use App\Http\Controllers\Writer\ArticleManagement;
 use App\Http\Controllers\Writer\WriterDashboard;
-=======
-use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 
->>>>>>> 223c15f6e66cae01d07d384a7165637def384945
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -113,7 +103,6 @@ Route::get('/reset-password/{token}',
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
     ->name('password.update');
 
-<<<<<<< HEAD
 // author
 Route::get('/author/dashboard', [AuthorDashboard::class, 'index'])->name('author.dashboard');
 Route::get('/author/users', [UserManagement::class, 'index'])->name('author.users');
@@ -121,8 +110,8 @@ Route::get('/author/users', [UserManagement::class, 'index'])->name('author.user
 // writer
 Route::get('/writer/dashboard', [WriterDashboard::class, 'index'])->name('writer.dashboard');
 Route::get('/writer/articles', [ArticleManagement::class, 'index'])->name('writer.articles');
-=======
+
+// profile
 Route::post('/profile/request-author-role',
     [ProfileController::class, 'requestAuthorRole'])
     ->name('profile.request-author-role');
->>>>>>> 223c15f6e66cae01d07d384a7165637def384945
