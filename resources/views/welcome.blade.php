@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
 <html lang="en">
 
 <head>
@@ -284,8 +283,8 @@ body {
                         </div>
                     </section>
                 </div>
-                
-                
+
+
 
                 <aside class="sidebar col-3">
                     <section class="news-categories">
@@ -322,11 +321,4 @@ body {
     </footer>
 </body>
 
-=======
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
- <head></head>
-   <body>
-       <h1>Đây là page Trang chủ</h1>
-   </body>
->>>>>>> c87870a5d7fe9e07f1122248806ac8579629b78d
 </html>
