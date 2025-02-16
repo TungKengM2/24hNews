@@ -12,6 +12,8 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\Author\UserManagement;
+use App\Http\Controllers\Writer\ArticleManagement;
+use App\Http\Controllers\Writer\WriterDashboard;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -84,3 +86,7 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
 // author
 Route::get('/author/dashboard', [AuthorDashboard::class, 'index'])->name('author.dashboard');
 Route::get('/author/users', [UserManagement::class, 'index'])->name('author.users');
+
+// writer
+Route::get('/writer/dashboard', [WriterDashboard::class, 'index'])->name('writer.dashboard');
+Route::get('/writer/articles', [ArticleManagement::class, 'index'])->name('writer.articles');
