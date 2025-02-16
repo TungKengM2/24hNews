@@ -15,37 +15,37 @@ class RoleSeeder extends Seeder
         DB::table('roles')->insert([
             [
                 'name' => 'admin',
-                'description' => 'Administrator',
+                'description' => 'Full rules',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
 
             [
                 'name' => 'author',
-                'description' => 'Author',
+                'description' => 'crud articles',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'moderator',
-                'description' => 'Moderator',
+                'description' => 'review articles and comments',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
 
             [
                 'name' => 'user',
-                'description' => 'User',
+                'description' => 'read articles and comments...',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
 
-            [
-                'name' => 'guest',
-                'description' => 'Guest',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+            //            [
+            //                'name' => 'guest',
+            //                'description' => 'Guest',
+            //                'created_at' => now(),
+            //                'updated_at' => now(),
+            //            ],
 
         ]);
     }
