@@ -8,9 +8,9 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ForgotPasswordController;
-use App\Http\Controllers\Author\AuthorDashboardController;
-use App\Http\Controllers\Author\UserManagementController;
-use App\Http\Controllers\Author\AuthorArticleController;
+use App\Http\Controllers\Moderator\ModeratorDashboardController;
+use App\Http\Controllers\Moderator\UserManagementController;
+use App\Http\Controllers\Moderator\ModeratorArticleController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -80,6 +80,6 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
 // author
 
 
-Route::get('/author/dashboard', [AuthorDashboardController::class, 'index'])->name('author.dashboard');
-Route::get('/author/users', [UserManagementController::class, 'index'])->name('author.users');
-Route::get('/author/articles', [AuthorArticleController::class, 'index'])->name('author.articles');
+Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])->name('author.dashboard');
+Route::get('/moderator/users', [UserManagementController::class, 'index'])->name('author.users');
+Route::get('/moderator/articles', [AuthorArticleController::class, 'index'])->name('author.articles');
