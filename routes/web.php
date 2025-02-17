@@ -17,6 +17,7 @@ use App\Http\Controllers\Writer\WriterDashboard;
 use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\Moderator\UserManagementController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
+use App\Http\Controllers\Client\UserProfileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -91,6 +92,11 @@ Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'
 Route::get('/moderator/users', [UserManagementController::class, 'index'])->name('author.users');
 Route::get('/moderator/articles', [ModeratorArticleController::class, 'index'])->name('author.articles');
 
+<<<<<<< HEAD
 // writer
 Route::get('/writer/dashboard', [WriterDashboard::class, 'index'])->name('writer.dashboard');
 Route::get('/writer/articles', [ArticleManagement::class, 'index'])->name('writer.articles');
+=======
+// router user
+Route::get('/user/profile', [UserProfileController::class, 'index'])->name('user.profile');
+>>>>>>> b858b6e9723f65924f952ae0eddf58c7645befc1
