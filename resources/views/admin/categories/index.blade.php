@@ -132,12 +132,8 @@
 <body>
     <div class="wrapper">
         @include('admin.menu')
-<<<<<<< HEAD
         <main class="content px-3 py-4 w-100">
             @include('admin.header')
-=======
-        <main class="content px-3 py-4 col-md-5">
->>>>>>> tungkeng
             <div class="container-fluid">
                 <div class="mb-3">
                     <div class="row">
@@ -148,7 +144,7 @@
                             <a class="btn btn-primary" href="{{ route('categories.create') }}">
                                 <i class="lni lni-plus"></i>
                             </a>
-                           
+
                         </div>
                         <div class="col-12">
                             <table class="table table-striped">

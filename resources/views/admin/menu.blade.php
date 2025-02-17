@@ -64,21 +64,12 @@ body {
     min-width: 260px;
 }
 
-<<<<<<< HEAD
         .toggle-btn {
             background-color: transparent;
             cursor: pointer;
             border: 0;
 
         }
-=======
-.toggle-btn {
-    background-color: transparent;
-    cursor: pointer;
-    border: 0;
-    padding: 1rem 1.5rem;
-}
->>>>>>> tungkeng
 
 .toggle-btn i {
     font-size: 1.5rem;
