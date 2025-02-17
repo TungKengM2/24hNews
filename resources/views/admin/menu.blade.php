@@ -13,7 +13,73 @@
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+<<<<<<< HEAD
 </style>
+=======
+
+::after,
+::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.wrapper {
+    display: flex;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+    background-color: #fff;
+    min-width: 0;
+}
+
+#sidebar {
+    width: 300px;
+    min-width: 70px;
+    position: relative;
+    min-height: 100vh;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
+    background-color: #0e2238;
+    display: flex;
+    flex-direction: column;
+}
+
+#sidebar.expand {
+    width: 260px;
+    min-width: 260px;
+}
+
+        .toggle-btn {
+            background-color: transparent;
+            cursor: pointer;
+            border: 0;
+
+        }
+
+.toggle-btn i {
+    font-size: 1.5rem;
+    color: #FFF;
+}
+>>>>>>> 65459d5776a18e445735a074bd602982137e0024
 
 
 </head>
@@ -101,4 +167,8 @@
 
 </body>
 
+<<<<<<< HEAD
 </html> --}}
+=======
+</html>
+>>>>>>> 65459d5776a18e445735a074bd602982137e0024
