@@ -69,7 +69,8 @@
                     <div id="editor">
                         <p>Hello from CKEditor 5!</p>
                     </div>
-                    <textarea id="content" name="content" style="display: none;"></textarea>
+                    {{--                    <textarea id="content" name="content" style="display: none;"></textarea>--}}
+                    <textarea id="content" name="content" style="position: absolute; left: -9999px;"></textarea>
                     <input type="file" id="fileInput" accept=".docx" style="margin-top: 10px;">
                 </div>
                 {{--                <div class="mb-3">--}}
