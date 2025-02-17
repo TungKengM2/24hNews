@@ -64,12 +64,27 @@ body {
     min-width: 260px;
 }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+        .toggle-btn {
+            background-color: transparent;
+            cursor: pointer;
+            border: 0;
+
+        }
+=======
+>>>>>>> 9165ff40825bbe6bc0a64e87dcb550fac1990ee4
 .toggle-btn {
     background-color: transparent;
     cursor: pointer;
     border: 0;
     padding: 1rem 1.5rem;
 }
+<<<<<<< HEAD
+=======
+>>>>>>> tungkeng
+>>>>>>> 9165ff40825bbe6bc0a64e87dcb550fac1990ee4
 
 .toggle-btn i {
     font-size: 1.5rem;
