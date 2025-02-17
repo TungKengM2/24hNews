@@ -13,14 +13,12 @@ class HomeController extends Controller
 {
     public function index()
     {
-<<<<<<< HEAD
 
         // $articles = Article::latest()->get();
 
 
         // return view('welcome', compact('articles'));
         return view('welcome');
-=======
         // Lấy bài viết có nhiều lượt xem và lượt thích nhất
         $featuredArticle = Article::where('status', 'published')
         ->orderByDesc('views') // Sắp xếp theo lượt xem giảm dần
@@ -51,17 +49,13 @@ class HomeController extends Controller
             ]);
             return back()->with('success', 'Bạn đã thích bài viết!');
         }
->>>>>>> 158876c489c9299eacf6ec48f67db3ba68b0eba6
     }
 
-<<<<<<< HEAD
 
 
-=======
  
     
     
     
     
->>>>>>> 158876c489c9299eacf6ec48f67db3ba68b0eba6
 }

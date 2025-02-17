@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -180,7 +179,6 @@
   </footer>
 </body>
 </html>
-=======
 @extends('master')
 
 @section('tieudetrang')
@@ -332,4 +330,3 @@ a{
     </div>
 </main>
 @endsection
->>>>>>> 158876c489c9299eacf6ec48f67db3ba68b0eba6

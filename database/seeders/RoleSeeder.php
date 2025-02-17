@@ -1,52 +1,58 @@
 <?php
 
-namespace Database\Seeders;
+    namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+    use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+    use Illuminate\Database\Seeder;
+    use Illuminate\Support\Facades\DB;
 
-class RoleSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    class RoleSeeder extends Seeder
     {
-        DB::table('roles')->insert([
-            [
-                'name' => 'admin',
-                'description' => 'Full rules',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
 
-            [
-                'name' => 'author',
-                'description' => 'crud articles',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'moderator',
-                'description' => 'review articles and comments',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        /**
+         * Run the database seeds.
+         */
+        public function run(): void
+        {
 
-            [
-                'name' => 'user',
-                'description' => 'read articles and comments...',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+            DB::table('roles')->insert([
+                [
+                    'name' => 'admin',
+                    'description' => 'Administrator',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
 
-            //            [
-            //                'name' => 'guest',
-            //                'description' => 'Guest',
-            //                'created_at' => now(),
-            //                'updated_at' => now(),
-            //            ],
+                [
+                    'name' => 'article',
+                    'description' => 'Article',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+                [
+                    'name' => 'moderator',
+                    'description' => 'Moderator',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
 
-        ]);
+                [
+                    'name' => 'user',
+                    'description' => 'User',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+
+                [
+                    'name' => 'guest',
+                    'description' => 'Guest',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+
+            ]);
+
+        }
+
+
     }
-}
