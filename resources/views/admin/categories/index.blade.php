@@ -17,6 +17,7 @@
 <body>
     <div class="wrapper">
 <<<<<<< HEAD
+<<<<<<< HEAD
         @include('admin.layouts.partials.menusidebar')
         <div class="main">
             @include('admin.layouts.partials.header')
@@ -25,6 +26,11 @@
         <main class="content px-3 py-4 w-100">
             @include('admin.header')
 >>>>>>> 65459d5776a18e445735a074bd602982137e0024
+=======
+        @include('admin.layouts.partials.menusidebar')
+        <div class="main">
+            @include('admin.layouts.partials.header')
+>>>>>>> 465ec0870b172196221404fd58cf493cde162b3c
             <div class="container-fluid">
                 <div class="mb-3">
                     <div class="    ">
