@@ -16,19 +16,9 @@
 
 <body>
     <div class="wrapper">
-<<<<<<< HEAD
         @include('admin.layouts.partials.menusidebar')
         <div class="main">
             @include('admin.layouts.partials.header')
-=======
-        @include('admin.menu')
-<<<<<<< HEAD
-        <main class="content px-3 py-4 w-100">
-            @include('admin.header')
-=======
-        <main class="content px-3 py-4 col-md-5">
->>>>>>> tungkeng
->>>>>>> 9165ff40825bbe6bc0a64e87dcb550fac1990ee4
             <div class="container-fluid">
                 <div class="mb-3">
                     <div class="    ">

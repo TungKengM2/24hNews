@@ -11,29 +11,38 @@
     <table class="w-full table-auto text-left">
       <thead class="text-gray-500 text-sm">
         <tr>
-          <th class="pb-2">Hình ảnh</th>
-          <th class="pb-2">Title</th>
-          <th class="pb-2">Category</th>
-          <th class="pb-2">Slug</th>
-          <th class="pb-2">View</th>
+          <th class="pb-2">Tiêu đề</th>
+          <th class="pb-2">Nội dung</th>
+          <th class="pb-2">Danh mục</th>
+          <th class="pb-2">Trạng thái</th>
+          <th class="pb-2">Lượt xem</th>
+          <th class="pb-2">Duyệt bởi</th>
+          <th class="pb-2">Thời gian tạo</th>
           <th class="pb-2">Hành động</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="border-t hover:bg-gray-50">
-          <td class="py-3 flex items-center space-x-3">
-            <img src="{{ asset('images/usercr7.jpg') }}" alt="User Image" class="w-10 h-10" />
+          <tr class="border-t hover:bg-gray-50">
+            <td class="py-3 text-gray-800 font-semibold max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap" title="Tiêu đề bài viết 1">Tiêu đề bài viết 1</td>
+          <td class="py-3 text-gray-800 max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap">
+            Nội dung bài viết ...
+            <button onclick="Swal.fire({
+              title: 'Nội dung bài viết',
+              html: '<div style=\'width: 1200px; margin: 0 auto; text-align: center; overflow-x: hidden;\'><p style=\'text-align: center;\'>' + `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Fusce tincidunt, nunc sit amet blandit venenatis, turpis erat varius mauris, at cursus mi orci eget sapien. Sed a massa ac urna cursus sagittis. Maecenas tempor, ligula vitae hendrerit dapibus, lorem velit laoreet massa, ut bibendum sapien sapien nec tortor. Phasellus vel tellus arcu. Integer non rhoncus urna, nec fermentum sem. Pellentesque ac velit id nulla mollis interdum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.` + '</p></div>',
+              icon: 'info',
+              width: '1400px'
+            })" class="text-blue-500 ml-2 cursor-pointer">(xem thêm)</button>
           </td>
-          <td class="py-3 text-gray-800">Anh Liêm</td>
-          <td class="py-3 text-gray-800">Thể thao</td>
-          <td class="py-3 text-gray-800">
-            <a href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fmobilecity.vn%2Ftin-tuc%2Ftop-anh-ronaldo-sieu-ngau-chat-danh-cho-dien-thoai-va-may-tinh.html&psig=AOvVaw0a2087CMBOv5FlsvfirQtf&ust=1739801196051000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOi73NKuyIsDFQAAAAAdAAAAABAE" class="">rol</a>
-          </td>
-          <td class="py-3"><span class="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">7</span></span></td>
+          <td class="py-3 text-gray-800">Công Nghệ</td>
+          <td class="py-3"><span class="px-3 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">Đang Chờ Duyệt</span></td>
+          <td class="py-3 text-gray-800">1.2K</td>
+          <td class="py-3 text-gray-800">Admin1</td>
+            <td class="py-3 text-gray-800">2025-02-15 08:34</td>
           <td class="py-3 space-x-2">
-            <button class="bg-red-500 text-white px-3 py-1 rounded text-xs">Xoa</button>
             <button class="bg-blue-500 text-white px-3 py-1 rounded text-xs">show</button>
           </td>
+
+
         </tr>
       </tbody>
     </table>

@@ -14,12 +14,10 @@ use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\Author\UserManagement;
 use App\Http\Controllers\Writer\ArticleManagement;
 use App\Http\Controllers\Writer\WriterDashboard;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\Moderator\UserManagementController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
 use App\Http\Controllers\Client\UserProfileController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -108,21 +106,13 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
     ->name('password.update');
 
 // author
-Route::get('/author/dashboard', [AuthorDashboard::class, 'index'])->name('author.dashboard');
-Route::get('/author/users', [UserManagement::class, 'index'])->name('author.users');
+Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])->name('author.dashboard');
+Route::get('/moderator/users', [UserManagementController::class, 'index'])->name('author.users');
+Route::get('/moderator/articles', [ModeratorArticleController::class, 'index'])->name('author.articles');
 
 // writer
 Route::get('/writer/dashboard', [WriterDashboard::class, 'index'])->name('writer.dashboard');
 Route::get('/writer/articles', [ArticleManagement::class, 'index'])->name('writer.articles');
-
-// profile
-Route::post('/profile/request-author-role',
-    [ProfileController::class, 'requestAuthorRole'])
-    ->name('profile.request-author-role');
-
-    Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])->name('author.dashboard');
-Route::get('/moderator/users', [UserManagementController::class, 'index'])->name('author.users');
-Route::get('/moderator/articles', [ModeratorArticleController::class, 'index'])->name('author.articles');
 
 // router user
 Route::get('/user/profile', [UserProfileController::class, 'index'])->name('user.profile');
