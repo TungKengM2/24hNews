@@ -73,5 +73,12 @@ class Article extends Model
         $this->increment('views');
     }
 
+    public function likes()
+    {
+        return $this->hasMany(ArticleLike::class, 'article_id');
+    }
+    
+
+
 
 }
