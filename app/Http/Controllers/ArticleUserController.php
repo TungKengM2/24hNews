@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\ArticleLike;
 use App\Models\ArticleView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -9,35 +10,43 @@ use Illuminate\Support\Facades\Log;
 class ArticleUserController extends Controller
 {
     public function show($article_id)
-{
-    // Lấy bài viết theo article_id
-    $article = Article::where('article_id', $article_id)->first();
-
-    if (!$article) {
-        abort(404, 'Bài viết không tồn tại!');
-    }
-
-    // Ghi nhận lượt xem
-    try {
-        ArticleView::create([
-            'article_id' => $article->article_id,
-            'user_id' => auth()->id(),
-            'anonymous' => auth()->check() ? 0 : 1,
-            'viewed_at' => now(),
-        ]);
-    } catch (\Exception $e) {
-        dd($e->getMessage());
-    }
+    {
+        // Lấy bài viết theo article_id với điều kiện status là 'published'
+        $article = Article::where('article_id', $article_id)
+                          ->where('status', 'published')
+                          ->first();
     
+        // Nếu bài viết không tồn tại, trả về lỗi 404
+        if (!$article) {
+            abort(404, 'Bài viết không tồn tại hoặc chưa được xuất bản!');
+        }
+    
+        // Ghi nhận lượt xem
+        try {
+            ArticleView::create([
+                'article_id' => $article->article_id,
+                'user_id' => auth()->id(),
+                'anonymous' => auth()->check() ? 0 : 1,
+                'viewed_at' => now(),
+            ]);
+            $article->increment('views');
+        } catch (\Exception $e) {
+            Log::error('Lỗi ghi nhận lượt xem: ' . $e->getMessage());
+        }
+    
+        // Lấy bài viết liên quan (chỉ lấy bài viết có status là 'published')
+        $relatedArticles = Article::where('category_id', $article->category_id)
+                                  ->where('article_id', '!=', $article->article_id)
+                                  ->where('status', 'published')
+                                  ->limit(5)
+                                  ->get();
+    
+        return view('client.articles.article', compact('article', 'relatedArticles'));
+    }
 
-    // Lấy bài viết liên quan
-    $relatedArticles = Article::where('category_id', $article->category_id)
-                              ->where('article_id', '!=', $article->article_id)
-                              ->limit(5)
-                              ->get();
-
-    return view('client.articles.article', compact('article', 'relatedArticles'));
-}
+    
+    
+    
 
 }
 

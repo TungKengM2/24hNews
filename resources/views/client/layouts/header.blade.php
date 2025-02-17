@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VNExpress Header & Footer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
     <style>
         body {
             margin: 0;
@@ -121,6 +123,10 @@
   
 
         }
+        .menu a i {
+            color: inherit; /* Icon cùng màu với chữ */
+            font-size: 16px; /* Điều chỉnh kích thước icon */
+        }
 
         /* Nội dung */
         .content {
@@ -138,6 +144,9 @@
             font-size: 14px;
             color: #555;
         }
+        a{
+    text-decoration: none;
+}
     </style>
 </head>
 <body>
@@ -164,37 +173,16 @@
 </div>
 
 <!-- Menu chính -->
-<div class="menu" >
-    <a href="#">Thời sự</a>
-    <a href="#">Thế giới</a>
-    <a href="#">Kinh doanh</a>
-    <a href="#">Công nghệ</a>
-    <a href="#">Khoa học</a>
-    <a href="#">Video</a>
-    <a href="#">Podcasts</a>
-    <a href="#">Bất động sản</a>
-    <a href="#">Sức khỏe</a>
-    <a href="#">Thể thao</a>
+<div class="menu">
+    <a href="{{ url('/') }}"><i class="fas fa-home"></i> Trang chủ</a>
+    <a href="/thoi-su"><i class="fas fa-newspaper"></i> Thời sự</a>
+    <a href="/the-gioi"><i class="fas fa-globe"></i> Thế giới</a>
+    <a href="/kinh-doanh"><i class="fas fa-chart-line"></i> Kinh doanh</a>
+    <a href="/cong-nghe"><i class="fas fa-microchip"></i> Công nghệ</a>
+    <a href="/khoa-hoc"><i class="fas fa-flask"></i> Khoa học</a>
+    <a href="/video"><i class="fas fa-video"></i> Video</a>
+    <a href="/podcasts"><i class="fas fa-podcast"></i> Podcasts</a>
+    <a href="/bat-dong-san"><i class="fas fa-building"></i> Bất động sản</a>
+    <a href="/suc-khoe"><i class="fas fa-heartbeat"></i> Sức khỏe</a>
+    <a href="/the-thao"><i class="fas fa-futbol"></i> Thể thao</a>
 </div>
-
-
-
-<!-- Footer -->
-<div class="footer">
-  <div class="logo">24H<span>N</span>EWS</div>
-  <p>&copy; 2025 VNExpress - Tất cả quyền được bảo lưu.</p>
-</div>
-
-<script>
-  // Cập nhật thời gian hiện tại
-  function updateDateTime() {
-      const now = new Date();
-      const days = ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"];
-      const formattedDate = `${days[now.getDay()]}, ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
-      document.getElementById("date-time").innerText = formattedDate;
-  }
-  updateDateTime();
-</script>
-
-</body>
-</html>

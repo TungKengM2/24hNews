@@ -12,6 +12,7 @@
         max-height: 450px;
         object-fit: cover;
         width: 100%;
+        border-radius: 10px;
     }
 
     /* Giới hạn kích thước ảnh trong sidebar */
@@ -21,45 +22,72 @@
         object-fit: cover;
         border-radius: 5px;
     }
+
+    .like-btn {
+        background-color: #ff4757;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease-in-out;
+    }
+    .like-btn:hover {
+        background-color: #e84118;
+    }
+
+    .advertisement {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .advertisement img {
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+    .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
 </style>
-<div class="container mt-5">
-    <!-- Header của bài viết -->
-    <header class="mb-5 text-center">
-        <h1 class="display-4 font-weight-bold">{{ $article->title }}</h1>
-        <p class="text-muted">
-            <i class="fa fa-eye"></i> {{ $article->views }} lượt xem |
-            <i class="fa fa-user"></i> {{ $article->author->username ?? 'N/A' }}
-        </p>
-    </header>
 
+<div class="container mt-4">
     <div class="row">
-        <!-- Nội dung chính của bài viết -->
+        <!-- Bài viết chính -->
         <div class="col-lg-8">
-            <article class="card shadow-sm border-0 mb-4">
-                @if($article->thumbnail_url)
-                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}" class="card-img-top img-fluid rounded-top article-image" alt="{{ $article->title }}">
-                @endif
-                <div class="card-body">
-                    <div class="article-content">
-                        {!! $article->content !!}
-                    </div>
-                </div>
-            </article>
-        </div>
-
-        <!-- Sidebar: Bài viết liên quan -->
-        <div class="col-lg-4">
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Bài viết liên quan</h5>
+                <img src="{{ asset('storage/' . $article->thumbnail_url) }}" class="card-img-top article-image" alt="{{ $article->title }}">
+                <div class="card-body">
+                    <h2 class="card-title">{{ $article->title }}</h2>
+                    <p class="text-muted">Lượt xem: {{ $article->views }} | Tác giả: {{ $article->author->username ?? 'N/A' }}</p>
+                    <button class="like-btn" id="likeButton">
+                        <i class="fa fa-thumbs-up"></i> Thích (<span id="likeCount">{{ $article->likes ?? 0 }}</span>)
+                    </button>
+                    <div class="article-content mt-3">{!! $article->content !!}</div>
                 </div>
+            </div>
+        </div>
+        
+        <!-- Quảng cáo -->
+        <div class="col-lg-4">
+            <div class="advertisement fade-in"><a href="https://shop.mixigaming.com/">
+                <img src="https://th.bing.com/th/id/R.638f0378be501384598c313b9254a074?rik=4q27eEjjmHzVeA&riu=http%3a%2f%2fintemnhandecal.net%2fwp-content%2fuploads%2f2019%2f07%2fcac-mau-in-poster-quang-cao.jpg&ehk=xEa19xG1SoAREwQ5DcFB6e7uJVPbPgG6cHVQGMLTuvA%3d&risl=&pid=ImgRaw&r=0" class="w-100" alt="Quảng cáo">
+            </a>
+            </div>
+            
+            <!-- Bài viết liên quan -->
+            <div class="card shadow-sm fade-in">
+                <div class="card-header bg-primary text-white">Bài viết liên quan</div>
                 <ul class="list-group list-group-flush">
                     @foreach ($relatedArticles as $related)
-                        <li class="list-group-item">
-                            <a href="{{ route('client.articles.article', $related->article_id) }}" class="d-flex align-items-center text-dark text-decoration-none">
-                                <img src="{{ asset('storage/' . $related->thumbnail_url) }}" alt="{{ $related->title }}" class="related-article-img mr-3">
-                                <span class="flex-fill text-truncate">{{ $related->title }}</span>
-                            </a>
+                        <li class="list-group-item d-flex align-items-center">
+                            <img src="{{ asset('storage/' . $related->thumbnail_url) }}" class="mr-3 related-article-img" alt="{{ $related->title }}">
+                            <a href="{{ route('client.articles.article', $related->article_id) }}" class="text-dark">{{ $related->title }}</a>
                         </li>
                     @endforeach
                 </ul>
@@ -68,5 +96,24 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let likeButton = document.getElementById("likeButton");
+        let likeCount = document.getElementById("likeCount");
+        let liked = false;
+
+        likeButton.addEventListener("click", function() {
+            if (!liked) {
+                liked = true;
+                likeCount.textContent = parseInt(likeCount.textContent) + 1;
+                likeButton.style.backgroundColor = "#e84118";
+            }
+        });
+
+        document.querySelectorAll(".fade-in").forEach((element) => {
+            element.classList.add("visible");
+        });
+    });
+</script>
 
 @endsection
