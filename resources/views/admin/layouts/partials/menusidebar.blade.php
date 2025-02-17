@@ -1,4 +1,4 @@
-<aside id="sidebar">
+<aside id="sidebar" class="">
             <div class="d-flex">
                 <div class="sidebar-logo">
                     <img src="{{ asset('images/logo.png') }}" class="img-fluid" alt="Logo 24H News">
