@@ -56,7 +56,10 @@ function formatPlainText($text)
             color: #FFF;
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9165ff40825bbe6bc0a64e87dcb550fac1990ee4
         @keyframes fadeIn {
             0% {
                 opacity: 0;
@@ -137,10 +140,17 @@ function formatPlainText($text)
 
 <body>
     <div class="main">
+<<<<<<< HEAD
         @include('admin.layouts.partials.header')
         <main class="content px-3 py-4">
             <div class="container-fluid">
                 <div class="mb-3">
+=======
+        <div class="row ">
+            <div class="sidebar col-3">
+                @include('admin.menu')
+            </div>
+>>>>>>> 9165ff40825bbe6bc0a64e87dcb550fac1990ee4
 
                     <div class="row">
                         <div class="col-12 col-md-4 ">
@@ -204,6 +214,7 @@ function formatPlainText($text)
                             </div>
                         </div>
                     </div>
+<<<<<<< HEAD
                     <h3 class="fw-bold fs-4 my-3">Avg. Agent Earnings
                     </h3>
                     <div class="row">
@@ -344,6 +355,9 @@ function formatPlainText($text)
                         </div>
                     </div>
                 </div>
+=======
+                </main>
+>>>>>>> 9165ff40825bbe6bc0a64e87dcb550fac1990ee4
             </div>
         </main>
 
