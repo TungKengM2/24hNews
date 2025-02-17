@@ -87,17 +87,10 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
     ->name('password.update');
 
 // author
-<<<<<<< HEAD
-Route::get('/author/dashboard', [AuthorDashboard::class, 'index'])->name('author.dashboard');
-Route::get('/author/users', [UserManagement::class, 'index'])->name('author.users');
+Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])->name('author.dashboard');
+Route::get('/moderator/users', [UserManagementController::class, 'index'])->name('author.users');
+Route::get('/moderator/articles', [ModeratorArticleController::class, 'index'])->name('author.articles');
 
 // writer
 Route::get('/writer/dashboard', [WriterDashboard::class, 'index'])->name('writer.dashboard');
 Route::get('/writer/articles', [ArticleManagement::class, 'index'])->name('writer.articles');
-=======
-
-
-Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])->name('author.dashboard');
-Route::get('/moderator/users', [UserManagementController::class, 'index'])->name('author.users');
-Route::get('/moderator/articles', [ModeratorArticleController::class, 'index'])->name('author.articles');
->>>>>>> 4323ffc2b3ee3290a9f322b87993fcdda6768a85
