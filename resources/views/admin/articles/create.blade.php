@@ -41,6 +41,7 @@
 </head>
 <body>
 <div class="wrapper">
+    @include('admin.menu')
     <div class="container mt-5 ">
         <div class="card p-2">
             <h2 class="mb-4">Create New Post</h2>
