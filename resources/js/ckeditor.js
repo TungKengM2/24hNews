@@ -47,6 +47,14 @@ import {
 
 import 'ckeditor5/ckeditor5.css';
 
+// form.addEventListener('submit', () => {
+//     const contentTextarea = document.querySelector('#content');
+//     if (contentTextarea) {
+//         contentTextarea.value = editor.getData();
+//         console.log('Content to be submitted:', contentTextarea.value); // Debugging
+//     }
+// });
+
 document.addEventListener('DOMContentLoaded', () => {
     ClassicEditor
         .create(document.querySelector('#content'), {
@@ -448,11 +456,61 @@ document.addEventListener('DOMContentLoaded', () => {
             form.addEventListener('submit', () => {
                 const contentTextarea = document.querySelector('#content');
                 if (contentTextarea) {
-                    contentTextarea.value = editor.getData();
+                    let htmlContent = editor.getData();
+                    const plainTextWithFormatting = convertHtmlToPlainText(htmlContent);
+                    contentTextarea.value = plainTextWithFormatting.trim();
+                    console.log('Plain text with formatting to be submitted:', contentTextarea.value);
                 }
             });
         })
         .catch(error => {
             console.error('Error initializing CKEditor:', error);
         });
+
+    function convertHtmlToPlainText(html) {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+
+        const processNode = (node) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                return node.textContent;
+            }
+
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                let text = '';
+                switch (node.tagName.toLowerCase()) {
+                    case 'b':
+                    case 'strong':
+                        text = `**${processChildren(node)}**`; // In đậm
+                        break;
+                    case 'i':
+                    case 'em':
+                        text = `_${processChildren(node)}_`; // Nghiêng
+                        break;
+                    case 'span':
+                        const color = node.style.color;
+                        if (color) {
+                            text = `[${color}]${processChildren(node)}[/${color}]`; // Màu sắc
+                        } else {
+                            text = processChildren(node);
+                        }
+                        break;
+                    default:
+                        text = processChildren(node);
+                }
+                return text;
+            }
+            return '';
+        };
+
+        const processChildren = (parent) => {
+            let result = '';
+            Array.from(parent.childNodes).forEach(child => {
+                result += processNode(child);
+            });
+            return result;
+        };
+
+        return processChildren(tempDiv);
+    }
 });
