@@ -136,80 +136,86 @@ function formatPlainText($text)
 </head>
 
 <body>
-    <div class="wrapper" >
-        @include('admin.layouts.partials.menusidebar')
-        <div class="main">
-            @include('admin.layouts.partials.header')
-            <main class="content px-3 py-4">
-                <div class="container-fluid">
-                    <div class="mb-3">
+    <div class="main">
+        @include('admin.layouts.partials.header')
+        <main class="content px-3 py-4">
+            <div class="container-fluid">
+                <div class="mb-3">
 
-
-                        <h3 class="fw-bold fs-4 my-3">Avg. Agent Earnings
-                        </h3>
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <h1>Thêm mới bài viết</h1>
-                                <a class="btn btn-secondary" href="{{ route('admin.dashboard') }}">
-                                    <i class="lni lni-arrow-left"></i> Back to Dashboard
-                                </a>
-                                <a class="btn btn-primary" href="{{ route('articles.create') }}">
-                                    <i class="lni lni-plus"></i>
-                                </a>
-
+                    <div class="row">
+                        <div class="col-12 col-md-4 ">
+                            <div class="card border-0">
+                                <div class="card-body py-4">
+                                    <h5 class="mb-2 fw-bold">
+                                        Memebers Progress
+                                    </h5>
+                                    <p class="mb-2 fw-bold">
+                                        $72,540
+                                    </p>
+                                    <div class="mb-0">
+                                        <span class="badge text-success me-2">
+                                            +9.0%
+                                        </span>
+                                        <span class=" fw-bold">
+                                            Since Last Month
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-12">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr class="highlight">
-                                            <th>ID</th>
-                                            <th>Title</th>
-                                            <th>Slug</th>
-                                            <th>Content</th>
-                                            <th>Preview Content</th>
-                                            <th>Contains Sensitive Content</th>
-                                            <th>Author</th>
-                                            <th>Category</th>
-                                            <th>Thumbnail</th>
-                                            <th>Status</th>
-                                            <th>Views</th>
-                                            <th>Approved By</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($articles as $article)
-                                            <tr>
-                                                <td>{{ $article->article_id }}</td>
-                                                <td>{{ $article->title }}</td>
-                                                <td>{{ $article->slug }}</td>
-                                                <td>{{ Str::limit($article->content, 50) }}</td>
-                                                <td>{{ Str::limit($article->preview_content, 50) }}</td>
-                                                <td class="text-center">
-                                                    @if ($article->contains_sensitive_content)
-                                                        <span class="badge bg-danger">Yes</span>
-                                                    @else
-                                                        <span class="badge bg-success">No</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{ $article->author->username ?? 'Unknown' }}</td>
-                                                <td>{{ $article->category->name ?? 'Uncategorized' }}</td>
-                                                <td>
-                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                        alt="Thumbnail" width="100" height="200">
+                        </div>
+                        <div class="col-12 col-md-4 ">
+                            <div class="card  border-0">
+                                <div class="card-body py-4">
+                                    <h5 class="mb-2 fw-bold">
+                                        Memebers Progress
+                                    </h5>
+                                    <p class="mb-2 fw-bold">
+                                        $72,540
+                                    </p>
+                                    <div class="mb-0">
+                                        <span class="badge text-success me-2">
+                                            +9.0%
+                                        </span>
+                                        <span class="fw-bold">
+                                            Since Last Month
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 ">
+                            <div class="card border-0">
+                                <div class="card-body py-4">
+                                    <h5 class="mb-2 fw-bold">
+                                        Memebers Progress
+                                    </h5>
+                                    <p class="mb-2 fw-bold">
+                                        $72,540
+                                    </p>
+                                    <div class="mb-0">
+                                        <span class="badge text-success me-2">
+                                            +9.0%
+                                        </span>
+                                        <span class="fw-bold">
+                                            Since Last Month
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold fs-4 my-3">Avg. Agent Earnings
+                    </h3>
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <h1>Thêm mới bài viết</h1>
+                            <a class="btn btn-secondary" href="{{ route('admin.dashboard') }}">
+                                <i class="lni lni-arrow-left"></i> Back to Dashboard
+                            </a>
+                            <a class="btn btn-primary" href="{{ route('articles.create') }}">
+                                <i class="lni lni-plus"></i>
+                            </a>
 
-<<<<<<< HEAD
-                                                </td>
-                                                <td>
-                                                    @switch($article->status)
-                                                        @case('draft')
-                                                            <span class="badge bg-secondary">Draft</span>
-                                                        @break
-
-                                                        @case('pending')
-                                                            <span class="badge bg-warning">Pending</span>
-                                                        @break
-=======
                         </div>
                         <div class="col-12">
                             <table class="table table-striped">
@@ -285,60 +291,62 @@ function formatPlainText($text)
                                                     @case('draft')
                                                         <span class="badge bg-secondary">Draft</span>
                                                     @break
->>>>>>> 117f085df7c0dcaf3ee9474e30f3434357a2ceed
 
-                                                        @case('published')
-                                                            <span class="badge bg-success">Published</span>
-                                                        @break
+                                                    @case('pending')
+                                                        <span class="badge bg-warning">Pending</span>
+                                                    @break
 
-                                                        @case('archived')
-                                                            <span class="badge bg-danger">Archived</span>
-                                                        @break
-                                                    @endswitch
-                                                </td>
-                                                <td>{{ $article->views }}</td>
-                                                <td>{{ $article->approved_by ? $article->approver->username : 'Not Approved' }}
-                                                </td>
-                                                <td>
-                                                    <a href="{{ route('articles.show', $article) }}"
-                                                        class="btn btn-info btn-sm">Show</a>
-                                                    <a href="{{ route('articles.edit', $article) }}"
-                                                        class="btn btn-warning btn-sm">Edit</a>
+                                                    @case('published')
+                                                        <span class="badge bg-success">Published</span>
+                                                    @break
 
-                                                    @if ($article->status === 'pending')
-                                                        <form action="{{ route('articles.approve', $article) }}"
-                                                            method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit" class="btn btn-success btn-sm"
-                                                                onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
-                                                                Approve
-                                                            </button>
-                                                        </form>
-                                                    @endif
+                                                    @case('archived')
+                                                        <span class="badge bg-danger">Archived</span>
+                                                    @break
+                                                @endswitch
+                                            </td>
+                                            <td>{{ $article->views }}</td>
+                                            <td>{{ $article->approved_by ? $article->approver->username : 'Not Approved' }}
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('articles.show', $article) }}"
+                                                    class="btn btn-info btn-sm">Show</a>
+                                                <a href="{{ route('articles.edit', $article) }}"
+                                                    class="btn btn-warning btn-sm">Edit</a>
 
-                                                    <form action="{{ route('articles.destroy', $article) }}" method="POST"
-                                                        class="d-inline">
+                                                @if ($article->status === 'pending')
+                                                    <form action="{{ route('articles.approve', $article) }}"
+                                                        method="POST" class="d-inline">
                                                         @csrf
-                                                        @method('DELETE')
-                                                        <button class="btn btn-danger btn-sm"
-                                                            onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
-                                                            Delete
+                                                        @method('PATCH')
+                                                        <button type="submit" class="btn btn-success btn-sm"
+                                                            onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
+                                                            Approve
                                                         </button>
                                                     </form>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                {{ $articles->Links() }}
-                            </div>
+                                                @endif
+
+                                                <form action="{{ route('articles.destroy', $article) }}" method="POST"
+                                                    class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            {{ $articles->Links() }}
                         </div>
                     </div>
                 </div>
-            </main>
+            </div>
+        </main>
 
-        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
