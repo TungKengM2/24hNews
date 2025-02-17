@@ -16,15 +16,9 @@
 
 <body>
     <div class="wrapper">
-<<<<<<< HEAD
         @include('admin.layouts.partials.menusidebar')
         <div class="main">
             @include('admin.layouts.partials.header')
-=======
-        @include('admin.menu')
-        <main class="content px-3 py-4 w-100">
-            @include('admin.header')
->>>>>>> 65459d5776a18e445735a074bd602982137e0024
             <div class="container-fluid">
                 <div class="mb-3">
                     <div class="    ">
