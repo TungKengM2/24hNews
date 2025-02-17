@@ -11,6 +11,7 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\Moderator\UserManagementController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
+use App\Http\Controllers\Client\UserProfileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -83,3 +84,6 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
 Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])->name('author.dashboard');
 Route::get('/moderator/users', [UserManagementController::class, 'index'])->name('author.users');
 Route::get('/moderator/articles', [ModeratorArticleController::class, 'index'])->name('author.articles');
+
+// router user
+Route::get('/user/profile', [UserProfileController::class, 'index'])->name('user.profile');
