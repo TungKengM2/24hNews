@@ -17,12 +17,7 @@
                 <span>Article </span>
             </a>
         </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link">
-                <i class="lni lni-agenda"></i>
-                <span>Article chờ duyệt</span>
-            </a>
-        </li>
+
         <li class="sidebar-item">
             <a  class="sidebar-link">
                 <i class="lni lni-list"></i>
