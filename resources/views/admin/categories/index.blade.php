@@ -132,15 +132,23 @@
 <body>
     <div class="wrapper">
         @include('admin.menu')
+<<<<<<< HEAD
         <main class="content px-3 py-4 w-100">
             @include('admin.header')
+=======
+        <main class="content px-3 py-4 col-md-5">
+>>>>>>> tungkeng
             <div class="container-fluid">
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-12 mb-3">
+                            <a class="btn btn-secondary" href="{{ route('admin.dashboard') }}">
+                                <i class="lni lni-arrow-left"></i> Back to Dashboard
+                            </a>
                             <a class="btn btn-primary" href="{{ route('categories.create') }}">
                                 <i class="lni lni-plus"></i>
                             </a>
+                           
                         </div>
                         <div class="col-12">
                             <table class="table table-striped">
@@ -173,17 +181,20 @@
                                             <td>@mdo</td>
                                             <td>@mdo</td>
                                             <td>@mdo</td> --}}
-                                            <td>
-                                                <a class="btn btn-warning"
+                                            <td class="d-flex">
+                                                <a class="btn btn-warning me-2"
                                                     href="{{ route('categories.edit', $category) }}">
-                                                    Sửa</a>
+                                                    sửa
+                                                </a>
                                                 <form action="{{ route('categories.destroy', $category) }}"
                                                     method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="btn btn-danger"
                                                         onclick="return confirm('Bạn có chắc chắn muốn xoá không?')"
-                                                        type="submit">Xóa</button>
+                                                        type="submit">
+                                                        xóa
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>

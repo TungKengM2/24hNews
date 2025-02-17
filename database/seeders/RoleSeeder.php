@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-
 
 class RoleSeeder extends Seeder
 {
@@ -15,10 +13,40 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         DB::table('roles')->insert([
-            ['name' => 'admin', 'description' => 'Admin'],
-            ['name' => 'editor', 'description' => 'Biên tập viên'],
-            ['name' => 'writer', 'description' => 'Người viết bài'],
-            ['name' => 'user', 'description' => 'Người dùng thường'],
+            [
+                'name' => 'admin',
+                'description' => 'Full rules',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            [
+                'name' => 'author',
+                'description' => 'crud articles',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'moderator',
+                'description' => 'review articles and comments',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            [
+                'name' => 'user',
+                'description' => 'read articles and comments...',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            //            [
+            //                'name' => 'guest',
+            //                'description' => 'Guest',
+            //                'created_at' => now(),
+            //                'updated_at' => now(),
+            //            ],
+
         ]);
     }
 }
