@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\author;
+namespace App\Http\Controllers\Client;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class AuthorDashboard extends Controller
+class UserProfileController extends Controller
 {
     public function index()
     {
         // Your code here
-        return view('author.layouts.dashboard');
+        return view('client.profile.layouts.home');
     }
 }
