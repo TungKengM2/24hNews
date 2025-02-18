@@ -20,7 +20,7 @@
         <li class="sidebar-item">
             <a class="sidebar-link">
                 <i class="lni lni-agenda"></i>
-                <span>Article đang chờ duyệt</span>
+                <span>Article chờ duyệt</span>
             </a>
         </li>
         <li class="sidebar-item">
