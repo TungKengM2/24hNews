@@ -16,7 +16,7 @@ class HomeController extends Controller
 
 
         // return view('welcome', compact('articles'));
-        return view('welcome');
+        return view('website.layouts.home');
     }
 
 
