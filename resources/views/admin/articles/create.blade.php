@@ -16,13 +16,36 @@
     {{--    <script src="https://cdn.ckbox.io/ckbox/2.6.1/ckbox.js" crossorigin></script>--}}
     <script src="{{ asset('js/ckeditor.js') }}"></script>
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
-    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            width: 100%;
+        }
+        .wrapper {
+            width: 1440px;
+            display: flex;
+            margin: 0px;
+        }
+        .container {
+            width: 80%;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-left: 300px;
+        }
+        .form-label {
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
 <div class="wrapper">
     @include('admin.menu')
-    <div class="container mt-5 ">
-        <div class="card p-2">
+    <div class="container ">
+        <div class="card p-2 ">
             <h2 class="mb-4">Create New Post</h2>
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -35,14 +58,16 @@
             @endif
             <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="mb-3">
-                    <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" required>
-                </div>
-                <div class="mb-3">
-                    <label for="slug" class="form-label">Slug</label>
-                    <input type="text" class="form-control" id="slug" name="slug" required>
-                </div>
+               <div class="d-flex">
+                    <div class="mb-3 col-4">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="mb-3 ms-3 col-4 ">
+                        <label for="slug" class="form-label">Slug</label>
+                        <input type="text" class="form-control" id="slug" name="slug" required>
+                    </div>
+               </div>
                 <div class="mb-3" style="height: auto; width: auto">
                     <label for="content" class="form-label">Content</label>
                     <div id="editor">
@@ -57,22 +82,24 @@
                 {{--                    <textarea class="form-control" id="preview_content" name="preview_content" rows="3"--}}
                 {{--                              required></textarea>--}}
                 {{--                </div>--}}
-                <div class="mb-3">
-                    <label for="contains_sensitive_content" class="form-label">Contains Sensitive Content?</label>
-                    <select class="form-control" id="contains_sensitive_content" name="contains_sensitive_content"
-                            required>
-                        <option value="0">No</option>
-                        <option value="1">Yes</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Author</label>
-                    <select name="author_id" class="form-control" required>
-                        <option value="">-- Chọn tác giả --</option>
-                        @foreach ($authors as $author)
-                            <option value="{{ $author->user_id }}">{{ $author->username }}</option>
-                        @endforeach
-                    </select>
+                <div class="d-flex ">
+                    <div class="mb-3">
+                        <label for="contains_sensitive_content" class="form-label">Contains Sensitive Content?</label>
+                        <select class="form-control" id="contains_sensitive_content" name="contains_sensitive_content"
+                                required>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 ms-3">
+                        <label class="form-label">Author</label>
+                        <select name="author_id" class="form-control" required>
+                            <option value="">-- Chọn tác giả --</option>
+                            @foreach ($authors as $author)
+                                <option value="{{ $author->user_id }}">{{ $author->username }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Category</label>
