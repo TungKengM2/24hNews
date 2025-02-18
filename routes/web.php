@@ -1,23 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ArticleUserController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\ForgotPasswordController;
-use App\Http\Controllers\Author\AuthorDashboard;
-use App\Http\Controllers\Author\UserManagement;
-use App\Http\Controllers\Writer\ArticleManagement;
-use App\Http\Controllers\Writer\WriterDashboard;
-use App\Http\Controllers\Moderator\ModeratorDashboardController;
-use App\Http\Controllers\Moderator\UserManagementController;
-use App\Http\Controllers\Moderator\ModeratorArticleController;
-use App\Http\Controllers\Client\UserProfileController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,12 +19,9 @@ use App\Http\Controllers\Client\UserProfileController;
 |
 */
 
-
-
-Route::get('/', [HomeController::class, 'index'])->name('home');
-
-Route::get('/client/articles/{article_id}', [ArticleUserController::class, 'show'])->name('client.articles.article');
-
+Route::get('/', function () {
+    return view('welcome');
+});
 // admin
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
     ->name('admin.dashboard');
@@ -57,10 +44,6 @@ Route::prefix('admin')->group(function () {
 // category
 Route::prefix('admin')->group(function () {
     Route::resource('categories', CategoryController::class);
-});
-//users
-Route::prefix('admin')->group(function () {
-    Route::resource('users', UserController::class);
 });
 
 // Routes for login and signup
@@ -105,14 +88,6 @@ Route::get('/reset-password/{token}',
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
     ->name('password.update');
 
-// author
-Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])->name('author.dashboard');
-Route::get('/moderator/users', [UserManagementController::class, 'index'])->name('author.users');
-Route::get('/moderator/articles', [ModeratorArticleController::class, 'index'])->name('author.articles');
-
-// writer
-Route::get('/writer/dashboard', [WriterDashboard::class, 'index'])->name('writer.dashboard');
-Route::get('/writer/articles', [ArticleManagement::class, 'index'])->name('writer.articles');
-
-// router user
-Route::get('/user/profile', [UserProfileController::class, 'index'])->name('user.profile');
+Route::post('/profile/request-author-role',
+    [ProfileController::class, 'requestAuthorRole'])
+    ->name('profile.request-author-role');
