@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,10 @@ Route::post('/admin/reject-role-upgrade/{approval_id}', [AdminDashboardControlle
     ->name('admin.reject-role-upgrade');
 
 // article
+use App\Http\Controllers\FileController;
+
+Route::post('/upload-file', [FileController::class, 'uploadFile'])->name('upload.file');
+
 Route::patch('/articles/{article}/approve',
     [ArticleController::class, 'approve'])->name('articles.approve');
 Route::prefix('admin')->group(function () {
