@@ -78,7 +78,7 @@
                 padding-right: 0;
             }
         }
-    </style> --}}
+    </style>
 </head>
 <body>
 <div class="wrapper">
