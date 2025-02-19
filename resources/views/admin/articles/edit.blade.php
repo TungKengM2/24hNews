@@ -54,121 +54,95 @@
                 </div>
             @endif
 
-            <form action="{{ route('articles.update', $article) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('articles.update', $article) }}" method="POST" enctype="multipart/form-data" id="articleEditForm">
                 @csrf
                 @method('PUT')
-                <div class="mt-3">
-                    <label class="form-label" for="title">Title</label>
-                    <input class="form-control" type="text" name="title" id="title"
-                        value="{{ old('title', $article->title) }}" required>
+            
+                <div class="mb-3">
+                    <label for="title" class="form-label">Tiêu đề</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $article->title) }}" required>
                 </div>
-
-                <div class="mt-3">
-                    <label class="form-label" for="slug">Slug</label>
-                    <input class="form-control" type="text" name="slug" id="slug"
-                        value="{{ old('slug', $article->slug) }}" required>
+            
+                <div class="mb-3">
+                    <label for="slug" class="form-label">Slug</label>
+                    <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug', $article->slug) }}" required>
                 </div>
-
-                <div class="mt-3">
-                    <label class="form-label" for="content">Content</label>
-                    <textarea class="form-control" name="content" id="content" required>{{ old('content', $article->content) }}</textarea>
+            
+               
+                <div class="mb-3">
+                    <label for="content" class="form-label">Nội dung</label>
+                    <textarea id="editor" name="content">{{ old('content', $article->content) }}</textarea>
                 </div>
-
-
-                <div class="mt-3">
-                    <label class="form-label" for="preview_content">Preview Content</label>
-                    <textarea class="form-control" name="preview_content" id="preview_content">{{ old('preview_content', $article->preview_content) }}</textarea>
-                </div>
-
-
-                <div class="mt-3">
-                    <label for="contains_sensitive_content" class="form-label">Contains Sensitive Content?</label>
-                    <select class="form-control" id="contains_sensitive_content" name="contains_sensitive_content"
-                        required>
-                        <option value="0"
-                            {{ old('contains_sensitive_content', $article->contains_sensitive_content) == 0 ? 'selected' : '' }}>
-                            No</option>
-                        <option value="1"
-                            {{ old('contains_sensitive_content', $article->contains_sensitive_content) == 1 ? 'selected' : '' }}>
-                            Yes</option>
-                    </select>
-                </div>
-
-
-                <div class="mt-3">
-                    <label class="form-label" for="author_id">Author</label>
-                    <select class="form-select" name="author_id" id="author_id" required>
-                        @foreach ($authors as $user)
-                            <option value="{{ $user->user_id }}"
-                                {{ $article->author_id == $user->user_id ? 'selected' : '' }}>
-                                {{ $user->username }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-
-                <div class="mt-3"><label class="form-label" for="category_id">Category</label>
-                    <select class="form-select" name="category_id" id="category_id" required>
+                
+                <div class="mb-3">
+                    <label class="form-label">Danh mục</label>
+                    <select name="category_id" class="form-control">
                         @foreach ($categories as $category)
-                            <option value="{{ $category->category_id }}"
-                                {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
-                                {{ $category->name }}
-                            </option>
+                        <option value="{{ $category->category_id }}"
+                            {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
-
-
-                <div class="mt-3">
-                    <label class="form-label" for="thumbnail_url">Thumbnail</label>
+            
+                <div class="mb-3">
+                    <label for="thumbnail_url" class="form-label">Ảnh đại diện</label>
+                    <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url" accept="image/*">
                     @if ($article->thumbnail_url)
-                        <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Current Thumbnail"
-                            width="100">
+                        <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Ảnh đại diện" class="mt-2" width="200">
                     @endif
-                    <input class="form-control" type="file" name="thumbnail_url" id="thumbnail_url">
                 </div>
-
-
-                <div class="mt-3"> <label class="form-label" for="status">Status</label>
-                    <select class="form-select" name="status" id="status" required>
-                        <option value="draft" {{ $article->status == 'draft' ? 'selected' : '' }}>Draft
-                        </option>
-                        <option value="pending" {{ $article->status == 'pending' ? 'selected' : '' }}>Pending
-                        </option>
-                        <option value="published" {{ $article->status == 'published' ? 'selected' : '' }}>
-                            Published
-                        </option>
-                        <option value="archived" {{ $article->status == 'archived' ? 'selected' : '' }}>
-                            Archived</option>
-                    </select>
+            
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="contains_sensitive_content" name="contains_sensitive_content" value="1"
+                        {{ $article->contains_sensitive_content ? 'checked' : '' }}>
+                    <label class="form-check-label" for="contains_sensitive_content">Nội dung nhạy cảm</label>
                 </div>
-
-
-                <div class="mt-3"><label class="form-label" for="views">Views</label>
-                    <input class="form-control" type="number" name="views" id="views"
-                        value="{{ old('views', $article->views) }}" min="0">
-                </div>
-
-
-                <div class="mt-3">
-                    <label class="form-label" for="approved_by">Approved By</label>
-                    <select class="form-select" name="approved_by" id="approved_by">
-                        <option value="">Not Approved</option>
-                        @foreach ($authors as $user)
-                            <option value="{{ $user->user_id }}"
-                                {{ $article->approved_by == $user->user_id ? 'selected' : '' }}>
-                                {{ $user->username }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-
-
-                <button type="submit" class="btn btn-primary mt-3">Update</button>
-                <a href="{{ route('articles.index') }}" class="btn btn-secondary mt-3">Cancel</a>
+            
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
             </form>
+            
+            {{-- Scripts --}}
+         <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+
+<script>
+    // Kích hoạt CKEditor
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .then(editor => {
+            window.editor = editor;
+        })
+        .catch(error => {
+            console.error('Lỗi CKEditor:', error);
+        });
+
+    // Tạo slug tự động khi nhập tiêu đề
+    document.getElementById("title").addEventListener("input", function () {
+        let title = this.value.trim();
+        let slug = title.toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/đ/g, "d").replace(/Đ/g, "D")
+            .replace(/\s+/g, "-")
+            .replace(/[^\w-]/g, "")
+            .replace(/--+/g, "-")
+            .replace(/^-+|-+$/g, "");
+
+        document.getElementById("slug").value = slug;
+    });
+
+    // Cảnh báo rời trang nếu có chỉnh sửa
+    let isFormEdited = false;
+    document.getElementById('articleEditForm').addEventListener('input', function () {
+        isFormEdited = true;
+    });
+
+    window.addEventListener('beforeunload', function (e) {
+        if (isFormEdited) {
+            e.returnValue = 'Bạn có chắc chắn muốn rời khỏi trang? Những thay đổi chưa được lưu sẽ bị mất.';
+        }
+    });
+</script>
 
         </div>
     </div>
@@ -178,3 +152,14 @@
 </body>
 
 </html>
+
+<div class="mt-3"><label class="form-label" for="category_id">Category</label>
+    <select class="form-select" name="category_id" id="category_id" required>
+        @foreach ($categories as $category)
+            <option value="{{ $category->category_id }}"
+                {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
+                {{ $category->name }}
+            </option>
+        @endforeach
+    </select>
+</div>

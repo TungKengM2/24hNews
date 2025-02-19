@@ -48,45 +48,40 @@ class ArticleController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:articles,slug',
-            'content' => 'required',
-            'preview_content' => 'nullable|string',
-            'contains_sensitive_content' => 'boolean',
-            'author_id' => 'required|exists:users,user_id',
-            'category_id' => 'required|exists:categories,category_id',
-            'thumbnail_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Đảm bảo đúng tên trường
-            'status' => 'required|in:draft,pending,published,archived',
-            'views' => 'integer|min:0',
-            'approved_by' => 'nullable|exists:users,user_id',
-        ]);
-
-        $article = new Article();
-        $article->title = $request->title;
-        $article->slug = $request->slug;
-        $article->content = $request->content;
-        $article->preview_content = $request->preview_content;
-        $article->contains_sensitive_content = $request->contains_sensitive_content;
-        $article->author_id = $request->author_id;
-        $article->category_id = $request->category_id;
-        $article->status = $request->status;
-        $article->views = $request->views ?? 0;
-        $article->approved_by = $request->approved_by;
-
-        // Kiểm tra và lưu ảnh
-        if ($request->hasFile('thumbnail_url')) { // Đúng tên trường form
-            $file = $request->file('thumbnail_url');
-            $path = $file->store('thumbnails', 'public'); // Lưu vào storage/app/public/thumbnails
-            $article->thumbnail_url = $path;
-        }
-
-        $article->save();
-
-        return redirect()->route('articles.index')->with('success', 'Article created successfully!');
-    }
+     public function store(Request $request)
+     {
+         $request->validate([
+             'title' => 'required|string|max:255',
+             'slug' => 'required|string|max:255|unique:articles,slug',
+             'content' => 'required',
+             'category_id' => 'required|exists:categories,category_id',
+             'thumbnail_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+             'status' => 'required|in:draft,pending',
+         ]);
+     
+         $article = new Article();
+         $article->title = $request->title;
+         $article->slug = $request->slug;
+         $article->content = $request->content;
+         $article->category_id = $request->category_id;
+         $article->status = $request->status;
+         $article->author_id = auth()->id();
+     
+         if ($request->hasFile('thumbnail_url')) {
+             $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+             $article->thumbnail_url = $path;
+         }
+     
+         $article->save();
+     
+         if ($request->status == 'draft') {
+             return redirect()->route('articles.index')->with('success', 'Bài viết đã lưu nháp!');
+         }
+     
+         return redirect()->route('articles.index')->with('success', 'Bài viết đã gửi để chờ duyệt!');
+     }
+     
+     
 
 
     /**
