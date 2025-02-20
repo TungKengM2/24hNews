@@ -116,26 +116,18 @@ class ArticleController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id',
             'content' => 'required',
-            'preview_content' => 'nullable|string',
-            'contains_sensitive_content' => 'boolean',
             'author_id' => 'required|exists:users,user_id',
             'category_id' => 'required|exists:categories,category_id',
             'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'required|in:draft,pending,published,archived',
-            'views' => 'integer|min:0',
-            'approved_by' => 'nullable|exists:users,user_id',
+            
         ]);
 
         $article->title = $request->title;
         $article->slug = $request->slug;
         $article->content = $request->input('content');
-        $article->preview_content = $request->preview_content;
-        $article->contains_sensitive_content = $request->contains_sensitive_content;
-        $article->author_id = $request->author_id;
+        $article->author_id = $request->author_id ?? $article->author_id;
         $article->category_id = $request->category_id;
-        $article->status = $request->status;
-        $article->views = $request->views ?? 0;
-        $article->approved_by = $request->approved_by;
+
 
         // Kiểm tra nếu có file mới thì cập nhật, không thì giữ ảnh cũ
         if ($request->hasFile('thumbnail_url')) {
