@@ -8,6 +8,7 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=account_circle"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+<<<<<<< HEAD
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.css"/>
 
@@ -40,8 +41,14 @@
             font-weight: 600;
         }
     </style>
+=======
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
+
+>>>>>>> c4fb09e72b4073f0818a85d1413b6074debe5c8d
 </head>
 <body>
+<<<<<<< HEAD
 <div class="wrapper">
     @include('admin.menu')
     <div class="container ">
@@ -97,6 +104,20 @@
                             <option value="">-- Chọn tác giả --</option>
                             @foreach ($authors as $author)
                                 <option value="{{ $author->user_id }}">{{ $author->username }}</option>
+=======
+    <div class="wrapper">
+        @include('admin.layouts.partials.menusidebar')
+        <div class="main">
+            @include('admin.layouts.partials.header')
+            <div class="card p-2">
+                <h2 class="mb-4">Create New Post</h2>
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+>>>>>>> c4fb09e72b4073f0818a85d1413b6074debe5c8d
                             @endforeach
                         </select>
                     </div>

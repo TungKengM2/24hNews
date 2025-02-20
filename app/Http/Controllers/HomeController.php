@@ -1,22 +1,25 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Article;
+<<<<<<< HEAD
 use App\Models\ArticleLike;
 use Illuminate\Support\Str;
+=======
+>>>>>>> c4fb09e72b4073f0818a85d1413b6074debe5c8d
 use Illuminate\Http\Request;
-use App\Models\ArticleHistory;
-use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     public function index()
     {
+        // Lấy tối đa 3 bài viết mới nhất
+        $latestArticles = Article::latest()->take(3)->get();
 
-        // $articles = Article::latest()->get();
 
-
+<<<<<<< HEAD
         // return view('welcome', compact('articles'));
         return view('welcome');
         // Lấy bài viết có nhiều lượt xem và lượt thích nhất
@@ -58,4 +61,11 @@ class HomeController extends Controller
     
     
     
+=======
+        $categoryArticles = Article::where('category_id', 1)->latest()->take(7)->get();
+
+        // Truyền dữ liệu bài viết tới view
+        return view('website.pages.home.home', compact('latestArticles', 'categoryArticles'));
+    }
+>>>>>>> c4fb09e72b4073f0818a85d1413b6074debe5c8d
 }
