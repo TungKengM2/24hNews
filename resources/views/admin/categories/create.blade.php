@@ -16,16 +16,10 @@
 
 <body>
     <div class="wrapper">
-<<<<<<< HEAD
-        @include('admin.menu')
-        <div class="container mt-5 ">
-            <div class="card p-2">
-=======
         @include('admin.layouts.partials.menusidebar')
         <div class="main">
             @include('admin.layouts.partials.header')
             <div class="card mx-2">
->>>>>>> c4fb09e72b4073f0818a85d1413b6074debe5c8d
                 <h2 class="mb-4">Create New Category</h2>
                 <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf

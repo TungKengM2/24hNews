@@ -34,8 +34,3 @@
     </div>
     <div class="text-center mt-8 text-gray-500 border-t pt-4">© 2005-2025 Bản quyền thuộc về Báo điện tử Dân trí. Cấm sao chép dưới mọi hình thức nếu không có sự chấp thuận bằng văn bản.</div>
   </footer>
-<<<<<<< HEAD:resources/views/welcome.blade.php
-</body>
-</html>
-=======
->>>>>>> c4fb09e72b4073f0818a85d1413b6074debe5c8d:resources/views/website/layouts/partials/footer.blade.php

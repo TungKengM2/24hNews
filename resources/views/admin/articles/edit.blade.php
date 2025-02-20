@@ -40,16 +40,10 @@
 
 <body>
     <div class="wrapper">
-<<<<<<< HEAD
-        @include('admin.menu')
-        <div class="container">
-            <h1>Chỉnh sửa bài viết</h1>
-=======
         @include('admin.layouts.partials.menusidebar')
         <div class="main">
             @include('admin.layouts.partials.header')
             <h1 class="mb-4">Chỉnh sửa bài viết</h1>
->>>>>>> c4fb09e72b4073f0818a85d1413b6074debe5c8d
 
             @if ($errors->any())
                 <div class="alert alert-danger">
