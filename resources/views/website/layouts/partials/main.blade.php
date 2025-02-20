@@ -21,7 +21,7 @@
 
             <div class="col-span-3 flex flex-col justify-between h-[32rem]">
               <!-- Cột trái -->
-              @foreach($sportsArticles->slice(0, 2) as $article)
+              @foreach($categoryArticles->slice(0, 2) as $article)
               <article class="bg-white p-4 shadow rounded-lg h-1/2 w-full mb-0">
                 <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Hình ảnh bài viết" class="w-full h-1/2 object-cover rounded-lg mb-2">
                 <div class="p-2 w-full h-1/4">
@@ -33,19 +33,19 @@
             </div>
             <div class="col-span-6 grid grid-rows-1 gap-4 h-[32rem]">
               <!-- Cột giữa -->
-              @if($sportsArticles->count() > 2)
+              @if($categoryArticles->count() > 2)
               <article class="bg-white p-4 shadow rounded-lg h-full flex flex-col">
-                <img src="{{ asset('storage/' . $sportsArticles[2]->thumbnail_url) }}" alt="Hình ảnh bài viết" class="w-full h-1/2 object-cover rounded-lg mb-2">
+                <img src="{{ asset('storage/' . $categoryArticles[2]->thumbnail_url) }}" alt="Hình ảnh bài viết" class="w-full h-1/2 object-cover rounded-lg mb-2">
                 <div class="p-4 flex flex-col justify-center">
-                  <h2 class="text-xl font-bold mb-2">{{ $sportsArticles[2]->title }}</h2>
-                  <p class="text-sm text-gray-600">{{ $sportsArticles[2]->preview_content }}</p>
+                  <h2 class="text-xl font-bold mb-2">{{ $categoryArticles[2]->title }}</h2>
+                  <p class="text-sm text-gray-600">{{ $categoryArticles[2]->preview_content }}</p>
                 </div>
               </article>
               @endif
             </div>
             <div class="col-span-3 flex flex-col justify-between h-[32rem]">
               <!-- Cột phải -->
-              @foreach($sportsArticles->slice(3, 7) as $article)
+              @foreach($categoryArticles->slice(3, 7) as $article)
               <article class="bg-white p-4 shadow rounded-lg h-1/4 w-full mb-0 flex">
                 <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Hình ảnh bài viết" class="w-1/2 h-full object-cover rounded-lg mb-2">
                 <div class="p-2 w-1/2 h-full flex flex-col justify-center">
