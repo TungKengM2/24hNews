@@ -8,7 +8,7 @@
         <div class="col-md-6 ads">
         <h3>Đăng nhập</h3>
           <div class="img">
-            <img src="https://i.imgur.com/HWuWWE9.jpeg" alt="">
+            <img src="{{ asset('images/bannerauth.jpg') }}" class="img-fluid" alt="banner login">
           </div>
         </div>
 
