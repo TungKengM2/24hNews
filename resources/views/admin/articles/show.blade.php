@@ -126,75 +126,81 @@
 </head>
 
 <body>
-    <div class="container">
-        <h2 class="mb-4">Chi tiết bài viết</h2>
+    <div class="wrapper width-100 ">
+        @include('admin.menu')
 
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title">Title: {{ $article->title }}</h3>
-                <p class="text-muted">Slug: {{ $article->slug }}</p>
 
-                <div class="mb-3">
-                    <strong>Content:</strong>
-                    <p>{{ $article->content }}</p>
-                </div>
+        <div class="card d-flex flex-column justify-content-center align-items-center w-50">
+            <h2 class="mb-4">Chi tiết bài viết</h2>
+            <div class="card-body d-flex flex-wrap align-items-start">
+                <div class="col-md-6 mb-3">
+                    <h3 class="card-title">Title: {{ $article->title }}</h3>
+                    <p class="text-muted">Slug: {{ $article->slug }}</p>
 
-                @if ($article->preview_content)
                     <div class="mb-3">
-                        <strong>Preview Content:</strong>
-                        <p>{{ $article->preview_content }}</p>
+                        <strong>Content:</strong>
+                        <p>{{ $article->content }}</p>
                     </div>
-                @endif
 
-                <div class="mb-3">
-                    <strong>Contains Sensitive Content?</strong>
-                    <p>{{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</p>
-                </div>
+                    @if ($article->preview_content)
+                        <div class="mb-3">
+                            <strong>Preview Content:</strong>
+                            <p>{{ $article->preview_content }}</p>
+                        </div>
+                    @endif
 
-                <div class="mb-3">
-                    <strong>Author:</strong>
-                    <p>{{ $article->author->username ?? 'N/A' }}</p>
-                </div>
-
-                <div class="mb-3">
-                    <strong>Category:</strong>
-                    <p>{{ $article->category->name ?? 'N/A' }}</p>
-                </div>
-
-                <div class="mb-3">
-                    <strong>Status:</strong>
-                    <p>{{ ucfirst($article->status) }}</p>
-                </div>
-
-                <div class="mb-3">
-                    <strong>Views:</strong>
-                    <p>{{ $article->views }}</p>
-                </div>
-
-                <div class="mb-3">
-                    <strong>Approved By:</strong>
-                    <p>{{ $article->approver->username ?? 'Not Approved' }}</p>
-                </div>
-
-                @if ($article->thumbnail_url)
                     <div class="mb-3">
-                        <strong>Thumbnail:</strong>
-                        <br>
-                        <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Thumbnail"
-                            class="img-thumbnail" style="max-width: 300px;">
+                        <strong>Contains Sensitive Content?</strong>
+                        <p>{{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</p>
                     </div>
-                @endif
 
-                <div class="mt-4">
-                    <a href="{{ route('articles.edit', $article->article_id) }}" class="btn btn-primary">Edit</a>
-                    <a href="{{ route('articles.index') }}" class="btn btn-secondary">Back to List</a>
+                    <div class="mb-3">
+                        <strong>Author:</strong>
+                        <p>{{ $article->author->username ?? 'N/A' }}</p>
+                    </div>
 
-                    <form action="{{ route('articles.destroy', $article->article_id) }}" method="POST"
-                        class="d-inline" onsubmit="return confirm('Are you sure you want to delete this article?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
+                    <div class="mb-3">
+                        <strong>Category:</strong>
+                        <p>{{ $article->category->name ?? 'N/A' }}</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="mb-3">
+                        <strong>Status:</strong>
+                        <p>{{ ucfirst($article->status) }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Views:</strong>
+                        <p>{{ $article->views }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Approved By:</strong>
+                        <p>{{ $article->approver->username ?? 'Not Approved' }}</p>
+                    </div>
+
+                    @if ($article->thumbnail_url)
+                        <div class="mb-3">
+                            <strong>Thumbnail:</strong>
+                            <br>
+                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Thumbnail"
+                                class="img-thumbnail" style="max-width: 300px;">
+                        </div>
+                    @endif
+
+                    <div class="mt-4">
+                        <a href="{{ route('articles.edit', $article->article_id) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ route('articles.index') }}" class="btn btn-secondary">Back to List</a>
+
+                        <form action="{{ route('articles.destroy', $article->article_id) }}" method="POST"
+                            class="d-inline" onsubmit="return confirm('Are you sure you want to delete this article?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
