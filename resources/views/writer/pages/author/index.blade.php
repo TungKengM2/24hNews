@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html>
 
 <head>
     <meta charset="UTF-8">
@@ -23,7 +21,7 @@
                 <div class="content">
                     @yield('content')
                 </div>
-                @include('writer.pages.articles.listarticle')
+                @include('writer.pages.author.authorindex')
             </div>
     </div>
     <div>

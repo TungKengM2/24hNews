@@ -12,8 +12,9 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\Author\UserManagement;
-use App\Http\Controllers\Writer\ArticleManagement;
+use App\Http\Controllers\Writer\ArticleAuthorManagement;
 use App\Http\Controllers\Writer\WriterDashboard;
+use App\Http\Controllers\Writer\WriterAuthorManagement;
 use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\Moderator\UserManagementController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
@@ -94,7 +95,8 @@ Route::get('/moderator/articles', [ModeratorArticleController::class, 'index'])-
 
 // writer
 Route::get('/writer/dashboard', [WriterDashboard::class, 'index'])->name('writer.dashboard');
-Route::get('/writer/articles', [ArticleManagement::class, 'index'])->name('writer.articles');
+Route::get('/writer/articleauthor', [ArticleAuthorManagement::class, 'index'])->name('writer.articleauthor');
+Route::get('/writer/author', [WriterAuthorManagement::class, 'index'])->name('writer.author');
 
 // router user
 Route::get('/user/profile', [UserProfileController::class, 'index'])->name('user.profile');
