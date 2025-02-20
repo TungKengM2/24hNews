@@ -12,7 +12,7 @@
             </a>
         </li>
         <li class="sidebar-item">
-            <a class="sidebar-link">
+            <a href="/writer/articleauthor" class="sidebar-link">
                 <i class="lni lni-agenda"></i>
                 <span>Article </span>
             </a>
