@@ -25,6 +25,7 @@ use App\Http\Controllers\Client\UserProfileController;
 
 
 
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/article/{id}', [ArticleController::class, 'showw'])->name('articles.article');
