@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Article;
 
-class ArticleManagement extends Controller
+class ArticleAuthorManagement extends Controller
 {
     public function index()
     {
-        return view('writer.pages.articles.index');
+        return view('writer.pages.articleauthor.index');
     }
 }
