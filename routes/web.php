@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ArticleController;
@@ -61,6 +62,13 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup');
 Route::post('/signup', [AuthController::class, 'processSignup'])->name('signup.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+//Routes for login and admin
+Route::get('/admin/login', [AuthAdminController::class, 'showLoginAdminForm'])->name('authadmin.login-admin');
+Route::post('/admin/login', [AuthAdminController::class, 'loginadmin'])->name('admin.login.submit');
+
+
+
 
 Route::get('/verify-otp', [AuthController::class, 'showOtpForm'])->name('otp.verify.form');
 // Route xử lý OTP
