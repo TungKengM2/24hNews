@@ -77,6 +77,8 @@
                             @endforeach
                         </select>
                     </div>
+                     <!-- Tự động gán tác giả -->
+                     <input type="hidden" name="author_id" value="{{ $article->author_id }}">
 
                     <div class="mb-3">
                         <label for="thumbnail_url" class="form-label">Ảnh đại diện</label>
@@ -94,6 +96,24 @@
                         document.getElementById('content').value = document.getElementById('editor').innerHTML;
                     });
                 </script>
+              <script>
+                document.getElementById("title").addEventListener("input", function() {
+                    let title = this.value.trim();
+                    let slug = title.toLowerCase()
+                        .normalize("NFD").replace(/[̀-ͯ]/g, "") // Loại bỏ dấu tiếng Việt
+                        .replace(/đ/g, "d").replace(/Đ/g, "D")
+                        .replace(/\s+/g, "-") // Thay dấu cách bằng "-"
+                        .replace(/[^\w-]/g, "") // Xóa ký tự đặc biệt
+                        .replace(/--+/g, "-") // Loại bỏ nhiều dấu "-" liên tiếp
+                        .replace(/^-+|-+$/g, ""); // Xóa "-" ở đầu và cuối
+            
+                    document.getElementById("slug").value = slug;
+                });
+            
+                document.getElementById('articleForm').addEventListener('submit', function() {
+                    document.getElementById('content').value = document.getElementById('editor').innerHTML;
+                });
+            </script>
             </div>
         </div>
     </div>
