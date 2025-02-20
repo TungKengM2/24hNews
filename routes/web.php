@@ -33,6 +33,7 @@ use App\Http\Controllers\Client\UserProfileController;
 
 
 
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/client/articles/{article_id}', [ArticleUserController::class, 'show'])->name('client.articles.article');
