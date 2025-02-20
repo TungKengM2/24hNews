@@ -8,11 +8,7 @@
         <div class="col-md-6 ads">
         <h3>Đăng nhập</h3>
           <div class="img">
-<<<<<<< HEAD
-            <img src="{{ asset('images/bannerlogin.jpg') }}" class="img-fluid" alt="banner login 24H News">
-=======
             <img src="{{ asset('images/bannerauth.jpg') }}" class="img-fluid" alt="banner login">
->>>>>>> c4fb09e72b4073f0818a85d1413b6074debe5c8d
           </div>
         </div>
 
