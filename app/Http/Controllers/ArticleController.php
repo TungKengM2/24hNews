@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
@@ -21,6 +22,7 @@ class ArticleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+
     public function create()
     {
         $categories = Category::select('category_id', 'name')->get();
@@ -62,7 +64,7 @@ class ArticleController extends Controller
          $article = new Article();
          $article->title = $request->title;
          $article->slug = $request->slug;
-         $article->content = $request->content;
+         $article->content = $request->input('content');
          $article->category_id = $request->category_id;
          $article->status = $request->status;
          $article->author_id = auth()->id();
@@ -126,7 +128,7 @@ class ArticleController extends Controller
 
         $article->title = $request->title;
         $article->slug = $request->slug;
-        $article->content = $request->content;
+        $article->content = $request->input('content');
         $article->preview_content = $request->preview_content;
         $article->contains_sensitive_content = $request->contains_sensitive_content;
         $article->author_id = $request->author_id;
