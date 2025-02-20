@@ -8,11 +8,11 @@
         <div class="col-md-6 ads">
             <h3>Đăng ký</h3>
             <div class="img">
-                <img src="https://i.imgur.com/HWuWWE9.jpeg" alt="">
+                <img src="{{ asset('images/bannerlogin.jpg') }}" class="img-fluid" alt="banner login 24H News">
             </div>
         </div>
         <div class="col-md-6 form-section">
-            
+
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>

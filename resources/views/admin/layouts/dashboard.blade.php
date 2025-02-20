@@ -14,7 +14,7 @@
 
 </head>
 <body>
-    <div class="wrapper">
+    <div class="wrapper h-20">
 
             @include('admin.layouts.partials.menusidebar')
 
