@@ -12,78 +12,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
-    {{-- <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .wrapper {
-            display: flex;
-            margin: 0px;
-        }
-
-        .container {
-            width: 100%;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-left: 300px;
-        }
-
-        .form-label {
-            font-weight: 600;
-        }
-
-        .form-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .form-group .lni,
-        .form-group .material-symbols-outlined {
-            margin-right: 10px;
-            font-size: 1.5rem;
-        }
-
-        .form-group-half {
-            width: 50%;
-            padding-right: 10px;
-        }
-
-        .form-group-full {
-            width: 100%;
-        }
-
-        .card {
-            padding: 20px;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .btn-secondary {
-            margin-left: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .form-group-half {
-                width: 100%;
-                padding-right: 0;
-            }
-        }
-    </style> --}}
 </head>
 
 <body>
     <div class="wrapper">
         @include('admin.layouts.partials.menusidebar')
-        <div class="container">
+        <div class="main">
             @include('admin.layouts.partials.header')
             <div class="card p-2">
                 <h2 class="mb-4">Create New Post</h2>
