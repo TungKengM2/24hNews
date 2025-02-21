@@ -14,7 +14,6 @@
         "webpack-cli": "^6.0.1"
     },
     "dependencies": {
-        "@ckeditor/ckeditor5-build-classic": "^44.2.1",
         "@ckeditor/ckeditor5-cloud-services": "^44.2.0",
         "@ckeditor/ckeditor5-import-word": "^44.2.1",
         "ckeditor5": "^44.2.0",

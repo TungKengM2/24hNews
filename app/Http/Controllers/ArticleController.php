@@ -60,7 +60,7 @@ class ArticleController extends Controller
              'thumbnail_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
              'status' => 'required|in:draft,pending',
          ]);
-     
+
          $article = new Article();
          $article->title = $request->title;
          $article->slug = $request->slug;
@@ -68,22 +68,22 @@ class ArticleController extends Controller
          $article->category_id = $request->category_id;
          $article->status = $request->status;
          $article->author_id = auth()->id();
-     
+
          if ($request->hasFile('thumbnail_url')) {
              $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
              $article->thumbnail_url = $path;
          }
-     
+
          $article->save();
-     
+
          if ($request->status == 'draft') {
              return redirect()->route('articles.index')->with('success', 'Bài viết đã lưu nháp!');
          }
-     
+
          return redirect()->route('articles.index')->with('success', 'Bài viết đã gửi để chờ duyệt!');
      }
-     
-     
+
+
 
 
     /**
@@ -119,7 +119,7 @@ class ArticleController extends Controller
             'author_id' => 'required|exists:users,user_id',
             'category_id' => 'required|exists:categories,category_id',
             'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            
+
         ]);
 
         $article->title = $request->title;
@@ -150,4 +150,23 @@ class ArticleController extends Controller
         $article->delete();
         return redirect()->route('articles.index')->with('success', 'Bài viết đã bị xóa!');
     }
+
+    public function showw($article_id)
+{
+    // Kiểm tra bài viết có tồn tại không
+    $article = Article::where('article_id', $article_id)
+                      ->where('status', 'approved')
+                      ->firstOrFail();
+
+    // Ghi nhận lượt xem
+    ArticleHistory::recordView($article);
+
+    // Lấy các bài viết cùng danh mục
+    $relatedArticles = Article::where('category_id', $article->category_id)
+                              ->where('article_id', '!=', $article->article_id)
+                              ->where('status', 'approved')
+                              ->limit(5)
+                              ->get();
+
+    return view('articles.article', compact('article', 'relatedArticles'));
 }
