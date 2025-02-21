@@ -56,7 +56,17 @@
                                 <div class="post-actions">
                                     <a href="{{ route('author.articles.edit', ['article' => $article->article_id]) }}">Edit</a>
                                     <a href="{{ route('client.articles.article', ['article_id' => $article->article_id]) }}">View</a>
-                                    <a href="#" style="color: red;">Delete</a>
+                                    <a href="#" style="color: red;"
+                                       onclick="event.preventDefault(); document.getElementById('delete-form-{{ $article->article_id }}').submit();">
+                                        Delete
+                                    </a>
+
+                                    <form id="delete-form-{{ $article->article_id }}"
+                                          action="{{ route('author.articles.destroy', $article->article_id) }}"
+                                          method="POST" style="display: none;">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
                                 </div>
                             </div>
                         </div>
