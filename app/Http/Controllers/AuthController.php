@@ -30,7 +30,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             if ($user->role_id == 3) {
-                return redirect()->intended('/writer/dashboard');
+                return redirect()->intended('/author/dashboard');
             } elseif ($user->role_id == 2) {
                 return redirect()->intended('/moderator/dashboard');
             } elseif ($user->role_id == 4) {
