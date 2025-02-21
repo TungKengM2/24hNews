@@ -85,6 +85,9 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name
 
 // Writer routes
 Route::get('/writer/dashboard', [WriterDashboard::class, 'index'])->name('writer.dashboard');
+Route::get('/writer/articles', [ArticleAuthorManagement::class, 'index'])->name('writer.articles');
+Route::get('/writer/authors', [WriterAuthorManagement::class, 'index'])->name('writer.authors');
+
 
 // Moderator routes
 Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])->name('moderator.dashboard');
