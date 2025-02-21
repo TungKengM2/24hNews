@@ -5,6 +5,8 @@
     use App\Http\Controllers\Controller;
     use App\Models\Article;
     use App\Models\Category;
+    use App\Models\Tag;
+    use App\Models\User;
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Auth;
 
@@ -32,21 +34,53 @@
             $categories = Category::all();
             $tags = Tag::all();
 
-            return view('author.article.create', compact('categories', 'tags'));
+            return view('author.create', compact('categories', 'tags'));
         }
 
-        public function store(Request $request) {}
-
-        public function edit($id)
+        public function store(Request $request)
         {
-            $article = Article::where('author_id', Auth::id())
-                ->with(['category', 'tags'])->findOrFail($id);
+            $request->validate([
+                'title' => 'required|string|max:255',
+                'slug' => 'required|string|max:255|unique:articles,slug',
+                'content' => 'required',
+                'category_id' => 'required|exists:categories,category_id',
+                'thumbnail_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'status' => 'required|in:draft,pending',
+            ]);
 
-            $categories = Category::where('is_active', 1)->get();
-            $tags = Tag::all();
+            $article = new Article();
+            $article->title = $request->title;
+            $article->slug = $request->slug;
+            $article->content = $request->input('content');
+            $article->category_id = $request->category_id;
+            $article->status = $request->status;
+            $article->author_id = auth()->id();
 
-            return view('author.articles.edit',
-                compact('article', 'categories', 'tags'));
+            if ($request->hasFile('thumbnail_url')) {
+                $path = $request->file('thumbnail_url')
+                    ->store('thumbnails', 'public');
+                $article->thumbnail_url = $path;
+            }
+
+            $article->save();
+
+            if ($request->status == 'draft') {
+                return redirect()
+                    ->route('author.articles.store')
+                    ->with('success', 'Bài viết đã lưu nháp!');
+            }
+
+            return redirect()
+                ->route('author.articles.store')
+                ->with('success', 'Bài viết đã gửi để chờ duyệt!');
+        }
+
+        public function edit(Article $article)
+        {
+            $categories = Category::select('category_id', 'name')->get();
+
+            return view('author.edit',
+                compact('article', 'categories'));
         }
 
         public function update(Request $request, $id) {}
