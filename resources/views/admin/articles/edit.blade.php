@@ -10,31 +10,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="{{ asset('js/ckeditor.js') }}"></script>
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
+    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-        }
 
-        .wrapper {
-            display: flex;
-        }
-
-        .container {
-            width: 100%;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-left: 300px;
-        }
-    </style>
 </head>
 
 <body>
     <div class="wrapper">
-        @include('admin.menu')
-        <div class="container mt-5">
+        @include('admin.layouts.partials.menusidebar')
+        <div class="main">
+            @include('admin.layouts.partials.header')
             <div class="card p-2">
                 <h2 class="mb-4">Update Post</h2>
                 @if ($errors->any())
@@ -100,28 +85,29 @@
                         document.getElementById('content').value = document.getElementById('editor').innerHTML;
                     });
                 </script>
-                <script>
-                    document.getElementById("title").addEventListener("input", function() {
-                        let title = this.value.trim();
-                        let slug = title.toLowerCase()
-                            .normalize("NFD").replace(/[̀-ͯ]/g, "") // Loại bỏ dấu tiếng Việt
-                            .replace(/đ/g, "d").replace(/Đ/g, "D")
-                            .replace(/\s+/g, "-") // Thay dấu cách bằng "-"
-                            .replace(/[^\w-]/g, "") // Xóa ký tự đặc biệt
-                            .replace(/--+/g, "-") // Loại bỏ nhiều dấu "-" liên tiếp
-                            .replace(/^-+|-+$/g, ""); // Xóa "-" ở đầu và cuối
+              <script>
+                document.getElementById("title").addEventListener("input", function() {
+                    let title = this.value.trim();
+                    let slug = title.toLowerCase()
+                        .normalize("NFD").replace(/[̀-ͯ]/g, "") // Loại bỏ dấu tiếng Việt
+                        .replace(/đ/g, "d").replace(/Đ/g, "D")
+                        .replace(/\s+/g, "-") // Thay dấu cách bằng "-"
+                        .replace(/[^\w-]/g, "") // Xóa ký tự đặc biệt
+                        .replace(/--+/g, "-") // Loại bỏ nhiều dấu "-" liên tiếp
+                        .replace(/^-+|-+$/g, ""); // Xóa "-" ở đầu và cuối
 
-                        document.getElementById("slug").value = slug;
-                    });
+                    document.getElementById("slug").value = slug;
+                });
 
-                    document.getElementById('articleForm').addEventListener('submit', function() {
-                        document.getElementById('content').value = document.getElementById('editor').innerHTML;
-                    });
-                </script>
+                document.getElementById('articleForm').addEventListener('submit', function() {
+                    document.getElementById('content').value = document.getElementById('editor').innerHTML;
+                });
+            </script>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
