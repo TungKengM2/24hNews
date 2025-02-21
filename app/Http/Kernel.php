@@ -5,6 +5,7 @@
     use App\Http\Middleware\AdminMiddleware;
     use App\Http\Middleware\Authenticate;
     use App\Http\Middleware\EncryptCookies;
+    use App\Http\Middleware\EnsureUserIsModerator;
     use App\Http\Middleware\PreventRequestsDuringMaintenance;
     use App\Http\Middleware\RedirectIfAuthenticated;
     use App\Http\Middleware\RoleMiddleware;
@@ -97,6 +98,7 @@
 
         protected $routeMiddleware = [
             'role' => RoleMiddleware::class,
+            'moderator' => EnsureUserIsModerator::class,
         ];
 
     }
