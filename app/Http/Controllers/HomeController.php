@@ -1,6 +1,15 @@
 <?php
+<<<<<<< HEAD
 
     namespace App\Http\Controllers;
+=======
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Models\Article;
+use Illuminate\Http\Request;
+>>>>>>> origin/dat
 
     use App\Models\User;
     use App\Models\Article;
@@ -12,10 +21,15 @@
 
     class HomeController extends Controller
     {
+<<<<<<< HEAD
 
         public function index()
         {
             // $articles = Article::latest()->get();
+=======
+        // Lấy tối đa 3 bài viết mới nhất
+        $latestArticles = Article::latest()->take(3)->get();
+>>>>>>> origin/dat
 
             // return view('welcome', compact('articles'));
             //        return view('welcome');
@@ -24,6 +38,7 @@
                 ->orderByDesc('views') // Sắp xếp theo lượt xem giảm dần
                 ->first();
 
+<<<<<<< HEAD
             // Lấy danh sách bài viết mới nhất
             $articles = Article::where('status', 'published')->latest()->get();
 
@@ -57,3 +72,11 @@
         }
 
     }
+=======
+        $categoryArticles = Article::where('category_id', 1)->latest()->take(7)->get();
+
+        // Truyền dữ liệu bài viết tới view
+        return view('website.pages.home.home', compact('latestArticles', 'categoryArticles'));
+    }
+}
+>>>>>>> origin/dat
