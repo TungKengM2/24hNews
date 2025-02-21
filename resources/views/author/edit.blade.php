@@ -20,9 +20,11 @@
 
                 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
-                <form action="{{ route('author.articles.store') }}" method="POST" enctype="multipart/form-data"
+                <form action="{{ route('author.articles.update', ['article' => $article->article_id]) }}" method="POST"
+                      enctype="multipart/form-data"
                       id="articleForm">
                     @csrf
+                    @method('PUT')
                     <div class="mb-3">
                         <label for="title" class="form-label">Tiêu đề</label>
                         <input type="text" class="form-control" id="title" name="title"

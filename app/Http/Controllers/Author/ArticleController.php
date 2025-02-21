@@ -37,6 +37,49 @@
             return view('author.create', compact('categories', 'tags'));
         }
 
+        public function edit(Article $article)
+        {
+            $categories = Category::select('category_id', 'name')->get();
+
+            return view('author.edit',
+                compact('article', 'categories'));
+        }
+
+        public function update(Request $request, Article $article)
+        {
+            // Validation rules
+            $request->validate([
+                'title' => 'required|string|max:255',
+                'slug' => $request->filled('slug') ? 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id' : 'nullable',
+                'content' => 'required',
+                'author_id' => 'required|exists:users,user_id',
+                'category_id' => 'required|exists:categories,category_id',
+                'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
+            $article->title = $request->input('title', $article->title);
+            $article->slug = $request->input('slug', $article->slug);
+            $article->content = $request->input('content', $article->content);
+            $article->author_id = $request->input('author_id',
+                $article->author_id);
+            $article->category_id = $request->input('category_id',
+                $article->category_id);
+
+            if ($request->hasFile('thumbnail_url')) {
+                $file = $request->file('thumbnail_url');
+                $path = $file->store('thumbnails', 'public');
+                $article->thumbnail_url = $path;
+            } else {
+                $article->thumbnail_url = $article->thumbnail_url;
+            }
+
+            $article->save();
+
+            return redirect()
+                ->route('author.articles')
+                ->with('success', 'Article updated successfully!');
+        }
+
         public function store(Request $request)
         {
             $request->validate([
@@ -75,23 +118,13 @@
                 ->with('success', 'Bài viết đã gửi để chờ duyệt!');
         }
 
-        public function edit(Article $article)
-        {
-            $categories = Category::select('category_id', 'name')->get();
-
-            return view('author.edit',
-                compact('article', 'categories'));
-        }
-
-        public function update(Request $request, $id) {}
-
         public function destroy($id)
         {
             $article = Article::where('author_id', Auth::id())->findOrFail($id);
             $article->delete();
 
             return redirect()
-                ->route('author.articles.index')
+                ->route('author.articles')
                 ->with('success', 'Bai viet da dc xoa');
         }
 
