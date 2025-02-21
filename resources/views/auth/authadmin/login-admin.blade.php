@@ -6,9 +6,9 @@
 <div class="login-container">
     <div class="row">
         <div class="col-md-6 ads">
-        <h3>Đăng nhập</h3>
+        <h3>Login Admin</h3>
           <div class="img">
-            <img src="{{ asset('images/bannerauth.jpg') }}" class="img-fluid" alt="banner login">
+            <img src="{{ asset('images/bannerloginadmin.jpg') }}" class="img-fluid" alt="banner login 24H News">
           </div>
         </div>
 
@@ -23,7 +23,7 @@
             <div class="profile-img">
                 <img src="{{ asset('images/headerbanner24hnews.jpg') }}" width="100px" height="100px" alt="Logo 24H News">
             </div>
-            <form action="{{ route('login') }}" method="POST" >
+            <form action="{{ route('admin.login.submit') }}" method="POST" >
                 @csrf
                 <div class="input-icon">
                     <i class="fa fa-envelope"></i>
@@ -48,17 +48,6 @@
 
                 <button type="submit">Đăng nhập</button>
             </form>
-            <div class="login social">
-                <button class="btn btn-google">
-                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Icon"> Login with Google
-                </button>
-                <button class="btn btn-facebook">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Icon"> Login with Facebook
-                </button>
-            </div>
-
-            <p><a href="{{ route('password.request') }}">Quên mật khẩu?</a></p>
-            <p>Chưa có tài khoản? <a href="{{ route('signup') }}">Đăng ký</a></p>
         </div>
     </div>
 </div>
