@@ -1,17 +1,12 @@
 <?php
 
-<<<<<<< HEAD
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\HomeController;
-=======
-use App\Http\Controllers\AdminDashboardController;
->>>>>>> 17e39cf198cbd504b4cd1570ef20832ce193e02a
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
-<<<<<<< HEAD
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\AdminDashboardController;
@@ -25,16 +20,6 @@ use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\Moderator\UserManagementController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
 use App\Http\Controllers\Client\UserProfileController;
-=======
-use App\Http\Controllers\ResetPasswordController;
-// use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\ForgotPasswordController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\HomeController;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-
->>>>>>> 17e39cf198cbd504b4cd1570ef20832ce193e02a
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,17 +31,12 @@ use Illuminate\Http\Request;
 |
 */
 
-<<<<<<< HEAD
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/client/articles/{article_id}', [ArticleUserController::class, 'show'])->name('client.articles.article');
 
 // admin
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-=======
-// Trang chủ
-Route::get('/', [HomeController::class, 'index'])->name('home');
->>>>>>> 17e39cf198cbd504b4cd1570ef20832ce193e02a
 
 //article
 Route::patch('/articles/{article}/approve', [ArticleController::class, 'approve'])->name('articles.approve');
@@ -136,13 +116,7 @@ Route::post('/upload-file', function (Request $request) {
         $filename = time() . '_' . $file->getClientOriginalName();
         $file->move(public_path('uploads'), $filename);
 
-<<<<<<< HEAD
         return response()->json(['url' => asset('uploads/' . $filename)]);
-=======
-        return response()->json([
-            'url' => asset('uploads/' . $filename)
-        ]);
->>>>>>> 17e39cf198cbd504b4cd1570ef20832ce193e02a
     }
     return response()->json(['error' => 'No file uploaded'], 400);
 })->name('upload.file');
