@@ -132,6 +132,32 @@
         [ModeratorDashboardController::class, 'index'])
         ->name('moderator.dashboard');
 
+    Route::prefix('moderator')
+        ->middleware([
+            'auth',
+            'role:moderator',
+        ]) // Chỉ moderator có quyền truy cập
+        ->group(function () {
+            Route::get('/approvals',
+                [UserManagementController::class, 'index'])
+                ->name('moderator.approvals.index');
+
+            // Chi tiết phê duyệt
+            Route::get('/approvals/{id}',
+                [UserManagementController::class, 'show'])
+                ->name('moderator.approvals.show');
+
+            // Phê duyệt tác giả
+            Route::post('/approvals/{id}/approve',
+                [UserManagementController::class, 'approve'])
+                ->name('moderator.approvals.approve');
+
+            // Từ chối phê duyệt
+            Route::post('/approvals/{id}/reject',
+                [UserManagementController::class, 'reject'])
+                ->name('moderator.approvals.reject');
+        });
+
     Route::get('/user/dashboard', [UserProfileController::class, 'index'])
         ->name('user.dashboard');
     Route::post('/upgrade-to-author',
@@ -154,7 +180,9 @@
                 \App\Http\Controllers\Author\ArticleController::class,
                 'index',
             ])->name('author.articles');
-
+            Route::get('/articles/{article}',
+                [\App\Http\Controllers\Author\ArticleController::class, 'show'])
+                ->name('author.articles.show');
             Route::get('/articles/create', [
                 \App\Http\Controllers\Author\ArticleController::class,
                 'create',
@@ -222,10 +250,10 @@
     Route::prefix('admin')->group(function () {
         Route::resource('users', UserController::class);
     });
-    //Route::get('/admin/login',
+    // Route::get('/admin/login',
     //    [AuthAdminController::class, 'showLoginAdminForm'])
     //    ->name('authadmin.login-admin');
-    //Route::post('/admin/login', [AuthAdminController::class, 'loginadmin'])
+    // Route::post('/admin/login', [AuthAdminController::class, 'loginadmin'])
     //    ->name('admin.login.submit');
     Route::get('/moderator/articles',
         [ModeratorArticleController::class, 'index'])

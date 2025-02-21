@@ -12,7 +12,11 @@
 
         public function index()
         {
-            return view('moderator.pages.users.index');
+            $approvals = Approval::where('type', 'role_upgrade')
+                ->where('status', 'pending')
+                ->paginate(10);
+
+            return view('moderator.pages.users.index', compact('approvals'));
         }
 
         public function approveUpgrade($approval_id)
@@ -20,7 +24,7 @@
             $approval = Approval::findOrFail($approval_id);
 
             if ($approval->status !== 'pending') {
-                return redirect()->route('moderator.dashboard')
+                return redirect()->route('moderator.approvals.index')
                     ->with('error', 'Yêu cầu này đã được xử lý trước đó.');
             }
 
@@ -35,7 +39,7 @@
                 'approved_by' => auth()->id(),
             ]);
 
-            return redirect()->route('moderator.dashboard')
+            return redirect()->route('moderator.approvals.index')
                 ->with('status',
                     'Yêu cầu nâng cấp đã được chấp nhận thành công.');
         }
@@ -45,7 +49,7 @@
             $approval = Approval::findOrFail($approval_id);
 
             if ($approval->status !== 'pending') {
-                return redirect()->route('moderator.dashboard')
+                return redirect()->route('moderator.approvals.index')
                     ->with('error', 'Yêu cầu này đã được xử lý trước đó.');
             }
 
@@ -54,7 +58,7 @@
                 'approved_by' => auth()->id(),
             ]);
 
-            return redirect()->route('moderator.dashboard')
+            return redirect()->route('moderator.approvals.index')
                 ->with('status', 'Yêu cầu nâng cấp đã bị từ chối.');
         }
 

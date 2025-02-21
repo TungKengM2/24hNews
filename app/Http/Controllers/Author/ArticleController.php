@@ -128,4 +128,11 @@
                 ->with('success', 'Bai viet da dc xoa');
         }
 
+        public function show($id)
+        {
+            $article = Article::with(['category', 'author'])->findOrFail($id);
+
+            return view('author.show', compact('article'));
+        }
+
     }
