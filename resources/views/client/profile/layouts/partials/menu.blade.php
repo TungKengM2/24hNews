@@ -2,7 +2,8 @@
     <div class="profile-sidebar">
 
         <div class="profile-userpic">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmL71aTMDWIHF3HD3VfThy3iT7vnbMt2w2jA&s" width="50" height="50" class="img-responsive" alt="">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmL71aTMDWIHF3HD3VfThy3iT7vnbMt2w2jA&s"
+                 width="50" height="50" class="img-responsive" alt="">
         </div>
 
         <div class="profile-usertitle">
@@ -14,17 +15,36 @@
             </div>
         </div>
 
-        <div class="profile-userbuttons">
-            <button type="button" class="btn btn-success btn-sm">Nâng Cấp Người Dùng</button>
+        <form id="upgradeForm" action="{{ route('upgrade.to.author') }}" method="POST" enctype="multipart/form-data"
+              style="display: none;">
+            @csrf
+        </form>
 
-        </div>
+        <button id="upgradeButton" type="button" class="btn btn-success btn-sm">Nâng Cấp Người Dùng</button>
+
+
+        <script>
+            document.getElementById('upgradeButton').addEventListener('click', function () {
+                Swal.fire({
+                    title: 'Bạn có muốn trở thành tác giả không?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('upgradeForm').submit();
+                    }
+                });
+            });
+        </script>
 
         <div class="profile-usermenu">
             <ul class="nav">
                 <li class="active">
                     <a href="#">
-                    <i class="glyphicon glyphicon-home"></i>
-                    Overview </a>
+                        <i class="glyphicon glyphicon-home"></i>
+                        Overview </a>
                 </li>
 
                 <li>
