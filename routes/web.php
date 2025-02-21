@@ -2,14 +2,18 @@
 
     use App\Http\Controllers\AdminDashboardController;
     use App\Http\Controllers\ArticleController;
+    use App\Http\Controllers\ArticleUserController;
     use App\Http\Controllers\AuthController;
     use App\Http\Controllers\Author\AuthorDashboard;
     use App\Http\Controllers\Author\ProfileController;
     use App\Http\Controllers\CategoryController;
     use App\Http\Controllers\Client\UserProfileController;
     use App\Http\Controllers\ForgotPasswordController;
+    use App\Http\Controllers\HomeController;
+    use App\Http\Controllers\Moderator\ModeratorArticleController;
     use App\Http\Controllers\Moderator\ModeratorDashboardController;
     use App\Http\Controllers\Moderator\UserManagementController;
+    use App\Http\Controllers\UserController;
     use App\Http\Controllers\Writer\WriterDashboard;
     use Illuminate\Support\Facades\Route;
     use Illuminate\Http\Request;
@@ -25,9 +29,6 @@
     |
     */
 
-    Route::get('/', function () {
-        return view('welcome');
-    });
     // admin
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
         ->name('admin.dashboard');
@@ -203,3 +204,24 @@
         }
         return response()->json(['error' => 'No file uploaded'], 400);
     })->name('upload.file');
+
+    // merge dat
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/client/articles/{article_id}',
+        [ArticleUserController::class, 'show'])
+        ->name('client.articles.article');
+    Route::prefix('admin')->group(function () {
+        Route::resource('users', UserController::class);
+    });
+    Route::get('/admin/login',
+        [AuthAdminController::class, 'showLoginAdminForm'])
+        ->name('authadmin.login-admin');
+    Route::post('/admin/login', [AuthAdminController::class, 'loginadmin'])
+        ->name('admin.login.submit');
+    Route::get('/moderator/articles',
+        [ModeratorArticleController::class, 'index'])->name('author.articles');
+    //    Route::get('/writer/articleauthor',
+    //        [ArticleAuthorManagement::class, 'index'])
+    //        ->name('writer.articleauthor');
+    //    Route::get('/writer/author', [WriterAuthorManagement::class, 'index'])
+    //        ->name('writer.author');
