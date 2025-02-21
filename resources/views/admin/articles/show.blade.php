@@ -41,7 +41,7 @@
 
                     <div class="mb-3">
                         <strong><i class="lni lni-pencil"></i> Content:</strong>
-                        <div class="border p-3" style="width: 100%; min-height: 300px;">{{ $article->content }}</div>
+                        <div class="border p-3" style="width: 100%; min-height: 300px;">{!! $article->content !!}</div>
                     </div>
 
                     @if ($article->preview_content || $article->thumbnail_url)
