@@ -19,15 +19,15 @@
         </li>
 
         <li class="sidebar-item">
-            <a  class="sidebar-link">
+            <a class="sidebar-link">
                 <i class="lni lni-list"></i>
                 <span>Categories</span>
             </a>
         </li>
         <li class="sidebar-item">
-            <a href="#" class="sidebar-link has-dropdown">
+            <a href="{{ route('moderator.approvals.index') }}" class="sidebar-link has-dropdown">
                 <i class="lni lni-protection"></i>
-                <span>Tác Giả Chờ Duyệt </span>
+                <span>Tác Giả Chờ Duyệt</span>
             </a>
             <ul class="sidebar-dropdown list-unstyled">
                 <li class="sidebar-item">

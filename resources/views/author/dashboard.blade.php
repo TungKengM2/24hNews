@@ -18,12 +18,13 @@
     </div>
 
     <script>
+        // Dữ liệu lượt xem bài viết
         const viewsData = {
-            labels: ['01/02', '02/02', '03/02', '04/02', '05/02', '06/02', '07/02'],
+            labels: {!! json_encode(array_keys($viewsData->toArray())) !!},
             datasets: [
                 {
                     label: 'Lượt xem bài viết',
-                    data: [120, 150, 180, 220, 250, 230, 300],
+                    data: {!! json_encode(array_values($viewsData->toArray())) !!},
                     borderColor: '#007bff',
                     backgroundColor: 'rgba(0, 123, 255, 0.2)',
                     fill: true,
@@ -31,16 +32,22 @@
             ],
         };
 
+        // Dữ liệu trạng thái bài viết
         const statusData = {
             labels: ['Draft', 'Pending', 'Published'],
             datasets: [
                 {
-                    data: [10, 5, 20],
+                    data: [
+                        {{ $articleStats['draft'] }},
+                        {{ $articleStats['pending'] }},
+                        {{ $articleStats['published'] }}
+                    ],
                     backgroundColor: ['#ffc107', '#17a2b8', '#28a745'],
                 },
             ],
         };
 
+        // Khởi tạo biểu đồ lượt xem bài viết
         new Chart(document.getElementById('viewsChart'), {
             type: 'line',
             data: viewsData,
@@ -53,6 +60,7 @@
             },
         });
 
+        // Khởi tạo biểu đồ trạng thái bài viết
         new Chart(document.getElementById('postsStatusChart'), {
             type: 'pie',
             data: statusData,
