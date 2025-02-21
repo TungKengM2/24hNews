@@ -8,7 +8,7 @@
 
         <div class="profile-usertitle">
             <div class="profile-usertitle-name">
-                Vu Thanh Luan
+                {{ $user->username }}
             </div>
             <div class="profile-usertitle-job">
                 Người Dùng
