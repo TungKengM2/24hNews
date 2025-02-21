@@ -23,9 +23,9 @@ class AuthorDashboard extends Controller
                 ->where('status', 'published')
                 ->count(),
             'pending' => Article::where('author_id', $user->user_id)
-                ->where('status', 'pending'),
+                ->where('status', 'pending')->count(),
             'draft' => Article::where('author_id', $user->user_id)
-                ->where('status', 'draft'),
+                ->where('status', 'draft')->count(),
         ];
 
         return view('author.dashboard', compact('articleStats'));

@@ -3,11 +3,13 @@
     use App\Http\Controllers\AdminDashboardController;
     use App\Http\Controllers\ArticleController;
     use App\Http\Controllers\AuthController;
+    use App\Http\Controllers\Author\AuthorDashboard;
+    use App\Http\Controllers\Author\ProfileController;
     use App\Http\Controllers\CategoryController;
     use App\Http\Controllers\Client\UserProfileController;
     use App\Http\Controllers\ForgotPasswordController;
     use App\Http\Controllers\Moderator\ModeratorDashboardController;
-    use App\Http\Controllers\ProfileController;
+    use App\Http\Controllers\Moderator\UserManagementController;
     use App\Http\Controllers\Writer\WriterDashboard;
     use Illuminate\Support\Facades\Route;
 
@@ -92,7 +94,7 @@
     Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
         ->name('password.update');
 
-    ////////////////////////////test//////////////////////////////
+    // //////////////////////////test//////////////////////////////
     Route::get('/writer/dashboard', [WriterDashboard::class, 'index'])
         ->name('writer.dashboard');
 
@@ -106,4 +108,52 @@
         [UserProfileController::class, 'requestAuthorRole'])
         ->middleware('auth')
         ->name('upgrade.to.author');
-    ////////////////////////////////////////////////////////////////////
+
+    Route::get('/author/dashboard', [AuthorDashboard::class, 'index'])
+        ->name('author.dashboard');
+    // //////////////////////////////////////////////////////////////////
+
+    Route::prefix('author')
+        ->middleware(['auth', 'role:author'])
+        ->group(function () {
+            Route::get('/dashboard', [AuthorDashboard::class, 'index'])
+                ->name('author.dashboard');
+            Route::get('/articles', [
+                \App\Http\Controllers\Author\ArticleController::class,
+                'index',
+            ])->name('author.articles');
+            Route::get('/articles/create', [
+                \App\Http\Controllers\Author\ArticleController::class,
+                'create',
+            ])->name('author.articles.create');
+            Route::post('/articles', [
+                \App\Http\Controllers\Author\ArticleController::class,
+                'store',
+            ])->name('author.articles.store');
+            Route::post('/articles',
+                [\App\Http\Controllers\Author\ArticleController::class, 'edit'])
+                ->name('author.articles.edit');
+            Route::post('/articles', [
+                \App\Http\Controllers\Author\ArticleController::class,
+                'update',
+            ])->name('author.articles.update');
+            Route::post('/articles', [
+                \App\Http\Controllers\Author\ArticleController::class,
+                'destroy',
+            ])->name('author.articles.destroy');
+
+            Route::get('/profile', [
+                ProfileController::class,
+                'index',
+            ])->name('author.profile');
+        });
+
+    Route::post('/approve-upgrade/{approval_id}',
+        [UserManagementController::class, 'approveUpgrade'])
+        ->middleware('moderator')
+        ->name('approve.upgrade');
+
+    Route::post('/reject-upgrade/{approval_id}',
+        [UserManagementController::class, 'rejectUpgrade'])
+        ->middleware('moderator')
+        ->name('reject.upgrade');
