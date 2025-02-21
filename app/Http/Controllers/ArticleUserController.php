@@ -25,6 +25,7 @@ class ArticleUserController extends Controller
             'user_id' => auth()->id(),
             'anonymous' => auth()->check() ? 0 : 1,
             'viewed_at' => now(),
+            $article->increment('views')
         ]);
     } catch (\Exception $e) {
         report($e);
