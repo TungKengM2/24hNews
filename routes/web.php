@@ -14,9 +14,8 @@
     use App\Http\Controllers\Moderator\ModeratorDashboardController;
     use App\Http\Controllers\Moderator\UserManagementController;
     use App\Http\Controllers\UserController;
-    use App\Http\Controllers\Writer\WriterDashboard;
-    use Illuminate\Support\Facades\Route;
     use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Route;
 
     /*
     |--------------------------------------------------------------------------
@@ -128,8 +127,6 @@
         ->name('password.update');
 
     // //////////////////////////test//////////////////////////////
-    Route::get('/writer/dashboard', [WriterDashboard::class, 'index'])
-        ->name('writer.dashboard');
 
     Route::get('/moderator/dashboard',
         [ModeratorDashboardController::class, 'index'])
@@ -143,39 +140,50 @@
         ->name('upgrade.to.author');
     //    Route::post('/profile/request-author-role', [ProfileController::class, 'requestAuthorRole'])->name('profile.request-author-role');
 
-    Route::get('/author/dashboard', [AuthorDashboard::class, 'index'])
-        ->name('author.dashboard');
     // //////////////////////////////////////////////////////////////////
 
     Route::prefix('author')
         ->middleware(['auth', 'role:author'])
         ->group(function () {
+            // Dashboard
             Route::get('/dashboard', [AuthorDashboard::class, 'index'])
                 ->name('author.dashboard');
+
+            // Articles
             Route::get('/articles', [
                 \App\Http\Controllers\Author\ArticleController::class,
                 'index',
             ])->name('author.articles');
+
             Route::get('/articles/create', [
                 \App\Http\Controllers\Author\ArticleController::class,
                 'create',
             ])->name('author.articles.create');
+
             Route::post('/articles', [
                 \App\Http\Controllers\Author\ArticleController::class,
                 'store',
             ])->name('author.articles.store');
-            Route::post('/articles',
-                [\App\Http\Controllers\Author\ArticleController::class, 'edit'])
-                ->name('author.articles.edit');
-            Route::post('/articles', [
+
+            // Edit article (GET request)
+            Route::get('/articles/{article}/edit', [
+                \App\Http\Controllers\Author\ArticleController::class,
+                'edit',
+            ])->name('author.articles.edit');
+
+            // Update article (PUT/PATCH request)
+            Route::put('/articles/{article}', [
                 \App\Http\Controllers\Author\ArticleController::class,
                 'update',
             ])->name('author.articles.update');
-            Route::post('/articles', [
+
+            // Delete article (DELETE request)
+            Route::delete('/articles/{article}', [
                 \App\Http\Controllers\Author\ArticleController::class,
                 'destroy',
             ])->name('author.articles.destroy');
 
+            // Profile
             Route::get('/profile', [
                 ProfileController::class,
                 'index',
@@ -202,6 +210,7 @@
                 'url' => asset('uploads/' . $filename),
             ]);
         }
+
         return response()->json(['error' => 'No file uploaded'], 400);
     })->name('upload.file');
 
@@ -213,13 +222,14 @@
     Route::prefix('admin')->group(function () {
         Route::resource('users', UserController::class);
     });
-    Route::get('/admin/login',
-        [AuthAdminController::class, 'showLoginAdminForm'])
-        ->name('authadmin.login-admin');
-    Route::post('/admin/login', [AuthAdminController::class, 'loginadmin'])
-        ->name('admin.login.submit');
+    //Route::get('/admin/login',
+    //    [AuthAdminController::class, 'showLoginAdminForm'])
+    //    ->name('authadmin.login-admin');
+    //Route::post('/admin/login', [AuthAdminController::class, 'loginadmin'])
+    //    ->name('admin.login.submit');
     Route::get('/moderator/articles',
-        [ModeratorArticleController::class, 'index'])->name('author.articles');
+        [ModeratorArticleController::class, 'index'])
+        ->name('moderator.articles');
     //    Route::get('/writer/articleauthor',
     //        [ArticleAuthorManagement::class, 'index'])
     //        ->name('writer.articleauthor');
