@@ -209,7 +209,7 @@
                 </h3>
                 <div class="row">
                     <div class="col-12 mb-3">
-                        <h1>Thêm mới bài viết</h1>
+                        <h1>Danh sách bài viết</h1>
                         <a class="btn btn-secondary" href="{{ route('admin.dashboard') }}">
                             <i class="lni lni-arrow-left"></i> Back to Dashboard
                         </a>
