@@ -513,8 +513,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return processChildren(tempDiv);
     }
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> cfc6db325ba9dcff812deeb0618e648f61af75ee
