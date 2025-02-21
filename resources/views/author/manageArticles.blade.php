@@ -55,7 +55,7 @@
                                 <a href="{{ route('client.articles.article', ['article_id' => $article->article_id]) }}">{{ $article->title }}</a>
                                 <div class="post-actions">
                                     <a href="{{ route('author.articles.edit', ['article' => $article->article_id]) }}">Edit</a>
-                                    <a href="{{ route('client.articles.article', ['article_id' => $article->article_id]) }}">View</a>
+                                    <a href="{{ route('author.articles.show', ['article' => $article->article_id]) }}">View</a>
                                     <a href="#" style="color: red;"
                                        onclick="event.preventDefault(); document.getElementById('delete-form-{{ $article->article_id }}').submit();">
                                         Delete
