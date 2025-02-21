@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Models\Article;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Models\ArticleHistory;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
@@ -22,6 +22,7 @@ class ArticleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+
     public function create()
     {
         $categories = Category::select('category_id', 'name')->get();
@@ -49,45 +50,40 @@ class ArticleController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:articles,slug',
-            'content' => 'required',
-            'preview_content' => 'nullable|string',
-            'contains_sensitive_content' => 'boolean',
-            'author_id' => 'required|exists:users,user_id',
-            'category_id' => 'required|exists:categories,category_id',
-            'thumbnail_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Đảm bảo đúng tên trường
-            'status' => 'required|in:draft,pending,published,archived',
-            'views' => 'integer|min:0',
-            'approved_by' => 'nullable|exists:users,user_id',
-        ]);
+     public function store(Request $request)
+     {
+         $request->validate([
+             'title' => 'required|string|max:255',
+             'slug' => 'required|string|max:255|unique:articles,slug',
+             'content' => 'required',
+             'category_id' => 'required|exists:categories,category_id',
+             'thumbnail_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+             'status' => 'required|in:draft,pending',
+         ]);
 
-        $article = new Article();
-        $article->title = $request->title;
-        $article->slug = $request->slug;
-        $article->content = $request->content;
-        $article->preview_content = $request->preview_content;
-        $article->contains_sensitive_content = $request->contains_sensitive_content;
-        $article->author_id = $request->author_id;
-        $article->category_id = $request->category_id;
-        $article->status = $request->status;
-        $article->views = $request->views ?? 0;
-        $article->approved_by = $request->approved_by;
+         $article = new Article();
+         $article->title = $request->title;
+         $article->slug = $request->slug;
+         $article->content = $request->input('content');
+         $article->category_id = $request->category_id;
+         $article->status = $request->status;
+         $article->author_id = auth()->id();
 
-        // Kiểm tra và lưu ảnh
-        if ($request->hasFile('thumbnail_url')) { // Đúng tên trường form
-            $file = $request->file('thumbnail_url');
-            $path = $file->store('thumbnails', 'public'); // Lưu vào storage/app/public/thumbnails
-            $article->thumbnail_url = $path;
-        }
+         if ($request->hasFile('thumbnail_url')) {
+             $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+             $article->thumbnail_url = $path;
+         }
 
-        $article->save();
+         $article->save();
 
-        return redirect()->route('articles.index')->with('success', 'Article created successfully!');
-    }
+         if ($request->status == 'draft') {
+             return redirect()->route('articles.index')->with('success', 'Bài viết đã lưu nháp!');
+         }
+
+         return redirect()->route('articles.index')->with('success', 'Bài viết đã gửi để chờ duyệt!');
+     }
+
+
 
 
     /**
@@ -120,26 +116,18 @@ class ArticleController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id',
             'content' => 'required',
-            'preview_content' => 'nullable|string',
-            'contains_sensitive_content' => 'boolean',
             'author_id' => 'required|exists:users,user_id',
             'category_id' => 'required|exists:categories,category_id',
             'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'required|in:draft,pending,published,archived',
-            'views' => 'integer|min:0',
-            'approved_by' => 'nullable|exists:users,user_id',
+
         ]);
 
         $article->title = $request->title;
         $article->slug = $request->slug;
-        $article->content = $request->content;
-        $article->preview_content = $request->preview_content;
-        $article->contains_sensitive_content = $request->contains_sensitive_content;
-        $article->author_id = $request->author_id;
+        $article->content = $request->input('content');
+        $article->author_id = $request->author_id ?? $article->author_id;
         $article->category_id = $request->category_id;
-        $article->status = $request->status;
-        $article->views = $request->views ?? 0;
-        $article->approved_by = $request->approved_by;
+
 
         // Kiểm tra nếu có file mới thì cập nhật, không thì giữ ảnh cũ
         if ($request->hasFile('thumbnail_url')) {
@@ -162,7 +150,7 @@ class ArticleController extends Controller
         $article->delete();
         return redirect()->route('articles.index')->with('success', 'Bài viết đã bị xóa!');
     }
-    
+
     public function showw($article_id)
 {
     // Kiểm tra bài viết có tồn tại không
