@@ -1,52 +1,37 @@
 <?php
 
-namespace Database\Seeders;
+    namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+    use Illuminate\Database\Seeder;
+    use Illuminate\Support\Facades\File;
+    use App\Models\Role;
 
-class RoleSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    class RoleSeeder extends Seeder
     {
-        DB::table('roles')->insert([
-            [
-                'name' => 'admin',
-                'description' => 'Full rules',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
 
-            [
-                'name' => 'author',
-                'description' => 'crud articles',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'moderator',
-                'description' => 'review articles and comments',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        public function run()
+        {
+            $roles = [
+                ['name' => 'admin', 'description' => 'Full rules'],
+                ['name' => 'author', 'description' => 'CRUD articles'],
+                [
+                    'name' => 'moderator',
+                    'description' => 'Review articles and comments',
+                ],
+                [
+                    'name' => 'user',
+                    'description' => 'Read articles and comments',
+                ],
+            ];
 
-            [
-                'name' => 'user',
-                'description' => 'read articles and comments...',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+            foreach ($roles as $role) {
+                Role::updateOrCreate(['name' => $role['name']], $role);
+            }
 
-            //            [
-            //                'name' => 'guest',
-            //                'description' => 'Guest',
-            //                'created_at' => now(),
-            //                'updated_at' => now(),
-            //            ],
+            $roles = Role::pluck('role_id', 'name')->toArray();
+            $content = '<?php' . PHP_EOL . 'return ' . var_export($roles,
+                    true) . ';';
+            File::put(config_path('roles.php'), $content);
+        }
 
-        ]);
     }
-}

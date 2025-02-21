@@ -131,8 +131,27 @@
 
 <body>
     <div class="wrapper">
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+        @include('admin.layouts.partials.menusidebar')
+        <div class="main">
+            @include('admin.layouts.partials.header')
+=======
         @include('admin.menu')
-        <main class="content px-3 py-4 col-md-5">
+        <main class="content px-3 py-4 w-100">
+            @include('admin.header')
+>>>>>>> 65459d5776a18e445735a074bd602982137e0024
+=======
+        @include('admin.layouts.partials.menusidebar')
+        <div class="main">
+            @include('admin.layouts.partials.header')
+>>>>>>> 465ec0870b172196221404fd58cf493cde162b3c
+=======
+        @include('admin.menu')
+        <main class="content px-3 py-4 w-100">
+            @include('admin.header')
+>>>>>>> cfc6db325ba9dcff812deeb0618e648f61af75ee
             <div class="container-fluid">
                 <div class="mb-3">
                     <div class="row">
@@ -143,7 +162,7 @@
                             <a class="btn btn-primary" href="{{ route('categories.create') }}">
                                 <i class="lni lni-plus"></i>
                             </a>
-                           
+
                         </div>
                         <div class="col-12">
                             <table class="table table-striped">

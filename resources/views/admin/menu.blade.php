@@ -48,7 +48,7 @@ body {
 }
 
 #sidebar {
-    width: 300px;
+    width: 200px;
     min-width: 70px;
     position: relative;
     min-height: 100vh;
@@ -64,12 +64,12 @@ body {
     min-width: 260px;
 }
 
-.toggle-btn {
-    background-color: transparent;
-    cursor: pointer;
-    border: 0;
-    padding: 1rem 1.5rem;
-}
+        .toggle-btn {
+            background-color: transparent;
+            cursor: pointer;
+            border: 0;
+
+        }
 
 .toggle-btn i {
     font-size: 1.5rem;
