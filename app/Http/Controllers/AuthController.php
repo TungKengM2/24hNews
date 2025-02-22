@@ -30,7 +30,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             if ($user->role_id == 3) {
-                return redirect()->intended('/writer/dashboard');
+                return redirect()->intended('/author/dashboard');
             } elseif ($user->role_id == 2) {
                 return redirect()->intended('/moderator/dashboard');
             } elseif ($user->role_id == 4) {
@@ -127,14 +127,18 @@ class AuthController extends Controller
 
         return redirect('/')->with('status', 'Đăng ký thành công');
     }
-
     public function logout(Request $request)
     {
+        $driver = Auth::getDefaultDriver(); // Lưu driver trước khi logout
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        Cookie::queue(Cookie::forget('remember_web_'.Auth::getDefaultDriver()));
+
+        // Xóa cookie remember me
+        Cookie::queue(Cookie::forget('remember_web_' . $driver));
 
         return redirect('/')->with('status', 'You have been logged out.');
     }
+
 }

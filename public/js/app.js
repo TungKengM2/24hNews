@@ -17,16 +17,23 @@
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
+<<<<<<< HEAD
 // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
+=======
+>>>>>>> 36e2be25bc965500aa926567ffbad2240c8fe98a
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
 __webpack_require__.r(__webpack_exports__);
+<<<<<<< HEAD
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 })();
+=======
+Object(function webpackMissingModule() { var e = new Error("Cannot find module './bootstrap'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+>>>>>>> 36e2be25bc965500aa926567ffbad2240c8fe98a
 
 /******/ })()
 ;
