@@ -170,3 +170,4 @@ class ArticleController extends Controller
 
     return view('articles.article', compact('article', 'relatedArticles'));
 }
+}

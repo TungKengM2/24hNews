@@ -17,29 +17,6 @@
     <script src="{{ asset('js/ckeditor.js') }}"></script>
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .wrapper {
-            display: flex;
-            margin: 0px;
-        }
-
-        .container {
-            width: 100%;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-left: 300px;
-        }
-
-        .form-label {
-            font-weight: 600;
-        }
-    </style>
 </head>
 
 <body>
