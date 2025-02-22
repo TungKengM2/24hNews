@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
     /* Giới hạn kích thước ảnh chính trong bài viết */
     .article-image {
