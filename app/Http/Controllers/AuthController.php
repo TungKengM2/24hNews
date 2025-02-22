@@ -29,9 +29,11 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->has('remember'))) {
             $user = Auth::user();
 
-            if ($user->role_id == 3) {
-                return redirect()->intended('/author/dashboard');
+            if ($user->role_id == 1) {
+                return redirect()->intended('/admin/dashboard');
             } elseif ($user->role_id == 2) {
+                return redirect()->intended('/article/dashboard');
+            } elseif ($user->role_id == 3) {
                 return redirect()->intended('/moderator/dashboard');
             } elseif ($user->role_id == 4) {
                 return redirect()->intended('/user/dashboard');
