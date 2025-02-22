@@ -17,9 +17,14 @@
 
 <body>
     <div class="wrapper">
+<<<<<<< HEAD
         @include('admin.layouts.partials.menusidebar')
         <div class="main">
             @include('admin.layouts.partials.header')
+=======
+        @include('admin.menu')
+        <div class="container mt-5">
+>>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
             <div class="card p-2">
                 <h2 class="mb-4">Update Post</h2>
                 @if ($errors->any())
