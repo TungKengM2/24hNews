@@ -115,19 +115,11 @@ class ArticleController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id',
-<<<<<<< HEAD
-            'content' => 'required',
-            'author_id' => 'required|exists:users,user_id',
-            'category_id' => 'required|exists:categories,category_id',
-            'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-
-=======
             'content' => '',
             'author_id' => 'required|exists:users,user_id',
             'category_id' => 'required|exists:categories,category_id',
             'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             
->>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
         ]);
 
         $article->title = $request->title;

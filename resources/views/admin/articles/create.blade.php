@@ -16,9 +16,6 @@
         href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css" />
     <script src="{{ asset('js/ckeditor.js') }}"></script>
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
-<<<<<<< HEAD
-    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
-=======
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
@@ -45,7 +42,6 @@
             font-weight: 600;
         }
     </style>
->>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
 </head>
 
 <body>
