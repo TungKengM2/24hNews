@@ -116,8 +116,8 @@
                                 <th>ID</th>
                                 <th>Title</th>
                                 <th>Slug</th>
-                                {{-- <th>Content</th> --}}
-                                {{-- <th>Preview Content</th> --}}
+                                <th>Content</th>
+                                <th>Preview Content</th>
                                 <th>Contains Sensitive Content</th>
                                 <th>Author</th>
                                 <th>Category</th>
@@ -134,15 +134,12 @@
                                     <td>{{ $article->article_id }}</td>
                                     <td>{{ $article->title }}</td>
                                     <td>{{ $article->slug }}</td>
+
                                     <td>
                                         {{ Str::limit(formatPlainText($article->content), 50) }}
                                     </td>
 
-                                    {{-- <td>
-                                        {{ Str::limit(formatPlainText($article->content), 50) }}
-                                    </td> --}}
-
-                                    {{-- <td>{{ Str::limit($article->preview_content, 50) }}</td> --}}
+                                    <td>{{ Str::limit($article->preview_content, 50) }}</td>
                                     <td class="text-center">
                                         @if ($article->contains_sensitive_content)
                                             <span class="badge bg-danger">Yes</span>

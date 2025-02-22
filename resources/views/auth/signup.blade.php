@@ -63,5 +63,10 @@
             <p>Nếu đã có tài khoản, hãy <a href="{{ route('login') }}">đăng nhập</a>.</p>
         </div>
     </div>
+
+</body>
+</html>
+
 </div>
 @endsection
+

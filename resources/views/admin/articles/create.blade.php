@@ -9,17 +9,6 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=account_circle" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-<<<<<<< HEAD
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.css"/>
-
-    <link rel="stylesheet"
-          href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css"/>
-    {{--    <script src="https://cdn.ckbox.io/ckbox/2.6.1/ckbox.js" crossorigin></script>--}}
-    <script src="{{ asset('js/ckeditor.js') }}"></script>
-    <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
-    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
-=======
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.css" />
 
@@ -29,131 +18,13 @@
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .wrapper {
-            display: flex;
-            margin: 0px;
-        }
-
-        .container {
-            width: 100%;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-left: 300px;
-        }
-
-        .form-label {
-            font-weight: 600;
-        }
-    </style>
->>>>>>> 36e2be25bc965500aa926567ffbad2240c8fe98a
 </head>
 
 <body>
-<<<<<<< HEAD
-<div class="wrapper">
-    @include('admin.menu')
-    <div class="container mt-5 ">
-        <div class="card p-2">
-            <h2 class="mb-4">Create New Post</h2>
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="mb-3">
-                    <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" required>
-                </div>
-                <div class="mb-3">
-                    <label for="slug" class="form-label">Slug</label>
-                    <input type="text" class="form-control" id="slug" name="slug" required>
-                </div>
-                <div class="mb-3" style="height: auto; width: auto">
-                    <label for="content" class="form-label">Content</label>
-                    <div id="editor">
-                        <p>Hello from CKEditor 5!</p>
-                    </div>
-                    {{--                    <textarea id="content" name="content" style="display: none;"></textarea>--}}
-                    <textarea id="content" name="content" style="position: absolute; left: -9999px;"></textarea>
-                    <input type="file" id="fileInput" accept=".docx" style="margin-top: 10px;">
-                </div>
-                {{--                <div class="mb-3">--}}
-                {{--                    <label for="preview_content" class="form-label">Preview Content</label>--}}
-                {{--                    <textarea class="form-control" id="preview_content" name="preview_content" rows="3"--}}
-                {{--                              required></textarea>--}}
-                {{--                </div>--}}
-                <div class="mb-3">
-                    <label for="contains_sensitive_content" class="form-label">Contains Sensitive Content?</label>
-                    <select class="form-control" id="contains_sensitive_content" name="contains_sensitive_content"
-                            required>
-                        <option value="0">No</option>
-                        <option value="1">Yes</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Author</label>
-                    <select name="author_id" class="form-control" required>
-                        <option value="">-- Chọn tác giả --</option>
-                        @foreach ($authors as $author)
-                            <option value="{{ $author->user_id }}">{{ $author->username }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Category</label>
-                    <select name="category_id" class="form-control">
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->category_id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="thumbnail_url" class="form-label">Thumbnail Url</label>
-                    <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Status</label>
-                    <select name="status" class="form-control">
-                        <option value="draft">Draft</option>
-                        <option value="pending">Pending</option>
-                        <option value="published">Published</option>
-                        <option value="archived">Archived</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Views</label>
-                    <input type="number" name="views" class="form-control" value="0">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Approved By</label>
-                    <select name="approved_by" class="form-control">
-                        <option value="">Not Approved</option>
-                        @if (isset($approvers) && $approvers->count() > 0)
-                            @foreach ($approvers as $approver)
-                                <option value="{{ $approver->user_id }}">{{ $approver->username }}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Create</button>
-                <a href="{{ route('articles.index') }}" class="btn btn-secondary">Cancel</a>
-            </form>
-=======
     <div class="wrapper">
-        @include('admin.menu')
-        <div class="container mt-5 ">
+        @include('admin.layouts.partials.menusidebar')
+        <div class="main">
+            @include('admin.layouts.partials.header')
             <div class="card p-2">
                 <h2 class="mb-4">Create New Post</h2>
                 @if ($errors->any())
@@ -285,7 +156,6 @@
 
 
             </div>
->>>>>>> 36e2be25bc965500aa926567ffbad2240c8fe98a
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>

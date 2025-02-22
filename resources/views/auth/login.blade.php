@@ -21,7 +21,7 @@
     @endif
         <div class="form-section">
             <div class="profile-img">
-                <img src="{{ asset('images/headerbanner24hnews.jpg') }}" width="100px" height="100px" alt="Logo 24H News">
+                <img src="https://i.imgur.com/ZuUExs4.jpeg" alt="profile_img" height="140px" width="140px;">
             </div>
             <form action="{{ route('login') }}" method="POST" >
                 @csrf

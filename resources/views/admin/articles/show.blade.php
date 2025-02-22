@@ -15,13 +15,12 @@
 </head>
 
 <body>
-    <div class="container">
-        <h2 class="mb-4">Chi tiết bài viết</h2>
+    <div class="wrapper">
+        @include('admin.layouts.partials.menusidebar')
 
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title">Title: {{ $article->title }}</h3>
-                <p class="text-muted">Slug: {{ $article->slug }}</p>
+        <div class="main">
+            @include('admin.layouts.partials.header')
+            <h1 class="mb-4">Chi tiết bài viết</h1>
 
             <div class="card mx-2">
                 <div class="card-body">
@@ -39,48 +38,29 @@
                             <p><i class="lni lni-warning"></i> <strong>Contains Sensitive Content?</strong> {{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</p>
                         </div>
                     </div>
-                @endif
 
-                <div class="mb-3">
-                    <strong>Contains Sensitive Content?</strong>
-                    <p>{{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</p>
-                </div>
-
-                <div class="mb-3">
-                    <strong>Author:</strong>
-                    <p>{{ $article->author->username ?? 'N/A' }}</p>
-                </div>
-
-                <div class="mb-3">
-                    <strong>Category:</strong>
-                    <p>{{ $article->category->name ?? 'N/A' }}</p>
-                </div>
-
-                <div class="mb-3">
-                    <strong>Status:</strong>
-                    <p>{{ ucfirst($article->status) }}</p>
-                </div>
-
-                <div class="mb-3">
-                    <strong>Views:</strong>
-                    <p>{{ $article->views }}</p>
-                </div>
-
-                <div class="mb-3">
-                    <strong>Approved By:</strong>
-                    <p>{{ $article->approver->username ?? 'Not Approved' }}</p>
-                </div>
-
-                @if ($article->thumbnail_url)
                     <div class="mb-3">
                         <strong><i class="lni lni-pencil"></i> Content:</strong>
                         <div class="border p-3" style="width: 100%; min-height: 300px;">{!! $article->content !!}</div>
                     </div>
-                @endif
 
-                <div class="mt-4">
-                    <a href="{{ route('articles.edit', $article->article_id) }}" class="btn btn-primary">Edit</a>
-                    <a href="{{ route('articles.index') }}" class="btn btn-secondary">Back to List</a>
+                    @if ($article->preview_content || $article->thumbnail_url)
+                    <div class="row align-items-center">
+                        @if ($article->preview_content)
+                        <div class="col-md-6">
+                            <strong><i class="lni lni-eye"></i> Preview Content:</strong>
+                            <div class="border p-3" style="width: 100%; min-height: 400px;">{{ $article->preview_content }}</div>
+                        </div>
+                        @endif
+                        @if ($article->thumbnail_url)
+                        <div class="col-md-6 text-center">
+                            <strong><i class="lni lni-image"></i> Thumbnail:</strong>
+                            <br>
+                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Thumbnail" class="img-thumbnail"style="width: 100%;min-height: 400px; ">
+                        </div>
+                        @endif
+                    </div>
+                    @endif
 
                     <div class="mt-4">
                         <a href="{{ route('articles.edit', $article->article_id) }}" class="btn btn-primary"><i class="lni lni-pencil"></i> Edit</a>
