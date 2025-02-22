@@ -13,11 +13,19 @@
     <div class="container mx-auto">
         @include('website.layouts.partials.main')
         @yield('content')
+        <button id="btn-to-top" title="Lên đầu trang" class="fixed bottom-4 right-4 bg-transparent text-gray-500 font-bold py-2 px-4 rounded hover:border-gray-500 hover:border-2">
+            <i class="fas fa-arrow-up"></i>
+          </button>
 
     </div>
     @include('website.layouts.partials.footer')
 
 
-
+<script>
+    document.getElementById("btn-to-top").addEventListener("click", function() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+</script>
 </body>
+
 </html>
