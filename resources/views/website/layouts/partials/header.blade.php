@@ -13,15 +13,26 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
-            <a href="{{ route('login') }}" class="px-3 py-1 border rounded hover:bg-gray-100">Đăng nhập</a>
-            <a href="{{ route('signup') }}" class="px-3 py-1 border rounded hover:bg-gray-100">Đăng ký</a>
+            <a href="{{ route('login') }}" class="px-3 py-1 border rounded hover:bg-gray-100 flex items-center">
+                <i class="fas fa-sign-in-alt mr-2"></i> Đăng nhập
+            </a>
+            <a href="{{ route('signup') }}" class="px-3 py-1 border rounded hover:bg-gray-100 flex items-center">
+                <i class="fas fa-user-plus mr-2"></i> Đăng ký
+            </a>
+
         </div>
     </div>
     <nav class="border-t bg-white mt-4">
-        <ul class="flex justify-between px-20 p-2 text-sm font-medium text-gray-700">
+        <ul class="flex justify-between px-20 px-4 p-2 text-base font-bold text-gray-700 items-center">
+            <!-- Icon Home -->
+            <li class="hover:text-red-600 cursor-pointer flex items-center">
+                <i class="fas fa-home text-gray-500 text-lg mr-2 "></i>
+            </li>
+
+            <!-- Các danh mục -->
             <li class="hover:text-red-600 cursor-pointer">Thời sự</li>
             <li class="hover:text-red-600 cursor-pointer">Góc nhìn</li>
-            <li class="hover:text-red-600 cursor-pointer">Thế giới</li>
+            <li class="hover:text-red-600 cursor-pointer ">Thế giới</li>
             <li class="hover:text-red-600 cursor-pointer">Video</li>
             <li class="hover:text-red-600 cursor-pointer">Podcasts</li>
             <li class="hover:text-red-600 cursor-pointer">Kinh doanh</li>
@@ -38,6 +49,12 @@
             <li class="hover:text-red-600 cursor-pointer">Xe</li>
             <li class="hover:text-red-600 cursor-pointer">Ý kiến</li>
             <li class="hover:text-red-600 cursor-pointer">Tâm sự</li>
+
+            <!-- Icon Danh Mục -->
+            <li class="hover:text-red-600 cursor-pointer flex items-center">
+                <i class="fas fa-bars text-gray-500 text-lg ml-2"></i>
+            </li>
         </ul>
     </nav>
+
 </header>
