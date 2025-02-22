@@ -248579,6 +248579,7 @@
       //
       url.href = url.toString();
     }
+<<<<<<< HEAD
     
     /**
      * This is convenience method for changing properties in the URL instance to
@@ -248600,6 +248601,1071 @@
         case 'query':
           if ('string' === typeof value && value.length) {
             value = (fn || qs.parse)(value);
+=======
+  }
+
+  return getRandomValues(rnds8);
+}
+
+/***/ }),
+
+/***/ "./node_modules/uuid/dist/esm-browser/stringify.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-browser/stringify.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   unsafeStringify: () => (/* binding */ unsafeStringify)
+/* harmony export */ });
+/* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validate.js */ "./node_modules/uuid/dist/esm-browser/validate.js");
+
+/**
+ * Convert array of 16 byte values to UUID string format of the form:
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ */
+
+const byteToHex = [];
+
+for (let i = 0; i < 256; ++i) {
+  byteToHex.push((i + 0x100).toString(16).slice(1));
+}
+
+function unsafeStringify(arr, offset = 0) {
+  // Note: Be careful editing this code!  It's been tuned for performance
+  // and works in ways you may not expect. See https://github.com/uuidjs/uuid/pull/434
+  return byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + '-' + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + '-' + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + '-' + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + '-' + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]];
+}
+
+function stringify(arr, offset = 0) {
+  const uuid = unsafeStringify(arr, offset); // Consistency check for valid UUID.  If this throws, it's likely due to one
+  // of the following:
+  // - One or more input array values don't map to a hex octet (leading to
+  // "undefined" in the uuid)
+  // - Invalid input values for the RFC `version` or `variant` fields
+
+  if (!(0,_validate_js__WEBPACK_IMPORTED_MODULE_0__["default"])(uuid)) {
+    throw TypeError('Stringified UUID is invalid');
+  }
+
+  return uuid;
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (stringify);
+
+/***/ }),
+
+/***/ "./node_modules/uuid/dist/esm-browser/v4.js":
+/*!**************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-browser/v4.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _native_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./native.js */ "./node_modules/uuid/dist/esm-browser/native.js");
+/* harmony import */ var _rng_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./rng.js */ "./node_modules/uuid/dist/esm-browser/rng.js");
+/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist/esm-browser/stringify.js");
+
+
+
+
+function v4(options, buf, offset) {
+  if (_native_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomUUID && !buf && !options) {
+    return _native_js__WEBPACK_IMPORTED_MODULE_0__["default"].randomUUID();
+  }
+
+  options = options || {};
+  const rnds = options.random || (options.rng || _rng_js__WEBPACK_IMPORTED_MODULE_1__["default"])(); // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+
+  rnds[6] = rnds[6] & 0x0f | 0x40;
+  rnds[8] = rnds[8] & 0x3f | 0x80; // Copy bytes to buffer, if provided
+
+  if (buf) {
+    offset = offset || 0;
+
+    for (let i = 0; i < 16; ++i) {
+      buf[offset + i] = rnds[i];
+    }
+
+    return buf;
+  }
+
+  return (0,_stringify_js__WEBPACK_IMPORTED_MODULE_2__.unsafeStringify)(rnds);
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (v4);
+
+/***/ }),
+
+/***/ "./node_modules/uuid/dist/esm-browser/validate.js":
+/*!********************************************************!*\
+  !*** ./node_modules/uuid/dist/esm-browser/validate.js ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regex.js */ "./node_modules/uuid/dist/esm-browser/regex.js");
+
+
+function validate(uuid) {
+  return typeof uuid === 'string' && _regex_js__WEBPACK_IMPORTED_MODULE_0__["default"].test(uuid);
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (validate);
+
+/***/ }),
+
+/***/ "./node_modules/vanilla-colorful/lib/components/color-picker.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/vanilla-colorful/lib/components/color-picker.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   $css: () => (/* binding */ $css),
+/* harmony export */   $sliders: () => (/* binding */ $sliders),
+/* harmony export */   ColorPicker: () => (/* binding */ ColorPicker)
+/* harmony export */ });
+/* harmony import */ var _utils_compare_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/compare.js */ "./node_modules/vanilla-colorful/lib/utils/compare.js");
+/* harmony import */ var _utils_dom_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/dom.js */ "./node_modules/vanilla-colorful/lib/utils/dom.js");
+/* harmony import */ var _hue_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./hue.js */ "./node_modules/vanilla-colorful/lib/components/hue.js");
+/* harmony import */ var _saturation_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./saturation.js */ "./node_modules/vanilla-colorful/lib/components/saturation.js");
+/* harmony import */ var _styles_color_picker_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../styles/color-picker.js */ "./node_modules/vanilla-colorful/lib/styles/color-picker.js");
+/* harmony import */ var _styles_hue_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../styles/hue.js */ "./node_modules/vanilla-colorful/lib/styles/hue.js");
+/* harmony import */ var _styles_saturation_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../styles/saturation.js */ "./node_modules/vanilla-colorful/lib/styles/saturation.js");
+
+
+
+
+
+
+
+const $isSame = Symbol('same');
+const $color = Symbol('color');
+const $hsva = Symbol('hsva');
+const $update = Symbol('update');
+const $parts = Symbol('parts');
+const $css = Symbol('css');
+const $sliders = Symbol('sliders');
+class ColorPicker extends HTMLElement {
+    static get observedAttributes() {
+        return ['color'];
+    }
+    get [$css]() {
+        return [_styles_color_picker_js__WEBPACK_IMPORTED_MODULE_0__["default"], _styles_hue_js__WEBPACK_IMPORTED_MODULE_1__["default"], _styles_saturation_js__WEBPACK_IMPORTED_MODULE_2__["default"]];
+    }
+    get [$sliders]() {
+        return [_saturation_js__WEBPACK_IMPORTED_MODULE_3__.Saturation, _hue_js__WEBPACK_IMPORTED_MODULE_4__.Hue];
+    }
+    get color() {
+        return this[$color];
+    }
+    set color(newColor) {
+        if (!this[$isSame](newColor)) {
+            const newHsva = this.colorModel.toHsva(newColor);
+            this[$update](newHsva);
+            this[$color] = newColor;
+        }
+    }
+    constructor() {
+        super();
+        const template = (0,_utils_dom_js__WEBPACK_IMPORTED_MODULE_5__.tpl)(`<style>${this[$css].join('')}</style>`);
+        const root = this.attachShadow({ mode: 'open' });
+        root.appendChild(template.content.cloneNode(true));
+        root.addEventListener('move', this);
+        this[$parts] = this[$sliders].map((slider) => new slider(root));
+    }
+    connectedCallback() {
+        // A user may set a property on an _instance_ of an element,
+        // before its prototype has been connected to this class.
+        // If so, we need to run it through the proper class setter.
+        if (this.hasOwnProperty('color')) {
+            const value = this.color;
+            delete this['color'];
+            this.color = value;
+        }
+        else if (!this.color) {
+            this.color = this.colorModel.defaultColor;
+        }
+    }
+    attributeChangedCallback(_attr, _oldVal, newVal) {
+        const color = this.colorModel.fromAttr(newVal);
+        if (!this[$isSame](color)) {
+            this.color = color;
+        }
+    }
+    handleEvent(event) {
+        // Merge the current HSV color object with updated params.
+        const oldHsva = this[$hsva];
+        const newHsva = { ...oldHsva, ...event.detail };
+        this[$update](newHsva);
+        let newColor;
+        if (!(0,_utils_compare_js__WEBPACK_IMPORTED_MODULE_6__.equalColorObjects)(newHsva, oldHsva) &&
+            !this[$isSame]((newColor = this.colorModel.fromHsva(newHsva)))) {
+            this[$color] = newColor;
+            (0,_utils_dom_js__WEBPACK_IMPORTED_MODULE_5__.fire)(this, 'color-changed', { value: newColor });
+        }
+    }
+    [$isSame](color) {
+        return this.color && this.colorModel.equal(color, this.color);
+    }
+    [$update](hsva) {
+        this[$hsva] = hsva;
+        this[$parts].forEach((part) => part.update(hsva));
+    }
+}
+//# sourceMappingURL=color-picker.js.map
+
+/***/ }),
+
+/***/ "./node_modules/vanilla-colorful/lib/components/hue.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/vanilla-colorful/lib/components/hue.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Hue: () => (/* binding */ Hue)
+/* harmony export */ });
+/* harmony import */ var _slider_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./slider.js */ "./node_modules/vanilla-colorful/lib/components/slider.js");
+/* harmony import */ var _utils_convert_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/convert.js */ "./node_modules/vanilla-colorful/lib/utils/convert.js");
+/* harmony import */ var _utils_math_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/math.js */ "./node_modules/vanilla-colorful/lib/utils/math.js");
+
+
+
+class Hue extends _slider_js__WEBPACK_IMPORTED_MODULE_0__.Slider {
+    constructor(root) {
+        super(root, 'hue', 'aria-label="Hue" aria-valuemin="0" aria-valuemax="360"', false);
+    }
+    update({ h }) {
+        this.h = h;
+        this.style([
+            {
+                left: `${(h / 360) * 100}%`,
+                color: (0,_utils_convert_js__WEBPACK_IMPORTED_MODULE_1__.hsvaToHslString)({ h, s: 100, v: 100, a: 1 })
+            }
+        ]);
+        this.el.setAttribute('aria-valuenow', `${(0,_utils_math_js__WEBPACK_IMPORTED_MODULE_2__.round)(h)}`);
+    }
+    getMove(offset, key) {
+        // Hue measured in degrees of the color circle ranging from 0 to 360
+        return { h: key ? (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_2__.clamp)(this.h + offset.x * 360, 0, 360) : 360 * offset.x };
+    }
+}
+//# sourceMappingURL=hue.js.map
+
+/***/ }),
+
+/***/ "./node_modules/vanilla-colorful/lib/components/saturation.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vanilla-colorful/lib/components/saturation.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Saturation: () => (/* binding */ Saturation)
+/* harmony export */ });
+/* harmony import */ var _slider_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./slider.js */ "./node_modules/vanilla-colorful/lib/components/slider.js");
+/* harmony import */ var _utils_convert_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/convert.js */ "./node_modules/vanilla-colorful/lib/utils/convert.js");
+/* harmony import */ var _utils_math_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/math.js */ "./node_modules/vanilla-colorful/lib/utils/math.js");
+
+
+
+class Saturation extends _slider_js__WEBPACK_IMPORTED_MODULE_0__.Slider {
+    constructor(root) {
+        super(root, 'saturation', 'aria-label="Color"', true);
+    }
+    update(hsva) {
+        this.hsva = hsva;
+        this.style([
+            {
+                top: `${100 - hsva.v}%`,
+                left: `${hsva.s}%`,
+                color: (0,_utils_convert_js__WEBPACK_IMPORTED_MODULE_1__.hsvaToHslString)(hsva)
+            },
+            {
+                'background-color': (0,_utils_convert_js__WEBPACK_IMPORTED_MODULE_1__.hsvaToHslString)({ h: hsva.h, s: 100, v: 100, a: 1 })
+            }
+        ]);
+        this.el.setAttribute('aria-valuetext', `Saturation ${(0,_utils_math_js__WEBPACK_IMPORTED_MODULE_2__.round)(hsva.s)}%, Brightness ${(0,_utils_math_js__WEBPACK_IMPORTED_MODULE_2__.round)(hsva.v)}%`);
+    }
+    getMove(offset, key) {
+        // Saturation and brightness always fit into [0, 100] range
+        return {
+            s: key ? (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_2__.clamp)(this.hsva.s + offset.x * 100, 0, 100) : offset.x * 100,
+            v: key ? (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_2__.clamp)(this.hsva.v - offset.y * 100, 0, 100) : Math.round(100 - offset.y * 100)
+        };
+    }
+}
+//# sourceMappingURL=saturation.js.map
+
+/***/ }),
+
+/***/ "./node_modules/vanilla-colorful/lib/components/slider.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vanilla-colorful/lib/components/slider.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Slider: () => (/* binding */ Slider)
+/* harmony export */ });
+/* harmony import */ var _utils_dom_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/dom.js */ "./node_modules/vanilla-colorful/lib/utils/dom.js");
+/* harmony import */ var _utils_math_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/math.js */ "./node_modules/vanilla-colorful/lib/utils/math.js");
+
+
+let hasTouched = false;
+// Check if an event was triggered by touch
+const isTouch = (e) => 'touches' in e;
+// Prevent mobile browsers from handling mouse events (conflicting with touch ones).
+// If we detected a touch interaction before, we prefer reacting to touch events only.
+const isValid = (event) => {
+    if (hasTouched && !isTouch(event))
+        return false;
+    if (!hasTouched)
+        hasTouched = isTouch(event);
+    return true;
+};
+const pointerMove = (target, event) => {
+    const pointer = isTouch(event) ? event.touches[0] : event;
+    const rect = target.el.getBoundingClientRect();
+    (0,_utils_dom_js__WEBPACK_IMPORTED_MODULE_0__.fire)(target.el, 'move', target.getMove({
+        x: (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_1__.clamp)((pointer.pageX - (rect.left + window.pageXOffset)) / rect.width),
+        y: (0,_utils_math_js__WEBPACK_IMPORTED_MODULE_1__.clamp)((pointer.pageY - (rect.top + window.pageYOffset)) / rect.height)
+    }));
+};
+const keyMove = (target, event) => {
+    // We use `keyCode` instead of `key` to reduce the size of the library.
+    const keyCode = event.keyCode;
+    // Ignore all keys except arrow ones, Page Up, Page Down, Home and End.
+    if (keyCode > 40 || (target.xy && keyCode < 37) || keyCode < 33)
+        return;
+    // Do not scroll page by keys when color picker element has focus.
+    event.preventDefault();
+    // Send relative offset to the parent component.
+    (0,_utils_dom_js__WEBPACK_IMPORTED_MODULE_0__.fire)(target.el, 'move', target.getMove({
+        x: keyCode === 39 // Arrow Right
+            ? 0.01
+            : keyCode === 37 // Arrow Left
+                ? -0.01
+                : keyCode === 34 // Page Down
+                    ? 0.05
+                    : keyCode === 33 // Page Up
+                        ? -0.05
+                        : keyCode === 35 // End
+                            ? 1
+                            : keyCode === 36 // Home
+                                ? -1
+                                : 0,
+        y: keyCode === 40 // Arrow down
+            ? 0.01
+            : keyCode === 38 // Arrow Up
+                ? -0.01
+                : 0
+    }, true));
+};
+class Slider {
+    constructor(root, part, aria, xy) {
+        const template = (0,_utils_dom_js__WEBPACK_IMPORTED_MODULE_0__.tpl)(`<div role="slider" tabindex="0" part="${part}" ${aria}><div part="${part}-pointer"></div></div>`);
+        root.appendChild(template.content.cloneNode(true));
+        const el = root.querySelector(`[part=${part}]`);
+        el.addEventListener('mousedown', this);
+        el.addEventListener('touchstart', this);
+        el.addEventListener('keydown', this);
+        this.el = el;
+        this.xy = xy;
+        this.nodes = [el.firstChild, el];
+    }
+    set dragging(state) {
+        const toggleEvent = state ? document.addEventListener : document.removeEventListener;
+        toggleEvent(hasTouched ? 'touchmove' : 'mousemove', this);
+        toggleEvent(hasTouched ? 'touchend' : 'mouseup', this);
+    }
+    handleEvent(event) {
+        switch (event.type) {
+            case 'mousedown':
+            case 'touchstart':
+                event.preventDefault();
+                // event.button is 0 in mousedown for left button activation
+                if (!isValid(event) || (!hasTouched && event.button != 0))
+                    return;
+                this.el.focus();
+                pointerMove(this, event);
+                this.dragging = true;
+                break;
+            case 'mousemove':
+            case 'touchmove':
+                event.preventDefault();
+                pointerMove(this, event);
+                break;
+            case 'mouseup':
+            case 'touchend':
+                this.dragging = false;
+                break;
+            case 'keydown':
+                keyMove(this, event);
+                break;
+        }
+    }
+    style(styles) {
+        styles.forEach((style, i) => {
+            for (const p in style) {
+                this.nodes[i].style.setProperty(p, style[p]);
+            }
+        });
+    }
+}
+//# sourceMappingURL=slider.js.map
+
+/***/ }),
+
+/***/ "./node_modules/vanilla-colorful/lib/entrypoints/hex.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/vanilla-colorful/lib/entrypoints/hex.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   HexBase: () => (/* binding */ HexBase)
+/* harmony export */ });
+/* harmony import */ var _components_color_picker_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/color-picker.js */ "./node_modules/vanilla-colorful/lib/components/color-picker.js");
+/* harmony import */ var _utils_convert_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/convert.js */ "./node_modules/vanilla-colorful/lib/utils/convert.js");
+/* harmony import */ var _utils_compare_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/compare.js */ "./node_modules/vanilla-colorful/lib/utils/compare.js");
+
+
+
+const colorModel = {
+    defaultColor: '#000',
+    toHsva: _utils_convert_js__WEBPACK_IMPORTED_MODULE_0__.hexToHsva,
+    fromHsva: ({ h, s, v }) => (0,_utils_convert_js__WEBPACK_IMPORTED_MODULE_0__.hsvaToHex)({ h, s, v, a: 1 }),
+    equal: _utils_compare_js__WEBPACK_IMPORTED_MODULE_1__.equalHex,
+    fromAttr: (color) => color
+};
+class HexBase extends _components_color_picker_js__WEBPACK_IMPORTED_MODULE_2__.ColorPicker {
+    get colorModel() {
+        return colorModel;
+    }
+}
+//# sourceMappingURL=hex.js.map
+
+/***/ }),
+
+/***/ "./node_modules/vanilla-colorful/lib/styles/color-picker.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/vanilla-colorful/lib/styles/color-picker.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (`:host{display:flex;flex-direction:column;position:relative;width:200px;height:200px;user-select:none;-webkit-user-select:none;cursor:default}:host([hidden]){display:none!important}[role=slider]{position:relative;touch-action:none;user-select:none;-webkit-user-select:none;outline:0}[role=slider]:last-child{border-radius:0 0 8px 8px}[part$=pointer]{position:absolute;z-index:1;box-sizing:border-box;width:28px;height:28px;display:flex;place-content:center center;transform:translate(-50%,-50%);background-color:#fff;border:2px solid #fff;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,.2)}[part$=pointer]::after{content:"";width:100%;height:100%;border-radius:inherit;background-color:currentColor}[role=slider]:focus [part$=pointer]{transform:translate(-50%,-50%) scale(1.1)}`);
+//# sourceMappingURL=color-picker.js.map
+
+/***/ }),
+
+/***/ "./node_modules/vanilla-colorful/lib/styles/hue.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/vanilla-colorful/lib/styles/hue.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (`[part=hue]{flex:0 0 24px;background:linear-gradient(to right,red 0,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,red 100%)}[part=hue-pointer]{top:50%;z-index:2}`);
+//# sourceMappingURL=hue.js.map
+
+/***/ }),
+
+/***/ "./node_modules/vanilla-colorful/lib/styles/saturation.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/vanilla-colorful/lib/styles/saturation.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (`[part=saturation]{flex-grow:1;border-color:transparent;border-bottom:12px solid #000;border-radius:8px 8px 0 0;background-image:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,rgba(255,255,255,0));box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}[part=saturation-pointer]{z-index:3}`);
+//# sourceMappingURL=saturation.js.map
+
+/***/ }),
+
+/***/ "./node_modules/vanilla-colorful/lib/utils/compare.js":
+/*!************************************************************!*\
+  !*** ./node_modules/vanilla-colorful/lib/utils/compare.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   equalColorObjects: () => (/* binding */ equalColorObjects),
+/* harmony export */   equalColorString: () => (/* binding */ equalColorString),
+/* harmony export */   equalHex: () => (/* binding */ equalHex)
+/* harmony export */ });
+/* harmony import */ var _convert_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./convert.js */ "./node_modules/vanilla-colorful/lib/utils/convert.js");
+
+const equalColorObjects = (first, second) => {
+    if (first === second)
+        return true;
+    for (const prop in first) {
+        // The following allows for a type-safe calling of this function (first & second have to be HSL, HSV, or RGB)
+        // with type-unsafe iterating over object keys. TS does not allow this without an index (`[key: string]: number`)
+        // on an object to define how iteration is normally done. To ensure extra keys are not allowed on our types,
+        // we must cast our object to unknown (as RGB demands `r` be a key, while `Record<string, x>` does not care if
+        // there is or not), and then as a type TS can iterate over.
+        if (first[prop] !==
+            second[prop])
+            return false;
+    }
+    return true;
+};
+const equalColorString = (first, second) => {
+    return first.replace(/\s/g, '') === second.replace(/\s/g, '');
+};
+const equalHex = (first, second) => {
+    if (first.toLowerCase() === second.toLowerCase())
+        return true;
+    // To compare colors like `#FFF` and `ffffff` we convert them into RGB objects
+    return equalColorObjects((0,_convert_js__WEBPACK_IMPORTED_MODULE_0__.hexToRgba)(first), (0,_convert_js__WEBPACK_IMPORTED_MODULE_0__.hexToRgba)(second));
+};
+//# sourceMappingURL=compare.js.map
+
+/***/ }),
+
+/***/ "./node_modules/vanilla-colorful/lib/utils/convert.js":
+/*!************************************************************!*\
+  !*** ./node_modules/vanilla-colorful/lib/utils/convert.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   hexToHsva: () => (/* binding */ hexToHsva),
+/* harmony export */   hexToRgba: () => (/* binding */ hexToRgba),
+/* harmony export */   hslStringToHsva: () => (/* binding */ hslStringToHsva),
+/* harmony export */   hslaStringToHsva: () => (/* binding */ hslaStringToHsva),
+/* harmony export */   hslaToHsl: () => (/* binding */ hslaToHsl),
+/* harmony export */   hslaToHsva: () => (/* binding */ hslaToHsva),
+/* harmony export */   hsvStringToHsva: () => (/* binding */ hsvStringToHsva),
+/* harmony export */   hsvaStringToHsva: () => (/* binding */ hsvaStringToHsva),
+/* harmony export */   hsvaToHex: () => (/* binding */ hsvaToHex),
+/* harmony export */   hsvaToHslString: () => (/* binding */ hsvaToHslString),
+/* harmony export */   hsvaToHsla: () => (/* binding */ hsvaToHsla),
+/* harmony export */   hsvaToHslaString: () => (/* binding */ hsvaToHslaString),
+/* harmony export */   hsvaToHsv: () => (/* binding */ hsvaToHsv),
+/* harmony export */   hsvaToHsvString: () => (/* binding */ hsvaToHsvString),
+/* harmony export */   hsvaToHsvaString: () => (/* binding */ hsvaToHsvaString),
+/* harmony export */   hsvaToRgbString: () => (/* binding */ hsvaToRgbString),
+/* harmony export */   hsvaToRgba: () => (/* binding */ hsvaToRgba),
+/* harmony export */   hsvaToRgbaString: () => (/* binding */ hsvaToRgbaString),
+/* harmony export */   parseHue: () => (/* binding */ parseHue),
+/* harmony export */   rgbStringToHsva: () => (/* binding */ rgbStringToHsva),
+/* harmony export */   rgbaStringToHsva: () => (/* binding */ rgbaStringToHsva),
+/* harmony export */   rgbaToHex: () => (/* binding */ rgbaToHex),
+/* harmony export */   rgbaToHsva: () => (/* binding */ rgbaToHsva),
+/* harmony export */   rgbaToRgb: () => (/* binding */ rgbaToRgb),
+/* harmony export */   roundHsva: () => (/* binding */ roundHsva)
+/* harmony export */ });
+/* harmony import */ var _math_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math.js */ "./node_modules/vanilla-colorful/lib/utils/math.js");
+
+/**
+ * Valid CSS <angle> units.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/angle
+ */
+const angleUnits = {
+    grad: 360 / 400,
+    turn: 360,
+    rad: 360 / (Math.PI * 2)
+};
+const hexToHsva = (hex) => rgbaToHsva(hexToRgba(hex));
+const hexToRgba = (hex) => {
+    if (hex[0] === '#')
+        hex = hex.substring(1);
+    if (hex.length < 6) {
+        return {
+            r: parseInt(hex[0] + hex[0], 16),
+            g: parseInt(hex[1] + hex[1], 16),
+            b: parseInt(hex[2] + hex[2], 16),
+            a: hex.length === 4 ? (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(parseInt(hex[3] + hex[3], 16) / 255, 2) : 1
+        };
+    }
+    return {
+        r: parseInt(hex.substring(0, 2), 16),
+        g: parseInt(hex.substring(2, 4), 16),
+        b: parseInt(hex.substring(4, 6), 16),
+        a: hex.length === 8 ? (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(parseInt(hex.substring(6, 8), 16) / 255, 2) : 1
+    };
+};
+const parseHue = (value, unit = 'deg') => {
+    return Number(value) * (angleUnits[unit] || 1);
+};
+const hslaStringToHsva = (hslString) => {
+    const matcher = /hsla?\(?\s*(-?\d*\.?\d+)(deg|rad|grad|turn)?[,\s]+(-?\d*\.?\d+)%?[,\s]+(-?\d*\.?\d+)%?,?\s*[/\s]*(-?\d*\.?\d+)?(%)?\s*\)?/i;
+    const match = matcher.exec(hslString);
+    if (!match)
+        return { h: 0, s: 0, v: 0, a: 1 };
+    return hslaToHsva({
+        h: parseHue(match[1], match[2]),
+        s: Number(match[3]),
+        l: Number(match[4]),
+        a: match[5] === undefined ? 1 : Number(match[5]) / (match[6] ? 100 : 1)
+    });
+};
+const hslStringToHsva = hslaStringToHsva;
+const hslaToHsva = ({ h, s, l, a }) => {
+    s *= (l < 50 ? l : 100 - l) / 100;
+    return {
+        h: h,
+        s: s > 0 ? ((2 * s) / (l + s)) * 100 : 0,
+        v: l + s,
+        a
+    };
+};
+const hsvaToHex = (hsva) => rgbaToHex(hsvaToRgba(hsva));
+const hsvaToHsla = ({ h, s, v, a }) => {
+    const hh = ((200 - s) * v) / 100;
+    return {
+        h: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(h),
+        s: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(hh > 0 && hh < 200 ? ((s * v) / 100 / (hh <= 100 ? hh : 200 - hh)) * 100 : 0),
+        l: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(hh / 2),
+        a: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(a, 2)
+    };
+};
+const hsvaToHsvString = (hsva) => {
+    const { h, s, v } = roundHsva(hsva);
+    return `hsv(${h}, ${s}%, ${v}%)`;
+};
+const hsvaToHsvaString = (hsva) => {
+    const { h, s, v, a } = roundHsva(hsva);
+    return `hsva(${h}, ${s}%, ${v}%, ${a})`;
+};
+const hsvaToHslString = (hsva) => {
+    const { h, s, l } = hsvaToHsla(hsva);
+    return `hsl(${h}, ${s}%, ${l}%)`;
+};
+const hsvaToHslaString = (hsva) => {
+    const { h, s, l, a } = hsvaToHsla(hsva);
+    return `hsla(${h}, ${s}%, ${l}%, ${a})`;
+};
+const hsvaToRgba = ({ h, s, v, a }) => {
+    h = (h / 360) * 6;
+    s = s / 100;
+    v = v / 100;
+    const hh = Math.floor(h), b = v * (1 - s), c = v * (1 - (h - hh) * s), d = v * (1 - (1 - h + hh) * s), module = hh % 6;
+    return {
+        r: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)([v, c, b, b, d, v][module] * 255),
+        g: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)([d, v, v, c, b, b][module] * 255),
+        b: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)([b, b, d, v, v, c][module] * 255),
+        a: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(a, 2)
+    };
+};
+const hsvaToRgbString = (hsva) => {
+    const { r, g, b } = hsvaToRgba(hsva);
+    return `rgb(${r}, ${g}, ${b})`;
+};
+const hsvaToRgbaString = (hsva) => {
+    const { r, g, b, a } = hsvaToRgba(hsva);
+    return `rgba(${r}, ${g}, ${b}, ${a})`;
+};
+const hsvaStringToHsva = (hsvString) => {
+    const matcher = /hsva?\(?\s*(-?\d*\.?\d+)(deg|rad|grad|turn)?[,\s]+(-?\d*\.?\d+)%?[,\s]+(-?\d*\.?\d+)%?,?\s*[/\s]*(-?\d*\.?\d+)?(%)?\s*\)?/i;
+    const match = matcher.exec(hsvString);
+    if (!match)
+        return { h: 0, s: 0, v: 0, a: 1 };
+    return roundHsva({
+        h: parseHue(match[1], match[2]),
+        s: Number(match[3]),
+        v: Number(match[4]),
+        a: match[5] === undefined ? 1 : Number(match[5]) / (match[6] ? 100 : 1)
+    });
+};
+const hsvStringToHsva = hsvaStringToHsva;
+const rgbaStringToHsva = (rgbaString) => {
+    const matcher = /rgba?\(?\s*(-?\d*\.?\d+)(%)?[,\s]+(-?\d*\.?\d+)(%)?[,\s]+(-?\d*\.?\d+)(%)?,?\s*[/\s]*(-?\d*\.?\d+)?(%)?\s*\)?/i;
+    const match = matcher.exec(rgbaString);
+    if (!match)
+        return { h: 0, s: 0, v: 0, a: 1 };
+    return rgbaToHsva({
+        r: Number(match[1]) / (match[2] ? 100 / 255 : 1),
+        g: Number(match[3]) / (match[4] ? 100 / 255 : 1),
+        b: Number(match[5]) / (match[6] ? 100 / 255 : 1),
+        a: match[7] === undefined ? 1 : Number(match[7]) / (match[8] ? 100 : 1)
+    });
+};
+const rgbStringToHsva = rgbaStringToHsva;
+const format = (number) => {
+    const hex = number.toString(16);
+    return hex.length < 2 ? '0' + hex : hex;
+};
+const rgbaToHex = ({ r, g, b, a }) => {
+    const alphaHex = a < 1 ? format((0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(a * 255)) : '';
+    return '#' + format(r) + format(g) + format(b) + alphaHex;
+};
+const rgbaToHsva = ({ r, g, b, a }) => {
+    const max = Math.max(r, g, b);
+    const delta = max - Math.min(r, g, b);
+    // prettier-ignore
+    const hh = delta
+        ? max === r
+            ? (g - b) / delta
+            : max === g
+                ? 2 + (b - r) / delta
+                : 4 + (r - g) / delta
+        : 0;
+    return {
+        h: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(60 * (hh < 0 ? hh + 6 : hh)),
+        s: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(max ? (delta / max) * 100 : 0),
+        v: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)((max / 255) * 100),
+        a
+    };
+};
+const roundHsva = (hsva) => ({
+    h: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(hsva.h),
+    s: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(hsva.s),
+    v: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(hsva.v),
+    a: (0,_math_js__WEBPACK_IMPORTED_MODULE_0__.round)(hsva.a, 2)
+});
+const rgbaToRgb = ({ r, g, b }) => ({ r, g, b });
+const hslaToHsl = ({ h, s, l }) => ({ h, s, l });
+const hsvaToHsv = (hsva) => {
+    const { h, s, v } = roundHsva(hsva);
+    return { h, s, v };
+};
+//# sourceMappingURL=convert.js.map
+
+/***/ }),
+
+/***/ "./node_modules/vanilla-colorful/lib/utils/dom.js":
+/*!********************************************************!*\
+  !*** ./node_modules/vanilla-colorful/lib/utils/dom.js ***!
+  \********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fire: () => (/* binding */ fire),
+/* harmony export */   tpl: () => (/* binding */ tpl)
+/* harmony export */ });
+const cache = {};
+const tpl = (html) => {
+    let template = cache[html];
+    if (!template) {
+        template = document.createElement('template');
+        template.innerHTML = html;
+        cache[html] = template;
+    }
+    return template;
+};
+const fire = (target, type, detail) => {
+    target.dispatchEvent(new CustomEvent(type, {
+        bubbles: true,
+        detail
+    }));
+};
+//# sourceMappingURL=dom.js.map
+
+/***/ }),
+
+/***/ "./node_modules/vanilla-colorful/lib/utils/math.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/vanilla-colorful/lib/utils/math.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   clamp: () => (/* binding */ clamp),
+/* harmony export */   round: () => (/* binding */ round)
+/* harmony export */ });
+// Clamps a value between an upper and lower bound.
+// We use ternary operators because it makes the minified code
+// 2 times shorter then `Math.min(Math.max(a,b),c)`
+const clamp = (number, min = 0, max = 1) => {
+    return number > max ? max : number < min ? min : number;
+};
+const round = (number, digits = 0, base = Math.pow(10, digits)) => {
+    return Math.round(base * number) / base;
+};
+//# sourceMappingURL=math.js.map
+
+/***/ }),
+
+/***/ "./node_modules/w3c-keyname/index.js":
+/*!*******************************************!*\
+  !*** ./node_modules/w3c-keyname/index.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   base: () => (/* binding */ base),
+/* harmony export */   keyName: () => (/* binding */ keyName),
+/* harmony export */   shift: () => (/* binding */ shift)
+/* harmony export */ });
+var base = {
+  8: "Backspace",
+  9: "Tab",
+  10: "Enter",
+  12: "NumLock",
+  13: "Enter",
+  16: "Shift",
+  17: "Control",
+  18: "Alt",
+  20: "CapsLock",
+  27: "Escape",
+  32: " ",
+  33: "PageUp",
+  34: "PageDown",
+  35: "End",
+  36: "Home",
+  37: "ArrowLeft",
+  38: "ArrowUp",
+  39: "ArrowRight",
+  40: "ArrowDown",
+  44: "PrintScreen",
+  45: "Insert",
+  46: "Delete",
+  59: ";",
+  61: "=",
+  91: "Meta",
+  92: "Meta",
+  106: "*",
+  107: "+",
+  108: ",",
+  109: "-",
+  110: ".",
+  111: "/",
+  144: "NumLock",
+  145: "ScrollLock",
+  160: "Shift",
+  161: "Shift",
+  162: "Control",
+  163: "Control",
+  164: "Alt",
+  165: "Alt",
+  173: "-",
+  186: ";",
+  187: "=",
+  188: ",",
+  189: "-",
+  190: ".",
+  191: "/",
+  192: "`",
+  219: "[",
+  220: "\\",
+  221: "]",
+  222: "'"
+}
+
+var shift = {
+  48: ")",
+  49: "!",
+  50: "@",
+  51: "#",
+  52: "$",
+  53: "%",
+  54: "^",
+  55: "&",
+  56: "*",
+  57: "(",
+  59: ":",
+  61: "+",
+  173: "_",
+  186: ":",
+  187: "+",
+  188: "<",
+  189: "_",
+  190: ">",
+  191: "?",
+  192: "~",
+  219: "{",
+  220: "|",
+  221: "}",
+  222: "\""
+}
+
+var mac = typeof navigator != "undefined" && /Mac/.test(navigator.platform)
+var ie = typeof navigator != "undefined" && /MSIE \d|Trident\/(?:[7-9]|\d{2,})\..*rv:(\d+)/.exec(navigator.userAgent)
+
+// Fill in the digit keys
+for (var i = 0; i < 10; i++) base[48 + i] = base[96 + i] = String(i)
+
+// The function keys
+for (var i = 1; i <= 24; i++) base[i + 111] = "F" + i
+
+// And the alphabetic keys
+for (var i = 65; i <= 90; i++) {
+  base[i] = String.fromCharCode(i + 32)
+  shift[i] = String.fromCharCode(i)
+}
+
+// For each code that doesn't have a shift-equivalent, copy the base name
+for (var code in base) if (!shift.hasOwnProperty(code)) shift[code] = base[code]
+
+function keyName(event) {
+  // On macOS, keys held with Shift and Cmd don't reflect the effect of Shift in `.key`.
+  // On IE, shift effect is never included in `.key`.
+  var ignoreKey = mac && event.metaKey && event.shiftKey && !event.ctrlKey && !event.altKey ||
+      ie && event.shiftKey && event.key && event.key.length == 1 ||
+      event.key == "Unidentified"
+  var name = (!ignoreKey && event.key) ||
+    (event.shiftKey ? shift : base)[event.keyCode] ||
+    event.key || "Unidentified"
+  // Edge sometimes produces wrong names (Issue #3)
+  if (name == "Esc") name = "Escape"
+  if (name == "Del") name = "Delete"
+  // https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/8860571/
+  if (name == "Left") name = "ArrowLeft"
+  if (name == "Up") name = "ArrowUp"
+  if (name == "Right") name = "ArrowRight"
+  if (name == "Down") name = "ArrowDown"
+  return name
+}
+
+
+/***/ }),
+
+/***/ "./resources/css/app.css":
+/*!*******************************!*\
+  !*** ./resources/css/app.css ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/js/ckeditor.js":
+/*!**********************************!*\
+  !*** ./resources/js/ckeditor.js ***!
+  \**********************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var ckeditor5__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ckeditor5 */ "./node_modules/ckeditor5/dist/ckeditor5.js");
+/* harmony import */ var ckeditor5_premium_features__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ckeditor5-premium-features */ "./node_modules/ckeditor5-premium-features/dist/ckeditor5-premium-features.js");
+/* harmony import */ var ckeditor5_ckeditor5_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ckeditor5/ckeditor5.css */ "./node_modules/ckeditor5/dist/ckeditor5.css");
+
+
+
+
+// form.addEventListener('submit', () => {
+//     const contentTextarea = document.querySelector('#content');
+//     if (contentTextarea) {
+//         contentTextarea.value = editor.getData();
+//         console.log('Content to be submitted:', contentTextarea.value); // Debugging
+//     }
+// });
+
+document.addEventListener('DOMContentLoaded', function () {
+  ckeditor5__WEBPACK_IMPORTED_MODULE_0__.ClassicEditor.create(document.querySelector('#content'), {
+    licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDA4NzM1OTksImp0aSI6IjU3NjMyMzYyLThjYzktNGI5OS04YTk4LTA3YTQ0NTRhOTk2OSIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImY3ODMxZjUwIn0.8zMtmfSOdINS8gAXMt-u-ORW6jDDZLl5fJejawSrIC7aeWgLGNiBwgApykggy8_Z789xYoaJ4aygTNI0YniwRA',
+    plugins: [ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Essentials, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Paragraph, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Bold, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Italic, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Font, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Indent, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.BlockQuote, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Emoji, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Mention, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.TextTransformation, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Code, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Strikethrough, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Subscript, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Superscript, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Underline,
+    // Title,
+    ckeditor5__WEBPACK_IMPORTED_MODULE_0__.CodeBlock, ckeditor5_premium_features__WEBPACK_IMPORTED_MODULE_1__.ExportPdf, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.CloudServices, ckeditor5_premium_features__WEBPACK_IMPORTED_MODULE_1__.ExportWord, ckeditor5_premium_features__WEBPACK_IMPORTED_MODULE_1__.ImportWord, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Image, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.PictureEditing, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.ImageUpload, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.CKBox, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.CKBoxImageEdit, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.LinkEditing, ckeditor5_premium_features__WEBPACK_IMPORTED_MODULE_1__.Uploadcare, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.ImageInsert, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.CKFinder, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.CKFinderUploadAdapter, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Link, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.FindAndReplace, ckeditor5_premium_features__WEBPACK_IMPORTED_MODULE_1__.FormatPainter, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.Highlight, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.HorizontalLine, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.ImageToolbar, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.ImageCaption, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.ImageStyle, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.ImageResize, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.LinkImage, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.ImageResizeEditing, ckeditor5__WEBPACK_IMPORTED_MODULE_0__.ImageResizeHandles],
+    toolbar: {
+      items: ['undo', 'redo', 'emoji', '|', 'heading', '|', 'fontfamily', 'fontsize', 'fontColor', 'fontBackgroundColor', '|', 'bold', 'italic', 'strikethrough', 'subscript', 'superscript', 'code', '|', 'link', 'uploadImage', 'blockQuote', 'codeBlock', '|', 'bulletedList', 'numberedList', 'todoList', 'outdent', 'indent', 'caseChange', 'codeBlock', 'exportPdf', 'exportWord', 'importWord', 'ckbox', 'ckboxImageEdit', 'ImageInsert', 'ckfinder', 'findAndReplace', 'highlight', 'formatPainter', 'horizontalLine', 'insertImage'],
+      shouldNotGroupWhenFull: false
+    },
+    resizeOptions: [{
+      name: 'resizeImage:original',
+      value: null,
+      label: 'Original'
+    }, {
+      name: 'resizeImage:custom',
+      label: 'Custom',
+      value: 'custom'
+    }, {
+      name: 'resizeImage:40',
+      value: '40',
+      label: '40%'
+    }, {
+      name: 'resizeImage:60',
+      value: '60',
+      label: '60%'
+    }],
+    ckbox: {
+      // Configuration.
+    },
+    importWord: {
+      // Configuration.
+      tokenUrl: 'https://apyf7qowpi43.cke-cs.com/token/dev/27d01afbe09470427d714aac32cf5ec89984c6226ad91e72347db760582b?limit=10',
+      formatting: {
+        resets: 'none',
+        defaults: 'none',
+        styles: 'inline',
+        comments: 'full'
+      }
+    },
+    exportPdf: {
+      stylesheets: [/* This path should point to application stylesheets. */
+      /* See: https://ckeditor.com/docs/ckeditor5/latest/features/converters/export-pdf.html */
+      './app.component.css', /* Export PDF needs access to stylesheets that style the content. */
+      'https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.css', 'https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css'],
+      fileName: 'export-pdf-demo.pdf',
+      converterOptions: {
+        format: 'Tabloid',
+        margin_top: '20mm',
+        margin_bottom: '20mm',
+        margin_right: '24mm',
+        margin_left: '24mm',
+        page_orientation: 'portrait'
+      }
+    },
+    exportWord: {
+      stylesheets: [/* This path should point to application stylesheets. */
+      /* See: https://ckeditor.com/docs/ckeditor5/latest/features/converters/export-word.html */
+      './app.component.css', /* Export Word needs access to stylesheets that style the content. */
+      'https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.css', 'https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css'],
+      fileName: 'export-word-demo.docx',
+      converterOptions: {
+        document: {
+          orientation: 'portrait',
+          size: 'Tabloid',
+          margins: {
+            top: '20mm',
+            bottom: '20mm',
+            right: '24mm',
+            left: '24mm'
+>>>>>>> 36e2be25bc965500aa926567ffbad2240c8fe98a
           }
     
           url[part] = value;

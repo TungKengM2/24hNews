@@ -22,6 +22,7 @@ class ArticleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+
     public function create()
     {
         $categories = Category::select('category_id', 'name')->get();
@@ -49,58 +50,39 @@ class ArticleController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:articles,slug',
-            'content' => 'required',
-            'preview_content' => 'nullable|string',
-            'contains_sensitive_content' => 'nullable|boolean',
-            'author_id' => 'required|exists:users,user_id',
-            'category_id' => 'required|exists:categories,category_id',
-            'thumbnail_url' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4,avi,mov,mp3,wav|max:51200',
-            'status' => 'required|in:draft,pending,published,archived',
-            'views' => 'nullable|integer|min:0',
-            'approved_by' => 'nullable|exists:users,user_id',
-        ]);
+     public function store(Request $request)
+     {
+         $request->validate([
+             'title' => 'required|string|max:255',
+             'slug' => 'required|string|max:255|unique:articles,slug',
+             'content' => 'required',
+             'category_id' => 'required|exists:categories,category_id',
+             'thumbnail_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+             'status' => 'required|in:draft,pending',
+         ]);
 
-        $article = new Article();
-        $article->title = $request->title;
-        $article->slug = $request->slug;
-        $article->content = $request->content;
-        $article->preview_content = $request->preview_content;
-        $article->contains_sensitive_content = $request->contains_sensitive_content ?? false;
-        $article->author_id = $request->author_id;
-        $article->category_id = $request->category_id;
-        $article->status = $request->status;
-        $article->views = $request->views ?? 0;
-        $article->approved_by = $request->approved_by;
+         $article = new Article();
+         $article->title = $request->title;
+         $article->slug = $request->slug;
+         $article->content = $request->input('content');
+         $article->category_id = $request->category_id;
+         $article->status = $request->status;
+         $article->author_id = auth()->id();
 
-        // Kiểm tra nếu có file upload
-        if ($request->hasFile('thumbnail_url')) {
-            $file = $request->file('thumbnail_url');
-            $extension = $file->getClientOriginalExtension();
+         if ($request->hasFile('thumbnail_url')) {
+             $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+             $article->thumbnail_url = $path;
+         }
 
-            if (in_array($extension, ['jpeg', 'png', 'jpg', 'gif'])) {
-                $folder = 'thumbnails';
-            } elseif (in_array($extension, ['mp4', 'avi', 'mov'])) {
-                $folder = 'videos';
-            } elseif (in_array($extension, ['mp3', 'wav'])) {
-                $folder = 'voices';
-            } else {
-                return redirect()->back()->withErrors(['thumbnail_url' => 'Invalid file format.']);
-            }
+         $article->save();
 
-            // Lưu file vào storage/public/{folder}
-            $path = $file->store($folder, 'public');
-            $article->thumbnail_url = $path;
-        }
+         if ($request->status == 'draft') {
+             return redirect()->route('articles.index')->with('success', 'Bài viết đã lưu nháp!');
+         }
 
-        $article->save();
+         return redirect()->route('articles.index')->with('success', 'Bài viết đã gửi để chờ duyệt!');
+     }
 
-        return redirect()->route('articles.index')->with('success', 'Article created successfully!');
-    }
 
 
 
@@ -132,50 +114,25 @@ class ArticleController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:articles,slug,' . $article->id,
+            'slug' => 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id',
             'content' => 'required',
-            'preview_content' => 'nullable|string',
-            'contains_sensitive_content' => 'nullable|boolean',
             'author_id' => 'required|exists:users,user_id',
             'category_id' => 'required|exists:categories,category_id',
-            'thumbnail_url' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4,avi,mov,mp3,wav|max:51200', 
-            'status' => 'required|in:draft,pending,published,archived',
-            'views' => 'nullable|integer|min:0',
-            'approved_by' => 'nullable|exists:users,user_id',
+            'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+
         ]);
 
         $article->title = $request->title;
         $article->slug = $request->slug;
-        $article->content = $request->content;
-        $article->preview_content = $request->preview_content;
-        $article->contains_sensitive_content = $request->contains_sensitive_content ?? false;
-        $article->author_id = $request->author_id;
+        $article->content = $request->input('content');
+        $article->author_id = $request->author_id ?? $article->author_id;
         $article->category_id = $request->category_id;
-        $article->status = $request->status;
-        $article->views = $request->views ?? $article->views;
-        $article->approved_by = $request->approved_by;
 
 
+        // Kiểm tra nếu có file mới thì cập nhật, không thì giữ ảnh cũ
         if ($request->hasFile('thumbnail_url')) {
             $file = $request->file('thumbnail_url');
-            $extension = $file->getClientOriginalExtension();
-
-            if (in_array($extension, ['jpeg', 'png', 'jpg', 'gif'])) {
-                $folder = 'thumbnails';
-            } elseif (in_array($extension, ['mp4', 'avi', 'mov'])) {
-                $folder = 'videos';
-            } elseif (in_array($extension, ['mp3', 'wav'])) {
-                $folder = 'voices';
-            } else {
-                return redirect()->back()->withErrors(['thumbnail_url' => 'Invalid file format.']);
-            }
-
-
-            if ($article->thumbnail_url) {
-                Storage::disk('public')->delete($article->thumbnail_url);
-            }
-
-            $path = $file->store($folder, 'public');
+            $path = $file->store('thumbnails', 'public'); // Lưu file mới
             $article->thumbnail_url = $path;
         }
 
@@ -183,7 +140,6 @@ class ArticleController extends Controller
 
         return redirect()->route('articles.index')->with('success', 'Article updated successfully!');
     }
-
 
 
     /**
@@ -194,4 +150,23 @@ class ArticleController extends Controller
         $article->delete();
         return redirect()->route('articles.index')->with('success', 'Bài viết đã bị xóa!');
     }
+
+    public function showw($article_id)
+{
+    // Kiểm tra bài viết có tồn tại không
+    $article = Article::where('article_id', $article_id)
+                      ->where('status', 'approved')
+                      ->firstOrFail();
+
+    // Ghi nhận lượt xem
+    ArticleHistory::recordView($article);
+
+    // Lấy các bài viết cùng danh mục
+    $relatedArticles = Article::where('category_id', $article->category_id)
+                              ->where('article_id', '!=', $article->article_id)
+                              ->where('status', 'approved')
+                              ->limit(5)
+                              ->get();
+
+    return view('articles.article', compact('article', 'relatedArticles'));
 }
