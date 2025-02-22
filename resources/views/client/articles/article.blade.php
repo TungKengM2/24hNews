@@ -46,6 +46,16 @@
                                 <i class="fas fa-share-alt"></i>
                             </div>
                         </div>
+
+                    </div>
+                    <div class="max-w-4xl mx-auto mt-2">
+                        <span class="font-bold text-gray-800">#Hashtag:</span>
+                        <div class="inline-flex space-x-2 ml-2">
+                            <span class="px-3 py-1 bg-blue-200 text-red-400 rounded-lg text-sm">Indonesia</span>
+                            <span class="px-3 py-1 bg-blue-200 text-red-400 rounded-lg text-sm">hashtag</span>
+                            <span class="px-3 py-1 bg-blue-200 text-red-400 rounded-lg text-sm">cư dân mạng</span>
+                            <span class="px-3 py-1 bg-blue-200 text-red-400 rounded-lg text-sm">đám bom</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -66,13 +76,14 @@
                 <ul class="divide-y divide-gray-200">
                     @foreach ($relatedArticles as $related)
                         <li class="flex items-center p-3">
-                            <img src="{{ asset('storage/' . $related->thumbnail_url) }}" class="w-16 h-16 object-cover rounded mr-3" alt="{{ $related->title }}">
+                            <img src="{{ asset('storage/' . $related->thumbnail_url) }}" class="w-48 h-32 object-cover rounded mr-3" alt="{{ $related->title }}">
                             <a href="{{ route('client.articles.article', $related->article_id) }}" class="text-gray-800 hover:text-blue-600">{{ $related->title }}</a>
                         </li>
                     @endforeach
                 </ul>
             </div>
         </div>
+
     </div>
 </div>
 
