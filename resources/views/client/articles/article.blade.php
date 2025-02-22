@@ -54,6 +54,28 @@
         opacity: 1;
         transform: translateY(0);
     }
+
+    .scroll-to-top {
+        position: fixed;
+        bottom: 20px; /* Adjusted from 20px to 60px */
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        transition: background-color 0.3s ease-in-out;
+    }
+    .scroll-to-top:hover {
+        background-color: #0056b3;
+    }
 </style>
 
 <div class="container mt-4">
@@ -96,6 +118,11 @@
     </div>
 </div>
 
+<!-- Button to scroll to top -->
+<button id="scrollToTopButton" class="scroll-to-top">
+    ↑
+</button>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         let likeButton = document.getElementById("likeButton");
@@ -112,6 +139,20 @@
 
         document.querySelectorAll(".fade-in").forEach((element) => {
             element.classList.add("visible");
+        });
+
+        let scrollToTopButton = document.getElementById("scrollToTopButton");
+
+        window.addEventListener("scroll", function() {
+            if (window.scrollY > 200) {
+                scrollToTopButton.style.display = "flex";
+            } else {
+                scrollToTopButton.style.display = "none";
+            }
+        });
+
+        scrollToTopButton.addEventListener("click", function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
 </script>

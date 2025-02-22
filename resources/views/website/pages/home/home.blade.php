@@ -13,9 +13,16 @@
         @yield('content')
 
     </div>
+
     @include('website.layouts.partials.footer')
 
-
-
+    <button id="scrollToTop" class="fixed bottom-4 right-4 bg-blue-500 text-white rounded-full p-3 shadow-lg w-12 h-12 flex items-center justify-center">
+        ↑
+    </button>
+    <script>
+        document.getElementById('scrollToTop').addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
 </body>
 </html>
