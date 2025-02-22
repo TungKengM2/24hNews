@@ -31,9 +31,6 @@ use App\Http\Controllers\Client\UserProfileController;
 |
 */
 
-
-
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/client/articles/{article_id}', [ArticleUserController::class, 'show'])->name('client.articles.article');
@@ -56,7 +53,6 @@ Route::prefix('admin')->group(function () {
     Route::resource('users', UserController::class);
 });
 
-
 // Routes for login and signup
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -68,44 +64,59 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/admin/login', [AuthAdminController::class, 'showLoginAdminForm'])->name('authadmin.login-admin');
 Route::post('/admin/login', [AuthAdminController::class, 'loginadmin'])->name('admin.login.submit');
 
-
-
-
 Route::get('/verify-otp', [AuthController::class, 'showOtpForm'])->name('otp.verify.form');
-// Route xử lý OTP
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('otp.verify.process');
 
-
-// Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 });
 
 // Hiển thị form nhập email để lấy lại mật khẩu
-Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
-    ->name('password.request');
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 
 // Xử lý gửi email đặt lại mật khẩu
-Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
-    ->name('password.email');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 
 // Hiển thị form nhập mật khẩu mới
-Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])
-    ->name('password.reset');
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 
 // Xử lý cập nhật mật khẩu mới
-Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
-    ->name('password.update');
+Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
 
-// author
-Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])->name('author.dashboard');
-Route::get('/moderator/users', [UserManagementController::class, 'index'])->name('author.users');
-Route::get('/moderator/articles', [ModeratorArticleController::class, 'index'])->name('author.articles');
-
-// writer
+// Writer routes
 Route::get('/writer/dashboard', [WriterDashboard::class, 'index'])->name('writer.dashboard');
-Route::get('/writer/articleauthor', [ArticleAuthorManagement::class, 'index'])->name('writer.articleauthor');
-Route::get('/writer/author', [WriterAuthorManagement::class, 'index'])->name('writer.author');
 
-// router user
-Route::get('/user/profile', [UserProfileController::class, 'index'])->name('user.profile');
+// Moderator routes
+Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])->name('moderator.dashboard');
+
+// User routes
+Route::get('/user/dashboard', [UserProfileController::class, 'index'])->name('user.dashboard');
+Route::post('/upgrade-to-author', [UserProfileController::class, 'requestAuthorRole'])->middleware('auth')->name('upgrade.to.author');
+
+// Author routes
+Route::prefix('author')->middleware(['auth', 'role:author'])->group(function () {
+    Route::get('/dashboard', [AuthorDashboard::class, 'index'])->name('author.dashboard');
+    Route::get('/articles', [\App\Http\Controllers\Author\ArticleController::class, 'index'])->name('author.articles');
+    Route::get('/articles/create', [\App\Http\Controllers\Author\ArticleController::class, 'create'])->name('author.articles.create');
+    Route::post('/articles', [\App\Http\Controllers\Author\ArticleController::class, 'store'])->name('author.articles.store');
+    Route::post('/articles', [\App\Http\Controllers\Author\ArticleController::class, 'edit'])->name('author.articles.edit');
+    Route::post('/articles', [\App\Http\Controllers\Author\ArticleController::class, 'update'])->name('author.articles.update');
+    Route::post('/articles', [\App\Http\Controllers\Author\ArticleController::class, 'destroy'])->name('author.articles.destroy');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('author.profile');
+});
+
+// Moderator approval routes
+Route::post('/approve-upgrade/{approval_id}', [UserManagementController::class, 'approveUpgrade'])->middleware('moderator')->name('approve.upgrade');
+Route::post('/reject-upgrade/{approval_id}', [UserManagementController::class, 'rejectUpgrade'])->middleware('moderator')->name('reject.upgrade');
+
+// File upload route
+Route::post('/upload-file', function (Request $request) {
+    if ($request->hasFile('upload')) {
+        $file = $request->file('upload');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads'), $filename);
+
+        return response()->json(['url' => asset('uploads/' . $filename)]);
+    }
+    return response()->json(['error' => 'No file uploaded'], 400);
+})->name('upload.file');
