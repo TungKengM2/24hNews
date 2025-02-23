@@ -1,4 +1,4 @@
-@extends('master')
+@extends('website.pages.articledetail.articledetail')
 
 @section('tieudetrang')
     Article

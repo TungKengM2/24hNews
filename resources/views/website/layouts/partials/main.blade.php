@@ -9,7 +9,8 @@
                         class="flex flex-1 pr-4 no-underline hover:text-blue-500">
                         <div>
                             <p class="text-sm text-gray-500 mb-1">{{ $article->created_at->diffForHumans() }}</p>
-                            <h2 class="text-base font-bold mb-1">{{ implode(' ', array_slice(explode(' ', strip_tags($article->title)), 0, 40)) }}</h2>
+                            <h2 class="text-base font-bold mb-1">
+                                {{ implode(' ', array_slice(explode(' ', strip_tags($article->title)), 0, 40)) }}</h2>
                             <p class="text-sm text-gray-600">{{ $article->preview_content }}</p>
                         </div>
                     </a>
@@ -31,11 +32,12 @@
 
             <!-- Cột trái -->
             @foreach ($categoryArticles->slice(0, 2) as $article)
-                <article class="bg-white p-4      h-1/2 w-full mb-0">
+                <article class="bg-white p-4  border   h-1/2 w-full mb-0">
                     <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Hình ảnh bài viết"
                         class="w-full h-3/4 object-cover  mb-2">
                     <div class="p-2 w-full h-1/4">
-                        <h2 class="text-sm font-medium mb-1">{{ implode(' ', array_slice(explode(' ', strip_tags($article->title)), 0, 20)) }}</h2>
+                        <h2 class="text-sm font-medium mb-1">
+                            {{ implode(' ', array_slice(explode(' ', strip_tags($article->title)), 0, 14)) }}</h2>
                         <p class="text-sm font-medium text-gray-600">{{ $article->preview_content }}</p>
                     </div>
 
@@ -48,11 +50,12 @@
 
 
             @if ($categoryArticles->count() > 2)
-                <article class="bg-white p-4      h-full flex flex-col">
+                <article class="bg-white p-4 border-t border-b b     h-full flex flex-col">
                     <img src="{{ asset('storage/' . $categoryArticles[2]->thumbnail_url) }}" alt="Hình ảnh bài viết"
                         class="w-full h-3/4 object-cover  mb-2">
                     <div class="p-4 flex flex-col h-1/4 justify-center">
-                        <h2 class="text-lg font-medium mb-2">{{ implode(' ', array_slice(explode(' ', strip_tags($article->title)), 0, 40)) }}</h2>
+                        <h2 class="text-lg font-medium mb-2">
+                            {{ implode(' ', array_slice(explode(' ', strip_tags($article->title)), 0, 40)) }}</h2>
                         <p class="text-sm text-gray-600">{{ $categoryArticles[2]->preview_content }}</p>
                     </div>
                 </article>
@@ -61,11 +64,12 @@
         <div class="col-span-3 flex flex-col justify-between h-[32rem]">
             <!-- Cột phải -->
             @foreach ($categoryArticles->slice(3, 7) as $article)
-                <article class="bg-white p-4  h-1/4 w-full mb-0 flex">
+                <article class="bg-white p-4 border  h-1/4 w-full mb-0 flex">
                     <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Hình ảnh bài viết"
                         class="w-1/2 h-full object-cover  mb-2">
                     <div class="p-2 w-1/2 h-full flex flex-col justify-center">
-                        <h2 class="text-xs font-medium   mb-1">{{ implode(' ', array_slice(explode(' ', strip_tags($article->title)), 0, 16)) }}</h2>
+                        <h2 class="text-xs font-medium   mb-1">
+                            {{ implode(' ', array_slice(explode(' ', strip_tags($article->title)), 0, 16)) }}</h2>
                         <p class="text-xs font-medium  text-gray-600">{{ $article->preview_content }}</p>
                     </div>
                 </article>
@@ -75,34 +79,38 @@
     </span>
     {{-- Danh Mục 1 (Phải có ít nhất 4 bài viết) --}}
     <div class="max-w-7xl mx-auto p-4 grid grid-cols-4  gap-4 mb-4  min-h-[38vh]">
-        <h1 class="text-3xl font-bold col-span-4">Danh Mục 1    </h1>
+        <h1 class="text-3xl font-bold col-span-4">Danh Mục 1 </h1>
 
         <!-- Bài viết 1 -->
         <div class="mx-auto">
-            <img src="http://127.0.0.1:8000/storage/thumbnails/nsem7ANx55nOMKO0ieXYF3pA9VEbQ1xBmOHaeEJ6.jpg" alt="News Image" class="w-full h-40 object-cover ">
+            <img src="http://127.0.0.1:8000/storage/thumbnails/nsem7ANx55nOMKO0ieXYF3pA9VEbQ1xBmOHaeEJ6.jpg"
+                alt="News Image" class="w-full h-40 object-cover ">
             <h3 class="text-sm font-bold">Cảnh báo thủ đoạn cắt ghép hình ảnh, tạo nội dung nhạy cảm để tống tiền</h3>
         </div>
         <!-- Bài viết 2 -->
         <div class="mx-auto">
-            <img src="http://127.0.0.1:8000/storage/thumbnails/nsem7ANx55nOMKO0ieXYF3pA9VEbQ1xBmOHaeEJ6.jpg" alt="News Image" class="w-full h-40 object-cover ">
+            <img src="http://127.0.0.1:8000/storage/thumbnails/nsem7ANx55nOMKO0ieXYF3pA9VEbQ1xBmOHaeEJ6.jpg"
+                alt="News Image" class="w-full h-40 object-cover ">
             <h3 class="text-sm font-bold">Người phụ nữ mua 5.000 bông thuốc được cắm khắp phòng, dân mạng mê mẩn</h3>
         </div>
         <!-- Bài viết 3 -->
         <div class="mx-auto">
-            <img src="http://127.0.0.1:8000/storage/thumbnails/nsem7ANx55nOMKO0ieXYF3pA9VEbQ1xBmOHaeEJ6.jpg" alt="News Image" class="w-full h-40 object-cover ">
+            <img src="http://127.0.0.1:8000/storage/thumbnails/nsem7ANx55nOMKO0ieXYF3pA9VEbQ1xBmOHaeEJ6.jpg"
+                alt="News Image" class="w-full h-40 object-cover ">
             <h3 class="text-sm font-bold">Bộ Y tế yêu cầu Bệnh viện Phụ sản T.Ư báo cáo sự cố y khoa</h3>
         </div>
         <!-- Bài viết 4 -->
         <div class="mx-auto">
-            <img src="http://127.0.0.1:8000/storage/thumbnails/nsem7ANx55nOMKO0ieXYF3pA9VEbQ1xBmOHaeEJ6.jpg" alt="News Image" class="w-full h-40 object-cover ">
+            <img src="http://127.0.0.1:8000/storage/thumbnails/nsem7ANx55nOMKO0ieXYF3pA9VEbQ1xBmOHaeEJ6.jpg"
+                alt="News Image" class="w-full h-40 object-cover ">
             <h3 class="text-sm font-bold">Siết dạy thêm, học thêm: 'Xóa sổ' những bất hợp lý trong giáo dục</h3>
         </div>
     </div>
     {{-- Danh Mục 2 (Phải có ít nhất 9 bài viết) --}}
     <span class="max-w-6xl mx-auto grid grid-cols-12 gap-4 ">
 
-        <div class="col-span-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">Danh Mục 2</h1>
+        <div class="col-span-8 mt-2">
+            <h1 class="text-2xl font-bold text-gray-900 mb-4">Danh Mục 2</h1>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="relative">
                     <img src="http://127.0.0.1:8000/storage/thumbnails/sbgkendixuEkULSdAP2dtHn8IQ2w3SltH6yX9KBI.jpg" alt="Space Shuttle" class="w-full h-auto ">
@@ -114,46 +122,47 @@
                 </div>
             </div>
             <hr class="my-6 border-gray-300">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="flex mt-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 border-1">
+                <div class="flex mt-2 p-2 border-b border-r border-t border-l border-gray-300">
                     <img src="http://127.0.0.1:8000/storage/thumbnails/sbgkendixuEkULSdAP2dtHn8IQ2w3SltH6yX9KBI.jpg" alt="Hồ tròn" class="w-1/2 h-auto ">
                     <div class="w-1/2 pl-2">
                         <h3 class="text-sm  text-gray-900">Miệng hố tròn hoàn hảo thách thức mọi lý giải khoa học</h3>
                     </div>
                 </div>
-                <div class="flex mt-8">
-                    <img src="http://127.0.0.1:8000/storage/thumbnails/sbgkendixuEkULSdAP2dtHn8IQ2w3SltH6yX9KBI.jpg" alt="Khoan dầu" class="w-1/2 h-auto ">
+                <div class="flex mt-2 p-2 border-b border-r border-t border-l border-gray-300">
+                    <img src="http://127.0.0.1:8000/storage/thumbnails/sbgkendixuEkULSdAP2dtHn8IQ2w3SltH6yX9KBI.jpg" alt="Hồ tròn" class="w-1/2 h-auto ">
                     <div class="w-1/2 pl-2">
-                        <h3 class="text-sm  text-gray-900">Trung Quốc hoàn thành khoan giếng thẳng đứng sâu nhất châu Á</h3>
+                        <h3 class="text-sm  text-gray-900">Miệng hố tròn hoàn hảo thách thức mọi lý giải khoa học</h3>
                     </div>
                 </div>
-                <div class="flex mt-8">
-                    <img src="http://127.0.0.1:8000/storage/thumbnails/sbgkendixuEkULSdAP2dtHn8IQ2w3SltH6yX9KBI.jpg" alt="Sa mạc" class="w-1/2 h-auto ">
+                <div class="flex mt-2 p-2 border-b border-r border-t border-l border-gray-300">
+                    <img src="http://127.0.0.1:8000/storage/thumbnails/sbgkendixuEkULSdAP2dtHn8IQ2w3SltH6yX9KBI.jpg" alt="Hồ tròn" class="w-1/2 h-auto ">
                     <div class="w-1/2 pl-2">
-                        <h3 class="text-sm  text-gray-900">Thiết bị thu thập nước trên sa mạc nóng khô nhất thế giới</h3>
+                        <h3 class="text-sm  text-gray-900">Miệng hố tròn hoàn hảo thách thức mọi lý giải khoa học</h3>
                     </div>
                 </div>
-                <div class="flex mt-8">
-                    <img src="http://127.0.0.1:8000/storage/thumbnails/sbgkendixuEkULSdAP2dtHn8IQ2w3SltH6yX9KBI.jpg" alt="Sa mạc" class="w-1/2 h-auto ">
+                <div class="flex mt-2 p-2 border-b border-r border-t border-l border-gray-300">
+                    <img src="http://127.0.0.1:8000/storage/thumbnails/sbgkendixuEkULSdAP2dtHn8IQ2w3SltH6yX9KBI.jpg" alt="Hồ tròn" class="w-1/2 h-auto ">
                     <div class="w-1/2 pl-2">
-                        <h3 class="text-sm  text-gray-900">Thiết bị thu thập nước trên sa mạc nóng khô nhất thế giới</h3>
+                        <h3 class="text-sm  text-gray-900">Miệng hố tròn hoàn hảo thách thức mọi lý giải khoa học</h3>
                     </div>
                 </div>
-                <div class="flex mt-8">
-                    <img src="http://127.0.0.1:8000/storage/thumbnails/sbgkendixuEkULSdAP2dtHn8IQ2w3SltH6yX9KBI.jpg" alt="Sa mạc" class="w-1/2 h-auto ">
+                <div class="flex mt-2 p-2 border-b border-r border-t border-l border-gray-300">
+                    <img src="http://127.0.0.1:8000/storage/thumbnails/sbgkendixuEkULSdAP2dtHn8IQ2w3SltH6yX9KBI.jpg" alt="Hồ tròn" class="w-1/2 h-auto ">
                     <div class="w-1/2 pl-2">
-                        <h3 class="text-sm  text-gray-900">Thiết bị thu thập nước trên sa mạc nóng khô nhất thế giới</h3>
+                        <h3 class="text-sm  text-gray-900">Miệng hố tròn hoàn hảo thách thức mọi lý giải khoa học</h3>
                     </div>
                 </div>
-                <div class="flex mt-8">
-                    <img src="http://127.0.0.1:8000/storage/thumbnails/sbgkendixuEkULSdAP2dtHn8IQ2w3SltH6yX9KBI.jpg" alt="Sa mạc" class="w-1/2 h-auto ">
+                <div class="flex mt-2 p-2 border-b border-r border-t border-l border-gray-300">
+                    <img src="http://127.0.0.1:8000/storage/thumbnails/sbgkendixuEkULSdAP2dtHn8IQ2w3SltH6yX9KBI.jpg" alt="Hồ tròn" class="w-1/2 h-auto ">
                     <div class="w-1/2 pl-2">
-                        <h3 class="text-sm  text-gray-900">Thiết bị thu thập nước trên sa mạc nóng khô nhất thế giới</h3>
+                        <h3 class="text-sm  text-gray-900">Miệng hố tròn hoàn hảo thách thức mọi lý giải khoa học</h3>
                     </div>
                 </div>
+
             </div>
         </div>
-        <div class="col-span-4 flex flex-col gap-4 mt-8">
+        <div class="col-span-4 flex flex-col gap-4 mt-8 py-2">
             <div>
                 <img src="http://127.0.0.1:8000/storage/thumbnails/sbgkendixuEkULSdAP2dtHn8IQ2w3SltH6yX9KBI.jpg" alt="Hành tinh" class="w-full h-3/4 ">
                 <h3 class="text-lg  text-gray-900 mt-2">Phát hiện hành tinh mới có thể chứa sự sống</h3>
@@ -164,51 +173,72 @@
             </div>
         </div>
 
-        <hr class="my-6 border-gray-300 col-span-12">
+        <hr class="my-2 border-gray-300 col-span-12">
     </span>
-     {{-- Danh Mục 3 (Phải có ít nhất 9 bài viếtviết) --}}
-    <span class="max-w-6xl mx-auto grid grid-cols-12 gap-4">
-        <div class="col-span-12">
-            <h1 class="text-2xl font-bold mb-4">Danh Mục 3</h1>
+    {{-- Danh Mục 3 (Phải có ít nhất 9 bài viếtviết) --}}
+    <div class="max-w-6xl mx-auto ">
+        <h1 class="text-2xl font-bold mb-6 text-center">Danh Mục 3</h1>
+        <div class="col-span-12"><hr class="border-t border-gray-300 my-4"></div>
+        <div class="grid grid-cols-12 gap-0">
+            <!-- Bài viết 1 -->
+            <div class="col-span-4 flex p-4 border-b border-r border-gray-300">
+                <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
+                <p class="ml-4">Miệng hố tròn hoàn hảo thách thức mọi lý giải khoa học</p>
+            </div>
+
+            <!-- Bài viết 2 -->
+            <div class="col-span-4 flex p-4 border-b border-r border-gray-300">
+                <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
+                <p class="ml-4">Trung Quốc hoàn thành khoan giếng thẳng đứng sâu nhất châu Á</p>
+            </div>
+
+            <!-- Bài viết 3 -->
+            <div class="col-span-4 flex p-4 border-b border-gray-300">
+                <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
+                <p class="ml-4">Thiết bị thu thập nước trên sa mạc nóng khô nhất thế giới</p>
+            </div>
+
+
+
+            <!-- Bài viết 4 -->
+            <div class="col-span-4 flex p-4 border-b border-r border-gray-300">
+                <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
+                <p class="ml-4">Ứng dụng AI trong nghiên cứu khoa học vũ trụ</p>
+            </div>
+
+            <!-- Bài viết 5 -->
+            <div class="col-span-4 flex p-4 border-b border-r border-gray-300">
+                <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
+                <p class="ml-4">NASA phát hiện hành tinh có thể hỗ trợ sự sống</p>
+            </div>
+
+            <!-- Bài viết 6 -->
+            <div class="col-span-4 flex p-4 border-b border-gray-300">
+                <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
+                <p class="ml-4">Công nghệ pin mới giúp kéo dài tuổi thọ xe điện</p>
+            </div>
+
+
+            <!-- Bài viết 7 -->
+            <div class="col-span-4 flex p-4 border-r border-gray-300">
+                <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
+                <p class="ml-4">Kỹ thuật chỉnh sửa gen mở ra kỷ nguyên y học mới</p>
+            </div>
+
+            <!-- Bài viết 8 -->
+            <div class="col-span-4 flex p-4 border-r border-gray-300">
+                <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
+                <p class="ml-4">Robot thông minh hỗ trợ con người trong đời sống</p>
+            </div>
+
+            <!-- Bài viết 9 -->
+            <div class="col-span-4 flex p-4">
+                <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
+                <p class="ml-4">Vật liệu mới siêu nhẹ nhưng bền hơn thép</p>
+            </div>
+
+            <!-- Đường kẻ dưới cùng -->
+            <div class="col-span-12"><hr class="border-t border-gray-300 my-4"></div>
         </div>
-         <div class="col-span-4 flex">
-             <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
-             <p class="ml-4">Miệng hố tròn hoàn hảo thách thức mọi lý giải khoa học</p>
-         </div>
-         <div class="col-span-4 flex">
-             <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
-             <p class="ml-4">Trung Quốc hoàn thành khoan giếng thẳng đứng sâu nhất châu Á</p>
-         </div>
-         <div class="col-span-4 flex">
-             <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
-             <p class="ml-4">Thiết bị thu thập nước trên sa mạc nóng khô nhất thế giới</p>
-         </div>
-         <div class="col-span-4 flex">
-             <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
-             <p class="ml-4">Thiết bị thu thập nước trên sa mạc nóng khô nhất thế giới</p>
-         </div>
-         <div class="col-span-4 flex">
-             <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
-             <p class="ml-4">Thiết bị thu thập nước trên sa mạc nóng khô nhất thế giới</p>
-         </div>
-         <div class="col-span-4 flex">
-             <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
-             <p class="ml-4">Thiết bị thu thập nước trên sa mạc nóng khô nhất thế giới</p>
-         </div>
-         <div class="col-span-4 flex">
-             <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
-             <p class="ml-4">Thiết bị thu thập nước trên sa mạc nóng khô nhất thế giới</p>
-         </div>
-         <div class="col-span-4 flex">
-             <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
-             <p class="ml-4">Thiết bị thu thập nước trên sa mạc nóng khô nhất thế giới</p>
-         </div>
-         <div class="col-span-4 flex">
-             <img src="http://127.0.0.1:8000/storage/thumbnails/ZPoe3VbHUEn7f33ZxJd2SBDl8aoXetVnxubqGRcL.jpg" alt="News Image" class="w-1/3 object-cover">
-             <p class="ml-4">Thiết bị thu thập nước trên sa mạc nóng khô nhất thế giới</p>
-         </div>
-         <hr class="my-6 border-gray-300 col-span-12">
-
-
- </span>
+    </div>
 </main>
