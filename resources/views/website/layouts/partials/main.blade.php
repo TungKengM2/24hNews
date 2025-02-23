@@ -107,7 +107,7 @@
         </div>
     </div>
     {{-- Danh Mục 2 (Phải có ít nhất 9 bài viết) --}}
-    <span class="max-w-6xl mx-auto grid grid-cols-12 gap-4 ">
+    <span class="max-w-7xl mx-auto grid grid-cols-12 gap-4 ">
 
         <div class="col-span-8 mt-2">
             <h1 class="text-2xl font-bold text-gray-900 mb-4">Danh Mục 2</h1>
@@ -176,7 +176,7 @@
         <hr class="my-2 border-gray-300 col-span-12">
     </span>
     {{-- Danh Mục 3 (Phải có ít nhất 9 bài viếtviết) --}}
-    <div class="max-w-6xl mx-auto ">
+    <div class="max-w-7xl mx-auto ">
         <h1 class="text-2xl font-bold mb-6 text-center">Danh Mục 3</h1>
         <div class="col-span-12"><hr class="border-t border-gray-300 my-4"></div>
         <div class="grid grid-cols-12 gap-0">
@@ -241,4 +241,77 @@
             <div class="col-span-12"><hr class="border-t border-gray-300 my-4"></div>
         </div>
     </div>
+    {{-- Thông tin quan trọng --}}
+    <div class="w-full max-w-7xl mx-auto bg-white p-6 shadow-lg relative overflow-hidden my-4">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold flex items-center">
+                <span class="border-l-4 border-green-500 pl-2">THÔNG TIN QUAN TRỌNG</span>
+            </h2>
+            <div class="flex space-x-2">
+                <button id="prevBtn" class="p-2 bg-gray-200 rounded-full hover:bg-gray-300">&#10094;</button>
+                <button id="nextBtn" class="p-2 bg-gray-200 rounded-full hover:bg-gray-300">&#10095;</button>
+            </div>
+        </div>
+
+        <!-- Bọc carousel để giới hạn kích thước -->
+        <div class="overflow-hidden w-full">
+            <div id="carousel" class="flex transform transition-transform duration-500 ease-in-out">
+                <!-- Các bài viết -->
+                <div class="carousel-item w-1/4 flex-shrink-0 p-2">
+                    <img src="http://127.0.0.1:8000/storage/thumbnails/mNsO0aipViN4L0mx0n3gNICrVYqKmonBryEfyb3u.jpg" class="w-full h-40 object-cover" alt="News">
+                    <p class="mt-2 text-sm font-bold">Bài Viết 1 – Điểm mặt những công nghệ AI định cao trên OPPO Reno13</p>
+                </div>
+                <div class="carousel-item w-1/4 flex-shrink-0 p-2">
+                    <img src="http://127.0.0.1:8000/storage/thumbnails/mNsO0aipViN4L0mx0n3gNICrVYqKmonBryEfyb3u.jpg" class="w-full h-40 object-cover" alt="News">
+                    <p class="mt-2 text-sm font-bold">Bài Viết 2 – Người bạn đồng hành lý tưởng cho công việc</p>
+                </div>
+                <div class="carousel-item w-1/4 flex-shrink-0 p-2">
+                    <img src="http://127.0.0.1:8000/storage/thumbnails/mNsO0aipViN4L0mx0n3gNICrVYqKmonBryEfyb3u.jpg" class="w-full h-40 object-cover" alt="News">
+                    <p class="mt-2 text-sm font-bold">Bài Viết 3 – Acer Aspire 16 AI - Nâng tầm trải nghiệm</p>
+                </div>
+                <div class="carousel-item w-1/4 flex-shrink-0 p-2">
+                    <img src="http://127.0.0.1:8000/storage/thumbnails/mNsO0aipViN4L0mx0n3gNICrVYqKmonBryEfyb3u.jpg" class="w-full h-40 object-cover" alt="News">
+                    <p class="mt-2 text-sm font-bold">Bài Viết 4 – Quảng Trị ra mắt công viên Vincom Đông Hà</p>
+                </div>
+                <div class="carousel-item w-1/4 flex-shrink-0 p-2">
+                    <img src="http://127.0.0.1:8000/storage/thumbnails/mNsO0aipViN4L0mx0n3gNICrVYqKmonBryEfyb3u.jpg" class="w-full h-40 object-cover" alt="News">
+                    <p class="mt-2 text-sm font-bold">Bài Viết 5 – Sự kiện công nghệ lớn nhất năm 2025</p>
+                </div>
+                <div class="carousel-item w-1/4 flex-shrink-0 p-2">
+                    <img src="http://127.0.0.1:8000/storage/thumbnails/mNsO0aipViN4L0mx0n3gNICrVYqKmonBryEfyb3u.jpg" class="w-full h-40 object-cover" alt="News">
+                    <p class="mt-2 text-sm font-bold">Bài Viết 6 – Giải pháp AI mới giúp doanh nghiệp bền vững</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
+<script>
+    let currentIndex = 0;
+    const carousel = document.getElementById('carousel');
+    const totalItems = carousel.children.length;
+    const itemsPerView = 4; // Hiển thị 4 bài viết
+
+    function updateCarousel() {
+        const itemWidth = document.querySelector('.carousel-item').clientWidth;
+        const offset = -currentIndex * itemWidth;
+        carousel.style.transform = `translateX(${offset}px)`;
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        if (currentIndex < totalItems - itemsPerView) {
+            currentIndex++;
+            updateCarousel();
+        }
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateCarousel();
+        }
+    });
+
+    // Cập nhật carousel ngay khi tải trang
+    window.addEventListener('resize', updateCarousel);
+    updateCarousel();
+</script>
