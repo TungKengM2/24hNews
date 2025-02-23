@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <form id="upgradeForm" action="{{ route('upgrade.to.author') }}" method="POST" enctype="multipart/form-data"
+        <form id="upgradeForm" action="{{ route('user.upgrade') }}" method="POST" enctype="multipart/form-data"
               style="display: none;">
             @csrf
         </form>

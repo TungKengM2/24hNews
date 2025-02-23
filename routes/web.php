@@ -17,217 +17,124 @@
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Route;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Web Routes
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can register web routes for your application. These
-    | routes are loaded by the RouteServiceProvider and all of them will
-    | be assigned to the "web" middleware group. Make something great!
-    |
-    */
+    // Public routes
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/client/articles/{article_id}',
+        [ArticleUserController::class, 'show'])
+        ->name('client.articles.article');
 
-    // admin
-    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
-        ->name('admin.dashboard');
-    Route::get('/admin/role-upgrade-requests',
-        [AdminDashboardController::class, 'roleUpgradeRequests'])
-        ->name('admin.user-role-requests');
-    Route::post('/admin/approve-role-upgrade/{approval_id}',
-        [AdminDashboardController::class, 'approveRoleUpgrade'])
-        ->name('admin.approve-role-upgrade');
-    Route::post('/admin/reject-role-upgrade/{approval_id}',
-        [AdminDashboardController::class, 'rejectRoleUpgrade'])
-        ->name('admin.reject-role-upgrade');
-
-    // article
-    Route::patch('/articles/{article}/approve',
-        [ArticleController::class, 'approve'])->name('articles.approve');
-    Route::prefix('admin')->group(function () {
-        Route::resource('articles', ArticleController::class);
-    });
-
-    // category
-    Route::prefix('admin')->group(function () {
-        Route::resource('categories', CategoryController::class);
-    });
-
-    // Middleware guest - Chặn truy cập /login và /signup nếu đã đăng nhập
+    // Authentication routes
     Route::middleware('guest')->group(function () {
-        // Đăng nhập & Đăng ký
-        Route::get('/login', [AuthController::class, 'showLoginForm'])
-            ->name('login');
-        Route::post('/login', [AuthController::class, 'login']);
-        Route::get('/signup', [AuthController::class, 'showSignupForm'])
-            ->name('signup');
-        Route::post('/signup', [AuthController::class, 'processSignup'])
-            ->name('signup.process');
-
-        // Quên mật khẩu
-        Route::get('/forgot-password',
-            [ForgotPasswordController::class, 'showLinkRequestForm'])
-            ->name('password.request');
-        Route::post('/forgot-password',
-            [ForgotPasswordController::class, 'sendResetLinkEmail'])
-            ->name('password.email');
-        Route::get('/reset-password/{token}',
-            [ForgotPasswordController::class, 'showResetForm'])
-            ->name('password.reset');
-        Route::post('/reset-password',
-            [ForgotPasswordController::class, 'reset'])
-            ->name('password.update');
-    });
-
-    // Đăng xuất - chỉ cho phép khi đã đăng nhập
-    Route::post('/logout', [AuthController::class, 'logout'])
-        ->name('logout')
-        ->middleware('auth');
-
-    // Routes for login and signup
-    Route::get('/login', [AuthController::class, 'showLoginForm'])
-        ->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/signup', [AuthController::class, 'showSignupForm'])
-        ->name('signup');
-    Route::post('/signup', [AuthController::class, 'processSignup'])
-        ->name('signup.process');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-    Route::get('/verify-otp', [AuthController::class, 'showOtpForm'])
-        ->name('otp.verify.form');
-    // Route xử lý OTP
-    Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])
-        ->name('otp.verify.process');
-
-    // Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-    Route::middleware(['auth', 'admin'])->group(function () {
-        Route::get('/admin/dashboard',
-            [AdminDashboardController::class, 'index'])
-            ->name('admin.dashboard');
-    });
-
-    // Hiển thị form nhập email để lấy lại mật khẩu
-    Route::get('/forgot-password',
-        [ForgotPasswordController::class, 'showLinkRequestForm'])
-        ->name('password.request');
-
-    // Xử lý gửi email đặt lại mật khẩu
-    Route::post('/forgot-password',
-        [ForgotPasswordController::class, 'sendResetLinkEmail'])
-        ->name('password.email');
-
-    // Hiển thị form nhập mật khẩu mới
-    Route::get('/reset-password/{token}',
-        [ForgotPasswordController::class, 'showResetForm'])
-        ->name('password.reset');
-
-    // Xử lý cập nhật mật khẩu mới
-    Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
-        ->name('password.update');
-
-    // //////////////////////////test//////////////////////////////
-
-    Route::get('/moderator/dashboard',
-        [ModeratorDashboardController::class, 'index'])
-        ->name('moderator.dashboard');
-
-    Route::prefix('moderator')
-        ->middleware([
-            'auth',
-            'role:moderator',
-        ]) // Chỉ moderator có quyền truy cập
-        ->group(function () {
-            Route::get('/approvals',
-                [UserManagementController::class, 'index'])
-                ->name('moderator.approvals.index');
-
-            // Chi tiết phê duyệt
-            Route::get('/approvals/{id}',
-                [UserManagementController::class, 'show'])
-                ->name('moderator.approvals.show');
-
-            // Phê duyệt tác giả
-            Route::post('/approvals/{id}/approve',
-                [UserManagementController::class, 'approve'])
-                ->name('moderator.approvals.approve');
-
-            // Từ chối phê duyệt
-            Route::post('/approvals/{id}/reject',
-                [UserManagementController::class, 'reject'])
-                ->name('moderator.approvals.reject');
+        // Login
+        Route::controller(AuthController::class)->group(function () {
+            Route::get('/login', 'showLoginForm')->name('login');
+            Route::post('/login', 'login');
+            Route::get('/signup', 'showSignupForm')->name('signup');
+            Route::post('/signup', 'processSignup')->name('signup.process');
+            Route::get('/verify-otp', 'showOtpForm')->name('otp.verify.form');
+            Route::post('/verify-otp', 'verifyOtp')->name('otp.verify.process');
         });
 
-    Route::get('/user/dashboard', [UserProfileController::class, 'index'])
-        ->name('user.dashboard');
-    Route::post('/upgrade-to-author',
-        [UserProfileController::class, 'requestAuthorRole'])
-        ->middleware('auth')
-        ->name('upgrade.to.author');
-    //    Route::post('/profile/request-author-role', [ProfileController::class, 'requestAuthorRole'])->name('profile.request-author-role');
+        // Password reset
+        Route::controller(ForgotPasswordController::class)->group(function () {
+            Route::get('/forgot-password', 'showLinkRequestForm')
+                ->name('password.request');
+            Route::post('/forgot-password', 'sendResetLinkEmail')
+                ->name('password.email');
+            Route::get('/reset-password/{token}', 'showResetForm')
+                ->name('password.reset');
+            Route::post('/reset-password', 'reset')->name('password.update');
+        });
+    });
 
-    // //////////////////////////////////////////////////////////////////
+    // Authenticated routes
+    Route::middleware('auth')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout'])
+            ->name('logout');
+    });
 
+    // Admin routes
+    Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+        Route::controller(AdminDashboardController::class)->group(function () {
+            Route::get('/dashboard', 'index')->name('admin.dashboard');
+            Route::get('/role-upgrade-requests', 'roleUpgradeRequests')
+                ->name('admin.user-role-requests');
+            Route::post('/approve-role-upgrade/{approval_id}',
+                'approveRoleUpgrade')->name('admin.approve-role-upgrade');
+            Route::post('/reject-role-upgrade/{approval_id}',
+                'rejectRoleUpgrade')->name('admin.reject-role-upgrade');
+        });
+
+        Route::resource('articles', ArticleController::class);
+        Route::resource('categories', CategoryController::class);
+        Route::resource('users', UserController::class);
+    });
+
+    // Moderator routes
+    Route::prefix('moderator')
+        ->middleware(['auth', 'role:moderator'])
+        ->group(function () {
+            Route::get('/dashboard',
+                [ModeratorDashboardController::class, 'index'])
+                ->name('moderator.dashboard');
+            Route::get('/articles',
+                [ModeratorArticleController::class, 'index'])
+                ->name('moderator.articles');
+
+            Route::controller(UserManagementController::class)->group(function (
+            ) {
+                Route::get('/approvals', 'index')
+                    ->name('moderator.approvals.index');
+                Route::get('/approvals/{id}', 'show')
+                    ->name('moderator.approvals.show');
+                Route::post('/approvals/{id}/approve', 'approve')
+                    ->name('moderator.approvals.approve');
+                Route::post('/approvals/{id}/reject', 'reject')
+                    ->name('moderator.approvals.reject');
+            });
+        });
+
+    // Author routes
     Route::prefix('author')
         ->middleware(['auth', 'role:author'])
         ->group(function () {
-            // Dashboard
             Route::get('/dashboard', [AuthorDashboard::class, 'index'])
                 ->name('author.dashboard');
 
-            // Articles
-            Route::get('/articles', [
-                \App\Http\Controllers\Author\ArticleController::class,
-                'index',
-            ])->name('author.articles');
-            Route::get('/articles/{article}',
-                [\App\Http\Controllers\Author\ArticleController::class, 'show'])
-                ->name('author.articles.show');
-            Route::get('/articles/create', [
-                \App\Http\Controllers\Author\ArticleController::class,
-                'create',
-            ])->name('author.articles.create');
+            Route::controller(\App\Http\Controllers\Author\ArticleController::class)
+                ->group(function () {
+                    Route::get('/articles', 'index')->name('author.articles');
+                    Route::get('/articles/create', 'create')
+                        ->name('author.articles.create');
+                    Route::post('/articles', 'store')
+                        ->name('author.articles.store');
+                    Route::get('/articles/{article}', 'show')
+                        ->name('author.articles.show');
+                    Route::get('/articles/{article}/edit', 'edit')
+                        ->name('author.articles.edit');
+                    Route::put('/articles/{article}', 'update')
+                        ->name('author.articles.update');
+                    Route::delete('/articles/{article}', 'destroy')
+                        ->name('author.articles.destroy');
+                });
 
-            Route::post('/articles', [
-                \App\Http\Controllers\Author\ArticleController::class,
-                'store',
-            ])->name('author.articles.store');
-
-            // Edit article (GET request)
-            Route::get('/articles/{article}/edit', [
-                \App\Http\Controllers\Author\ArticleController::class,
-                'edit',
-            ])->name('author.articles.edit');
-
-            // Update article (PUT/PATCH request)
-            Route::put('/articles/{article}', [
-                \App\Http\Controllers\Author\ArticleController::class,
-                'update',
-            ])->name('author.articles.update');
-
-            // Delete article (DELETE request)
-            Route::delete('/articles/{article}', [
-                \App\Http\Controllers\Author\ArticleController::class,
-                'destroy',
-            ])->name('author.articles.destroy');
-
-            // Profile
-            Route::get('/profile', [
-                ProfileController::class,
-                'index',
-            ])->name('author.profile');
+            Route::get('/profile', [ProfileController::class, 'index'])
+                ->name('author.profile');
         });
 
-    Route::post('/approve-upgrade/{approval_id}',
-        [UserManagementController::class, 'approveUpgrade'])
-        ->middleware('moderator')
-        ->name('approve.upgrade');
+    // User dashboard
+    Route::middleware('auth')->prefix('user')->group(function () {
+        Route::controller(UserProfileController::class)->group(function () {
+            Route::get('/dashboard', 'index')
+                ->name('user.dashboard');
 
-    Route::post('/reject-upgrade/{approval_id}',
-        [UserManagementController::class, 'rejectUpgrade'])
-        ->middleware('moderator')
-        ->name('reject.upgrade');
+            Route::post('/upgrade-to-author',
+                'requestAuthorRole')
+                ->name('user.upgrade');
+        });
+    });
 
+    // File upload
     Route::post('/upload-file', function (Request $request) {
         if ($request->hasFile('upload')) {
             $file = $request->file('upload');
@@ -241,25 +148,3 @@
 
         return response()->json(['error' => 'No file uploaded'], 400);
     })->name('upload.file');
-
-    // merge dat
-    Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('/client/articles/{article_id}',
-        [ArticleUserController::class, 'show'])
-        ->name('client.articles.article');
-    Route::prefix('admin')->group(function () {
-        Route::resource('users', UserController::class);
-    });
-    // Route::get('/admin/login',
-    //    [AuthAdminController::class, 'showLoginAdminForm'])
-    //    ->name('authadmin.login-admin');
-    // Route::post('/admin/login', [AuthAdminController::class, 'loginadmin'])
-    //    ->name('admin.login.submit');
-    Route::get('/moderator/articles',
-        [ModeratorArticleController::class, 'index'])
-        ->name('moderator.articles');
-    //    Route::get('/writer/articleauthor',
-    //        [ArticleAuthorManagement::class, 'index'])
-    //        ->name('writer.articleauthor');
-    //    Route::get('/writer/author', [WriterAuthorManagement::class, 'index'])
-    //        ->name('writer.author');
