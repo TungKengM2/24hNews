@@ -16,6 +16,6 @@ class HomeController extends Controller
         $categoryArticles = Article::where('category_id', 1)->latest()->take(7)->get();
 
         // Truyền dữ liệu bài viết tới view
-        return view('website.pages.home.home', compact('latestArticles', 'categoryArticles'));
+        return view('client.pages.home', compact('latestArticles', 'categoryArticles'));
     }
 }
