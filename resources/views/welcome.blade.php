@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="{{ asset('client/img/fav.png') }}" title="Favicon" sizes="16x16" />
 
     <!-- bootstrap 5 -->
-    <link rel="stylesheet" href="{{ asset('client/css/lib/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('client/css/lib/bootstrap.min.css') }}" />
 
     <!-- font family -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
@@ -41,25 +41,18 @@
     <title> Newzin </title>
 </head>
 
-<body class="home-style10">
+<body class="home-style1">
 
     <!-- ====== start loading page ====== -->
-
     @include('website.layouts.partials.loadingpage')
     <!-- ====== end loading page ====== -->
 
-    <!-- ====== start nav-search ====== -->
-    @include('website.layouts.partials.navsearch')
-    <!-- ====== end nav-search ====== -->
-
-    <!-- ====== start header ====== -->
+    <!-- ====== start navbar-container ====== -->
     @include('website.layouts.partials.header')
-    <!-- ====== end header ====== -->
+    <!-- ====== start navbar-container ====== -->
 
     <!--Contents-->
-   <div class="main">
-        @include('website.layouts.partials.main')
-   </div>
+    @include('website.layouts.partials.main')
     <!--End-Contents-->
 
     <!-- ====== start footer ====== -->
@@ -87,41 +80,7 @@
     <script src="{{ asset('client/js/lib/parallaxie.js') }}"></script>
     <script src="{{ asset('client/js/main.js') }}"></script>
 
-    <script>
-        // const TweenMax = window.TweenMax;
-        // const cursor = document.querySelector(".cursor"),
-        // follower = document.querySelector(".follow");
-        // let posX = 0,
-        // posY = 0;
-        // let mouseX = 0,
-        // mouseY = 0;
-        // TweenMax.to({}, 0.016, {
-        // repeat: -1,
-        // onRepeat: function () {
-        //     posX += (mouseX - posX) / 9;
-        //     posY += (mouseY - posY) / 9;
-
-        //     TweenMax.set(follower, {
-        //     css: {
-        //         left: posX - 37,
-        //         top: posY - 37
-        //     }
-        //     });
-        //     TweenMax.set(cursor, {
-        //     css: {
-        //         left: mouseX,
-        //         top: mouseY
-        //     }
-        //     });
-        // }
-        // });
-        document.onmousemove = function (e) {
-        mouseX = e.pageX;
-        mouseY = e.pageY;
-        document.body.style.setProperty("--x", e.clientX + "px");
-        document.body.style.setProperty("--y", e.clientY + "px");
-        };
-    </script>
-
 
 </body>
+
+</html>
