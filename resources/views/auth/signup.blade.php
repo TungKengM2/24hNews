@@ -8,7 +8,7 @@
         <div class="col-md-6 ads">
             <h3>Đăng ký</h3>
             <div class="img">
-                <img src="{{ asset('images/bannerauth.jpg') }}" class="img-fluid" alt="banner signup">
+                <img src="{{ asset('images/bannerlogin.jpg') }}" class="img-fluid" alt="banner login 24H News">
             </div>
         </div>
         <div class="col-md-6 form-section">
@@ -63,10 +63,5 @@
             <p>Nếu đã có tài khoản, hãy <a href="{{ route('login') }}">đăng nhập</a>.</p>
         </div>
     </div>
-
-</body>
-</html>
-
 </div>
 @endsection
-
