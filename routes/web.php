@@ -19,8 +19,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// client
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/article-detail', function () {
+    return view('website.pages.articledetail.homedetail');
 });
 // admin
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
