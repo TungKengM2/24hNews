@@ -1,129 +1,248 @@
-<footer class="footer-style10 pt-100 pb-80 px-lg-5 overflow-hidden">
-        <div class="content">
-            <div class="row gx-5">
-                <div class="col-lg-3 col-md-6">
-                    <div class="foot-info pe-lg-5">
-                        <div class="foot-logo mb-30">
-                            <img src="assets/img/logo_home10_dr.png" alt="">
-                        </div>
-                        <b class="fw-bold mb-20 fsz-20px d-block"> Newz - Creative Blog and Magazine WordPress Theme </b>
-                        <div class="text color-666">
-                            When an unknown printer took galley and scrambled it to make a specimented book not only five. When an unknown printer 
+<footer class="footer-style1">
+        <div class="container">
+            <div class="tc-subscribe-style1">
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-lg-4">
+                        <div class="sub-info">
+                            <h5>Get the best blog stories into your inbox</h5>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-2 col-md-6">
-                    <div class="foot-links mt-30 mt-lg-0">
-                        <p class="fsz-20px text-uppercase mb-40"> Infromation </p>
-                        <ul>
-                            <li>
-                                <a href="home-10.html#">223 Thatcher Road St, Mahattan, NY 10632, United States</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">support@newz.com</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">(+051) 3235 68 69</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">License  No. 12/AB-BCDEF, Signed on January 29, 2022</a>
-                            </li>
-                        </ul>
-                        <div class="foot-social mt-50">
-                            <a href="home-10.html#">
-                                <i class="la la-twitter"></i>
-                            </a>
-                            <a href="home-10.html#">
-                                <i class="la la-facebook-f"></i>
-                            </a>
-                            <a href="home-10.html#">
-                                <i class="la la-instagram"></i>
-                            </a>
-                            <a href="home-10.html#">
-                                <i class="la la-youtube"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6">
-                    <div class="foot-links mt-30 mt-lg-0">
-                        <p class="fsz-20px text-uppercase mb-40"> categories </p>
-                        <ul>
-                            <li>
-                                <a href="home-10.html#">Lifestyle</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">Technology</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">Travel</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">Game</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">Sport</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">Food</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">Business</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6">
-                    <div class="foot-links mt-30 mt-lg-0">
-                        <p class="fsz-20px text-uppercase mb-40"> help center </p>
-                        <ul>
-                            <li>
-                                <a href="home-10.html#">About</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">Contact</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">Advertise</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">Career</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">Policy</a>
-                            </li>
-                            <li>
-                                <a href="home-10.html#">FAQs</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="foot-subscribe mt-30 mt-lg-0">
-                        <p class="fsz-20px text-uppercase mb-40"> Newsletter </p>
-                        <div class="text mb-30">
-                            Subscribe our newsletter to get the latest about best blog stories & more
-                        </div>
+                    <div class="col-lg-6">
                         <div class="sub-form">
                             <div class="form-group">
                                 <span class="icon">
                                     <i class="la la-envelope"></i>
                                 </span>
-                                <input type="text" class="form-control" placeholder="your email">
+                                <input type="text" class="form-control" placeholder="Enter your email">
                                 <button>subscribe</button>
                             </div>
-                            <p class="mt-3 color-666 fsz-12px fst-italic">By subscribing, you accepted the our <a href="home-10.html#" class="color-777 text-decoration-underline fst-normal">Policy</a></p>
+                            <p class="mt-2 color-666 fsz-13px fst-italic">By subscribing, you accepted the our <a
+                                    href="home-default.html#" class="text-decoration-underline fst-normal color-000">Policy</a></p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="foot mt-90 text-center">
-            <p> © 2023 Copyrights by <a href="home-10.html#" class="fw-bold"> Newzin </a>. All Rights Reserved. Designed by <a href="home-10.html#" class="fw-bold"> themescamp </a> </p>
-        </div> 
+            <div class="content">
+                <div class="row gx-lg-5">
+                    <div class="col-lg-4">
+                        <div class="info">
+                            <div class="foot-logo">
+                                <img src="assets/img/logo_home1.png" alt="" class="dark-none">
+                                <img src="assets/img/logo_home1_lt.png" alt="" class="light-none">
+                            </div>
+                            <div class="data-info">
+                                <p>
+                                    <b>Operated by : </b> ThemesCamp Company, Inc.
+                                </p>
+                                <p>
+                                    <b> Tax Code: </b> 0514234567
+                                </p>
+                                <p>
+                                    <b> Address: </b> 223 Thatcher Road St, Mahattan <br> NY 10632, United States
+                                </p>
+                                <p>
+                                    <b> Email : </b> support@Newzin.com
+                                </p>
+                                <p>
+                                    <b> Phone : </b> (+051) 3235 68 69
+                                </p>
+                                <p>
+                                    License No. 12/AB-BCDEF, Signed on <br> January 29, 2022
+                                </p>
+                            </div>
+
+                            <div class="social-links">
+                                <a href="home-default.html#">
+                                    <i class="la la-twitter"></i>
+                                </a>
+                                <a href="home-default.html#">
+                                    <i class="la la-facebook-f"></i>
+                                </a>
+                                <a href="home-default.html#">
+                                    <i class="la la-instagram"></i>
+                                </a>
+                                <a href="home-default.html#">
+                                    <i class="la la-youtube"></i>
+                                </a>
+                                <a href="home-default.html#">
+                                    <i class="la la-spotify"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Business</div>
+                            <ul>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Startup</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Business Trends</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Work Culture</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Personal Finance</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Leaders</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Stocks Market</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="link-group">
+                            <div class="title">Politics</div>
+                            <ul>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Capital Journal</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">National Security</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Politics Video</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Technology</div>
+                            <ul>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Personal Technology</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Product Reviews</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Video Games</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Discover</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Knowledge</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="link-group">
+                            <div class="title">Lifestyle</div>
+                            <ul>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Lifestyle Trends</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Family</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Psychology</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Fashion</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Foods</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Culture</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Entertainment</div>
+                            <ul>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Music & Podcasts</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Art & Design</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Movies</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="link-group">
+                            <div class="title">Sport</div>
+                            <ul>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Football</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Tennis</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">F-1 Racing Tour</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">NBA</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Basketball</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Travel</div>
+                            <ul>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Discovery</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Flight Tickets & Hotel</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Tour</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Destination</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Experience & Reviews</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="link-group">
+                            <div class="title">Help Center</div>
+                            <ul>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">About Us</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Contact</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Partners Programe</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Privacy Policy</a>
+                                </li>
+                                <li>
+                                    <a href="home-default.html#" class="f-link">Term & Conditions</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="foot text-center py-4 border-1 border-top brd-gray">
+                <p class="fsz-13px color-666">© 2023 Copyrights by <a href="home-default.html#" class="color-000">Newzin</a>. All Rights
+                    Reserved. Developed by <a href="home-default.html#" class="color-000 text-decoration-underline">ThemesCamp</a></p>
+            </div>
+        </div>
         <!-- ====== start to top button ====== -->
-        <a href="home-10.html#" class="to_top show">
+        <a href="home-default.html#" class="to_top">
             <i class="la la-angle-up"></i>
         </a>
         <!-- ====== end to top button ====== -->
