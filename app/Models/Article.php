@@ -10,9 +10,9 @@
 
         use HasFactory;
 
-        protected $table = 'articles'; // Đảm bảo tên bảng đúng
+        protected $table = 'articles';
 
-        protected $primaryKey = 'article_id'; // Khóa chính là 'article_id'
+        protected $primaryKey = 'article_id';
 
         protected $fillable = [
             'title',
@@ -27,6 +27,8 @@
             'views',
             'approved_by',
         ];
+
+        protected $with = ['tags'];
 
         /**
          * Lấy danh sách bài viết đã xuất bản

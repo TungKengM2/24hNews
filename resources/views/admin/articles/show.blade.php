@@ -1,43 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <title>Article Detail</title>
-    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=account_circle" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
-=======
     <title>Chi tiết bài viết</title>
-    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=account_circle" />
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=account_circle">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .content-display img {
             max-width: 100%;
             height: auto;
         }
+
+        .card-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .thumbnail img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tag-badge {
+            background-color: #007bff;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin-right: 5px;
+        }
     </style>
->>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
 </head>
 
 <body>
-    <div class="container">
+    <div class="container py-4">
         <h2 class="mb-4">Chi tiết bài viết</h2>
 
-        <div class="card">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">Thông tin bài viết</div>
             <div class="card-body">
-                <h3 class="card-title">Title: {{ $article->title }}</h3>
+                <h3 class="card-title">{{ $article->title }}</h3>
                 <p class="text-muted">Slug: {{ $article->slug }}</p>
 
-<<<<<<< HEAD
+
             <div class="card mx-2">
                 <div class="card-body">
                     <div class="row">
@@ -53,68 +65,88 @@
                             <p><i class="lni lni-thumbs-up"></i> <strong>Approved By:</strong> {{ $article->approver->username ?? 'Not Approved' }}</p>
                             <p><i class="lni lni-warning"></i> <strong>Contains Sensitive Content?</strong> {{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</p>
                         </div>
-=======
+
+                @if ($article->thumbnail_url)
+                    <div class="mb-3 text-center thumbnail">
+                        <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Thumbnail" class="img-fluid">
+                    </div>
+                @endif
+
+
                 <div class="mb-3 content-display">
-                    <strong>Content:</strong>
+                    <strong>Nội dung bài viết:</strong>
                     <div>{!! $article->content !!}</div>
                 </div>
 
                 @if ($article->preview_content)
                     <div class="mb-3">
-                        <strong>Preview Content:</strong>
+                        <strong>Mô tả ngắn:</strong>
                         <p>{{ $article->preview_content }}</p>
->>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
+
                     </div>
                 @endif
 
                 <div class="mb-3">
-                    <strong>Contains Sensitive Content?</strong>
-                    <p>{{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</p>
+                    <strong>Nội dung nhạy cảm:</strong>
+                    <p>{{ $article->contains_sensitive_content ? 'Có' : 'Không' }}</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <strong>Tác giả:</strong>
+                        <p>{{ $article->author->username ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Danh mục:</strong>
+                        <p>{{ $article->category->name ?? 'N/A' }}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <strong>Trạng thái:</strong>
+                        <p><span class="badge bg-info text-dark">{{ ucfirst($article->status) }}</span></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Lượt xem:</strong>
+                        <p>{{ $article->views }}</p>
+                    </div>
                 </div>
 
                 <div class="mb-3">
-                    <strong>Author:</strong>
-                    <p>{{ $article->author->username ?? 'N/A' }}</p>
+                    <strong>Người duyệt:</strong>
+                    <p>{{ $article->approver->username ?? 'Chưa duyệt' }}</p>
                 </div>
 
-                <div class="mb-3">
-                    <strong>Category:</strong>
-                    <p>{{ $article->category->name ?? 'N/A' }}</p>
-                </div>
-
-                <div class="mb-3">
-                    <strong>Status:</strong>
-                    <p>{{ ucfirst($article->status) }}</p>
-                </div>
-
-                <div class="mb-3">
-                    <strong>Views:</strong>
-                    <p>{{ $article->views }}</p>
-                </div>
-
-                <div class="mb-3">
-                    <strong>Approved By:</strong>
-                    <p>{{ $article->approver->username ?? 'Not Approved' }}</p>
-                </div>
-
-                @if ($article->thumbnail_url)
+                @if ($article->tags->count() > 0)
                     <div class="mb-3">
-<<<<<<< HEAD
+
+
                         <strong><i class="lni lni-pencil"></i> Content:</strong>
                         <div class="border p-3" style="width: 100%; min-height: 300px;">{!! $article->content !!}</div>
-=======
+
                         <strong>Thumbnail:</strong>
                         <br>
                         <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Thumbnail" class="img-thumbnail" style="max-width: 300px;">
->>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
+
+                        <strong>Tags:</strong>
+                        <div>
+                            @foreach ($article->tags as $tag)
+                                <span class="tag-badge">{{ $tag->name }}</span>
+                            @endforeach
+                        </div>
+
                     </div>
                 @endif
 
                 <div class="mt-4">
-                    <a href="{{ route('articles.edit', $article->article_id) }}" class="btn btn-primary">Edit</a>
-                    <a href="{{ route('articles.index') }}" class="btn btn-secondary">Back to List</a>
+                    <a href="{{ route('articles.edit', $article->article_id) }}" class="btn btn-primary">
+                        <i class="lni lni-pencil"></i> Chỉnh sửa
+                    </a>
+                    <a href="{{ route('articles.index') }}" class="btn btn-secondary">
+                        <i class="lni lni-list"></i> Quay lại danh sách
+                    </a>
 
-<<<<<<< HEAD
                     <div class="mt-4">
                         <a href="{{ route('articles.edit', $article->article_id) }}" class="btn btn-primary"><i class="lni lni-pencil"></i> Edit</a>
                         <a href="{{ route('articles.index') }}" class="btn btn-secondary"><i class="lni lni-list"></i> Back to List</a>
@@ -125,17 +157,24 @@
                             <button type="submit" class="btn btn-danger"><i class="lni lni-trash"></i> Delete</button>
                         </form>
                     </div>
-=======
+
                     <form action="{{ route('articles.destroy', $article->article_id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this article?');">
+
+                    <form action="{{ route('articles.destroy', $article->article_id) }}" method="POST"
+                        class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này?');">
+
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="lni lni-trash-can"></i> Xóa
+                        </button>
                     </form>
->>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
+
                 </div>
             </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

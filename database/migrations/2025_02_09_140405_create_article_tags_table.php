@@ -10,14 +10,16 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('article_tags', function (Blueprint $table) {
-            $table->foreignId('article_id')->constrained('articles', 'article_id');
-            $table->foreignId('tag_id')->constrained('tags', 'tag_id');
-            $table->primary(['article_id', 'tag_id']);
-        });
+{
+    Schema::create('article_tags', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('article_id')->references('article_id')->on('articles')->onDelete('cascade');
+        $table->foreignId('tag_id')->references('tag_id')->on('tags')->onDelete('cascade');
+        $table->timestamps();
+        $table->unique(['article_id', 'tag_id']);
+    });
+}
 
-    }
 
     /**
      * Reverse the migrations.
