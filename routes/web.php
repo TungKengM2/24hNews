@@ -3,6 +3,8 @@
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthAdminController;
+use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ProfileController;
@@ -66,6 +68,39 @@ Route::get('/verify-otp', [AuthController::class, 'showOtpForm'])
 // Route xử lý OTP
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])
     ->name('otp.verify.process');
+
+
+
+// Route login admin chinh lai
+Route::get('/login-admin', [AuthAdminController::class, 'showLoginAdminForm'])
+    ->name('loginadmin');
+
+Route::get('/signup-admin', [AuthAdminController::class, 'showSignupAdminForm'])
+    ->name('signupadmin');
+
+Route::get('/forget-admin', [AuthAdminController::class, 'showForgetAdminForm'])
+    ->name('forgetadmin');
+
+
+//////////////////////////
+
+// Route login user chinh lai
+Route::get('/login-user', [AuthUserController::class, 'showLoginUserForm'])
+    ->name('loginuser');
+
+Route::get('/signup-user', [AuthUserController::class, 'showSignupUserForm'])
+    ->name('signupuser');
+
+Route::get('/forget-user', [AuthUserController::class, 'showForgetUserForm'])
+    ->name('forgetuser');
+
+
+// //////////////////////////
+
+
+
+
+
 
 // Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 Route::middleware(['auth', 'admin'])->group(function () {
