@@ -16,6 +16,7 @@
         href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css" />
     <script src="{{ asset('js/ckeditor.js') }}"></script>
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
@@ -82,6 +83,21 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="tags">Chọn hoặc thêm tags:</label>
+                        <select id="tags" name="tags[]" class="form-control select2" multiple="multiple">
+                            @foreach ($tags as $tag)
+                                <option value="{{ $tag->tag_id }}">{{ $tag->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="new_tags">Thêm tags mới:</label>
+                        <input type="text" id="new_tags" name="new_tags" class="form-control"
+                            placeholder="Tag1, Tag2, Tag3">
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">Danh mục</label>
                         <select name="category_id" class="form-control">
                             @foreach ($categories as $category)
@@ -96,7 +112,7 @@
                             accept="image/*" required>
                     </div>
 
-                   
+
                     <!-- Tự động gán tác giả -->
                     <input type="hidden" name="author_id" value="{{ auth()->id() }}">
                     <input type="hidden" name="status" id="articleStatus" value="pending">
@@ -105,8 +121,19 @@
                     <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
                 </form>
 
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
                 <script>
+                    $(document).ready(function() {
+                        $('#tags').select2({
+                            tags: true,
+                            tokenSeparators: [','],
+                            placeholder: "Chọn hoặc nhập tags mới",
+                            allowClear: true
+                        });
+                    });
+
                     // Lưu nháp bài viết
                     document.getElementById('saveDraft').addEventListener('click', function() {
                         document.getElementById('articleStatus').value = 'draft';

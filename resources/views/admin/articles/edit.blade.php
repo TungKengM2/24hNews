@@ -8,6 +8,7 @@
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet">
     <script src="{{ asset('js/ckeditor.js') }}"></script>
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
 
@@ -70,6 +71,27 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label">Tags</label>
+                        <div class="d-flex flex-wrap">
+                            @foreach ($tags as $tag)
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" name="tags[]"
+                                        value="{{ $tag->tag_id }}"
+                                        {{ in_array($tag->tag_id, $article->tags->pluck('tag_id')->toArray()) ? 'checked' : '' }}>
+                                    <label class="form-check-label">{{ $tag->name }}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Thêm Tags mới (cách nhau bởi dấu phẩy)</label>
+                        <input type="text" class="form-control" name="new_tags" placeholder="Tag1, Tag2, Tag3">
+                    </div>
+
+
+
+                    <div class="mb-3">
                         <label class="form-label">Danh mục</label>
                         <select name="category_id" class="form-control">
                             @foreach ($categories as $category)
@@ -94,10 +116,19 @@
 
                     <button type="submit" class="btn btn-primary">Cập nhật</button>
                 </form>
+                <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
                 <script>
                     document.getElementById('articleForm').addEventListener('submit', function() {
                         document.getElementById('content').value = document.getElementById('editor').innerHTML;
+                    });
+                </script>
+                <script>
+                    $(document).ready(function() {
+                        $('.select2').select2({
+                            placeholder: "Chọn tags...",
+                            allowClear: true
+                        });
                     });
                 </script>
                 <script>
