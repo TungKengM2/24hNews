@@ -10,6 +10,9 @@
     <meta name="keywords" content="HTML5 Template Iteck Multi-Purpose themeforest" />
     <meta name="description" content="Iteck - Multi-Purpose HTML5 Template" />
     <meta name="author" content="" />
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 
     <!-- Title  -->
     <title>Newzin</title>
@@ -62,11 +65,44 @@
 .position-relative:hover .overlay {
     opacity: 1;
 }
-
 .like-btn {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+}
+
+.like-btn i {
+    font-size: 20px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+/* Khi hover vào nút */
+.like-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+
+/* Khi đã like */
+.liked {
+    background-color: rgba(0, 123, 255, 0.2);
+    border-radius: 8px;
+}
+
+.liked i {
+    color: #007bff;  /* Màu xanh dương */
+    transform: scale(1.2);
+}
+
+.liked span {
+    color: #007bff;
 }
 
     </style>
@@ -107,17 +143,12 @@
                     </p>
         
                     <!-- Nút Like -->
-                    <button class="like-btn" id="likeButton" 
-    data-liked="{{ $isLiked ? 'true' : 'false' }}" 
-    data-article-id="{{ $article->article_id }}">
-    <i class="fa fa-thumbs-up"></i> 
-    <span id="likeText">{{ $isLiked ? 'Đã thích' : 'Thích' }}</span> 
-    (<span id="likeCount">{{ $likeCount }}</span>)
-</button>
-
+                    <button id="likeButton" class="like-btn" data-article-id="{{ $article->article_id }}" data-liked="{{ $isLiked ? 'true' : 'false' }}">
+                        <i class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-thumbs-up" style="color: {{ $isLiked ? '#007bff' : 'black' }};"></i>
+                        <span id="likeText" style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $isLiked ? 'Đã thích' : 'Thích' }}</span>
+                        <span id="likeCount" style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $likeCount }}</span>
+                    </button>
                     
-                    
-        
                     <div class="article-content mt-3">{!! $article->content !!}</div>
                 </div>
             </div>
@@ -161,11 +192,12 @@
                     <div class="tab-pane fade show active" id="pills-description" role="tabpanel" aria-labelledby="pills-description-tab">
                         <div class="content-info text-center pb-0">
                             <div class="text mb-30">
-                                Nulla velit turpis, tincidunt eget elit vitae, congue sodales metus. Sed sed neque luctus, sollicitudin sem sed, consectetur libero. Nunc mollis turpis velit, vitae laoreet sapien vehicula nec. Curabitur blandit ac libero eu dictum. Nullam vehicula hendrerit nisl eu laoreet. Cras non velit est. Vivamus tincidunt lacus est, at auctor elit finibus et. Maecenas a consequat metus. Aliquam ac nisl nec est mollis faucibus eget vitae eros. Duis bibendum vestibulum felis id mattis.
+                                In today's fast-paced world, maintaining a balance between work and health has become a top priority. Studies show that daily habits and living environments play a crucial role in enhancing quality of life.  
                             </div>
                             <div class="text">
-                                Suspendisse metus sapien, lacinia eu lectus sit amet, consequat mollis felis. Mauris convallis augue quis semper venenatis. Vivamus imperdiet leo at neque efficitur, id faucibus arcu eleifend. Vivamus in massa bibendum, aliquet est quis, ornare lacus.
+                                Experts suggest that regular physical activity not only improves fitness but also boosts mental well-being. Additionally, a well-designed work environment enhances productivity and mental health, contributing to a sustainable and healthy lifestyle.
                             </div>
+                            
                         </div>
                     </div>
                     <div class="tab-pane fade" id="pills-reviews" role="tabpanel" aria-labelledby="pills-reviews-tab">
@@ -354,23 +386,29 @@
     <script src="{{ asset('client/js/main.js') }}"></script>
 
     <script>
-           document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () {
     let likeButton = document.getElementById("likeButton");
-
-    if (!likeButton) return; // Tránh lỗi nếu không có nút like
-
     let likeText = document.getElementById("likeText");
     let likeCount = document.getElementById("likeCount");
-    let articleId = likeButton.getAttribute("data-article-id");
+    let icon = likeButton.querySelector("i");
+
+    let isLiked = likeButton.getAttribute("data-liked") === "true";
+
+    // Cập nhật trạng thái ban đầu khi load trang
+    if (isLiked) {
+        updateLikeUI(true);
+    }
 
     likeButton.addEventListener("click", function () {
+        let articleId = likeButton.getAttribute("data-article-id");
+
         fetch(`/client/articles/${articleId}/like`, {
             method: "POST",
             headers: {
                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
                 "Content-Type": "application/json"
             },
-            credentials: "include" // QUAN TRỌNG: Gửi kèm cookie để Laravel nhận diện user
+            body: JSON.stringify({})
         })
         .then(response => response.json())
         .then(data => {
@@ -379,19 +417,32 @@
                 likeText.textContent = data.liked ? "Đã thích" : "Thích";
                 likeCount.textContent = data.likeCount;
 
-                // Đổi màu chữ của icon và chữ khi like/unlike
-                likeText.style.color = data.liked ? "blue" : "black";
-                likeButton.querySelector("i").style.color = data.liked ? "blue" : "black";
+                // Cập nhật giao diện theo trạng thái like
+                updateLikeUI(data.liked);
             } else {
                 alert("Lỗi: " + data.message);
             }
-        })
-        .catch(error => {
-            console.error("Lỗi fetch:", error);
-            alert("Có lỗi xảy ra, vui lòng thử lại!");
         });
     });
+
+    // Hàm cập nhật UI
+    function updateLikeUI(liked) {
+        if (liked) {
+            likeText.style.color = "#007bff"; // Màu xanh 💙
+            likeCount.style.color = "#007bff"; // Màu xanh 💙
+            icon.classList.remove("fa-regular");
+            icon.classList.add("fa-solid");
+            icon.style.color = "#007bff"; // Màu xanh 💙
+        } else {
+            likeText.style.color = "black"; // Màu đen 🖤
+            likeCount.style.color = "black"; // Màu đen 🖤
+            icon.classList.remove("fa-solid");
+            icon.classList.add("fa-regular");
+            icon.style.color = "black"; // Màu đen 🖤
+        }
+    }
 });
+
 
 
     </script>
