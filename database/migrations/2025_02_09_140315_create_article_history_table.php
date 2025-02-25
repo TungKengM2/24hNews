@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -13,12 +13,19 @@ return new class extends Migration
     {
         Schema::create('article_history', function (Blueprint $table) {
             $table->id('history_id');
-            $table->foreignId('article_id')->constrained('articles', 'article_id');
+            $table->foreignId('article_id')
+                ->constrained('articles', 'article_id')
+                ->onDelete('cascade'); // Xóa bài viết sẽ xóa lịch sử liên quan
+
             $table->text('content');
-            $table->foreignId('edited_by')->constrained('users', 'user_id');
+
+            $table->foreignId('edited_by')
+                ->nullable() // Cho phép null nếu người dùng bị xóa
+                ->constrained('users', 'user_id')
+                ->onDelete('set null'); // Nếu user bị xóa, giữ lại lịch sử và đặt edited_by = null
+
             $table->timestamp('edited_at')->useCurrent();
         });
-
     }
 
     /**

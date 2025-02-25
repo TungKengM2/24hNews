@@ -19,6 +19,7 @@ class ArticleUserController extends Controller
         }
 
         $userId = auth()->id();
+        $userIp = request()->ip();
 
         // Kiểm tra xem user đã like bài viết chưa
         $isLiked = false;
@@ -30,6 +31,29 @@ class ArticleUserController extends Controller
 
         // Lấy số lượt like
         $likeCount = ArticleLike::where('article_id', $article->article_id)->count();
+
+        // Kiểm tra xem user đã xem bài viết chưa
+        $hasViewed = ArticleView::where('article_id', $article->article_id)
+            ->where(function ($query) use ($userId, $userIp) {
+                if ($userId) {
+                    $query->where('user_id', $userId);
+                } else {
+                    $query->whereNull('user_id')->where('ip_address', $userIp);
+                }
+            })
+            ->exists();
+
+        // Nếu chưa xem, thêm vào database & tăng lượt xem
+        if (!$hasViewed) {
+            ArticleView::create([
+                'article_id' => $article->article_id,
+                'user_id' => $userId,
+                'ip_address' => $userIp,
+                'viewed_at' => now(),
+            ]);
+
+            $article->increment('views');
+        }
 
         // Lấy bài viết liên quan
         $relatedArticles = Article::where('category_id', $article->category_id)
