@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\AdminDashboardController;
+
 use App\Http\Controllers\ForgotPasswordController;
 
 /*
@@ -24,7 +25,10 @@ use App\Http\Controllers\ForgotPasswordController;
 // client
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/client/articles/{article_id}',[ArticleUserController::class, 'show'])->name('client.articles.article');
+
+Route::get('/client/articles/{article_id}', [ArticleUserController::class, 'show'])->name('client.articles.article');
+Route::post('/client/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('client.articles.like');
+
 
 Route::get('/article-detail', function () {
     return view('website.pages.articledetail.homedetail');

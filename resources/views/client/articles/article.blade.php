@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <!-- Metas -->
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="keywords" content="HTML5 Template Iteck Multi-Purpose themeforest" />
@@ -40,6 +40,36 @@
     <!-- ====== main style ====== -->
     <link rel="stylesheet" href="{{ asset('client/css/style.css') }}" />
     <title> Newzin </title>
+    <style>
+        .article-image {
+    height: 400px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    border-radius: 10px;
+}
+
+.position-relative:hover .overlay {
+    opacity: 1;
+}
+
+.like-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+    </style>
 </head>
 
 <body class="home-style1">
@@ -53,23 +83,46 @@
     <!-- ====== start navbar-container ====== -->
 
     <!--Contents-->
-    
+    <main class="product-page">
+        <!-- ====== start product ====== -->
+        <section class="product pt-50">
+            <div class="container">
+                    
 <div class="container mt-4">
     <div class="row">
         <!-- Bài viết chính -->
         <div class="col-lg-8">
-            <div class="card shadow-sm mb-4">
-                <img src="{{ asset('storage/' . $article->thumbnail_url) }}" class="card-img-top article-image" alt="{{ $article->title }}">
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="position-relative">
+                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}" class="card-img-top rounded-top article-image" alt="{{ $article->title }}">
+                    <div class="overlay d-flex align-items-center justify-content-center">
+                        <h2 class="text-white text-center">{{ $article->title }}</h2>
+                    </div>
+                </div>
                 <div class="card-body">
                     <h2 class="card-title">{{ $article->title }}</h2>
-                    <p class="text-muted">Lượt xem: {{ $article->views }} | Tác giả: {{ $article->author->username ?? 'N/A' }}</p>
-                    <button class="like-btn" id="likeButton">
-                        <i class="fa fa-thumbs-up"></i> Thích (<span id="likeCount">{{ $article->likes ?? 0 }}</span>)
-                    </button>
+                    <p class="text-muted">
+                        <i class="fa fa-eye"></i> {{ $article->views }} lượt xem | 
+                        <i class="fa fa-user"></i> {{ $article->author->username ?? 'N/A' }}
+                    </p>
+        
+                    <!-- Nút Like -->
+                    <button class="like-btn" id="likeButton" 
+    data-liked="{{ $isLiked ? 'true' : 'false' }}" 
+    data-article-id="{{ $article->article_id }}">
+    <i class="fa fa-thumbs-up"></i> 
+    <span id="likeText">{{ $isLiked ? 'Đã thích' : 'Thích' }}</span> 
+    (<span id="likeCount">{{ $likeCount }}</span>)
+</button>
+
+                    
+                    
+        
                     <div class="article-content mt-3">{!! $article->content !!}</div>
                 </div>
             </div>
         </div>
+        
         
         <!-- Quảng cáo -->
         <div class="col-lg-4">
@@ -78,21 +131,199 @@
             </a>
             </div>
             
-            <!-- Bài viết liên quan -->
-            <div class="card shadow-sm fade-in">
-                <div class="card-header bg-primary text-white">Bài viết liên quan</div>
-                <ul class="list-group list-group-flush">
-                    @foreach ($relatedArticles as $related)
-                        <li class="list-group-item d-flex align-items-center">
-                            <img src="{{ asset('storage/' . $related->thumbnail_url) }}" class="mr-3 related-article-img" alt="{{ $related->title }}">
-                            <a href="{{ route('client.articles.article', $related->article_id) }}" class="text-dark">{{ $related->title }}</a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
+
+            
         </div>
     </div>
 </div>
+                
+            </div>
+        </section>
+        <!-- ====== end product ====== -->
+
+
+        <!-- ====== start product details ====== -->
+        <section class="product-details pt-100">
+            <div class="container">
+                <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-description-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-description" type="button" role="tab" aria-controls="pills-description"
+                            aria-selected="true">Description</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-reviews-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-reviews" type="button" role="tab" aria-controls="pills-reviews"
+                            aria-selected="false">Reviews (3)</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-description" role="tabpanel" aria-labelledby="pills-description-tab">
+                        <div class="content-info text-center pb-0">
+                            <div class="text mb-30">
+                                Nulla velit turpis, tincidunt eget elit vitae, congue sodales metus. Sed sed neque luctus, sollicitudin sem sed, consectetur libero. Nunc mollis turpis velit, vitae laoreet sapien vehicula nec. Curabitur blandit ac libero eu dictum. Nullam vehicula hendrerit nisl eu laoreet. Cras non velit est. Vivamus tincidunt lacus est, at auctor elit finibus et. Maecenas a consequat metus. Aliquam ac nisl nec est mollis faucibus eget vitae eros. Duis bibendum vestibulum felis id mattis.
+                            </div>
+                            <div class="text">
+                                Suspendisse metus sapien, lacinia eu lectus sit amet, consequat mollis felis. Mauris convallis augue quis semper venenatis. Vivamus imperdiet leo at neque efficitur, id faucibus arcu eleifend. Vivamus in massa bibendum, aliquet est quis, ornare lacus.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-reviews" role="tabpanel" aria-labelledby="pills-reviews-tab">
+                        <div class="product-reviews pt-30">
+                            <div class="row gx-5">
+                                <div class="col-lg-7">
+                                    <div class="reviews-content pt-30">
+                                        <h5 class="color-000 mb-40 text-capitalize"> 02 reviews </h5>
+                                        <div class="comment-replay-cont bg-light py-5 px-4 mb-20">
+                                            <div class="d-flex comment-cont">
+                                                <div class="icon-60 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
+                                                    <img src="assets/img/colums/1.png" alt="">
+                                                </div>
+                                                <div class="inf">
+                                                    <div class="title d-flex justify-content-between">
+                                                        <h6 class="fw-bold fs-14px">Robert Downey Jr</h6>
+                                                        <div class="time fs-12px text-uppercase d-inline-block">
+                                                            <div class="rate">
+                                                                <div class="stars">
+                                                                    <i class="la la-star active"></i>
+                                                                    <i class="la la-star active"></i>
+                                                                    <i class="la la-star active"></i>
+                                                                    <i class="la la-star active"></i>
+                                                                    <i class="la la-star"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="text color-000 fs-12px mt-10">
+                                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Atume nusaate staman utra phone limo sumeria                                            
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="comment-replay-cont bg-light py-5 px-4 mb-20">
+                                            <div class="d-flex comment-cont">
+                                                <div class="icon-60 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
+                                                    <img src="assets/img/colums/2.png" alt="">
+                                                </div>
+                                                <div class="inf">
+                                                    <div class="title d-flex justify-content-between">
+                                                        <h6 class="fw-bold fs-14px">Ben Chiwell</h6>
+                                                        <div class="time fs-12px text-uppercase">
+                                                            <div class="rate">
+                                                                <div class="stars">
+                                                                    <i class="la la-star active"></i>
+                                                                    <i class="la la-star active"></i>
+                                                                    <i class="la la-star active"></i>
+                                                                    <i class="la la-star active"></i>
+                                                                    <i class="la la-star"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="text color-000 fs-12px mt-10">
+                                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Atume nusaate staman utra phone limo sumeria                                            
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <form class="comment-form d-block pt-30">
+                                        <h5 class="color-000 mb-40 text-capitalize"> Add a review </h5>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <label class="text-uppercase mb-1">
+                                                    your rating
+                                                </label>
+                                                <div class="rate-stars">
+                                                    <input type="radio" name="star" value="5">
+                                                    <input type="radio" name="star" value="4">
+                                                    <input type="radio" name="star" value="3">
+                                                    <input type="radio" name="star" value="2">
+                                                    <input type="radio" name="star" value="1">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-30">
+                                                    <textarea class="form-control radius-4 fs-12px p-3" rows="6" placeholder="Write your comment here"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group mb-4 mb-lg-0">
+                                                    <input type="text" class="form-control fs-12px radius-4 p-3" placeholder="Your Name *">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control fs-12px radius-4 p-3" placeholder="Your Email *">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="form-check mt-20">
+                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                    <label class="form-check-label fs-12px" for="flexCheckDefault">
+                                                        Save my name &amp; email in this browser for next time I comment
+                                                    </label>
+                                                  </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <a href="page-product.html#" class="btn rounded-pill bg-main text-white sm-butn fw-bold mt-40">
+                                                    <span>Submit Comment </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+        </section>
+        <!-- ====== end product details ====== -->
+
+
+        <!-- ====== start Related products ====== -->
+        <section class="tc-products-content section-padding">
+            <div class="container">
+                <div class="title mb-30">
+                    <h4>Related Articles</h4>
+                </div>
+                <div class="related-products-slider tc-products position-relative tc-slider-style1">
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            @foreach ($relatedArticles as $related)
+                                <div class="swiper-slide">
+                                    <div class="product-card">
+                                        <div class="img">
+                                            <img src="{{ asset('storage/' . $related->thumbnail_url) }}" alt="{{ $related->title }}">
+                                            <div class="btns">
+
+                                                <a href="{{ route('client.articles.article', $related->article_id) }}" class="butn">
+                                                    <span><i class="la la-eye me-2"></i> Read More</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="info pt-30">
+                                            <a href="{{ route('client.articles.article', $related->article_id) }}" class="title">{{ $related->title }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end Related products ====== -->
+
+    </main>
+
 
 
     <!--End-Contents-->
@@ -123,24 +354,48 @@
     <script src="{{ asset('client/js/main.js') }}"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let likeButton = document.getElementById("likeButton");
-            let likeCount = document.getElementById("likeCount");
-            let liked = false;
-    
-            likeButton.addEventListener("click", function() {
-                if (!liked) {
-                    liked = true;
-                    likeCount.textContent = parseInt(likeCount.textContent) + 1;
-                    likeButton.style.backgroundColor = "#e84118";
-                }
-            });
-    
-            document.querySelectorAll(".fade-in").forEach((element) => {
-                element.classList.add("visible");
-            });
+           document.addEventListener("DOMContentLoaded", function () {
+    let likeButton = document.getElementById("likeButton");
+
+    if (!likeButton) return; // Tránh lỗi nếu không có nút like
+
+    let likeText = document.getElementById("likeText");
+    let likeCount = document.getElementById("likeCount");
+    let articleId = likeButton.getAttribute("data-article-id");
+
+    likeButton.addEventListener("click", function () {
+        fetch(`/client/articles/${articleId}/like`, {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                "Content-Type": "application/json"
+            },
+            credentials: "include" // QUAN TRỌNG: Gửi kèm cookie để Laravel nhận diện user
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                likeButton.setAttribute("data-liked", data.liked ? "true" : "false");
+                likeText.textContent = data.liked ? "Đã thích" : "Thích";
+                likeCount.textContent = data.likeCount;
+
+                // Đổi màu chữ của icon và chữ khi like/unlike
+                likeText.style.color = data.liked ? "blue" : "black";
+                likeButton.querySelector("i").style.color = data.liked ? "blue" : "black";
+            } else {
+                alert("Lỗi: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Lỗi fetch:", error);
+            alert("Có lỗi xảy ra, vui lòng thử lại!");
         });
+    });
+});
+
+
     </script>
+
 </body>
 
 </html>

@@ -158,42 +158,7 @@
                                     </div>
                                 @endforeach
 
-                                <div class="swiper-slide">
-                                    <div class="tc-post-overlay-default">
-                                        <div class="img th-650 img-cover">
-                                            <img src="client/img/trend/3.png" alt="">
-                                            <div class="tags">
-                                                <a href="home-default.html#">technology</a>
-                                            </div>
-                                        </div>
-                                        <div class="content ps-40 pe-40 pb-40">
-                                            <h2 class="title mb-20">
-                                                <a href="page-single-post-creative.html">Myenergi's award
-                                                    winning product the zappi EV
-                                                    charger</a>
-                                            </h2>
-                                            <div class="text mb-40">
-                                                Its first decline in subscribers since 2011 triggered a $54
-                                                billion stock value loss and raised questions [...]
-                                            </div>
-                                            <div class="meta-bot lh-1">
-                                                <ul class="d-flex">
-                                                    <li class="date me-5">
-                                                        <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14,
-                                                            2022</a>
-                                                    </li>
-                                                    <li class="author me-5">
-                                                        <a href="home-default.html#"><i class="la la-user me-2"></i> by Admin</a>
-                                                    </li>
-                                                    <li class="comment">
-                                                        <a href="home-default.html#"><i class="la la-comment me-2"></i> 55
-                                                            Comments</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                               
                             </div>
                         </div>
                         <!-- arrows -->
