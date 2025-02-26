@@ -15,8 +15,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::with('author', 'category', 'approver')->paginate(10);
-        return view('admin.articles.index', compact('articles'));
+        return view('admin.articles.index');
     }
 
     /**
@@ -24,11 +23,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        $categories = Category::select('category_id', 'name')->get();
-        $authors = User::select('user_id', 'username')->get(); // Lấy danh sách users
-        $approvers = User::where('role_id', 1)->select('user_id', 'username')->get(); // Lọc người duyệt bài
-
-        return view('admin.articles.create', compact('categories', 'authors', 'approvers'));
+        return view('admin.articles.create');
     }
     public function approve(Article $article)
     {
@@ -117,11 +112,7 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        $categories = Category::select('category_id', 'name')->get();
-        $authors = User::select('user_id', 'username')->get(); // Lấy danh sách users
-        $approvers = User::where('role_id', 1)->select('user_id', 'username')->get(); // Lọc người duyệt bài
-
-        return view('admin.articles.edit', compact('article', 'categories', 'authors', 'approvers'));
+        return view('admin.articles.edit');
     }
 
 

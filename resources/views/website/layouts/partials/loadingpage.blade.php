@@ -5,9 +5,10 @@
                 <span>n</span>
                 <span>e</span>
                 <span>w</span>
-                <span>z</span>
-                <span>i</span>
-                <span>n</span>
+                <span>s</span>
+                <span>2</span>
+                <span>4</span>
+                <span>h</span>
               </h2>
               <small class="loading loading01">
                   <span>l</span>
