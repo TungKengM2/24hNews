@@ -1,4 +1,4 @@
-<aside id="sidebar">
+<aside id="sidebar" class="">
             <div class="d-flex">
                 <div class="sidebar-logo">
                     <img src="{{ asset('images/logo.png') }}" class="img-fluid" alt="Logo 24H News">
@@ -65,11 +65,9 @@
                 </li>
             </ul>
             <div class="sidebar-footer">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-                        Đăng xuất
-                    </button>
-                </form>
+                <a href="#" class="sidebar-link">
+                    <i class="lni lni-exit"></i>
+                    <span>Đăng xuất</span>
+                </a>
             </div>
         </aside>

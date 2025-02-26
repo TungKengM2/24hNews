@@ -129,18 +129,14 @@ class AuthController extends Controller
 
         return redirect('/')->with('status', 'Đăng ký thành công');
     }
+
     public function logout(Request $request)
     {
-        $driver = Auth::getDefaultDriver(); // Lưu driver trước khi logout
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        // Xóa cookie remember me
-        Cookie::queue(Cookie::forget('remember_web_' . $driver));
+        Cookie::queue(Cookie::forget('remember_web_'.Auth::getDefaultDriver()));
 
         return redirect('/')->with('status', 'You have been logged out.');
     }
-
 }
