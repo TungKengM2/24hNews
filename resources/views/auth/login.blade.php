@@ -8,7 +8,7 @@
         <div class="col-md-6 ads">
         <h3>Đăng nhập</h3>
           <div class="img">
-            <img src="{{ asset('images/bannerauth.jpg') }}" class="img-fluid" alt="banner login">
+            <img src="{{ asset('images/bannerlogin.jpg') }}" class="img-fluid" alt="banner login 24H News">
           </div>
         </div>
 
@@ -21,7 +21,7 @@
     @endif
         <div class="form-section">
             <div class="profile-img">
-                <img src="https://i.imgur.com/ZuUExs4.jpeg" alt="profile_img" height="140px" width="140px;">
+                <img src="{{ asset('images/headerbanner24hnews.jpg') }}" width="260px" height="100px" alt="Logo 24H News">
             </div>
             <form action="{{ route('login') }}" method="POST" >
                 @csrf
