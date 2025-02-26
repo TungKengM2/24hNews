@@ -31,7 +31,7 @@
                         <h3>Get more things done with Loggin platform.</h3>
                         <p>Access to the most powerfull tool in the entire design and web industry.</p>
                         <div class="page-links">
-                            <a href="login2.html">Login</a><a href="register2.html" class="active">Register</a>
+                        <a href="{{ route('loginadmin') }}" class="active">Login</a><a href="{{ route('signupadmin') }}">Register</a>
                         </div>
                         <form>
                             <input class="form-control" type="text" name="name" placeholder="Full Name" required>
