@@ -43,7 +43,7 @@
                             <a href="register21.html#"><i class="fab fa-facebook-f"></i>Facebook</a><a href="register21.html#"><i class="fab fa-google"></i>Google</a><a href="register21.html#"><i class="fab fa-linkedin-in"></i>Linkedin</a>
                         </div>
                         <div class="page-links">
-                            <a href="login21.html">Login to account</a>
+                            <a href="{{ route('loginuser') }}">Login to account</a>
                         </div>
                     </div>
                 </div>
