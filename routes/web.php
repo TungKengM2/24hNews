@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-
 Route::get('/article-detail', function () {
     return view('website.pages.articledetail.homedetail');
 });
@@ -42,10 +41,16 @@ Route::post('/admin/reject-role-upgrade/{approval_id}', [AdminDashboardControlle
     ->name('admin.reject-role-upgrade');
 
 // article
-Route::patch('/articles/{article}/approve',
-    [ArticleController::class, 'approve'])->name('articles.approve');
-Route::prefix('admin')->group(function () {
-    Route::resource('articles', ArticleController::class);
+Route::get('admin/list-article', function () {
+    return view('admin.articles.index');
+});
+
+Route::get('admin/create-article', function () {
+    return view('admin.articles.create');
+});
+
+Route::get('admin/edit-article', function () {
+    return view('admin.articles.edit');
 });
 
 // category

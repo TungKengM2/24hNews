@@ -1,249 +1,295 @@
-<?php
-
-function formatPlainText($text)
-{
-    $text = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $text);
-    $text = preg_replace('/_(.*?)_/', '<em>$1</em>', $text);
-    $text = preg_replace('/\[([^\]]+)\](.*?)\[\/\1\]/', '<span style="color:$1">$2</span>', $text);
-
-    return $text;
-}
-?>
 <!DOCTYPE html>
-<html>
+<html lang="zxx">
+
+<!-- Mirrored from demo.dashboardpack.com/sales-html/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 May 2024 07:23:13 GMT -->
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidebar With Bootstrap</title>
-    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=account_circle" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>List</title>
+
+
+    <link rel="stylesheet" href="{{ asset('admin/css/bootstrap1.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/themefy_icon/themify-icons.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/niceselect/css/nice-select.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/owl_carousel/css/owl.carousel.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/gijgo/gijgo.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/font_awesome/css/all.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/tagsinput/tagsinput.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/datepicker/date-picker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/vectormap-home/vectormap-2.0.2.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/scroll/scrollable.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/datatable/css/jquery.dataTables.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/datatable/css/responsive.dataTables.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/datatable/css/buttons.dataTables.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/text_editor/summernote-bs4.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/morris/morris.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/vendors/material_icon/material-icons.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/css/metisMenu.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/css/style1.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/css/colors/default.css') }}" id="colorSkinCSS">
 
 </head>
 
-<body>
-    <div class="wrapper">
-        @include('admin.menu')
-        <main class="content px-3 py-4">
-         @include('admin.header')
-            <div class="container-fluid">
-                <div class="mb-3">
+<body class="crm_body_bg">
 
-                    <div class="row">
-                        <div class="col-12 col-md-4 ">
-                            <div class="card border-0">
-                                <div class="card-body py-4">
-                                    <h5 class="mb-2 fw-bold">
-                                        Memebers Progress
-                                    </h5>
-                                    <p class="mb-2 fw-bold">
-                                        $72,540
-                                    </p>
-                                    <div class="mb-0">
-                                        <span class="badge text-success me-2">
-                                            +9.0%
-                                        </span>
-                                        <span class=" fw-bold">
-                                            Since Last Month
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4 ">
-                            <div class="card  border-0">
-                                <div class="card-body py-4">
-                                    <h5 class="mb-2 fw-bold">
-                                        Memebers Progress
-                                    </h5>
-                                    <p class="mb-2 fw-bold">
-                                        $72,540
-                                    </p>
-                                    <div class="mb-0">
-                                        <span class="badge text-success me-2">
-                                            +9.0%
-                                        </span>
-                                        <span class="fw-bold">
-                                            Since Last Month
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4 ">
-                            <div class="card border-0">
-                                <div class="card-body py-4">
-                                    <h5 class="mb-2 fw-bold">
-                                        Memebers Progress
-                                    </h5>
-                                    <p class="mb-2 fw-bold">
-                                        $72,540
-                                    </p>
-                                    <div class="mb-0">
-                                        <span class="badge text-success me-2">
-                                            +9.0%
-                                        </span>
-                                        <span class="fw-bold">
-                                            Since Last Month
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <h3 class="fw-bold fs-4 my-3">Avg. Agent Earnings
-                    </h3>
-                    <div class="row">
-                        <div class="col-12 mb-3">
-                            <h1>Thêm mới bài viết</h1>
-                            <a class="btn btn-secondary" href="{{ route('admin.dashboard') }}">
-                                <i class="lni lni-arrow-left"></i> Back to Dashboard
-                            </a>
-                            <a class="btn btn-primary" href="{{ route('articles.create') }}">
-                                <i class="lni lni-plus"></i>
-                            </a>
+    // Sidebar
+    @include('admin.layouts.partials.sidebar')
+    // main
+    <section class="main_content dashboard_part large_header_bg">
 
-                        </div>
-                        <div class="col-12">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr class="highlight">
-                                        <th>ID</th>
-                                        <th>Title</th>
-                                        <th>Slug</th>
-                                        {{-- <th>Content</th> --}}
-                                        <th>Preview Content</th>
-                                        <th>Contains Sensitive Content</th>
-                                        <th>Author</th>
-                                        <th>Category</th>
-                                        <th>Thumbnail</th>
-                                        <th>Status</th>
-                                        <th>Views</th>
-                                        <th>Approved By</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($articles as $article)
-                                        <tr>
-                                            <td>{{ $article->article_id }}</td>
-                                            <td>{{ $article->title }}</td>
-                                            <td>{{ $article->slug }}</td>
+<div class="container-fluid g-0">
+<div class="row">
+<div class="col-lg-12 p-0 ">
+<div class="header_iner d-flex justify-content-between align-items-center">
+<div class="sidebar_icon d-lg-none">
+<i class="ti-menu"></i>
+</div>
+<div class="serach_field-area d-flex align-items-center">
+<div class="search_inner">
+<form action="#">
+<div class="search_field">
+<input type="text" placeholder="Search here...">
+</div>
+<button type="submit"> <img src="img/icon/icon_search.svg" alt> </button>
+</form>
+</div>
+<span class="f_s_14 f_w_400 ml_25 white_text text_white">Apps</span>
+</div>
+<div class="header_right d-flex justify-content-between align-items-center">
+<div class="header_notification_warp d-flex align-items-center">
+<li>
+<a class="bell_notification_clicker nav-link-notify" href="#"> <img src="img/icon/bell.svg" alt>
+</a>
 
-                                            {{-- <td>
-                                                {{ Str::limit(formatPlainText($article->content), 50) }}
-                                            </td> --}}
+<div class="Menu_NOtification_Wrap">
+<div class="notification_Header">
+<h4>Notifications</h4>
+</div>
+<div class="Notification_body">
 
-                                            <td>{{ Str::limit($article->preview_content, 50) }}</td>
-                                            <td class="text-center">
-                                                @if ($article->contains_sensitive_content)
-                                                    <span class="badge bg-danger">Yes</span>
-                                                @else
-                                                    <span class="badge bg-success">No</span>
-                                                @endif
-                                            </td>
-                                            <td>{{ $article->author->username ?? 'Unknown' }}</td>
-                                            <td>{{ $article->category->name ?? 'Uncategorized' }}</td>
-                                            <td>
-                                                @if ($article->thumbnail_url)
-                                                    @php
-                                                        $extension = pathinfo(
-                                                            $article->thumbnail_url,
-                                                            PATHINFO_EXTENSION,
-                                                        );
-                                                    @endphp
+<div class="single_notify d-flex align-items-center">
+<div class="notify_thumb">
+<a href="#"><img src="img/staf/2.png" alt></a>
+</div>
+<div class="notify_content">
+<a href="#"><h5>Cool Marketing </h5></a>
+<p>Lorem ipsum dolor sit amet</p>
+</div>
+</div>
 
-                                                    @if (in_array($extension, ['jpeg', 'png', 'jpg', 'gif']))
-                                                        <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                            width="100" height="100">
-                                                    @elseif (in_array($extension, ['mp4', 'avi', 'mov']))
-                                                        <video width="150" height="100" controls>
-                                                            <source
-                                                                src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                                type="video/{{ $extension }}">
-                                                            Your browser does not support the video tag.
-                                                        </video>
-                                                    @elseif (in_array($extension, ['mp3', 'wav']))
-                                                        <audio controls>
-                                                            <source
-                                                                src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                                type="audio/{{ $extension }}">
-                                                            Your browser does not support the audio element.
-                                                        </audio>
-                                                    @endif
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @switch($article->status)
-                                                    @case('draft')
-                                                        <span class="badge bg-secondary">Draft</span>
-                                                    @break
+<div class="single_notify d-flex align-items-center">
+<div class="notify_thumb">
+<a href="#"><img src="img/staf/4.png" alt></a>
+</div>
+<div class="notify_content">
+<a href="#"><h5>Awesome packages</h5></a>
+<p>Lorem ipsum dolor sit amet</p>
+</div>
+</div>
 
-                                                    @case('pending')
-                                                        <span class="badge bg-warning">Pending</span>
-                                                    @break
+<div class="single_notify d-flex align-items-center">
+<div class="notify_thumb">
+<a href="#"><img src="img/staf/3.png" alt></a>
+</div>
+<div class="notify_content">
+<a href="#"><h5>what a packages</h5></a>
+<p>Lorem ipsum dolor sit amet</p>
+</div>
+</div>
 
-                                                    @case('published')
-                                                        <span class="badge bg-success">Published</span>
-                                                    @break
+<div class="single_notify d-flex align-items-center">
+<div class="notify_thumb">
+<a href="#"><img src="img/staf/2.png" alt></a>
+</div>
+<div class="notify_content">
+<a href="#"><h5>Cool Marketing </h5></a>
+<p>Lorem ipsum dolor sit amet</p>
+</div>
+</div>
 
-                                                    @case('archived')
-                                                        <span class="badge bg-danger">Archived</span>
-                                                    @break
-                                                @endswitch
-                                            </td>
-                                            <td>{{ $article->views }}</td>
-                                            <td>{{ $article->approved_by ? $article->approver->username : 'Not Approved' }}
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('articles.show', $article) }}"
-                                                    class="btn btn-info btn-sm">Show</a>
-                                                <a href="{{ route('articles.edit', $article) }}"
-                                                    class="btn btn-warning btn-sm">Edit</a>
+<div class="single_notify d-flex align-items-center">
+<div class="notify_thumb">
+<a href="#"><img src="img/staf/4.png" alt></a>
+</div>
+<div class="notify_content">
+<a href="#"><h5>Awesome packages</h5></a>
+<p>Lorem ipsum dolor sit amet</p>
+</div>
+</div>
 
-                                                @if ($article->status === 'pending')
-                                                    <form action="{{ route('articles.approve', $article) }}"
-                                                        method="POST" class="d-inline">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="btn btn-success btn-sm"
-                                                            onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
-                                                            Approve
-                                                        </button>
-                                                    </form>
-                                                @endif
+<div class="single_notify d-flex align-items-center">
+<div class="notify_thumb">
+<a href="#"><img src="img/staf/3.png" alt></a>
+</div>
+<div class="notify_content">
+<a href="#"><h5>what a packages</h5></a>
+<p>Lorem ipsum dolor sit amet</p>
+</div>
+</div>
+</div>
+<div class="nofity_footer">
+<div class="submit_button text-center pt_20">
+<a href="#" class="btn_1">See More</a>
+</div>
+</div>
+</div>
 
-                                                <form action="{{ route('articles.destroy', $article) }}" method="POST"
-                                                    class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
-                                                        Delete
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            {{ $articles->Links() }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+</li>
+<li>
+<a class="CHATBOX_open nav-link-notify" href="#"> <img src="img/icon/msg.svg" alt> </a>
+</li>
+</div>
+<div class="profile_info">
+<img src="img/client_img.png" alt="#">
+<div class="profile_info_iner">
+<div class="profile_author_name">
+<p>Neurologist </p>
+<h5>Dr. Robar Smith</h5>
+</div>
+<div class="profile_info_details">
+<a href="#">My Profile </a>
+<a href="#">Settings</a>
+<a href="#">Log Out </a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-    </script>
+<div class="main_content_iner ">
+<div class="container-fluid p-0">
+<div class="row justify-content-center">
+<div class="col-lg-12">
+<div class="white_card card_height_100 mb_30">
+<div class="white_card_header">
+<div class="box_header m-0">
+<div class="main-title">
+<h3 class="m-0">Data table</h3>
+</div>
+</div>
+</div>
+<div class="white_card_body">
+<div class="QA_section">
+<div class="white_box_tittle list_header">
+<h4>Table</h4>
+<div class="box_right d-flex lms_block">
+<div class="serach_field_2">
+<div class="search_inner">
+<form Active="#">
+<div class="search_field">
+<input type="text" placeholder="Search content here...">
+</div>
+<button type="submit"> <i class="ti-search"></i> </button>
+</form>
+</div>
+</div>
+<div class="add_button ms-2">
+<a href="#" data-bs-toggle="modal" data-bs-target="#addcategory" class="btn_1">Add New</a>
+</div>
+</div>
+</div>
+<div class="QA_table mb_30">
+
+<table class="table lms_table_active ">
+<thead>
+<tr>
+<th scope="col">title</th>
+<th scope="col">Category</th>
+<th scope="col">Teacher</th>
+<th scope="col">Lesson</th>
+<th scope="col">Enrolled</th>
+<th scope="col">Price</th>
+<th scope="col">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th scope="row"> <a href="#" class="question_content"> title here 1</a></th>
+<td>Category name</td>
+<td>Teacher James</td>
+<td>Lessons name</td>
+<td>16</td>
+<td>$25.00</td>
+<td><a href="#" class="status_btn">edit</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-12">
+</div>
+</div>
+</div>
+</div>
+
+<div class="footer_part">
+<div class="container">
+<div class="row">
+<div class="col-lg-12">
+<div class="footer_iner text-center">
+<p>2020 © Influence - Designed by <a href="#"> <i class="ti-heart"></i> </a><a href="#"> Dashboard</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+    // backtop
+    @include('admin.layouts.partials.backtop')
+
+    <script src="{{ asset('admin/js/jquery1-3.4.1.min.js') }}"></script>
+    <script src="{{ asset('admin/js/popper1.min.js') }}"></script>
+    <script src="{{ asset('admin/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('admin/js/metisMenu.js') }}"></script>
+    <script src="{{ asset('admin/vendors/count_up/jquery.waypoints.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/chartlist/Chart.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/count_up/jquery.counterup.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/niceselect/js/jquery.nice-select.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/owl_carousel/js/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/datatable/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/datatable/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/datatable/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/datatable/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/datatable/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/datatable/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/datatable/js/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('admin/vendors/datatable/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/datatable/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/datepicker/datepicker.js') }}"></script>
+    <script src="{{ asset('admin/vendors/datepicker/datepicker.en.js') }}"></script>
+    <script src="{{ asset('admin/vendors/datepicker/datepicker.custom.js') }}"></script>
+    <script src="{{ asset('admin/js/chart.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/chartjs/roundedBar.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/progressbar/jquery.barfiller.js') }}"></script>
+    <script src="{{ asset('admin/vendors/tagsinput/tagsinput.js') }}"></script>
+    <script src="{{ asset('admin/vendors/text_editor/summernote-bs4.js') }}"></script>
+    <script src="{{ asset('admin/vendors/am_chart/amcharts.js') }}"></script>
+    <script src="{{ asset('admin/vendors/scroll/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/scroll/scrollable-custom.js') }}"></script>
+    <script src="{{ asset('admin/vendors/vectormap-home/vectormap-2.0.2.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/vectormap-home/vectormap-world-mill-en.js') }}"></script>
+    <script src="{{ asset('admin/vendors/apex_chart/apex-chart2.js') }}"></script>
+    <script src="{{ asset('admin/vendors/apex_chart/apex_dashboard.js') }}"></script>
+    <script src="{{ asset('admin/vendors/echart/echarts.min.js') }}"></script>
+    <script src="{{ asset('admin/vendors/chart_am/core.js') }}"></script>
+    <script src="{{ asset('admin/vendors/chart_am/charts.js') }}"></script>
+    <script src="{{ asset('admin/vendors/chart_am/animated.js') }}"></script>
+    <script src="{{ asset('admin/vendors/chart_am/kelly.js') }}"></script>
+    <script src="{{ asset('admin/vendors/chart_am/chart-custom.js') }}"></script>
+    <script src="{{ asset('admin/js/dashboard_init.js') }}"></script>
+    <script src="{{ asset('admin/js/custom.js') }}"></script>
 
 </body>
+
+<!-- Mirrored from demo.dashboardpack.com/sales-html/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 May 2024 07:24:00 GMT -->
 
 </html>
