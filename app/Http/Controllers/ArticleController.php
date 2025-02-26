@@ -119,7 +119,7 @@ class ArticleController extends Controller
             'author_id' => 'required|exists:users,user_id',
             'category_id' => 'required|exists:categories,category_id',
             'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            
+
         ]);
 
         $article->title = $request->title;

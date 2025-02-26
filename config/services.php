@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'sightengine' => [
+        'user' => env('SIGHTENGINE_API_USER'),
+        'secret' => env('SIGHTENGINE_API_SECRET'),
+    ],
+
 ];

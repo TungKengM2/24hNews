@@ -22,6 +22,8 @@
     Route::get('/client/articles/{article_id}',
         [ArticleUserController::class, 'show'])
         ->name('client.articles.article');
+    Route::patch('/articles/{article}/approve',
+        [ArticleController::class, 'approve'])->name('articles.approve');
 
     // Authentication routes
     Route::middleware('guest')->group(function () {
@@ -42,7 +44,7 @@
             Route::post('/forgot-password', 'sendResetLinkEmail')
                 ->name('password.email');
             Route::get('/reset-password/{token}', 'showResetForm')
-                ->name('password.reset');
+                ->name('F.reset');
             Route::post('/reset-password', 'reset')->name('password.update');
         });
     });
