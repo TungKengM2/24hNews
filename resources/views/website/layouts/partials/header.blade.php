@@ -175,8 +175,9 @@
                             </li>
                         </ul>
                         <div class="nav-side">
-                            <a href="home-default.html#" class="icon-link">
-                                <i class="la la-user fs-4"></i>
+                            <a href="{{ route('loginuser') }} " class="icon-link">
+                                <i class="la la-user fs-4">
+                                </i>
                             </a>
                             <a href="home-default.html#" class="icon-link noti-dot">
                                 <i class="la la-shopping-bag fs-4"></i>

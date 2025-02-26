@@ -34,7 +34,7 @@
                             <input class="form-control" type="text" name="username" placeholder="E-mail Address" required>
                             <input class="form-control" type="password" name="password" placeholder="Password" required>
                             <div class="form-button">
-                                <button id="submit" type="submit" class="ibtn">Login</button> <a href="forget21.html">Forget password?</a>
+                                <button id="submit" type="submit" class="ibtn">Login</button> <a href="{{ route('forgetuser') }}">Forget password?</a>
                             </div>
                         </form>
                         <div class="other-links social-with-title">
@@ -42,7 +42,7 @@
                             <a href="login21.html#"><i class="fab fa-facebook-f"></i>Facebook</a><a href="login21.html#"><i class="fab fa-google"></i>Google</a><a href="login21.html#"><i class="fab fa-linkedin-in"></i>Linkedin</a>
                         </div>
                         <div class="page-links">
-                            <a href="register21.html">Register new account</a>
+                            <a href="{{ route('signupuser') }}">Register new account</a>
                         </div>
                     </div>
                 </div>

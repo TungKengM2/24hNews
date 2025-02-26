@@ -31,14 +31,14 @@
                         <h3>Get more things done with Loggin platform.</h3>
                         <p>Access to the most powerfull tool in the entire design and web industry.</p>
                         <div class="page-links">
-                            <a href="login2.html" class="active">Login</a><a href="register2.html">Register</a>
+                            <a href="{{ route('loginadmin') }}" class="active">Login</a><a href="{{ route('signupadmin') }}">Register</a>
                         </div>
                         <form>
                             <input class="form-control" type="text" name="username" placeholder="E-mail Address" required>
                             <input class="form-control" type="password" name="password" placeholder="Password" required>
                             <input type="checkbox" id="chk1"><label for="chk1">Remmeber me</label>
                             <div class="form-button">
-                                <button id="submit" type="submit" class="ibtn">Login</button> <a href="forget2.html">Forget password?</a>
+                                <button id="submit" type="submit" class="ibtn">Login</button> <a href="{{ route('forgetadmin') }}">Forget password?</a>
                             </div>
                         </form>
                         <div class="other-links">
