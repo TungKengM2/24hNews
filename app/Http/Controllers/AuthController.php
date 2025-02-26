@@ -141,8 +141,4 @@ class AuthController extends Controller
 
         return redirect('/')->with('status', 'You have been logged out.');
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> 84316a16a0e65264cfab4cf1c2c08dd74a89b800
 }
