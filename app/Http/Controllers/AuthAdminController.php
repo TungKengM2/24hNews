@@ -5,32 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cookie;
 
-class AuthAdminController extends Controller{
-    public function showLoginAdminForm ()
+
+
+class AuthAdminController extends Controller
+{
+    // login
+    public function showLoginAdminForm()
     {
-        return view('auth.authadmin.login-admin');
+        return view('auth.authadmin.loginadmin');
     }
 
-    public function loginadmin(Request $request)
+    // signup
+    public function showSignupAdminForm()
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        return view('auth.authadmin.signupadmin');
+    }
 
-        if (Auth::attempt($credentials, $request->has('remember'))) {
-            $user = Auth::user();
-
-            if ($user->role_id == 1) {
-                return redirect()->intended('/admin/dashboard');
-            } else {
-                return redirect()->intended('/');
-            }
-        }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+    // forget password
+    public function showForgetAdminForm()
+    {
+        return view('auth.authadmin.forgetadmin');
     }
 }
