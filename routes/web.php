@@ -8,6 +8,8 @@ use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Moderator\ModeratorDashboardController;
+use App\Http\Controllers\Moderator\ModeratorArticleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -136,3 +138,11 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
 Route::post('/profile/request-author-role',
     [ProfileController::class, 'requestAuthorRole'])
     ->name('profile.request-author-role');
+
+// moderator kiểm duyệt viên
+Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])
+    ->name('moderator.dashboard');
+
+Route::get('/moderator/list-article',[ModeratorArticleController::class, 'index'])
+    ->name('moderator.list-article');
+
