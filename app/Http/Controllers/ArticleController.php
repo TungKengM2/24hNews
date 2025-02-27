@@ -63,20 +63,37 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+        $tagInputs = array_filter($request->input('tags', []), function ($tag) {
+            return !empty(trim($tag));
+        });
+
+
+        if (is_string($tagInputs)) {
+            $tagInputs = explode(',', $tagInputs);
+        }
+
+        $tagIds = [];
+
+        foreach ($tagInputs as $tag) {
+            if (is_numeric($tag)) {
+                $tagIds[] = (int) $tag;
+            } else {
+                $tag = trim($tag);
+                if (!empty($tag)) {
+                    $tagModel = Tag::firstOrCreate(['name' => $tag]);
+                    $tagIds[] = $tagModel->tag_id;
+                }
+            }
+        }
+
         $rules = [
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:articles,slug',
             'category_id' => 'required|exists:categories,category_id',
             'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:draft,pending',
-            'tags' => 'array',
-            'tags.*' => 'integer|exists:tags,tag_id',
-            'new_tags' => 'nullable|string',
+            'content' => $request->status !== 'draft' ? 'required' : 'nullable',
         ];
-
-        if ($request->status !== 'draft') {
-            $rules['content'] = 'required';
-        }
 
         $request->validate($rules);
 
@@ -94,21 +111,10 @@ class ArticleController extends Controller
             $article->update(['thumbnail_url' => $path]);
         }
 
-        $tagIds = $request->tags ?? [];
-
-        if ($request->filled('new_tags')) {
-            $newTagNames = explode(',', $request->new_tags);
-            foreach ($newTagNames as $tagName) {
-                $tag = Tag::firstOrCreate(['name' => trim($tagName)]);
-                $tagIds[] = $tag->tag_id;
-            }
-        }
-
         $article->tags()->sync($tagIds);
 
         return redirect()->route('articles.index')->with('success', 'Bài viết đã được tạo thành công!');
     }
-
 
     /**
      *
@@ -126,11 +132,16 @@ class ArticleController extends Controller
         $categories = Category::select('category_id', 'name')->get();
         $authors = User::select('user_id', 'username')->get();
         $approvers = User::where('role_id', 1)->select('user_id', 'username')->get();
-        $tags = Tag::all();
+
+        // Lấy tất cả tags có trong database
+        $tags = Tag::select('tag_id', 'name')->get();
+
+        // Lấy danh sách tag đã chọn của bài viết
         $selectedTags = $article->tags->pluck('tag_id')->toArray();
 
         return view('admin.articles.edit', compact('article', 'categories', 'authors', 'approvers', 'tags', 'selectedTags'));
     }
+
 
 
     /**
@@ -146,9 +157,10 @@ class ArticleController extends Controller
             'category_id' => 'required|exists:categories,category_id',
             'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'tags' => 'array',
-            'tags.*' => 'integer|exists:tags,tag_id',
+            'tags.*' => 'nullable|string',
             'new_tags' => 'nullable|string',
         ];
+
 
         $request->validate($rules);
 
@@ -168,13 +180,21 @@ class ArticleController extends Controller
             $article->update(['thumbnail_url' => $path]);
         }
 
-        $tagIds = $request->tags ?? [];
+        $tagInputs = $request->input('tags', []);
+        $tagIds = [];
 
-        if ($request->filled('new_tags')) {
-            $newTagNames = explode(',', $request->new_tags);
-            foreach ($newTagNames as $tagName) {
-                $tag = Tag::firstOrCreate(['name' => trim($tagName)]);
-                $tagIds[] = $tag->tag_id;
+        foreach ($tagInputs as $tag) {
+            $tag = trim($tag);
+
+            if (is_numeric($tag)) {
+                // Nếu là số, kiểm tra có tồn tại trong DB không
+                if (Tag::where('tag_id', $tag)->exists()) {
+                    $tagIds[] = (int) $tag;
+                }
+            } else {
+                // Nếu là chữ, tự động tạo mới
+                $tagModel = Tag::firstOrCreate(['name' => $tag]);
+                $tagIds[] = $tagModel->tag_id;
             }
         }
 
@@ -182,6 +202,8 @@ class ArticleController extends Controller
 
         return redirect()->route('articles.index')->with('success', 'Bài viết đã được cập nhật thành công!');
     }
+
+
 
 
     /**
