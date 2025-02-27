@@ -84,17 +84,11 @@
 
                     <div class="mb-3">
                         <label for="tags">Chọn hoặc thêm tags:</label>
-                        <select id="tags" name="tags[]" class="form-control select2" multiple="multiple">
+                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                             @foreach ($tags as $tag)
                                 <option value="{{ $tag->tag_id }}">{{ $tag->name }}</option>
                             @endforeach
                         </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="new_tags">Thêm tags mới:</label>
-                        <input type="text" id="new_tags" name="new_tags" class="form-control"
-                            placeholder="Tag1, Tag2, Tag3">
                     </div>
 
                     <div class="mb-3">
