@@ -1,5 +1,5 @@
 <header class="main-header">
-	<div class="d-flex align-items-center logo-box justify-content-center">	
+	<div class="d-flex align-items-center logo-box justify-content-center">
 		<!-- Logo -->
 		<a href="index.html" class="logo">
 		  <!-- logo-->
@@ -11,8 +11,8 @@
 			  <span class="light-logo"><img src="admin/../images/logo-dark-text.png" alt="logo"></span>
 			  <span class="dark-logo"><img src="admin/../images/logo-light-text.png" alt="logo"></span>
 		  </div>
-		</a>	
-	</div>  
+		</a>
+	</div>
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top">
       <!-- Sidebar toggle button-->
@@ -22,7 +22,7 @@
 				<a href="tables_data.html#" class="waves-effect waves-light nav-link push-btn btn-outline no-border btn-primary-light text-dark hover-white" data-toggle="push-menu" role="button">
 					<i data-feather="align-left"></i>
 			    </a>
-			</li>				  
+			</li>
 			<li class="btn-group d-lg-inline-flex d-none">
 				<div class="app-menu">
 					<div class="search-bx mx-5">
@@ -52,11 +52,11 @@
 					<i data-feather="clipboard"></i>
 			    </a>
 			</li>
-		</ul> 
+		</ul>
 	  </div>
-		
+
       <div class="navbar-custom-menu r-side">
-        <ul class="nav navbar-nav">		 
+        <ul class="nav navbar-nav">
 			<li class="btn-group nav-item d-lg-inline-flex d-none">
 				<a href="tables_data.html#" data-provide="fullscreen" class="waves-effect waves-light nav-link btn-outline no-border full-screen btn-warning-light text-dark hover-white" title="Full Screen">
 					<i data-feather="maximize"></i>
@@ -112,7 +112,7 @@
 				  </li>
 				  <li>
 					<a href="tables_data.html#">
-					  <i class="fa fa-user text-primary"></i> Nunc fringilla lorem 
+					  <i class="fa fa-user text-primary"></i> Nunc fringilla lorem
 					</a>
 				  </li>
 				  <li>
@@ -126,8 +126,8 @@
 				  <a href="tables_data.html#">View all</a>
 			  </li>
 			</ul>
-		  </li>	
-		  
+		  </li>
+
 	      <!-- User Account-->
           <li class="dropdown user user-menu">
             <a href="tables_data.html#" class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white" data-bs-toggle="dropdown" title="User">
@@ -142,14 +142,14 @@
 				 <a class="dropdown-item" href="tables_data.html#"><i class="ti-lock text-muted me-2"></i> Logout</a>
               </li>
             </ul>
-          </li>			  
+          </li>
           <!-- Control Sidebar Toggle Button -->
           <li>
               <a href="tables_data.html#" data-toggle="control-sidebar" title="Setting" class="waves-effect waves-light btn-outline no-border btn-danger-light text-dark hover-white">
 			  	<i data-feather="settings"></i>
 			  </a>
           </li>
-			
+
         </ul>
       </div>
     </nav>
