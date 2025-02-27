@@ -1,91 +1,65 @@
 <!DOCTYPE html>
-<html lang="zxx">
-
-<!-- Mirrored from demo.dashboardpack.com/sales-html/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 May 2024 07:23:13 GMT -->
-
+<html lang="en">
 <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="{{ asset('admin/images/favicon.ico') }}">
 
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Dashboard</title>
+  <title>CrmX Admin - Dashboard Data Tables</title>
 
-
-    <link rel="stylesheet" href="{{ asset('admin/css/bootstrap1.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/themefy_icon/themify-icons.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/niceselect/css/nice-select.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/owl_carousel/css/owl.carousel.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/gijgo/gijgo.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/font_awesome/css/all.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/tagsinput/tagsinput.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/datepicker/date-picker.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/vectormap-home/vectormap-2.0.2.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/scroll/scrollable.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/datatable/css/jquery.dataTables.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/datatable/css/responsive.dataTables.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/datatable/css/buttons.dataTables.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/text_editor/summernote-bs4.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/morris/morris.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/material_icon/material-icons.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/css/metisMenu.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/css/style1.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/css/colors/default.css') }}" id="colorSkinCSS">
-
+  <!-- Vendors Style -->
+  <link rel="stylesheet" href="{{ asset('admin/main/css/vendors_css.css') }}">
+  
+  <!-- Style -->  
+  <link rel="stylesheet" href="{{ asset('admin/main/css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('admin/main/css/skin_color.css') }}">
 </head>
 
-<body class="crm_body_bg">
+<body class="hold-transition dark-skin sidebar-mini theme-primary fixed">
+  
+<div class="wrapper">
+  <div id="loader"></div>
+   
+  @include('admin.layouts.partials.header')
 
-    // Sidebar
-    @include('admin.layouts.partials.sidebar')
-    // main
-    @include('admin.layouts.partials.main')
+  <!-- Left side column. contains the logo and sidebar -->
+  @include('admin.layouts.partials.aside')
 
-    // backtop
-    @include('admin.layouts.partials.backtop')
+  <!-- Content Wrapper. Contains page content -->
+  @include('admin.layouts.partials.content')
+  <!-- /.content-wrapper -->
 
-    <script src="{{ asset('admin/js/jquery1-3.4.1.min.js') }}"></script>
-    <script src="{{ asset('admin/js/popper1.min.js') }}"></script>
-    <script src="{{ asset('admin/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('admin/js/metisMenu.js') }}"></script>
-    <script src="{{ asset('admin/vendors/count_up/jquery.waypoints.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chartlist/Chart.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/count_up/jquery.counterup.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/niceselect/js/jquery.nice-select.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/owl_carousel/js/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/buttons.flash.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/jszip.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datepicker/datepicker.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datepicker/datepicker.en.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datepicker/datepicker.custom.js') }}"></script>
-    <script src="{{ asset('admin/js/chart.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chartjs/roundedBar.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/progressbar/jquery.barfiller.js') }}"></script>
-    <script src="{{ asset('admin/vendors/tagsinput/tagsinput.js') }}"></script>
-    <script src="{{ asset('admin/vendors/text_editor/summernote-bs4.js') }}"></script>
-    <script src="{{ asset('admin/vendors/am_chart/amcharts.js') }}"></script>
-    <script src="{{ asset('admin/vendors/scroll/perfect-scrollbar.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/scroll/scrollable-custom.js') }}"></script>
-    <script src="{{ asset('admin/vendors/vectormap-home/vectormap-2.0.2.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/vectormap-home/vectormap-world-mill-en.js') }}"></script>
-    <script src="{{ asset('admin/vendors/apex_chart/apex-chart2.js') }}"></script>
-    <script src="{{ asset('admin/vendors/apex_chart/apex_dashboard.js') }}"></script>
-    <script src="{{ asset('admin/vendors/echart/echarts.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chart_am/core.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chart_am/charts.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chart_am/animated.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chart_am/kelly.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chart_am/chart-custom.js') }}"></script>
-    <script src="{{ asset('admin/js/dashboard_init.js') }}"></script>
-    <script src="{{ asset('admin/js/custom.js') }}"></script>
+  @include('admin.layouts.partials.footer')
+
+  <!-- Control Sidebar -->
+  <!-- /.control-sidebar -->
+
+  <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- Vendor JS -->
+		<script src="{{ asset('admin/main/js/vendors.min.js') }}"></script>
+		<script src="{{ asset('admin/main/js/pages/chat-popup.js') }}"></script>
+		<script src="{{ asset('admin/assets/icons/feather-icons/feather.min.js') }}"></script>
+		<script src="{{ asset('admin/assets/vendor_components/apexcharts-bundle/irregular-data-series.js') }}"></script>
+		<script src="{{ asset('admin/assets/vendor_components/apexcharts-bundle/dist/apexcharts.js') }}"></script>
+		<script src="{{ asset('admin/assets/vendor_components/zingchart_branded_version/zingchart.min.js') }}"></script>
+		<script src="https://www.amcharts.com/lib/4/core.js"></script>
+		<script src="https://www.amcharts.com/lib/4/maps.js"></script>
+		<script src="https://www.amcharts.com/lib/4/geodata/worldLow.js"></script>
+		<script src="https://www.amcharts.com/lib/4/themes/dataviz.js"></script>
+		<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+
+		<!-- CrmX Admin App -->
+		<script src="{{ asset('admin/main/js/template.js') }}"></script>
+		<script src="{{ asset('admin/main/js/demo.js') }}"></script>
+		<script src="{{ asset('admin/main/js/pages/dashboard.js') }}"></script>
+
 
 </body>
-
-<!-- Mirrored from demo.dashboardpack.com/sales-html/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 May 2024 07:24:00 GMT -->
-
 </html>
