@@ -1,0 +1,21 @@
+<div class="nav-search-style1">
+        <div class="row justify-content-center align-items-center gx-lg-5">
+            <div class="col-lg-4">
+                <div class="info">
+                    <h5> you can search by category <br> or news title </h5>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <form class="form">
+                    <span class="color-777 fst-italic text-capitalize mb-2 fsz-13px">Enter Keyword</span>
+                    <div class="form-group">
+                        <span class="icon">
+                            <i class="la la-search"></i>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Elon Musk ... ">
+                        <button type="submit">search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

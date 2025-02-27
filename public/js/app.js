@@ -1,4 +1,5 @@
 /******/ (() => { // webpackBootstrap
+<<<<<<< HEAD
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./node_modules/axios/lib/adapters/adapters.js":
@@ -7092,6 +7093,12 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
+=======
+/******/ 	"use strict";
+/******/ 	// The require scope
+/******/ 	var __webpack_require__ = {};
+/******/
+>>>>>>> dat
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
@@ -7104,7 +7111,11 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 			}
 /******/ 		};
 /******/ 	})();
+<<<<<<< HEAD
 /******/ 	
+=======
+/******/
+>>>>>>> dat
 /******/ 	/* webpack/runtime/global */
 /******/ 	(() => {
 /******/ 		__webpack_require__.g = (function() {
@@ -7116,12 +7127,20 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 			}
 /******/ 		})();
 /******/ 	})();
+<<<<<<< HEAD
 /******/ 	
+=======
+/******/
+>>>>>>> dat
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
+<<<<<<< HEAD
 /******/ 	
+=======
+/******/
+>>>>>>> dat
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -7132,7 +7151,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.

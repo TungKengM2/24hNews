@@ -1,9 +1,13 @@
-{{-- <div class="container-fluid">
-    <footer class="footer">
-        <div class="row">
-            <div class="col-md-12 footer-copyright text-center">
-                <p class="mb-0">Copyright 2025 © {{ env('APP_NAME', '24hnews') }} by Bảy Anh Tài</p>
-            </div>
-        </div>
-    </footer>
-</div> --}}
+<footer class="main-footer">
+    <div class="pull-right d-none d-sm-inline-block">
+        <ul class="nav nav-primary nav-dotted nav-dot-separated justify-content-center justify-content-md-end">
+		  {{-- <li class="nav-item">
+			<a class="nav-link" href="javascript:void(0)">FAQ</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="index.html#">Purchase Now</a>
+		  </li> --}}
+		</ul>
+    </div>
+	  &copy; 2025 <a href="https://www.multipurposethemes.com/">Bảy Anh Tài Vượt Ải</a>. All Rights Reserved.
+  </footer>

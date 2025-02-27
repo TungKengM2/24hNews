@@ -1,34 +1,65 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Người Kiểm Duyệt Quản Trị</title>
-    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
-    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/x-icon" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=account_circle" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="{{ asset('admin/images/favicon.ico') }}">
+
+  <title>CrmX Moderator - Dashboard Data Tables</title>
+
+  <!-- Vendors Style -->
+  <link rel="stylesheet" href="{{ asset('admin/main/css/vendors_css.css') }}">
+
+  <!-- Style -->
+  <link rel="stylesheet" href="{{ asset('admin/main/css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('admin/main/css/skin_color.css') }}">
 </head>
-<body>
-    <div class="wrapper">
 
-            @include('moderator.layouts.partials.menusidebar')
+<body class="hold-transition dark-skin sidebar-mini theme-primary fixed">
 
-            <div class="main">
-                @include('moderator.layouts.partials.header')
-                <div class="content">
-                    @yield('content')
-                </div>
-        @include('moderator.layouts.partials.content')
-            </div>
-    </div>
-    <div>
-        @include('moderator.layouts.partials.footer')
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+<div class="wrapper">
+  <div id="loader"></div>
+
+  @include('moderator.layouts.partials.header')
+
+  <!-- Left side column. contains the logo and sidebar -->
+  @include('moderator.layouts.partials.aside')
+
+  <!-- Content Wrapper. Contains page content -->
+  @include('moderator.layouts.partials.content')
+  <!-- /.content-wrapper -->
+
+  @include('moderator.layouts.partials.footer')
+
+  <!-- Control Sidebar -->
+  <!-- /.control-sidebar -->
+
+  <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- Vendor JS -->
+		<script src="{{ asset('admin/main/js/vendors.min.js') }}"></script>
+		<script src="{{ asset('admin/main/js/pages/chat-popup.js') }}"></script>
+		<script src="{{ asset('admin/assets/icons/feather-icons/feather.min.js') }}"></script>
+		<script src="{{ asset('admin/assets/vendor_components/apexcharts-bundle/irregular-data-series.js') }}"></script>
+		<script src="{{ asset('admin/assets/vendor_components/apexcharts-bundle/dist/apexcharts.js') }}"></script>
+		<script src="{{ asset('admin/assets/vendor_components/zingchart_branded_version/zingchart.min.js') }}"></script>
+		<script src="https://www.amcharts.com/lib/4/core.js"></script>
+		<script src="https://www.amcharts.com/lib/4/maps.js"></script>
+		<script src="https://www.amcharts.com/lib/4/geodata/worldLow.js"></script>
+		<script src="https://www.amcharts.com/lib/4/themes/dataviz.js"></script>
+		<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+
+		<!-- CrmX Admin App -->
+		<script src="{{ asset('admin/main/js/template.js') }}"></script>
+		<script src="{{ asset('admin/main/js/demo.js') }}"></script>
+		<script src="{{ asset('admin/main/js/pages/dashboard.js') }}"></script>
+
+
 </body>
 </html>

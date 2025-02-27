@@ -302,3 +302,4 @@ Route::get(
     //        ->name('writer.articleauthor');
     //    Route::get('/writer/author', [WriterAuthorManagement::class, 'index'])
     //        ->name('writer.author');
+
