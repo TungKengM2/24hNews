@@ -18,15 +18,15 @@ return new class extends Migration
             $table->text('content');
             $table->text('preview_content')->nullable();
             $table->boolean('contains_sensitive_content')->default(false);
-            $table->foreignId('author_id')->constrained('users', 'user_id');
+            $table->unsignedBigInteger('author_id');
+            $table->foreign('author_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->foreignId('category_id')->constrained('categories', 'category_id');
-            $table->string('thumbnail_url', 255);
+            $table->string('thumbnail_url', 255)->nullable();
             $table->enum('status', ['draft', 'pending', 'published', 'archived'])->default('draft');
             $table->integer('views')->default(0);
             $table->foreignId('approved_by')->nullable()->constrained('users', 'user_id');
             $table->timestamps();
         });
-
     }
 
     /**

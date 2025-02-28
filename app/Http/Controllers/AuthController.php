@@ -22,7 +22,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' =>'required|email',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
@@ -34,11 +34,12 @@ class AuthController extends Controller
             } elseif ($user->role_id == 2) {
                 return redirect()->intended('/article/dashboard');
             } elseif ($user->role_id == 3) {
-                return redirect()->intended('/moderator/dashboard');
+                return redirect()->intended('/author/dashboard');
             } elseif ($user->role_id == 4) {
                 return redirect()->intended('/user/dashboard');
-            }
-            else {
+            } elseif ($user->role_id == 1) {
+                return redirect()->intended('/admin/dashboard');
+            } else {
                 return redirect()->intended('/');
             }
         }
@@ -55,7 +56,7 @@ class AuthController extends Controller
 
     public function processSignup(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'phone'    => 'required|string|max:15',
@@ -68,37 +69,37 @@ class AuthController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $otp = rand(100000,999999);
+        $otp = rand(100000, 999999);
 
-         // Lưu dữ liệu đăng ký và OTP vào session
+        // Lưu dữ liệu đăng ký và OTP vào session
 
         session([
-            'signup_data' => $request->only('username', 'email', 'password','phone'),
+            'signup_data' => $request->only('username', 'email', 'password', 'phone'),
             'signup_otp' => $otp,
         ]);
 
         // Gửi OTP qua email
         Mail::raw("Your OTP for registration is: $otp", function ($message) use ($request) {
             $message->to($request->email)
-                    ->subject('Your OTP for registration');
+                ->subject('Your OTP for registration');
         });
 
-         // Chuyển hướng đến form nhập OTP
+        // Chuyển hướng đến form nhập OTP
         return redirect()->route('otp.verify.form')->with('status', 'OTP has been sent to your email.');
-
-
     }
     // Hiển thị form  nhập otp
 
-    public function showOtpForm() {
+    public function showOtpForm()
+    {
         return view('auth.verify-otp');
     }
 
     // Xử lý xác nhận otp
 
-    public function verifyOtp(Request $request){
+    public function verifyOtp(Request $request)
+    {
         $request->validate([
-            'otp'=>'required|numeric'
+            'otp' => 'required|numeric'
         ]);
 
         $sessionOtp = session('signup_otp');
@@ -113,12 +114,12 @@ class AuthController extends Controller
 
         //Tạo tài khoản
         $user = User::create([
-             'username' => $signupData['username'],
-             'email' => $signupData['email'],
-             'phone'    => $signupData['phone'],
-             'password' => Hash::make($signupData['password']),
-             'role_id' => 4, // Mặc định là user
-             ]);
+            'username' => $signupData['username'],
+            'email' => $signupData['email'],
+            'phone'    => $signupData['phone'],
+            'password' => Hash::make($signupData['password']),
+            'role_id' => 4, // Mặc định là user
+        ]);
 
         //xóa dữ liệu tạm trong session
         session()->forget(['signup_data', 'signup_otp']);
@@ -129,9 +130,9 @@ class AuthController extends Controller
 
         return redirect('/')->with('status', 'Đăng ký thành công');
     }
+
     public function logout(Request $request)
     {
-        $driver = Auth::getDefaultDriver(); // Lưu driver trước khi logout
         Auth::logout();
 
         $request->session()->invalidate();
@@ -142,5 +143,4 @@ class AuthController extends Controller
 
         return redirect('/')->with('status', 'You have been logged out.');
     }
-
 }
