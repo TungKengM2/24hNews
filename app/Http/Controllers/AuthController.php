@@ -134,18 +134,12 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-<<<<<<< HEAD
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        Cookie::queue(Cookie::forget('remember_web_'.Auth::getDefaultDriver()));
-=======
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         // Xóa cookie remember me
         Cookie::queue(Cookie::forget('remember_web_' . $driver));
->>>>>>> tungkeng
 
         return redirect('/')->with('status', 'You have been logged out.');
     }
