@@ -25,9 +25,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 // client
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+
+
+Route::get('/client/articles/{article_id}', [ArticleUserController::class, 'show'])->name('client.articles.article');
+Route::post('/client/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('client.articles.like');
+Route::post('/client/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('client.articles.comment');
+
+
 Route::get('/article-detail', function () {
     return view('website.pages.articledetail.homedetail');
 });
