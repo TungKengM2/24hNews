@@ -23,16 +23,16 @@
 <div class="wrapper">
   <div id="loader"></div>
    
-  @include('admin.layouts.partials.header')
+  @include('author.layouts.partials.header')
 
   <!-- Left side column. contains the logo and sidebar -->
-  @include('admin.layouts.partials.aside')
+  @include('author.layouts.partials.aside')
 
   <!-- Content Wrapper. Contains page content -->
-  @include('admin.layouts.partials.content')
+  @include('author.layouts.partials.content')
   <!-- /.content-wrapper -->
 
-  @include('admin.layouts.partials.footer')
+  @include('author.layouts.partials.footer')
 
   <!-- Control Sidebar -->
   <!-- /.control-sidebar -->

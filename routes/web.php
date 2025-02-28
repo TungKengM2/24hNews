@@ -10,6 +10,7 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
+use App\Http\Controllers\Author\AuthorDashboard;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -152,3 +153,32 @@ Route::post(
     [ProfileController::class, 'requestAuthorRole']
 )
     ->name('profile.request-author-role');
+
+// Author
+  // Author routes
+  Route::prefix('author')
+//   ->middleware(['auth', 'role:author'])
+  ->group(function () {
+      Route::get('/dashboard', [AuthorDashboard::class, 'index'])
+          ->name('author.dashboard');
+
+      Route::controller(\App\Http\Controllers\Author\ArticleController::class)
+          ->group(function () {
+              Route::get('/articles', 'index')->name('author.articles');
+              Route::get('/articles/create', 'create')
+                  ->name('author.articles.create');
+              Route::post('/articles', 'store')
+                  ->name('author.articles.store');
+              Route::get('/articles/{article}', 'show')
+                  ->name('author.articles.show');
+              Route::get('/articles/{article}/edit', 'edit')
+                  ->name('author.articles.edit');
+              Route::put('/articles/{article}', 'update')
+                  ->name('author.articles.update');
+              Route::delete('/articles/{article}', 'destroy')
+                  ->name('author.articles.destroy');
+          });
+
+      Route::get('/profile', [ProfileController::class, 'index'])
+          ->name('author.profile');
+  });
