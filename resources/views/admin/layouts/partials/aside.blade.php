@@ -1,7 +1,7 @@
 <aside class="main-sidebar">
     <div class="user-profile">
         <div class="profile-pic">
-            <img src="admin/../images/user5-128x128.jpg" alt="user">
+            <img src="{{ asset('admin/images/user5-128x128.jpg') }}" alt="">
             <div class="profile-info">
                 <h4>John Doe</h4>
                 <div class="list-icons-item dropdown">

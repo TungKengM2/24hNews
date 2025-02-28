@@ -4,12 +4,12 @@
 		<a href="index.html" class="logo">
 		  <!-- logo-->
 		  <div class="logo-mini w-30">
-			  <span class="light-logo"><img src="admin/../images/logo-letter.png" alt="logo"></span>
-			  <span class="dark-logo"><img src="admin/../images/logo-letter.png" alt="logo"></span>
+			  <span class="light-logo"><img src="{{ asset('admin/images/logo-letter.png') }}" alt="logo"></span>
+			  <span class="dark-logo"><img src="{{ asset('admin/images/logo-letter.png') }}" alt="logo"></span>
 		  </div>
 		  <div class="logo-lg">
-			  <span class="light-logo"><img src="admin/../images/logo-dark-text.png" alt="logo"></span>
-			  <span class="dark-logo"><img src="admin/../images/logo-light-text.png" alt="logo"></span>
+			  <span class="light-logo"><img src="{{ asset('admin/images/logo-dark-text.png') }}" alt="logo"></span>
+			  <span class="dark-logo"><img src="{{ asset('admin/images/logo-dark-text.png') }}" alt="logo"></span>
 		  </div>
 		</a>
 	</div>
@@ -131,7 +131,7 @@
 	      <!-- User Account-->
           <li class="dropdown user user-menu">
             <a href="tables_data.html#" class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white" data-bs-toggle="dropdown" title="User">
-				<img class="avatar avatar-pill" src="admin/../images/avatar/3.jpg" alt="">
+				<img class="avatar avatar-pill" src="{{ asset('admin/images/avatar/3.jpg') }}" alt="">
             </a>
             <ul class="dropdown-menu animated flipInX">
               <li class="user-body">
