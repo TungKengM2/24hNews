@@ -64,9 +64,9 @@
             return $this->belongsTo(Role::class, 'role_id');
         }
 
-        public function approvals()
-        {
-            return $this->hasMany(Approval::class, 'user_id');
-        }
+        // public function approvals()
+        // {
+        //     return $this->hasMany(Approval::class, 'user_id');
+        // }
 
     }
