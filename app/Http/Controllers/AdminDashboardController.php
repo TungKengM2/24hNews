@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Approval;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
 
 class AdminDashboardController extends Controller
 {
@@ -16,6 +18,7 @@ class AdminDashboardController extends Controller
     public function index()
     // POST
     {
+        $notifications = Auth::user()->notifications;
         return view('admin.layouts.dashboard');
     }
 
