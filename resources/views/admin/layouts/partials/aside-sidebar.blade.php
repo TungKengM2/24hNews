@@ -28,11 +28,15 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{{route('articles.index')}}"><i class="icon-Commit"><span class="path1"></span><span
-                                        class="path2"></span></i>Bài Viết</a>
+                        <li><a href="{{ route('articles.index') }}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Bài Viết</a>
                         </li>
-                        <li><a href="{{route('categories.index')}}"><i class="icon-Commit"><span class="path1"></span><span
-                                        class="path2"></span></i>Danh Mục
+                        <li><a href="{{ route('categories.index') }}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Danh Mục
+                            </a>
+                        </li>
+                        <li><a href="{{ route('users.index') }}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Người Dùng
                             </a>
                         </li>
                         {{-- <li><a href="contact_app_chat.html"><i class="icon-Commit"><span class="path1"></span><span
@@ -46,6 +50,26 @@
                         </li> --}}
                     </ul>
                 </li>
+
+                <li class="treeview">
+                    <a href="index.html#">
+                        <i data-feather="grid"></i>
+                        <span>Kiểm Duyệt</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-right pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="#"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Bài Viết</a>
+                        </li>
+                        <li><a href="#"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Nâng Cấp Tài Khoản
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 {{-- <li class="treeview">
                     <a href="index.html#">
                         <i data-feather="edit"></i>

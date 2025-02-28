@@ -17,11 +17,12 @@ class ArticleController extends Controller
     public function index()
     {
         $articles = Article::with(['author', 'category', 'approver', 'tags'])
-            ->latest()
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return view('admin.articles.index', compact('articles'));
     }
+
 
 
     /**
