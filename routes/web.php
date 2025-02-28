@@ -10,6 +10,7 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -60,10 +61,14 @@ Route::prefix('admin')->group(function () {
 });
 
 
-
 // category
 Route::prefix('admin')->group(function () {
     Route::resource('categories', CategoryController::class);
+});
+
+// User
+Route::prefix('admin')->group(function () {
+    Route::resource('users', UserController::class);
 });
 
 // Routes for login and signup
@@ -150,14 +155,15 @@ Route::get(
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
     ->name('password.update');
 
-Route::post('/profile/request-author-role',
-    [ProfileController::class, 'requestAuthorRole'])
+Route::post(
+    '/profile/request-author-role',
+    [ProfileController::class, 'requestAuthorRole']
+)
     ->name('profile.request-author-role');
 
 // moderator kiểm duyệt viên
 Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])
     ->name('moderator.dashboard');
 
-Route::get('/moderator/list-article',[ModeratorArticleController::class, 'index'])
+Route::get('/moderator/list-article', [ModeratorArticleController::class, 'index'])
     ->name('moderator.list-article');
-
