@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NewArticleSubmitted;
 
 class ArticleController extends Controller
 {
@@ -106,8 +109,15 @@ class ArticleController extends Controller
 
         $article->tags()->sync($tagIds);
 
+        // Gửi thông báo cho admin nếu bài viết cần duyệt
+        if ($article->status === 'pending') {
+            $admins = User::where('role_id', 1)->get();
+            Notification::send($admins, new NewArticleSubmitted($article));
+        }
+
         return redirect()->route('articles.index')->with('success', 'Bài viết đã được tạo thành công!');
     }
+
 
 
     /**
