@@ -45,7 +45,7 @@
                             <label for="chk1">Remember me</label>
                                                         <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Login</button>
-                                <a href="{{ route('password.request') }}">Forget password?</a>
+                                {{-- <a href="{{ route('password.request') }}">Forget password?</a> --}}
                             </div>
                         </form>
                         

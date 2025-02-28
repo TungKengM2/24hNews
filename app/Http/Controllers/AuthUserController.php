@@ -43,7 +43,7 @@ class AuthUserController extends Controller
             'email'    => 'required|string|email|max:255|unique:users',
             'phone'    => 'required|string|max:15',
             'password' => 'required|string|min:8|confirmed',
-            // 'terms'    => 'accepted'
+            'terms'    => 'accepted'
         ]);
     
         if ($validator->fails()) {

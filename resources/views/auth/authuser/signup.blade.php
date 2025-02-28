@@ -9,6 +9,18 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/fontawesome-all.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/iofrm-style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/iofrm-theme21.css') }}">
+    <style>
+        .form-content input[type="checkbox"] {
+            position: static !important;
+            /* Đưa checkbox về vị trí mặc định */
+            left: auto !important;
+            /* Bỏ -9999px */
+            margin-right: 5px;
+            /* Tạo khoảng cách giữa checkbox và chữ */
+            display: inline-block !important;
+            /* Đảm bảo checkbox hiển thị */
+        }
+    </style>
 </head>
 
 <body>
@@ -68,15 +80,12 @@
                             <input class="form-control" type="password" name="password" placeholder="Password" required>
                             <input class="form-control" type="password" name="password_confirmation"
                                 placeholder="Confirm Password" required>
-
-                            {{-- <!-- Checkbox Terms -->
-                            <div>
-
-                                <input class="form-control" type="checkbox" name="terms"
-                                    {{ old('terms') ? 'checked' : '' }} required>
-                                Tôi đồng ý với <a href="#">điều khoản sử dụng</a>
-
-                            </div> --}}
+                                <div>
+                                    <input class="form-control" type="checkbox" name="terms"
+                                        {{ old('terms') ? 'checked' : '' }} required>
+                                    Tôi đồng ý với <a href="#">điều khoản sử dụng</a>
+        
+                                </div>
 
                             <div class="form-button">
                                 <button type="submit" class="ibtn">Register</button>
