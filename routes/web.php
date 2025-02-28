@@ -31,20 +31,23 @@ Route::get('/article-detail', function () {
     return view('website.pages.articledetail.homedetail');
 });
 // admin
-Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
-    ->name('admin.dashboard');
-Route::get(
-    '/admin/role-upgrade-requests',
-    [AdminDashboardController::class, 'roleUpgradeRequests']
-)
-    ->name('admin.user-role-requests');
-Route::post(
-    '/admin/approve-role-upgrade/{approval_id}',
-    [AdminDashboardController::class, 'approveRoleUpgrade']
-)
-    ->name('admin.approve-role-upgrade');
-Route::post('/admin/reject-role-upgrade/{approval_id}', [AdminDashboardController::class, 'rejectRoleUpgrade'])
-    ->name('admin.reject-role-upgrade');
+Route::get('/admin/dashboard', function () {
+    return view('admin.dashboard');
+});
+// Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
+//     ->name('admin.dashboard');
+// Route::get(
+//     '/admin/role-upgrade-requests',
+//     [AdminDashboardController::class, 'roleUpgradeRequests']
+// )
+//     ->name('admin.user-role-requests');
+// Route::post(
+//     '/admin/approve-role-upgrade/{approval_id}',
+//     [AdminDashboardController::class, 'approveRoleUpgrade']
+// )
+//     ->name('admin.approve-role-upgrade');
+// Route::post('/admin/reject-role-upgrade/{approval_id}', [AdminDashboardController::class, 'rejectRoleUpgrade'])
+//     ->name('admin.reject-role-upgrade');
 
 
 // article
