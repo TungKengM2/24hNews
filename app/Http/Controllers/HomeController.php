@@ -18,16 +18,17 @@ class HomeController extends Controller
         // hot trends
         
 
-        //
+        //top 2 bài viết nhiều lượt xem
         $D1Articles = Article::where('status', 'published')
-        ->orderByDesc('created_at') // Sắp xếp bài viết mới nhất
-        ->take(2) // Lấy 2 bài viết gần đây
+        ->orderByDesc('views') // Sắp xếp bài viết nhiều views nhất
+        ->take(2) // Lấy top 2 bài viết nhiều lượt xem
         ->get();
     
         // Lấy danh sách bài viết mới nhất
         $articles = Article::where('status', 'published')->latest()->get();
     
-   
+        
+        
         // Truyền dữ liệu bài viết tới view
         return view('welcome', compact('featuredArticles', 'articles', 'D1Articles'));
 

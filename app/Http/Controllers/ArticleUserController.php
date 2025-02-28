@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Comment;
 use App\Models\ArticleLike;
 use App\Models\ArticleView;
 use Illuminate\Http\Request;
+use App\Models\CommentReaction;
 use Illuminate\Support\Facades\Log;
 
 class ArticleUserController extends Controller
@@ -61,24 +63,41 @@ class ArticleUserController extends Controller
             ->limit(5)
             ->get();
 
-        return view('client.articles.article', compact('article', 'relatedArticles', 'isLiked', 'likeCount'));
+        // Lấy danh sách bình luận
+        $comments = Comment::where('article_id', $article->article_id)
+            ->where('status', 'approved')
+            ->with(['user:user_id,username', 'replies', 'reactions'])
+            ->withCount([
+                'reactions as like_count' => function ($query) {
+                    $query->where('is_like', true);
+                },
+                'reactions as dislike_count' => function ($query) {
+                    $query->where('is_like', false);
+                }
+            ])
+            ->get();
+
+        return view('client.articles.article', compact('article', 'relatedArticles', 'isLiked', 'likeCount', 'comments'));
     }
 
     public function likeArticle(Request $request, $article_id)
     {
         $userId = auth()->id();
-
+    
         if (!$userId) {
             return response()->json(['success' => false, 'message' => 'Bạn cần đăng nhập để like!']);
         }
-
+    
         $like = ArticleLike::where('article_id', $article_id)
             ->where('user_id', $userId)
             ->first();
-
+    
         if ($like) {
             try {
-                ArticleLike::where('like_id', $like->like_id)->delete(); // Xóa theo đúng khóa chính
+                // Chỉ xóa nếu like thuộc về người dùng hiện tại
+                ArticleLike::where('like_id', $like->like_id)
+                    ->where('user_id', $userId)
+                    ->delete();
                 $liked = false;
             } catch (\Exception $e) {
                 return response()->json(['success' => false, 'message' => 'Lỗi khi hủy like: ' . $e->getMessage()]);
@@ -91,9 +110,69 @@ class ArticleUserController extends Controller
             ]);
             $liked = true;
         }
-
+    
         $likeCount = ArticleLike::where('article_id', $article_id)->count();
-
+    
         return response()->json(['success' => true, 'liked' => $liked, 'likeCount' => $likeCount]);
     }
+    
+    
+
+
+    public function storeComment(Request $request)
+    {
+        $request->validate([
+            'article_id' => 'required|exists:articles,article_id',
+            'content' => 'required|string',
+            'parent_id' => 'nullable|exists:comments,comment_id'
+        ]);
+
+        $badWords = ['tục1', 'tục2', 'tục3'];
+        $cleanContent = str_ireplace($badWords, '***', $request->content);
+
+        $comment = Comment::create([
+            'article_id' => $request->article_id,
+            'user_id' => auth()->id(),
+            'content' => $cleanContent,
+            'parent_id' => $request->parent_id,
+            'depth' => $request->parent_id ? Comment::find($request->parent_id)->depth + 1 : 0,
+            'status' => 'approved'
+        ]);
+
+        return response()->json(['success' => true, 'comment' => $comment]);
+    }
+
+    public function likeComment($commentId)
+    {
+        return $this->handleCommentReaction($commentId, true);
+    }
+
+    public function dislikeComment($commentId)
+    {
+        return $this->handleCommentReaction($commentId, false);
+    }
+
+    public function react(Request $request, $commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
+        $userId = auth()->id();
+        $isLike = $request->is_like;
+    
+        $reaction = CommentReaction::updateOrCreate(
+            ['comment_id' => $commentId, 'user_id' => $userId],
+            ['is_like' => $isLike, 'reacted_at' => now()]
+        );
+    
+        $comment->likes = CommentReaction::where('comment_id', $commentId)->where('is_like', true)->count();
+        $comment->dislikes = CommentReaction::where('comment_id', $commentId)->where('is_like', false)->count();
+        $comment->save();
+    
+        return response()->json(['success' => true, 'count' => $isLike ? $comment->likes : $comment->dislikes]);
+    }
+    
+    
+    
+
+    
+    
 }
