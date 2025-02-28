@@ -124,7 +124,7 @@
             $article->delete();
 
             return redirect()
-                ->route('author.articles')
+                ->route('author.articles.index')
                 ->with('success', 'Bai viet da dc xoa');
         }
 
