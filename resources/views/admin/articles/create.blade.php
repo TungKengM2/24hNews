@@ -19,13 +19,9 @@
         href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css" />
     <script src="{{ asset('js/ckeditor.js') }}"></script>
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
-<<<<<<< HEAD
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-=======
     <!-- Style -->
     <link rel="stylesheet" href="{{ asset('admin/main/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/main/css/skin_color.css') }}">
->>>>>>> dat
 
     <style>
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -39,12 +35,8 @@
     </style>
 </head>
 
-<<<<<<< HEAD
-<body>
-=======
 <body class="hold-transition dark-skin sidebar-mini theme-primary fixed">
 
->>>>>>> dat
     <div class="wrapper">
         <div id="loader"></div>
 
@@ -106,31 +98,11 @@
                                     <input type="text" class="form-control" id="slug" name="slug" required>
                                 </div>
 
-<<<<<<< HEAD
-                    <div class="mb-3">
-                        <label for="tags">Chọn hoặc thêm tags:</label>
-                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
-                            @foreach ($tags as $tag)
-                                <option value="{{ $tag->tag_id }}">{{ $tag->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Danh mục</label>
-                        <select name="category_id" class="form-control">
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->category_id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-=======
                                 <div class="mb-3">
                                     <label for="content" class="form-label">Nội dung</label>
                                     <div id="editor"></div>
                                     <textarea id="content" name="content" style="display: none;"></textarea>
                                 </div>
->>>>>>> dat
 
                                 <div class="mb-3">
                                     <label for="tags">Chọn hoặc thêm tags:</label>
@@ -141,12 +113,6 @@
                                     </select>
                                 </div>
 
-<<<<<<< HEAD
-
-                    <!-- Tự động gán tác giả -->
-                    <input type="hidden" name="author_id" value="{{ auth()->id() }}">
-                    <input type="hidden" name="status" id="articleStatus" value="pending">
-=======
                                 <div class="mb-3">
                                     <label class="form-label">Danh mục</label>
                                     <select name="category_id" class="form-control">
@@ -155,7 +121,6 @@
                                         @endforeach
                                     </select>
                                 </div>
->>>>>>> dat
 
                                 <div class="mb-3">
                                     <label for="thumbnail_url" class="form-label">Ảnh đại diện</label>
@@ -166,28 +131,9 @@
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
-<<<<<<< HEAD
-                <script>
-                    $(document).ready(function() {
-                        $('#tags').select2({
-                            tags: true,
-                            tokenSeparators: [','],
-                            placeholder: "Chọn hoặc nhập tags mới",
-                            allowClear: true
-                        });
-                    });
-
-                    // Lưu nháp bài viết
-                    document.getElementById('saveDraft').addEventListener('click', function() {
-                        document.getElementById('articleStatus').value = 'draft';
-                        document.getElementById('articleForm').setAttribute('novalidate', 'novalidate'); // Bỏ qua required
-                        document.getElementById('articleForm').submit();
-                    });
-=======
                                 <!-- Tự động gán tác giả -->
                                 <input type="hidden" name="author_id" value="{{ auth()->id() }}">
                                 <input type="hidden" name="status" id="articleStatus" value="pending">
->>>>>>> dat
 
                                 <button type="submit" class="btn btn-primary">Gửi</button>
                                 <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
@@ -277,17 +223,10 @@
                             </script>
 
 
-<<<<<<< HEAD
-            </div>
-        </div>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
-=======
                         </div>
                     </div>
                 </div>
                 <!-- ./wrapper -->
->>>>>>> dat
 
                 <!-- Vendor JS -->
                 <script src="{{ asset('admin/main/js/vendors.min.js') }}"></script>
