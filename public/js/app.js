@@ -1,5 +1,4 @@
 /******/ (() => { // webpackBootstrap
-<<<<<<< HEAD
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./node_modules/axios/lib/adapters/adapters.js":
@@ -2495,14 +2494,14 @@ function buildURL(url, params, options) {
   if (!params) {
     return url;
   }
-  
+
   const _encode = options && options.encode || encode;
 
   if (_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].isFunction(options)) {
     options = {
       serialize: options
     };
-  } 
+  }
 
   const serializeFn = options && options.serialize;
 
@@ -7071,7 +7070,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -7085,20 +7084,14 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-=======
-/******/ 	"use strict";
-/******/ 	// The require scope
-/******/ 	var __webpack_require__ = {};
 /******/
->>>>>>> dat
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
@@ -7112,7 +7105,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 		};
 /******/ 	})();
 <<<<<<< HEAD
-/******/ 	
+/******/
 =======
 /******/
 >>>>>>> dat
@@ -7128,7 +7121,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 		})();
 /******/ 	})();
 <<<<<<< HEAD
-/******/ 	
+/******/
 =======
 /******/
 >>>>>>> dat
@@ -7136,11 +7129,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-<<<<<<< HEAD
-/******/ 	
-=======
 /******/
->>>>>>> dat
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
