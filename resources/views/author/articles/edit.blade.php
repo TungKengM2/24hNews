@@ -1,460 +1,203 @@
 <!DOCTYPE html>
-<html lang="zxx">
-
-<!-- Mirrored from demo.dashboardpack.com/sales-html/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 May 2024 07:23:13 GMT -->
+<html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
 
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Edit</title>
+    <title>Cập Nhập Bài Viết</title>
 
+    <!-- Vendors Style -->
+    <link rel="stylesheet" href="{{ asset('admin/main/css/vendors_css.css') }}">
+    <link rel="icon" href="{{ asset('admin/images/favicon.ico') }}">
 
-    <link rel="stylesheet" href="{{ asset('admin/css/bootstrap1.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/themefy_icon/themify-icons.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/niceselect/css/nice-select.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/owl_carousel/css/owl.carousel.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/gijgo/gijgo.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/font_awesome/css/all.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/tagsinput/tagsinput.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/datepicker/date-picker.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/vectormap-home/vectormap-2.0.2.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/scroll/scrollable.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/datatable/css/jquery.dataTables.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/datatable/css/responsive.dataTables.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/datatable/css/buttons.dataTables.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/text_editor/summernote-bs4.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/morris/morris.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/vendors/material_icon/material-icons.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/css/metisMenu.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/css/style1.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/css/colors/default.css') }}" id="colorSkinCSS">
+    <!-- Style -->
+    <link rel="stylesheet" href="{{ asset('admin/main/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/main/css/skin_color.css') }}">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="{{ asset('js/ckeditor.js') }}"></script>
+    <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <style>
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #c3bebe;
+            color: white;
+            border: 1px solid #c2c2c2;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 
-<body class="crm_body_bg">
+<body class="hold-transition dark-skin sidebar-mini theme-primary fixed">
 
-    // Sidebar
-    @include('admin.layouts.partials.sidebar')
-    // main
-    <section class="main_content dashboard_part large_header_bg">
+    <div class="wrapper">
+        <div id="loader"></div>
 
-        <div class="container-fluid g-0">
-            <div class="row">
-                <div class="col-lg-12 p-0 ">
-                    <div class="header_iner d-flex justify-content-between align-items-center">
-                        <div class="sidebar_icon d-lg-none">
-                            <i class="ti-menu"></i>
-                        </div>
-                        <div class="serach_field-area d-flex align-items-center">
-                            <div class="search_inner">
-                                <form action="#">
-                                    <div class="search_field">
-                                        <input type="text" placeholder="Search here...">
-                                    </div>
-                                    <button type="submit"> <img src="img/icon/icon_search.svg" alt> </button>
-                                </form>
-                            </div>
-                            <span class="f_s_14 f_w_400 ml_25 white_text text_white">Apps</span>
-                        </div>
-                        <div class="header_right d-flex justify-content-between align-items-center">
-                            <div class="header_notification_warp d-flex align-items-center">
-                                <li>
-                                    <a class="bell_notification_clicker nav-link-notify" href="#"> <img
-                                            src="img/icon/bell.svg" alt>
-                                    </a>
+        @include('admin.layouts.partials.header')
 
-                                    <div class="Menu_NOtification_Wrap">
-                                        <div class="notification_Header">
-                                            <h4>Notifications</h4>
-                                        </div>
-                                        <div class="Notification_body">
+        <!-- Left side column. contains the logo and sidebar -->
+        @include('admin.layouts.partials.aside')
 
-                                            <div class="single_notify d-flex align-items-center">
-                                                <div class="notify_thumb">
-                                                    <a href="#"><img src="img/staf/2.png" alt></a>
-                                                </div>
-                                                <div class="notify_content">
-                                                    <a href="#">
-                                                        <h5>Cool Marketing </h5>
-                                                    </a>
-                                                    <p>Lorem ipsum dolor sit amet</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="single_notify d-flex align-items-center">
-                                                <div class="notify_thumb">
-                                                    <a href="#"><img src="img/staf/4.png" alt></a>
-                                                </div>
-                                                <div class="notify_content">
-                                                    <a href="#">
-                                                        <h5>Awesome packages</h5>
-                                                    </a>
-                                                    <p>Lorem ipsum dolor sit amet</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="single_notify d-flex align-items-center">
-                                                <div class="notify_thumb">
-                                                    <a href="#"><img src="img/staf/3.png" alt></a>
-                                                </div>
-                                                <div class="notify_content">
-                                                    <a href="#">
-                                                        <h5>what a packages</h5>
-                                                    </a>
-                                                    <p>Lorem ipsum dolor sit amet</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="single_notify d-flex align-items-center">
-                                                <div class="notify_thumb">
-                                                    <a href="#"><img src="img/staf/2.png" alt></a>
-                                                </div>
-                                                <div class="notify_content">
-                                                    <a href="#">
-                                                        <h5>Cool Marketing </h5>
-                                                    </a>
-                                                    <p>Lorem ipsum dolor sit amet</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="single_notify d-flex align-items-center">
-                                                <div class="notify_thumb">
-                                                    <a href="#"><img src="img/staf/4.png" alt></a>
-                                                </div>
-                                                <div class="notify_content">
-                                                    <a href="#">
-                                                        <h5>Awesome packages</h5>
-                                                    </a>
-                                                    <p>Lorem ipsum dolor sit amet</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="single_notify d-flex align-items-center">
-                                                <div class="notify_thumb">
-                                                    <a href="#"><img src="img/staf/3.png" alt></a>
-                                                </div>
-                                                <div class="notify_content">
-                                                    <a href="#">
-                                                        <h5>what a packages</h5>
-                                                    </a>
-                                                    <p>Lorem ipsum dolor sit amet</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="nofity_footer">
-                                            <div class="submit_button text-center pt_20">
-                                                <a href="#" class="btn_1">See More</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </li>
-                                <li>
-                                    <a class="CHATBOX_open nav-link-notify" href="#"> <img src="img/icon/msg.svg" alt>
-                                    </a>
-                                </li>
-                            </div>
-                            <div class="profile_info">
-                                <img src="img/client_img.png" alt="#">
-                                <div class="profile_info_iner">
-                                    <div class="profile_author_name">
-                                        <p>Neurologist </p>
-                                        <h5>Dr. Robar Smith</h5>
-                                    </div>
-                                    <div class="profile_info_details">
-                                        <a href="#">My Profile </a>
-                                        <a href="#">Settings</a>
-                                        <a href="#">Log Out </a>
-                                    </div>
-                                </div>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <div class="container-full">
+                <!-- Content Header (Page header) -->
+                <div class="content-header">
+                    <div class="d-flex align-items-center">
+                        <div class="me-auto">
+                            <h4 class="page-title">Cập Nhập Bài Viết</h4>
+                            <div class="d-inline-block align-items-center">
+                                <nav>
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="tables_data.html#"><i
+                                                    class="mdi mdi-home-outline"></i></a></li>
+                                        <li class="breadcrumb-item" aria-current="page">Danh Sách Bài Viết</li>
+                                        <li class="breadcrumb-item active" aria-current="page">Cập Nhập</li>
+                                    </ol>
+                                </nav>
                             </div>
                         </div>
+
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="main_content_iner ">
-            <div class="container-fluid p-0 sm_padding_15px">
-                <div class="row justify-content-center">
-                    <div class="col-lg-4">
-                        <div class="white_card card_height_100 mb_30">
-                            <div class="white_card_header">
-                                <div class="box_header m-0">
-                                    <div class="main-title">
-                                        <h3 class="m-0">Text</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="white_card_body">
-                                <h6 class="card-subtitle mb-2 mb-2">Usage <code>type="text"</code></h6>
-                                <div class=" mb-0">
-                                    <input type="text" class="form-control" name="inputText" id="inputText"
-                                        placeholder="Text Input">
-                                </div>
-                            </div>
+                <!-- Main content -->
+                <div class="card p-2">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="white_card card_height_100 mb_30">
-                            <div class="white_card_header">
-                                <div class="box_header m-0">
-                                    <div class="main-title">
-                                        <h3 class="m-0">Email</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="white_card_body">
-                                <h6 class="card-subtitle mb-2 mb-2">Usage <code>type="email"</code></h6>
-                                <div class=" mb-0">
-                                    <input type="email" class="form-control" name="inputEmail" id="inputEmail"
-                                        placeholder="name@example.com">
-                                </div>
-                            </div>
+                    @endif
+
+                    <form action="{{ route('articles.update', $article) }}" method="POST" enctype="multipart/form-data"
+                        id="articleForm">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Tiêu đề</label>
+                            <input type="text" class="form-control" id="title" name="title"
+                                value="{{ $article->title }}" required>
                         </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="white_card card_height_100 mb_30">
-                            <div class="white_card_header">
-                                <div class="box_header m-0">
-                                    <div class="main-title">
-                                        <h3 class="m-0">Password</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="white_card_body">
-                                <h6 class="card-subtitle mb-2">Usage <code>type="password"</code></h6>
-                                <div class=" mb-0">
-                                    <input type="password" class="form-control" name="inputPassword" id="inputPassword"
-                                        placeholder="Password">
-                                </div>
-                            </div>
+
+                        <div class="mb-3">
+                            <label for="slug" class="form-label">Slug</label>
+                            <input type="text" class="form-control" id="slug" name="slug"
+                                value="{{ $article->slug }}" required>
                         </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="white_card card_height_100 mb_30">
-                            <div class="white_card_header">
-                                <div class="box_header m-0">
-                                    <div class="main-title">
-                                        <h3 class="m-0">number</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="white_card_body">
-                                <h6 class="card-subtitle mb-2">Usage <code>type="number"</code></h6>
-                                <div class=" mb-0">
-                                    <input type="number" class="form-control" name="inputNumber" id="inputNumber"
-                                        value="1">
-                                </div>
-                            </div>
+
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Nội dung</label>
+                            <textarea id="content" name="content" class="form-control">{!! $article->content !!}</textarea>
                         </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="white_card card_height_100 mb_30">
-                            <div class="white_card_header">
-                                <div class="box_header m-0">
-                                    <div class="main-title">
-                                        <h3 class="m-0">search</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="white_card_body">
-                                <h6 class="card-subtitle mb-2">Usage <code>type="search"</code></h6>
-                                <div class=" mb-0">
-                                    <input type="Search" class="form-control" name="inputSearch" id="inputSearch"
-                                        placeholder="Search">
-                                </div>
-                            </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Chọn hoặc thêm tags:</label>
+                            <select name="tags[]" class="form-control select2" multiple="multiple">
+                                @foreach ($tags as $tag)
+                                    <option value="{{ $tag->tag_id }}"
+                                        @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
+                                        {{ $tag->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="white_card card_height_100 mb_30">
-                            <div class="white_card_header">
-                                <div class="box_header m-0">
-                                    <div class="main-title">
-                                        <h3 class="m-0">url</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="white_card_body">
-                                <h6 class="card-subtitle mb-2">Usage <code>type="url"</code></h6>
-                                <div class=" mb-0">
-                                    <input type="url" class="form-control" name="inputUrl" id="inputUrl"
-                                        placeholder="https://getbootstrap.com/">
-                                </div>
-                            </div>
+
+
+                        <div class="mb-3">
+                            <label class="form-label">Danh mục</label>
+                            <select name="category_id" class="form-control">
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->category_id }}"
+                                        {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="white_card card_height_100 mb_30">
-                            <div class="white_card_header">
-                                <div class="box_header m-0">
-                                    <div class="main-title">
-                                        <h3 class="m-0">tel</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="white_card_body">
-                                <h6 class="card-subtitle mb-2">Usage <code>type="tel"</code></h6>
-                                <div class=" mb-0">
-                                    <input type="tel" class="form-control" name="inputTel" id="inputTel"
-                                        placeholder="+1 9876543210">
-                                </div>
-                            </div>
+
+
+
+                        <input type="hidden" name="author_id" value="{{ $article->author_id }}">
+
+                        <div class="mt-3">
+                            <label class="form-label" for="thumbnail_url">Ảnh Đại Diện</label>
+                            <input class="form-control" type="file" name="thumbnail_url" id="thumbnail_url">
+                            @if ($article->thumbnail_url)
+                                <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Current Thumbnail"
+                                    width="100">
+                            @endif
                         </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="white_card card_height_100 mb_30">
-                            <div class="white_card_header">
-                                <div class="box_header m-0">
-                                    <div class="main-title">
-                                        <h3 class="m-0">file</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="white_card_body">
-                                <h6 class="card-subtitle mb-2">Usage <code>type="file"</code></h6>
-                                <div class=" mb-0">
-                                    <input type="file" class id="exampleFormControlFile1">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="white_card card_height_100 mb_30">
-                            <div class="white_card_header">
-                                <div class="box_header m-0">
-                                    <div class="main-title">
-                                        <h3 class="m-0">datetime-local</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="white_card_body">
-                                <h6 class="card-subtitle mb-2">Usage <code>type="datetime-local"</code></h6>
-                                <div class=" mb-0">
-                                    <input type="datetime-local" class="form-control" name="inputDateTime"
-                                        id="inputDateTime">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="white_card card_height_100 mb_30">
-                            <div class="white_card_header">
-                                <div class="box_header m-0">
-                                    <div class="main-title">
-                                        <h3 class="m-0">date</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="white_card_body">
-                                <h6 class="card-subtitle mb-2">Usage <code>type="date"</code></h6>
-                                <div class=" mb-0">
-                                    <input type="date" class="form-control" name="inputDate" id="inputDate">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="white_card card_height_100 mb_30">
-                            <div class="white_card_header">
-                                <div class="box_header m-0">
-                                    <div class="main-title">
-                                        <h3 class="m-0">time</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="white_card_body">
-                                <h6 class="card-subtitle mb-2">Usage <code>type="time"</code></h6>
-                                <div class=" mb-0">
-                                    <input type="time" class="form-control" name="inputTime" id="inputTime">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="white_card card_height_100 mb_30">
-                            <div class="white_card_header">
-                                <div class="box_header m-0">
-                                    <div class="main-title">
-                                        <h3 class="m-0">week</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="white_card_body">
-                                <h6 class="card-subtitle mb-2">Usage <code>type="week"</code></h6>
-                                <div class=" mb-0">
-                                    <input type="week" class="form-control" name="inputWeek" id="inputWeek">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+
+                        <button type="submit" class="btn btn-primary mt-3">Cập nhật</button>
+                    </form>
                 </div>
+
+                <script>
+                    $(document).ready(function() {
+                        $('.select2').select2({
+                            tags: true,
+                            tokenSeparators: [','],
+                            placeholder: "Chọn hoặc nhập tags mới",
+                            allowClear: true
+                        });
+                    });
+
+                    document.getElementById("title").addEventListener("input", function() {
+                        let title = this.value.trim();
+                        let slug = title.toLowerCase()
+                            .normalize("NFD").replace(/[̀-ͯ]/g, "")
+                            .replace(/đ/g, "d").replace(/Đ/g, "D")
+                            .replace(/\s+/g, "-")
+                            .replace(/[^\w-]/g, "")
+                            .replace(/--+/g, "-")
+                            .replace(/^-+|-+$/g, "");
+
+                        document.getElementById("slug").value = slug;
+                    });
+                </script>
+
+
+                <!-- /.content-wrapper -->
+
+                @include('admin.layouts.partials.footer')
+
+                <!-- Control Sidebar -->
+                <!-- /.control-sidebar -->
+
+                <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
+                <div class="control-sidebar-bg"></div>
             </div>
+            <!-- ./wrapper -->
+
+            <!-- Vendor JS -->
+            <script src="{{ asset('admin/main/js/vendors.min.js') }}"></script>
+            <script src="{{ asset('admin/main/js/pages/chat-popup.js') }}"></script>
+            <script src="{{ asset('admin/assets/icons/feather-icons/feather.min.js') }}"></script>
+            <script src="{{ asset('admin/assets/vendor_components/apexcharts-bundle/irregular-data-series.js') }}"></script>
+            <script src="{{ asset('admin/assets/vendor_components/apexcharts-bundle/dist/apexcharts.js') }}"></script>
+            <script src="{{ asset('admin/assets/vendor_components/zingchart_branded_version/zingchart.min.js') }}"></script>
+            <script src="{{ asset('./admin/assets/vendor_components/select2/dist/js/select2.full.js') }}"></script>
+
+            <!-- CrmX Admin App -->
+            <script src="{{ asset('admin/main/js/template.js') }}"></script>
+            <script src="{{ asset('admin/main/js/demo.js') }}"></script>
+            <script src="{{ asset('admin/main/js/pages/dashboard.js') }}"></script>
         </div>
-
-        <div class="footer_part">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="footer_iner text-center">
-                            <p>2020 © Influence - Designed by <a href="#"> <i class="ti-heart"></i> </a><a href="#">
-                                    Dashboard</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    // backtop
-    @include('admin.layouts.partials.backtop')
-
-    <script src="{{ asset('admin/js/jquery1-3.4.1.min.js') }}"></script>
-    <script src="{{ asset('admin/js/popper1.min.js') }}"></script>
-    <script src="{{ asset('admin/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('admin/js/metisMenu.js') }}"></script>
-    <script src="{{ asset('admin/vendors/count_up/jquery.waypoints.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chartlist/Chart.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/count_up/jquery.counterup.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/niceselect/js/jquery.nice-select.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/owl_carousel/js/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/buttons.flash.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/jszip.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datatable/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datepicker/datepicker.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datepicker/datepicker.en.js') }}"></script>
-    <script src="{{ asset('admin/vendors/datepicker/datepicker.custom.js') }}"></script>
-    <script src="{{ asset('admin/js/chart.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chartjs/roundedBar.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/progressbar/jquery.barfiller.js') }}"></script>
-    <script src="{{ asset('admin/vendors/tagsinput/tagsinput.js') }}"></script>
-    <script src="{{ asset('admin/vendors/text_editor/summernote-bs4.js') }}"></script>
-    <script src="{{ asset('admin/vendors/am_chart/amcharts.js') }}"></script>
-    <script src="{{ asset('admin/vendors/scroll/perfect-scrollbar.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/scroll/scrollable-custom.js') }}"></script>
-    <script src="{{ asset('admin/vendors/vectormap-home/vectormap-2.0.2.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/vectormap-home/vectormap-world-mill-en.js') }}"></script>
-    <script src="{{ asset('admin/vendors/apex_chart/apex-chart2.js') }}"></script>
-    <script src="{{ asset('admin/vendors/apex_chart/apex_dashboard.js') }}"></script>
-    <script src="{{ asset('admin/vendors/echart/echarts.min.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chart_am/core.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chart_am/charts.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chart_am/animated.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chart_am/kelly.js') }}"></script>
-    <script src="{{ asset('admin/vendors/chart_am/chart-custom.js') }}"></script>
-    <script src="{{ asset('admin/js/dashboard_init.js') }}"></script>
-    <script src="{{ asset('admin/js/custom.js') }}"></script>
 
 </body>
-
-<!-- Mirrored from demo.dashboardpack.com/sales-html/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 May 2024 07:24:00 GMT -->
 
 </html>
