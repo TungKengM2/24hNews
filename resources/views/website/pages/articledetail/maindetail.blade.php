@@ -1,130 +1,219 @@
 <main>
 
-<!-- ====== start tc-main-post-style1 ====== -->
-<section class="tc-main-post-style1 pb-60">
+<!-- ====== start breaking news ====== -->
+<section class="tc-breaking-news-style1 pt-50 pb-50">
     <div class="container">
-        <div class="tc-main-post-title pt-40 pb-40">
-            <div class="row">
-                <div class="col-lg-8">
-                    <p class="text-uppercase mb-15">Sport</p>
-                    <h2 class="title">Manoah dominates, closes on Blue Jays history</h2>
-                    <p class="fsz-16px mt-20 color-666">Stay focused and remember we design the best WordPress News</p>
+        <p class="color-999 text-uppercase mb-30 ltspc-1">breaking news</p>
+        <div class="tc-post-grid-default">
+            <div class="tc-slider-style1">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        @foreach ($featuredArticles as $article)
+                        <div class="swiper-slide">
+                            <a href="{{ Auth::check() ? route('client.articles.article', $article->article_id)  : route('login') }}" class="item d-block">
+                                <div class="row gx-4 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-70 img-cover">
+                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="{{ $article->title }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <h5 class="title">{{ $article->title }}</h5>
+                                            <div class="meta-bot mt-10">
+                                                <ul>
+                                                    <li class="date"> <i class="la la-clock"></i> {{ $article->created_at->diffForHumans() }}</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+                    </div>
                 </div>
+                <!-- arrows -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
             </div>
         </div>
-        <div class="meta-nav pt-30 pb-30 border-top border-1 brd-gray">
+    </div>
+</section>
+<!-- ====== end breaking news ====== -->
+
+<!-- ====== start trends news ====== -->
+<section class="tc-trends-news-style1 pt-50 pb-50 bg-gray1">
+    <div class="container">
+        <div class="hot-trends-tabs-style1 mb-4">
+            <p class="color-999 text-uppercase ltspc-1 flex-shrink-0 me-4 pt-1"> <i
+                    class="ion-arrow-graph-up-right me-2"></i> hot trends </p>
+            <div class="links">
+                {{-- @foreach ( $hottrendsArticles as $article)
+                <a class="link" href="{{ Auth::check() ? route('client.articles.article', $article->id) : route('login') }}" class="item d-block">{{ $article->preview_contentt }}
+                </a>
+                @endforeach --}}
+            </div>
+        </div>
+        <div class="section-content">
             <div class="row">
+                <div class="col-lg-3">
+                    <div class="tc-stock-card mb-30">
+                        <a href="home-default.html#" class="stock-card-title">
+                            Stocks Market today
+                            <span class="la la-arrow-circle-o-right color-666"></span>
+                        </a>
+                        <div class="stock-card-body">
+                            <div class="stock-card-item">
+                                <div class="title">
+                                    <h6>DOW <small class="indicator text-danger"> <i
+                                                class="ion-arrow-down-b"></i> 2,82%</small></h6>
+                                    <span class="price">33,811.47</span>
+                                </div>
+                                <div class="inf">
+                                    <p>Dow Jones Indus. Avg</p>
+                                    <span class="price text-danger">-981.36</span>
+                                </div>
+                            </div>
+                            <div class="stock-card-item">
+                                <div class="title">
+                                    <h6>NASDAQ <small class="indicator text-danger"> <i
+                                                class="ion-arrow-down-b"></i> 1,76% </small></h6>
+                                    <span class="price">12,839.95</span>
+                                </div>
+                                <div class="inf">
+                                    <p>NASDQ Composite Index</p>
+                                    <span class="price text-danger">-217.86</span>
+                                </div>
+                            </div>
+                            <div class="stock-card-item">
+                                <div class="title">
+                                    <h6>S&P 500 <small class="indicator text-success"> <i
+                                                class="ion-arrow-up-b"></i> 3,93% </small></h6>
+                                    <span class="price">4,271.7</span>
+                                </div>
+                                <div class="inf">
+                                    <p>S&P 500 Index</p>
+                                    <span class="price text-success">+125.8</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tc-post-grid-default">
+                        <div class="item">
+                            <div class="img img-cover th-200">
+                                <img src="client/img/trend/1.png" alt="">
+                            </div>
+                            <div class="content py-4 px-3 bg-gray2">
+                                <p class="color-main fsz-13px text-uppercase mb-1">Sponsored Content</p>
+                                <h4 class="title ltspc--1"> <a href="page-single-post-creative.html">3D2N at
+                                        Sixsense Resort 5 stars just
+                                        $1,299</a> </h4>
+                                <a href="home-default.html#" class="color-999 fsz-12px mt-20">booking.com <i
+                                        class="la la-external-link-square-alt"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-lg-6">
-                    <div class="author-side color-666 fsz-13px">
-                        <div class="author me-40 d-flex d-lg-inline-flex align-items-center">
-                            <span class="icon-30 rounded-circle overflow-hidden me-10">
-                                <img src="client/img/colums.png" alt="">
-                            </span>
-                            <span>By</span>
-                            <a href="page-single-post-creative.html#" class="text-decoration-underline text-primary ms-1">Conor Bradley</a>
-                        </div>
-                        <span class="me-40">
-                            <a href="page-single-post-creative.html#"><i class="la la-calendar me-1"></i> Dec 14, 2022</a>
-                        </span>
-                        <span class="">
-                            <a href="page-single-post-creative.html#"><i class="la la-comment me-1"></i> 55 Comments</a>
-                        </span>
-                    </div>
-                </div>
-                <div class="col-lg-6 text-lg-end">
-                    <div class="links-side color-000 fsz-13px">
-                        <a href="page-single-post-creative.html#" class="me-40"><i class="la la-link me-1"></i> Copy Link</a>
-                        <a href="page-single-post-creative.html#" class="me-40"><i class="la la-bookmark me-1"></i> Bookmark</a>
-                        <a href="page-single-post-creative.html#"><i class="la la-exclamation-triangle me-1"></i> Report</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="tc-main-post-img img-cover mb-50">
-            <img src="client/img/main_post.jpeg" alt="">
-        </div>
-        <div class="tc-main-post-content color-000">
-            <div class="row">
-                <div class="col-lg-2">
-                    <div class="sharing">
-                        <p class="text-uppercase mb-20">Share</p>
-                        <div class="share-icons">
-                            <a href="page-single-post-creative.html#"> <i class="la la-twitter"></i> </a>
-                            <a href="page-single-post-creative.html#"> <i class="la la-facebook-f"></i> </a>
-                            <a href="page-single-post-creative.html#"> <i class="la la-instagram"></i> </a>
-                            <a href="page-single-post-creative.html#"> <i class="la la-youtube"></i> </a>
-                            <a href="page-single-post-creative.html#"> <i class="la la-spotify"></i> </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-10">
-                    <h4 class="sub-title sm-content-width">
-                        This intimate, fearless account of the <span class="color-main">Canadian</span> author’s relationship with her traumatised, free-thinking mother leaves you rooting for both of them.
-                    </h4>
-                    <p class="info-text sm-content-width mt-40">
-                        <span class="lg-letter">
-                            a
-                        </span>
-                        uthor and journalist Leah McLaren was a precocious 13-year-old when she broke down at her mother’s kitchen table one night in Toronto and described a  harrowing sexual experience at a pool party. Her mother, Cessie, brewed her a mug of herbal tea, added a slug of whisky, and countered it with a tale of her own.At just 12, Cessie had been raped by her riding instructor. The Horseman, she called him. Having groomed her for assault, he then persuaded her that she was in love with him.
-                    </p>
-                    <h4 class="sub-title sm-content-width mt-40">
-                        Sample Heading 
-                    </h4>
-                    <h6 class="sub-title sm-content-width mt-30">
-                        The first, and most obvious, is a noise when you apply the brake pedal. This could be anything from a grinding sound to a high-pitched screech
-                    </h6>
-                    <div class="info-text-img mt-30">
-                        <div class="row">
-                            <div class="col-lg-7">
-                                <p class="info-text">
-                                    wearing thin and the calipers. An account of McLaren’s efforts to win her mother’s blessing for the book over a girls’ weekend in New York frames a narrative composed of chronologically arranged vignettes that capture telling moments from McLaren’s girlhood and early adulthood. More room mate than parent, Cessie gave her the freedom to cruise through school snacking on magic mushrooms, stay out all night with calling home, and tolerate the gaze of a voyeur in the alleyway outside their apartment – until she woke to find him trying to climb through her bedroom window. Listening, McLaren’s first response was relief & perhaps her own story wasn’t so momentous after all. 
-                                </p>
-                            </div>
-                            <div class="col-lg-5">
-                                <div class="img img-cover th-280 mt-15">
-                                    <img src="client/img/latest/136.png" alt="">
-                                </div>
-                                <div class="text-center color-999 py-3 fst-italic">
-                                    <span>Images by <a href="page-single-post-creative.html#" class="color-000">@tim_arterbury</a></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="info-text sm-content-width mt-30">
-                        Her mother’s, on the other hand, would come to haunt her. It appeared to hold the key to Cessie’s doomed marriage to McLaren’s small-town father at 21 and her flight, a dozen years later, in pursuit of urban sophistication and a career in newspapers. It explained a tortured romance that saw <a href="page-single-post-creative.html#" class="text-decoration-underline text-primary">Text link</a> from one emotional crisis to another throughout McLaren’s adolescence
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-10">
-                    <div class="quote-message-content mt-50">
-                        <div class="row">
-                            <div class="col-lg-7">
-                                <div class="quote-message">
-                                    <div class="icon">
-                                        <img src="client/img/quote.png" alt="">
+                    <div class="tc-trends-news-slider1 tc-slider-style2">
+                        <div class="swiper-container">
+                            <div class="swiper-wrapper">
+                                @foreach ($D1Articles as $article)
+                                    <div class="swiper-slide">
+                                        <div class="tc-post-overlay-default">
+                                            <div class="img th-650 img-cover">
+                                                <img src="{{ asset($article->thumbnail_url) }}" alt="{{ $article->title }}">
+                                                <div class="tags">
+                                                    <a href="">
+                                                        {{ $article->category->name ?? 'Uncategorized' }}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="content ps-40 pe-40 pb-40">
+                                                <h2 class="title mb-20">
+                                                    <a href="{{ Auth::check() ? route('client.articles.article', $article->article_id)  : route('login') }}">
+
+                                                        {{ $article->title }}
+                                                    </a>
+                                                </h2>
+                                                <div class="text mb-40">
+                                                    {{ Str::limit($article->preview_content, 100, '...') }}
+                                                </div>
+                                                <div class="meta-bot lh-1">
+                                                    <ul class="d-flex">
+                                                        <li class="date me-5">
+                                                            <a href="#"><i class="la la-calendar me-2"></i> {{ $article->created_at->format('M d, Y') }}</a>
+                                                        </li>
+                                                        <li class="author me-5">
+                                                            <a href="#"><i class="la la-user me-2"></i> by {{ $article->author->name ?? 'Admin' }}</a>
+                                                        </li>
+                                                        <li class="comment">
+                                                            <a href="#"><i class="la la-comment me-2"></i> 55 Comments</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="info">
-                                        <h3>Gross-out humour meets Jungian psychology as the book moves.</h3>
-                                        <p class="color-999 mt-20"> <strong class="color-000"> M Moussa </strong>  //  Envato Author</p>
-                                    </div>
+                                @endforeach
+
+                               
+                            </div>
+                        </div>
+                        <!-- arrows -->
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="tc-post-list-style1">
+                        <div class="tc-post-title-style1">
+                            <a href="page-blog.html"> trending posts </a>
+                        </div>
+                        <div class="tc-post-overlay-default">
+                            <div class="img th-200 img-cover">
+                                <img src="client/img/trend/4.png" alt="">
+                            </div>
+                            <div class="content ps-20 pe-20 pb-20 text-white">
+                                <a href="page-single-post-creative.html"
+                                    class="text-uppercase fsz-13px mb-1">lifestyle</a>
+                                <h4 class="title">
+                                    <a href="home-default.html#">The story about Hoki</a>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="items">
+                            <a href="page-single-post-creative.html" class="item hover-main">
+                                <h2 class="num">
+                                    2
+                                </h2>
+                                <div class="content">
+                                    <span class="fsz-12px color-999 text-uppercase mb-2">news</span>
+                                    <h6 class="title">Elon Musk got Twitter because he gets Twitter</h6>
                                 </div>
-                            </div>
-                            <div class="col-lg-5">
-                                <div class="content-info">
-                                    <h5 class="sub-title sm-content-width mb-20">
-                                        Sample Heading 
-                                    </h5>
-                                    <p class="info-text">
-                                        Sub Heading “The Horseman was both the clue and the final reveal. He was keystone in the arch, the signature at the bottom of every page. As Homer Simpson once observed of beer, the Horseman was the cause of and solution to all of life’s problems,” explains McLaren. It could only be a matter of time before someone in this family of writers (the mother
-                                    </p>
+                            </a>
+                            <a href="page-single-post-creative.html" class="item hover-main">
+                                <h2 class="num">
+                                    3
+                                </h2>
+                                <div class="content">
+                                    <span class="fsz-12px color-999 text-uppercase mb-2">technology</span>
+                                    <h6 class="title">NFT Technology is become trends in 2022</h6>
                                 </div>
-                            </div>
-                            <div class="col-lg-10 offset-lg-2">
-                                <p class="info-text ps-30">
-                                    of author and uncle are both journalists). It explained a tortured romance that saw Cessie lurch from one emotional crisis to another throughout McLaren’s adolescence
-                                </p>
-                            </div>
+                            </a>
+                            <a href="page-single-post-creative.html" class="item hover-main">
+                                <h2 class="num">
+                                    4
+                                </h2>
+                                <div class="content">
+                                    <span class="fsz-12px color-999 text-uppercase mb-2">lifestyle</span>
+                                    <h6 class="title">MLB become 1st fashion brands in US</h6>
+                                </div>
+                            </a>
+                            <a href="home-default.html#" class="fsz-13px color-999  pt-30 pb-30">
+                                See all posts <i class="la la-angle-right"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -132,97 +221,1132 @@
         </div>
     </div>
 </section>
-<!-- ====== end tc-main-post-style ====== -->
+<!-- ====== end trends news ====== -->
 
-<!-- ====== start banner18 ====== -->
-<section class="banner18">
+<!-- ====== start google web stories ====== -->
+<section class="tc-google-stories-style1">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="content border-1 border-top border-bottom brd-gray pt-50 pb-50">
-                    <a href="page-single-post-creative.html#" class="d-block img-cover">
-                        <img src="client/img/banner18.png" alt="">
+        <div class="section-content pt-70 pb-70 border-0 border-bottom brd-gray">
+            <p class="color-000 text-uppercase mb-30 ltspc-1">google web stories</p>
+            <div class="tc-google-stories-slider1 tc-slider-style1">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <a href="home-default.html#" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/1.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    Kayak stories
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item seen">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/2.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    6 Tips Succe ...
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/3.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    PS Controller
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/4.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    What’s love in ...
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/5.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    News war Uk ...
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/6.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    Top Real Est ...
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/7.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    Top Real Est ...
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/8.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    The Moment
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/3.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    PS Controller
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- arrows -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ====== end google web stories ====== -->
+
+<!-- ====== start Latest news ====== -->
+<section class="tc-latest-news-style1">
+    <div class="container">
+        <div class="section-content pt-50 pb-50 border-bottom border-1 brd-gray">
+            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html"> latest news </a> <i class="la la-angle-right ms-1"></i>
+            </p>
+            <div class="row">
+                <div class="col-lg-5 border-end brd-gray border-1">
+                    <div class="tc-post-grid-default">
+                        <div class="item">
+                            <div class="img img-cover th-330">
+                                <img src="client/img/latest/1.png" alt="">
+                                <a href="https://youtu.be/pGbIOC83-So?t=21" data-lity
+                                    class="video_icon icon-70">
+                                    <i class="ion-play"></i>
+                                </a>
+                            </div>
+                            <div class="content pt-30">
+                                <a href="page-blog.html"
+                                    class="news-cat color-999 fsz-13px text-uppercase mb-10">politics</a>
+                                <h2 class="title mb-20">
+                                    <a href="page-single-post-features.html">Biden asks Congress for $33 billion
+                                        to support Ukraine</a>
+                                </h2>
+                                <div class="text color-666">
+                                    The social-media company is in discussions to sell itself to Elon, a
+                                    dramatic turn of events just 11 days after the [...]
+                                </div>
+                                <div class="meta-bot lh-1 mt-40">
+                                    <ul class="d-flex">
+                                        <li class="date me-5">
+                                            <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14, 2022</a>
+                                        </li>
+                                        <li class="author me-5">
+                                            <a href="home-default.html#"><i class="la la-user me-2"></i> by Admin </a>
+                                        </li>
+                                        <li class="comment">
+                                            <a href="home-default.html#"><i class="la la-comment me-2"></i> 55 Comments</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 border-end brd-gray border-1">
+                    <div class="tc-post-list-style2">
+                        <div class="items">
+                            <div class="item">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-70 img-cover">
+                                            <img src="client/img/latest/3.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                                                politics
+                                            </div>
+                                            <h5 class="title ltspc--1">
+                                                <a href="page-single-post-creative.html"
+                                                    class="hover-underline">Disputes in the South China
+                                                    Sea show no sign of ending</a>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-70 img-cover">
+                                            <img src="client/img/latest/4.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <div class="news-cat color-999 fsz-13px text-uppercase mb-1">sport
+                                                <b class="text-danger"> <i
+                                                        class="icon-6 rounded-circle bg-danger ms-2 me-1 d-inline-block"></i>
+                                                    live</b> </div>
+                                            <h5 class="title ltspc--1">
+                                                <a href="page-single-post-creative.html"
+                                                    class="hover-underline">Live of MLB Baseball 2022:
+                                                    NY Yankees Vs NY Mets</a>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-70 img-cover">
+                                            <img src="client/img/latest/5.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                                                lifestyle</div>
+                                            <h5 class="title ltspc--1">
+                                                <a href="page-single-post-creative.html"
+                                                    class="hover-underline">Paddling in Miami Beach</a>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-70 img-cover">
+                                            <img src="client/img/latest/6.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                                                business
+                                            </div>
+                                            <h5 class="title ltspc--1">
+                                                <a href="page-single-post-creative.html"
+                                                    class="hover-underline">Stock market in last week:
+                                                    "The strength of bulls"</a>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-70 img-cover">
+                                            <img src="client/img/latest/7.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                                                lifestyle</div>
+                                            <h5 class="title ltspc--1">
+                                                <a href="page-single-post-creative.html"
+                                                    class="hover-underline">Stock market in last week:
+                                                    "The strength of bulls"</a>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item border-0">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-70 img-cover">
+                                            <img src="client/img/latest/8.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                                                lifestyle</div>
+                                            <h5 class="title ltspc--1">
+                                                <a href="page-single-post-creative.html"
+                                                    class="hover-underline">Helm Extract Infuse cream,
+                                                    1000mg Full spectrum</a>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="tc-post-grid-default border-1 border-bottom brd-gray pb-10">
+                        <div class="item">
+                            <div class="img img-cover th-200">
+                                <img src="client/img/latest/2.png" alt="">
+                            </div>
+                            <div class="content pt-20">
+                                <a href="home-default.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">travel</a>
+                                <h5 class="title ltspc--1 mb-10"> <a href="page-single-post-creative.html">Fact
+                                        of Camel in Dubai</a> </h5>
+                                <div class="text color-666">
+                                    Crime rates on trains and buses are up in some of the nation’s biggest [...]
+                                </div>
+                                <div class="meta-bot lh-1 mt-20">
+                                    <ul class="d-flex">
+                                        <li class="date me-5">
+                                            <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 25, 2022</a>
+                                        </li>
+                                        <li class="comment">
+                                            <a href="home-default.html#"><i class="la la-comment me-2"></i> 8 </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-15">
+                        <span class="fsz-12px color-999 text-capitalize fst-italic">Related Post</span>
+                        <a href="page-single-post-creative.html" class="d-flex my-3">
+                            <span class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
+                            <h6 class="fsz-16px">
+                                Top 10 Destinations not to be missed this summer
+                            </h6>
+                        </a>
+                        <a href="page-single-post-creative.html" class="d-flex my-3">
+                            <span class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
+                            <h6 class="fsz-16px">
+                                Travel experience Switzerland self-sufficient in 4D3N
+                            </h6>
+                        </a>
+                        <a href="page-single-post-creative.html" class="d-flex my-3">
+                            <span class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
+                            <h6 class="fsz-16px">
+                                Discovery Devon island, Canada
+                            </h6>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ====== end Latest news ====== -->
+
+<!-- ====== start banner1 ====== -->
+<section class="banner1">
+    <div class="container">
+        <div class="content pt-50 pb-50 border-bottom border-1 brd-gray">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <a href="home-default.html#" class="d-block img-cover">
+                        <img src="client/img/banner1.png" alt="">
                     </a>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- ====== end banner18 ====== -->
+<!-- ====== end banner1 ====== -->
 
-<!-- ====== start video content ====== -->
-<section class="tc-main-post-style1 pt-60 pb-60">
+<!-- ====== start must read ====== -->
+<section class="pt-50 pb-50">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="tc-main-post-content">
-                    <h4 class="sub-title mb-40">
-                        3 Reasons to investing at this moment 
-                    </h4>
-                    <p class="info-text">
-                        The first and most obvious, is a noise when <span class="fst-italic">“you apply the brake pedal”</span>. This could be anything from a grinding sound to a high-pitched screech
-                    </p>
-                    <ul class="info-text mt-40 mb-40">
-                        <li> Welsh novelist Sarah Waters sums it up eloquently </li>
-                        <li>In their classic book, Creativity in Business, based on a popular course tvhey co-taught</li>
-                        <li>Novelist and screenwriter Steven Pressfield</li>
-                    </ul>
-                    <p class="info-text">
-                        That immediately brought to mind one of <a href="page-single-post-creative.html#" class="text-decoration-underline text-cyan">my fondest</a> memories, involving my daughter
-                    </p>
-                    <div class="video-content mt-60">
-                        <video width="100%" height="100%" controls>
-                            <source src="client/img/video.mp4" type="video/mp4">
-                        </video>
-                    </div>
-                    <p class="info-text mt-50">
-                        Unlike many others, the Guardian has no shareholders and no billionaire owner. Just the determination and passion to deliver high-impact global reporting, always free from commercial or political influence.
-                    </p>
-                    <div class="tc-subscribe-style9 mt-50">
-                        <div class="row justify-content-around align-items-center">
-                            <div class="col-lg-4">
-                                <div class="sub-info">
-                                    <h5 class="mb-10">Our Newsletter</h5>
-                                    <p class="fsz-13px color-666">Subscribe our newsletter to get latest news & promotion</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="sub-form mt-4 mt-lg-0">
-                                    <div class="form-group">
-                                        <span class="icon">
-                                            <i class="la la-envelope"></i>
-                                        </span>
-                                        <input type="text" class="form-control" placeholder="Enter your email">
-                                        <button>subscribe</button>
+        <div class="row">
+            <div class="col-lg-9">
+                <!-- must-read -->
+                <section class="tc-must-read-style1 bg-gray2 p-30">
+                    <p class="color-000 text-uppercase mb-20 ltspc-1"> <a href="page-blog.html"> must read </a> <i
+                            class="la la-angle-right ms-1"></i> </p>
+                    <div class="tc-post-grid-default border-1 border-bottom brd-gray pb-30">
+                        <div class="item">
+                            <div class="row">
+                                <div class="col-lg-5">
+                                    <div class="img img-cover th-230">
+                                        <img src="client/img/must_read/1.png" alt="">
                                     </div>
-                                    <p class="mt-2 color-666 fsz-13px fst-italic">By subscribing, you accepted the our <a href="page-single-post-creative.html#" class="text-decoration-underline fst-normal color-000">Policy</a></p>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="content">
+                                        <a href="home-default.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">Sport</a>
+                                        <h3 class="title mb-15"> <a href="page-single-post-creative.html">Manoah dominates, closes in on Blue
+                                                Jays history</a> </h3>
+                                        <div class="text color-666">
+                                            The social-media company is in discussions to sell itself to Elon, a
+                                            dramatic turn of events just 11 days [...]
+                                        </div>
+                                        <div class="meta-bot lh-1 mt-50">
+                                            <ul class="d-flex">
+                                                <li class="date me-4">
+                                                    <a href="home-default.html#"><i class="la la-calendar me-1"></i> Dec 14,
+                                                        2022</a>
+                                                </li>
+                                                <li class="author me-4">
+                                                    <a href="home-default.html#"><i class="la la-user me-1"></i> by Admin </a>
+                                                </li>
+                                                <li class="comment">
+                                                    <a href="home-default.html#"><i class="la la-comment me-1"></i> 55
+                                                        Comments</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <p class="info-text mt-50">
-                        Our should never complain, complaining is a weak emotion, you gotlife, we breathing, we blessed. Surround yourself with angels. They never said winning was easy
-                    </p>
-                </div>
-                <div class="btm-share-post mt-50">
-                    <div class="row items">
-                        <div class="col-lg-6">
-                            <div class="btm-tags mb-4 mb-lg-0">
-                                <a href="page-single-post-creative.html#">wordpress</a>
-                                <a href="page-single-post-creative.html#">theme</a>
-                                <a href="page-single-post-creative.html#">sports</a>
-                                <a href="page-single-post-creative.html#">magazine</a>
+                    <div class="tc-post-grid-default pt-30">
+                        <div class="row">
+                            <div class="col-lg-4 border-1 border-end brd-gray">
+                                <div class="item">
+                                    <div class="img img-cover th-180 mb-20">
+                                        <img src="client/img/must_read/2.png" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <a href="home-default.html#"
+                                            class="news-cat color-999 fsz-13px text-uppercase mb-1">business</a>
+                                        <h4 class="title ltspc--1">
+                                            <a href="page-single-post-creative.html" class="hover-underline">
+                                                Sponsored Content Post with Double line
+                                            </a>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 border-1 border-end brd-gray">
+                                <div class="item">
+                                    <div class="img img-cover th-180 mb-20">
+                                        <img src="client/img/must_read/3.png" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <a href="home-default.html#"
+                                            class="news-cat color-999 fsz-13px text-uppercase mb-1">culture</a>
+                                        <h4 class="title ltspc--1">
+                                            <a href="page-single-post-creative.html" class="hover-underline">
+                                                Discovery the culture of Japan. Oriental beauty & the legend of
+                                                Samurai
+                                            </a>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="item">
+                                    <div class="img img-cover th-180 mb-20">
+                                        <img src="client/img/must_read/4.png" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <a href="home-default.html#"
+                                            class="news-cat color-999 fsz-13px text-uppercase mb-1">technology</a>
+                                        <h4 class="title ltspc--1">
+                                            <a href="page-single-post-creative.html" class="hover-underline">
+                                                Tiktok will pass Facebook?
+                                            </a>
+                                        </h4>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="btm-sharing d-lg-flex align-items-lg-center justify-content-lg-end">
-                                <p class="text-capitalize me-20 mb-2 mb-lg-0">Share</p>
-                                <div class="share-icons">
-                                    <a href="page-single-post-creative.html#"> <i class="la la-twitter"></i> </a>
-                                    <a href="page-single-post-creative.html#"> <i class="la la-facebook-f"></i> </a>
-                                    <a href="page-single-post-creative.html#"> <i class="la la-instagram"></i> </a>
-                                    <a href="page-single-post-creative.html#"> <i class="la la-youtube"></i> </a>
-                                    <a href="page-single-post-creative.html#"> <i class="la la-spotify"></i> </a>
+                    </div>
+                </section>
+
+                <!-- business -->
+                <section class="tc-business-style1 pt-50 pb-50">
+                    <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">business</a> <i
+                            class="la la-angle-right ms-1"></i> </p>
+                    <div class="main-blog pb-30 border-1 border-bottom brd-gray">
+                        <div class="row">
+                            <div class="col-lg-8 border-1 border-end brd-gray">
+                                <div class="tc-post-overlay-default">
+                                    <div class="img th-400 img-cover">
+                                        <img src="client/img/bussines/1.png" alt="">
+                                        <div class="tags">
+                                            <a href="home-default.html#">business</a>
+                                        </div>
+                                    </div>
+                                    <div class="content ps-30 pe-30 pb-30">
+                                        <h3 class="title mb-20">
+                                            <a href="page-single-post-creative.html">Become master of strategy from playing chess</a>
+                                            </h2>
+                                            <div class="meta-bot lh-1">
+                                                <ul class="d-flex">
+                                                    <li class="date me-5">
+                                                        <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14,
+                                                            2022</a>
+                                                    </li>
+                                                    <li class="author me-5">
+                                                        <a href="home-default.html#"><i class="la la-user me-2"></i> by Admin</a>
+                                                    </li>
+                                                    <li class="comment">
+                                                        <a href="home-default.html#"><i class="la la-comment me-2"></i> 55
+                                                            Comments</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="tc-post-list-style2">
+                                    <div class="items">
+                                        <div class="item pb-20">
+                                            <div class="content">
+                                                <a href="home-default.html#"
+                                                    class="news-cat color-999 fsz-13px text-uppercase mb-1">business</a>
+                                                <h5 class="title ltspc--1">
+                                                    <a href="page-single-post-creative.html">Global financial markets after covid 2022</a>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="item pb-20">
+                                            <div class="content">
+                                                <a href="home-default.html#"
+                                                    class="news-cat color-999 fsz-13px text-uppercase mb-1">business</a>
+                                                <h5 class="title ltspc--1">
+                                                    <a href="page-single-post-creative.html">U.S Stocks Market today</a>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="item pb-20">
+                                            <div class="content">
+                                                <a href="home-default.html#"
+                                                    class="news-cat color-999 fsz-13px text-uppercase mb-1">business</a>
+                                                <h5 class="title ltspc--1">
+                                                    <a href="page-single-post-creative.html">Stock Market meltdowns have FAANGs looking
+                                                        increasingly toothless</a>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="item pb-20 border-0">
+                                            <div class="content">
+                                                <a href="home-default.html#"
+                                                    class="news-cat color-999 fsz-13px text-uppercase mb-1">business</a>
+                                                <h5 class="title ltspc--1">
+                                                    <a href="page-single-post-creative.html">Success Stories of Starbuck</a>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tc-post-list-style2">
+                        <div class="items">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <a href="page-single-post-creative.html" class="item d-block border-0 pt-30">
+                                        <div class="row gx-3 align-items-center">
+                                            <div class="col-4">
+                                                <div class="img th-90 img-cover">
+                                                    <img src="client/img/bussines/2.png" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="content">
+                                                    <div
+                                                        class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                                                        business</div>
+                                                    <h5 class="title ltspc--1">Horseback Riding, <br> A
+                                                        business-class hobby</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-lg-6">
+                                    <a href="page-single-post-creative.html" class="item d-block border-0 pt-30">
+                                        <div class="row gx-3 align-items-center">
+                                            <div class="col-4">
+                                                <div class="img th-90 img-cover">
+                                                    <img src="client/img/bussines/3.png" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="content">
+                                                    <div
+                                                        class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                                                        business</div>
+                                                    <h5 class="title ltspc--1">The Financial statements of ABC
+                                                        <br> Bank are questionable
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- banner2 -->
+                <section class="banner2">
+                    <div class="container">
+                        <div class="content">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-10">
+                                    <a href="home-default.html#" class="d-block img-cover">
+                                        <img src="client/img/banner2.png" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- technology -->
+                <div class="tc-technology-style1 pt-50">
+                    <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">technology</a> <i
+                            class="la la-angle-right ms-1"></i> </p>
+                    <div class="tc-post-overlay-default">
+                        <div class="img th-600 img-cover">
+                            <img src="client/img/technology/1.png" alt="">
+                            <div class="tags">
+                                <a href="home-default.html#">technology</a>
+                            </div>
+                        </div>
+                        <div class="content ps-40 pe-40 pb-40">
+                            <h2 class="title mb-30">
+                                <a href="page-single-post-creative.html">Myenergi's award winning product <br> the zappi EV charger</a>
+                            </h2>
+                            <div class="meta-bot lh-1">
+                                <ul class="d-flex">
+                                    <li class="date me-5">
+                                        <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14, 2022</a>
+                                    </li>
+                                    <li class="author me-5">
+                                        <a href="home-default.html#"><i class="la la-user me-2"></i> by Admin</a>
+                                    </li>
+                                    <li class="comment">
+                                        <a href="home-default.html#"><i class="la la-comment me-2"></i> 55 Comments</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tc-post-list-style2">
+                        <div class="items">
+                            <div class="item pt-30 pb-30 mt-30 border-1 border-top border-bottom brd-gray">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="img th-200 img-cover">
+                                            <img src="client/img/technology/2.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="content">
+                                            <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
+                                                <a href="home-default.html#">technology</a>
+                                            </div>
+                                            <h3 class="title ltspc--1">
+                                                <a href="page-single-post-creative.html"> Big Title for featured post with double line and
+                                                    more text </a>
+                                            </h3>
+                                            <div class="meta-bot lh-1 mt-80">
+                                                <ul class="d-flex">
+                                                    <li class="date me-5">
+                                                        <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14,
+                                                            2022</a>
+                                                    </li>
+                                                    <li class="author me-5">
+                                                        <a href="home-default.html#"><i class="la la-user me-2"></i> by Admin
+                                                        </a>
+                                                    </li>
+                                                    <li class="comment">
+                                                        <a href="home-default.html#"><i class="la la-comment me-2"></i> 55
+                                                            Comments</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item border-0 bg-gray1 p-3 mt-30">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="img th-200 img-cover">
+                                            <img src="client/img/technology/3.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="content">
+                                            <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
+                                                <a href="home-default.html#" class="text-danger">Sponsored Content</a>
+                                            </div>
+                                            <h3 class="title ltspc--1">
+                                                <a href="page-single-post-creative.html"> Oppoturnity become Lead of Backend Developer at
+                                                    Google Studio </a>
+                                            </h3>
+                                            <div class="meta-bot lh-1 mt-80">
+                                                <ul class="d-flex">
+                                                    <li class="comment">
+                                                        <a href="home-default.html#"> totalworks.com <i
+                                                                class="las la-external-link-square-alt ms-2"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="tc-side-widgets">
+                    <!-- widget-social -->
+                    <div class="tc-widget-social-style1">
+                        <p class="color-000 text-uppercase mb-30 ltspc-1 lh-2"> stay connected </p>
+                        <div class="content">
+                            <a href="home-default.html#" class="social-card">
+                                <div class="icon facebook-icon">
+                                    <i class="lab la-facebook-f"></i>
+                                </div>
+                                <h6>1,5M</h6>
+                            </a>
+                            <a href="home-default.html#" class="social-card">
+                                <div class="icon twitter-icon">
+                                    <i class="lab la-twitter"></i>
+                                </div>
+                                <h6>920K</h6>
+                            </a>
+                            <a href="home-default.html#" class="social-card">
+                                <div class="icon insta-icon">
+                                    <i class="lab la-instagram"></i>
+                                </div>
+                                <h6>25,7K</h6>
+                            </a>
+                            <a href="home-default.html#" class="social-card mb-0">
+                                <div class="icon youtube-icon">
+                                    <i class="lab la-youtube"></i>
+                                </div>
+                                <h6>1,5M</h6>
+                            </a>
+                            <a href="home-default.html#" class="social-card mb-0">
+                                <div class="icon spotify-icon">
+                                    <i class="lab la-spotify"></i>
+                                </div>
+                                <h6>1,5M</h6>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- widget-podcast -->
+                    <div class="tc-widget-podcast">
+                        <p class="color-000 text-uppercase mb-30 ltspc-1 lh-2"> new podcasts <i
+                                class="la la-angle-right ms-1"></i> </p>
+                        <div class="main-card">
+                            <div class="img img-cover">
+                                <img src="client/img/pdc1.png" alt="">
+                            </div>
+                            <div class="info pt-10">
+                                <small>2 Hours ago</small>
+                                <h5>
+                                    <a href="home-default.html#" class="title">
+                                        Start A New Day with A Smile
+                                    </a>
+                                </h5>
+                            </div>
+                            <audio controls class="audio">
+                                <source src="client/img/audio1.mp3" type="audio/mpeg">
+                            </audio>
+                        </div>
+                        <div class="podcast-list">
+                            <div class="item">
+                                <a href="home-default.html#" class="img">
+                                    <img src="client/img/pdc1.png" alt="">
+                                </a>
+                                <div class="info">
+                                    <small> 3 Hours ago </small>
+                                    <h6 class="title">
+                                        <a href="home-default.html#">
+                                            Release energy and activity
+                                        </a>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <a href="https://www.youtube.com/watch?v=pGbIOC83-So&t=21s"
+                                    data-fancybox="video" class="img img-vid">
+                                    <img src="client/img/pdc2.png" alt="">
+                                    <i class="ion-arrow-right-b play-icon"></i>
+                                </a>
+                                <div class="info">
+                                    <small> 3 Hours ago </small>
+                                    <h6 class="title">
+                                        <a href="home-default.html#">
+                                            Cafe, Chill and focus to study
+                                        </a>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="item mb-0">
+                                <a href="home-default.html#" class="img">
+                                    <img src="client/img/pdc3.png" alt="">
+                                </a>
+                                <div class="info">
+                                    <small> 3 Hours ago </small>
+                                    <h6 class="title">
+                                        <a href="home-default.html#">
+                                            A long day mood
+                                        </a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- widget-sponsored -->
+                    <div class="tc-widget-sponsored-style1">
+                        <div class="img img-cover">
+                            <img src="client/img/sponsored/1.png" alt="">
+                        </div>
+                        <div class="info pt-10">
+                            <div class="spon-cat"> Sponsored Content </div>
+                            <h6 class="title">
+                                <a href="home-default.html#">
+                                    Dile & Kamine Soap from pure natura 100%
+                                </a>
+                            </h6>
+                            <a href="home-default.html#">
+                                <small>dileandkamina.com <i
+                                        class="las la-external-link-square-alt ms-2"></i></small>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- popular posts -->
+                    <div class="tc-widget-popular-style1">
+                        <p class="color-000 text-uppercase mb-20 ltspc-1"> popular posts </p>
+                        <div class="main-card">
+                            <div class="img th-300 img-cover">
+                                <img src="client/img/wid_popular/1.png" alt="">
+                                <div class="tags">
+                                    <a href="home-default.html#">business</a>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <h4 class="title">
+                                    <a href="page-single-post-creative.html">Big Title for featured post with double</a>
+                                </h4>
+                                <div class="meta-bot">
+                                    <ul class="d-flex">
+                                        <li class="date me-4">
+                                            <a href="home-default.html#"><i class="la la-calendar me-1"></i> Dec 14, 2022</a>
+                                        </li>
+                                        <li class="comment">
+                                            <a href="home-default.html#"><i class="la la-comment me-1"></i> 55 </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tc-widget-popular-list">
+                            <a href="page-single-post-creative.html" class="item">
+                                <div class="img img-cover">
+                                    <img src="client/img/wid_popular/2.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="title">
+                                        Joe Biden did not participate in the war
+                                    </h6>
+                                </div>
+                            </a>
+                            <a href="page-single-post-creative.html" class="item">
+                                <div class="img img-cover">
+                                    <img src="client/img/wid_popular/3.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="title">
+                                        Mindset to Succesful, Become Lion King
+                                    </h6>
+                                </div>
+                            </a>
+                            <a href="page-single-post-creative.html" class="item">
+                                <div class="img img-cover">
+                                    <img src="client/img/wid_popular/4.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="title">
+                                        Experience ballon balls in Turkey
+                                    </h6>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- widget-adbox -->
+                    <div class="tc-widget-adbox-style1">
+                        <a href="home-default.html#" class="img">
+                            <img src="client/img/banner12.png" alt="" class="">
+                        </a>
+                    </div>
+                    <!-- widget-survey -->
+                    <div class="tc-widget-survey-style1">
+                        <p class="color-000 text-uppercase mb-20 ltspc-1"> quick survey </p>
+                        <div class="ques-title lh-4">
+                            How was your experience on Newzin?
+                        </div>
+                        <div class="ansr-content">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="quesCheck" id="quesCheck1">
+                                <label class="form-check-label" for="quesCheck1">
+                                    Awesome, I’m satisfied!
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="quesCheck" id="quesCheck2">
+                                <label class="form-check-label" for="quesCheck2">
+                                    Normal
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="quesCheck" id="quesCheck3">
+                                <label class="form-check-label" for="quesCheck3">
+                                    Bad! Need improve more
+                                </label>
+                            </div>
+                        </div>
+                        <div class="btns">
+                            <a href="home-default.html#" class="btn active me-2">
+                                Submit
+                            </a>
+                            <a href="home-default.html#" class="btn">
+                                Result
+                            </a>
+                        </div>
+
+                        <small class="pl-num">
+                            <span class="color-000">24,562 </span> Peoples joined
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ====== end must read ====== -->
+
+<!-- ====== start hot videos ====== -->
+<section class="tc-hot-videos-style1 pt-30 pb-50 parallaxie">
+    <div class="container">
+        <div class="content">
+            <div class="section-head">
+                <p class="text-white text-uppercase ltspc-1"> hot videos LAST WEEK <i
+                        class="la la-angle-right ms-1"></i> </p>
+                <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-Popular-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-Popular" type="button" role="tab"
+                            aria-controls="pills-Popular" aria-selected="true">
+                            Popular
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-Latest-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-Latest" type="button" role="tab" aria-controls="pills-Latest"
+                            aria-selected="false">
+                            Latest
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-Popular" role="tabpanel"
+                    aria-labelledby="pills-Popular-tab">
+                    <div class="row">
+                        <div class="col-lg-9 border-1 border-end brd-light">
+                            <div class="tc-video-slider1">
+                                <div class="swiper-container">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            <div class="slider-content">
+                                                <p class="sub-title">featured, video</p>
+                                                <h3 class="title">  <a href="page-single-post-features.html"> Amazing View! Catch the sunrise <br> in high
+                                                    moutain </a> </h3>
+                                                <div class="meta-bot lh-1">
+                                                    <ul class="d-flex">
+                                                        <li class="date me-5">
+                                                            <a href="home-default.html#"><i class="la la-calendar me-2"></i>
+                                                                Dec 24, 2022
+                                                            </a>
+                                                        </li>
+                                                        <li class="comment">
+                                                            <i class="las la-chart-line me-2"></i>
+                                                            25,6K Views
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <a href="https://youtu.be/pGbIOC83-So?t=21" data-fancybox=""
+                                                    class="play-cont">
+                                                    <i class="ion-play me-3"></i>
+                                                    <span>
+                                                        play <br> video
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- arrows -->
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="tc-side-video-posts">
+                                <p class="text-white text-uppercase ltspc-1 mb-40 lh-2 fsz-13px">videos up next
+                                </p>
+                                <div class="tc-post-grid-default">
+                                    <div class="item mb-40">
+                                        <div class="img img-cover th-180">
+                                            <img src="client/img/videos/1.png" alt="">
+                                            <a href="https://youtu.be/pGbIOC83-So?t=21" data-lity
+                                                class="video_icon icon-60">
+                                                <i class="ion-play"></i>
+                                            </a>
+                                        </div>
+                                        <div class="content pt-20">
+                                            <a href="home-default.html#"
+                                                class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">travel,
+                                                video</a>
+                                            <h4 class="title ltspc--1 text-white">
+                                                <a href="page-single-post-features.html">Amazing View! Catch the sunrise in high mountain</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="img img-cover th-180">
+                                            <img src="client/img/videos/2.png" alt="">
+                                            <a href="https://youtu.be/pGbIOC83-So?t=21" data-lity=""
+                                                class="video_icon icon-60">
+                                                <i class="ion-play"></i>
+                                            </a>
+                                        </div>
+                                        <div class="content pt-20">
+                                            <a href="home-default.html#"
+                                                class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">culture,
+                                                video</a>
+                                            <h4 class="title ltspc--1 text-white">
+                                                <a href="page-single-post-features.html">Bhutan! The happiest country on the world</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-Latest" role="tabpanel" aria-labelledby="pills-Latest-tab">
+                    <div class="row">
+                        <div class="col-lg-9 border-1 border-end brd-light">
+                            <div class="tc-video-slider1">
+                                <div class="swiper-container">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide">
+                                            <div class="slider-content">
+                                                <p class="sub-title">featured, video</p>
+                                                <h3 class="title"> <a href="page-single-post-features.html"> Amazing View! Catch the sunrise <br> in high
+                                                    moutain </a> </h3>
+                                                <div class="meta-bot lh-1">
+                                                    <ul class="d-flex">
+                                                        <li class="date me-5">
+                                                            <a href="home-default.html#"><i class="la la-calendar me-2"></i>
+                                                                Dec 24, 2022
+                                                            </a>
+                                                        </li>
+                                                        <li class="comment">
+                                                            <i class="las la-chart-line me-2"></i>
+                                                            25,6K Views
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <a href="https://youtu.be/pGbIOC83-So?t=21" data-fancybox=""
+                                                    class="play-cont">
+                                                    <i class="ion-play me-3"></i>
+                                                    <span>
+                                                        play <br> video
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- arrows -->
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="tc-side-video-posts">
+                                <p class="text-white text-uppercase ltspc-1 mb-40 lh-2 fsz-13px">videos up next
+                                </p>
+                                <div class="tc-post-grid-default">
+                                    <div class="item mb-40">
+                                        <div class="img img-cover th-180">
+                                            <img src="client/img/videos/1.png" alt="">
+                                            <a href="https://youtu.be/pGbIOC83-So?t=21" data-lity=""
+                                                class="video_icon icon-60">
+                                                <i class="ion-play"></i>
+                                            </a>
+                                        </div>
+                                        <div class="content pt-20">
+                                            <a href="home-default.html#"
+                                                class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">travel,
+                                                video</a>
+                                            <h4 class="title ltspc--1 text-white">
+                                                <a href="page-single-post-features.html">Amazing View! Catch the sunrise in high mountain</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="img img-cover th-180">
+                                            <img src="client/img/videos/2.png" alt="">
+                                            <a href="https://youtu.be/pGbIOC83-So?t=21" data-lity=""
+                                                class="video_icon icon-60">
+                                                <i class="ion-play"></i>
+                                            </a>
+                                        </div>
+                                        <div class="content pt-20">
+                                            <a href="home-default.html#"
+                                                class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">culture,
+                                                video</a>
+                                            <h4 class="title ltspc--1 text-white">
+                                                <a href="page-single-post-features.html">Bhutan! The happiest country on the world</a>
+                                            </h4>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -232,82 +1356,317 @@
         </div>
     </div>
 </section>
-<!-- ====== end video content ====== -->
+<!-- ====== end hot vedios ====== -->
 
-
-<!-- ====== start next prev post slider ====== -->
-<section class="tc-next-prev-post mb-60">
+<!-- ====== start lifestyle ====== -->
+<section class="tc-lifestyle pt-50 pb-50">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="tc-next-prev-post-slider">
-                    <div class="swiper-container">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <a href="page-single-post-creative.html#" class="item">
-                                    <p class="color-666 fsz-12px text-uppercase">previous</p>
-                                    <h6 class="title">Hawks acquire All-Star guard Murray from Spurs</h6>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a href="page-single-post-creative.html#" class="item">
-                                    <p class="color-666 fsz-12px text-uppercase">next</p>
-                                    <h6 class="title">PFF: Bills should consider free agent CB Xavier Rhodes</h6>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a href="page-single-post-creative.html#" class="item">
-                                    <p class="color-666 fsz-12px text-uppercase">next</p>
-                                    <h6 class="title">PFF: Bills should consider free agent CB Xavier Rhodes</h6>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- ====== end next prev post slider ====== -->
-
-
-<!-- ====== start author info ====== -->
-<section class="tc-author-info-style1 pb-60">
-    <div class="container">
-        <div class="tc-author-card border-1 border-top brd-gray">
-            <div class="content mt-50 p-50 d-block d-lg-flex bg-gray1">
-                <div class="img img-cover icon-85 rounded-circle overflow-hidden flex-shrink-0 me-30">
-                    <img src="client/img/colums.png" alt="">
-                </div>
-                <div class="info">
-                    <h5 class="title fsz-24px fw-bold">Conor Bradley</h5>
-                    <small class="fsz-12px color-main text-uppercase">nba, nfl editor</small>
-                    <div class="text fsz-15px color-666 mt-20">
-                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum sed ut perspiciatis unde. Lorem ispum dolor sit amet prodigues ametalia
-                    </div>
-                    <div class="social-links mt-20 fsz-19px">
-                        <a href="page-single-post-creative.html#" class="me-15"><i class="la la-twitter"></i></a>
-                        <a href="page-single-post-creative.html#" class="me-15"><i class="la la-facebook-f"></i></a>
-                        <a href="page-single-post-creative.html#" class="me-15"><i class="la la-instagram"></i></a>
-                        <a href="page-single-post-creative.html#"><i class="la la-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- ====== end author info ====== -->
-
-
-<!-- ====== start another posts ====== -->
-<section class="another-news">
-    <div class="container">
-        <div class="content pt-50 pb-50 border-1 border-top border-dark">
+        <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">lifestyle</a> <i class="la la-angle-right ms-1"></i> </p>
+        <div class="content">
             <div class="row">
-                <div class="col-lg-4 mb-5 mb-lg-0">
-                    <a href="page-blog.html" class="color-000 text-uppercase mb-30 ltspc-1"> more from this author <i class="la la-angle-right ms-1"></i> </a>
+                <div class="col-lg-6 border-end brd-gray border-1">
+                    <div class="tc-post-grid-default">
+                        <div class="item">
+                            <div class="img img-cover th-400">
+                                <img src="client/img/lifestyle/1.png" alt="">
+                            </div>
+                            <div class="content pt-30">
+                                <a href="home-default.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">life
+                                    style</a>
+                                <h3 class="title ltspc--1 mb-20"> <a href="page-single-post-creative.html">
+                                        Hotdog styles on 20 countries
+                                    </a> </h3>
+                                <div class="text color-666">
+                                    The social-media company is in discussions to sell itself to Elon, a
+                                    dramatic turn of events just 11 days after the [...]
+                                </div>
+                                <div class="meta-bot lh-1 mt-40">
+                                    <ul class="d-flex">
+                                        <li class="date me-5">
+                                            <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14, 2022</a>
+                                        </li>
+                                        <li class="author me-5">
+                                            <a href="home-default.html#"><i class="la la-user me-2"></i> by Admin </a>
+                                        </li>
+                                        <li class="comment">
+                                            <a href="home-default.html#"><i class="la la-comment me-2"></i> 55 Comments</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 border-end brd-gray border-1">
+                    <div class="tc-post-grid-default">
+                        <div class="item">
+                            <div class="img img-cover th-200">
+                                <img src="client/img/lifestyle/2.png" alt="">
+                            </div>
+                            <div class="content pt-20">
+                                <a href="home-default.html#"
+                                    class="news-cat color-999 fsz-13px text-uppercase mb-10">lifestyle</a>
+                                <h5 class="title ltspc--1 mb-10">
+                                    <a href="page-single-post-creative.html">
+                                        Grand Pera Coffee
+                                    </a>
+                                </h5>
+                                <div class="text color-666">
+                                    Crime rates on trains and buses are up in some of the nation’s biggest [...]
+                                </div>
+                                <div class="meta-bot lh-1 mt-20">
+                                    <ul class="d-flex">
+                                        <li class="date me-5">
+                                            <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14, 2022</a>
+                                        </li>
+                                        <li class="comment">
+                                            <a href="home-default.html#"><i class="la la-comment me-2"></i> 7</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tc-post-list-style2">
+                        <div class="items">
+                            <a href="page-single-post-creative.html"
+                                class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-50 img-cover">
+                                            <img src="client/img/lifestyle/3.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <h6 class="title ltspc--1">
+                                                Top 10 Best of Mustache for Hipster 2022
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-50 img-cover">
+                                            <img src="client/img/lifestyle/4.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <h6 class="title ltspc--1">
+                                                Dad and “his son”
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-50 img-cover">
+                                            <img src="client/img/lifestyle/5.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <h6 class="title ltspc--1">
+                                                The fashion trend for “old guys”
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="tc-post-grid-default">
+                        <div class="item">
+                            <div class="img img-cover th-200">
+                                <img src="client/img/lifestyle/6.png" alt="">
+                            </div>
+                            <div class="content pt-20">
+                                <a href="home-default.html#"
+                                    class="news-cat color-999 fsz-13px text-uppercase mb-10">lifestyle</a>
+                                <h5 class="title ltspc--1 mb-10">
+                                    <a href="page-single-post-creative.html">
+                                        Enviroment Protection
+                                    </a>
+                                </h5>
+                                <div class="text color-666">
+                                    Crime rates on trains and buses are up in some of the nation’s biggest [...]
+                                </div>
+                                <div class="meta-bot lh-1 mt-20">
+                                    <ul class="d-flex">
+                                        <li class="date me-5">
+                                            <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14, 2022</a>
+                                        </li>
+                                        <li class="comment">
+                                            <a href="home-default.html#"><i class="la la-comment me-2"></i> 7</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tc-post-list-style2">
+                        <div class="items">
+                            <a href="page-single-post-creative.html"
+                                class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-50 img-cover">
+                                            <img src="client/img/lifestyle/7.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <h6 class="title ltspc--1">
+                                                10 Best of Scadinavia Interior styles
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-50 img-cover">
+                                            <img src="client/img/lifestyle/8.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <h6 class="title ltspc--1">
+                                                How to make a toast with burberry
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-50 img-cover">
+                                            <img src="client/img/lifestyle/9.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <h6 class="title ltspc--1">
+                                                Enhance water in your body with Boxed Water
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ====== end lifestyle ====== -->
+
+<!-- ====== start columnist ====== -->
+<section class="tc-columnist-style1">
+    <div class="container">
+        <div class="content pt-50 pb-50 border-1 border-top brd-gray">
+            <p class="color-000 text-uppercase mb-40 ltspc-1 lh-1">top columnist <i
+                    class="la la-angle-right ms-1"></i> </p>
+            <div class="columnist-slider1 tc-slider-style1">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="columnist-card d-flex align-items-center">
+                                <div
+                                    class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                    <img src="client/img/colums/1.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="name fsz-20px mb-10">
+                                        Conor Bradley
+                                    </h6>
+                                    <div class="jop-title">
+                                        <small class="fsz-13px color-999">Specialize in</small>
+                                        <p class="fsz-13px text-uppercase">Business, technology</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="columnist-card d-flex align-items-center">
+                                <div
+                                    class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                    <img src="client/img/colums/2.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="name fsz-20px mb-10">
+                                        Luis Diaz
+                                    </h6>
+                                    <div class="jop-title">
+                                        <small class="fsz-13px color-999">Specialize in</small>
+                                        <p class="fsz-13px text-uppercase">Politic, lifestyle</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="columnist-card d-flex align-items-center">
+                                <div
+                                    class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                    <img src="client/img/colums/3.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="name fsz-20px mb-10">
+                                        Alberto Moreno
+                                    </h6>
+                                    <div class="jop-title">
+                                        <small class="fsz-13px color-999">Specialize in</small>
+                                        <p class="fsz-13px text-uppercase">Entertaiment, culture, wolrd </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="columnist-card d-flex align-items-center">
+                                <div
+                                    class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                    <img src="client/img/colums/2.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="name fsz-20px mb-10">
+                                        Luis Diaz
+                                    </h6>
+                                    <div class="jop-title">
+                                        <small class="fsz-13px color-999">Specialize in</small>
+                                        <p class="fsz-13px text-uppercase">Politic, lifestyle</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- arrows -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ====== end columnist ====== -->
+
+<!-- ====== start another-news ====== -->
+<section class="another-news pt-50 pb-50 border-1 border-top brd-gray">
+    <div class="container">
+        <div class="content">
+            <div class="row">
+                <div class="col-lg-4">
+                    <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">Sport</a> <i
+                            class="la la-angle-right ms-1"></i> </p>
                     <div class="row">
                         <div class="col-12 border-1 border-end brd-gray">
                             <div class="tc-post-grid-default">
@@ -316,7 +1675,8 @@
                                         <img src="client/img/another_news/1.png" alt="">
                                     </div>
                                     <div class="content pt-20">
-                                        <a href="page-single-post-creative.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</a>
+                                        <a href="home-default.html#"
+                                            class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</a>
                                         <h4 class="title ltspc--1 mb-10">
                                             <a href="page-single-post-creative.html">
                                                 America's track and field team won the 2022 olympics?
@@ -329,11 +1689,11 @@
                                         <div class="meta-bot lh-1 mt-20">
                                             <ul class="d-flex">
                                                 <li class="date me-5">
-                                                    <a href="page-single-post-creative.html#"><i class="la la-calendar me-2"></i> Dec 14,
+                                                    <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14,
                                                         2022</a>
                                                 </li>
                                                 <li class="comment">
-                                                    <a href="page-single-post-creative.html#"><i class="la la-comment me-2"></i> 7</a>
+                                                    <a href="home-default.html#"><i class="la la-comment me-2"></i> 7</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -342,7 +1702,8 @@
                             </div>
                             <div class="tc-post-list-style2">
                                 <div class="items">
-                                    <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
+                                    <a href="page-single-post-creative.html"
+                                        class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
                                         <div class="row gx-3 align-items-center">
                                             <div class="col-4">
                                                 <div class="img th-70 img-cover">
@@ -351,7 +1712,8 @@
                                             </div>
                                             <div class="col-8">
                                                 <div class="content">
-                                                    <small class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</small>
+                                                    <small
+                                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</small>
                                                     <h5 class="title ltspc--1">
                                                         How’s Ameican Football Ball created out?
                                                     </h5>
@@ -359,7 +1721,8 @@
                                             </div>
                                         </div>
                                     </a>
-                                    <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
+                                    <a href="page-single-post-creative.html"
+                                        class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
                                         <div class="row gx-3 align-items-center">
                                             <div class="col-4">
                                                 <div class="img th-70 img-cover">
@@ -368,7 +1731,8 @@
                                             </div>
                                             <div class="col-8">
                                                 <div class="content">
-                                                    <small class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</small>
+                                                    <small
+                                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</small>
                                                     <h5 class="title ltspc--1">
                                                         Daniel share experience ski on Everest
                                                     </h5>
@@ -382,20 +1746,22 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4 mb-5 mb-lg-0">
-                    <a href="page-blog.html" class="color-000 text-uppercase mb-30 ltspc-1"> related posts <i class="la la-angle-right ms-1"></i> </a>
+                <div class="col-lg-4">
+                    <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">Entertaiment</a> <i
+                            class="la la-angle-right ms-1"></i> </p>
                     <div class="row">
                         <div class="col-12 border-1 border-end brd-gray">
                             <div class="tc-post-grid-default">
                                 <div class="item">
                                     <div class="img img-cover th-250">
-                                        <img src="client/img/latest/124.png" alt="">
+                                        <img src="client/img/another_news/4.png" alt="">
                                     </div>
                                     <div class="content pt-20">
-                                        <a href="page-single-post-creative.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</a>
+                                        <a href="home-default.html#"
+                                            class="news-cat color-999 fsz-13px text-uppercase mb-10">Entertaiment</a>
                                         <h4 class="title ltspc--1 mb-10">
                                             <a href="page-single-post-creative.html">
-                                                PGA Tour Highlights: Travelers Championship Round 1
+                                                Logan Cee's Best Contemporary Art Works
                                             </a>
                                         </h4>
                                         <div class="text color-666">
@@ -405,11 +1771,11 @@
                                         <div class="meta-bot lh-1 mt-20">
                                             <ul class="d-flex">
                                                 <li class="date me-5">
-                                                    <a href="page-single-post-creative.html#"><i class="la la-calendar me-2"></i> Dec 14,
+                                                    <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14,
                                                         2022</a>
                                                 </li>
                                                 <li class="comment">
-                                                    <a href="page-single-post-creative.html#"><i class="la la-comment me-2"></i> 7</a>
+                                                    <a href="home-default.html#"><i class="la la-comment me-2"></i> 7</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -418,35 +1784,39 @@
                             </div>
                             <div class="tc-post-list-style2">
                                 <div class="items">
-                                    <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
+                                    <a href="page-single-post-creative.html"
+                                        class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
                                         <div class="row gx-3 align-items-center">
                                             <div class="col-4">
                                                 <div class="img th-70 img-cover">
-                                                    <img src="client/img/latest/123.png" alt="">
+                                                    <img src="client/img/another_news/5.png" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-8">
                                                 <div class="content">
-                                                    <small class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</small>
+                                                    <small
+                                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">entertaiment</small>
                                                     <h5 class="title ltspc--1">
-                                                        Hamilton, Russell question safety of bouncing F1 cars
+                                                        Netflix change their policy for package family
                                                     </h5>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
-                                    <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
+                                    <a href="page-single-post-creative.html"
+                                        class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
                                         <div class="row gx-3 align-items-center">
                                             <div class="col-4">
                                                 <div class="img th-70 img-cover">
-                                                    <img src="client/img/latest/130.png" alt="">
+                                                    <img src="client/img/another_news/6.png" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-8">
                                                 <div class="content">
-                                                    <small class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</small>
+                                                    <small
+                                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">entertaiment</small>
                                                     <h5 class="title ltspc--1">
-                                                        14th Best linebacker of Bill
+                                                        Buy black vinyl record at Festival Oldschool market
                                                     </h5>
                                                 </div>
                                             </div>
@@ -459,19 +1829,21 @@
                 </div>
 
                 <div class="col-lg-4">
-                    <a href="page-blog.html" class="color-000 text-uppercase mb-30 ltspc-1"> recommended <i class="la la-angle-right ms-1"></i> </a>
+                    <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">Travel</a> <i
+                            class="la la-angle-right ms-1"></i> </p>
                     <div class="row">
                         <div class="col-12">
                             <div class="tc-post-grid-default">
                                 <div class="item">
                                     <div class="img img-cover th-250">
-                                        <img src="client/img/latest/137.png" alt="">
+                                        <img src="client/img/another_news/7.png" alt="">
                                     </div>
                                     <div class="content pt-20">
-                                        <a href="page-single-post-creative.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">Travel</a>
+                                        <a href="home-default.html#"
+                                            class="news-cat color-999 fsz-13px text-uppercase mb-10">Travel</a>
                                         <h4 class="title ltspc--1 mb-10">
                                             <a href="page-single-post-creative.html">
-                                                Sainz qualifies on pole for British Grand Prix
+                                                Top 10 Most beautiful hot springs in the world
                                             </a>
                                         </h4>
                                         <div class="text color-666">
@@ -481,11 +1853,11 @@
                                         <div class="meta-bot lh-1 mt-20">
                                             <ul class="d-flex">
                                                 <li class="date me-5">
-                                                    <a href="page-single-post-creative.html#"><i class="la la-calendar me-2"></i> Dec 14,
+                                                    <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14,
                                                         2022</a>
                                                 </li>
                                                 <li class="comment">
-                                                    <a href="page-single-post-creative.html#"><i class="la la-comment me-2"></i> 7</a>
+                                                    <a href="home-default.html#"><i class="la la-comment me-2"></i> 7</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -494,35 +1866,39 @@
                             </div>
                             <div class="tc-post-list-style2">
                                 <div class="items">
-                                    <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
+                                    <a href="page-single-post-creative.html"
+                                        class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
                                         <div class="row gx-3 align-items-center">
                                             <div class="col-4">
                                                 <div class="img th-70 img-cover">
-                                                    <img src="client/img/latest/132.png" alt="">
+                                                    <img src="client/img/another_news/8.png" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-8">
                                                 <div class="content">
-                                                    <small class="news-cat color-999 fsz-13px text-uppercase mb-10">Travel</small>
+                                                    <small
+                                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">Travel</small>
                                                     <h5 class="title ltspc--1">
-                                                        Hall of Famer Hugh McElhenny dies at 93
+                                                        Experience in applying for a visa card for newcomers
                                                     </h5>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
-                                    <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
+                                    <a href="page-single-post-creative.html"
+                                        class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
                                         <div class="row gx-3 align-items-center">
                                             <div class="col-4">
                                                 <div class="img th-70 img-cover">
-                                                    <img src="client/img/latest/131.png" alt="">
+                                                    <img src="client/img/another_news/9.png" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-8">
                                                 <div class="content">
-                                                    <small class="news-cat color-999 fsz-13px text-uppercase mb-10">Travel</small>
+                                                    <small
+                                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">Travel</small>
                                                     <h5 class="title ltspc--1">
-                                                        PFF: Bills should consider free agent CB Xavier Rhodes
+                                                        Release yourself on the sea and get the vibe chill
                                                     </h5>
                                                 </div>
                                             </div>
@@ -537,138 +1913,36 @@
         </div>
     </div>
 </section>
-<!-- ====== start another posts ====== -->
+<!-- ====== end another-news ====== -->
 
-
-<!-- ====== start comments ====== -->
-<section class="tc-single-post-comments">
+<!-- ====== start download ====== -->
+<section class="tc-download-style1 pb-50">
     <div class="container">
-        <div class="comments-content pt-50 pb-50 border-1 border-top border-dark">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="content">
-                        <div class="comments-filter">
-                            <div class="row align-items-center">
-                                <div class="col-4">
-                                    <p class="text-uppercase">3 comments</p>
-                                </div>
-                                <div class="col-8 text-end">
-                                    <div class="from-group">
-                                        <label for="">Sort by : </label>
-                                        <select name="" id="" class="form-select">
-                                            <option value="">Most liked</option>
-                                            <option value="">Most views</option>
-                                            <option value="">Most rated</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="content">
+            <div class="row align-items-center">
+                <div class="col-lg-4">
+                    <div class="info">
+                        <strong class="title">Download Newzin App</strong>
+                        <div class="text">
+                            Easy to update latest news, daily podcast and everything in your hand
                         </div>
-                        <div class="comments-cards">
-                            <div class="comment-replay-cont border-bottom border-1 brd-gray pb-40 pt-40">
-                                <div class="d-flex comment-cont">
-                                    <div class="icon-60 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
-                                        <img src="client/img/colums/1.png" alt="">
-                                    </div>
-                                    <div class="inf w-100">
-                                        <div class="title d-flex justify-content-between">
-                                            <h6 class="fw-bold fsz-14px">David Bowie</h6>
-                                            <span class="time fsz-12px text-uppercase color-999">
-                                                3 hours ago
-                                            </span>
-                                        </div>
-                                        <div class="text color-666 fsz-12px mt-10">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Atume nusaate staman utra phone limo sumeria                                            
-                                        </div>
-                                        <a href="page-single-post-creative.html#" class="butn border border-1 mt-20 py-2 px-3">
-                                            <span class="fsz-11px"> replay </span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="d-flex comment-replay ps-5 mt-30 ms-4">
-                                    <div class="icon-40 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
-                                        <img src="client/img/colums/2.png" alt="">
-                                    </div>
-                                    <div class="inf w-100">
-                                        <div class="title d-flex justify-content-between">
-                                            <h6 class="fw-bold fsz-14px">Logan Cee</h6>
-                                            <span class="time fsz-12px text-uppercase color-999">
-                                                2 dayes ago
-                                            </span>
-                                        </div>
-                                        <div class="text color-666 fsz-12px mt-10">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Atume nusaate staman utra phone limo sumeria                                            
-                                        </div>
-                                        <a href="page-single-post-creative.html#" class="butn border border-1 mt-20 py-2 px-3">
-                                            <span class="fsz-11px"> replay </span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="comment-replay-cont pb-40 pt-40 border-bottom border-1 brd-gray">
-                                <div class="d-flex comment-cont">
-                                    <div class="icon-60 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
-                                        <img src="client/img/colums/3.png" alt="">
-                                    </div>
-                                    <div class="inf w-100">
-                                        <div class="title d-flex justify-content-between">
-                                            <h6 class="fw-bold fsz-14px">Luis Diaz</h6>
-                                            <span class="time fsz-12px text-uppercase color-999">
-                                                December 25, 2022
-                                            </span>
-                                        </div>
-                                        <div class="text color-000 fsz-12px mt-10">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt                                             
-                                        </div>
-                                        <a href="page-single-post-creative.html#" class="butn border border-1 mt-20 py-2 px-3">
-                                            <span class="fsz-11px"> replay </span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <form class="comment-form d-block pt-30">
-                            <p class="text-uppercase mb-30">Leave A Comment</p>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group mb-30">
-                                        <textarea class="form-control rounded-0 fsz-12px p-3" name="comment" rows="6" placeholder="Write your comment here"></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group mb-4 mb-lg-0">
-                                        <input type="text" class="form-control fsz-12px rounded-0 p-3" name="name" placeholder="Your Name *">
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control fsz-12px rounded-0 p-3" name="email" placeholder="Your Email *">
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="form-check mt-20">
-                                        <input class="form-check-input" name="checkbox" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label fsz-12px" for="flexCheckDefault">
-                                            Save my name & email in this browser for next time I comment
-                                        </label>
-                                      </div>
-                                </div>
-                                <div class="col-12">
-                                    <button type="submit" class="btn bg-main text-white rounded-0 mt-40">
-                                        <span class="fsz-11px">Submit Comment </span>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="img">
+                        <a href="home-default.html#">
+                            <img src="client/img/apple1.png" alt="">
+                        </a>
+                        <a href="home-default.html#">
+                            <img src="client/img/android1.png" alt="">
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- ====== end comments ====== -->
-
+<!-- ====== end download ====== -->
 
 <!-- ====== start modals ====== -->
 
@@ -683,14 +1957,17 @@
             aria-label="Close"></button>
     </div>
     <div class="offcanvas-body mt-4">
-        <h6 class="color-000 text-uppercase mb-15 ltspc-1"> about us <i class="la la-angle-right ms-1"></i> </h6>
+        <h6 class="color-000 text-uppercase mb-15 ltspc-1"> about us <i class="la la-angle-right ms-1"></i>
+        </h6>
         <div class="text">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem optio tempora quia iure quae. Soluta corporis quidem aperiam amet nihil.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem optio tempora quia iure quae.
+            Soluta corporis quidem aperiam amet nihil.
         </div>
 
         <div class="sidebar-categories mt-40">
-            <h6 class="color-000 text-uppercase mb-30 ltspc-1"> categories <i class="la la-angle-right ms-1"></i> </h6>
-            <a href="page-single-post-creative.html#" class="cat-card">
+            <h6 class="color-000 text-uppercase mb-30 ltspc-1"> categories <i
+                    class="la la-angle-right ms-1"></i> </h6>
+            <a href="home-default.html#" class="cat-card">
                 <div class="img img-cover">
                     <img src="client/img/bussines/1.png" alt="">
                 </div>
@@ -699,7 +1976,7 @@
                     <span class="num">12</span>
                 </div>
             </a>
-            <a href="page-single-post-creative.html#" class="cat-card">
+            <a href="home-default.html#" class="cat-card">
                 <div class="img img-cover">
                     <img src="client/img/trend/3.png" alt="">
                 </div>
@@ -708,7 +1985,7 @@
                     <span class="num">14</span>
                 </div>
             </a>
-            <a href="page-single-post-creative.html#" class="cat-card">
+            <a href="home-default.html#" class="cat-card">
                 <div class="img img-cover">
                     <img src="client/img/must_read/3.png" alt="">
                 </div>
@@ -717,7 +1994,7 @@
                     <span class="num">20</span>
                 </div>
             </a>
-            <a href="page-single-post-creative.html#" class="cat-card">
+            <a href="home-default.html#" class="cat-card">
                 <div class="img img-cover">
                     <img src="client/img/videos/1.png" alt="">
                 </div>
@@ -728,35 +2005,36 @@
             </a>
         </div>
         <div class="sidebar-contact-info mt-50">
-            <h6 class="color-000 text-uppercase mb-20 ltspc-1"> Contact & follow <i class="la la-angle-right ms-1"></i> </h6>
+            <h6 class="color-000 text-uppercase mb-20 ltspc-1"> Contact & follow <i
+                    class="la la-angle-right ms-1"></i> </h6>
             <ul class="m-0">
                 <li class="mb-3">
                     <i class="las la-map-marker me-2 color-main fs-5"></i>
-                    <a href="page-single-post-creative.html#">streat name 12, hollywood City, USA</a>
+                    <a href="home-default.html#">streat name 12, hollywood City, USA</a>
                 </li>
                 <li class="mb-3">
                     <i class="las la-envelope me-2 color-main fs-5"></i>
-                    <a href="page-single-post-creative.html#">Newzin@gmail.com</a>
+                    <a href="home-default.html#">Newzin@gmail.com</a>
                 </li>
                 <li class="mb-3">
                     <i class="las la-phone-volume me-2 color-main fs-5"></i>
-                    <a href="page-single-post-creative.html#">+12 123 456 789</a>
+                    <a href="home-default.html#">+12 123 456 789</a>
                 </li>
             </ul>
             <div class="social-links">
-                <a href="page-single-post-creative.html#">
+                <a href="home-default.html#">
                     <i class="la la-twitter"></i>
                 </a>
-                <a href="page-single-post-creative.html#">
+                <a href="home-default.html#">
                     <i class="la la-facebook-f"></i>
                 </a>
-                <a href="page-single-post-creative.html#">
+                <a href="home-default.html#">
                     <i class="la la-instagram"></i>
                 </a>
-                <a href="page-single-post-creative.html#">
+                <a href="home-default.html#">
                     <i class="la la-youtube"></i>
                 </a>
-                <a href="page-single-post-creative.html#">
+                <a href="home-default.html#">
                     <i class="la la-spotify"></i>
                 </a>
             </div>
