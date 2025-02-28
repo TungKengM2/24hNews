@@ -1,52 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('author.layouts.master')
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    
-
-    <title>Cập Nhập Bài Viết</title>
-
-    <!-- Vendors Style -->
-    <link rel="stylesheet" href="{{ asset('admin/main/css/vendors_css.css') }}">
-    <link rel="icon" href="{{ asset('admin/images/favicon.ico') }}">
-
-    <!-- Style -->
-    <link rel="stylesheet" href="{{ asset('admin/main/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/main/css/skin_color.css') }}">
-    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="{{ asset('js/ckeditor.js') }}"></script>
-    <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <style>
-        .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: #c3bebe;
-            color: white;
-            border: 1px solid #c2c2c2;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-    </style>
-</head>
-
-<body class="hold-transition dark-skin sidebar-mini theme-primary fixed">
-
-    <div class="wrapper">
-        <div id="loader"></div>
-
-        @include('admin.layouts.partials.header')
-
-        <!-- Left side column. contains the logo and sidebar -->
-        @include('admin.layouts.partials.aside')
-
+@section('content')
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <div class="container-full">
@@ -169,35 +123,7 @@
                         document.getElementById("slug").value = slug;
                     });
                 </script>
-
-
-                <!-- /.content-wrapper -->
-
-                @include('admin.layouts.partials.footer')
-
-                <!-- Control Sidebar -->
-                <!-- /.control-sidebar -->
-
-                <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
-                <div class="control-sidebar-bg"></div>
             </div>
-            <!-- ./wrapper -->
-
-            <!-- Vendor JS -->
-            <script src="{{ asset('admin/main/js/vendors.min.js') }}"></script>
-            <script src="{{ asset('admin/main/js/pages/chat-popup.js') }}"></script>
-            <script src="{{ asset('admin/assets/icons/feather-icons/feather.min.js') }}"></script>
-            <script src="{{ asset('admin/assets/vendor_components/apexcharts-bundle/irregular-data-series.js') }}"></script>
-            <script src="{{ asset('admin/assets/vendor_components/apexcharts-bundle/dist/apexcharts.js') }}"></script>
-            <script src="{{ asset('admin/assets/vendor_components/zingchart_branded_version/zingchart.min.js') }}"></script>
-            <script src="{{ asset('./admin/assets/vendor_components/select2/dist/js/select2.full.js') }}"></script>
-
-            <!-- CrmX Admin App -->
-            <script src="{{ asset('admin/main/js/template.js') }}"></script>
-            <script src="{{ asset('admin/main/js/demo.js') }}"></script>
-            <script src="{{ asset('admin/main/js/pages/dashboard.js') }}"></script>
         </div>
-
-</body>
-
-</html>
+        <!-- /.content-wrapper -->        
+@endsection
