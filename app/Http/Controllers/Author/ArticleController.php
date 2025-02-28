@@ -34,6 +34,7 @@
             $categories = Category::all();
             $tags = Tag::all();
 
+<<<<<<< HEAD
             return view('author.articles.create', compact('categories', 'tags'));
         }
 
@@ -43,6 +44,17 @@
 
             return view('author.articles.edit',
                 compact('articles', 'categories'));
+=======
+            return view('author.create', compact('categories', 'tags'));
+        }
+
+        public function edit(Article $article)
+        {
+            $categories = Category::select('category_id', 'name')->get();
+
+            return view('author.edit',
+                compact('article', 'categories'));
+>>>>>>> tungkeng
         }
 
         public function update(Request $request, Article $article)
@@ -76,7 +88,11 @@
             $article->save();
 
             return redirect()
+<<<<<<< HEAD
                 ->route('author.articles.index')
+=======
+                ->route('author.articles')
+>>>>>>> tungkeng
                 ->with('success', 'Article updated successfully!');
         }
 
@@ -124,7 +140,7 @@
             $article->delete();
 
             return redirect()
-                ->route('author.articles.index')
+                ->route('author.articles')
                 ->with('success', 'Bai viet da dc xoa');
         }
 
@@ -132,7 +148,14 @@
         {
             $article = Article::with(['category', 'author'])->findOrFail($id);
 
+<<<<<<< HEAD
             return view('author.articles.show', compact('article'));
         }
 
     }
+=======
+            return view('author.show', compact('article'));
+        }
+
+    }
+>>>>>>> tungkeng
