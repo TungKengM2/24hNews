@@ -10,6 +10,6 @@ class ModeratorDashboardController extends Controller
     public function index()
     {
         // Your code here
-        return view('moderator.layouts.dashboard');
+        return view('moderator.dashboard');
     }
 }

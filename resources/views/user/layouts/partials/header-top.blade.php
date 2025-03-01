@@ -1,7 +1,7 @@
 <nav class="navbar navbar-static-top">
     <!-- Sidebar toggle button-->
     <div class="app-menu">
-        <ul class="header-megamenu nav">
+        {{-- <ul class="header-megamenu nav">
             <li class="btn-group nav-item">
                 <a href="index.html#"
                     class="waves-effect waves-light nav-link push-btn btn-outline no-border btn-primary-light text-dark hover-white"
@@ -9,55 +9,11 @@
                     <i data-feather="align-left"></i>
                 </a>
             </li>
-            {{-- <li class="btn-group d-lg-inline-flex d-none">
-                <div class="app-menu">
-                    <div class="search-bx mx-5">
-                        <form>
-                            <div class="input-group">
-                                <input type="search" class="form-control" placeholder="Search" aria-label="Search"
-                                    aria-describedby="button-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn" type="submit" id="button-addon3"><i
-                                            data-feather="search"></i></button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </li> --}}
-            {{-- <li class="btn-group nav-item d-none d-xl-inline-block">
-                <a href="contact_app_chat.html"
-                    class="waves-effect waves-light nav-link btn-outline no-border svg-bt-icon btn-info-light text-dark hover-white"
-                    title="Chat">
-                    <i data-feather="message-circle"></i>
-                </a>
-            </li> --}}
-            {{-- <li class="btn-group nav-item d-none d-xl-inline-block">
-                <a href="mailbox.html"
-                    class="waves-effect waves-light nav-link btn-outline no-border svg-bt-icon btn-danger-light text-dark hover-white"
-                    title="Mailbox">
-                    <i data-feather="at-sign"></i>
-                </a>
-            </li> --}}
-            {{-- <li class="btn-group nav-item d-none d-xl-inline-block">
-                <a href="extra_taskboard.html"
-                    class="waves-effect waves-light btn-outline no-border nav-link svg-bt-icon btn-success-light text-dark hover-white"
-                    title="Taskboard">
-                    <i data-feather="clipboard"></i>
-                </a>
-            </li> --}}
-        </ul>
+        </ul> --}}
     </div>
 
     <div class="navbar-custom-menu r-side">
         <ul class="nav navbar-nav">
-            {{-- <li class="btn-group nav-item d-lg-inline-flex d-none">
-                <a href="index.html#" data-provide="fullscreen"
-                    class="waves-effect waves-light nav-link btn-outline no-border full-screen btn-warning-light text-dark hover-white"
-                    title="Full Screen">
-                    <i data-feather="maximize"></i>
-                </a>
-            </li> --}}
             <!-- Notifications -->
             <li class="dropdown notifications-menu">
                 <a href="index.html#"
@@ -141,26 +97,15 @@
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
-                        {{-- <a class="dropdown-item" href="index.html#"><i class="ti-user text-muted me-2"></i>
-                            Profile</a> --}}
-                        {{-- <a class="dropdown-item" href="index.html#"><i class="ti-wallet text-muted me-2"></i> My
-                            Wallet</a>
-                        <a class="dropdown-item" href="index.html#"><i class="ti-settings text-muted me-2"></i>
-                            Settings</a> --}}
+                        <a class="dropdown-item" href="{{ route('user.profile') }}"><i
+                                class="ti-settings text-muted me-2"></i>
+                            Settings</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="index.html#"><i class="ti-lock text-muted me-2"></i>
                             Logout</a>
                     </li>
                 </ul>
             </li>
-            <!-- Control Sidebar Toggle Button -->
-            {{-- <li>
-                <a href="index.html#" data-toggle="control-sidebar" title="Setting"
-                    class="waves-effect waves-light btn-outline no-border btn-danger-light text-dark hover-white">
-                    <i data-feather="settings"></i>
-                </a>
-            </li> --}}
-
         </ul>
     </div>
 </nav>
