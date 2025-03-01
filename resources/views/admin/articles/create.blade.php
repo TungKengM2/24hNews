@@ -1,21 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('admin.layouts.master')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Post</title>
-    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=account_circle" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+@section('head')
     <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.css" />
 
-    <link rel="stylesheet"
-        href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css" />
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css" />
     <script src="{{ asset('js/ckeditor.js') }}"></script>
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
+<<<<<<< HEAD
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
     <style>
@@ -41,13 +32,30 @@
 
         .form-label {
             font-weight: 600;
+=======
+
+    <!-- Style -->
+
+    <style>
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #c3bebe;
+            color: white;
+            border: 1px solid #c2c2c2;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
         }
     </style>
-</head>
+@endsection
 
-<body>
+@section('title')
+    Thêm Mới Bài Viết
+@endsection
+
+@section('content')
+    <!-- Main content -->
     <div class="wrapper">
-        @include('admin.menu')
         <div class="container mt-5 ">
             <div class="card p-2">
                 <h2 class="mb-4">Create New Post</h2>
@@ -63,8 +71,7 @@
 
                 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
-                <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data"
-                    id="articleForm">
+                <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data" id="articleForm">
                     @csrf
                     <div class="mb-3">
                         <label for="title" class="form-label">Tiêu đề</label>
@@ -84,17 +91,11 @@
 
                     <div class="mb-3">
                         <label for="tags">Chọn hoặc thêm tags:</label>
-                        <select id="tags" name="tags[]" class="form-control select2" multiple="multiple">
+                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                             @foreach ($tags as $tag)
                                 <option value="{{ $tag->tag_id }}">{{ $tag->name }}</option>
                             @endforeach
                         </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="new_tags">Thêm tags mới:</label>
-                        <input type="text" id="new_tags" name="new_tags" class="form-control"
-                            placeholder="Tag1, Tag2, Tag3">
                     </div>
 
                     <div class="mb-3">
@@ -108,10 +109,12 @@
 
                     <div class="mb-3">
                         <label for="thumbnail_url" class="form-label">Ảnh đại diện</label>
-                        <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url"
-                            accept="image/*" required>
+                        <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url" accept="image/*"
+                            required>
                     </div>
 
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
                     <!-- Tự động gán tác giả -->
                     <input type="hidden" name="author_id" value="{{ auth()->id() }}">
@@ -180,7 +183,7 @@
                     });
                 </script>
 
-                {{-- Đọc nội dung file Word (nếu có) --}}
+                Đọc nội dung file Word (nếu có)
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
                 <script>
                     document.getElementById('thumbnail_url').addEventListener('change', function(event) {
@@ -208,13 +211,4 @@
             </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-    </script>
-
-
-</body>
-
-</html>
+@endsection

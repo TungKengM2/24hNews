@@ -1,13 +1,14 @@
 <?php
 
-    namespace App\Http\Controllers\Moderator;
+namespace App\Http\Controllers\Moderator;
 
-    use App\Http\Controllers\Controller;
-    use App\Models\Approval;
-    use Illuminate\Http\Request;
-    use App\Models\User;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\User;
 
-    class UserManagementController extends Controller
+class UserManagementController extends Controller
+{
+    public function index()
     {
 
         public function index()
@@ -63,3 +64,4 @@
         }
 
     }
+}

@@ -1,11 +1,14 @@
 /******/ (() => { // webpackBootstrap
 <<<<<<< HEAD
+<<<<<<< HEAD
 /******/ 	"use strict";
 /******/ 	// The require scope
 /******/ 	var __webpack_require__ = {};
 /******/ 	
 /************************************************************************/
 =======
+=======
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./node_modules/axios/lib/adapters/adapters.js":
@@ -2501,14 +2504,14 @@ function buildURL(url, params, options) {
   if (!params) {
     return url;
   }
-  
+
   const _encode = options && options.encode || encode;
 
   if (_utils_js__WEBPACK_IMPORTED_MODULE_0__["default"].isFunction(options)) {
     options = {
       serialize: options
     };
-  } 
+  }
 
   const serializeFn = options && options.serialize;
 
@@ -7077,7 +7080,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -7091,14 +7094,14 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
@@ -7111,7 +7114,11 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/ 	
+<<<<<<< HEAD
+/******/
+=======
+/******/
+>>>>>>> dat
 /******/ 	/* webpack/runtime/global */
 /******/ 	(() => {
 /******/ 		__webpack_require__.g = (function() {
@@ -7123,13 +7130,21 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 			}
 /******/ 		})();
 /******/ 	})();
-/******/ 	
+<<<<<<< HEAD
+/******/
+=======
+/******/
+>>>>>>> dat
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
+<<<<<<< HEAD
 /******/ 	
 >>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
+=======
+/******/
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -7140,19 +7155,26 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
 var __webpack_exports__ = {};
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
 >>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
+=======
+// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
+(() => {
+"use strict";
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
 __webpack_require__.r(__webpack_exports__);
+<<<<<<< HEAD
 <<<<<<< HEAD
 Object(function webpackMissingModule() { var e = new Error("Cannot find module './bootstrap'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
 =======
@@ -7160,6 +7182,11 @@ Object(function webpackMissingModule() { var e = new Error("Cannot find module '
 
 })();
 >>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
+=======
+/* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+
+})();
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 
 /******/ })()
 ;
