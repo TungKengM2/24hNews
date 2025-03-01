@@ -17,6 +17,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// 🌟 Giao diện chi tiết bài viết
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/client/articles/{article_id}', [ArticleUserController::class, 'show'])->name('client.articles.article');
+Route::post('/client/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('client.articles.like');
+Route::post('/client/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('client.articles.comment');
+
 Route::get('/article-detail', function () {
     return view('website.pages.articledetail.homedetail');
 });
@@ -177,8 +185,4 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 });
 
 
-<<<<<<< HEAD
 Route::post('/logout', [AuthUserController::class, 'logout'])->name('logout');
-=======
-Route::post('/logout', [AuthUserController::class, 'logout'])->name('logout');
->>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459

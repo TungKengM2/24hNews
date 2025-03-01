@@ -8,45 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-<<<<<<< HEAD
-    <link rel="icon" href="{{ asset('admin/images/favicon.ico') }}">
-
-    <title>@yield('title')</title>
-
-    <!-- Vendors Style -->
-    @include('admin.layouts.partials.css')
-=======
     <link rel="icon" href="/admin/main/../images/favicon.ico">
 
     <title>@yield('title')</title>
 
     @include('admin.layouts.partials.css')
 
->>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 </head>
 
 <body class="hold-transition dark-skin sidebar-mini theme-primary fixed">
 
     <div class="wrapper">
         <div id="loader"></div>
-<<<<<<< HEAD
-        <header class="main-header">
-            {{-- logo --}}
-          @include('admin.layouts.partials.logo-header')
-            <!-- Header Navbar -->
-            @include('admin.layouts.partials.navbar-header')
-        </header>
-
-        <!-- Left side column. contains the logo and sidebar -->
-        <aside class="main-sidebar">
-            {{-- user profile --}}
-          @include('admin.layouts.partials.user-profile')
-            <!-- sidebar-->
-           @include('admin.layouts.partials.sidebar')
-        </aside>
-        <!-- Content Wrapper. Contains page content -->
-        @yield('content')
-=======
 
         <header class="main-header">
             @include('admin.layouts.partials.header-logo')
@@ -64,14 +37,11 @@
 
         @yield('content')
 
->>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
         <!-- /.content-wrapper -->
 
         @include('admin.layouts.partials.footer')
 
         <!-- Control Sidebar -->
-<<<<<<< HEAD
-=======
         {{-- <aside class="control-sidebar">
 
             <div class="rpanel-title"><span class="pull-right btn btn-circle btn-danger"><i
@@ -337,18 +307,10 @@
                 <!-- /.tab-pane -->
             </div>
         </aside> --}}
->>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
         <!-- /.control-sidebar -->
 
         <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
         <div class="control-sidebar-bg"></div>
-<<<<<<< HEAD
-    </div>
-    <!-- ./wrapper -->
-
-    <!-- Vendor JS -->
-   @include('admin.layouts.partials.js')
-=======
 
     </div>
     <!-- ./wrapper -->
@@ -499,7 +461,6 @@
     <!-- Vendor JS -->
     @include('admin.layouts.partials.js')
 
->>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 </body>
 
 </html>

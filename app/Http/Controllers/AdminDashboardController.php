@@ -16,10 +16,7 @@ class AdminDashboardController extends Controller
     public function index()
     // POST
     {
-<<<<<<< HEAD
-=======
         // return view('admin.layouts.dashboard');
->>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
         return view('admin.dashboard');
     }
 
