@@ -1,10 +1,6 @@
 @extends('admin.layouts.master')
 
 @section('content')
-<<<<<<< HEAD
-=======
-
->>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <div class="container-full">
@@ -287,8 +283,4 @@
         </div>
     </div>
 
-<<<<<<< HEAD
 @endsection
-=======
-@endsection
->>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459

@@ -20,7 +20,7 @@
                 </li> --}}
                 <li class="header">Quản Lý</li>
                 <li class="treeview">
-                    <a href="index.html#">
+                    <a href="{{ route('admin.a') }}">
                         <i data-feather="grid"></i>
                         <span>Bài Viết & Danh Mục</span>
                         <span class="pull-right-container">
