@@ -167,3 +167,33 @@ Route::get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'
 
 Route::get('/moderator/list-article', [ModeratorArticleController::class, 'index'])
     ->name('moderator.list-article');
+
+Route::get('/moderator-profile-setting', function () {
+    return view("moderator.profile-setting");
+})->name('moderator.profile-setting');
+
+Route::get('/moderator-profile', function () {
+    return view("moderator.profile");
+})->name('moderator.profile');
+
+
+//Route author dashborad
+Route::get('/author/dashboard', function () {
+    return view("author.dashboard");
+});
+
+Route::get('/author-profile-setting', function () {
+    return view("author.profile-setting");
+})->name('author.profile-setting');
+
+Route::get('/author-profile', function () {
+    return view("author.profile");
+})->name('author.profile');
+
+//Route User dashboard
+Route::get('/user/dasboard', function () {
+    return view("user.dashboard");
+});
+Route::get('/user-profile', function () {
+    return view("user.user-setting");
+})->name('user.profile');

@@ -9,5 +9,5 @@
             </li>
         </ul>
     </div>
-    &copy; 2025 <a href="https://www.multipurposethemes.com/">Tác Giả</a>. All Rights Reserved.
+    &copy; 2025 <a href="https://www.multipurposethemes.com/">User</a>. All Rights Reserved.
 </footer>
