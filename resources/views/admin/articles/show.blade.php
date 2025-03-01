@@ -37,11 +37,10 @@
                 <div class="box-body">
                     <div id="slimtest2">
                         <div class="row">
-
                             <p class="col-md-5">Preview Content: {{ $article->preview_content }}</p>
-                            <div class="row">
-                                <p class="col-md-5">Content:</p>
-                                <div class="col-md-7">
+                            <div class="bg-white p-3 m-2">
+                                <p class="col-md-5 text-bold">Content:</p>
+                                <div class="col-md-7 mb-3">
                                     <p>{!! $article->content !!}</p>
                                 </div>
                             </div>
@@ -59,7 +58,7 @@
 
                             <div class="row" style="margin-top: 50px">
 
-                                <div class="col-2">
+                                <div class="col-2 mb-3">
                                     <strong>Contains Sensitive Content?</strong>
                                     <p>{{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</p>
                                 </div>
