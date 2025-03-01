@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 @extends('admin.layouts.master')
+=======
+@extends('author.layouts.master')
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -233,7 +237,12 @@
                                             <div class="mt-30">
                                                 <h4>Status: Live</h4>
                                                 <p class="mb-0 fw-700"><i class="ti-location-pin text-danger fs-16"></i>
+<<<<<<< HEAD
                                                     <span class="fs-12">12 Osborne Drive Suite 845</span></p>
+=======
+                                                    <span class="fs-12">12 Osborne Drive Suite 845</span>
+                                                </p>
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
                                                 <div class="mt-40">
                                                     <p class="mb-0 fw-700">Miami</p>
                                                     <div class="progress">
@@ -282,6 +291,7 @@
             <!-- /.content -->
         </div>
     </div>
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 @endsection
@@ -344,5 +354,7 @@
         });
     </script>
 
+=======
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 @endsection
 >>>>>>> tungkeng

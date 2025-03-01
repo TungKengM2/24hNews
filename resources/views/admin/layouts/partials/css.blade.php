@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <link rel="stylesheet" href="{{ asset('admin/main/css/vendors_css.css') }}">
 
 
@@ -22,3 +23,11 @@
         font-size: 14px;
     }
 </style>
+=======
+   <!-- Vendors Style-->
+   <link rel="stylesheet" href="/admin/main/css/vendors_css.css">
+
+   <!-- Style-->
+   <link rel="stylesheet" href="/admin/main/css/style.css">
+   <link rel="stylesheet" href="/admin/main/css/skin_color.css">
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459

@@ -11,11 +11,19 @@
     {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         // public function __construct()
         // {
         //     $this->middleware('auth');
         //     $this->middleware('role:author');
         // }
+=======
+        public function __construct()
+        {
+            $this->middleware('auth');
+            $this->middleware('role:author');
+        }
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 
         public function index()
         {
@@ -33,6 +41,7 @@
                     ->count(),
             ];
 
+<<<<<<< HEAD
             // $viewsData = ArticleView::where('user_id', $user->user_id)
             //     ->selectRaw('DATE(viewed_at) as date, COUNT(*) as views')
             //     ->groupBy('date')
@@ -87,3 +96,20 @@
 
     }
 >>>>>>> tungkeng
+=======
+            $viewsData = ArticleView::where('user_id', $user->user_id)
+                ->selectRaw('DATE(viewed_at) as date, COUNT(*) as views')
+                ->groupBy('date')
+                ->orderBy('date')
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    return [$item->date => $item->views];
+                });
+            //            dd($viewsData);
+            //            dd($articleStats);
+            return view('author.dashboard',
+                compact('articleStats', 'viewsData'));
+        }
+
+    }
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459

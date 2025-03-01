@@ -17,7 +17,11 @@ class Tag extends Model
         parent::boot();
         static::creating(function ($tag) {
             if (!$tag->description) {
+<<<<<<< HEAD
                 $tag->description = ''; 
+=======
+                $tag->description = '';
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
             }
         });
     }

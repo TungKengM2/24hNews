@@ -1,5 +1,6 @@
 <main>
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <!-- ====== start breaking news ====== -->
 <section class="tc-breaking-news-style1 pt-50 pb-50">
@@ -104,6 +105,8 @@
                 <div class="swiper-button-prev"></div>
             </div>
 =======
+=======
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
     <!-- Hiển thị 3 bài viết mới nhất theo thời gian -->
     <span class="max-w-7xl mx-auto p-4 grid grid-cols-12 gap-4 mb-20 min-h-[75vh]">
         <div class="col-span-12 flex flex-col space-y-4">
@@ -122,12 +125,16 @@
          class="w-48 h-32 object-cover rounded-lg">
 </article>
             @endforeach
+<<<<<<< HEAD
 >>>>>>> tungkeng
+=======
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
         </div>
     </div>
 </section>
 <!-- ====== end breaking news ====== -->
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <!-- ====== start trends news ====== -->
 <section class="tc-trends-news-style1 pt-50 pb-50 bg-gray1">
@@ -1048,6 +1055,8 @@
                     </div>
                 </div>
 =======
+=======
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
     {{-- Hiển thị 7 bài viết tiêu biểu theo danh mục   --}}
     <span class="max-w-7xl mx-auto mt-[-6rem] p-4 grid grid-cols-12 gap-4  min-h-[75vh]">
 
@@ -1089,7 +1098,10 @@
                 </div>
               </article>
                 @endforeach
+<<<<<<< HEAD
 >>>>>>> tungkeng
+=======
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
             </div>
 
             <div class="col-lg-3">
@@ -1323,6 +1335,9 @@
 </section>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 <!-- ====== end must read ====== -->
 
 <!-- ====== start hot videos ====== -->
@@ -2213,6 +2228,9 @@
 <!-- ====== end modals ====== -->
 
 </main>
+<<<<<<< HEAD
 =======
 </main>
 >>>>>>> tungkeng
+=======
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
