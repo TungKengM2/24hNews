@@ -30,20 +30,25 @@
                     <div class="form-items">
                         <h3>Get more things done with Loggin platform.</h3>
                         <p>Access to the most powerfull tool in the entire design and web industry.</p>
-                        <div class="page-links">
-                        <a href="{{ route('loginadmin') }}" class="active">Login</a><a href="{{ route('signupadmin') }}">Register</a>
-                        </div>
-                        <form>
-                            <input class="form-control" type="text" name="name" placeholder="Full Name" required>
-                            <input class="form-control" type="email" name="email" placeholder="E-mail Address" required>
+                        <form action="{{ route('loginadmin.process') }}" method="POST">
+                            @csrf
+                            <input class="form-control" type="email" name="email" placeholder="E-mail Address" required value="{{ old('email') }}">
+                            @error('email')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                            
                             <input class="form-control" type="password" name="password" placeholder="Password" required>
-                            <div class="form-button">
-                                <button id="submit" type="submit" class="ibtn">Register</button>
+                            @error('password')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror  
+                            <input type="checkbox" id="chk1" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                            <label for="chk1">Remember me</label>
+                                                        <div class="form-button">
+                                <button id="submit" type="submit" class="ibtn">Login</button>
+                                {{-- <a href="{{ route('password.request') }}">Forget password?</a> --}}
                             </div>
                         </form>
-                        <div class="other-links">
-                            <span>Or register with</span><a href="register2.html#">Facebook</a><a href="register2.html#">Google</a><a href="register2.html#">Linkedin</a>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
