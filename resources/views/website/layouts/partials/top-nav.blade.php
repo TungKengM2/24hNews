@@ -31,8 +31,7 @@
             </div>
             <div class="col-lg-4">
                 <a href="home-default.html#" class="logo-brand d-none d-lg-block">
-                    <img src="{{ asset('client/img/logo_home1.png') }}" alt="" class="dark-none">
-                    <img src="{{ asset('client/img/logo_home1_lt.png') }}" alt="" class="light-none">
+                    <h1>News24h</h1>
                 </a>
             </div>
             <div class="col-lg-4">
