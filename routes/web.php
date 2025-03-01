@@ -177,4 +177,8 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 });
 
 
+<<<<<<< HEAD
 Route::post('/logout', [AuthUserController::class, 'logout'])->name('logout');
+=======
+Route::post('/logout', [AuthUserController::class, 'logout'])->name('logout');
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459

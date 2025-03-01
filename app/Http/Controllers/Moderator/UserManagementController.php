@@ -11,8 +11,11 @@ class UserManagementController extends Controller
     public function index()
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         return view('moderator.pages.users.index');
 =======
+=======
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 
         public function index()
         {
@@ -66,6 +69,9 @@ class UserManagementController extends Controller
                 ->with('status', 'Yêu cầu nâng cấp đã bị từ chối.');
         }
 
+<<<<<<< HEAD
 >>>>>>> tungkeng
+=======
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
     }
 }

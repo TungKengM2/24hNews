@@ -80,6 +80,7 @@ class ArticleUserController extends Controller
         return view('client.articles.article', compact('article', 'relatedArticles', 'isLiked', 'likeCount', 'comments'));
     }
 
+<<<<<<< HEAD
     public function likeArticle(Request $request, $article_id)
     {
         $userId = auth()->id();
@@ -117,6 +118,34 @@ class ArticleUserController extends Controller
     }
     
     
+=======
+    // Ghi nhận lượt xem
+    try {
+        ArticleView::create([
+            'article_id' => $article->article_id,
+            'user_id' => auth()->id(),
+            'anonymous' => auth()->check() ? 0 : 1,
+            'viewed_at' => now(),
+            $article->increment('views')
+        ]);
+    } catch (\Exception $e) {
+        report($e);
+    }
+
+    // Lấy bài viết liên quan
+    $relatedArticles = Article::where('category_id', $article->category_id)
+                              ->where('article_id', '!=', $article->article_id)
+                              ->limit(5)
+                              ->get();
+
+    return view('client.articles.article', compact('article', 'relatedArticles'));
+}
+
+}
+
+
+
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 
 
     public function storeComment(Request $request)
