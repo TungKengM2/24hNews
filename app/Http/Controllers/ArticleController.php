@@ -226,5 +226,8 @@ class ArticleController extends Controller
 
         return redirect()->route('articles.index')->with('success', 'Bài viết đã bị xóa!');
     }
+<<<<<<< HEAD
 }
+=======
+>>>>>>> c8f85802d98004cd3d8007e37c78e51bb8c5f865
 }

@@ -13,11 +13,11 @@
     class ArticleController extends Controller
     {
 
-        public function __construct()
-        {
-            $this->middleware('auth');
-            $this->middleware('role:author');
-        }
+        // public function __construct()
+        // {
+        //     $this->middleware('auth');
+        //     $this->middleware('role:author');
+        // }
 
         public function index()
         {
@@ -26,7 +26,7 @@
                 ->orderBy('created_at', 'desc')
                 ->paginate(10);
 
-            return view('author.manageArticles', compact('articles'));
+            return view('author.articles.index', compact('articles'));
         }
 
         public function create()
@@ -34,6 +34,31 @@
             $categories = Category::all();
             $tags = Tag::all();
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+            return view('author.articles.create', compact('categories', 'tags'));
+        }
+
+        public function edit(Article $articles)
+        {
+            $categories = Category::select('category_id', 'name')->get();
+
+            return view('author.articles.edit',
+                compact('articles', 'categories'));
+=======
+            return view('author.create', compact('categories', 'tags'));
+        }
+
+        public function edit(Article $article)
+        {
+            $categories = Category::select('category_id', 'name')->get();
+
+            return view('author.edit',
+                compact('article', 'categories'));
+>>>>>>> tungkeng
+        }
+
+=======
             return view('author.create', compact('categories', 'tags'));
         }
 
@@ -45,6 +70,7 @@
                 compact('article', 'categories'));
         }
 
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
         public function update(Request $request, Article $article)
         {
             // Validation rules
@@ -76,7 +102,15 @@
             $article->save();
 
             return redirect()
+<<<<<<< HEAD
+<<<<<<< HEAD
+                ->route('author.articles.index')
+=======
                 ->route('author.articles')
+>>>>>>> tungkeng
+=======
+                ->route('author.articles')
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
                 ->with('success', 'Article updated successfully!');
         }
 
@@ -132,7 +166,18 @@
         {
             $article = Article::with(['category', 'author'])->findOrFail($id);
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+            return view('author.articles.show', compact('article'));
+=======
+            return view('author.show', compact('article'));
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
+        }
+
+    }
+=======
             return view('author.show', compact('article'));
         }
 
     }
+>>>>>>> tungkeng

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="navbar-container">
         <div class="container">
             <!-- ====== start top navbar ====== -->
@@ -265,3 +266,6 @@
         </div>
     </div>
 >>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
+=======
+
+>>>>>>> c8f85802d98004cd3d8007e37c78e51bb8c5f865

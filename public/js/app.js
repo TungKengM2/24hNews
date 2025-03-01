@@ -4,8 +4,12 @@
 /******/ 	"use strict";
 /******/ 	// The require scope
 /******/ 	var __webpack_require__ = {};
+<<<<<<< HEAD
 /******/ 	
 /************************************************************************/
+=======
+/******/
+>>>>>>> c8f85802d98004cd3d8007e37c78e51bb8c5f865
 =======
 =======
 >>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
@@ -7101,7 +7105,12 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
+<<<<<<< HEAD
+/******/ 	
+>>>>>>> tungkeng
+=======
 /******/
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
@@ -7117,8 +7126,13 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 <<<<<<< HEAD
 /******/
 =======
+<<<<<<< HEAD
+/******/ 	
+>>>>>>> tungkeng
+=======
 /******/
 >>>>>>> dat
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 /******/ 	/* webpack/runtime/global */
 /******/ 	(() => {
 /******/ 		__webpack_require__.g = (function() {
@@ -7133,17 +7147,32 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 <<<<<<< HEAD
 /******/
 =======
+<<<<<<< HEAD
+/******/ 	
+>>>>>>> tungkeng
+=======
 /******/
 >>>>>>> dat
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 <<<<<<< HEAD
+<<<<<<< HEAD
 /******/ 	
 >>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
 =======
 /******/
+=======
+<<<<<<< HEAD
+/******/
+=======
+/******/ 	
+>>>>>>> tungkeng
+=======
+/******/
+>>>>>>> c8f85802d98004cd3d8007e37c78e51bb8c5f865
 >>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
