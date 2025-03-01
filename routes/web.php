@@ -8,25 +8,6 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Moderator\ModeratorDashboardController;
-<<<<<<< HEAD
-use App\Http\Controllers\Moderator\UserManagementController;
-use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
-// ------------------------- Guest Routes (Login, Signup, Forgot Password) -------------------------
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-
-    Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup');
-    Route::post('/signup', [AuthController::class, 'processSignup'])->name('signup.process');
-
-    Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-    Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
-    Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
-=======
 use App\Http\Controllers\Moderator\ModeratorArticleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -88,7 +69,6 @@ Route::prefix('admin')->group(function () {
 // category
 Route::prefix('admin')->group(function () {
     Route::resource('categories', CategoryController::class);
->>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 });
 
 // User
@@ -190,13 +170,8 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::resource('categories', CategoryController::class);
 });
 
-<<<<<<< HEAD
-// ------------------------- Moderator Routes -------------------------
-Route::prefix('moderator')->middleware(['auth', 'role:moderator'])->group(function () {
-=======
 // 🚀 Khu vực dành riêng cho Moderator (role_id = 3)
 Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
->>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
     Route::get('/dashboard', [ModeratorDashboardController::class, 'index'])->name('moderator.dashboard');
     Route::get('/list-article', [ModeratorArticleController::class, 'index'])->name('moderator.list-article');
 });
@@ -210,25 +185,4 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 });
 
 
-<<<<<<< HEAD
-// ------------------------- Public Routes -------------------------
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/client/articles/{article_id}', [ArticleUserController::class, 'show'])->name('client.articles.article');
-
-// ------------------------- File Upload Route -------------------------
-Route::post('/upload-file', function (Request $request) {
-    if ($request->hasFile('upload')) {
-        $file = $request->file('upload');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads'), $filename);
-
-        return response()->json([
-            'url' => asset('uploads/' . $filename),
-        ]);
-    }
-
-    return response()->json(['error' => 'No file uploaded'], 400);
-})->name('upload.file');
-=======
 Route::post('/logout', [AuthUserController::class, 'logout'])->name('logout');
->>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
