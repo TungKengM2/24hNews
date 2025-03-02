@@ -12,7 +12,7 @@
     <meta name="author" content="" />
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
 
     <!-- Title  -->
     <title>Newzin</title>
@@ -44,6 +44,10 @@
     <link rel="stylesheet" href="{{ asset('client/css/style.css') }}" />
     <title> Newzin </title>
     <style>
+        .reply-content {
+            white-space: pre-line;
+        }
+
         .article-image {
             height: 400px;
             object-fit: cover;
@@ -193,7 +197,7 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-reviews-tab" data-bs-toggle="pill"
                             data-bs-target="#pills-reviews" type="button" role="tab" aria-controls="pills-reviews"
-                            aria-selected="false">Reviews (3)</button>
+                            aria-selected="false">Comment</button>
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
@@ -218,12 +222,15 @@
                         <div class="product-reviews pt-30">
                             <div class="row gx-5">
                                 <div class="row">
+
                                     <div class="col-lg-7">
                                         <div class="reviews-content pt-30">
-                                            <h5 class="color-000 mb-40 text-capitalize"> <?= count($comments) ?>
-                                                Reviews </h5>
+                                            <h5 class="color-000 mb-40 text-capitalize">
+                                                Comments</h5>
+
                                             <?php foreach ($comments as $comment): ?>
-                                            <div class="comment-replay-cont bg-light py-4 px-4 mb-3 rounded shadow-sm">
+                                            <?php if (!$comment->parent_id): ?>
+                                            <div class="comment-reply-cont bg-light py-3 px-4 mb-3 rounded shadow-sm">
                                                 <div class="d-flex align-items-start">
                                                     <div
                                                         class="icon-60 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
@@ -232,45 +239,169 @@
                                                     </div>
                                                     <div class="inf w-100">
                                                         <div class="d-flex justify-content-between align-items-center">
-                                                            <h6 class="fw-bold fs-14px">
-                                                                <?= htmlspecialchars($comment->user->username ?? 'Ẩn danh') ?>
+                                                            <h6 class="fw-bold">
+                                                                <?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>
                                                             </h6>
-                                                            <span
-                                                                class="fs-12px text-muted"><?= date('M d, Y H:i', strtotime($comment->created_at)) ?></span>
+                                                            <span class="fs-12px text-muted">
+                                                                <i class="fas fa-clock"></i>
+                                                                <?= date('F d, Y', strtotime($comment->created_at)) ?>
+                                                            </span>
                                                         </div>
-                                                        <div class="text color-000 fs-12px mt-2">
+                                                        <div class="text color-000 fs-14px mt-2">
                                                             <?= nl2br(htmlspecialchars($comment->content)) ?>
                                                         </div>
-
-                                                        <div class="d-flex mt-3">
+                                                        <div class="mt-2">
                                                             <button
-                                                                class="btn btn-light border like-comment d-flex align-items-center me-3"
-                                                                data-comment-id="<?= $comment->comment_id ?>">
-                                                                <i class="la la-thumbs-up me-1"></i>
-                                                                <span
-                                                                    class="like-count"><?= $comment->likes ?? 0 ?></span>
+                                                                class="btn btn-sm btn-outline-primary reply-btn d-flex align-items-center gap-1 px-3 py-1"
+                                                                data-comment-id="<?= $comment->comment_id ?>"
+                                                                data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
+                                                                <i class="fas fa-reply fa-flip-horizontal"></i> <span
+                                                                    class="fw-bold">Reply</span>
                                                             </button>
+                                                        </div>
 
+
+                                                        <!-- Danh sách replies -->
+                                                        <div class="replies ms-5 mt-3"
+                                                            data-reply-count="<?= count($comment->replies) ?>">
+                                                            <?php
+                                                            $replyCount = count($comment->replies);
+                                                            $visibleReplies = 3; // Số phản hồi hiển thị ban đầu
+                                                            $index = 0;
+                                                            ?>
+                                                            <?php foreach ($comment->replies as $reply): ?>
+                                                            <div
+                                                                class="comment-reply-cont bg-white py-2 px-3 mb-2 rounded shadow-sm reply-item <?= $index >= $visibleReplies ? 'd-none' : '' ?>">
+                                                                <div class="d-flex align-items-start">
+                                                                    <div
+                                                                        class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
+                                                                        <img src="<?= $reply->user->image ?? 'assets/img/colums/default.png' ?>"
+                                                                            alt="User Avatar">
+                                                                    </div>
+                                                                    <div class="inf w-100">
+                                                                        <div
+                                                                            class="d-flex justify-content-between align-items-center">
+                                                                            <h6 class="fw-bold">
+                                                                                <?= htmlspecialchars($reply->user->username ?? 'Anonymous') ?>
+                                                                            </h6>
+                                                                            <span class="fs-12px text-muted">
+                                                                                <i class="fas fa-clock"></i>
+                                                                                <?= date('F d, Y', strtotime($reply->created_at)) ?>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div class="text color-000 fs-14px mt-1">
+                                                                            <?= nl2br(htmlspecialchars($reply->content)) ?>
+                                                                        </div>
+                                                                        <div class="mt-2">
+                                                                            <button
+                                                                                class="btn btn-sm btn-outline-primary reply-btn d-flex align-items-center gap-1 px-3 py-1"
+                                                                                data-comment-id="<?= $comment->comment_id ?>"
+                                                                                data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
+                                                                                <i
+                                                                                    class="fas fa-reply fa-flip-horizontal"></i>
+                                                                                <span class="fw-bold">Reply</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <?php $index++; ?>
+                                                            <?php endforeach; ?>
+
+                                                            <?php if ($replyCount > $visibleReplies): ?>
                                                             <button
-                                                                class="btn btn-light border dislike-comment d-flex align-items-center me-3"
-                                                                data-comment-id="<?= $comment->comment_id ?>">
-                                                                <i class="la la-thumbs-down me-1"></i>
-                                                                <span
-                                                                    class="dislike-count"><?= $comment->dislikes ?? 0 ?></span>
-                                                            </button>
-
+                                                                class="btn btn-link text-primary px-0 show-more-replies text-decoration-none">Show
+                                                                more</button>
+                                                            <?php endif; ?>
 
                                                         </div>
 
 
+                                                        <!-- JavaScript để hiển thị form khi nhấn nút Reply -->
+                                                        <script>
+                                                            document.addEventListener("DOMContentLoaded", function() {
+                                                                document.querySelectorAll(".replies").forEach(replyContainer => {
+                                                                    const showMoreBtn = replyContainer.querySelector(".show-more-replies");
+                                                                    const hiddenReplies = replyContainer.querySelectorAll(".reply-item.d-none");
 
+                                                                    if (showMoreBtn) {
+                                                                        showMoreBtn.addEventListener("click", function() {
+                                                                            hiddenReplies.forEach(reply => reply.classList.remove("d-none"));
+                                                                            showMoreBtn.style.display = "none"; // Ẩn nút sau khi mở rộng
+                                                                        });
+                                                                    }
+                                                                });
+                                                            });
+                                                        </script>
+
+
+                                                        <!-- Form Reply -->
+                                                        <div class="reply-form-container mt-2 d-none"
+                                                            id="reply-form-{{ $comment->comment_id }}">
+                                                            <form class="reply-form">
+                                                                @csrf
+                                                                <input type="hidden" name="comment_id"
+                                                                    value="{{ $comment->comment_id }}">
+                                                                <input type="hidden" name="article_id"
+                                                                    value="{{ $comment->article_id }}">
+
+                                                                <div
+                                                                    class="d-flex align-items-start bg-white p-3 rounded shadow-sm">
+                                                                    <!-- Ảnh đại diện -->
+                                                                    <div
+                                                                        class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
+                                                                        <img src="{{ $currentUser->image ?? asset('assets/img/colums/default.png') }}"
+                                                                            alt="Your Avatar">
+                                                                    </div>
+
+                                                                    <div class="w-100">
+                                                                        <!-- Ô nhập nội dung trả lời -->
+                                                                        <textarea class="form-control form-control-sm reply-content" name="content" rows="2" required
+                                                                            placeholder="Trả lời: @php echo $comment->user->username ?? 'Người dùng ẩn danh'; @endphp"
+                                                                            onfocus="addUsernameToReply(this, '{{ $comment->user->username ?? 'Người dùng ẩn danh' }}')">
+                                                                        </textarea>
+
+                                                                        <script>
+                                                                            function addUsernameToReply(textarea, username) {
+                                                                                if (textarea.value.trim() === '') {
+                                                                                    textarea.value = '@' + username + ' ';
+                                                                                }
+                                                                            }
+                                                                        </script>
+
+
+
+
+                                                                        <!-- Nút hành động -->
+                                                                        <div
+                                                                            class="d-flex justify-content-end gap-2 mt-2">
+                                                                            <button type="button"
+                                                                                class="btn btn-sm btn-outline-secondary cancel-reply">
+                                                                                Cancel
+                                                                            </button>
+                                                                            <button type="button"
+                                                                                class="btn btn-sm btn-primary send-reply"
+                                                                                data-comment-id="{{ $comment->comment_id }}"
+                                                                                data-article-id="{{ $comment->article_id }}">
+                                                                                Reply
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <?php endif; ?>
                                             <?php endforeach; ?>
+
+                                            <!-- THÊM PHÂN TRANG -->
+                                            <div class="d-flex justify-content-center mt-4">
+                                                {{ $comments->links() }}
+                                            </div>
                                         </div>
                                     </div>
-
 
 
                                     <div class="col-lg-5">
@@ -297,6 +428,7 @@
                                         </form>
                                     </div>
                                 </div>
+
 
 
                             </div>
@@ -437,8 +569,208 @@
                 }
             }
         });
-       
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("Script loaded!");
+
+            /** 🟢 1️⃣ Xử lý gửi Comment thường **/
+            document.querySelector(".comment-form").addEventListener("submit", function(e) {
+                e.preventDefault();
+                let formData = new FormData(this);
+                let url = this.getAttribute("action");
+
+                fetch(url, {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            let newComment = `
+                    <div class="comment-reply-cont bg-light py-3 px-4 mb-3 rounded shadow-sm">
+                        <div class="d-flex align-items-start">
+                            <div class="icon-60 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
+                                <img src="${data.comment.user_image}" alt="User Avatar">
+                            </div>
+                            <div class="inf w-100">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="fw-bold">${data.comment.username}</h6>
+                                    <span class="fs-12px text-muted"><i class="fas fa-clock"></i> ${data.comment.created_at}</span>
+                                </div>
+                                <div class="text color-000 fs-14px mt-2">${data.comment.content}</div>
+                                <div class="mt-2">
+                                    <a href="#" class="text-primary fw-bold reply-link" data-comment-id="${data.comment.comment_id}">
+                                        <i class="fas fa-reply"></i> Reply
+                                    </a>
+                                </div>
+                                <div class="reply-form-container mt-2 d-none" id="reply-form-${data.comment.comment_id}">
+                                    <form class="reply-form" data-comment-id="${data.comment.comment_id}">
+                                        <div class="d-flex align-items-start bg-white p-3 rounded shadow-sm">
+                                            <div class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
+                                                <img src="${data.comment.user_image}" alt="Your Avatar">
+                                            </div>
+                                            <div class="w-100">
+                                                <textarea class="form-control reply-content" name="content" rows="2" placeholder="Reply to @${data.comment.username}..."></textarea>
+                                                <input type="hidden" name="article_id" value="${data.comment.article_id}">
+                                                <input type="hidden" name="parent_id" value="${data.comment.comment_id}">
+                                                <div class="d-flex justify-content-end mt-2">
+                                                    <button type="button" class="btn btn-sm btn-secondary cancel-reply me-2">
+                                                        <i class="fas fa-times"></i> Cancel
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-primary send-reply" data-comment-id="${data.comment.comment_id}">
+                                                        <i class="fas fa-paper-plane"></i> Reply
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                            document.querySelector(".reviews-content").insertAdjacentHTML("beforeend",
+                                newComment);
+                            e.target.reset();
+                        } else {
+                            alert("Lỗi khi gửi comment!");
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            });
+        });
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Mở form trả lời khi nhấn "Reply"
+            document.querySelectorAll(".reply-btn").forEach(button => {
+                button.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    let commentId = this.getAttribute("data-comment-id");
+                    let replyForm = document.getElementById(`reply-form-${commentId}`);
+                    if (replyForm) {
+                        replyForm.classList.toggle("d-none");
+                    }
+                });
+            });
+
+            // Ẩn form khi nhấn "Cancel"
+            document.addEventListener("click", function(e) {
+                if (e.target.classList.contains("cancel-reply")) {
+                    let form = e.target.closest(".reply-form-container");
+                    if (form) {
+                        form.classList.add("d-none");
+                    }
+                }
+            });
+
+
+
+            $(document).ready(function() {
+                $(".send-reply").click(function() {
+                    var btn = $(this);
+                    var form = btn.closest("form");
+                    var content = form.find(".reply-content").val();
+                    var articleId = btn.data("article-id");
+                    var commentId = btn.data("comment-id");
+
+                    if (content.trim() === "") {
+                        alert("Nội dung không được để trống!");
+                        return;
+                    }
+
+                    $.ajax({
+                        url: "{{ route('client.articles.replyComment', ['article_id' => '__ARTICLE_ID__', 'comment_id' => '__COMMENT_ID__']) }}"
+                            .replace("__ARTICLE_ID__", articleId)
+                            .replace("__COMMENT_ID__", commentId),
+                        type: "POST",
+                        data: form.serialize(),
+                        success: function(response) {
+                            if (response.success) {
+                                // Tạo comment mới trong HTML
+                                var newReply = `
+                                <div class="replies ms-5 mt-3">
+                            <div
+                                                            
+                                                                class="comment-reply-cont bg-white py-2 px-3 mb-2 rounded shadow-sm">
+                                                                <div class="d-flex align-items-start">
+                                                                    <div
+                                                                        class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
+                                                                        <img src="<?= $reply->user->image ?? 'assets/img/colums/default.png' ?>"
+                                                                            alt="User Avatar">
+                                                                    </div>
+                                                                    <div class="inf w-100">
+                                                                        <div
+                                                                            class="d-flex justify-content-between align-items-center">
+                                                                            <h6 class="fw-bold">
+                                                                                <?= htmlspecialchars($reply->user->username ?? 'Anonymous') ?>
+                                                                            </h6>
+                                                                            <span class="fs-12px text-muted"><i
+                                                                                    class="fas fa-clock"></i>
+                                                                                <?= date('F d, Y', strtotime($reply->created_at)) ?>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div class="text color-000 fs-14px mt-1">
+                                                                            <?= nl2br(htmlspecialchars($reply->content)) ?>
+                                                                        </div>
+
+                                                                        <!-- Thêm nút phản hồi -->
+                                                                        <div class="mt-2">
+                                                                            <button
+                                                                                class="btn btn-sm btn-outline-primary reply-btn d-flex align-items-center gap-1 px-3 py-1"
+                                                                                data-comment-id="<?= $comment->comment_id ?>"
+                                                                                data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
+                                                                                <i
+                                                                                    class="fas fa-reply fa-flip-horizontal"></i>
+                                                                                <span class="fw-bold">Reply</span>
+                                                                            </button>
+                                                                        </div>
+
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                        `;
+
+                                // Chèn bình luận mới vào giao diện
+                                $("#reply-form-" + commentId).before(newReply);
+
+                                // Ẩn form & xóa nội dung nhập vào
+                                form.find(".reply-content").val("");
+                                $("#reply-form-" + commentId).addClass("d-none");
+                            }
+                        },
+                        error: function() {
+                            alert("Có lỗi xảy ra, vui lòng thử lại!");
+                        }
+                    });
+                });
+
+                // Nút hủy: Ẩn form khi nhấn "Hủy"
+                $(".cancel-reply").click(function() {
+                    $(this).closest(".reply-form-container").addClass("d-none");
+                });
+            });
+
+
+
+
+
+        });
+    </script>
+
+
+
+
+
+
+
+
 
 
 </body>

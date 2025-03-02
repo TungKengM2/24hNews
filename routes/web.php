@@ -29,7 +29,15 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/client/articles/{article_id}', [ArticleUserController::class, 'show'])->name('client.articles.article');
 Route::post('/client/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('client.articles.like');
-Route::post('/client/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('client.articles.comment');
+Route::post('/client/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])
+    ->middleware('auth')
+    ->name('client.articles.comment');
+Route::post('/client/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])
+    ->middleware('auth')
+    ->name('client.articles.replyComment');
+
+
+
 
 
 
@@ -40,18 +48,24 @@ Route::get('/article-detail', function () {
 // admin
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
     ->name('admin.dashboard');
-Route::get('/admin/role-upgrade-requests',
-    [AdminDashboardController::class, 'roleUpgradeRequests'])
+Route::get(
+    '/admin/role-upgrade-requests',
+    [AdminDashboardController::class, 'roleUpgradeRequests']
+)
     ->name('admin.user-role-requests');
-Route::post('/admin/approve-role-upgrade/{approval_id}',
-    [AdminDashboardController::class, 'approveRoleUpgrade'])
+Route::post(
+    '/admin/approve-role-upgrade/{approval_id}',
+    [AdminDashboardController::class, 'approveRoleUpgrade']
+)
     ->name('admin.approve-role-upgrade');
 Route::post('/admin/reject-role-upgrade/{approval_id}', [AdminDashboardController::class, 'rejectRoleUpgrade'])
     ->name('admin.reject-role-upgrade');
 
 // article
-Route::patch('/articles/{article}/approve',
-    [ArticleController::class, 'approve'])->name('articles.approve');
+Route::patch(
+    '/articles/{article}/approve',
+    [ArticleController::class, 'approve']
+)->name('articles.approve');
 Route::prefix('admin')->group(function () {
     Route::resource('articles', ArticleController::class);
 });
@@ -79,30 +93,40 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])
 
 // Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/dashboard',
-        [AdminDashboardController::class, 'index'])
+    Route::get(
+        '/admin/dashboard',
+        [AdminDashboardController::class, 'index']
+    )
         ->name('admin.dashboard');
 });
 
 // Hiển thị form nhập email để lấy lại mật khẩu
-Route::get('/forgot-password',
-    [ForgotPasswordController::class, 'showLinkRequestForm'])
+Route::get(
+    '/forgot-password',
+    [ForgotPasswordController::class, 'showLinkRequestForm']
+)
     ->name('password.request');
 
 // Xử lý gửi email đặt lại mật khẩu
-Route::post('/forgot-password',
-    [ForgotPasswordController::class, 'sendResetLinkEmail'])
+Route::post(
+    '/forgot-password',
+    [ForgotPasswordController::class, 'sendResetLinkEmail']
+)
     ->name('password.email');
 
 // Hiển thị form nhập mật khẩu mới
-Route::get('/reset-password/{token}',
-    [ForgotPasswordController::class, 'showResetForm'])
+Route::get(
+    '/reset-password/{token}',
+    [ForgotPasswordController::class, 'showResetForm']
+)
     ->name('password.reset');
 
 // Xử lý cập nhật mật khẩu mới
 Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])
     ->name('password.update');
 
-Route::post('/profile/request-author-role',
-    [ProfileController::class, 'requestAuthorRole'])
+Route::post(
+    '/profile/request-author-role',
+    [ProfileController::class, 'requestAuthorRole']
+)
     ->name('profile.request-author-role');
