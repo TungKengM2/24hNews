@@ -4,31 +4,46 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Cookie;
-
-
 
 class AuthAdminController extends Controller
 {
-    // login
     public function showLoginAdminForm()
     {
-        return view('auth.authadmin.loginadmin');
+        return view('auth.authadmin.login');
     }
 
-    // signup
-    public function showSignupAdminForm()
+    public function login(Request $request)
     {
-        return view('auth.authadmin.signupadmin');
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+    
+        if (Auth::attempt($credentials, $request->has('remember'))) {
+            $user = Auth::user();
+    
+            if ($user->role_id == 1) {
+                session()->flash('success', 'Login successful!');
+                return redirect()->intended('/admin/dashboard');
+            }
+    
+            Auth::logout();
+            return redirect('/')->withErrors(['email' => 'You do not have admin access.']);
+        }
+    
+        return back()->withErrors(['email' => 'The provided credentials do not match our records.'])->withInput($request->only('email'));
+    }
+    
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/login-admin')->with('status', 'You have been logged out.');
     }
 
-    // forget password
     public function showForgetAdminForm()
     {
-        return view('auth.authadmin.forgetadmin');
+        return view('auth.authadmin.forget');
     }
 }
