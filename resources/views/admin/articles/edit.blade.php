@@ -19,19 +19,27 @@
             font-size: 14px;
         }
 
-        .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: #c3bebe;
-            color: white;
-            border: 1px solid #c2c2c2;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 14px;
+        .title-slug-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            margin-bottom: 1rem;
+        }
+
+        .title-slug-container textarea {
+            height: 50px; /* Chiều cao cố định */
         }
     </style>
 @endsection
 
 @section('title')
-    Chỉnh Sửa Bải Viết
+    Chỉnh Sửa Bài Viết
 @endsection
 
 @section('content')
@@ -41,19 +49,17 @@
             <div class="content-header">
                 <div class="d-flex align-items-center">
                     <div class="me-auto">
-                        <h4 class="page-title">Cập Nhập Bài Viết</h4>
+                        <h4 class="page-title">Cập Nhật Bài Viết</h4>
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="tables_data.html#"><i
-                                                class="mdi mdi-home-outline"></i></a></li>
+                                    <li class="breadcrumb-item"><a href="#"><i class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Danh Sách Bài Viết</li>
-                                    <li class="breadcrumb-item active" aria-current="page">Cập Nhập</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Cập Nhật</li>
                                 </ol>
                             </nav>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -69,20 +75,18 @@
                     </div>
                 @endif
 
-                <form action="{{ route('articles.update', $article) }}" method="POST" enctype="multipart/form-data"
-                    id="articleForm">
+                <form action="{{ route('articles.update', $article) }}" method="POST" enctype="multipart/form-data" id="articleForm">
                     @csrf
                     @method('PUT')
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Tiêu đề</label>
-                        <input type="text" class="form-control" id="title" name="title"
-                            value="{{ $article->title }}" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="slug" class="form-label">Slug</label>
-                        <input type="text" class="form-control" id="slug" name="slug"
-                            value="{{ $article->slug }}" required>
+                    <div class="title-slug-container">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Tiêu đề</label>
+                            <textarea class="form-control" id="title" name="title" required>{{ $article->title }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="slug" class="form-label">Slug</label>
+                            <textarea class="form-control" id="slug" name="slug" required>{{ $article->slug }}</textarea>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -101,20 +105,16 @@
                         </select>
                     </div>
 
-
                     <div class="mb-3">
                         <label class="form-label">Danh mục</label>
                         <select name="category_id" class="form-control">
                             @foreach ($categories as $category)
-                                <option value="{{ $category->category_id }}"
-                                    {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
+                                <option value="{{ $category->category_id }}" {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
                                     {{ $category->name }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
-
-
 
                     <input type="hidden" name="author_id" value="{{ $article->author_id }}">
 
@@ -122,11 +122,9 @@
                         <label class="form-label" for="thumbnail_url">Ảnh Đại Diện</label>
                         <input class="form-control" type="file" name="thumbnail_url" id="thumbnail_url">
                         @if ($article->thumbnail_url)
-                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Current Thumbnail"
-                                width="100">
+                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Current Thumbnail" width="100">
                         @endif
                     </div>
-
 
                     <button type="submit" class="btn btn-primary mt-3">Cập nhật</button>
                 </form>
@@ -145,7 +143,7 @@
                 document.getElementById("title").addEventListener("input", function() {
                     let title = this.value.trim();
                     let slug = title.toLowerCase()
-                        .normalize("NFD").replace(/[̀-ͯ]/g, "")
+                        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                         .replace(/đ/g, "d").replace(/Đ/g, "D")
                         .replace(/\s+/g, "-")
                         .replace(/[^\w-]/g, "")
@@ -155,5 +153,6 @@
                     document.getElementById("slug").value = slug;
                 });
             </script>
-
-        @endsection
+        </div>
+    </div>
+@endsection
