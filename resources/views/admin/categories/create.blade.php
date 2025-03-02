@@ -5,8 +5,8 @@
 @endsection
 
 @section('content')
-    <div class="wrapper">
-        <div class="container mt-5 ">
+    <div class="content-wrapper">
+        <div class="container-full">
             <div class="card p-2">
                 <h2 class="mb-4">Create New Category</h2>
                 <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">

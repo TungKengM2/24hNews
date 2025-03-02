@@ -80,7 +80,7 @@
                                                 <td>{{ $article->category->name ?? 'Uncategorized' }}</td>
                                                 <td>
                                                     <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                        alt="Thumbnail" width="100" height="150">
+                                                        alt="Thumbnail" width="500" height="100">
 
                                                 </td>
                                                 <td>
