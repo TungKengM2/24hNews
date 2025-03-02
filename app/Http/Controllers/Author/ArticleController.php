@@ -1,138 +1,224 @@
 <?php
 
-    namespace App\Http\Controllers\Author;
+namespace App\Http\Controllers\Author;
 
-    use App\Http\Controllers\Controller;
-    use App\Models\Article;
-    use App\Models\Category;
-    use App\Models\Tag;
-    use App\Models\User;
-    use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use App\Models\Article;
+use App\Models\Category;
+use App\Models\Tag;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
-    class ArticleController extends Controller
+class ArticleController extends Controller
+{
+    public function index()
     {
+        $articles = Article::with([
+            'author',
+            'category',
+            'approver',
+            'tags',
+        ])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
-        public function __construct()
-        {
-            $this->middleware('auth');
-            $this->middleware('role:author');
-        }
-
-        public function index()
-        {
-            $articles = Article::where('author_id', Auth::id())
-                ->with(['category', 'tags'])
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
-
-            return view('author.manageArticles', compact('articles'));
-        }
-
-        public function create()
-        {
-            $categories = Category::all();
-            $tags = Tag::all();
-
-            return view('author.create', compact('categories', 'tags'));
-        }
-
-        public function edit(Article $article)
-        {
-            $categories = Category::select('category_id', 'name')->get();
-
-            return view('author.edit',
-                compact('article', 'categories'));
-        }
-
-        public function update(Request $request, Article $article)
-        {
-            // Validation rules
-            $request->validate([
-                'title' => 'required|string|max:255',
-                'slug' => $request->filled('slug') ? 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id' : 'nullable',
-                'content' => 'required',
-                'author_id' => 'required|exists:users,user_id',
-                'category_id' => 'required|exists:categories,category_id',
-                'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            ]);
-
-            $article->title = $request->input('title', $article->title);
-            $article->slug = $request->input('slug', $article->slug);
-            $article->content = $request->input('content', $article->content);
-            $article->author_id = $request->input('author_id',
-                $article->author_id);
-            $article->category_id = $request->input('category_id',
-                $article->category_id);
-
-            if ($request->hasFile('thumbnail_url')) {
-                $file = $request->file('thumbnail_url');
-                $path = $file->store('thumbnails', 'public');
-                $article->thumbnail_url = $path;
-            } else {
-                $article->thumbnail_url = $article->thumbnail_url;
-            }
-
-            $article->save();
-
-            return redirect()
-                ->route('author.articles')
-                ->with('success', 'Article updated successfully!');
-        }
-
-        public function store(Request $request)
-        {
-            $request->validate([
-                'title' => 'required|string|max:255',
-                'slug' => 'required|string|max:255|unique:articles,slug',
-                'content' => 'required',
-                'category_id' => 'required|exists:categories,category_id',
-                'thumbnail_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'status' => 'required|in:draft,pending',
-            ]);
-
-            $article = new Article();
-            $article->title = $request->title;
-            $article->slug = $request->slug;
-            $article->content = $request->input('content');
-            $article->category_id = $request->category_id;
-            $article->status = $request->status;
-            $article->author_id = auth()->id();
-
-            if ($request->hasFile('thumbnail_url')) {
-                $path = $request->file('thumbnail_url')
-                    ->store('thumbnails', 'public');
-                $article->thumbnail_url = $path;
-            }
-
-            $article->save();
-
-            if ($request->status == 'draft') {
-                return redirect()
-                    ->route('author.articles.store')
-                    ->with('success', 'Bài viết đã lưu nháp!');
-            }
-
-            return redirect()
-                ->route('author.articles.store')
-                ->with('success', 'Bài viết đã gửi để chờ duyệt!');
-        }
-
-        public function destroy($id)
-        {
-            $article = Article::where('author_id', Auth::id())->findOrFail($id);
-            $article->delete();
-
-            return redirect()
-                ->route('author.articles')
-                ->with('success', 'Bai viet da dc xoa');
-        }
-
-        public function show($id)
-        {
-            $article = Article::with(['category', 'author'])->findOrFail($id);
-
-            return view('author.show', compact('article'));
-        }
-
+        return view('author.articles.index', compact('articles'));
     }
+
+    public function approve(Article $article)
+    {
+        if ($article->status === 'published') {
+            return redirect()
+                ->back()
+                ->with('error', 'Bài viết đã được duyệt trước đó.');
+        }
+
+        if ($article->status !== 'pending') {
+            return redirect()
+                ->back()
+                ->with('error', 'Bài viết không hợp lệ để duyệt.');
+        }
+
+        $article->update([
+            'status' => 'published',
+            'approved_by' => auth()->id(),
+        ]);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Bài viết đã được duyệt.');
+    }
+
+    public function update(Request $request, Article $article)
+    {
+        $rules = [
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:articles,slug,'.$article->article_id.',article_id',
+            'content' => 'nullable',
+            'author_id' => 'required|exists:users,user_id',
+            'category_id' => 'required|exists:categories,category_id',
+            'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'tags' => 'array',
+            'tags.*' => 'nullable|string',
+            'new_tags' => 'nullable|string',
+        ];
+
+        $request->validate($rules);
+
+        $article->update([
+            'title' => $request->title,
+            'slug' => $request->slug,
+            'content' => $request->content,
+            'author_id' => $request->author_id,
+            'category_id' => $request->category_id,
+        ]);
+
+        if ($request->hasFile('thumbnail_url')) {
+            if ($article->thumbnail_url) {
+                Storage::disk('public')->delete($article->thumbnail_url);
+            }
+            $path = $request->file('thumbnail_url')
+                ->store('thumbnails', 'public');
+            $article->update(['thumbnail_url' => $path]);
+        }
+
+        $tagInputs = $request->input('tags', []);
+        $tagIds = [];
+
+        foreach ($tagInputs as $tag) {
+            $tag = trim($tag);
+
+            if (is_numeric($tag)) {
+                // Nếu là số, kiểm tra có tồn tại trong DB không
+                if (Tag::where('tag_id', $tag)->exists()) {
+                    $tagIds[] = (int) $tag;
+                }
+            } else {
+                // Nếu là chữ, tự động tạo mới
+                $tagModel = Tag::firstOrCreate(['name' => $tag]);
+                $tagIds[] = $tagModel->tag_id;
+            }
+        }
+
+        $article->tags()->sync($tagIds);
+
+        return redirect()
+            ->route('author.articles.index')
+            ->with('success', 'Bài viết đã được cập nhật thành công!');
+    }
+
+    public function store(Request $request)
+    {
+        //            dd($request->all());
+        $tagInputs = array_filter($request->input('tags', []),
+            function ($tag) {
+                return ! empty(trim($tag));
+            });
+
+        if (is_string($tagInputs)) {
+            $tagInputs = explode(',', $tagInputs);
+        }
+
+        $tagIds = [];
+
+        foreach ($tagInputs as $tag) {
+            if (is_numeric($tag)) {
+                $tagIds[] = (int) $tag;
+            } else {
+                $tag = trim($tag);
+                if (! empty($tag)) {
+                    $tagModel = Tag::firstOrCreate(['name' => $tag]);
+                    $tagIds[] = $tagModel->tag_id;
+                }
+            }
+        }
+        //            dd($request->all());
+        $rules = [
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:articles,slug',
+            'category_id' => 'required|exists:categories,category_id',
+            'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'status' => 'required|in:draft,pending',
+            'content' => $request->status !== 'draft' ? 'required' : 'nullable',
+        ];
+
+        $request->validate($rules);
+
+        $article = Article::create([
+            'title' => $request->title,
+            'slug' => $request->slug,
+            'content' => $request->input('content') ?? '',
+            'category_id' => $request->category_id,
+            'status' => $request->status,
+            'author_id' => auth()->id(),
+        ]);
+
+        //            dd($article);
+
+        if ($request->hasFile('thumbnail_url')) {
+            $path = $request->file('thumbnail_url')
+                ->store('thumbnails', 'public');
+            $article->update(['thumbnail_url' => $path]);
+        }
+
+        $article->tags()->sync($tagIds);
+
+        return redirect()
+            ->route('author.articles.index')
+            ->with('success', 'Bài viết đã được tạo thành công!');
+    }
+
+    public function create()
+    {
+        $categories = Category::select('category_id', 'name')->get();
+        $authors = User::select('user_id', 'username')->get();
+        $approvers = User::where('role_id', 1)
+            ->select('user_id', 'username')
+            ->get();
+        $tags = Tag::all();
+
+        return view('author.articles.create',
+            compact('categories', 'authors', 'approvers', 'tags'));
+    }
+
+    public function show(Article $article)
+    {
+        //            dd($article);
+        return view('author.articles.show', compact('article'));
+    }
+
+    public function edit(Article $article)
+    {
+        $categories = Category::select('category_id', 'name')->get();
+        $authors = User::select('user_id', 'username')->get();
+        $approvers = User::where('role_id', 1)
+            ->select('user_id', 'username')
+            ->get();
+
+        // Lấy tất cả tags có trong database
+        $tags = Tag::select('tag_id', 'name')->get();
+
+        // Lấy danh sách tag đã chọn của bài viết
+        $selectedTags = $article->tags->pluck('tag_id')->toArray();
+
+        return view('author.articles.edit',
+            compact('article', 'categories', 'authors', 'approvers', 'tags',
+                'selectedTags'));
+    }
+
+    public function destroy(Article $article)
+    {
+        if ($article->thumbnail_url) {
+            Storage::disk('public')->delete($article->thumbnail_url);
+        }
+
+        $article->tags()->detach();
+
+        $article->delete();
+
+        return redirect()
+            ->route('author.articles.index')
+            ->with('success', 'Bài viết đã bị xóa!');
+    }
+}

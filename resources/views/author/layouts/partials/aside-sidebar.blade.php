@@ -20,16 +20,25 @@
                 </li> --}}
                 <li class="header">Quản Lý</li>
                 <li class="treeview">
-                    <a href="index.html#">
+                    <a href="{{ route('author.articles.index') }}">
                         <i data-feather="grid"></i>
                         <span>Bài Viết</span>
                         <span class="pull-right-container">
-                            <i class="fa fa-angle-right pull-right"></i>
-                        </span>
+            <i class="fa fa-angle-right pull-right"></i>
+        </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="#"><i class="icon-Commit"><span class="path1"></span><span
-                                        class="path2"></span></i>Bài Viết</a>
+                        <li>
+                            <a href="{{ route('author.articles.index') }}">
+                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                Bài Viết
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('author.articles.create') }}">
+                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                Thêm Bài Viết
+                            </a>
                         </li>
                     </ul>
                 </li>

@@ -10,11 +10,11 @@
     class AuthorDashboard extends Controller
     {
 
-        public function __construct()
-        {
-            $this->middleware('auth');
-            $this->middleware('role:author');
-        }
+        //        public function __construct()
+        //        {
+        //            $this->middleware('auth');
+        //            $this->middleware('role:author');
+        //        }
 
         public function index()
         {
@@ -40,6 +40,7 @@
                 ->mapWithKeys(function ($item) {
                     return [$item->date => $item->views];
                 });
+
             //            dd($viewsData);
             //            dd($articleStats);
             return view('author.dashboard',
