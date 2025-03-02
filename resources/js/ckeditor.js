@@ -47,18 +47,10 @@ import {
 
 import 'ckeditor5/ckeditor5.css';
 
-// form.addEventListener('submit', () => {
-//     const contentTextarea = document.querySelector('#content');
-//     if (contentTextarea) {
-//         contentTextarea.value = editor.getData();
-//         console.log('Content to be submitted:', contentTextarea.value); // Debugging
-//     }
-// });
-
 document.addEventListener('DOMContentLoaded', () => {
     ClassicEditor
-        .create(document.querySelector('#content'), {
-            licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDA4NzM1OTksImp0aSI6IjU3NjMyMzYyLThjYzktNGI5OS04YTk4LTA3YTQ0NTRhOTk2OSIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImY3ODMxZjUwIn0.8zMtmfSOdINS8gAXMt-u-ORW6jDDZLl5fJejawSrIC7aeWgLGNiBwgApykggy8_Z789xYoaJ4aygTNI0YniwRA',
+        .create(document.querySelector('#editor'), {
+            licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NDIxNjk1OTksImp0aSI6IjA2MTAzZGJjLWMxNjUtNDE2Ny1hY2FjLTJiZmU3Y2IzYzAzZCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImJjZTFlMGZiIn0.4XHyURSOWK1Ig2rk6h67vC6NCjUxZquMrBuA61Xso-DMiRFf46XM9e-BF3mDcAWQ5lvEOKOZKk5kAW4woA9mgw',
             plugins: [
                 Essentials,
                 Paragraph,
@@ -88,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ],
             toolbar: {
                 items: [
-                    'undo', 'redo', 'emoji',
+                    'undo', 'redo',
                     '|',
                     'heading',
                     '|',
@@ -133,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             importWord: {
                 // Configuration.
-                tokenUrl: 'https://apyf7qowpi43.cke-cs.com/token/dev/27d01afbe09470427d714aac32cf5ec89984c6226ad91e72347db760582b?limit=10',
+                tokenUrl: 'https://yof1o6oo2dbn.cke-cs.com/token/dev/b8ec5cf7235a1243df57bded9404ec6766718cd6f963cff14cc1260519ba?limit=10',
                 formatting: {
                     resets: 'none',
                     defaults: 'none',
@@ -223,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 allowExternalImagesEditing: [/.*/],
             },
             cloudServices: {
-                tokenUrl: 'https://apyf7qowpi43.cke-cs.com/token/dev/27d01afbe09470427d714aac32cf5ec89984c6226ad91e72347db760582b?limit=10',
+                tokenUrl: 'https://yof1o6oo2dbn.cke-cs.com/token/dev/b8ec5cf7235a1243df57bded9404ec6766718cd6f963cff14cc1260519ba?limit=10',
             },
             menuBar: {
                 isVisible: true,
