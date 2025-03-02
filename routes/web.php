@@ -1,15 +1,15 @@
 <?php
 
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\AuthUserController;
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 // 🌟 Giao diện trang chủ + bài viết
@@ -51,7 +51,7 @@ Route::post('/admin/reject-role-upgrade/{approval_id}', [AdminDashboardControlle
 // article
 Route::patch(
     '/articles/{article}/approve',
-    [ArticleController::class, 'approve']
+    [AdminArticleController::class, 'approve']
 )->name('articles.approve');
 Route::prefix('admin')->group(function () {
     Route::resource('articles', ArticleController::class);

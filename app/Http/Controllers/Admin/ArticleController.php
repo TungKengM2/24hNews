@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\User;
@@ -19,7 +20,6 @@ class ArticleController extends Controller
         $articles = Article::with(['author', 'category', 'approver', 'tags'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-
         return view('admin.articles.index', compact('articles'));
     }
 

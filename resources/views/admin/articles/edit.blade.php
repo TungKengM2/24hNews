@@ -45,7 +45,7 @@
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="tables_data.html#"><i
+                                    <li class="breadcrumb-item"><a href="{{ route('articles.index') }}"><i
                                                 class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Danh Sách Bài Viết</li>
                                     <li class="breadcrumb-item active" aria-current="page">Cập Nhập</li>
@@ -73,25 +73,31 @@
                     id="articleForm">
                     @csrf
                     @method('PUT')
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Tiêu đề</label>
-                        <input type="text" class="form-control" id="title" name="title"
-                            value="{{ $article->title }}" required>
+                    <div class="form-group">
+                        <h5>Title:</h5>
+                        <div class="controls">
+                            <input type="text" id="title" name="title" class="form-control"
+                                value="{{ $article->title }}" required>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="slug" class="form-label">Slug</label>
-                        <input type="text" class="form-control" id="slug" name="slug"
-                            value="{{ $article->slug }}" required>
+                    <div class="form-group">
+                        <h5>Slug:</h5>
+                        <div class="controls">
+                            <input type="text" id="slug" name="slug" class="form-control"
+                                value="{{ $article->slug }}" required>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="content" class="form-label">Nội dung</label>
-                        <textarea id="content" name="content" class="form-control">{!! $article->content !!}</textarea>
+                    <div class="form-group">
+                        <h5>Content:</h5>
+                        <div class="controls">
+                            <textarea id="content" name="content" class="form-control"> {!! $article->content !!} </textarea>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Chọn hoặc thêm tags:</label>
+                    <div class="form-group">
+                        <h5>Slect Tags Or Add New Tags:</h5>
                         <select name="tags[]" class="form-control select2" multiple="multiple">
                             @foreach ($tags as $tag)
                                 <option value="{{ $tag->tag_id }}" @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
@@ -102,8 +108,8 @@
                     </div>
 
 
-                    <div class="mb-3">
-                        <label class="form-label">Danh mục</label>
+                    <div class="form-group">
+                        <h5>Category</h5>
                         <select name="category_id" class="form-control">
                             @foreach ($categories as $category)
                                 <option value="{{ $category->category_id }}"

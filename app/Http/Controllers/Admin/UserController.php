@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -13,8 +14,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $roles = Role::all(); // Lấy tất cả role
-        $users = User::paginate(5); // Lấy user và phân trang
+        $roles = Role::all();
+        $users = User::paginate(10);
 
         return view('admin.users.index', compact('roles', 'users'));
     }
