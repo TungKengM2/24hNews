@@ -85,8 +85,6 @@
                             required>
                     </div>
 
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
                     <!-- Tự động gán tác giả -->
                     <input type="hidden" name="author_id" value="{{ auth()->id() }}">
@@ -94,10 +92,13 @@
 
                     <button type="submit" class="btn btn-primary">Gửi</button>
                     <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
+                    <button type="button" class="waves-effect waves-light btn btn-default"><a
+                            href="{{ route('articles.index') }}">
+                            Back to List
+                        </a></button>
                 </form>
 
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
                 <script>
                     $(document).ready(function() {
@@ -155,7 +156,7 @@
                     });
                 </script>
 
-                Đọc nội dung file Word (nếu có)
+                {{-- Đọc nội dung file Word (nếu có) --}}
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
                 <script>
                     document.getElementById('thumbnail_url').addEventListener('change', function(event) {

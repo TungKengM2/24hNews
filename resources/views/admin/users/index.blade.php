@@ -5,146 +5,56 @@
 @endsection
 
 @section('content')
-    {{-- <div class="mt-5">
-        @foreach ($roles as $role)
-            <div class="card mb-3">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">{{ ucfirst($role->name) }}</h4>
-                    <small>{{ $role->description }}</small>
-                </div>
-                <div class="card-body">
-                    @if ($role->users->isEmpty())
-                        <p class="text-muted">Chưa có người dùng nào.</p>
-                    @else
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Username</th>
-                                    <th>Email</th>
-                                    <th>Số điện thoại</th>
-                                    <th>Ảnh đại diện</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($role->users as $user)
+    <div class="content-wrapper">
+        <div class="container-full">
+            @foreach ($roles as $role)
+                <div class="box container mb-4">
+                    <div class="box-header with-border">
+                        <h4 class="box-title">{{ ucfirst($role->name) }}</h4>
+                        <small>{{ $role->description }}</small>
+                    </div>
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-dark mb-0">
+                                <thead>
                                     <tr>
-                                        <td>{{ $user->user_id }}</td>
-                                        <td>{{ $user->username }}</td>
-                                        <td>{{ $user->email }}</td>
-                                        <td>{{ $user->phone }}</td>
-                                        <td>
-                                            @if ($user->image)
-                                                <img src="{{ asset('storage/' . $user->image) }}" alt="Avatar"
-                                                    width="50">
-                                            @else
-                                                Không có ảnh
-                                            @endif
-                                        </td>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Ảnh đại diện</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @endif
-                </div>
-            </div>
-        @endforeach
-    </div> --}}
-
-    {{-- <div class="container">
-        <div class="box-header with-border">
-            <h3 class="box-title">Data Table With Full Features</h3>
-        </div> --}}
-    <!-- /.box-header -->
-    {{-- <div class="box-body">
-            <div class="table-responsive">
-                @foreach ($roles as $role)
-                    <div class="card mb-3">
-                        <div class="card-header bg-primary text-white">
-                            <h4 class="mb-0">{{ ucfirst($role->name) }}</h4>
-                            <small>{{ $role->description }}</small>
-                        </div>
-                        <div class="card-body">
-                            @if ($role->users->isEmpty())
-                                <p class="text-muted">Chưa có người dùng nào.</p>
-                            @else
-                                <table class="table table-bordered table-striped">
-                                    <thead>
+                                </thead>
+                                <tbody id="user-table">
+                                    @foreach ($users->where('role_id', $role->role_id) as $user)
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>Số điện thoại</th>
-                                            <th>Ảnh đại diện</th>
+                                            <td>{{ $user->user_id }}</td>
+                                            <td>{{ $user->username }}</td>
+                                            <td>{{ $user->email }}</td>
+                                            <td>{{ $user->phone }}</td>
+                                            <td>
+                                                @if ($user->image)
+                                                    <img src="{{ asset('storage/' . $user->image) }}" alt="Avatar"
+                                                        width="50">
+                                                @else
+                                                    Không có ảnh
+                                                @endif
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($role->users as $user)
-                                            <tr>
-                                                <td>{{ $user->user_id }}</td>
-                                                <td>{{ $user->username }}</td>
-                                                <td>{{ $user->email }}</td>
-                                                <td>{{ $user->phone }}</td>
-                                                <td>
-                                                    @if ($user->image)
-                                                        <img src="{{ asset('storage/' . $user->image) }}" alt="Avatar"
-                                                            width="50">
-                                                    @else
-                                                        Không có ảnh
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="pagination-wrapper" class="d-flex justify-content-end mt-5">
+                            <nav>
+                                <ul class="pagination pagination-sm">
+                                    {{ $users->links('pagination::bootstrap-5') }}
+                                </ul>
+                            </nav>
                         </div>
                     </div>
-                @endforeach
-            </div>
-        </div> --}}
-
-    @foreach ($roles as $role)
-        <div class="card mb-3">
-            <div class="card-header bg-primary text-white text-center">
-                <h4 class="mb-0">{{ ucfirst($role->name) }}</h4>
-                <small>{{ $role->description }}</small>
-            </div>
-            <div class="card-body">
-                <table class="table table-bordered text-center">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Số điện thoại</th>
-                            <th>Ảnh đại diện</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($users->where('role_id', $role->role_id) as $user)
-                            <tr>
-                                <td>{{ $user->user_id }}</td>
-                                <td>{{ $user->username }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->phone }}</td>
-                                <td>
-                                    @if ($user->image)
-                                        <img src="{{ asset('storage/' . $user->image) }}" alt="Avatar" width="50">
-                                    @else
-                                        Không có ảnh
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-                <!-- Hiển thị phân trang -->
-                <div class="d-flex justify-content-center">
-                    {{ $users->links() }}
                 </div>
-            </div>
+            @endforeach
         </div>
-    @endforeach
+    </div>
 @endsection
