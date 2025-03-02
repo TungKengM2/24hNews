@@ -1,0 +1,23 @@
+{
+  "resources/css/app.css": {
+    "file": "js/app.js",
+    "name": "app",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "js/app2.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/ckeditor.js": {
+    "file": "js/ckeditor.js",
+    "name": "ckeditor",
+    "src": "resources/js/ckeditor.js",
+    "isEntry": true,
+    "css": [
+      "assets/ckeditor-B7bDVuwv.css"
+    ]
+  }
+}
