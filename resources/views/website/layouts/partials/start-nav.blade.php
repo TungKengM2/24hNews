@@ -7,8 +7,7 @@
                 <span></span>
             </button>
             <a href="home-default.html#" class="logo-brand d-block d-lg-none w-50 my-4">
-                <img src="{{ asset('client/img/logo_home1.png') }}" alt="" class="dark-none">
-                <img src="{{ asset('client/img/logo_home1_lt.png') }}" alt="" class="light-none">
+               <h1>News24h</h1>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
