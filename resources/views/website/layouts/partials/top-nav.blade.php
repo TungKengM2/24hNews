@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <a href="home-default.html#" class="logo-brand d-none d-lg-block">
+                <a href="{{ url('/') }}" class="logo-brand d-none d-lg-block">
                     <h1>News24h</h1>
                 </a>
             </div>
