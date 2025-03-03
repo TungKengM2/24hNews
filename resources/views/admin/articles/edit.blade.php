@@ -1,43 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('admin.layouts.master')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Post</title>
+@section('head')
+    <!-- Style -->
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet">
-    <script src="{{ asset('js/ckeditor.js') }}"></script>
+    {{-- <script src="{{ asset('js/ckeditor.js') }}"></script> --}}
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .wrapper {
-            display: flex;
-        }
-
-        .container {
-            width: 100%;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-left: 300px;
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #c3bebe;
+            color: white;
+            border: 1px solid #c2c2c2;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
         }
     </style>
-</head>
+@endsection
 
-<body>
-    <div class="wrapper">
-        @include('admin.menu')
-        <div class="container mt-5">
+@section('title')
+    Chỉnh Sửa Bải Viết
+@endsection
+
+@section('content')
+    <div class="content-wrapper">
+        <div class="container-full">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="d-flex align-items-center">
+                    <div class="me-auto">
+                        <h4 class="page-title">Cập Nhập Bài Viết</h4>
+                        <div class="d-inline-block align-items-center">
+                            <nav>
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{{ route('articles.index') }}"><i
+                                                class="mdi mdi-home-outline"></i></a></li>
+                                    <li class="breadcrumb-item" aria-current="page">Danh Sách Bài Viết</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Cập Nhập</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Main content -->
             <div class="card p-2">
-                <h2 class="mb-4">Update Post</h2>
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -52,47 +64,45 @@
                     id="articleForm">
                     @csrf
                     @method('PUT')
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Tiêu đề</label>
-                        <input type="text" class="form-control" id="title" name="title"
-                            value="{{ $article->title }}" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="slug" class="form-label">Slug</label>
-                        <input type="text" class="form-control" id="slug" name="slug"
-                            value="{{ $article->slug }}" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="content" class="form-label">Nội dung</label>
-                        <div id="editor"></div>
-                        <textarea id="content" name="content" style="display: none;">{!! $article->content !!}</textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Tags</label>
-                        <div class="d-flex flex-wrap">
-                            @foreach ($tags as $tag)
-                                <div class="form-check me-3">
-                                    <input class="form-check-input" type="checkbox" name="tags[]"
-                                        value="{{ $tag->tag_id }}"
-                                        {{ in_array($tag->tag_id, $article->tags->pluck('tag_id')->toArray()) ? 'checked' : '' }}>
-                                    <label class="form-check-label">{{ $tag->name }}</label>
-                                </div>
-                            @endforeach
+                    <div class="form-group">
+                        <h5>Title:</h5>
+                        <div class="controls">
+                            <input type="text" id="title" name="title" class="form-control"
+                                value="{{ $article->title }}" required>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Thêm Tags mới (cách nhau bởi dấu phẩy)</label>
-                        <input type="text" class="form-control" name="new_tags" placeholder="Tag1, Tag2, Tag3">
+                    <div class="form-group">
+                        <h5>Slug:</h5>
+                        <div class="controls">
+                            <input type="text" id="slug" name="slug" class="form-control"
+                                value="{{ $article->slug }}" required>
+                        </div>
+                    </div>
+
+                    <script src="/tinymce/js/tinymce/tinymce.min.js"></script>
+
+                    <div class="form-group">
+                        <h5>Content:</h5>
+                        <div class="controls">
+                            <textarea id="editor" name="content" class="form-control"> {!! $article->content !!} </textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h5>Slect Tags Or Add New Tags:</h5>
+                        <select name="tags[]" class="form-control select2" multiple="multiple">
+                            @foreach ($tags as $tag)
+                                <option value="{{ $tag->tag_id }}" @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
+                                    {{ $tag->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
 
 
-
-                    <div class="mb-3">
-                        <label class="form-label">Danh mục</label>
+                    <div class="form-group">
+                        <h5>Category</h5>
                         <select name="category_id" class="form-control">
                             @foreach ($categories as $category)
                                 <option value="{{ $category->category_id }}"
@@ -102,7 +112,9 @@
                             @endforeach
                         </select>
                     </div>
-                    <!-- Tự động gán tác giả -->
+
+
+
                     <input type="hidden" name="author_id" value="{{ $article->author_id }}">
 
                     <div class="mt-3">
@@ -114,46 +126,42 @@
                         @endif
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+
+                    <button type="submit" class="btn btn-primary mt-3">Cập nhật</button>
                 </form>
-                <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-
-                <script>
-                    document.getElementById('articleForm').addEventListener('submit', function() {
-                        document.getElementById('content').value = document.getElementById('editor').innerHTML;
-                    });
-                </script>
-                <script>
-                    $(document).ready(function() {
-                        $('.select2').select2({
-                            placeholder: "Chọn tags...",
-                            allowClear: true
-                        });
-                    });
-                </script>
-                <script>
-                    document.getElementById("title").addEventListener("input", function() {
-                        let title = this.value.trim();
-                        let slug = title.toLowerCase()
-                            .normalize("NFD").replace(/[̀-ͯ]/g, "") // Loại bỏ dấu tiếng Việt
-                            .replace(/đ/g, "d").replace(/Đ/g, "D")
-                            .replace(/\s+/g, "-") // Thay dấu cách bằng "-"
-                            .replace(/[^\w-]/g, "") // Xóa ký tự đặc biệt
-                            .replace(/--+/g, "-") // Loại bỏ nhiều dấu "-" liên tiếp
-                            .replace(/^-+|-+$/g, ""); // Xóa "-" ở đầu và cuối
-
-                        document.getElementById("slug").value = slug;
-                    });
-
-                    document.getElementById('articleForm').addEventListener('submit', function() {
-                        document.getElementById('content').value = document.getElementById('editor').innerHTML;
-                    });
-                </script>
             </div>
-        </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+            <script>
+                $(document).ready(function() {
+                    $('.select2').select2({
+                        tags: true,
+                        tokenSeparators: [','],
+                        placeholder: "Chọn hoặc nhập tags mới",
+                        allowClear: true
+                    });
+                });
 
-</html>
+                document.getElementById("title").addEventListener("input", function() {
+                    let title = this.value.trim();
+                    let slug = title.toLowerCase()
+                        .normalize("NFD").replace(/[̀-ͯ]/g, "")
+                        .replace(/đ/g, "d").replace(/Đ/g, "D")
+                        .replace(/\s+/g, "-")
+                        .replace(/[^\w-]/g, "")
+                        .replace(/--+/g, "-")
+                        .replace(/^-+|-+$/g, "");
+
+                    document.getElementById("slug").value = slug;
+                });
+            </script>
+
+            {{-- Script TinyMCE --}}
+            <script>
+                tinymce.init({
+                    selector: '#editor',
+                    plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
+                    toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | table',
+                    menubar: 'file edit view insert format tools table help'
+                });
+            </script>
+        @endsection

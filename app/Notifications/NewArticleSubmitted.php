@@ -1,10 +1,11 @@
 <?php
 
+// app/Notifications/NewArticleSubmitted.php
 namespace App\Notifications;
 
 use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\DatabaseMessage;
 use Illuminate\Bus\Queueable;
+use App\Models\Article;
 
 class NewArticleSubmitted extends Notification
 {
@@ -12,31 +13,26 @@ class NewArticleSubmitted extends Notification
 
     protected $article;
 
-    public function __construct($article)
+    public function __construct(Article $article)
     {
         $this->article = $article;
-    }
-    public function toDatabase($notifiable)
-    {
-        return [
-            'message' => 'Có một bài viết mới cần duyệt!',
-            'article_id' => $this->article->article_id, // Thêm ID bài viết
-            'status' => $this->article->status  // Thêm trạng thái bài viết
-        ];
     }
 
     public function via($notifiable)
     {
-        return ['database']; // Lưu vào database
+        return ['database'];
     }
 
-    public function toArray($notifiable)
+    public function toDatabase($notifiable)
     {
         return [
-            'message' => "Bài viết mới cần duyệt: " . $this->article->title,
-            'article_id' => $this->article->id
+            'message' => "Bài viết mới đang chờ duyệt: {$this->article->title}",
+            'article_id' => $this->article->id,
+            'status' => $this->article->status,
+            'pending_count' => Article::where('status', 'pending')->count()
         ];
     }
-
-
 }
+
+
+
