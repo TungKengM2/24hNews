@@ -212,7 +212,16 @@ class ArticleController extends Controller
         return redirect()->route('articles.index')->with('success', 'Bài viết đã được cập nhật thành công!');
     }
 
+// duyệt bài viết
+    public function Approves()
+    {
+        $articles = Article::with(['author', 'category', 'approver', 'tags'])
+            ->where('status', 'pending') // Lọc bài viết có trạng thái pending
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
 
+        return view('admin.articles.approve', compact('articles'));
+    }
 
 
     /**

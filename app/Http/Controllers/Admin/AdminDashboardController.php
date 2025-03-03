@@ -37,6 +37,11 @@ class AdminDashboardController extends Controller
     {
         return view('admin.articles.edit');
     }
+// duyệt bài viết
+    public function Approves()
+    {
+        return view('admin.articles.approve');
+    }
 
     // CATEGORY
     public function showListCategory()

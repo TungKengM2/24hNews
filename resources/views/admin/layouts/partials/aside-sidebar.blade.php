@@ -60,8 +60,9 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="#"><i class="icon-Commit"><span
-                                        class="path1"></span><span class="path2"></span></i>Bài Viết</a>
+                        <li><a href="{{ route('admin.articles.approves') }}"><i class="icon-Commit"><span
+                            class="path1"></span><span class="path2"></span></i>Duyệt Bài Viết</a>
+            </li>
                         </li>
                         <li><a href="#"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Nâng Cấp Tài Khoản
