@@ -46,14 +46,15 @@ Route::post(
 Route::post('/admin/reject-role-upgrade/{approval_id}', [AdminDashboardController::class, 'rejectRoleUpgrade'])
     ->name('admin.reject-role-upgrade');
 
-    // duyet
-
+    // approves
+    Route::get('/admin/articles/approves', [ArticleController::class, 'Approves'])
+    ->name('admin.articles.approves');
 
 // article
-Route::patch(
-    '/articles/{article}/approve',
-    [AdminArticleController::class, 'approve']
-)->name('articles.approve');
+// Route::patch(
+//     '/articles/{article}/approve',
+//     [AdminArticleController::class, 'approve']
+// )->name('articles.approve');
 
 
 Route::prefix('admin')->group(function () {

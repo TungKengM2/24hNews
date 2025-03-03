@@ -90,9 +90,7 @@
                                 @if ($pendingCount > 0)
                                         <a href="">
                                             {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
-                                            <a href="{{ route('admin.dashboard') }}" onclick="event.preventDefault(); markAsReadAll();">
-                                                Xem ngay
-                                      </a>
+                                        </a>
                                 @endif
                             </li>
                             <li>
