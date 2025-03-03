@@ -176,7 +176,7 @@
                         <div class="tc-post-grid-default">
                             <div class="item">
                                 <div class="img img-cover th-200">
-                                    <img src="client/img/trend/1.png" alt="">
+                                    <img src="client/assets/img/trend/1.png" alt="">
                                 </div>
                                 <div class="content py-4 px-3 bg-gray2">
                                     <p class="color-main fsz-13px text-uppercase mb-1">Sponsored Content</p>
@@ -196,7 +196,7 @@
                                     <div class="swiper-slide">
                                         <div class="tc-post-overlay-default">
                                             <div class="img th-650 img-cover">
-                                                <img src="client/img/trend/2.png" alt="">
+                                                <img src="client/assets/img/trend/2.png" alt="">
                                                 <div class="tags">
                                                     <a href="home-default.html#">featured,</a>
                                                     <a href="home-default.html#">news</a>
@@ -233,7 +233,7 @@
                                     <div class="swiper-slide">
                                         <div class="tc-post-overlay-default">
                                             <div class="img th-650 img-cover">
-                                                <img src="client/img/trend/3.png" alt="">
+                                                <img src="client/assets/img/trend/3.png" alt="">
                                                 <div class="tags">
                                                     <a href="home-default.html#">technology</a>
                                                 </div>
@@ -280,7 +280,7 @@
                             </div>
                             <div class="tc-post-overlay-default">
                                 <div class="img th-200 img-cover">
-                                    <img src="client/img/trend/4.png" alt="">
+                                    <img src="client/assets/img/trend/4.png" alt="">
                                 </div>
                                 <div class="content ps-20 pe-20 pb-20 text-white">
                                     <a href="page-single-post-creative.html"
@@ -450,7 +450,7 @@
                         <div class="tc-post-grid-default">
                             <div class="item">
                                 <div class="img img-cover th-330">
-                                    <img src="client/img/latest/1.png" alt="">
+                                    <img src="client/assets/img/latest/1.png" alt="">
                                     <a href="https://youtu.be/pGbIOC83-So?t=21" data-lity
                                         class="video_icon icon-70">
                                         <i class="ion-play"></i>
@@ -491,7 +491,7 @@
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-70 img-cover">
-                                                <img src="client/img/latest/3.png" alt="">
+                                                <img src="client/assets/img/latest/3.png" alt="">
                                             </div>
                                         </div>
                                         <div class="col-8">
@@ -512,7 +512,7 @@
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-70 img-cover">
-                                                <img src="client/img/latest/4.png" alt="">
+                                                <img src="client/assets/img/latest/4.png" alt="">
                                             </div>
                                         </div>
                                         <div class="col-8">
@@ -534,7 +534,7 @@
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-70 img-cover">
-                                                <img src="client/img/latest/5.png" alt="">
+                                                <img src="client/assets/img/latest/5.png" alt="">
                                             </div>
                                         </div>
                                         <div class="col-8">
@@ -553,7 +553,7 @@
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-70 img-cover">
-                                                <img src="client/img/latest/6.png" alt="">
+                                                <img src="client/assets/img/latest/6.png" alt="">
                                             </div>
                                         </div>
                                         <div class="col-8">
@@ -574,7 +574,7 @@
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-70 img-cover">
-                                                <img src="client/img/latest/7.png" alt="">
+                                                <img src="client/assets/img/latest/7.png" alt="">
                                             </div>
                                         </div>
                                         <div class="col-8">
@@ -594,7 +594,7 @@
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-70 img-cover">
-                                                <img src="client/img/latest/8.png" alt="">
+                                                <img src="client/assets/img/latest/8.png" alt="">
                                             </div>
                                         </div>
                                         <div class="col-8">
@@ -617,7 +617,7 @@
                         <div class="tc-post-grid-default border-1 border-bottom brd-gray pb-10">
                             <div class="item">
                                 <div class="img img-cover th-200">
-                                    <img src="client/img/latest/2.png" alt="">
+                                    <img src="client/assets/img/latest/2.png" alt="">
                                 </div>
                                 <div class="content pt-20">
                                     <a href="home-default.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">travel</a>
@@ -1691,7 +1691,7 @@
                                 <div class="columnist-card d-flex align-items-center">
                                     <div
                                         class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                        <img src="client/img/colums/1.png" alt="">
+                                        <img src="client/assets/img/colums/1.png" alt="">
                                     </div>
                                     <div class="info">
                                         <h6 class="name fsz-20px mb-10">
@@ -1708,7 +1708,7 @@
                                 <div class="columnist-card d-flex align-items-center">
                                     <div
                                         class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                        <img src="client/img/colums/2.png" alt="">
+                                        <img src="client/assets/img/colums/2.png" alt="">
                                     </div>
                                     <div class="info">
                                         <h6 class="name fsz-20px mb-10">
@@ -1725,7 +1725,7 @@
                                 <div class="columnist-card d-flex align-items-center">
                                     <div
                                         class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                        <img src="client/img/colums/3.png" alt="">
+                                        <img src="client/assets/img/colums/3.png" alt="">
                                     </div>
                                     <div class="info">
                                         <h6 class="name fsz-20px mb-10">
@@ -1742,7 +1742,7 @@
                                 <div class="columnist-card d-flex align-items-center">
                                     <div
                                         class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                        <img src="client/img/colums/2.png" alt="">
+                                        <img src="client/assets/img/colums/2.png" alt="">
                                     </div>
                                     <div class="info">
                                         <h6 class="name fsz-20px mb-10">
@@ -1779,7 +1779,7 @@
                                 <div class="tc-post-grid-default">
                                     <div class="item">
                                         <div class="img img-cover th-250">
-                                            <img src="client/img/another_news/1.png" alt="">
+                                            <img src="client/assets/img/another_news/1.png" alt="">
                                         </div>
                                         <div class="content pt-20">
                                             <a href="home-default.html#"
@@ -1814,7 +1814,7 @@
                                             <div class="row gx-3 align-items-center">
                                                 <div class="col-4">
                                                     <div class="img th-70 img-cover">
-                                                        <img src="client/img/another_news/2.png" alt="">
+                                                        <img src="client/assets/img/another_news/2.png" alt="">
                                                     </div>
                                                 </div>
                                                 <div class="col-8">
@@ -1833,7 +1833,7 @@
                                             <div class="row gx-3 align-items-center">
                                                 <div class="col-4">
                                                     <div class="img th-70 img-cover">
-                                                        <img src="client/img/another_news/3.png" alt="">
+                                                        <img src="client/assets/img/another_news/3.png" alt="">
                                                     </div>
                                                 </div>
                                                 <div class="col-8">
@@ -1861,7 +1861,7 @@
                                 <div class="tc-post-grid-default">
                                     <div class="item">
                                         <div class="img img-cover th-250">
-                                            <img src="client/img/another_news/4.png" alt="">
+                                            <img src="client/assets/img/another_news/4.png" alt="">
                                         </div>
                                         <div class="content pt-20">
                                             <a href="home-default.html#"
@@ -1896,7 +1896,7 @@
                                             <div class="row gx-3 align-items-center">
                                                 <div class="col-4">
                                                     <div class="img th-70 img-cover">
-                                                        <img src="client/img/another_news/5.png" alt="">
+                                                        <img src="client/assets/img/another_news/5.png" alt="">
                                                     </div>
                                                 </div>
                                                 <div class="col-8">
@@ -1915,7 +1915,7 @@
                                             <div class="row gx-3 align-items-center">
                                                 <div class="col-4">
                                                     <div class="img th-70 img-cover">
-                                                        <img src="client/img/another_news/6.png" alt="">
+                                                        <img src="client/assets/img/another_news/6.png" alt="">
                                                     </div>
                                                 </div>
                                                 <div class="col-8">
@@ -1943,7 +1943,7 @@
                                 <div class="tc-post-grid-default">
                                     <div class="item">
                                         <div class="img img-cover th-250">
-                                            <img src="client/img/another_news/7.png" alt="">
+                                            <img src="client/assets/img/another_news/7.png" alt="">
                                         </div>
                                         <div class="content pt-20">
                                             <a href="home-default.html#"
@@ -1978,7 +1978,7 @@
                                             <div class="row gx-3 align-items-center">
                                                 <div class="col-4">
                                                     <div class="img th-70 img-cover">
-                                                        <img src="client/img/another_news/8.png" alt="">
+                                                        <img src="client/assets/img/another_news/8.png" alt="">
                                                     </div>
                                                 </div>
                                                 <div class="col-8">
@@ -1997,7 +1997,7 @@
                                             <div class="row gx-3 align-items-center">
                                                 <div class="col-4">
                                                     <div class="img th-70 img-cover">
-                                                        <img src="client/img/another_news/9.png" alt="">
+                                                        <img src="client/assets/img/another_news/9.png" alt="">
                                                     </div>
                                                 </div>
                                                 <div class="col-8">
@@ -2038,10 +2038,10 @@
                     <div class="col-lg-3">
                         <div class="img">
                             <a href="home-default.html#">
-                                <img src="client/img/apple1.png" alt="">
+                                <img src="client/assets/img/apple1.png" alt="">
                             </a>
                             <a href="home-default.html#">
-                                <img src="client/img/android1.png" alt="">
+                                <img src="client/assets/img/android1.png" alt="">
                             </a>
                         </div>
                     </div>
@@ -2057,8 +2057,8 @@
         aria-labelledby="offcanvasExampleLabel">
         <div class="offcanvas-header">
             <div class="logo">
-                <img src="client/img/logo_home1.png" alt="" class="dark-none">
-                <img src="client/img/logo_home1_lt.png" alt="" class="light-none">
+                <img src="client/assets/img/logo_home1.png" alt="" class="dark-none">
+                <img src="client/assets/img/logo_home1_lt.png" alt="" class="light-none">
             </div>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                 aria-label="Close"></button>
@@ -2076,7 +2076,7 @@
                         class="la la-angle-right ms-1"></i> </h6>
                 <a href="home-default.html#" class="cat-card">
                     <div class="img img-cover">
-                        <img src="client/img/bussines/1.png" alt="">
+                        <img src="client/assets/img/bussines/1.png" alt="">
                     </div>
                     <div class="info">
                         <h5>bussines</h5>
@@ -2085,7 +2085,7 @@
                 </a>
                 <a href="home-default.html#" class="cat-card">
                     <div class="img img-cover">
-                        <img src="client/img/trend/3.png" alt="">
+                        <img src="client/assets/img/trend/3.png" alt="">
                     </div>
                     <div class="info">
                         <h5>technology</h5>
@@ -2094,7 +2094,7 @@
                 </a>
                 <a href="home-default.html#" class="cat-card">
                     <div class="img img-cover">
-                        <img src="client/img/must_read/3.png" alt="">
+                        <img src="client/assets/img/must_read/3.png" alt="">
                     </div>
                     <div class="info">
                         <h5>culture</h5>
@@ -2103,7 +2103,7 @@
                 </a>
                 <a href="home-default.html#" class="cat-card">
                     <div class="img img-cover">
-                        <img src="client/img/videos/1.png" alt="">
+                        <img src="client/assets/img/videos/1.png" alt="">
                     </div>
                     <div class="info">
                         <h5>videos</h5>
