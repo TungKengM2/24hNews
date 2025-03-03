@@ -43,5 +43,5 @@ class ArticleUserController extends Controller
 }
 
 
-    
+
 
