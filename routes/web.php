@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\SocialAuthController;
 
 // 🌟 Giao diện trang chủ + bài viết
 Route::get('/', function () {
@@ -83,3 +84,8 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 
 
 Route::post('/logout', [AuthUserController::class, 'logout'])->name('logout');
+
+
+// Login với facebook và google
+Route::get('auth/{provider}', [SocialAuthController::class, 'redirectToProvider']);
+Route::get('auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback']);

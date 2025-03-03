@@ -50,8 +50,10 @@
                         </form>
                         <div class="other-links social-with-title">
                             <div class="text">Or login with</div>
-                            <a href="login21.html#"><i class="fab fa-facebook-f"></i>Facebook</a><a href="login21.html#"><i class="fab fa-google"></i>Google</a><a href="login21.html#"><i class="fab fa-linkedin-in"></i>Linkedin</a>
+                            <a href="{{ url('auth/facebook') }}"><i class="fab fa-facebook-f"></i> Facebook</a>
+                            <a href="{{ url('auth/google') }}"><i class="fab fa-google"></i> Google</a>
                         </div>
+                        
                         <div class="page-links">
                             <a href="{{ route('signupuser') }}">Register new account</a>
                         </div>
