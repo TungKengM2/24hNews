@@ -1,10 +1,10 @@
 @extends('admin.layouts.master')
 
 @section('head')
-    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.css" />
+    {{-- <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.css" /> --}}
 
-    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css" />
-    <script src="{{ asset('js/ckeditor.js') }}"></script>
+    {{-- <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css" /> --}}
+    {{-- <script src="{{ asset('js/ckeditor.js') }}"></script> --}}
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
 
     <!-- Style -->
@@ -41,7 +41,11 @@
                     </div>
                 @endif
 
-                <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+                {{-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> --}}
+                {{-- <script src="https://cdn.tiny.cloud/1/wqfctsnehjc4409j4s7ihcv6ujakakcdn8riyn391q6f1uep/tinymce/6/tinymce.min.js"
+                    referrerpolicy="origin"></script> --}}
+                <script src="/tinymce/js/tinymce/tinymce.min.js"></script>
+
 
                 <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data" id="articleForm">
                     @csrf
@@ -57,8 +61,9 @@
 
                     <div class="mb-3">
                         <label for="content" class="form-label">Nội dung</label>
-                        <div id="editor"></div>
-                        <textarea id="content" name="content" style="display: none;"></textarea>
+                        {{-- <div id="editor"></div>
+                        <textarea id="editor" name="content" style="display: none;"></textarea> --}}
+                        <textarea name="content" id="editor" cols="30" rows="10"></textarea>
                     </div>
 
                     <div class="mb-3">
@@ -178,6 +183,18 @@
                             reader.readAsArrayBuffer(file);
                         }
                     });
+                </script>
+
+                <script>
+                    tinymce.init({
+                        selector: '#editor',
+                        plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
+                        toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | table',
+                        // menubar: false
+                    });
+
+                    let content = tinymce.get('editor').getContent();
+                    console.log(content);
                 </script>
 
 

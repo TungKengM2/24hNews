@@ -5,20 +5,11 @@
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="{{ asset('js/ckeditor.js') }}"></script>
+    {{-- <script src="{{ asset('js/ckeditor.js') }}"></script> --}}
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
-        .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: #c3bebe;
-            color: white;
-            border: 1px solid #c2c2c2;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
             background-color: #c3bebe;
             color: white;
@@ -89,10 +80,12 @@
                         </div>
                     </div>
 
+                    <script src="/tinymce/js/tinymce/tinymce.min.js"></script>
+
                     <div class="form-group">
                         <h5>Content:</h5>
                         <div class="controls">
-                            <textarea id="content" name="content" class="form-control"> {!! $article->content !!} </textarea>
+                            <textarea id="editor" name="content" class="form-control"> {!! $article->content !!} </textarea>
                         </div>
                     </div>
 
@@ -162,4 +155,13 @@
                 });
             </script>
 
+            {{-- Script TinyMCE --}}
+            <script>
+                tinymce.init({
+                    selector: '#editor',
+                    plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
+                    toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | table',
+                    menubar: 'file edit view insert format tools table help'
+                });
+            </script>
         @endsection

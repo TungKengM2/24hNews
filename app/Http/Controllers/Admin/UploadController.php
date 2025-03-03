@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -17,7 +18,7 @@ class UploadController extends Controller
             ], 400);
         }
 
-        $file = $request->file('upload'); 
+        $file = $request->file('upload');
         $extension = $file->getClientOriginalExtension();
         $allowedImages = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         $allowedVideos = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'];
