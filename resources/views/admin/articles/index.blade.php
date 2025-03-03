@@ -15,7 +15,7 @@
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="tables_data.html#"><i
+                                    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}"><i
                                                 class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Trang Chủ</li>
                                     <li class="breadcrumb-item active" aria-current="page">Danh Sách Bài Viết</li>
@@ -41,11 +41,11 @@
                                     href="{{ route('articles.create') }}">
                                     <i class="si-plus si"></i>
                                 </a></button>
-
                         </div>
+
                         <div class="box-body">
                             <div class="table-responsive">
-                                <table id="complex_header" class="table table-striped table-bordered display"
+                                <table class="table table-bordered table-dark mb-0"
                                     style="width:100%">
                                     <thead>
                                         <tr>
@@ -67,8 +67,9 @@
                                         @foreach ($articles as $article)
                                             <tr>
                                                 <td>{{ $article->article_id }}</td>
-                                                <td>{{ implode(' ', array_slice(explode(' ', $article->title), 0, 15)) }}{{ (count(explode(' ', $article->title)) > 10) ? '...' : '' }}</td>
-                                                <td>{{ $article->slug }}</td>
+                                                {{-- hiển thị limit 10 từ  --}}
+                                                <td>{{ implode(' ', array_slice(explode(' ', $article->title), 0, 10)) }}{{ (count(explode(' ', $article->title)) > 10) ? '...' : '' }}</td>
+                                                <td>{{ implode('-', array_slice(explode('-', $article->slug), 0, 10)) }}{{ (count(explode('-', $article->slug)) > 10) ? '...' : '' }}</td>
                                                 <td class="text-center">
                                                     @if ($article->contains_sensitive_content)
                                                         <span class="badge bg-danger">Yes</span>
@@ -148,43 +149,13 @@
                                     </tbody>
 
                                 </table>
-                                {{-- <div class="row">
-                                    <div class="col-sm-12 col-md-5">
-                                        <div class="dataTables_info" id="example6_info" role="status" aria-live="polite">
-                                            Showing 1 to 10 of 57 entries</div>
-                                    </div>
-                                    <div class="col-sm-12 col-md-7 items-end">
-                                        <div class="dataTables_paginate paging_simple_numbers" id="example6_paginate">
-                                            <ul class="pagination">
-                                                <li class="paginate_button page-item previous disabled"
-                                                    id="example6_previous"><a href="#" aria-controls="example6"
-                                                        data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li>
-                                                <li class="paginate_button page-item active"><a href="#"
-                                                        aria-controls="example6" data-dt-idx="1" tabindex="0"
-                                                        class="page-link">1</a></li>
-                                                <li class="paginate_button page-item "><a href="#"
-                                                        aria-controls="example6" data-dt-idx="2" tabindex="0"
-                                                        class="page-link">2</a></li>
-                                                <li class="paginate_button page-item "><a href="#"
-                                                        aria-controls="example6" data-dt-idx="3" tabindex="0"
-                                                        class="page-link">3</a></li>
-                                                <li class="paginate_button page-item "><a href="#"
-                                                        aria-controls="example6" data-dt-idx="4" tabindex="0"
-                                                        class="page-link">4</a></li>
-                                                <li class="paginate_button page-item "><a href="#"
-                                                        aria-controls="example6" data-dt-idx="5" tabindex="0"
-                                                        class="page-link">5</a></li>
-                                                <li class="paginate_button page-item "><a href="#"
-                                                        aria-controls="example6" data-dt-idx="6" tabindex="0"
-                                                        class="page-link">6</a></li>
-                                                <li class="paginate_button page-item next" id="example6_next"><a
-                                                        href="#" aria-controls="example6" data-dt-idx="7"
-                                                        tabindex="0" class="page-link">Next</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div> --}}
-                                {{ $articles->links() }}
+                                <div id="pagination-wrapper" class="d-flex justify-content-end mt-5">
+                                    <nav>
+                                        <ul class="pagination pagination-sm">
+                                            {{ $articles->links('pagination::bootstrap-5') }}
+                                        </ul>
+                                    </nav>
+                                </div>
                             </div>
                             <div class="row item-space-between">
                                 <div class="col-sm-12 col-md-5">
@@ -227,4 +198,6 @@
                 </div>
             </div>
             <!-- /.content-wrapper -->
-        @endsection
+        </div>
+    </div>
+@endsection

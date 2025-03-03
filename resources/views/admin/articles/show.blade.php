@@ -47,7 +47,7 @@
                             </div>
                         </div>
 
-                        <p class="col-md-5">Preview Content: {{ $article->preview_content }}</p>
+                        <p class="col-md-5 mx-3"><strong>Preview Content:</strong> {{ $article->preview_content }}</p>
                         <div class="bg-white p-3 m-2">
                             <p class="col-md-5 text-bold">Content:</p>
                             <div class="col-md-7 mb-3">
@@ -55,7 +55,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12 mt-4" >
+                        <div class="col-md-12 mt-4 mx-2" >
                            <div class="row">
                             @if ($article->thumbnail_url)
                             <div class="mb-3 col-md-4">

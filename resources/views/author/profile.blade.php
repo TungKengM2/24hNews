@@ -5,47 +5,71 @@
 @endsection
 
 @section('content')
-    <div class="content-wrapper container">
+    <div class="content-wrapper">
         <div class="container-full">
-            <section class="content">
+            <div class="nav-tabs-custom">
+                <div class="content">
+                    <div class="pane" id="settings">
 
-                <div class="row">
-                    <div class="user-profile">
-                        <div class="box box-widget widget-user">
-                            <!-- Add the bg color to the header using any of the bg-* classes -->
-                            <div class="widget-user-header bg-img bbsr-0 bber-0"
-                                style="background: url('../images/gallery/full/10.jpg') center center;" data-overlay="5">
-                                <h3 class="widget-user-username text-white">Tên Author</h3>
-                                <h6 class="widget-user-desc text-white">Author</h6>
-                            </div>
-                            <div class="widget-user-image">
-                                <img class="rounded-circle" src="/admin/main/../images/user3-128x128.jpg" alt="User Avatar">
-                            </div>
-                            <div class="box-footer">
-                            </div>
-                        </div>
-                        <div class="box">
-                            <div class="box-body box-profile">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div>
-                                            <p>Email :<span class="text-gray ps-10">David@yahoo.com</span> </p>
-                                            <p>Phone :<span class="text-gray ps-10">+11 123 456 7890</span></p>
-                                            <p>Address :<span class="text-gray ps-10">123, Lorem Ipsum, Florida,
-                                                    USA</span></p>
+                        <div class="box no-shadow">
+                            <form class="form-horizontal form-element col-12">
+                                <div class="form-group row">
+                                    <label for="inputName" class="col-sm-2 form-label">Name</label>
+
+                                    <div class="col-sm-10">
+                                        <input type="email" class="form-control" id="inputName" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail" class="col-sm-2 form-label">Email</label>
+
+                                    <div class="col-sm-10">
+                                        <input type="email" class="form-control" id="inputEmail" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPhone" class="col-sm-2 form-label">Phone</label>
+
+                                    <div class="col-sm-10">
+                                        <input type="tel" class="form-control" id="inputPhone" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputExperience" class="col-sm-2 form-label">Experience</label>
+
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" id="inputExperience" placeholder=""></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputSkills" class="col-sm-2 form-label">Skills</label>
+
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputSkills" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="ms-auto col-sm-10">
+                                        <div class="checkbox">
+                                            <input type="checkbox" id="basic_checkbox_1" checked="">
+                                            <label for="basic_checkbox_1"> I agree to the</label>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;<a href="extra_profile.html#">Terms
+                                                and Conditions</a>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- /.box-body -->
+                                <div class="form-group row">
+                                    <div class="ms-auto col-sm-10">
+                                        <button type="submit" class="btn btn-success">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-
+                    <!-- /.tab-pane -->
                 </div>
-                <!-- /.row -->
-
-            </section>
-            <!-- /.content -->
+                <!-- /.tab-content -->
+            </div>
         </div>
     </div>
 @endsection
