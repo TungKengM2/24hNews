@@ -80,45 +80,6 @@ class ArticleUserController extends Controller
         return view('client.articles.article', compact('article', 'relatedArticles', 'isLiked', 'likeCount', 'comments'));
     }
 
-<<<<<<< HEAD
-    public function likeArticle(Request $request, $article_id)
-    {
-        $userId = auth()->id();
-    
-        if (!$userId) {
-            return response()->json(['success' => false, 'message' => 'Bạn cần đăng nhập để like!']);
-        }
-    
-        $like = ArticleLike::where('article_id', $article_id)
-            ->where('user_id', $userId)
-            ->first();
-    
-        if ($like) {
-            try {
-                // Chỉ xóa nếu like thuộc về người dùng hiện tại
-                ArticleLike::where('like_id', $like->like_id)
-                    ->where('user_id', $userId)
-                    ->delete();
-                $liked = false;
-            } catch (\Exception $e) {
-                return response()->json(['success' => false, 'message' => 'Lỗi khi hủy like: ' . $e->getMessage()]);
-            }
-        } else {
-            ArticleLike::create([
-                'article_id' => $article_id,
-                'user_id' => $userId,
-                'liked_at' => now(),
-            ]);
-            $liked = true;
-        }
-    
-        $likeCount = ArticleLike::where('article_id', $article_id)->count();
-    
-        return response()->json(['success' => true, 'liked' => $liked, 'likeCount' => $likeCount]);
-    }
-    
-    
-=======
     // Ghi nhận lượt xem
     try {
         ArticleView::create([
@@ -145,7 +106,6 @@ class ArticleUserController extends Controller
 
 
 
->>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 
 
     public function storeComment(Request $request)

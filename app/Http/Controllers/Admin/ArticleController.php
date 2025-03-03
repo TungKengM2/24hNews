@@ -97,7 +97,9 @@ class ArticleController extends Controller
         ];
 
         $request->validate($rules);
-
+        if ($request->hasFile('thumbnail_url')) {
+            $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+        }
         $article = Article::create([
             'title' => $request->title,
             'slug' => $request->slug,
@@ -105,15 +107,9 @@ class ArticleController extends Controller
             'category_id' => $request->category_id,
             'status' => $request->status,
             'author_id' => auth()->id(),
+            'thumbnail_url' => $path ,
         ]);
-
-        if ($request->hasFile('thumbnail_url')) {
-            $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
-            $article->update(['thumbnail_url' => $path]);
-        }
-
         $article->tags()->sync($tagIds);
-
         return redirect()->route('articles.index')->with('success', 'Bài viết đã được tạo thành công!');
     }
 
