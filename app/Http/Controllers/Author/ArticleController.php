@@ -154,8 +154,6 @@ class ArticleController extends Controller
             'author_id' => auth()->id(),
         ]);
 
-        //            dd($article);
-
         if ($request->hasFile('thumbnail_url')) {
             $path = $request->file('thumbnail_url')
                 ->store('thumbnails', 'public');
