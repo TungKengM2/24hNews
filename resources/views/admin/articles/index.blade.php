@@ -15,7 +15,7 @@
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="tables_data.html#"><i
+                                    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}"><i
                                                 class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Trang Chủ</li>
                                     <li class="breadcrumb-item active" aria-current="page">Danh Sách Bài Viết</li>
@@ -41,11 +41,11 @@
                                     href="{{ route('articles.create') }}">
                                     <i class="si-plus si"></i>
                                 </a></button>
-
                         </div>
+
                         <div class="box-body">
                             <div class="table-responsive">
-                                <table id="complex_header" class="table table-striped table-bordered display"
+                                <table class="table table-bordered table-dark mb-0"
                                     style="width:100%">
                                     <thead>
                                         <tr>
@@ -147,11 +147,19 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                                {{ $articles->links() }}
+                                <div id="pagination-wrapper" class="d-flex justify-content-end mt-5">
+                                    <nav>
+                                        <ul class="pagination pagination-sm">
+                                            {{ $articles->links('pagination::bootstrap-5') }}
+                                        </ul>
+                                    </nav>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- /.content-wrapper -->
-        @endsection
+        </div>
+    </div>
+@endsection
