@@ -1,10 +1,10 @@
 @extends('admin.layouts.master')
 
 @section('head')
-    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.css" />
+    {{-- <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.css" /> --}}
 
-    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css" />
-    <script src="{{ asset('js/ckeditor.js') }}"></script>
+    {{-- <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css" /> --}}
+    {{-- <script src="{{ asset('js/ckeditor.js') }}"></script> --}}
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
 
     <!-- Style -->
@@ -18,7 +18,6 @@
             border-radius: 5px;
             font-size: 14px;
         }
-
     </style>
 @endsection
 
@@ -43,18 +42,22 @@
                 </div>
             @endif
 
-            <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+            {{-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> --}}
+            {{-- <script src="https://cdn.tiny.cloud/1/wqfctsnehjc4409j4s7ihcv6ujakakcdn8riyn391q6f1uep/tinymce/6/tinymce.min.js"
+                    referrerpolicy="origin"></script> --}}
+            <script src="/tinymce/js/tinymce/tinymce.min.js"></script>
+
 
             <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data" id="articleForm">
                 @csrf
                 <div class="col-md-12">
-                  <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Tiêu đề</label>
-                            <textarea type="text" class="form-control  min-h-100 " id="title" name="title" required></textarea>
+                    <div class="row mx-2">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Tiêu đề</label>
+                                <textarea type="text" class="form-control  min-h-100 " id="title" name="title" required></textarea>
+                            </div>
                         </div>
-                       </div>
 
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -62,18 +65,19 @@
                                 <textarea type="text" class="form-control min-h-100" id="slug" name="slug" required></textarea>
                             </div>
                         </div>
-                  </div>
+                    </div>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-3 mx-3">
                     <label for="content" class="form-label">Nội dung</label>
-                    <div id="editor"></div>
-                    <textarea id="content" name="content" style="" required class="form-control h-300" ></textarea>
+                    {{-- <div id="editor"></div>
+                        <textarea id="editor" name="content" style="display: none;"></textarea> --}}
+                    <textarea name="content" id="editor" cols="30" rows="10"></textarea>
                 </div>
 
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="mb-3 col-md-4">
+                <div class="col-md-12 ">
+                    <div class="row mx-2 mb-4">
+                        <div class="mt-2 col-md-4">
                             <label for="tags">Chọn hoặc thêm tags:</label>
                             <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                                 @foreach ($tags as $tag)
@@ -93,24 +97,27 @@
 
                         <div class="mb-3 col-md-4">
                             <label for="thumbnail_url" class="form-label">Ảnh đại diện</label>
-                            <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url" accept="image/*"
-                                required>
+                            <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url"
+                                accept="image/*" required>
                         </div>
                     </div>
-                </div>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
-                <!-- Tự động gán tác giả -->
-                <input type="hidden" name="author_id" value="{{ auth()->id() }}">
-                <input type="hidden" name="status" id="articleStatus" value="pending">
 
-                <button type="submit" class="btn btn-primary">Gửi</button>
-                <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
+                    <!-- Tự động gán tác giả -->
+                    <input type="hidden" name="author_id" value="{{ auth()->id() }}">
+                    <input type="hidden" name="status" id="articleStatus" value="pending">
+
+                    <div class="mx-3 mb-4">
+                        <button type="submit" class="btn btn-primary">Gửi</button>
+                        <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
+                        <button type="button" class="waves-effect waves-light btn btn-default"><a
+                                href="{{ route('articles.index') }}">
+                                Back to List
+                            </a></button>
+                 </div>
             </form>
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
             <script>
                 $(document).ready(function() {
@@ -168,7 +175,7 @@
                 });
             </script>
 
-            Đọc nội dung file Word (nếu có)
+            {{-- Đọc nội dung file Word (nếu có) --}}
             <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
             <script>
                 document.getElementById('thumbnail_url').addEventListener('change', function(event) {
@@ -190,13 +197,23 @@
                         reader.readAsArrayBuffer(file);
                     }
                 });
+            </script>
 
+            <script>
+                tinymce.init({
+                    selector: '#editor',
+                    plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
+                    toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | table',
+                    // menubar: false
+                });
+
+                let content = tinymce.get('editor').getContent();
+                console.log(content);
             </script>
 
 
-
-
         </div>
+    </div>
     </div>
 
 @endsection

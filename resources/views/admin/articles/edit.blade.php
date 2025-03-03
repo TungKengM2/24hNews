@@ -5,7 +5,7 @@
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="{{ asset('js/ckeditor.js') }}"></script>
+    {{-- <script src="{{ asset('js/ckeditor.js') }}"></script> --}}
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -17,24 +17,6 @@
             padding: 5px 10px;
             border-radius: 5px;
             font-size: 14px;
-        }
-
-        .title-slug-container {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-label {
-            margin-bottom: 0.5rem;
-        }
-
-        .form-control {
-            margin-bottom: 1rem;
-        }
-
-        .title-slug-container textarea {
-            height: 50px;
-            /* Chiều cao cố định */
         }
     </style>
 @endsection
@@ -54,8 +36,8 @@
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#"><i class="mdi mdi-home-outline"></i></a>
-                                    </li>
+                                    <li class="breadcrumb-item"><a href="{{ route('articles.index') }}"><i
+                                                class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Danh Sách Bài Viết</li>
                                     <li class="breadcrumb-item active" aria-current="page">Cập Nhật</li>
                                 </ol>
@@ -83,26 +65,31 @@
                     @method('PUT')
                     <div class="col-md-12">
                         <div class="row">
-                            <div class="mb-3 col-md-6">
-                                <label for="title" class="form-label">Tiêu đề</label>
-                                <textarea class="form-control min-h-100" id="title" name="title" required>{{ $article->title }}</textarea>
+                            <div class="col-md-6">
+                                <h5>Title:</h5>
+                                <textarea id="title" name="title" class="form-control min-h-150" required>{{ $article->title }}</textarea>
                             </div>
-                            <div class="mb-3 col-md-6">
-                                <label for="slug" class="form-label">Slug</label>
-                                <textarea class="form-control min-h-100" id="slug" name="slug" required>{{ $article->slug }}</textarea>
+
+                            <div class="col-md-6">
+                                <h5>Slug:</h5>
+                                <textarea id="slug" name="slug" class="form-control min-h-150" required>{{ $article->slug }}</textarea>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="content" class="form-label">Nội dung</label>
-                        <textarea id="content" name="content" class="form-control">{!! $article->content !!}</textarea>
+                    <script src="/tinymce/js/tinymce/tinymce.min.js"></script>
+
+                    <div class="form-group">
+                        <h5>Content:</h5>
+                        <div class="controls">
+                            <textarea id="editor" name="content" class="form-control"> {!! $article->content !!} </textarea>
+                        </div>
                     </div>
 
-                  <div class="col-md-12">
+                 <div class="col-md-12">
                     <div class="row">
-                        <div class="mb-3 col-md-4">
-                            <label class="form-label">Chọn hoặc thêm tags:</label>
+                        <div class="col-md-4">
+                            <h5>Slect Tags Or Add New Tags:</h5>
                             <select name="tags[]" class="form-control select2" multiple="multiple">
                                 @foreach ($tags as $tag)
                                     <option value="{{ $tag->tag_id }}" @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
@@ -112,8 +99,9 @@
                             </select>
                         </div>
 
-                        <div class="mb-3 col-md-4">
-                            <label class="form-label">Danh mục</label>
+
+                        <div class="col-md-4">
+                            <h5>Category</h5>
                             <select name="category_id" class="form-control">
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->category_id }}"
@@ -124,6 +112,8 @@
                             </select>
                         </div>
 
+
+
                         <input type="hidden" name="author_id" value="{{ $article->author_id }}">
 
                         <div class="mb-3 col-md-4">
@@ -131,39 +121,49 @@
                             <input class="form-control" type="file" name="thumbnail_url" id="thumbnail_url">
                             @if ($article->thumbnail_url)
                                 <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Current Thumbnail"
-                                    width="500">
+                                    width="200">
                             @endif
                         </div>
                     </div>
-                  </div>
+                 </div>
 
-                    <button type="submit" class="btn btn-primary mt-3">Cập nhật</button>
-                </form>
             </div>
 
-            <script>
-                $(document).ready(function() {
-                    $('.select2').select2({
-                        tags: true,
-                        tokenSeparators: [','],
-                        placeholder: "Chọn hoặc nhập tags mới",
-                        allowClear: true
-                    });
-                });
-
-                document.getElementById("title").addEventListener("input", function() {
-                    let title = this.value.trim();
-                    let slug = title.toLowerCase()
-                        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                        .replace(/đ/g, "d").replace(/Đ/g, "D")
-                        .replace(/\s+/g, "-")
-                        .replace(/[^\w-]/g, "")
-                        .replace(/--+/g, "-")
-                        .replace(/^-+|-+$/g, "");
-
-                    document.getElementById("slug").value = slug;
-                });
-            </script>
+            <button type="submit" class="btn btn-primary mt-3">Cập nhật</button>
+            </form>
         </div>
-    </div>
-@endsection
+
+        <script>
+            $(document).ready(function() {
+                $('.select2').select2({
+                    tags: true,
+                    tokenSeparators: [','],
+                    placeholder: "Chọn hoặc nhập tags mới",
+                    allowClear: true
+                });
+            });
+
+            document.getElementById("title").addEventListener("input", function() {
+                let title = this.value.trim();
+                let slug = title.toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .replace(/đ/g, "d").replace(/Đ/g, "D")
+                    .replace(/\s+/g, "-")
+                    .replace(/[^\w-]/g, "")
+                    .replace(/--+/g, "-")
+                    .replace(/^-+|-+$/g, "");
+
+                document.getElementById("slug").value = slug;
+            });
+        </script>
+
+        {{-- Script TinyMCE --}}
+        <script>
+            tinymce.init({
+                selector: '#editor',
+                plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
+                toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | table',
+                menubar: 'file edit view insert format tools table help'
+            });
+        </script>
+    @endsection
