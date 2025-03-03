@@ -67,7 +67,7 @@
                                         @foreach ($articles as $article)
                                             <tr>
                                                 <td>{{ $article->article_id }}</td>
-                                                <td>{{ $article->title }}</td>
+                                                <td>{{ implode(' ', array_slice(explode(' ', $article->title), 0, 15)) }}{{ (count(explode(' ', $article->title)) > 10) ? '...' : '' }}</td>
                                                 <td>{{ $article->slug }}</td>
                                                 <td class="text-center">
                                                     @if ($article->contains_sensitive_content)
