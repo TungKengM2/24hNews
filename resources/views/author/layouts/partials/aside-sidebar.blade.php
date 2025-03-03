@@ -19,6 +19,13 @@
                     </ul>
                 </li> --}}
                 <li class="header">Quản Lý</li>
+                <li>
+                    <a href="{{ route('author.dashboard') }}" class="d-block">
+                        <i data-feather="home"></i>
+                        <span>Tổng quan</span>
+                    </a>
+                </li>
+
                 <li class="treeview">
                     <a href="{{ route('author.articles.index') }}">
                         <i data-feather="grid"></i>
