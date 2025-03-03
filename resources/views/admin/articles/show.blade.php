@@ -57,7 +57,7 @@
                                 <h6 class="card-title">Category: {{ $article->category->name ?? 'N/A' }}</h6>
                                 <h6 class="card-title">Status: {{ ucfirst($article->status) }}</h6>
                                 <h6 class="card-title">Views: {{ $article->views }}</h6>
-                                <h6 class="card-title">Approved By:: {{ $article->approver->username ?? 'Not Approved' }}
+                                <h6 class="card-title">Approved By: {{ $article->approver->username ?? 'Not Approved' }}
                                 </h6>
                                 <h6 class="card-title">Tags:
                                     <div class="tags">
@@ -80,8 +80,8 @@
                                     <div class="row">
                                         <h5 class="card-text">Preview Content: {{ $article->preview_content }}</h5>
 
-                                        <div class="col-md-5"><img src="../images/gallery/thumb/2.jpg"
-                                                class="img-responsive" alt="" /></div>
+                                        {{-- <div class="col-md-5"><img src="../images/gallery/thumb/2.jpg"
+                                                class="img-responsive" alt="" /></div> --}}
                                         <div class="col-md-7">
                                             <p>{!! $article->content !!}</p>
                                         </div>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -29,9 +30,6 @@ Route::get('/article-detail', function () {
     return view('website.pages.articledetail.homedetail');
 });
 // admin
-// Route::get('/admin/dashboard', function () {
-//     return view('admin.dashboard');
-// });
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
     ->name('admin.dashboard');
 Route::get(
@@ -53,9 +51,14 @@ Route::patch(
     '/articles/{article}/approve',
     [AdminArticleController::class, 'approve']
 )->name('articles.approve');
+
+
 Route::prefix('admin')->group(function () {
     Route::resource('articles', ArticleController::class);
 });
+
+// UploadImage
+Route::post('/upload/image', [UploadController::class, 'store'])->name('upload.image');
 
 
 // category
