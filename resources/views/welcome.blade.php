@@ -133,45 +133,15 @@
                 <div class="row">
                     <div class="col-lg-3">
                         <div class="tc-stock-card mb-30">
-                            <a href="home-default.html#" class="stock-card-title">
-                                Stocks Market today
-                                <span class="la la-arrow-circle-o-right color-666"></span>
-                            </a>
-                            <div class="stock-card-body">
-                                <div class="stock-card-item">
-                                    <div class="title">
-                                        <h6>DOW <small class="indicator text-danger"> <i
-                                                    class="ion-arrow-down-b"></i> 2,82%</small></h6>
-                                        <span class="price">33,811.47</span>
-                                    </div>
-                                    <div class="inf">
-                                        <p>Dow Jones Indus. Avg</p>
-                                        <span class="price text-danger">-981.36</span>
-                                    </div>
-                                </div>
-                                <div class="stock-card-item">
-                                    <div class="title">
-                                        <h6>NASDAQ <small class="indicator text-danger"> <i
-                                                    class="ion-arrow-down-b"></i> 1,76% </small></h6>
-                                        <span class="price">12,839.95</span>
-                                    </div>
-                                    <div class="inf">
-                                        <p>NASDQ Composite Index</p>
-                                        <span class="price text-danger">-217.86</span>
-                                    </div>
-                                </div>
-                                <div class="stock-card-item">
-                                    <div class="title">
-                                        <h6>S&P 500 <small class="indicator text-success"> <i
-                                                    class="ion-arrow-up-b"></i> 3,93% </small></h6>
-                                        <span class="price">4,271.7</span>
-                                    </div>
-                                    <div class="inf">
-                                        <p>S&P 500 Index</p>
-                                        <span class="price text-success">+125.8</span>
-                                    </div>
-                                </div>
-                            </div>
+                                    <div id="weather" class="weather-widget p-2">
+                                        <div class="icon me-3 pt-1 la-3x d-flex justify-content-center">
+                                            <img id="weather-icon" alt="Weather Icon">
+                                        </div>
+                                        <p id="weather-city"></p>
+                                        <p id="weather-description"></p>
+                                        <p id="weather-temperature"></p>
+                                        <p id="weather-humidity"></p>
+                                    </div>  
                         </div>
                         <div class="tc-post-grid-default">
                             <div class="item">

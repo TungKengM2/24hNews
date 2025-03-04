@@ -15,17 +15,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="item">
-                                <div class="icon me-3 pt-1">
-                                    <i class="la la-cloud-sun"></i>
-                                </div>
-                                <div class="inf">
-                                    <strong>32° deg, Cloudy</strong>
-                                    <p>New York</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
