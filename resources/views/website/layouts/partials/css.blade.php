@@ -20,3 +20,4 @@
 
  <!-- ====== main style ====== -->
  <link rel="stylesheet" href="{{ asset('client/assets/css/style.css') }}" />
+ 
