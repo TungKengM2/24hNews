@@ -192,12 +192,12 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="pills-description-tab" data-bs-toggle="pill"
                             data-bs-target="#pills-description" type="button" role="tab"
-                            aria-controls="pills-description" aria-selected="true">Description</button>
+                            aria-controls="pills-description" aria-selected="true">Mô</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-reviews-tab" data-bs-toggle="pill"
                             data-bs-target="#pills-reviews" type="button" role="tab" aria-controls="pills-reviews"
-                            aria-selected="false">Comment</button>
+                            aria-selected="false">Bình Luận</button>
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
@@ -205,18 +205,22 @@
                         aria-labelledby="pills-description-tab">
                         <div class="content-info text-center pb-0">
                             <div class="text mb-30">
-                                In today's fast-paced world, maintaining a balance between work and health has become a
-                                top priority. Studies show that daily habits and living environments play a crucial role
-                                in enhancing quality of life.
+                                Trong thế giới hiện đại ngày nay, việc duy trì sự cân bằng giữa công việc và sức khỏe đã
+                                trở thành một
+                                ưu tiên hàng đầu. Các nghiên cứu cho thấy rằng thói quen hàng ngày và môi trường sống
+                                đóng vai trò quan trọng
+                                trong việc nâng cao chất lượng cuộc sống.
                             </div>
                             <div class="text">
-                                Experts suggest that regular physical activity not only improves fitness but also boosts
-                                mental well-being. Additionally, a well-designed work environment enhances productivity
-                                and mental health, contributing to a sustainable and healthy lifestyle.
+                                Các chuyên gia khuyến nghị rằng hoạt động thể chất thường xuyên không chỉ cải thiện thể
+                                lực mà còn tăng cường
+                                sức khỏe tinh thần. Ngoài ra, một môi trường làm việc được thiết kế hợp lý giúp nâng cao
+                                năng suất và tinh thần,
+                                góp phần tạo nên một lối sống lành mạnh và bền vững.
                             </div>
-
                         </div>
                     </div>
+
                     <div class="tab-pane fade" id="pills-reviews" role="tabpanel"
                         aria-labelledby="pills-reviews-tab">
                         <div class="product-reviews pt-30">
@@ -226,7 +230,7 @@
                                     <div class="col-lg-7">
                                         <div class="reviews-content pt-30">
                                             <h5 class="color-000 mb-40 text-capitalize">
-                                                Comments</h5>
+                                                Bình luận</h5>
 
                                             <?php foreach ($comments as $comment): ?>
                                             <?php if (!$comment->parent_id): ?>
@@ -256,7 +260,7 @@
                                                                 data-comment-id="<?= $comment->comment_id ?>"
                                                                 data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
                                                                 <i class="fas fa-reply fa-flip-horizontal"></i> <span
-                                                                    class="fw-bold">Reply</span>
+                                                                    class="fw-bold">Trả lời</span>
                                                             </button>
                                                         </div>
 
@@ -299,7 +303,7 @@
                                                                                 data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
                                                                                 <i
                                                                                     class="fas fa-reply fa-flip-horizontal"></i>
-                                                                                <span class="fw-bold">Reply</span>
+                                                                                <span class="fw-bold">Trả lời</span>
                                                                             </button>
                                                                         </div>
                                                                     </div>
@@ -310,8 +314,9 @@
 
                                                             <?php if ($replyCount > $visibleReplies): ?>
                                                             <button
-                                                                class="btn btn-link text-primary px-0 show-more-replies text-decoration-none">Show
-                                                                more</button>
+                                                                class="btn btn-link text-primary px-0 show-more-replies text-decoration-none">Xem
+                                                                thêmthêm
+                                                            </button>
                                                             <?php endif; ?>
 
                                                         </div>
@@ -377,13 +382,13 @@
                                                                             class="d-flex justify-content-end gap-2 mt-2">
                                                                             <button type="button"
                                                                                 class="btn btn-sm btn-outline-secondary cancel-reply">
-                                                                                Cancel
+                                                                                Hủy
                                                                             </button>
                                                                             <button type="button"
                                                                                 class="btn btn-sm btn-primary send-reply"
                                                                                 data-comment-id="{{ $comment->comment_id }}"
                                                                                 data-article-id="{{ $comment->article_id }}">
-                                                                                Reply
+                                                                                Trả lời
                                                                             </button>
                                                                         </div>
                                                                     </div>
@@ -408,12 +413,12 @@
                                         <form class="comment-form pt-30" method="POST"
                                             action="<?= route('client.articles.comment', ['article_id' => $article->article_id]) ?>">
                                             <?= csrf_field() ?>
-                                            <h5 class="color-000 mb-40 text-capitalize"> Add a Comment </h5>
+                                            <h5 class="color-000 mb-40 text-capitalize"> Thêm bình luận </h5>
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <div class="form-group mb-30">
                                                         <textarea class="form-control radius-4 fs-12px p-3" name="content" rows="6"
-                                                            placeholder="Write your comment here" required></textarea>
+                                                            placeholder="Viết bình luận của bạn ở đây" required></textarea>
                                                     </div>
                                                 </div>
                                                 <input type="hidden" name="article_id"
@@ -421,7 +426,7 @@
                                                 <div class="col-12">
                                                     <button type="submit"
                                                         class="btn rounded-pill bg-main text-white sm-butn fw-bold mt-40">
-                                                        Submit Comment
+                                                        Gửi bình luận
                                                     </button>
                                                 </div>
                                             </div>
@@ -445,7 +450,7 @@
         <section class="tc-products-content section-padding">
             <div class="container">
                 <div class="title mb-30">
-                    <h4>Related Articles</h4>
+                    <h4>Bài viết liên quan</h4>
                 </div>
                 <div class="related-products-slider tc-products position-relative tc-slider-style1">
                     <div class="swiper-container">
@@ -460,7 +465,7 @@
 
                                                 <a href="{{ route('client.articles.article', $related->article_id) }}"
                                                     class="butn">
-                                                    <span><i class="la la-eye me-2"></i> Read More</span>
+                                                    <span><i class="la la-eye me-2"></i>Đọc thêm</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -620,7 +625,7 @@
                                                         <i class="fas fa-times"></i> Cancel
                                                     </button>
                                                     <button type="button" class="btn btn-sm btn-primary send-reply" data-comment-id="${data.comment.comment_id}">
-                                                        <i class="fas fa-paper-plane"></i> Reply
+                                                        <i class="fas fa-paper-plane"></i> Trả lời
                                                     </button>
                                                 </div>
                                             </div>
@@ -725,7 +730,7 @@
                                                                                 data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
                                                                                 <i
                                                                                     class="fas fa-reply fa-flip-horizontal"></i>
-                                                                                <span class="fw-bold">Reply</span>
+                                                                                <span class="fw-bold">Trả lời</span>
                                                                             </button>
                                                                         </div>
 
@@ -756,22 +761,8 @@
                     $(this).closest(".reply-form-container").addClass("d-none");
                 });
             });
-
-
-
-
-
         });
     </script>
-
-
-
-
-
-
-
-
-
 
 </body>
 

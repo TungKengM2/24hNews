@@ -40,7 +40,7 @@ class ArticleUserController extends Controller
                 if ($userId) {
                     $query->where('user_id', $userId);
                 } else {
-                    $query->whereNull('user_id')->where('ip_address', $userIp);
+                    $query->whereNull('user_id')->where($userIp);
                 }
             })
             ->exists();
