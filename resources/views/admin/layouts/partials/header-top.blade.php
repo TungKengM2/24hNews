@@ -73,9 +73,9 @@
                                 <div>
                                     <h4 class="mb-0 mt-0">Notifications</h4>
                                 </div>
-                                <div>
+                                {{-- <div>
                                     <a href="index.html#" class="text-danger">Clear All</a>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </li>
@@ -92,7 +92,7 @@
                                             {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
                                         </a>
                                 @endif
-                            </li>
+                            {{-- </li>
                             <li>
                                 <a href="index.html#">
                                     <i class="fa fa-warning text-warning"></i> Duis malesuada justo eu
@@ -127,7 +127,7 @@
                                     <i class="fa fa-user text-success"></i> Nullam euismod dolor ut quam
                                     interdum, at scelerisque ipsum imperdiet.
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </li>
                     <li class="footer">
