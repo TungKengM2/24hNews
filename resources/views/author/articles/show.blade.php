@@ -36,80 +36,80 @@
                 </div>
                 <div class="box-body">
                     <div id="slimtest2">
-                        <div class="row">
+                        <!-- Preview Content -->
+                        <div class="mb-3">
+                            <strong>Preview Content:</strong>
+                            <p>{!! $preview_content !!}</p>
+                        </div>
 
-                            <p class="col-md-5">Preview Content: {{ $article->preview_content }}</p>
-                            <div class="row">
-                                <p class="col-md-5">Content:</p>
-                                <div class="col-md-7">
-                                    <p>{!! $article->content !!}</p>
+                        <!-- Content -->
+                        <div class="mb-3">
+                            <strong>Content:</strong>
+                            <p>{!! $article->content !!}</p>
+                        </div>
+
+                        <!-- Thumbnail -->
+                        <div>
+                            @if ($article->thumbnail_url)
+                                <div class="mb-3">
+                                    <strong>Thumbnail:</strong>
+                                    <br>
+                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Thumbnail"
+                                         class="img-thumbnail" style="max-width: 200px;">
                                 </div>
+                            @endif
+                        </div>
+
+                        <div class="row" style="margin-top: 50px">
+                            <div class="col-2">
+                                <strong>Contains Sensitive Content?</strong>
+                                <p>{{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</p>
                             </div>
 
-                            <div>
-                                @if ($article->thumbnail_url)
-                                    <div class="mb-3">
-                                        <strong>Thumbnail:</strong>
-                                        <br>
-                                        <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Thumbnail"
-                                             class="img-thumbnail" style="max-width: 200px;">
-                                    </div>
-                                @endif
+                            <div class="col-2">
+                                <strong>Author:</strong>
+                                <p>{{ $article->author->username ?? 'N/A' }}</p>
                             </div>
 
-                            <div class="row" style="margin-top: 50px">
-
-                                <div class="col-2">
-                                    <strong>Contains Sensitive Content?</strong>
-                                    <p>{{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</p>
-                                </div>
-
-                                <div class="col-2">
-                                    <strong>Author:</strong>
-                                    <p>{{ $article->author->username ?? 'N/A' }}</p>
-                                </div>
-
-                                <div class="col-2">
-                                    <strong>Category:</strong>
-                                    <p>{{ $article->category->name ?? 'N/A' }}</p>
-                                </div>
-
-                                <div class="col-2">
-                                    <strong>Status:</strong>
-                                    <p>{{ ucfirst($article->status) }}</p>
-
-                                </div>
-
-                                <div class="col-2">
-                                    <strong>Views:</strong>
-                                    <p>{{ $article->views }}</p>
-
-                                </div>
-
-                                <div class="col-2">
-                                    <strong>Approved By:</strong>
-                                    <p>{{ $article->approver->username ?? 'Not Approved' }}</p>
-                                </div>
-
-
+                            <div class="col-2">
+                                <strong>Category:</strong>
+                                <p>{{ $article->category->name ?? 'N/A' }}</p>
                             </div>
 
-                            <div class="mt-4">
-                                <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
-                                        href="{{ route('author.articles.index') }}">
-                                        Back to Dashboard
-                                    </a></button>
-                                <a href="{{ route('author.articles.edit', $article) }}"
-                                   class="btn btn-warning btn-sm"><i
-                                        class="si-pencil si"></i></a>
-                                <form action="{{ route('author.articles.destroy', $article) }}" method="POST"
-                                      class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
-                                        <i class="si-trash si"></i>
-                                    </button>
-                                </form>
+                            <div class="col-2">
+                                <strong>Status:</strong>
+                                <p>{{ ucfirst($article->status) }}</p>
                             </div>
+
+                            <div class="col-2">
+                                <strong>Views:</strong>
+                                <p>{{ $article->views }}</p>
+                            </div>
+
+                            <div class="col-2">
+                                <strong>Approved By:</strong>
+                                <p>{{ $article->approver->username ?? 'Not Approved' }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="mt-4">
+                            <button type="button" class="waves-effect waves-light btn btn-default mb-5">
+                                <a href="{{ route('author.articles.index') }}">Back to Dashboard</a>
+                            </button>
+                            <a href="{{ route('author.articles.edit', $article) }}" class="btn btn-warning btn-sm">
+                                <i class="si-pencil si"></i>
+                            </a>
+                            <form action="{{ route('author.articles.destroy', $article) }}" method="POST"
+                                  class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
+                                    <i class="si-trash si"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 @endsection
