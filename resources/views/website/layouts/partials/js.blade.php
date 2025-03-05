@@ -34,3 +34,21 @@
             .catch(error => console.error('Error fetching weather data:', error));
     });
 </script>
+
+<script>
+    function updateDate() {
+    const daysOfWeek = ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"];
+    const months = ["tháng 1", "tháng 2", "tháng 3", "tháng 4", "tháng 5", "tháng 6", "tháng 7", "tháng 8", "tháng 9", "tháng 10", "tháng 11", "tháng 12"];
+
+    const now = new Date();
+    const dayOfWeek = daysOfWeek[now.getDay()];
+    const day = now.getDate();
+    const month = months[now.getMonth()];
+    const year = now.getFullYear();
+
+    const formattedDate = `${dayOfWeek}, ngày ${day} ${month} năm ${year}`;
+    document.getElementById("dateElement").innerText = formattedDate;
+}
+
+updateDate();
+</script>
