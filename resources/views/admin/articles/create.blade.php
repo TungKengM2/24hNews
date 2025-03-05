@@ -1,14 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('head')
-    {{-- <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.css" /> --}}
-
-    {{-- <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css" /> --}}
-    {{-- <script src="{{ asset('js/ckeditor.js') }}"></script> --}}
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
-
-    <!-- Style -->
-
     <style>
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
             background-color: #c3bebe;
@@ -26,194 +19,120 @@
 @endsection
 
 @section('content')
-    <!-- Main content -->
-    <div class="content-wrapper">
-        <div class="container-full">
-            <!-- Content Header (Page header) -->
-
-            <h2 class="mb-4">Create New Post</h2>
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            {{-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> --}}
-            {{-- <script src="https://cdn.tiny.cloud/1/wqfctsnehjc4409j4s7ihcv6ujakakcdn8riyn391q6f1uep/tinymce/6/tinymce.min.js"
-                    referrerpolicy="origin"></script> --}}
-            <script src="/tinymce/js/tinymce/tinymce.min.js"></script>
-
-
-            <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data" id="articleForm">
-                @csrf
-                <div class="col-md-12">
-                    <div class="row mx-2">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Tiêu đề</label>
-                                <textarea type="text" class="form-control  min-h-100 " id="title" name="title" required></textarea>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="slug" class="form-label">Slug</label>
-                                <textarea type="text" class="form-control min-h-100" id="slug" name="slug" required></textarea>
-                            </div>
-                        </div>
+    <div class="wrapper">
+        <div class="container mt-5 ">
+            <div class="card p-2">
+                <h2 class="mb-4">Create New Post</h2>
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
-                </div>
+                @endif
 
-                <div class="mb-3 mx-3">
-                    <label for="content" class="form-label">Nội dung</label>
-                    {{-- <div id="editor"></div>
-                        <textarea id="editor" name="content" style="display: none;"></textarea> --}}
-                    <textarea name="content" id="editor" cols="30" rows="10"></textarea>
-                </div>
+                <script src="/tinymce/js/tinymce/tinymce.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
 
-                <div class="col-md-12 ">
-                    <div class="row mx-2 mb-4">
-                        <div class="mt-2 col-md-4">
-                            <label for="tags">Chọn hoặc thêm tags:</label>
-                            <select name="tags[]" id="tags" class="form-control" multiple="multiple">
-                                @foreach ($tags as $tag)
-                                    <option value="{{ $tag->tag_id }}">{{ $tag->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="mb-3 col-md-4">
-                            <label class="form-label">Danh mục</label>
-                            <select name="category_id" class="form-control">
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->category_id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="mb-3 col-md-4">
-                            <label for="thumbnail_url" class="form-label">Ảnh đại diện</label>
-                            <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url"
-                                accept="image/*" required>
-                        </div>
+                <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data" id="articleForm">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Tiêu đề</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="slug" class="form-label">Slug</label>
+                        <input type="text" class="form-control" id="slug" name="slug" required>
+                    </div>
 
-                    <!-- Tự động gán tác giả -->
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Nội dung</label>
+                        <textarea name="content" id="editor" cols="30" rows="10"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="word_file" class="form-label">Nhập nội dung từ file Word</label>
+                        <input type="file" class="form-control" id="word_file" accept=".docx">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tags">Chọn hoặc thêm tags:</label>
+                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
+                            @foreach ($tags as $tag)
+                                <option value="{{ $tag->tag_id }}">{{ $tag->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Danh mục</label>
+                        <select name="category_id" class="form-control">
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->category_id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="thumbnail_url" class="form-label">Ảnh đại diện</label>
+                        <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
+                    </div>
+
                     <input type="hidden" name="author_id" value="{{ auth()->id() }}">
                     <input type="hidden" name="status" id="articleStatus" value="pending">
 
-                    <div class="mx-3 mb-4">
-                        <button type="submit" class="btn btn-primary">Gửi</button>
-                        <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
-                        <button type="button" class="waves-effect waves-light btn btn-default"><a
-                                href="{{ route('articles.index') }}">
-                                Back to List
-                            </a></button>
-                 </div>
-            </form>
+                    <button type="submit" class="btn btn-primary">Gửi</button>
+                    <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
+                    <button type="button" class="waves-effect waves-light btn btn-default">
+                        <a href="{{ route('articles.index') }}">Back to List</a>
+                    </button>
+                </form>
 
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-            <script>
-                $(document).ready(function() {
-                    $('#tags').select2({
-                        tags: true,
-                        tokenSeparators: [','],
-                        placeholder: "Chọn hoặc nhập tags mới",
-                        allowClear: true
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+                <script>
+                    $(document).ready(function() {
+                        $('#tags').select2({
+                            tags: true,
+                            tokenSeparators: [','],
+                            placeholder: "Chọn hoặc nhập tags mới",
+                            allowClear: true
+                        });
                     });
-                });
 
-                // Lưu nháp bài viết
-                document.getElementById('saveDraft').addEventListener('click', function() {
-                    document.getElementById('articleStatus').value = 'draft';
-                    document.getElementById('articleForm').setAttribute('novalidate', 'novalidate'); // Bỏ qua required
-                    document.getElementById('articleForm').submit();
-                });
-
-                // Cập nhật nội dung từ editor vào textarea trước khi submit
-                document.getElementById('articleForm').addEventListener('submit', function() {
-                    document.getElementById('content').value = document.getElementById('editor').innerHTML;
-                });
-
-                // Cảnh báo khi người dùng rời khỏi trang nếu có thay đổi
-                let isFormEdited = false;
-                const formElements = document.getElementById('articleForm').elements;
-
-                for (let i = 0; i < formElements.length; i++) {
-                    formElements[i].addEventListener('change', function() {
-                        isFormEdited = true;
+                    document.getElementById('saveDraft').addEventListener('click', function() {
+                        document.getElementById('articleStatus').value = 'draft';
+                        document.getElementById('articleForm').setAttribute('novalidate', 'novalidate');
+                        document.getElementById('articleForm').submit();
                     });
-                }
 
-                window.addEventListener('beforeunload', function(e) {
-                    if (isFormEdited) {
-                        const confirmationMessage =
-                            'Bạn có chắc chắn muốn rời khỏi trang? Những thay đổi chưa được lưu sẽ bị mất.';
-                        e.returnValue = confirmationMessage;
-                        return confirmationMessage;
-                    }
-                });
+                    document.getElementById('word_file').addEventListener('change', function(event) {
+                        const file = event.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const arrayBuffer = e.target.result;
+                                mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
+                                    .then(function(result) {
+                                        tinymce.get('editor').setContent(result.value);
+                                    })
+                                    .catch(function(error) {
+                                        console.error('Lỗi đọc file:', error);
+                                    });
+                            };
+                            reader.readAsArrayBuffer(file);
+                        }
+                    });
 
-                // Tạo slug tự động
-                document.getElementById("title").addEventListener("input", function() {
-                    let title = this.value.trim();
-                    let slug = title.toLowerCase()
-                        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Loại bỏ dấu tiếng Việt
-                        .replace(/đ/g, "d").replace(/Đ/g, "D")
-                        .replace(/\s+/g, "-") // Thay dấu cách bằng "-"
-                        .replace(/[^\w-]/g, "") // Xóa ký tự đặc biệt
-                        .replace(/--+/g, "-") // Loại bỏ nhiều dấu "-" liên tiếp
-                        .replace(/^-+|-+$/g, ""); // Xóa "-" ở đầu và cuối
-
-                    document.getElementById("slug").value = slug;
-                });
-            </script>
-
-            {{-- Đọc nội dung file Word (nếu có) --}}
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
-            <script>
-                document.getElementById('thumbnail_url').addEventListener('change', function(event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const arrayBuffer = e.target.result;
-                            mammoth.extractRawText({
-                                    arrayBuffer: arrayBuffer
-                                })
-                                .then(function(result) {
-                                    document.getElementById('editor').innerHTML = result.value;
-                                })
-                                .catch(function(error) {
-                                    console.error('Lỗi đọc file:', error);
-                                });
-                        };
-                        reader.readAsArrayBuffer(file);
-                    }
-                });
-            </script>
-
-            <script>
-                tinymce.init({
-                    selector: '#editor',
-                    plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
-                    toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | table',
-                    // menubar: false
-                });
-
-                let content = tinymce.get('editor').getContent();
-                console.log(content);
-            </script>
-
-
+                    tinymce.init({
+                        selector: '#editor',
+                        plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
+                        toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | table',
+                    });
+                </script>
+            </div>
         </div>
     </div>
-    </div>
-
 @endsection

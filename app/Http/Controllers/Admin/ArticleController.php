@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NewArticleSubmitted;
 
 class ArticleController extends Controller
 {
@@ -19,7 +21,7 @@ class ArticleController extends Controller
     {
         $articles = Article::with(['author', 'category', 'approver', 'tags'])
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(5);
         return view('admin.articles.index', compact('articles'));
     }
 
@@ -110,6 +112,13 @@ class ArticleController extends Controller
             'thumbnail_url' => $path ,
         ]);
         $article->tags()->sync($tagIds);
+
+        // Gửi thông báo cho admin nếu bài viết cần duyệt
+        if ($article->status === 'pending') {
+            $admins = User::where('role_id', 1)->get();
+            Notification::send($admins, new NewArticleSubmitted($article));
+        }
+
         return redirect()->route('articles.index')->with('success', 'Bài viết đã được tạo thành công!');
     }
 
@@ -200,7 +209,16 @@ class ArticleController extends Controller
         return redirect()->route('articles.index')->with('success', 'Bài viết đã được cập nhật thành công!');
     }
 
+// duyệt bài viết
+    public function Approves()
+    {
+        $articles = Article::with(['author', 'category', 'approver', 'tags'])
+            ->where('status', 'pending') // Lọc bài viết có trạng thái pending
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
 
+        return view('admin.articles.approve', compact('articles'));
+    }
 
 
     /**

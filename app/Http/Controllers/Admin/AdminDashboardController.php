@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Approval;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
 
 class AdminDashboardController extends Controller
 {
@@ -34,6 +36,11 @@ class AdminDashboardController extends Controller
     public function showEditPost()
     {
         return view('admin.articles.edit');
+    }
+// duyệt bài viết
+    public function Approves()
+    {
+        return view('admin.articles.approve');
     }
 
     // CATEGORY

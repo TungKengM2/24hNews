@@ -13,6 +13,7 @@ use App\Http\Controllers\Moderator\ModeratorArticleController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
+
 // 🌟 Giao diện trang chủ + bài viết
 Route::get('/', function () {
     return view('welcome');
@@ -53,12 +54,15 @@ Route::post(
 Route::post('/admin/reject-role-upgrade/{approval_id}', [AdminDashboardController::class, 'rejectRoleUpgrade'])
     ->name('admin.reject-role-upgrade');
 
+    // approves
+    Route::get('/admin/articles/approves', [ArticleController::class, 'Approves'])
+    ->name('admin.articles.approves');
 
 // article
-Route::patch(
-    '/articles/{article}/approve',
-    [AdminArticleController::class, 'approve']
-)->name('articles.approve');
+// Route::patch(
+//     '/articles/{article}/approve',
+//     [AdminArticleController::class, 'approve']
+// )->name('articles.approve');
 
 
 Route::prefix('admin')->group(function () {
