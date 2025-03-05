@@ -9,26 +9,19 @@ class HomeController extends Controller
 {
     public function index()
     {
-        //breaking news
-        $featuredArticles = Article::where('status', 'published')
-        ->orderByDesc('created_at') // Sắp xếp theo thời gian mới nhất
-        ->take(7)
-        ->get();
+        // Lấy 3 bài viết mới nhất đã được duyệt
+        $latestArticles = Article::where('status', 'Published')
+            ->latest()
+            ->take(3)
+            ->get();
 
-        // hot trends
-        
+        // Lấy 7 bài viết theo danh mục (chỉ lấy bài đã duyệt)
+        $categoryArticles = Article::where('category_id', 1)
+            ->where('status', 'Published')
+            ->latest()
+            ->take(7)
+            ->get();
 
-        //top 2 bài viết nhiều lượt xem
-        $D1Articles = Article::where('status', 'published')
-        ->orderByDesc('views') // Sắp xếp bài viết nhiều views nhất
-        ->take(2) // Lấy top 2 bài viết nhiều lượt xem
-        ->get();
-    
-        // Lấy danh sách bài viết mới nhất
-        $articles = Article::where('status', 'published')->latest()->get();
-    
-        
-        
         // Truyền dữ liệu bài viết tới view
         return view('welcome', compact('featuredArticles', 'articles', 'D1Articles'));
 
