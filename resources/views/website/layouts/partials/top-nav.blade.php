@@ -10,8 +10,7 @@
                                     <i class="la la-calendar"></i>
                                 </div>
                                 <div class="inf">
-                                    <strong>Monday</strong>
-                                    <p>Nov 25, 2023</p>
+                                    <div id="dateElement"></div>
                                 </div>
                             </div>
                         </div>
