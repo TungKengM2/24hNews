@@ -2,17 +2,19 @@
 
     use App\Http\Controllers\Admin\AdminDashboardController;
     use App\Http\Controllers\Admin\ArticleController;
+    use App\Http\Controllers\Admin\CategoryController;
     use App\Http\Controllers\Admin\UploadController;
+    use App\Http\Controllers\Admin\UserController;
     use App\Http\Controllers\AuthAdminController;
     use App\Http\Controllers\Author\AuthorDashboard;
     use App\Http\Controllers\AuthUserController;
-    use App\Http\Controllers\Admin\CategoryController;
     use App\Http\Controllers\ForgotPasswordController;
-    use App\Http\Controllers\ProfileController;
-    use App\Http\Controllers\Moderator\ModeratorDashboardController;
     use App\Http\Controllers\Moderator\ModeratorArticleController;
-    use App\Http\Controllers\Admin\UserController;
+    use App\Http\Controllers\Moderator\ModeratorDashboardController;
+    use App\Http\Controllers\ProfileController;
+    use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Route;
+    use Illuminate\Support\Facades\Storage;
 
     // 🌟 Giao diện trang chủ + bài viết
     Route::get('/', function () {
@@ -90,14 +92,14 @@
         ->name('moderator.list-article');
 
     Route::get('/moderator-profile-setting', function () {
-        return view("moderator.profile-setting");
+        return view('moderator.profile-setting');
     })->name('moderator.profile-setting');
 
     Route::get('/moderator-profile', function () {
-        return view("moderator.profile");
+        return view('moderator.profile');
     })->name('moderator.profile');
 
-    //Route author dashborad
+    // Route author dashborad
     Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
         Route::get('/dashboard', [AuthorDashboard::class, 'index'])
             ->name('author.dashboard');
@@ -113,14 +115,20 @@
         Route::resource('articles',
             \App\Http\Controllers\Author\ArticleController::class)
             ->names('author.articles');
+
+        Route::post('/articles/upload', [
+            \App\Http\Controllers\Author\ArticleController::class,
+            'uploadImage',
+        ])
+            ->name('author.articles.upload');
     });
 
-    //Route User dashboard
+    // Route User dashboard
     Route::get('/user/dasboard', function () {
-        return view("user.dashboard");
+        return view('user.dashboard');
     });
     Route::get('/user-profile', function () {
-        return view("user.user-setting");
+        return view('user.user-setting');
     })->name('user.profile');
 
     // 🌟 Routes dành cho User (AuthUserController)
