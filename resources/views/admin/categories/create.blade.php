@@ -1,61 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('admin.layouts.master')
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="{{ asset('admin/images/favicon.ico') }}">
+@section('title')
+    Thêm Mới Danh Mục
+@endsection
 
-    <title>Thêm Mới Danh Mục</title>
-
-    <!-- Vendors Style -->
-    <link rel="stylesheet" href="{{ asset('admin/main/css/vendors_css.css') }}">
-
-    <!-- Style -->
-    <link rel="stylesheet" href="{{ asset('admin/main/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/main/css/skin_color.css') }}">
-</head>
-
-<body class="hold-transition dark-skin sidebar-mini theme-primary fixed">
-    @include('admin.layouts.partials.header')
-
-    <!-- Left side column. contains the logo and sidebar -->
-    @include('admin.layouts.partials.aside')
-    <div class="wrapper">
-        <div class="container mt-5 ">
-            <div class="card p-2">
-                <h2 class="mb-4">Create New Category</h2>
-                <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+@section('content')
+    <div class="content-wrapper">
+        <div class="container-full">
+            <div class="wrapper">
+                <div class="container mt-5 ">
+                    <div class="card p-2">
+                        <h2 class="mb-4">Create New Category</h2>
+                        <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="controls">
+                                            <input type="checkbox" id="is_active" name="is_active" value="single">
+                                            <label for="is_active">Is Active</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label for="is_active" class="form-label">Is Active</label>
-                        <input type="checkbox" name="is_active" checked>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+                </div>
             </div>
         </div>
-
-
-        <!-- Vendor JS -->
-        <script src="{{ asset('admin/main/js/vendors.min.js') }}"></script>
-        <script src="{{ asset('admin/main/js/pages/chat-popup.js') }}"></script>
-        <script src="{{ asset('admin/assets/icons/feather-icons/feather.min.js') }}"></script>
-        <script src="{{ asset('admin/assets/vendor_components/apexcharts-bundle/irregular-data-series.js') }}"></script>
-        <script src="{{ asset('admin/assets/vendor_components/apexcharts-bundle/dist/apexcharts.js') }}"></script>
-        <script src="{{ asset('admin/assets/vendor_components/zingchart_branded_version/zingchart.min.js') }}"></script>
-
-        <!-- CrmX Admin App -->
-        <script src="{{ asset('admin/main/js/template.js') }}"></script>
-        <script src="{{ asset('admin/main/js/demo.js') }}"></script>
-        <script src="{{ asset('admin/main/js/pages/dashboard.js') }}"></script>
-</body>
-
-</html>
+    </div>
+@endsection
