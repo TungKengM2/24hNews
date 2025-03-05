@@ -133,6 +133,7 @@
                 <div class="row">
                     <div class="col-lg-3">
                         <div class="tc-stock-card mb-30">
+                                    <h2 class="color-main p-2">Thời tiết</h2>
                                     <div id="weather" class="weather-widget p-2">
                                         <div class="icon me-3 pt-1 la-3x d-flex justify-content-center">
                                             <img id="weather-icon" alt="Weather Icon">
