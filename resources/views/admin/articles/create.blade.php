@@ -1,14 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('head')
-    {{-- <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.css" /> --}}
-
-    {{-- <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css" /> --}}
-    {{-- <script src="{{ asset('js/ckeditor.js') }}"></script> --}}
     <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
-
-    <!-- Style -->
-
     <style>
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
             background-color: #c3bebe;
@@ -26,7 +19,6 @@
 @endsection
 
 @section('content')
-    <!-- Main content -->
     <div class="wrapper">
         <div class="container mt-5 ">
             <div class="card p-2">
@@ -41,11 +33,8 @@
                     </div>
                 @endif
 
-                {{-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> --}}
-                {{-- <script src="https://cdn.tiny.cloud/1/wqfctsnehjc4409j4s7ihcv6ujakakcdn8riyn391q6f1uep/tinymce/6/tinymce.min.js"
-                    referrerpolicy="origin"></script> --}}
                 <script src="/tinymce/js/tinymce/tinymce.min.js"></script>
-
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
 
                 <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data" id="articleForm">
                     @csrf
@@ -61,9 +50,12 @@
 
                     <div class="mb-3">
                         <label for="content" class="form-label">Nội dung</label>
-                        {{-- <div id="editor"></div>
-                        <textarea id="editor" name="content" style="display: none;"></textarea> --}}
                         <textarea name="content" id="editor" cols="30" rows="10"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="word_file" class="form-label">Nhập nội dung từ file Word</label>
+                        <input type="file" class="form-control" id="word_file" accept=".docx">
                     </div>
 
                     <div class="mb-3">
@@ -86,25 +78,20 @@
 
                     <div class="mb-3">
                         <label for="thumbnail_url" class="form-label">Ảnh đại diện</label>
-                        <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url" accept="image/*"
-                            required>
+                        <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
                     </div>
 
-
-                    <!-- Tự động gán tác giả -->
                     <input type="hidden" name="author_id" value="{{ auth()->id() }}">
                     <input type="hidden" name="status" id="articleStatus" value="pending">
 
                     <button type="submit" class="btn btn-primary">Gửi</button>
                     <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
-                    <button type="button" class="waves-effect waves-light btn btn-default"><a
-                            href="{{ route('articles.index') }}">
-                            Back to List
-                        </a></button>
+                    <button type="button" class="waves-effect waves-light btn btn-default">
+                        <a href="{{ route('articles.index') }}">Back to List</a>
+                    </button>
                 </form>
 
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
                 <script>
                     $(document).ready(function() {
                         $('#tags').select2({
@@ -115,66 +102,21 @@
                         });
                     });
 
-                    // Lưu nháp bài viết
                     document.getElementById('saveDraft').addEventListener('click', function() {
                         document.getElementById('articleStatus').value = 'draft';
-                        document.getElementById('articleForm').setAttribute('novalidate', 'novalidate'); // Bỏ qua required
+                        document.getElementById('articleForm').setAttribute('novalidate', 'novalidate');
                         document.getElementById('articleForm').submit();
                     });
 
-                    // Cập nhật nội dung từ editor vào textarea trước khi submit
-                    document.getElementById('articleForm').addEventListener('submit', function() {
-                        document.getElementById('content').value = document.getElementById('editor').innerHTML;
-                    });
-
-                    // Cảnh báo khi người dùng rời khỏi trang nếu có thay đổi
-                    let isFormEdited = false;
-                    const formElements = document.getElementById('articleForm').elements;
-
-                    for (let i = 0; i < formElements.length; i++) {
-                        formElements[i].addEventListener('change', function() {
-                            isFormEdited = true;
-                        });
-                    }
-
-                    window.addEventListener('beforeunload', function(e) {
-                        if (isFormEdited) {
-                            const confirmationMessage =
-                                'Bạn có chắc chắn muốn rời khỏi trang? Những thay đổi chưa được lưu sẽ bị mất.';
-                            e.returnValue = confirmationMessage;
-                            return confirmationMessage;
-                        }
-                    });
-
-                    // Tạo slug tự động
-                    document.getElementById("title").addEventListener("input", function() {
-                        let title = this.value.trim();
-                        let slug = title.toLowerCase()
-                            .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Loại bỏ dấu tiếng Việt
-                            .replace(/đ/g, "d").replace(/Đ/g, "D")
-                            .replace(/\s+/g, "-") // Thay dấu cách bằng "-"
-                            .replace(/[^\w-]/g, "") // Xóa ký tự đặc biệt
-                            .replace(/--+/g, "-") // Loại bỏ nhiều dấu "-" liên tiếp
-                            .replace(/^-+|-+$/g, ""); // Xóa "-" ở đầu và cuối
-
-                        document.getElementById("slug").value = slug;
-                    });
-                </script>
-
-                {{-- Đọc nội dung file Word (nếu có) --}}
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
-                <script>
-                    document.getElementById('thumbnail_url').addEventListener('change', function(event) {
+                    document.getElementById('word_file').addEventListener('change', function(event) {
                         const file = event.target.files[0];
                         if (file) {
                             const reader = new FileReader();
                             reader.onload = function(e) {
                                 const arrayBuffer = e.target.result;
-                                mammoth.extractRawText({
-                                        arrayBuffer: arrayBuffer
-                                    })
+                                mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
                                     .then(function(result) {
-                                        document.getElementById('editor').innerHTML = result.value;
+                                        tinymce.get('editor').setContent(result.value);
                                     })
                                     .catch(function(error) {
                                         console.error('Lỗi đọc file:', error);
@@ -183,21 +125,13 @@
                             reader.readAsArrayBuffer(file);
                         }
                     });
-                </script>
 
-                <script>
                     tinymce.init({
                         selector: '#editor',
                         plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
                         toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | table',
-                        // menubar: false
                     });
-
-                    let content = tinymce.get('editor').getContent();
-                    console.log(content);
                 </script>
-
-
             </div>
         </div>
     </div>
