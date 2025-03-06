@@ -17,13 +17,31 @@ class ArticleController extends Controller
     /**
      *
      */
-    public function index()
-    {
-        $articles = Article::with(['author', 'category', 'approver', 'tags'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(5);
-        return view('admin.articles.index', compact('articles'));
+    public function index(Request $request)
+{
+    $filter = $request->input('filter', 'active'); // Mặc định hiển thị các bài viết hoạt động5
+
+    $query = Article::with(['author', 'category', 'approver', 'tags'])
+        ->orderBy('created_at', 'desc');
+
+    if ($filter === 'inactive') {
+        // Chỉ lấy bài viết có danh mục không hoạt động
+        $query->whereHas('category', function ($q) {
+            $q->where('is_active', false);
+        });
+    } elseif ($filter === 'active') {
+        // Chỉ lấy bài viết có danh mục hoạt động
+        $query->whereHas('category', function ($q) {
+            $q->where('is_active', true);
+        });
     }
+
+    $articles = $query->paginate(10);
+
+    return view('admin.articles.index', compact('articles', 'filter'));
+}
+
+
 
 
 
@@ -32,7 +50,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        $categories = Category::select('category_id', 'name')->get();
+        $categories = Category::where('is_active', true)->get();
         $authors = User::select('user_id', 'username')->get();
         $approvers = User::where('role_id', 1)->select('user_id', 'username')->get();
         $tags = Tag::all();
@@ -212,7 +230,7 @@ class ArticleController extends Controller
         return redirect()->route('articles.index')->with('success', 'Bài viết đã được cập nhật thành công!');
     }
 
-// duyệt bài viết
+    // duyệt bài viết
     public function Approves()
     {
         $articles = Article::with(['author', 'category', 'approver', 'tags'])

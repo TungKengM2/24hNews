@@ -15,7 +15,7 @@
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}"><i
+                                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i
                                                 class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Trang Chủ</li>
                                     <li class="breadcrumb-item active" aria-current="page">Danh Sách Bài Viết</li>
@@ -33,6 +33,7 @@
                     <div class="box">
                         <div class="box-header">
 
+
                             <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
                                     href="{{ route('admin.dashboard') }}">
                                     Back to Dashboard
@@ -41,12 +42,23 @@
                                     href="{{ route('articles.create') }}">
                                     <i class="si-plus si"></i>
                                 </a></button>
+
+                            <div class="d-flex align-items-center mb-3">
+                                <label for="filter" class="me-2">Lọc bài viết:</label>
+                                <select id="filter" class="form-control w-auto" onchange="filterArticles()">
+                                    {{-- <option value="all" {{ $filter == 'all' ? 'selected' : '' }}>Tất cả</option> --}}
+                                    <option value="active" {{ $filter == 'active' ? 'selected' : '' }}>Bài viết hoạt động
+                                    </option>
+                                    <option value="inactive" {{ $filter == 'inactive' ? 'selected' : '' }}>Bài viết không
+                                        hoạt động</option>
+                                </select>
+                            </div>
+
                         </div>
 
                         <div class="box-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-dark mb-0"
-                                    style="width:100%">
+                                <table class="table table-bordered table-dark mb-0" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
@@ -158,6 +170,13 @@
                         </div>
                     </div>
                 </div>
+
+                <script>
+                    function filterArticles() {
+                        let filter = document.getElementById("filter").value;
+                        window.location.href = "?filter=" + filter;
+                    }
+                </script>
             </div>
             <!-- /.content-wrapper -->
         </div>

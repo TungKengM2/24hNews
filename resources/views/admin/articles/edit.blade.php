@@ -105,10 +105,12 @@
                         <h5>Category</h5>
                         <select name="category_id" class="form-control">
                             @foreach ($categories as $category)
-                                <option value="{{ $category->category_id }}"
-                                    {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
+                                @if ($category->is_active)
+                                    <option value="{{ $category->category_id }}"
+                                        {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
