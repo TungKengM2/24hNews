@@ -99,4 +99,11 @@ class Article extends Model
     {
         $this->increment('views');
     }
+
+    public function scopeActiveCategory($query)
+    {
+        return $query->whereHas('category', function ($q) {
+            $q->where('is_active', true);
+        });
+    }
 }
