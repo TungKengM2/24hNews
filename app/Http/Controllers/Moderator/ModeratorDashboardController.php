@@ -1,15 +1,28 @@
 <?php
 
-namespace App\Http\Controllers\Moderator;
+    namespace App\Http\Controllers\Moderator;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+    use App\Models\Approval;
+    use Illuminate\Http\Request;
+    use App\Http\Controllers\Controller;
 
-class ModeratorDashboardController extends Controller
-{
-    public function index()
+    class ModeratorDashboardController extends Controller
     {
-        // Your code here
-        return view('moderator.layouts.dashboard');
+
+        public function index()
+        {
+            // Your code here
+            return view('moderator.layouts.dashboard');
+        }
+
+        public function dashboard()
+        {
+            $pendingRequests = Approval::where('type', 'role_upgrade')
+                ->where('status', 'pending')
+                ->with('user')
+                ->get();
+
+            return view('moderator.dashboard', compact('pendingRequests'));
+        }
+
     }
-}

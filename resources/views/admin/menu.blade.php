@@ -48,7 +48,11 @@ body {
 }
 
 #sidebar {
+
     width: 300px;
+
+    width: 200px;
+
     min-width: 70px;
     position: relative;
     min-height: 100vh;

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Article;
 use App\Models\Category;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -48,6 +48,7 @@ class ArticleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
 
     public function store(Request $request)
     {
@@ -102,6 +103,40 @@ class ArticleController extends Controller
         return redirect()->route('articles.index')->with('success', 'Article created successfully!');
     }
 
+    //  public function store(Request $request)
+    //  {
+    //      $request->validate([
+    //          'title' => 'required|string|max:255',
+    //          'slug' => 'required|string|max:255|unique:articles,slug',
+    //          'content' => 'required',
+    //          'category_id' => 'required|exists:categories,category_id',
+    //          'thumbnail_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    //          'status' => 'required|in:draft,pending',
+    //      ]);
+
+    //      $article = new Article();
+    //      $article->title = $request->title;
+    //      $article->slug = $request->slug;
+    //      $article->content = $request->input('content');
+    //      $article->category_id = $request->category_id;
+    //      $article->status = $request->status;
+    //      $article->author_id = auth()->id();
+
+    //      if ($request->hasFile('thumbnail_url')) {
+    //          $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+    //          $article->thumbnail_url = $path;
+    //      }
+
+    //      $article->save();
+
+    //      if ($request->status == 'draft') {
+    //          return redirect()->route('articles.index')->with('success', 'Bài viết đã lưu nháp!');
+    //      }
+
+    //      return redirect()->route('articles.index')->with('success', 'Bài viết đã gửi để chờ duyệt!');
+    //  }
+
+
 
 
     /**
@@ -132,16 +167,25 @@ class ArticleController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:articles,slug,' . $article->id,
-            'content' => 'required',
+
+            
+            
             'preview_content' => 'nullable|string',
             'contains_sensitive_content' => 'nullable|boolean',
-            'author_id' => 'required|exists:users,user_id',
-            'category_id' => 'required|exists:categories,category_id',
-            'thumbnail_url' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4,avi,mov,mp3,wav|max:51200', 
+            
+            
+         
             'status' => 'required|in:draft,pending,published,archived',
             'views' => 'nullable|integer|min:0',
             'approved_by' => 'nullable|exists:users,user_id',
+
+            'slug' => 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id',
+            'content' => 'nullable',
+            'author_id' => 'required|exists:users,user_id',
+            'category_id' => 'required|exists:categories,category_id',
+            'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+
+
         ]);
 
         $article->title = $request->title;
@@ -192,6 +236,7 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         $article->delete();
+
         return redirect()->route('articles.index')->with('success', 'Bài viết đã bị xóa!');
     }
 }
