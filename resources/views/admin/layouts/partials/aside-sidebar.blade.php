@@ -3,21 +3,21 @@
         <div class="multinav-scroll" style="height: 100%;">
             <!-- sidebar menu-->
             <ul class="sidebar-menu" data-widget="tree">
-                {{-- <li class="treeview">
-                    <a href="index.html#">
+                <li class="">
+                    <a href="{{ route('admin.dashboard') }}">
                         <i data-feather="monitor"></i>
                         <span>Dashboard</span>
-                        <span class="pull-right-container">
+                        {{-- <span class="pull-right-container">
                             <i class="fa fa-angle-right pull-right"></i>
-                        </span>
+                        </span> --}}
                     </a>
-                    <ul class="treeview-menu">
+                    {{-- <ul class="treeview-menu">
                         <li><a href="index.html"><i class="icon-Commit"><span class="path1"></span><span
                                         class="path2"></span></i>Analytics</a></li>
                         <li><a href="index-2.html"><i class="icon-Commit"><span class="path1"></span><span
                                         class="path2"></span></i>e-Commerce</a></li>
-                    </ul>
-                </li> --}}
+                    </ul> --}}
+                </li>
                 <li class="header">Quản Lý</li>
                 <li class="treeview">
                     <a href="index.html#">
@@ -60,17 +60,18 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="#"><i class="icon-Commit"><span
-                                        class="path1"></span><span class="path2"></span></i>Bài Viết</a>
+                        <li><a href="{{ route('admin.articles.approves') }}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Duyệt Bài Viết</a>
                         </li>
-                        <li><a href="#"><i class="icon-Commit"><span
-                                        class="path1"></span><span class="path2"></span></i>Nâng Cấp Tài Khoản
-                            </a>
-                        </li>
-                    </ul>
                 </li>
+                <li><a href="#"><i class="icon-Commit"><span class="path1"></span><span
+                                class="path2"></span></i>Nâng Cấp Tài Khoản
+                    </a>
+                </li>
+            </ul>
+            </li>
 
-                {{-- <li class="treeview">
+            {{-- <li class="treeview">
                     <a href="index.html#">
                         <i data-feather="edit"></i>
                         <span>Widgets</span>
