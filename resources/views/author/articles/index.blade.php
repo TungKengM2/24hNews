@@ -23,6 +23,7 @@
                             </nav>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -30,18 +31,29 @@
             <div class="container-full">
                 <div class="col-12">
                     <div class="box">
-                        <div class="box-header">
+                        <div class="box-header d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <button type="button" class="waves-effect waves-light btn btn-default mb-5">
+                                    <a href="{{ route('admin.dashboard') }}">Back to Dashboard</a>
+                                </button>
+                                <a href="{{ route('author.articles.create') }}"
+                                   class="waves-effect waves-light btn btn-primary mb-5 ml-2">
+                                    <i class="si-plus si"></i>
+                                </a>
+                            </div>
 
-                            <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
-                                    href="{{ route('admin.dashboard') }}">
-                                    Back to Dashboard
-                                </a></button>
-                            <a href="{{ route('author.articles.create') }}"
-                               class="waves-effect waves-light btn btn-primary mb-5">
-                                <i class="si-plus si"></i>
-                            </a>
-
+                            <div class="input-group" style="width: 300px;">
+                                <input type="text" id="searchInput" class="form-control"
+                                       placeholder="Tìm kiếm bài viết...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary btn-sm" type="button">
+                                        <i class="mdi mdi-magnify"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
+
+
                         <div class="box-body">
                             <div class="table-responsive">
                                 <table id="complex_header" class="table table-striped table-bordered display"
@@ -154,4 +166,54 @@
                 </div>
             </div>
             <!-- /.content-wrapper -->
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    $('#searchInput').on('input', function () {
+                        const query = $(this).val().trim(); // Loại bỏ khoảng trắng thừa
+                        if (!query) {
+                            // Nếu query rỗng, reset bảng
+                            $('table tbody').empty();
+                            return;
+                        }
+
+                        $.ajax({
+                            url: "{{ route('author.articles.search') }}",
+                            method: 'GET',
+                            data: { query: query },
+                            success: function (response) {
+                                console.log('Server response:', response);
+
+                                // Xóa dữ liệu cũ
+                                $('table tbody').empty();
+
+                                // Hiển thị kết quả mới
+                                if (response.data.length > 0) {
+                                    response.data.forEach(article => {
+                                        const html = `
+                            <tr>
+                                <td>${article.article_id}</td>
+                                <td>${article.title}</td>
+                                <td>${article.slug}</td>
+                                <td>${article.category?.name || 'N/A'}</td>
+                                <td>${article.tags.map(tag => tag.name).join(', ')}</td>
+                            </tr>
+                        `;
+                                        $('table tbody').append(html);
+                                    });
+                                } else {
+                                    // Hiển thị thông báo nếu không có kết quả
+                                    $('table tbody').append('<tr><td colspan="5">Không tìm thấy kết quả</td></tr>');
+                                }
+
+                                // Cập nhật phân trang
+                                $('#pagination').html(response.links);
+                            },
+                            error: function (xhr) {
+                                console.error('AJAX Error:', xhr.responseText);
+                            },
+                        });
+                    });
+                });
+            </script>
 @endsection
