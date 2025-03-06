@@ -123,8 +123,7 @@
                                                     <span class="text-muted">Không có tag</span>
                                                 @endif
                                             </td>
-                                            {{--                                            <td>{{ $article->approved_by ? $article->approver->username : 'Not Approved' }}--}}
-                                            </td>
+
                                             <td>
                                                 <a href="{{ route('author.articles.show', $article) }}"
                                                    class="btn btn-info btn-sm"><i class="si-eye si"></i></a>
@@ -132,28 +131,11 @@
                                                 <a href="{{ route('author.articles.edit', $article) }}"
                                                    class="btn btn-warning btn-sm"><i class="si-pencil si"></i></a>
 
-                                                {{--                                                @if ($article->status === 'pending')--}}
-                                                {{--                                                    <form action="{{ route('articles.approve', $article) }}"--}}
-                                                {{--                                                          method="POST" class="d-inline">--}}
-                                                {{--                                                        @csrf--}}
-                                                {{--                                                        @method('PATCH')--}}
-                                                {{--                                                        <button type="submit" class="btn btn-success btn-sm"--}}
-                                                {{--                                                                onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">--}}
-                                                {{--                                                            Approve--}}
-                                                {{--                                                        </button>--}}
-                                                {{--                                                    </form>--}}
-                                                {{--                                                @endif--}}
 
-                                                <form action="{{ route('author.articles.destroy', $article) }}"
-                                                      method="POST"
-                                                      class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-danger btn-sm"
-                                                            onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
-                                                        <i class="si-trash si"></i>
-                                                    </button>
-                                                </form>
+                                                <button class="btn btn-danger btn-sm"
+                                                        onclick="deleteArticle({{ $article->article_id }})">
+                                                    <i class="si-trash si"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -170,9 +152,8 @@
             <script>
                 $(document).ready(function () {
                     $('#searchInput').on('input', function () {
-                        const query = $(this).val().trim(); // Loại bỏ khoảng trắng thừa
+                        const query = $(this).val().trim();
                         if (!query) {
-                            // Nếu query rỗng, reset bảng
                             $('table tbody').empty();
                             return;
                         }
@@ -184,10 +165,8 @@
                             success: function (response) {
                                 console.log('Server response:', response);
 
-                                // Xóa dữ liệu cũ
                                 $('table tbody').empty();
 
-                                // Hiển thị kết quả mới
                                 if (response.data.length > 0) {
                                     response.data.forEach(article => {
                                         const html = `
@@ -202,11 +181,9 @@
                                         $('table tbody').append(html);
                                     });
                                 } else {
-                                    // Hiển thị thông báo nếu không có kết quả
                                     $('table tbody').append('<tr><td colspan="5">Không tìm thấy kết quả</td></tr>');
                                 }
 
-                                // Cập nhật phân trang
                                 $('#pagination').html(response.links);
                             },
                             error: function (xhr) {
@@ -215,5 +192,65 @@
                         });
                     });
                 });
+            </script>
+            <script>
+                function deleteArticle(articleId) {
+                    console.log('deleteArticle called with articleId:', articleId);
+                    const swalWithBootstrapButtons = Swal.mixin({
+                        customClass: {
+                            confirmButton: 'btn btn-success',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        buttonsStyling: false,
+                    });
+
+                    swalWithBootstrapButtons.fire({
+                        title: 'Are you sure?',
+                        text: 'You won\'t be able to revert this!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'No, cancel!',
+                        reverseButtons: true,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/author/articles/${articleId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                },
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Failed to delete article');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    swalWithBootstrapButtons.fire({
+                                        title: 'Deleted!',
+                                        text: data.message,
+                                        icon: 'success',
+                                    }).then(() => {
+                                        window.location.reload();
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    swalWithBootstrapButtons.fire({
+                                        title: 'Error!',
+                                        text: 'An error occurred while deleting the article.',
+                                        icon: 'error',
+                                    });
+                                });
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            swalWithBootstrapButtons.fire({
+                                title: 'Cancelled',
+                                text: 'Your article is safe :)',
+                                icon: 'error',
+                            });
+                        }
+                    });
+                }
             </script>
 @endsection

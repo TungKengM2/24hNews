@@ -208,21 +208,18 @@
         public function destroy(Article $article)
         {
             if ($article->author_id !== auth()->id()) {
-                return redirect()
-                    ->back()
-                    ->with('error', 'Bạn không có quyền xóa bài viết này.');
+                return response()->json(['message' => 'Bạn không có quyền xóa bài viết này.'],
+                    403);
             }
+
             if ($article->thumbnail_url) {
                 Storage::disk('public')->delete($article->thumbnail_url);
             }
 
             $article->tags()->detach();
-
             $article->delete();
 
-            return redirect()
-                ->route('author.articles.index')
-                ->with('success', 'Bài viết đã bị xóa!');
+            return response()->json(['message' => 'Bài viết đã bị xóa!']);
         }
 
         public function uploadImage(Request $request)
