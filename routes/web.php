@@ -45,21 +45,12 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 
 // 🚀 Profile dùng chung
 Route::middleware(['auth'])->group(function () {
-    // Trang profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    
-    // Cập nhật thông tin người dùng (profile)
     Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
-
-    // Thay đổi mật khẩu
     Route::get('/profile/change-password', [ProfileController::class, 'showChangePasswordForm'])->name('profile.change-password');
     Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
-    
-    // Tải ảnh đại diện (upload avatar)
     Route::post('/profile/upload-avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.upload-avatar');
 });
-
-
 
 // 🚀 Cài đặt profile riêng theo vai trò
 Route::middleware(['auth', 'role:4'])->get('/user/profile-setting', function () {
@@ -74,6 +65,23 @@ Route::middleware(['auth', 'role:3'])->get('/moderator/profile-setting', functio
     return view('moderator.profile-setting');
 })->name('moderator.profile-setting');
 
+// 🚀 Dashboard cho từng vai trò
+Route::middleware(['auth', 'role:1'])->get('/admin/dashboard', function () {
+    return view('admin.dashboard');
+})->name('admin.dashboard');
+
+Route::middleware(['auth', 'role:2'])->get('/author/dashboard', function () {
+    return view('author.dashboard');
+})->name('author.dashboard');
+
+Route::middleware(['auth', 'role:3'])->get('/moderator/dashboard', function () {
+    return view('moderator.dashboard');
+})->name('moderator.dashboard');
+
+Route::middleware(['auth', 'role:4'])->get('/user/dashboard', function () {
+    return view('user.dashboard');
+})->name('user.dashboard');
+
 // 🚀 Khu vực dành riêng cho Moderator (role_id = 3)
 Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     Route::get('/list-article', [ModeratorArticleController::class, 'index'])->name('moderator.list-article');
@@ -81,12 +89,15 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
 
 // 🚀 Khu vực dành riêng cho Admin (role_id = 1)
 Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
-    Route::get('/role-upgrade-requests', [UserController::class, 'roleUpgradeRequests'])
-        ->name('admin.user-role-requests');
-    Route::post('/approve-role-upgrade/{approval_id}', [UserController::class, 'approveRoleUpgrade'])
-        ->name('admin.approve-role-upgrade');
-    Route::post('/reject-role-upgrade/{approval_id}', [UserController::class, 'rejectRoleUpgrade'])
-        ->name('admin.reject-role-upgrade');
+    // 🏠 Admin Dashboard
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+
+    // Quản lý yêu cầu nâng cấp vai trò
+    Route::get('/role-upgrade-requests', [UserController::class, 'roleUpgradeRequests'])->name('admin.user-role-requests');
+    Route::post('/approve-role-upgrade/{approval_id}', [UserController::class, 'approveRoleUpgrade'])->name('admin.approve-role-upgrade');
+    Route::post('/reject-role-upgrade/{approval_id}', [UserController::class, 'rejectRoleUpgrade'])->name('admin.reject-role-upgrade');
 
     // Quản lý bài viết
     Route::get('/articles/approves', [ArticleController::class, 'Approves'])->name('admin.articles.approves');
