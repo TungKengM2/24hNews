@@ -4,7 +4,9 @@
     use App\Http\Controllers\Admin\ArticleController;
     use App\Http\Controllers\Admin\UploadController;
     use App\Http\Controllers\AuthAdminController;
+    use App\Http\Controllers\Author\AuthorController;
     use App\Http\Controllers\Author\AuthorDashboard;
+    use App\Http\Controllers\Author\AuthorProfileController;
     use App\Http\Controllers\AuthUserController;
     use App\Http\Controllers\Admin\CategoryController;
     use App\Http\Controllers\ForgotPasswordController;
@@ -102,7 +104,7 @@
         return view("moderator.profile");
     })->name('moderator.profile');
 
-    //Route author dashborad
+    //Route author
     Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
         Route::get('/dashboard', [AuthorDashboard::class, 'index'])
             ->name('author.dashboard');
@@ -111,9 +113,11 @@
             return view('author.profile-setting');
         })->name('author.profile-setting');
 
-        Route::get('/profile', function () {
-            return view('author.profile');
-        })->name('author.profile');
+        Route::get('/profile', [AuthorProfileController::class, 'index'])
+            ->name('author.profile');
+        Route::put('/profile',
+            [AuthorProfileController::class, 'update'])
+            ->name('author.profile.update');
 
         Route::resource('articles',
             \App\Http\Controllers\Author\ArticleController::class)

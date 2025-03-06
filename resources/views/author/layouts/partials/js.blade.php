@@ -17,7 +17,7 @@
 <script src="/admin/main/js/demo.js"></script>
 <script src="/admin/main/js/pages/dashboard.js"></script>
 <script src="/admin/assets/vendor_components/select2/dist/js/select2.full.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script referrerpolicy="origin"
         src="https://cdn.tiny.cloud/1/z5nmbwpgzi1mqfjo2czz0cu8h05tmwnkumfhvwkcnr16tn3a/tinymce/7/tinymce.min.js"></script>
@@ -230,4 +230,10 @@
             */
 
         });
+</script>
+<script>
+    setTimeout(function () {
+        let alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => alert.style.display = 'none');
+    }, 3000);
 </script>

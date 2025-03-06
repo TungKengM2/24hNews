@@ -4,8 +4,8 @@
         <ul class="header-megamenu nav">
             <li class="btn-group nav-item">
                 <a href="index.html#"
-                    class="waves-effect waves-light nav-link push-btn btn-outline no-border btn-primary-light text-dark hover-white"
-                    data-toggle="push-menu" role="button">
+                   class="waves-effect waves-light nav-link push-btn btn-outline no-border btn-primary-light text-dark hover-white"
+                   data-toggle="push-menu" role="button">
                     <i data-feather="align-left"></i>
                 </a>
             </li>
@@ -61,8 +61,8 @@
             <!-- Notifications -->
             <li class="dropdown notifications-menu">
                 <a href="index.html#"
-                    class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
-                    data-bs-toggle="dropdown" title="Notifications">
+                   class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
+                   data-bs-toggle="dropdown" title="Notifications">
                     <i data-feather="bell"></i>
                 </a>
                 <ul class="dropdown-menu animated bounceIn">
@@ -135,16 +135,18 @@
             <!-- User Account-->
             <li class="dropdown user user-menu">
                 <a href="index.html#"
-                    class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white"
-                    data-bs-toggle="dropdown" title="User">
-                    <img class="avatar avatar-pill" src="/admin/main/../images/avatar/3.jpg" alt="">
+                   class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white"
+                   data-bs-toggle="dropdown" title="User">
+                    <img class="avatar avatar-pill" src="{{ asset('storage/' . $avatar) }}" alt="">
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
-                        <a class="dropdown-item" href="{{route(name: "author.profile")}}"><i class="ti-user text-muted me-2"></i>
+                        <a class="dropdown-item" href="{{route('author.profile')}}"><i
+                                class="ti-user text-muted me-2"></i>
                             Profile</a>
 
-                        <a class="dropdown-item" href="{{route(name: "author.profile-setting")}}"><i class="ti-settings text-muted me-2"></i>
+                        <a class="dropdown-item" href="{{route(name: "author.profile-setting")}}"><i
+                                class="ti-settings text-muted me-2"></i>
                             Settings</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="index.html#"><i class="ti-lock text-muted me-2"></i>

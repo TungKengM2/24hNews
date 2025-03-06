@@ -9,7 +9,7 @@
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Storage;
 
-    class ArticleController extends Controller
+    class AuthorController extends Controller
     {
 
         /**
@@ -22,7 +22,7 @@
 
         public function create()
         {
-            return view('admin.articles.create');
+            return view('author.articles.create');
         }
 
     }

@@ -538,7 +538,7 @@
 
             <div class="sidebar-widgets">
                 <div class="copyright text-start m-25">
-                    <p><strong class="d-block">Tác Giả Dashboard</strong> © 2025 All Rights Reserved</p>
+                    <p><strong class="d-block">Author Dashboard</strong> © 2025 All Rights Reserved</p>
                 </div>
             </div>
         </div>
