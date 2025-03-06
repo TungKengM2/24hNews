@@ -37,8 +37,6 @@ class AuthController extends Controller
                 return redirect()->intended('/moderator/dashboard');
             } elseif ($user->role_id == 4) {
                 return redirect()->intended('/user/dashboard');
-            } elseif ($user->role_id == 1) {
-                return redirect()->intended('/admin/dashboard');
             } else {
                 return redirect()->intended('/');
             }

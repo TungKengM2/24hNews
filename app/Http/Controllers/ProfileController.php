@@ -81,37 +81,43 @@ class ProfileController extends Controller
      */
     public function showChangePasswordForm()
 {
-    return view('profile.change-password'); // Trả về view chứa form đổi mật khẩu
+    $user = Auth::user();
+
+    // Nếu user đăng nhập bằng Google/Facebook, chuyển hướng về profile với thông báo
+    if (!$user->password) {
+        return redirect()->route('profile')->with('error', 'Tài khoản của bạn đăng nhập bằng Google/Facebook, không thể đổi mật khẩu.');
+    }
+
+    return view('profile.change-password');
 }
+
 
 public function updatePassword(Request $request)
 {
     $user = Auth::user();
-    
+
     // Nếu user đăng nhập bằng Google/Facebook thì không cho đổi mật khẩu
     if (!$user->password) {
-        return back()->withErrors(['password' => 'Tài khoản của bạn đăng nhập bằng Google/Facebook, không thể đổi mật khẩu.']);
+        return redirect()->route('profile')->with('error', 'Tài khoản của bạn đăng nhập bằng Google/Facebook, không thể đổi mật khẩu.');
     }
 
     // Kiểm tra dữ liệu nhập vào
     $request->validate([
-        'current_password' => 'required',  // Mật khẩu hiện tại là bắt buộc
-        'new_password'     => 'required|min:8|confirmed', // Mật khẩu mới phải có ít nhất 8 ký tự và trùng khớp với xác nhận
+        'current_password' => 'required',
+        'new_password'     => 'required|min:8|confirmed',
     ]);
 
-    // Kiểm tra mật khẩu hiện tại của người dùng
+    // Kiểm tra mật khẩu hiện tại
     if (!Hash::check($request->current_password, $user->password)) {
         return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không đúng.']);
     }
 
     // Cập nhật mật khẩu mới
     $user->update([
-        'password' => Hash::make($request->new_password)  // Mã hóa mật khẩu mới và lưu
+        'password' => Hash::make($request->new_password)
     ]);
 
-    // Thêm thông báo thành công vào session
     return back()->with('success', 'Đổi mật khẩu thành công!');
 }
 
-    
 }
