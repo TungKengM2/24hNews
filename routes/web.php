@@ -121,6 +121,10 @@
             'uploadImage',
         ])
             ->name('author.articles.upload');
+
+        Route::get('/articles/search',
+            [\App\Http\Controllers\Author\ArticleController::class, 'search'])
+            ->name('author.articles.search');
     });
 
     // Route User dashboard
