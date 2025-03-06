@@ -5,9 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Approval;
 use App\Models\Role;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
 
 class AdminDashboardController extends Controller
 {
@@ -37,7 +35,8 @@ class AdminDashboardController extends Controller
     {
         return view('admin.articles.edit');
     }
-// duyệt bài viết
+
+    // duyệt bài viết
     public function Approves()
     {
         return view('admin.articles.approve');
@@ -66,42 +65,40 @@ class AdminDashboardController extends Controller
             ->with('user')
             ->get();
 
-        return view('admin.users.userRoleRequests', compact('requests'));
+        return view('admin.users.index', compact('requests'));
     }
 
-    public function approveRoleUpgrade($approval_id)
+    public function approveRoleUpgrade(Approval $approval)
     {
-        $approval = Approval::findOrFail($approval_id);
+        DB::transaction(function () use ($approval) {
+            $user = $approval->user;
+            $role = Role::where('name', $approval->requested_role)
+                ->firstOrFail();
 
-        // Cập nhật vai trò của người dùng
-        $user = User::find($approval->user_id);
-        $role = Role::where('name', $approval->requested_role)
-            ->first();
-        $user->role_id = $role->role_id;
-        $user->save();
+            $user->update(['role_id' => 2]);
 
-        // Cập nhật trạng thái phê duyệt
-        $approval->update([
-            'status' => 'approved',
-            'approved_by' => auth()->id(),
-        ]);
+            $approval->update([
+                'status' => 'approved',
+                'approved_by' => auth()->id(),
+                'approved_at' => now(),
+            ]);
+        });
 
         return redirect()
-            ->route('admin.role-upgrade-requests')
-            ->with('status', 'Role upgrade approved successfully.');
+            ->route('admin.user-role-requests')
+            ->with('success', 'Đã duyệt yêu cầu nâng cấp vai trò');
     }
 
-    public function rejectRoleUpgrade($approval_id)
+    public function rejectRoleUpgrade(Approval $approval)
     {
-        $approval = Approval::findOrFail($approval_id);
-
         $approval->update([
             'status' => 'rejected',
             'approved_by' => auth()->id(),
+            'approved_at' => now(),
         ]);
 
         return redirect()
-            ->route('admin.role-upgrade-requests')
-            ->with('status', 'Role upgrade rejected successfully.');
+            ->route('admin.user-role-requests')
+            ->with('warning', 'Đã từ chối yêu cầu nâng cấp vai trò');
     }
 }
