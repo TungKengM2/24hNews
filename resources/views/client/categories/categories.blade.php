@@ -277,7 +277,8 @@
             </div>
         </div>
     </section>
-
+    @include('website.layouts.partials.footer')
+    <!-- ====== end footer ====== -->
 
     <script src="{{ asset('client/js/lib/jquery-3.0.0.min.js') }}"></script>
     <script src="{{ asset('client/js/lib/jquery-migrate-3.0.0.min.js') }}"></script>
