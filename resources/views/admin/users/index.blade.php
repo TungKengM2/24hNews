@@ -129,7 +129,7 @@
                                 <div id="pagination-wrapper" class="d-flex justify-content-end mt-5">
                                     <nav>
                                         <ul class="pagination pagination-sm">
-                                            {{--                                            {{ $articles->links('pagination::bootstrap-5') }}--}}
+                                            {{ $requests->links('pagination::bootstrap-5') }}
                                         </ul>
                                     </nav>
                                 </div>
