@@ -235,5 +235,5 @@
     setTimeout(function () {
         let alerts = document.querySelectorAll('.alert');
         alerts.forEach(alert => alert.style.display = 'none');
-    }, 3000);
+    }, 5000);
 </script>

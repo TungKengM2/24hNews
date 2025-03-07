@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\Author\AuthorProfileController;
+use App\Http\Controllers\Author\ModerationController;
 use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
@@ -220,3 +221,8 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 
 Route::post('/logout', [AuthUserController::class, 'logout'])
     ->name('logout');
+
+// Route::get('/moderate', [ModerationController::class, 'showForm'])
+//    ->name('moderate.form');
+// Route::post('/moderate', [ModerationController::class, 'moderate'])
+//    ->name('moderate.submit');
