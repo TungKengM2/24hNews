@@ -63,6 +63,12 @@
                 ->with('status', 'Profile updated successfully.');
         }
 
+        public function upgradeToAuthor()
+        {
+            $user = auth()->user();
+            return view('user.upgrade', compact('user'));
+        }
+
         public function requestAuthorRole(Request $request)
         {
             $existingRequest = Approval::where('type', 'role_upgrade')
@@ -73,7 +79,7 @@
 
             if ($existingRequest) {
                 return redirect()
-                    ->route('profile.edit')
+                    ->route('user.upgrade.result')
                     ->with('error', 'You have already submitted a request.');
             }
 
@@ -88,7 +94,7 @@
             ]);
 
             return redirect()
-                ->route('profile.edit')
+                ->route('user.upgrade.result')
                 ->with('status',
                     'Your request has been submitted successfully.');
         }

@@ -32,6 +32,9 @@
                     'author.profile',
                     'author.layouts.master',
                     'author.layouts.partials.header-top',
+                    'user.dashboard',
+                    'user.layouts.master',
+                    'user.layouts.partials.header-top',
                 ],
                 function ($view) {
                     $user = Auth::user();
