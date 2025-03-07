@@ -135,9 +135,9 @@
     });
 
     //Route User dashboard
-    Route::get('/user/dasboard', function () {
-        return view("user.dashboard");
-    });
+    //    Route::get('/user/dasboard', function () {
+    //        return view("user.dashboard");
+    //    });
     Route::get('/user-profile', function () {
         return view("user.user-setting");
     })->name('user.profile');
@@ -159,16 +159,17 @@
         });
 
     // 🚀 Khu vực dành riêng cho User (role_id = 4)
-    Route::middleware(['auth', 'role:4'])->group(function () {
-        Route::get('/user/dashboard', function () {
-            return view('user.dashboard');
-        })->name('user.dashboard');
+    Route::middleware(['auth', 'role:4'])
+        ->prefix('/user')
+        ->group(function () {
+            Route::get('/dashboard', [ProfileController::class, 'index'])
+                ->name('user.dashboard');
 
-        // Yêu cầu nâng cấp vai trò lên Author
-        Route::post('/profile/request-author-role',
-            [ProfileController::class, 'requestAuthorRole'])
-            ->name('profile.request-author-role');
-    });
+            // Yêu cầu nâng cấp vai trò lên Author
+            Route::post('/profile/request-author-role',
+                [ProfileController::class, 'requestAuthorRole'])
+                ->name('profile.request-author-role');
+        });
 
     // 🌟 Routes dành cho Admin (AuthAdminController)
     Route::middleware('guest')
