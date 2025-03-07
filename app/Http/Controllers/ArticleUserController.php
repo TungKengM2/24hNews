@@ -65,54 +65,49 @@ class ArticleUserController extends Controller
 
         // Lấy danh sách bình luận
         $comments = Comment::where('article_id', $article->article_id)
-    ->where('status', 'approved')
-    ->whereNull('parent_id') // Chỉ lấy bình luận gốc
-    ->with([
-        'user:user_id,username,image',
-        'reactions',
-    ])
-    ->withCount([
-        'reactions as like_count' => function ($query) {
-            $query->where('is_like', true);
-        },
-        'reactions as dislike_count' => function ($query) {
-            $query->where('is_like', false);
+            ->where('status', 'approved')
+            ->whereNull('parent_id') // Chỉ lấy bình luận gốc
+            ->with([
+                'user:user_id,username,image',
+                'reactions',
+            ])
+            ->withCount([
+                'reactions as like_count' => function ($query) {
+                    $query->where('is_like', true);
+                },
+                'reactions as dislike_count' => function ($query) {
+                    $query->where('is_like', false);
+                }
+            ])
+            ->orderBy('created_at', 'desc')
+            ->paginate(4); // Phân trang bình luận gốc (5 bình luận mỗi trang)
+
+        // ✅ Lấy tất cả các replies của các bình luận đã phân trang
+        $commentIds = $comments->pluck('comment_id'); // Lấy danh sách ID của bình luận gốc
+
+        $replies = Comment::whereIn('parent_id', $commentIds) // Chỉ lấy replies của bình luận gốc
+            ->where('status', 'approved')
+            ->with([
+                'user:user_id,username,image',
+                'reactions',
+            ])
+            ->withCount([
+                'reactions as like_count' => function ($query) {
+                    $query->where('is_like', true);
+                },
+                'reactions as dislike_count' => function ($query) {
+                    $query->where('is_like', false);
+                }
+            ])
+            ->orderBy('created_at', 'asc') // Hiển thị replies theo thứ tự cũ -> mới
+            ->get();
+
+        // ✅ Gán replies vào từng comment
+        $groupedReplies = $replies->groupBy('parent_id');
+
+        foreach ($comments as $comment) {
+            $comment->replies = $groupedReplies->get($comment->comment_id, collect()); // Gán danh sách replies vào từng comment
         }
-    ])
-    ->orderBy('created_at', 'desc')
-    ->paginate(4); // Phân trang bình luận gốc (5 bình luận mỗi trang)
-
-// ✅ Lấy tất cả các replies của các bình luận đã phân trang
-$commentIds = $comments->pluck('comment_id'); // Lấy danh sách ID của bình luận gốc
-
-$replies = Comment::whereIn('parent_id', $commentIds) // Chỉ lấy replies của bình luận gốc
-    ->where('status', 'approved')
-    ->with([
-        'user:user_id,username,image',
-        'reactions',
-    ])
-    ->withCount([
-        'reactions as like_count' => function ($query) {
-            $query->where('is_like', true);
-        },
-        'reactions as dislike_count' => function ($query) {
-            $query->where('is_like', false);
-        }
-    ])
-    ->orderBy('created_at', 'asc') // Hiển thị replies theo thứ tự cũ -> mới
-    ->get();
-
-// ✅ Gán replies vào từng comment
-$groupedReplies = $replies->groupBy('parent_id');
-
-foreach ($comments as $comment) {
-    $comment->replies = $groupedReplies->get($comment->comment_id, collect()); // Gán danh sách replies vào từng comment
-}
-
-
-
-
-
 
 
         return view('client.articles.article', compact('article', 'relatedArticles', 'isLiked', 'likeCount', 'comments'));

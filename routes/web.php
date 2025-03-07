@@ -1,12 +1,16 @@
 <?php
 
+use App\Models\Article;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProfileController;
+
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\Author\AuthorDashboard;
@@ -20,6 +24,10 @@ use App\Http\Controllers\Moderator\ModeratorDashboardController;
 
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::post('/get-posts-by-category', [HomeController::class, 'getPostsByCategory'])->name('get.posts.by.category');
+
+
 
 // Admin
 Route::middleware(['auth', 'admin'])->group(function () {
