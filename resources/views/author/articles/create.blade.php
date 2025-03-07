@@ -3,7 +3,7 @@
 @section('head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-   
+
     <!-- Style -->
     <style>
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -36,8 +36,17 @@
                         </ul>
                     </div>
                 @endif
+                @if(session('violation_reasons'))
+                    <div class="alert alert-warning">
+                        <strong>Lý do vi phạm:</strong>
+                        <ul>
+                            @foreach(session('violation_reasons') as $word => $reason)
+                                <li><strong>{{ $word }}:</strong> {{ $reason }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-                {{--                <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>--}}
 
                 <form action="{{ route('author.articles.store') }}" method="POST" enctype="multipart/form-data"
                       id="articleForm">
@@ -54,8 +63,19 @@
 
                     <div class="mb-3">
                         <label for="content" class="form-label">Nội dung</label>
-                        <textarea id="full-featured" name="content" style="height: 800px"></textarea>
+                        @if(session('violations'))
+                            <textarea id="full-featured" name="content"
+                                      style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                            {!! highlightWords(old('content'), session('violations')) !!}
+                        </textarea>
+                        @else
+                            <textarea id="full-featured" name="content"
+                                      style="height: 800px;">
+                        {{ old('content') }}
+                        </textarea>
+                        @endif
                     </div>
+
 
                     <div class="mb-3">
                         <label for="tags">Chọn hoặc thêm tags:</label>
@@ -111,12 +131,6 @@
                         document.getElementById('articleStatus').value = 'draft';
                         document.getElementById('articleForm').setAttribute('novalidate', 'novalidate'); // Bỏ qua required
                         document.getElementById('articleForm').submit();
-                    });
-
-                    // Cập nhật nội dung từ editor vào textarea trước khi submit
-                    document.getElementById('articleForm').addEventListener('submit', function () {
-                        document.getElementById('editor').value = editor.getData();
-
                     });
 
                     // Cảnh báo khi người dùng rời khỏi trang nếu có thay đổi

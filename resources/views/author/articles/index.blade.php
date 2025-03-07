@@ -30,7 +30,7 @@
                     <div class="box">
                         <div class="box-header d-flex justify-content-between align-items-center">
                             <button type="button" class="btn btn-secondary btn-sm">
-                                <a href="{{ route('admin.dashboard') }}" class="text-white">Back to Dashboard</a>
+                                <a href="{{ route('author.dashboard') }}" class="text-white">Back to Dashboard</a>
                             </button>
                             <a href="{{ route('author.articles.create') }}" class="btn btn-primary btn-sm">
                                 <i class="si-plus si"></i> Thêm bài viết
