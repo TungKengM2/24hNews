@@ -11,20 +11,39 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewArticleSubmitted;
+use Illuminate\Support\Facades\Log;
 
 class ArticleController extends Controller
 {
     /**
      *
      */
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::with(['author', 'category', 'approver', 'tags'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(5);
-        return view('admin.articles.index', compact('articles'));
-    }
+        $filter = $request->input('filter', 'all'); // Mặc định hiển thị tất cả bài viết
 
+        $query = Article::with(['author', 'category', 'approver', 'tags'])
+            ->orderBy('created_at', 'desc');
+
+        if ($filter === 'inactive') {
+            // Lấy bài viết có danh mục không hoạt động (KHÔNG BỊ NULL)
+            $query->whereHas('category', function ($q) {
+                $q->where('is_active', false);
+            });
+        } elseif ($filter === 'active') {
+            // Lấy bài viết có danh mục hoạt động
+            $query->whereHas('category', function ($q) {
+                $q->where('is_active', true);
+            });
+        } elseif ($filter === 'no_category') {
+            // Lấy bài viết không có danh mục (category_id thực sự NULL)
+            $query->whereNull('category_id');
+        }
+
+        $articles = $query->paginate(10);
+
+        return view('admin.articles.index', compact('articles', 'filter'));
+    }
 
 
     /**
@@ -32,7 +51,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        $categories = Category::select('category_id', 'name')->get();
+        $categories = Category::where('is_active', true)->get();
         $authors = User::select('user_id', 'username')->get();
         $approvers = User::where('role_id', 1)->select('user_id', 'username')->get();
         $tags = Tag::all();
@@ -92,7 +111,7 @@ class ArticleController extends Controller
         $rules = [
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:articles,slug',
-            'category_id' => 'required|exists:categories,category_id',
+            'category_id' => 'nullable|exists:categories,category_id',
             'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:draft,pending',
             'content' => $request->status !== 'draft' ? 'required' : 'nullable',
@@ -104,7 +123,7 @@ class ArticleController extends Controller
             'title' => $request->title,
             'slug' => $request->slug,
             'content' => $request->content ?? '',
-            'category_id' => $request->category_id,
+            'category_id' => $request->category_id ?? null,
             'status' => $request->status,
             'author_id' => auth()->id(),
         ]);
@@ -138,7 +157,7 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        $categories = Category::select('category_id', 'name')->get();
+        $categories = Category::all();
         $authors = User::select('user_id', 'username')->get();
         $approvers = User::where('role_id', 1)->select('user_id', 'username')->get();
 
@@ -163,7 +182,7 @@ class ArticleController extends Controller
             'slug' => 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id',
             'content' => 'nullable',
             'author_id' => 'required|exists:users,user_id',
-            'category_id' => 'required|exists:categories,category_id',
+            'category_id' => 'nullable|exists:categories,category_id',
             'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'tags' => 'array',
             'tags.*' => 'nullable|string',
@@ -178,7 +197,7 @@ class ArticleController extends Controller
             'slug' => $request->slug,
             'content' => $request->content,
             'author_id' => $request->author_id,
-            'category_id' => $request->category_id,
+            'category_id' => $request->category_id ?? null,
         ]);
 
         if ($request->hasFile('thumbnail_url')) {
@@ -212,7 +231,7 @@ class ArticleController extends Controller
         return redirect()->route('articles.index')->with('success', 'Bài viết đã được cập nhật thành công!');
     }
 
-// duyệt bài viết
+    // duyệt bài viết
     public function Approves()
     {
         $articles = Article::with(['author', 'category', 'approver', 'tags'])
