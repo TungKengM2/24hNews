@@ -63,7 +63,7 @@ class AdminDashboardController extends Controller
         $requests = Approval::where('type', 'role_upgrade')
             ->where('status', 'pending')
             ->with('user')
-            ->get();
+            ->paginate(10);
 
         return view('admin.users.index', compact('requests'));
     }
