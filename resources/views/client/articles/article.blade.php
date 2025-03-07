@@ -42,7 +42,7 @@
 
     <!-- ====== main style ====== -->
     <link rel="stylesheet" href="{{ asset('client/css/style.css') }}" />
-    <title> Newzin </title>
+    <title> Trang Chi Tiết Bài Viết </title>
     <style>
         .reply-content {
             white-space: pre-line;

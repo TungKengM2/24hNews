@@ -9,23 +9,24 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\ProfileController;
 
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
+
 use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\Author\AuthorDashboard;
+use App\Http\Controllers\CategoryUserController;
+
 use App\Http\Controllers\Writer\WriterDashboard;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Client\UserProfileController;
+
 use App\Http\Controllers\Moderator\UserManagementController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
-use App\Http\Controllers\Moderator\ModeratorDashboardController;
 
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-Route::post('/get-posts-by-category', [HomeController::class, 'getPostsByCategory'])->name('get.posts.by.category');
 
 
 
@@ -66,6 +67,12 @@ Route::get('/client/articles/{article_id}', [ArticleUserController::class, 'show
 Route::post('/client/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('client.articles.like');
 Route::post('/client/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->middleware('auth')->name('client.articles.comment');
 Route::post('/client/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->middleware('auth')->name('client.articles.replyComment');
+
+// Client Category
+use App\Http\Controllers\Moderator\ModeratorDashboardController;
+
+Route::get('client/category/{categorySlug}', [CategoryUserController::class, 'index'])->name('client.category.show');
+
 
 // Author Routes
 Route::prefix('author')->middleware(['auth', 'role:author'])->group(function () {

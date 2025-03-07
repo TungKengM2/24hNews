@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\Catch_;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
@@ -66,34 +67,6 @@ class HomeController extends Controller
                 
         // Truyền dữ liệu bài viết tới view
         return view('welcome', compact('categories','sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles'));
-    }
-    
-
-
-    public function getPostsByCategory(Request $request) {
-        $categoryId = $request->category_id;
-    
-        if (!$categoryId) {
-            return response()->json(['error' => 'Danh mục không hợp lệ'], 400);
-        }
-    
-        $posts = Article::where('category_id', $categoryId) // ✅ Đúng: Lấy từ bảng `articles`
-            ->where('status', 'published') // ✅ Đúng: `status` có trong bảng `articles`
-            ->latest()
-            ->take(5)
-            ->get()
-            ->map(function ($post) {
-                return [
-                    'slug' => $post->slug,
-                    'title' => $post->title,
-                    'preview_content' => $post->preview_content,
-                    'thumbnail_url' => asset('storage/' . $post->thumbnail_url),
-                    'category_name' => $post->category->name ?? 'Không xác định',
-                    'created_at' => $post->created_at->format('d/m/Y H:i'),
-                ];
-            });
-    
-        return response()->json($posts);
     }
     
     

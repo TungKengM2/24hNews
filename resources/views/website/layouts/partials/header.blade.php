@@ -1,3 +1,32 @@
+<style>
+.nav-scroll-container {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.navbar-nav {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Ẩn thanh cuộn trên Chrome, Safari */
+.navbar-nav::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hiển thị thanh cuộn tùy chỉnh trên Firefox */
+.navbar-nav {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+.active-home i {
+    color: rgb(249, 60, 50) !important;
+}
+
+</style>
 <div class="navbar-container">
         <div class="container">
             <!-- ====== start top navbar ====== -->
@@ -101,86 +130,29 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                     </div>
+                    
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link active dropdown-toggle" href="home-default.html#" id="navbarDropdown1" role="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    homes
-                                </a>
-                                <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
-                                    <li><a class="dropdown-item" href="home-default.html">home default</a></li>
-                                    <li><a class="dropdown-item" href="home-technology.html">home techonology</a></li>
-                                    <li><a class="dropdown-item" href="home-gaming.html">home gaming</a></li>
-                                    <li><a class="dropdown-item" href="home-food.html">home food</a></li>
-                                    <li><a class="dropdown-item" href="home-bussiness.html">home bussiness</a></li>
-                                    <li><a class="dropdown-item" href="home-politic.html">home politic</a></li>
-                                    <li><a class="dropdown-item" href="home-nft.html">home NFT</a></li>
-                                    <li><a class="dropdown-item" href="home-sport.html">home sport</a></li>
-                                    <li><a class="dropdown-item" href="home-cars.html">home cars</a></li>
-                                    <li><a class="dropdown-item" href="home-10.html">original</a></li>
-                                    <li><a class="dropdown-item" href="rtl-home-sport.html">home sport RTL</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="home-default.html#" id="navbarDropdown1" role="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Blog
-                                </a>
-                                <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
-                                    <li><a class="dropdown-item" href="page-blog.html">Blog</a></li>
-                                    <li><a class="dropdown-item" href="page-author.html">authors</a></li>
-                                    <li><a class="dropdown-item" href="page-author-details.html">author details</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="home-default.html#" id="navbarDropdown1" role="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Single posts
-                                </a>
-                                <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
-                                    <li><a class="dropdown-item" href="page-single-post-creative.html">single post
-                                            creative</a></li>
-                                    <li><a class="dropdown-item" href="page-single-post-creative.html">single post
-                                            features</a></li>
-                                    <li><a class="dropdown-item" href="rtl-page-single-post-creative.html">single post
-                                            creative RTL</a></li>
-                                    <li><a class="dropdown-item" href="rtl-page-single-post-features.html">single post
-                                            features RTL</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="home-default.html#" id="navbarDropdown1" role="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Pages
-                                </a>
-                                <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
-                                    <li><a class="dropdown-item" href="page-about.html">About</a></li>
-                                    <li><a class="dropdown-item" href="page-team.html">Team</a></li>
-                                    <li><a class="dropdown-item" href="page-product.html">Product</a></li>
-                                    <li><a class="dropdown-item" href="page-404.html">404 page</a></li>
-                                </ul>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link" href="page-contact.html">
-                                    contact
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="page-shop.html">
-                                    shop
-                                    <small class="hot">hot</small>
-                                </a>
-                            </li>
-                        </ul>
+                        <div class="nav-scroll-container">
+                            <ul class="navbar-nav d-flex flex-row flex-nowrap overflow-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('/') ? 'active-home' : '' }}" href="{{ url('/') }}">
+                                        <i class="la la-home fs-4"></i>
+                                    </a>
+                                </li>
+                                
+            
+                                @foreach ($categories as $category)
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
+                                        {{ $category->name }}
+                                    </a>
+                                </li>
+                            @endforeach
+                            
+                            </ul>
+                        </div>
+                        
                         <div class="nav-side">
-                            <a href="home-default.html#" class="icon-link">
-                                <i class="la la-user fs-4"></i>
-                            </a>
-                            <a href="home-default.html#" class="icon-link noti-dot">
-                                <i class="la la-shopping-bag fs-4"></i>
-                            </a>
                             <a href="home-default.html#" class="icon-link search-btn-style1">
                                 <i class="la la-search fs-4 sOpen-btn"></i>
                                 <i class="la la-close fs-4 sClose-btn"></i>
@@ -189,7 +161,7 @@
                     </div>
                 </div>
             </nav>
-            <!-- ====== end navbar ====== -->
+
 
             <!-- ====== start nav-search ====== -->
             <div class="nav-search-style1">

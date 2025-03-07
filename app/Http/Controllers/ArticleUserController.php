@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Comment;
+use App\Models\Category;
 use App\Models\ArticleLike;
 use App\Models\ArticleView;
 use Illuminate\Http\Request;
@@ -109,8 +110,11 @@ class ArticleUserController extends Controller
             $comment->replies = $groupedReplies->get($comment->comment_id, collect()); // Gán danh sách replies vào từng comment
         }
 
+        
+        $categories = Category::where('is_active', 1)->get();
 
-        return view('client.articles.article', compact('article', 'relatedArticles', 'isLiked', 'likeCount', 'comments'));
+
+        return view('client.articles.article', compact('categories','article', 'relatedArticles', 'isLiked', 'likeCount', 'comments'));
     }
 
     public function likeArticle(Request $request, $article_id)
