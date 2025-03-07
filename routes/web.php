@@ -166,9 +166,15 @@
                 ->name('user.dashboard');
 
             // Yêu cầu nâng cấp vai trò lên Author
-            Route::post('/profile/request-author-role',
+            Route::get('/upgrade', function () {
+                return view('user.upgrade');
+            })->name('user.upgrade');
+            Route::get('/upgrade-result', function () {
+                return view('user.upgrade-result');
+            })->name('user.upgrade.result');
+            Route::post('/upgrade',
                 [ProfileController::class, 'requestAuthorRole'])
-                ->name('profile.request-author-role');
+                ->name('user.upgrade.author');
         });
 
     // 🌟 Routes dành cho Admin (AuthAdminController)

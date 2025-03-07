@@ -17,8 +17,8 @@
             <!-- Notifications -->
             <li class="dropdown notifications-menu">
                 <a href="index.html#"
-                    class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
-                    data-bs-toggle="dropdown" title="Notifications">
+                   class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
+                   data-bs-toggle="dropdown" title="Notifications">
                     <i data-feather="bell"></i>
                 </a>
                 <ul class="dropdown-menu animated bounceIn">
@@ -91,9 +91,11 @@
             <!-- User Account-->
             <li class="dropdown user user-menu">
                 <a href="index.html#"
-                    class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white"
-                    data-bs-toggle="dropdown" title="User">
-                    <img class="avatar avatar-pill" src="/admin/main/../images/avatar/3.jpg" alt="">
+                   class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white"
+                   data-bs-toggle="dropdown" title="User">
+                    <img class="avatar avatar-pill"
+                         src="{{ asset('storage/' . $avatar) }}"
+                         alt="">
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
@@ -101,8 +103,13 @@
                                 class="ti-settings text-muted me-2"></i>
                             Settings</a>
                         <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ route('user.upgrade') }}"><i
+                                class="ti-arrow-up text-muted me-2"></i>
+                            Upgrade to author</a>
                         <a class="dropdown-item" href="index.html#"><i class="ti-lock text-muted me-2"></i>
                             Logout</a>
+
+
                     </li>
                 </ul>
             </li>
