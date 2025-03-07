@@ -43,16 +43,23 @@
                                     <i class="si-plus si"></i>
                                 </a></button>
 
-                            <div class="d-flex align-items-center mb-3">
-                                <label for="filter" class="me-2">Lọc bài viết:</label>
-                                <select id="filter" class="form-control w-auto" onchange="filterArticles()">
-                                    {{-- <option value="all" {{ $filter == 'all' ? 'selected' : '' }}>Tất cả</option> --}}
-                                    <option value="active" {{ $filter == 'active' ? 'selected' : '' }}>Bài viết hoạt động
-                                    </option>
-                                    <option value="inactive" {{ $filter == 'inactive' ? 'selected' : '' }}>Bài viết không
-                                        hoạt động</option>
-                                </select>
-                            </div>
+                            <form method="GET" action="{{ route('articles.index') }}">
+                                <div class="d-flex align-items-center mb-3">
+                                    <label for="filter" class="me-2">Lọc bài viết:</label>
+                                    <select name="filter" class="form-control w-auto" onchange="this.form.submit()">
+                                        <option value="all" {{ request('filter') == 'all' ? 'selected' : '' }}>Tất cả bài
+                                            viết</option>
+                                        <option value="active" {{ request('filter') == 'active' ? 'selected' : '' }}>Bài
+                                            viết có danh mục hoạt động</option>
+                                        <option value="inactive" {{ request('filter') == 'inactive' ? 'selected' : '' }}>Bài
+                                            viết có danh mục bị vô hiệu hóa</option>
+                                        <option value="no_category"
+                                            {{ request('filter') == 'no_category' ? 'selected' : '' }}>Bài viết không có
+                                            danh mục</option>
+                                    </select>
+                                </div>
+                            </form>
+
 
                         </div>
 
@@ -89,7 +96,18 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $article->author->username ?? 'Unknown' }}</td>
-                                                <td>{{ $article->category->name ?? 'Uncategorized' }}</td>
+                                                <td>
+                                                    @if ($article->category)
+                                                        @if (!$article->category->is_active)
+                                                            <span class="text-warning">{{$article->category->name}} (Không Hoạt Động)</span>
+                                                        @else
+                                                            {{ $article->category->name }}
+                                                        @endif
+                                                    @else
+                                                        <span class="text-danger">Không có danh mục</span>
+                                                    @endif
+                                                </td>
+
                                                 <td>
                                                     <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
                                                         alt="Thumbnail" width="100" height="150">

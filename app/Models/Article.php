@@ -62,6 +62,16 @@ class Article extends Model
         );
     }
 
+
+    public function getCategoryNameAttribute()
+    {
+        if (!$this->category) {
+            return "Không có danh mục";
+        }
+
+        return $this->category->is_active ? $this->category->name : "Không hoạt động";
+    }
+
     public function tags()
     {
         return $this->belongsToMany(

@@ -73,6 +73,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Danh mục</label>
                                 <select name="category_id" class="form-control">
+                                    <option value="">-- Không có danh mục --</option>
                                     @foreach ($categories as $category)
                                         @if ($category->is_active)
                                             <option value="{{ $category->category_id }}">{{ $category->name }}</option>

@@ -104,16 +104,23 @@
                     <div class="form-group">
                         <h5>Category</h5>
                         <select name="category_id" class="form-control">
+                            <option value="">-- Không có danh mục --</option> <!-- Tùy chọn không có danh mục -->
                             @foreach ($categories as $category)
-                                @if ($category->is_active)
+                                @if ($category->is_active || $article->category_id == $category->category_id)
                                     <option value="{{ $category->category_id }}"
                                         {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
                                         {{ $category->name }}
+                                        @if (!$category->is_active)
+                                            (Đã vô hiệu hóa)
+                                        @endif
                                     </option>
                                 @endif
                             @endforeach
                         </select>
                     </div>
+
+
+
 
 
 
