@@ -62,6 +62,16 @@ class Article extends Model
         );
     }
 
+
+    public function getCategoryNameAttribute()
+    {
+        if (!$this->category) {
+            return "Không có danh mục";
+        }
+
+        return $this->category->is_active ? $this->category->name : "Không hoạt động";
+    }
+
     public function tags()
     {
         return $this->belongsToMany(
@@ -98,5 +108,12 @@ class Article extends Model
     public function incrementViews()
     {
         $this->increment('views');
+    }
+
+    public function scopeActiveCategory($query)
+    {
+        return $query->whereHas('category', function ($q) {
+            $q->where('is_active', true);
+        });
     }
 }

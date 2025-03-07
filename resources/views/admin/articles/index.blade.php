@@ -15,7 +15,7 @@
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}"><i
+                                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i
                                                 class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Trang Chủ</li>
                                     <li class="breadcrumb-item active" aria-current="page">Danh Sách Bài Viết</li>
@@ -33,6 +33,7 @@
                     <div class="box">
                         <div class="box-header">
 
+
                             <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
                                     href="{{ route('admin.dashboard') }}">
                                     Back to Dashboard
@@ -41,12 +42,30 @@
                                     href="{{ route('articles.create') }}">
                                     <i class="si-plus si"></i>
                                 </a></button>
+
+                            <form method="GET" action="{{ route('articles.index') }}">
+                                <div class="d-flex align-items-center mb-3">
+                                    <label for="filter" class="me-2">Lọc bài viết:</label>
+                                    <select name="filter" class="form-control w-auto" onchange="this.form.submit()">
+                                        <option value="all" {{ request('filter') == 'all' ? 'selected' : '' }}>Tất cả bài
+                                            viết</option>
+                                        <option value="active" {{ request('filter') == 'active' ? 'selected' : '' }}>Bài
+                                            viết có danh mục hoạt động</option>
+                                        <option value="inactive" {{ request('filter') == 'inactive' ? 'selected' : '' }}>Bài
+                                            viết có danh mục bị vô hiệu hóa</option>
+                                        <option value="no_category"
+                                            {{ request('filter') == 'no_category' ? 'selected' : '' }}>Bài viết không có
+                                            danh mục</option>
+                                    </select>
+                                </div>
+                            </form>
+
+
                         </div>
 
                         <div class="box-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-dark mb-0"
-                                    style="width:100%">
+                                <table class="table table-bordered table-dark mb-0" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
@@ -77,7 +96,18 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $article->author->username ?? 'Unknown' }}</td>
-                                                <td>{{ $article->category->name ?? 'Uncategorized' }}</td>
+                                                <td>
+                                                    @if ($article->category)
+                                                        @if (!$article->category->is_active)
+                                                            <span class="text-warning">{{$article->category->name}} (Không Hoạt Động)</span>
+                                                        @else
+                                                            {{ $article->category->name }}
+                                                        @endif
+                                                    @else
+                                                        <span class="text-danger">Không có danh mục</span>
+                                                    @endif
+                                                </td>
+
                                                 <td>
                                                     <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
                                                         alt="Thumbnail" width="100" height="150">
@@ -158,6 +188,13 @@
                         </div>
                     </div>
                 </div>
+
+                <script>
+                    function filterArticles() {
+                        let filter = document.getElementById("filter").value;
+                        window.location.href = "?filter=" + filter;
+                    }
+                </script>
             </div>
             <!-- /.content-wrapper -->
         </div>
