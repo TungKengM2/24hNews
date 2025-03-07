@@ -1,9 +1,7 @@
 @extends('author.layouts.master')
-
 @section('title')
     Chi Tiết Bài Viết
 @endsection
-
 @section('content')
     <div class="content-wrapper">
         <div class="container-full">
@@ -15,7 +13,7 @@
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="tables_data.html#"><i
+                                    <li class="breadcrumb-item"><a href="{{ route('author.articles.index') }}"><i
                                                 class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Danh Sách Bài Viết</li>
                                     <li class="breadcrumb-item active" aria-current="page">Chi Tiết</li>
@@ -23,79 +21,68 @@
                             </nav>
                         </div>
                     </div>
-
                 </div>
             </div>
-
             <!-- Main content -->
-
-            <div class="box">
-                <div class="box-header with-border">
-                    <h4 class="box-title">Title: {{ $article->title }}</h4> <br>
-                    <h6 class="box-title mt-2">Slug: {{ $article->slug }}</h6>
-                </div>
-                <div class="box-body">
-                    <div id="slimtest2">
-                        <!-- Preview Content -->
-                        <div class="mb-3">
-                            <strong>Preview Content:</strong>
-                            <p>{!! $preview_content !!}</p>
-                        </div>
-
-                        <!-- Content -->
-                        <div class="mb-3">
-                            <strong>Content:</strong>
-                            <p>{!! $article->content !!}</p>
-                        </div>
-
-                        <!-- Thumbnail -->
-                        <div>
-                            @if ($article->thumbnail_url)
-                                <div class="mb-3">
-                                    <strong>Thumbnail:</strong>
-                                    <br>
-                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Thumbnail"
-                                         class="img-thumbnail" style="max-width: 200px;">
+            <div class="content">
+                <div class="container-full">
+                    <div class="card">
+                        <div class="card-img-top">
+                            <h5 class="card-title">Thumbnail:
+                                <div class="thumbnail">
+                                    @if ($article->thumbnail_url)
+                                        <div class="mb-3">
+                                            <br>
+                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Thumbnail"
+                                                 class="img-thumbnail" style="max-width: 100px;">
+                                        </div>
+                                    @endif
                                 </div>
-                            @endif
+                            </h5>
                         </div>
-
-                        <div class="row" style="margin-top: 50px">
-                            <div class="col-2">
-                                <strong>Contains Sensitive Content?</strong>
-                                <p>{{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</p>
+                        <div class="card-body">
+                            <div class="row">
+                                <h6 class="card-title">Title: {{ $article->title }}</h6>
+                                <h6 class="card-title">Slug: {{ $article->slug }}</h6>
+                                <h6 class="card-title">Contains Sensitive Content:
+                                    {{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</h6>
+                                <h6 class="card-title">Author: {{ $article->author->username ?? 'N/A' }}</h6>
+                                <h6 class="card-title">Category: {{ $article->category->name ?? 'N/A' }}</h6>
+                                <h6 class="card-title">Status: {{ ucfirst($article->status) }}</h6>
+                                <h6 class="card-title">Views: {{ $article->views }}</h6>
+                                <h6 class="card-title">Approved
+                                    By: {{ $article->approver->username ?? 'Not Approved' }}</h6>
+                                <h6 class="card-title">Tags:
+                                    <div class="tags">
+                                        @if ($article->tags->isNotEmpty())
+                                            @foreach ($article->tags as $tag)
+                                                <span class="badge bg-primary">{{ $tag->name }}</span>
+                                            @endforeach
+                                        @else
+                                            <span class="text-muted">Không có tag</span>
+                                        @endif
+                                    </div>
+                                </h6>
                             </div>
-
-                            <div class="col-2">
-                                <strong>Author:</strong>
-                                <p>{{ $article->author->username ?? 'N/A' }}</p>
-                            </div>
-
-                            <div class="col-2">
-                                <strong>Category:</strong>
-                                <p>{{ $article->category->name ?? 'N/A' }}</p>
-                            </div>
-
-                            <div class="col-2">
-                                <strong>Status:</strong>
-                                <p>{{ ucfirst($article->status) }}</p>
-                            </div>
-
-                            <div class="col-2">
-                                <strong>Views:</strong>
-                                <p>{{ $article->views }}</p>
-                            </div>
-
-                            <div class="col-2">
-                                <strong>Approved By:</strong>
-                                <p>{{ $article->approver->username ?? 'Not Approved' }}</p>
+                            <p class="card-text">Preview Content:</p>
+                        </div>
+                        <div class="card-footer justify-content-between d-flex">
+                            <div class="box-body">
+                                <div id="slimtest2">
+                                    <div class="row">
+                                        <h5 class="card-text">Preview Content: {{ $article->preview_content }}</h5>
+                                        <div class="col-md-7">
+                                            <p>{!! $article->content !!}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Buttons -->
                         <div class="mt-4">
                             <button type="button" class="waves-effect waves-light btn btn-default mb-5">
-                                <a href="{{ route('author.articles.index') }}">Back to Dashboard</a>
+                                <a href="{{ route('author.articles.index') }}">
+                                    Back to Dashboard
+                                </a>
                             </button>
                             <a href="{{ route('author.articles.edit', $article) }}" class="btn btn-warning btn-sm">
                                 <i class="si-pencil si"></i>
@@ -112,4 +99,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 @endsection
