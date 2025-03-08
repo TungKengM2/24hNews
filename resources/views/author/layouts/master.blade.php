@@ -41,6 +41,7 @@
 
     @include('author.layouts.partials.footer')
 
+    @include('author.layouts.partials.control-sidebar')
 
     <div class="control-sidebar-bg"></div>
 
