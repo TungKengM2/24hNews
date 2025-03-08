@@ -5,153 +5,85 @@
 @endsection
 
 @section('content')
-
     <div class="content-wrapper">
         <div class="container-full">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="d-flex align-items-center">
-                    <div class="me-auto">
-                        <h4 class="page-title">Duyệt Tác Giả</h4>
-                        <div class="d-inline-block align-items-center">
-                            <nav>
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}"><i
-                                                class="mdi mdi-home-outline"></i></a></li>
-                                    <li class="breadcrumb-item" aria-current="page">Trang Chủ</li>
-                                    <li class="breadcrumb-item active" aria-current="page">Nâng Cấp Tài Khoản</li>
-                                </ol>
-                            </nav>
-                        </div>
+            <div class="box container mb-4">
+                <div class="box-header with-border d-flex justify-content-between align-items-center">
+                    <h4 class="box-title">Danh sách người dùng</h4>
+                    <div>
+                        <label for="role-filter" class="text-white">Lọc theo vai trò:</label>
+                        <select id="role-filter" class="form-control">
+                            <option value="">Tất cả</option>
+                            @foreach ($roles as $role)
+                                <option value="{{ $role->role_id }}" {{ $role_id == $role->role_id ? 'selected' : '' }}>
+                                    {{ ucfirst($role->name) }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
-
                 </div>
-            </div>
 
-            <!-- Main content -->
-            <div class="container-full">
-                <div class="col-12">
-                    <div class="box">
-                        <div class="box-header">
-
-                            <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
-                                    href="{{ route('admin.dashboard') }}">
-                                    Back to Dashboard
-                                </a></button>
-                            <button type="button" class="waves-effect waves-light btn btn-primary mb-5"><a
-                                    href="{{ route('articles.create') }}">
-                                    <i class="si-plus si"></i>
-                                </a></button>
-
-                            @if(session('success'))
-                                <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                                    <i class="fa-solid fa-circle-check me-2"></i>
-                                    {{ session('success') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                </div>
-                            @endif
-
-                            @if(session('warning'))
-                                <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
-                                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
-                                    {{ session('warning') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="box-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-dark mb-0"
-                                       style="width:100%">
-                                    <thead>
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-dark mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Vai trò</th>
+                                    <th>Ảnh đại diện</th>
+                                </tr>
+                            </thead>
+                            <tbody id="user-table">
+                                @foreach ($users as $user)
                                     <tr>
-                                        <th>Username</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Current Role</th>
-                                        <th>Application Reason</th>
-                                        <th>Registration Date</th>
-                                        <th>Application Date</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
+                                        <td>{{ $user->user_id }}</td>
+                                        <td>{{ $user->username }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->phone }}</td>
+                                        <td>{{ ucfirst($user->role->name ?? 'Chưa có vai trò') }}</td>
+                                        <td>
+                                            @if ($user->image)
+                                                <img src="{{ asset('storage/' . $user->image) }}" alt="Avatar"
+                                                    width="50">
+                                            @else
+                                                Không có ảnh
+                                            @endif
+                                        </td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach ($requests as $req)
-                                        <tr>
-
-                                            <td>{{ $req->user->username }}</td>
-                                            <td>{{ $req->user->email }}</td>
-                                            <td>{{ $req->user->phone }}</td>
-                                            <td>{{ $req->user->role->name }}</td>
-                                            <td> {{ $req->remarks }}</td>
-                                            <td>{{ $req->user->created_at }}</td>
-                                            <td> {{ $req->created_at }}</td>
-                                            <td>
-                                                @if ($req->status === 'pending')
-                                                    <span class="badge badge-warning">Pending</span>
-                                                @elseif ($req->status === 'approved')
-                                                    <span class="badge badge-success">Approved</span>
-                                                @elseif ($req->status === 'rejected')
-                                                    <span class="badge badge-danger">Rejected</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if($req->status === 'pending')
-                                                    <form
-                                                        action="{{ route('admin.approve-role-upgrade', $req->approval_id) }}"
-                                                        method="POST" class="d-inline">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="btn btn-success btn-sm"
-                                                                onclick="return confirm('Xác nhận duyệt yêu cầu này?')">
-                                                            Duyệt
-                                                        </button>
-                                                    </form>
-
-                                                    <form
-                                                        action="{{ route('admin.reject-role-upgrade', $req->approval_id) }}"
-                                                        method="POST" class="d-inline">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="btn btn-danger btn-sm"
-                                                                onclick="return confirm('Xác nhận từ chối yêu cầu này?')">
-                                                            Từ chối
-                                                        </button>
-                                                    </form>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                                <div id="pagination-wrapper" class="d-flex justify-content-end mt-5">
-                                    <nav>
-                                        <ul class="pagination pagination-sm">
-                                            {{ $requests->links('pagination::bootstrap-5') }}
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="pagination-wrapper" class="d-flex justify-content-end mt-5">
+                        <nav>
+                            <ul class="pagination pagination-sm">
+                                {{ $users->appends(['role_id' => $role_id])->links('pagination::bootstrap-5') }}
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
-            <!-- /.content-wrapper -->
         </div>
     </div>
+
     <script>
-        setTimeout(function () {
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => {
-                const alertInstance = bootstrap.Alert.getInstance(alert);
-                if (alertInstance) {
-                    alertInstance.close();
+        document.addEventListener('DOMContentLoaded', function() {
+            let roleFilter = document.getElementById('role-filter');
+            roleFilter.addEventListener('change', function() {
+                let selectedRole = this.value;
+                let url = new URL(window.location.href);
+
+                if (selectedRole) {
+                    url.searchParams.set('role_id', selectedRole);
                 } else {
-                    alert.style.display = 'none';
+                    url.searchParams.delete('role_id');
                 }
+
+                window.location.href = url.toString();
             });
-        }, 3000);
+        });
     </script>
 @endsection

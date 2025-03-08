@@ -1,6 +1,6 @@
 <div class="user-profile">
     <div class="profile-pic">
-        <img src="{{ asset('storage/' . $avatar) }}" alt="user">
+        <img src="/admin/main/../images/user5-128x128.jpg" alt="user">
         <div class="profile-info">
             <h4>{{ $username }}</h4>
             <div class="list-icons-item dropdown">
