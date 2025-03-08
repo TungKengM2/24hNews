@@ -150,7 +150,7 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 Route::middleware(['auth', 'role:4'])
     ->prefix('/user')
     ->group(function () {
-        Route::get('/dashboard', [ProfileController::class, 'index'])
+        Route::get('/dashboard', [ProfileController::class, 'dashboard'])
             ->name('user.dashboard');
 
         // Yêu cầu nâng cấp vai trò lên Author

@@ -101,7 +101,7 @@
                     <li class="user-body">
                         <a class="dropdown-item" href="{{ route('profile') }}"><i
                                 class="ti-settings text-muted me-2"></i>
-                            Settings</a>
+                            Profile</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ route('user.upgrade') }}">
                             <i class="ti-arrow-up text-muted me-2"></i> Upgrade to author
