@@ -53,35 +53,40 @@
                     @csrf
                     <div class="mb-3">
                         <label for="title" class="form-label">Tiêu đề</label>
-                        <input type="text" class="form-control" id="title" name="title" required>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}"
+                               required>
                     </div>
 
                     <div class="mb-3">
                         <label for="slug" class="form-label">Slug</label>
-                        <input type="text" class="form-control" id="slug" name="slug" required>
+                        <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug') }}"
+                               required>
                     </div>
 
                     <div class="mb-3">
                         <label for="content" class="form-label">Nội dung</label>
-                        @if(session('violations'))
+                        @if(session()->has('violations') && !empty(session('violations')))
                             <textarea id="full-featured" name="content"
                                       style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
-                            {!! highlightWords(old('content'), session('violations')) !!}
-                        </textarea>
+                              {!! highlightWords(old('content', $article->content ?? ''), session('violations')) !!}
+                              </textarea>
                         @else
                             <textarea id="full-featured" name="content"
                                       style="height: 800px;">
-                        {{ old('content') }}
-                        </textarea>
+                            {{ old('content', $article->content ?? '') }}
+                            </textarea>
                         @endif
                     </div>
-
+                    
 
                     <div class="mb-3">
                         <label for="tags">Chọn hoặc thêm tags:</label>
                         <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                             @foreach ($tags as $tag)
-                                <option value="{{ $tag->tag_id }}">{{ $tag->name }}</option>
+                                <option
+                                    value="{{ $tag->tag_id }}" {{ in_array($tag->tag_id, old('tags', [])) ? 'selected' : '' }}>
+                                    {{ $tag->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -90,17 +95,23 @@
                         <label class="form-label">Danh mục</label>
                         <select name="category_id" class="form-control">
                             @foreach ($categories as $category)
-                                <option value="{{ $category->category_id }}">{{ $category->name }}</option>
+                                <option
+                                    value="{{ $category->category_id }}" {{ old('category_id') == $category->category_id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
-
 
                     <div class="mb-3">
                         <label for="thumbnail_url" class="form-label">Ảnh đại diện</label>
                         <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url" accept="image/*"
                                required>
+                        @if (old('thumbnail_url'))
+                            <p>File đã chọn trước đó: {{ old('thumbnail_url') }}</p>
+                        @endif
                     </div>
+
 
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>

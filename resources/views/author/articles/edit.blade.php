@@ -43,6 +43,25 @@
                 <div class="d-flex align-items-center">
                     <div class="me-auto">
                         <h4 class="page-title">Cập Nhập Bài Viết</h4>
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        @if(session('violation_reasons'))
+                            <div class="alert alert-warning">
+                                <strong>Lý do vi phạm:</strong>
+                                <ul>
+                                    @foreach(session('violation_reasons') as $word => $reason)
+                                        <li><strong>{{ $word }}:</strong> {{ $reason }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
@@ -91,11 +110,27 @@
                     @php
                         $content = str_replace('src="../../storage', 'src="/storage', $article->content);
                     @endphp
+                    {{--                    <div class="mb-3">--}}
+                    {{--                        <label for="content" class="form-label">Nội dung</label>--}}
+                    {{--                        <textarea id="full-featured" name="content"--}}
+                    {{--                                  class="form-control">{!! $content !!}</textarea>--}}
+                    {{--                    </div>--}}
+
                     <div class="mb-3">
                         <label for="content" class="form-label">Nội dung</label>
-                        <textarea id="full-featured" name="content"
-                                  class="form-control">{!! $content !!}</textarea>
+                        @if(session('violations'))
+                            <textarea id="full-featured" name="content"
+                                      style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                            {!! highlightWords(old('content'), session('violations')) !!}
+                        </textarea>
+                        @else
+                            <textarea id="full-featured" name="content"
+                                      style="height: 800px;">
+                        {!! $content !!}
+                        </textarea>
+                        @endif
                     </div>
+
 
                     <div class="mb-3">
                         <label class="form-label">Chọn hoặc thêm tags:</label>
@@ -134,7 +169,8 @@
                         @endif
                     </div>
 
-
+                    <input type="hidden" name="status" id="articleStatus" value="{{ $article->status }}">
+                    <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
                     <button type="submit" class="btn btn-primary mt-3">Cập nhật</button>
                 </form>
             </div>
@@ -160,6 +196,19 @@
                         .replace(/^-+|-+$/g, '');
 
                     document.getElementById('slug').value = slug;
+                });
+            </script>
+            <script>
+                // Lưu nháp
+                document.getElementById('saveDraft').addEventListener('click', function () {
+                    document.getElementById('articleStatus').value = 'draft';
+                    document.getElementById('articleForm').submit();
+                });
+
+                document.getElementById('articleForm').addEventListener('submit', function () {
+                    if (document.activeElement.id !== 'saveDraft') {
+                        document.getElementById('articleStatus').value = 'pending';
+                    }
                 });
             </script>
 
