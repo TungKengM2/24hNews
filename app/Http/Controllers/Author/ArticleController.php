@@ -21,20 +21,32 @@ class ArticleController extends Controller
         $this->moderationService = $moderationService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $filter = $request->input('filter', 'all');
+
         $articles = Article::with([
             'author',
             'category',
             'approver',
             'tags',
-        ])
+        ]) // Sửa lại đây
             ->where('author_id', auth()->id())
+            ->when($filter !== 'all', function ($query) use ($filter) {
+                if ($filter === 'active') {
+                    $query->whereHas('category',
+                        fn ($q) => $q->where('is_active', true));
+                } elseif ($filter === 'inactive') {
+                    $query->whereHas('category',
+                        fn ($q) => $q->where('is_active', false));
+                } elseif ($filter === 'no_category') {
+                    $query->whereNull('category_id');
+                }
+            })
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-        //        dd($articles->toArray());
 
-        return view('author.articles.index', compact('articles'));
+        return view('author.articles.index', compact('articles', 'filter'));
     }
 
     public function update(Request $request, Article $article)
@@ -55,7 +67,8 @@ class ArticleController extends Controller
             'content' => 'nullable',
         ];
         $request->validate($rules);
-
+        //        print_r($request);
+        //        exit();
         if ($request->status === 'draft') {
             $article->update([
                 'title' => $request->title,
@@ -363,7 +376,7 @@ class ArticleController extends Controller
                 ->with('error',
                     'Bạn không có quyền chỉnh sửa bài viết này.');
         }
-        $categories = Category::select('category_id', 'name')->get();
+        $categories = Category::all();
         $authors = User::select('user_id', 'username')->get();
         $approvers = User::where('role_id', 1)
             ->select('user_id', 'username')
