@@ -308,7 +308,7 @@ class ArticleController extends Controller
 
     public function create()
     {
-        $categories = Category::select('category_id', 'name')->get();
+        $categories = Category::where('is_active', true)->get();
         $authors = User::select('user_id', 'username')->get();
         $approvers = User::where('role_id', 1)
             ->select('user_id', 'username')

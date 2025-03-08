@@ -77,7 +77,7 @@
                             </textarea>
                         @endif
                     </div>
-                    
+
 
                     <div class="mb-3">
                         <label for="tags">Chọn hoặc thêm tags:</label>
@@ -95,10 +95,9 @@
                         <label class="form-label">Danh mục</label>
                         <select name="category_id" class="form-control">
                             @foreach ($categories as $category)
-                                <option
-                                    value="{{ $category->category_id }}" {{ old('category_id') == $category->category_id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
+                                @if ($category->is_active)
+                                    <option value="{{ $category->category_id }}">{{ $category->name }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
