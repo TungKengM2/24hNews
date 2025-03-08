@@ -176,12 +176,10 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/role-upgrade-requests',
         [UserController::class, 'roleUpgradeRequests'])
         ->name('admin.user-role-requests');
-    Route::post('/approve-role-upgrade/{approval_id}',
-        [UserController::class, 'approveRoleUpgrade'])
-        ->name('admin.approve-role-upgrade');
-    Route::post('/reject-role-upgrade/{approval_id}',
-        [UserController::class, 'rejectRoleUpgrade'])
-        ->name('admin.reject-role-upgrade');
+    Route::post('/admin/approve/{id}', [UserController::class, 'approve'])
+        ->name('admin.approve.user');
+    Route::delete('/admin/reject/{id}', [UserController::class, 'reject'])
+        ->name('admin.reject.user');
 
     // Quản lý bài viết
     Route::get('/articles/approves', [ArticleController::class, 'Approves'])
@@ -194,7 +192,9 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::resource('categories', CategoryController::class);
 
     // Quản lý người dùng
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)->names([
+        'index' => 'admin.users.index',
+    ]);
 });
 
 // 📤 Upload hình ảnh
