@@ -15,19 +15,20 @@ class ProfileController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function dashboard()
     {
         $user = auth()->user();
 
         //            dd($user);
         return view('user.dashboard', compact('user'));
     }
-    //    public function index()
-    //    {
-    //        $user = Auth::user();
-    //
-    //        return view('profile.index', compact('user'));
-    //    }
+
+    public function index()
+    {
+        $user = Auth::user();
+
+        return view('profile.index', compact('user'));
+    }
 
     public function edit()
     {
