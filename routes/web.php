@@ -104,9 +104,9 @@ Route::middleware(['auth', 'role:3'])
     })
     ->name('moderator.dashboard');
 
-Route::middleware(['auth', 'role:4'])->get('/user/dashboard', function () {
-    return view('user.dashboard');
-})->name('user.dashboard');
+// Route::middleware(['auth', 'role:4'])->get('/user/dashboard', function () {
+//    return view('user.dashboard');
+// })->name('user.dashboard');
 
 // 🚀 Khu vực dành riêng cho Moderator (role_id = 3)
 Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function (
@@ -150,8 +150,8 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 Route::middleware(['auth', 'role:4'])
     ->prefix('/user')
     ->group(function () {
-        //            Route::get('/dashboard', [ProfileController::class, 'index'])
-        //                ->name('user.dashboard');
+        Route::get('/dashboard', [ProfileController::class, 'index'])
+            ->name('user.dashboard');
 
         // Yêu cầu nâng cấp vai trò lên Author
         Route::get('/upgrade', function () {
