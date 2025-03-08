@@ -28,14 +28,42 @@
             <div class="container-full">
                 <div class="col-12">
                     <div class="box">
+
                         <div class="box-header d-flex justify-content-between align-items-center">
                             <button type="button" class="btn btn-secondary btn-sm">
                                 <a href="{{ route('author.dashboard') }}" class="text-white">Back to Dashboard</a>
                             </button>
-                            <a href="{{ route('author.articles.create') }}" class="btn btn-primary btn-sm">
-                                <i class="si-plus si"></i> Thêm bài viết
-                            </a>
+
+                            <div class="d-flex">
+                                <form method="GET" action="{{ route('author.articles.index') }}" class="me-2">
+                                    <div class="d-flex align-items-center">
+                                        <label for="filter" class="me-2">Lọc bài viết:</label>
+                                        <select name="filter" class="form-control w-auto" onchange="this.form.submit()">
+                                            <option value="all" {{ request('filter') == 'all' ? 'selected' : '' }}>Tất
+                                                cả bài viết
+                                            </option>
+                                            <option
+                                                value="active" {{ request('filter') == 'active' ? 'selected' : '' }}>Bài
+                                                viết có danh mục hoạt động
+                                            </option>
+                                            <option
+                                                value="inactive" {{ request('filter') == 'inactive' ? 'selected' : '' }}>
+                                                Bài viết có danh mục bị vô hiệu hóa
+                                            </option>
+                                            <option
+                                                value="no_category" {{ request('filter') == 'no_category' ? 'selected' : '' }}>
+                                                Bài viết không có danh mục
+                                            </option>
+                                        </select>
+                                    </div>
+                                </form>
+
+                                <a href="{{ route('author.articles.create') }}" class="btn btn-primary btn-sm">
+                                    <i class="si-plus si"></i> Thêm bài viết
+                                </a>
+                            </div>
                         </div>
+
 
                         <div class="box-body">
                             <div class="table-responsive">
@@ -69,7 +97,17 @@
                                                 @endif
                                             </td>
                                             <td>{{ $article->author->username ?? 'Unknown' }}</td>
-                                            <td>{{ $article->category->name ?? 'Uncategorized' }}</td>
+                                            <td>
+                                                @if ($article->category)
+                                                    @if (!$article->category->is_active)
+                                                        <span class="text-warning">{{$article->category->name}} (Không Hoạt Động)</span>
+                                                    @else
+                                                        {{ $article->category->name }}
+                                                    @endif
+                                                @else
+                                                    <span class="text-danger">Không có danh mục</span>
+                                                @endif
+                                            </td>
                                             <td>
                                                 <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
                                                      alt="Thumbnail" width="100" height="150">
