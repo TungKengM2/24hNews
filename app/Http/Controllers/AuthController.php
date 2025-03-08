@@ -17,6 +17,37 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
+<<<<<<< HEAD
+=======
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials, $request->has('remember'))) {
+            $user = Auth::user();
+
+            if ($user->role_id == 1) {
+                return redirect()->intended('/admin/dashboard');
+            } elseif ($user->role_id == 2) {
+                return redirect()->intended('/article/dashboard');
+            } elseif ($user->role_id == 3) {
+                return redirect()->intended('/moderator/dashboard');
+            } elseif ($user->role_id == 4) {
+                return redirect()->intended('/user/dashboard');
+            } else {
+                return redirect()->intended('/');
+            }
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
+    }
+
+>>>>>>> nluan
     public function showSignupForm()
     {
         return view('auth.signup');

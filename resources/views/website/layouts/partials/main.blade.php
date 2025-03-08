@@ -19,38 +19,6 @@
             @endforeach
         </div>
     </div>
-<<<<<<< HEAD
-
-    <!-- Hiển thị 7 bài viết tiêu biểu theo danh mục -->
-    <div class="max-w-7xl mx-auto p-4 grid grid-cols-12 gap-4 min-h-[75vh]">
-        <!-- Cột trái (2 bài viết) -->
-        <div class="col-span-3 flex flex-col space-y-4">
-            @foreach($categoryArticles->slice(0, 2) as $article)
-                <article class="bg-white p-4 shadow rounded-lg h-1/2 w-full">
-                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Hình ảnh bài viết"
-                         class="w-full h-1/2 object-cover rounded-lg mb-2">
-                    <div class="p-2 w-full h-1/4">
-                        <h2 class="text-lg font-bold mb-1">{{ $article->title }}</h2>
-                        <p class="text-sm text-gray-600">{{ $article->preview_content }}</p>
-                    </div>
-                </article>
-            @endforeach
-        </div>
-
-        <!-- Cột giữa (1 bài viết lớn) -->
-        <div class="col-span-6">
-            @if($categoryArticles->count() > 2)
-                <article class="bg-white p-4 shadow rounded-lg h-full flex flex-col">
-                    <img src="{{ asset('storage/' . $categoryArticles[2]->thumbnail_url) }}" alt="Hình ảnh bài viết"
-                         class="w-full h-1/2 object-cover rounded-lg mb-2">
-                    <div class="p-4 flex flex-col justify-center">
-                        <h2 class="text-xl font-bold mb-2">{{ $categoryArticles[2]->title }}</h2>
-                        <p class="text-sm text-gray-600">{{ $categoryArticles[2]->preview_content }}</p>
-                    </div>
-                </article>
-            @endif
-        </div>
-=======
 </section>
 <!-- ====== end breaking news ====== -->
 
@@ -1215,7 +1183,6 @@
     </div>
 </div>
 <!-- ====== end modals ====== -->
->>>>>>> a469837ad339879a133078ce90584594ec59d6dd
 
         <!-- Cột phải (4 bài viết) -->
         <div class="col-span-3 flex flex-col space-y-4">

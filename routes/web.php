@@ -1,97 +1,122 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\Author\AuthorProfileController;
-use App\Http\Controllers\Author\ModerationController;
 use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
-use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// 🌟 Giao diện trang chủ + bài viết
-Route::get('/', function () {
-    return view('welcome');
+// 🌟 Trang chủ & bài viết chi tiết
+Route::view('/', 'welcome');
+Route::view('/article-detail', 'website.pages.articledetail.homedetail');
+
+// 🚀 Auth dành cho User
+Route::middleware('guest')
+    ->controller(AuthUserController::class)
+    ->group(function () {
+        Route::get('/login-user', 'showLoginUserForm')->name('loginuser');
+        Route::post('/login-user', 'login')->name('loginuser.process');
+        Route::get('/signup-user', 'showSignupUserForm')
+            ->name('signupuser');
+        Route::post('/signup-user', 'processSignup')
+            ->name('signupuser.process');
+        Route::get('/verify-otp', 'showOtpForm')->name('otp.verify.form');
+        Route::post('/verify-otp', 'verifyOtp')->name('otp.verify.process');
+        Route::get('/forget-user', 'showForgetUserForm')
+            ->name('forgetuser');
+    });
+
+// 🚀 Auth dành cho Admin
+Route::middleware('guest')
+    ->controller(AuthAdminController::class)
+    ->group(function () {
+        Route::get('/login-admin', 'showLoginAdminForm')
+            ->name('loginadmin');
+        Route::post('/login-admin', 'login')->name('loginadmin.process');
+        Route::get('/forget-admin', 'showForgetAdminForm')
+            ->name('forgetadmin');
+        Route::post('/forget-admin', 'processForgetAdmin')
+            ->name('forgetadmin.process');
+    });
+
+// 🔐 Quên mật khẩu chung
+Route::controller(ForgotPasswordController::class)->group(function () {
+    Route::get('/forgot-password', 'showLinkRequestForm')
+        ->name('password.request');
+    Route::post('/forgot-password', 'sendResetLinkEmail')
+        ->name('password.email');
+    Route::get('/reset-password/{token}', 'showResetForm')
+        ->name('password.reset');
+    Route::post('/reset-password', 'reset')->name('password.update');
 });
 
-Route::get('/article-detail', function () {
-    return view('website.pages.articledetail.homedetail');
+// 🚀 Profile dùng chung
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])
+        ->name('profile');
+    Route::post('/profile/update',
+        [ProfileController::class, 'updateProfile'])
+        ->name('profile.update');
+    Route::get('/profile/change-password',
+        [ProfileController::class, 'showChangePasswordForm'])
+        ->name('profile.change-password');
+    Route::post('/profile/update-password',
+        [ProfileController::class, 'updatePassword'])
+        ->name('profile.update-password');
+    Route::post('/profile/upload-avatar',
+        [ProfileController::class, 'uploadAvatar'])
+        ->name('profile.upload-avatar');
 });
 
-// client
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/article-detail', function () {
-    return view('website.pages.articledetail.homedetail');
-});
-// admin
-Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
-    ->name('admin.dashboard');
+// 🚀 Cài đặt profile riêng theo vai trò
+Route::middleware(['auth', 'role:4'])
+    ->get('/user/profile-setting', function () {
+        return view('user.profile-setting');
+    })
+    ->name('user.profile-setting');
 
-// approves
-Route::get('/admin/articles/approves',
-    [ArticleController::class, 'Approves'])
-    ->name('admin.articles.approves');
+// Route::middleware(['auth', 'role:2'])->get('/author/profile-setting', function () {
+//    return view('author.profile-setting');
+// })->name('author.profile-setting');
 
-// article
-// Route::patch(
-//     '/articles/{article}/approve',
-//     [AdminArticleController::class, 'approve']
-// )->name('articles.approve');
+Route::middleware(['auth', 'role:3'])
+    ->get('/moderator/profile-setting', function () {
+        return view('moderator.profile-setting');
+    })
+    ->name('moderator.profile-setting');
 
-Route::prefix('admin')->group(function () {
-    Route::resource('articles', ArticleController::class);
-});
+// 🚀 Dashboard cho từng vai trò
+Route::middleware(['auth', 'role:1'])->get('/admin/dashboard', function () {
+    return view('admin.dashboard');
+})->name('admin.dashboard');
 
-// UploadImage
-Route::post('/upload/image', [UploadController::class, 'store'])
-    ->name('upload.image');
-
-// category
-Route::prefix('admin')->group(function () {
-    Route::resource('categories', CategoryController::class);
-});
-
-// User
-Route::prefix('admin')->group(function () {
-    Route::resource('users', UserController::class);
-});
-
-// Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-// Route::middleware(['auth', 'admin'])->group(function () {
-//     Route::get(
-//         '/admin/dashboard',
-//         [AdminDashboardController::class, 'index']
-//     )
-//         ->name('admin.dashboard');
-// });
-
-// moderator kiểm duyệt viên
-Route::get('/moderator/dashboard',
-    [ModeratorDashboardController::class, 'index'])
+Route::middleware(['auth', 'role:3'])
+    ->get('/moderator/dashboard', function () {
+        return view('moderator.dashboard');
+    })
     ->name('moderator.dashboard');
 
-Route::get('/moderator/list-article',
-    [ModeratorArticleController::class, 'index'])
-    ->name('moderator.list-article');
+Route::middleware(['auth', 'role:4'])->get('/user/dashboard', function () {
+    return view('user.dashboard');
+})->name('user.dashboard');
 
-Route::get('/moderator-profile-setting', function () {
-    return view('moderator.profile-setting');
-})->name('moderator.profile-setting');
+// 🚀 Khu vực dành riêng cho Moderator (role_id = 3)
+Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function (
+) {
+    Route::get('/list-article',
+        [ModeratorArticleController::class, 'index'])
+        ->name('moderator.list-article');
+});
 
-Route::get('/moderator-profile', function () {
-    return view('moderator.profile');
-})->name('moderator.profile');
-
-// Route author
+// 🚀 Khu vực dành riêng cho Author (role_id = 2)
 Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     Route::get('/dashboard', [AuthorDashboard::class, 'index'])
         ->name('author.dashboard');
@@ -121,36 +146,12 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
         ->name('author.articles.search');
 });
 
-// Route User dashboard
-//    Route::get('/user/dasboard', function () {
-//        return view("user.dashboard");
-//    });
-Route::get('/user-profile', function () {
-    return view('user.user-setting');
-})->name('user.profile');
-
-// 🌟 Routes dành cho User (AuthUserController)
-Route::middleware('guest')
-    ->controller(AuthUserController::class)
-    ->group(function () {
-        Route::get('/login-user', 'showLoginUserForm')->name('loginuser');
-        Route::post('/login-user', 'login')->name('loginuser.process');
-        Route::get('/signup-user', 'showSignupUserForm')
-            ->name('signupuser');
-        Route::post('/signup-user', 'processSignup')
-            ->name('signupuser.process');
-        Route::get('/verify-otp', 'showOtpForm')->name('otp.verify.form');
-        Route::post('/verify-otp', 'verifyOtp')->name('otp.verify.process');
-        Route::get('/forget-user', 'showForgetUserForm')
-            ->name('forgetuser');
-    });
-
 // 🚀 Khu vực dành riêng cho User (role_id = 4)
 Route::middleware(['auth', 'role:4'])
     ->prefix('/user')
     ->group(function () {
-        Route::get('/dashboard', [ProfileController::class, 'index'])
-            ->name('user.dashboard');
+        //            Route::get('/dashboard', [ProfileController::class, 'index'])
+        //                ->name('user.dashboard');
 
         // Yêu cầu nâng cấp vai trò lên Author
         Route::get('/upgrade', function () {
@@ -164,65 +165,48 @@ Route::middleware(['auth', 'role:4'])
             ->name('user.upgrade.author');
     });
 
-// 🌟 Routes dành cho Admin (AuthAdminController)
-Route::middleware('guest')
-    ->controller(AuthAdminController::class)
-    ->group(function () {
-        Route::get('/login-admin', 'showLoginAdminForm')
-            ->name('loginadmin');
-        Route::post('/login-admin', 'login')->name('loginadmin.process');
-        Route::get('/forget-admin', 'showForgetAdminForm')
-            ->name('forgetadmin');
-    });
-
 // 🚀 Khu vực dành riêng cho Admin (role_id = 1)
 Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])
-        ->name('admin.dashboard');
+    // 🏠 Admin Dashboard
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+
+    // Quản lý yêu cầu nâng cấp vai trò
     Route::get('/role-upgrade-requests',
-        [AdminDashboardController::class, 'roleUpgradeRequests'])
+        [UserController::class, 'roleUpgradeRequests'])
         ->name('admin.user-role-requests');
-    Route::patch('/approve-role-upgrade/{approval}',
-        [AdminDashboardController::class, 'approveRoleUpgrade'])
+    Route::post('/approve-role-upgrade/{approval_id}',
+        [UserController::class, 'approveRoleUpgrade'])
         ->name('admin.approve-role-upgrade');
-    Route::patch('/reject-role-upgrade/{approval}',
-        [AdminDashboardController::class, 'rejectRoleUpgrade'])
+    Route::post('/reject-role-upgrade/{approval_id}',
+        [UserController::class, 'rejectRoleUpgrade'])
         ->name('admin.reject-role-upgrade');
 
     // Quản lý bài viết
+    Route::get('/articles/approves', [ArticleController::class, 'Approves'])
+        ->name('admin.articles.approves');
     Route::patch('/articles/{article}/approve',
         [ArticleController::class, 'approve'])->name('articles.approve');
     Route::resource('articles', ArticleController::class);
 
     // Quản lý danh mục
     Route::resource('categories', CategoryController::class);
+
+    // Quản lý người dùng
+    Route::resource('users', UserController::class);
 });
 
-// 🚀 Khu vực dành riêng cho Moderator (role_id = 3)
-Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function (
-) {
-    Route::get('/dashboard', [ModeratorDashboardController::class, 'index'])
-        ->name('moderator.dashboard');
-    Route::get('/list-article',
-        [ModeratorArticleController::class, 'index'])
-        ->name('moderator.list-article');
-});
+// 📤 Upload hình ảnh
+Route::post('/upload/image', [UploadController::class, 'store'])
+    ->name('upload.image');
 
-// 🔹 Quên mật khẩu chung
-Route::controller(ForgotPasswordController::class)->group(function () {
-    Route::get('/forgot-password', 'showLinkRequestForm')
-        ->name('password.request');
-    Route::post('/forgot-password', 'sendResetLinkEmail')
-        ->name('password.email');
-    Route::get('/reset-password/{token}', 'showResetForm')
-        ->name('password.reset');
-    Route::post('/reset-password', 'reset')->name('password.update');
-});
-
+// 🔐 Đăng xuất
 Route::post('/logout', [AuthUserController::class, 'logout'])
     ->name('logout');
 
-// Route::get('/moderate', [ModerationController::class, 'showForm'])
-//    ->name('moderate.form');
-// Route::post('/moderate', [ModerationController::class, 'moderate'])
-//    ->name('moderate.submit');
+// 🌍 Đăng nhập với Google & Facebook
+Route::get('auth/{provider}',
+    [SocialAuthController::class, 'redirectToProvider']);
+Route::get('auth/{provider}/callback',
+    [SocialAuthController::class, 'handleProviderCallback']);
