@@ -97,12 +97,19 @@
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
-                        <a class="dropdown-item" href="{{ route('user.profile') }}"><i
+                        <a class="dropdown-item" href="{{ route('profile') }}"><i
                                 class="ti-settings text-muted me-2"></i>
                             Settings</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="index.html#"><i class="ti-lock text-muted me-2"></i>
-                            Logout</a>
+                        <a class="dropdown-item" href="#"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="ti-lock text-muted me-2"></i> Logout
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                style="display: none;">
+                                @csrf
+                            </form>
                     </li>
                 </ul>
             </li>
