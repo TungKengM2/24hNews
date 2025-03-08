@@ -17,8 +17,8 @@
             <!-- Notifications -->
             <li class="dropdown notifications-menu">
                 <a href="index.html#"
-                   class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
-                   data-bs-toggle="dropdown" title="Notifications">
+                    class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
+                    data-bs-toggle="dropdown" title="Notifications">
                     <i data-feather="bell"></i>
                 </a>
                 <ul class="dropdown-menu animated bounceIn">
@@ -91,11 +91,9 @@
             <!-- User Account-->
             <li class="dropdown user user-menu">
                 <a href="index.html#"
-                   class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white"
-                   data-bs-toggle="dropdown" title="User">
-                    <img class="avatar avatar-pill"
-                         src="{{ asset('storage/' . $avatar) }}"
-                         alt="">
+                    class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white"
+                    data-bs-toggle="dropdown" title="User">
+                    <img class="avatar avatar-pill" src="/admin/main/../images/avatar/3.jpg" alt="">
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
@@ -108,7 +106,7 @@
                         </a>
 
                         <a class="dropdown-item" href="#"
-                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="ti-lock text-muted me-2"></i> Logout
                         </a>
 
@@ -118,6 +116,12 @@
 
                     </li>
                 </ul>
+            </li>
+            <li>
+                <a href="index.html#" data-toggle="control-sidebar" title="Setting"
+                    class="waves-effect waves-light btn-outline no-border btn-danger-light text-dark hover-white">
+                    <i data-feather="settings"></i>
+                </a>
             </li>
         </ul>
     </div>

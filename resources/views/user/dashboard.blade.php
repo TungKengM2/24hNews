@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper container">
+    <div class="content-wrapper">
         <div class="container-full">
             <section class="content">
 
