@@ -94,9 +94,9 @@ Route::middleware(['auth', 'role:3'])
     ->name('moderator.profile-setting');
 
 // 🚀 Dashboard cho từng vai trò
-Route::middleware(['auth', 'role:1'])->get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-})->name('admin.dashboard');
+// Route::middleware(['auth', 'role:1'])->get('/admin/dashboard', function () {
+//    return view('admin.dashboard');
+// })->name('admin.dashboard');
 
 Route::middleware(['auth', 'role:3'])
     ->get('/moderator/dashboard', function () {
