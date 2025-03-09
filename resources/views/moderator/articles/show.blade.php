@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('moderator.layouts.master')
 
 @section('title')
     Chi Tiết Bài Viết
@@ -23,6 +23,7 @@
                             </nav>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -91,10 +92,10 @@
 
                         <div class="mt-4">
                             <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
-                                    href="{{ route('articles.index') }}">
-                                    Back to Dashboard
+                                    href="{{ route('moderator.articles.index') }}">
+                                    Back to Articles List
                                 </a></button>
-                            <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm"><i
+                            {{-- <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm"><i
                                     class="si-pencil si"></i></a>
                             <form action="{{ route('articles.destroy', $article) }}" method="POST" class="d-inline">
                                 @csrf
@@ -103,7 +104,7 @@
                                     onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
                                     <i class="si-trash si"></i>
                                 </button>
-                            </form>
+                            </form> --}}
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 @extends('author.layouts.master')
 
-<<<<<<< HEAD
+
 @section('content')
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -185,7 +185,8 @@
 </div>
 <!-- /.content-wrapper -->
 @endsection
-=======
+
+
 @section('head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -391,4 +392,3 @@
         </div>
     </div>
 @endsection
->>>>>>> tungkeng

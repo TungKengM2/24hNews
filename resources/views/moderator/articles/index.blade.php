@@ -1,7 +1,7 @@
-@extends('admin.layouts.master')
+@extends('moderator.layouts.master')
 
 @section('title')
-    Danh Sách Bài Viết
+    Duyệt bài viết
 @endsection
 
 @section('content')
@@ -11,14 +11,14 @@
             <div class="content-header">
                 <div class="d-flex align-items-center">
                     <div class="me-auto">
-                        <h4 class="page-title">Danh Sách Bài Viết</h4>
+                        <h4 class="page-title">Duyệt bài viết</h4>
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i
+                                    <li class="breadcrumb-item"><a href="{{ route('moderator.dashboard') }}"><i
                                                 class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Trang Chủ</li>
-                                    <li class="breadcrumb-item active" aria-current="page">Danh Sách Bài Viết</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Danh Sách Bài Viết Chờ Duyệt</li>
                                 </ol>
                             </nav>
                         </div>
@@ -35,15 +35,15 @@
 
 
                             <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
-                                    href="{{ route('admin.dashboard') }}">
+                                    href="{{ route('moderator.dashboard') }}">
                                     Back to Dashboard
                                 </a></button>
-                            <button type="button" class="waves-effect waves-light btn btn-primary mb-5"> <a
+                            {{-- <button type="button" class="waves-effect waves-light btn btn-primary mb-5"> <a
                                     href="{{ route('articles.create') }}">
                                     <i class="si-plus si"></i>
-                                </a></button>
+                                </a></button> --}}
 
-                            <form method="GET" action="{{ route('articles.index') }}">
+                            {{-- <form method="GET" action="{{ route('articles.index') }}">
                                 <div class="d-flex align-items-center mb-3">
                                     <label for="filter" class="me-2">Lọc bài viết:</label>
                                     <select name="filter" class="form-control w-auto" onchange="this.form.submit()">
@@ -58,7 +58,7 @@
                                             danh mục</option>
                                     </select>
                                 </div>
-                            </form>
+                            </form> --}}
 
 
                         </div>
@@ -145,25 +145,26 @@
                                                 <td>{{ $article->approved_by ? $article->approver->username : 'Not Approved' }}
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('articles.show', $article) }}"
+                                                    <a href="{{ route('moderator.articles.show', $article) }}"
                                                         class="btn btn-info btn-sm"><i class="si-eye si"></i></a>
 
-                                                    <a href="{{ route('articles.edit', $article) }}"
-                                                        class="btn btn-warning btn-sm"><i class="si-pencil si"></i></a>
+                                                    {{-- <a href="{{ route('articles.edit', $article) }}"
+                                                        class="btn btn-warning btn-sm"><i class="si-pencil si"></i></a> --}}
+
 
                                                     @if ($article->status === 'pending')
-                                                        <form action="{{ route('articles.approve', $article) }}"
-                                                            method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit" class="btn btn-success btn-sm"
-                                                                onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
-                                                                Approve
-                                                            </button>
-                                                        </form>
-                                                    @endif
+                                                    <form action="{{ route('moderator.articles.approve', $article) }}"
+                                                        method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="btn btn-success btn-sm"
+                                                            onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
+                                                            Approve
+                                                        </button>
+                                                    </form>
+                                                @endif
 
-                                                    <form action="{{ route('articles.destroy', $article) }}" method="POST"
+                                                    {{-- <form action="{{ route('articles.destroy', $article) }}" method="POST"
                                                         class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
@@ -171,7 +172,7 @@
                                                             onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
                                                             <i class="si-trash si"></i>
                                                         </button>
-                                                    </form>
+                                                    </form> --}}
                                                 </td>
                                             </tr>
                                         @endforeach

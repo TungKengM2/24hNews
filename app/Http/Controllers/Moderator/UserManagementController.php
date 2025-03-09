@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Moderator;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Approval;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
 
 class UserManagementController extends Controller
 {
-    public function index()
-    {
+
+
 
         public function index()
         {
@@ -64,4 +66,5 @@ class UserManagementController extends Controller
         }
 
     }
-}
+
+

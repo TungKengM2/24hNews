@@ -12,13 +12,8 @@
 <script src="https://www.amcharts.com/lib/4/themes/dataviz.js"></script>
 <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
 
-<<<<<<< HEAD
- <!-- CrmX Admin App -->
- <script src="/admin/main/js/template.js"></script>
- <script src="/admin/main/js/demo.js"></script>
- <script src="/admin/main/js/pages/dashboard.js"></script>
- <script src="/admin/assets/vendor_components/select2/dist/js/select2.full.js"></script>
-=======
+
+
 <!-- CrmX Admin App -->
 <script src="/admin/main/js/template.js"></script>
 <script src="/admin/main/js/demo.js"></script>
@@ -244,4 +239,3 @@
         alerts.forEach(alert => alert.style.display = 'none');
     }, 5000);
 </script>
->>>>>>> tungkeng

@@ -1,6 +1,6 @@
 @extends('author.layouts.master')
 
-<<<<<<< HEAD
+
 @section('content')
 <div class="content-wrapper">
     <div class="container-full">
@@ -97,7 +97,7 @@
                                                     @case('archived')
                                                         <span class="badge bg-danger">Archived</span>
                                                     @break
-=======
+
 @section('title')
     Danh Sách Bài Viết
 @endsection
@@ -131,6 +131,12 @@
                             <button type="button" class="btn btn-secondary btn-sm">
                                 <a href="{{ route('author.dashboard') }}" class="text-white">Back to Dashboard</a>
                             </button>
+                            @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 
                             <div class="d-flex">
                                 <form method="GET" action="{{ route('author.articles.index') }}" class="me-2">
@@ -224,25 +230,28 @@
                                                     @case('archived')
                                                         <span class="badge bg-danger">Archived</span>
                                                         @break
->>>>>>> tungkeng
+
                                                 @endswitch
                                             </td>
                                             <td>{{ $article->views }}</td>
                                             <td>
                                                 @if ($article->tags->isNotEmpty())
                                                     @foreach ($article->tags as $tag)
-<<<<<<< HEAD
+
                                                         <span
                                                             class="badge bg-primary">{{ $tag->name }}</span>
-=======
+
                                                         <span class="badge bg-primary">{{ $tag->name }}</span>
->>>>>>> tungkeng
+
+
+                                                        <span class="badge bg-primary">{{ $tag->name }}</span>
+
                                                     @endforeach
                                                 @else
                                                     <span class="text-muted">Không có tag</span>
                                                 @endif
                                             </td>
-<<<<<<< HEAD
+
                                             <td>{{ $article->approved_by ? $article->approver->username : 'Not Approved' }}
                                             </td>
                                             <td>
@@ -279,7 +288,6 @@
                                     @endforeach
                                 </tbody>
                             </table>
-=======
                                             <td>
                                                 <a href="{{ route('author.articles.show', $article) }}"
                                                    class="btn btn-info btn-sm"><i class="si-eye si"></i></a>
@@ -290,6 +298,24 @@
                                                     <i class="si-trash si"></i>
                                                 </button>
                                             </td>
+
+                                            <td>
+                                                    <a href="{{ route('author.articles.show', $article) }}"
+                                                        class="btn btn-info btn-sm"><i class="si-eye si"></i></a>
+
+                                                    <a href="{{ route('author.articles.edit', $article) }}"
+                                                        class="btn btn-warning btn-sm"><i class="si-pencil si"></i></a>
+
+                                                    <form action="{{ route('author.articles.destroy', $article) }}" method="POST"
+                                                        class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="btn btn-danger btn-sm"
+                                                            onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
+                                                            <i class="si-trash si"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -298,17 +324,16 @@
                                     {{ $articles->links('pagination::bootstrap-5') }}
                                 </div>
                             </div>
->>>>>>> tungkeng
+
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<<<<<<< HEAD
+
 </div>
         <!-- /.content-wrapper -->
 @endsection
-=======
-@endsection
->>>>>>> tungkeng
+

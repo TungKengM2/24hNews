@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id('approval_id');
             $table->unsignedBigInteger('article_id')->nullable();
             $table->unsignedBigInteger('approved_by')->nullable();
-            $table->enum('type', ['role_upgrade', 'other_type']);
+
+            $table->enum('type', ['article', 'role_upgrade'])->default('article')->change();
+
             $table->string('requested_role');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->boolean('auto_reviewed')->default(false);

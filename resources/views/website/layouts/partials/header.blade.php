@@ -1,3 +1,4 @@
+
 <style>
 .nav-scroll-container {
     width: 100%;
@@ -27,6 +28,7 @@
 }
 
 </style>
+
 <div class="navbar-container">
         <div class="container">
             <!-- ====== start top navbar ====== -->
@@ -130,29 +132,56 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                     </div>
+
                     
+                   
+
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <div class="nav-scroll-container">
-                            <ul class="navbar-nav d-flex flex-row flex-nowrap overflow-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link {{ request()->is('/') ? 'active-home' : '' }}" href="{{ url('/') }}">
-                                        <i class="la la-home fs-4"></i>
-                                    </a>
-                                </li>
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <div class="nav-scroll-container">
+                                    <ul class="navbar-nav d-flex flex-row flex-nowrap overflow-auto">
+                                        <li class="nav-item">
+                                            <a class="nav-link {{ request()->is('/') ? 'active-home' : '' }}" href="{{ url('/') }}">
+                                                <i class="la la-home fs-4"></i>
+                                            </a>
+                                        </li>
+                                        
+                    
+                                        @foreach ($categories as $category)
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
+                                                {{ $category->name }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                    
+                                    </ul>
+                                </div>
                                 
-            
-                                @foreach ($categories as $category)
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
-                                        {{ $category->name }}
-                                    </a>
-                                </li>
-                            @endforeach
-                            
-                            </ul>
-                        </div>
-                        
+                                <div class="nav-side">
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="page-contact.html">
+                                    contact
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="page-shop.html">
+                                    shop
+                                    <small class="hot">hot</small>
+                                </a>
+                            </li>
+                        </ul>
                         <div class="nav-side">
+                            <a href="{{ route('loginuser') }} " class="icon-link">
+                                <i class="la la-user fs-4">
+                                </i>
+                            </a>
+                            <a href="home-default.html#" class="icon-link noti-dot">
+                                <i class="la la-shopping-bag fs-4"></i>
+                            </a>
+
                             <a href="home-default.html#" class="icon-link search-btn-style1">
                                 <i class="la la-search fs-4 sOpen-btn"></i>
                                 <i class="la la-close fs-4 sClose-btn"></i>
@@ -161,6 +190,8 @@
                     </div>
                 </div>
             </nav>
+
+            <!-- ====== end navbar ====== -->
 
 
             <!-- ====== start nav-search ====== -->

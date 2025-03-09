@@ -1,6 +1,8 @@
 @extends('admin.layouts.master')
 
 @section('content')
+
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <div class="container-full">
@@ -242,6 +244,7 @@
                                                             aria-valuemax="100" style="width: 60%">
                                                             <span class="sr-only">60% Complete (warning)</span>
                                                         </div>
+
 
                                                     </div>
                                                 </div>

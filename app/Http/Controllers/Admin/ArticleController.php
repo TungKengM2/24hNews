@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Tag;
+use App\Models\User;
 use App\Models\Article;
 use App\Models\Category;
-use App\Models\User;
-use App\Models\Tag;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\NewArticleSubmitted;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use App\Notifications\NewArticleSubmitted;
+use Illuminate\Support\Facades\Notification;
 
 class ArticleController extends Controller
 {
@@ -118,9 +118,9 @@ class ArticleController extends Controller
         ];
 
         $request->validate($rules);
-        if ($request->hasFile('thumbnail_url')) {
-            $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
-        }
+
+
+
         $article = Article::create([
             'title' => $request->title,
             'slug' => $request->slug,
@@ -128,8 +128,14 @@ class ArticleController extends Controller
             'category_id' => $request->category_id ?? null,
             'status' => $request->status,
             'author_id' => auth()->id(),
-            'thumbnail_url' => $path ,
+
         ]);
+
+        if ($request->hasFile('thumbnail_url')) {
+            $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+            $article->update(['thumbnail_url' => $path]);
+        }
+
         $article->tags()->sync($tagIds);
 
         // Gửi thông báo cho admin nếu bài viết cần duyệt
@@ -255,4 +261,5 @@ class ArticleController extends Controller
 
         return redirect()->route('articles.index')->with('success', 'Bài viết đã bị xóa!');
     }
+
 }

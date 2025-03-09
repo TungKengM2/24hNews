@@ -12,4 +12,6 @@ class ModeratorDashboardController extends Controller
         // Your code here
         return view('moderator.dashboard');
     }
+
+
 }

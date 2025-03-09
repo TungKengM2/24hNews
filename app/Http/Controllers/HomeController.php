@@ -14,6 +14,7 @@ class HomeController extends Controller
 {
     public function index()
     {
+
         //breaking news
         $featuredArticles = Article::where('status', 'published')
             ->orderByDesc('created_at') // Sắp xếp theo thời gian mới nhất
@@ -43,7 +44,6 @@ class HomeController extends Controller
         $sportsArticles = Article::whereHas('category', function ($query) {
             $query->where('name', 'Thể Thao'); // Hoặc sử dụng category_id cụ thể
         })->inRandomOrder()->distinct()->get();
-
 
 
         //11111111
