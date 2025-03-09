@@ -9,22 +9,23 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::table('approvals', function (Blueprint $table) {
-            $table->timestamp('updated_at')
-                ->nullable()
-                ->after('created_at');
-        });
+        if (! Schema::hasColumn('approvals', 'updated_at')) {
+            Schema::table('approvals', function (Blueprint $table) {
+                $table->timestamp('updated_at')
+                    ->nullable()
+                    ->after('created_at');
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::table('approvals', function (Blueprint $table) {
-            $table->dropColumn('updated_at');
-        });
+        if (Schema::hasColumn('approvals', 'updated_at')) {
+            Schema::table('approvals', function (Blueprint $table) {
+                $table->dropColumn('updated_at');
+            });
+        }
     }
 };
