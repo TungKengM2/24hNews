@@ -8,8 +8,7 @@ use App\Models\Article;
 use App\Models\Approval;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Services\ModerationService;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
@@ -138,6 +137,10 @@ class ArticleController extends Controller
                 ->with('violation_reasons', $moderationResult['reason'])
                 ->with('violations', $moderationResult['violations']);
         }
+        //        Log::info('Check helper status:', [
+        //            'function_exists' => function_exists('highlightWords'),
+        //            'session_violations' => session('violations'),
+        //        ]);
 
         $currentStatus = $article->status;
         $newStatus = $currentStatus;
