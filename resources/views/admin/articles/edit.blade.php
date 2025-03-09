@@ -22,7 +22,7 @@
 @endsection
 
 @section('title')
-    Chỉnh Sửa Bài Viết
+    Chỉnh Sửa Bải Viết
 @endsection
 
 @section('content')
@@ -32,18 +32,19 @@
             <div class="content-header">
                 <div class="d-flex align-items-center">
                     <div class="me-auto">
-                        <h4 class="page-title">Cập Nhật Bài Viết</h4>
+                        <h4 class="page-title">Cập Nhập Bài Viết</h4>
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ route('articles.index') }}"><i
                                                 class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Danh Sách Bài Viết</li>
-                                    <li class="breadcrumb-item active" aria-current="page">Cập Nhật</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Cập Nhập</li>
                                 </ol>
                             </nav>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -63,17 +64,19 @@
                     id="articleForm">
                     @csrf
                     @method('PUT')
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5>Title:</h5>
-                                <textarea id="title" name="title" class="form-control min-h-150" required>{{ $article->title }}</textarea>
-                            </div>
+                    <div class="form-group">
+                        <h5>Title:</h5>
+                        <div class="controls">
+                            <input type="text" id="title" name="title" class="form-control"
+                                value="{{ $article->title }}" required>
+                        </div>
+                    </div>
 
-                            <div class="col-md-6">
-                                <h5>Slug:</h5>
-                                <textarea id="slug" name="slug" class="form-control min-h-150" required>{{ $article->slug }}</textarea>
-                            </div>
+                    <div class="form-group">
+                        <h5>Slug:</h5>
+                        <div class="controls">
+                            <input type="text" id="slug" name="slug" class="form-control"
+                                value="{{ $article->slug }}" required>
                         </div>
                     </div>
 
@@ -86,84 +89,88 @@
                         </div>
                     </div>
 
-                 <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h5>Slect Tags Or Add New Tags:</h5>
-                            <select name="tags[]" class="form-control select2" multiple="multiple">
-                                @foreach ($tags as $tag)
-                                    <option value="{{ $tag->tag_id }}" @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
-                                        {{ $tag->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <h5>Slect Tags Or Add New Tags:</h5>
+                        <select name="tags[]" class="form-control select2" multiple="multiple">
+                            @foreach ($tags as $tag)
+                                <option value="{{ $tag->tag_id }}" @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
+                                    {{ $tag->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
 
-                        <div class="col-md-4">
-                            <h5>Category</h5>
-                            <select name="category_id" class="form-control">
-                                @foreach ($categories as $category)
+                    <div class="form-group">
+                        <h5>Category</h5>
+                        <select name="category_id" class="form-control">
+                            <option value="">-- Không có danh mục --</option> <!-- Tùy chọn không có danh mục -->
+                            @foreach ($categories as $category)
+                                @if ($category->is_active || $article->category_id == $category->category_id)
                                     <option value="{{ $category->category_id }}"
                                         {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
                                         {{ $category->name }}
+                                        @if (!$category->is_active)
+                                            (Đã vô hiệu hóa)
+                                        @endif
                                     </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-
-
-                        <input type="hidden" name="author_id" value="{{ $article->author_id }}">
-
-                        <div class="mb-3 col-md-4">
-                            <label class="form-label" for="thumbnail_url">Ảnh Đại Diện</label>
-                            <input class="form-control" type="file" name="thumbnail_url" id="thumbnail_url">
-                            @if ($article->thumbnail_url)
-                                <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Current Thumbnail"
-                                    width="200">
-                            @endif
-                        </div>
+                                @endif
+                            @endforeach
+                        </select>
                     </div>
-                 </div>
 
+
+
+
+
+
+                    <input type="hidden" name="author_id" value="{{ $article->author_id }}">
+
+                    <div class="mt-3">
+                        <label class="form-label" for="thumbnail_url">Ảnh Đại Diện</label>
+                        <input class="form-control" type="file" name="thumbnail_url" id="thumbnail_url">
+                        @if ($article->thumbnail_url)
+                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Current Thumbnail"
+                                width="100">
+                        @endif
+                    </div>
+
+
+                    <button type="submit" class="btn btn-primary mt-3">Cập nhật</button>
+                </form>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-3">Cập nhật</button>
-            </form>
-        </div>
-
-        <script>
-            $(document).ready(function() {
-                $('.select2').select2({
-                    tags: true,
-                    tokenSeparators: [','],
-                    placeholder: "Chọn hoặc nhập tags mới",
-                    allowClear: true
+            <script>
+                $(document).ready(function() {
+                    $('.select2').select2({
+                        tags: true,
+                        tokenSeparators: [','],
+                        placeholder: "Chọn hoặc nhập tags mới",
+                        allowClear: true
+                    });
                 });
-            });
 
-            document.getElementById("title").addEventListener("input", function() {
-                let title = this.value.trim();
-                let slug = title.toLowerCase()
-                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                    .replace(/đ/g, "d").replace(/Đ/g, "D")
-                    .replace(/\s+/g, "-")
-                    .replace(/[^\w-]/g, "")
-                    .replace(/--+/g, "-")
-                    .replace(/^-+|-+$/g, "");
+                document.getElementById("title").addEventListener("input", function() {
+                    let title = this.value.trim();
+                    let slug = title.toLowerCase()
+                        .normalize("NFD").replace(/[̀-ͯ]/g, "")
+                        .replace(/đ/g, "d").replace(/Đ/g, "D")
+                        .replace(/\s+/g, "-")
+                        .replace(/[^\w-]/g, "")
+                        .replace(/--+/g, "-")
+                        .replace(/^-+|-+$/g, "");
 
-                document.getElementById("slug").value = slug;
-            });
-        </script>
+                    document.getElementById("slug").value = slug;
+                });
+            </script>
 
-        {{-- Script TinyMCE --}}
-        <script>
-            tinymce.init({
-                selector: '#editor',
-                plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
-                toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | table',
-                menubar: 'file edit view insert format tools table help'
-            });
-        </script>
-    @endsection
+            {{-- Script TinyMCE --}}
+            <script>
+                tinymce.init({
+                    selector: '#editor',
+                    plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
+                    toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | table',
+                    menubar: 'file edit view insert format tools table help'
+                });
+            </script>
+        @endsection

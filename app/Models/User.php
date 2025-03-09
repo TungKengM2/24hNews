@@ -26,6 +26,8 @@ class User extends Authenticatable implements CanResetPasswordContract
         'is_promoted',
         'violation_count',
         'banned_until',
+        'provider',
+        'provider_id',
     ];
 
     protected $hidden = [

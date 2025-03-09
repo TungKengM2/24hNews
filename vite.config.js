@@ -1,11 +1,25 @@
-const { defineConfig } = require('vite');
-const laravel = require('laravel-vite-plugin');
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
 
-module.exports = defineConfig({
+export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/ckeditor.js'],
+            input: [
+                'resources/css/app.css',
+                'resources/js/app.js',
+                'resources/js/ckeditor.js',
+            ],
             refresh: true,
         }),
     ],
+    build: {
+       
+        rollupOptions: {
+            external: ['bootstrap'],
+        },
+        input: {
+            app: 'resources/js/app.js',
+            ckeditor: 'resources/js/ckeditor.js',
+        },
+    },
 });

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('contains_sensitive_content')->default(false);
             $table->unsignedBigInteger('author_id');
             $table->foreign('author_id')->references('user_id')->on('users')->onDelete('cascade');
-            $table->foreignId('category_id')->constrained('categories', 'category_id');
+            $table->foreignId('category_id')->nullable()->constrained('categories', 'category_id')->nullOnDelete();
             $table->string('thumbnail_url', 255)->nullable();
             $table->enum('status', ['draft', 'pending', 'published', 'archived'])->default('draft');
             $table->integer('views')->default(0);

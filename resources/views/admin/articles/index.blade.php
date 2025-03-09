@@ -15,7 +15,7 @@
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}"><i
+                                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i
                                                 class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Trang Chủ</li>
                                     <li class="breadcrumb-item active" aria-current="page">Danh Sách Bài Viết</li>
@@ -33,6 +33,7 @@
                     <div class="box">
                         <div class="box-header">
 
+
                             <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
                                     href="{{ route('admin.dashboard') }}">
                                     Back to Dashboard
@@ -41,12 +42,30 @@
                                     href="{{ route('articles.create') }}">
                                     <i class="si-plus si"></i>
                                 </a></button>
+
+                            <form method="GET" action="{{ route('articles.index') }}">
+                                <div class="d-flex align-items-center mb-3">
+                                    <label for="filter" class="me-2">Lọc bài viết:</label>
+                                    <select name="filter" class="form-control w-auto" onchange="this.form.submit()">
+                                        <option value="all" {{ request('filter') == 'all' ? 'selected' : '' }}>Tất cả bài
+                                            viết</option>
+                                        <option value="active" {{ request('filter') == 'active' ? 'selected' : '' }}>Bài
+                                            viết có danh mục hoạt động</option>
+                                        <option value="inactive" {{ request('filter') == 'inactive' ? 'selected' : '' }}>Bài
+                                            viết có danh mục bị vô hiệu hóa</option>
+                                        <option value="no_category"
+                                            {{ request('filter') == 'no_category' ? 'selected' : '' }}>Bài viết không có
+                                            danh mục</option>
+                                    </select>
+                                </div>
+                            </form>
+
+
                         </div>
 
                         <div class="box-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-dark mb-0"
-                                    style="width:100%">
+                                <table class="table table-bordered table-dark mb-0" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
@@ -67,9 +86,8 @@
                                         @foreach ($articles as $article)
                                             <tr>
                                                 <td>{{ $article->article_id }}</td>
-                                                {{-- hiển thị limit 10 từ  --}}
-                                                <td>{{ implode(' ', array_slice(explode(' ', $article->title), 0, 10)) }}{{ (count(explode(' ', $article->title)) > 10) ? '...' : '' }}</td>
-                                                <td>{{ implode('-', array_slice(explode('-', $article->slug), 0, 10)) }}{{ (count(explode('-', $article->slug)) > 10) ? '...' : '' }}</td>
+                                                <td>{{ $article->title }}</td>
+                                                <td>{{ $article->slug }}</td>
                                                 <td class="text-center">
                                                     @if ($article->contains_sensitive_content)
                                                         <span class="badge bg-danger">Yes</span>
@@ -78,10 +96,22 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $article->author->username ?? 'Unknown' }}</td>
-                                                <td>{{ $article->category->name ?? 'Uncategorized' }}</td>
+                                                <td>
+                                                    @if ($article->category)
+                                                        @if (!$article->category->is_active)
+                                                            <span class="text-warning">{{ $article->category->name }}
+                                                                (Không Hoạt Động)</span>
+                                                        @else
+                                                            {{ $article->category->name }}
+                                                        @endif
+                                                    @else
+                                                        <span class="text-danger">Không có danh mục</span>
+                                                    @endif
+                                                </td>
+
                                                 <td>
                                                     <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                        alt="Thumbnail" width="500" height="100">
+                                                        alt="Thumbnail" width="100" height="150">
 
                                                 </td>
                                                 <td>
@@ -147,7 +177,6 @@
                                             </tr>
                                         @endforeach
                                     </tbody>
-
                                 </table>
                                 <div id="pagination-wrapper" class="d-flex justify-content-end mt-5">
                                     <nav>
@@ -157,45 +186,16 @@
                                     </nav>
                                 </div>
                             </div>
-                            <div class="row item-space-between">
-                                <div class="col-sm-12 col-md-5">
-                                    <div class="dataTables_info" id="example6_info" role="status" aria-live="polite">
-                                        Showing 1 to 10 of 57 entries</div>
-                                </div>
-                                <div class="col-sm-12 col-md-7 items-end">
-                                    <div class="dataTables_paginate paging_simple_numbers" id="example6_paginate">
-                                        <ul class="pagination">
-                                            <li class="paginate_button page-item previous disabled"
-                                                id="example6_previous"><a href="#" aria-controls="example6"
-                                                    data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li>
-                                            <li class="paginate_button page-item active"><a href="#"
-                                                    aria-controls="example6" data-dt-idx="1" tabindex="0"
-                                                    class="page-link">1</a></li>
-                                            <li class="paginate_button page-item "><a href="#"
-                                                    aria-controls="example6" data-dt-idx="2" tabindex="0"
-                                                    class="page-link">2</a></li>
-                                            <li class="paginate_button page-item "><a href="#"
-                                                    aria-controls="example6" data-dt-idx="3" tabindex="0"
-                                                    class="page-link">3</a></li>
-                                            <li class="paginate_button page-item "><a href="#"
-                                                    aria-controls="example6" data-dt-idx="4" tabindex="0"
-                                                    class="page-link">4</a></li>
-                                            <li class="paginate_button page-item "><a href="#"
-                                                    aria-controls="example6" data-dt-idx="5" tabindex="0"
-                                                    class="page-link">5</a></li>
-                                            <li class="paginate_button page-item "><a href="#"
-                                                    aria-controls="example6" data-dt-idx="6" tabindex="0"
-                                                    class="page-link">6</a></li>
-                                            <li class="paginate_button page-item next" id="example6_next"><a
-                                                    href="#" aria-controls="example6" data-dt-idx="7"
-                                                    tabindex="0" class="page-link">Next</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
+
+                <script>
+                    function filterArticles() {
+                        let filter = document.getElementById("filter").value;
+                        window.location.href = "?filter=" + filter;
+                    }
+                </script>
             </div>
             <!-- /.content-wrapper -->
         </div>
