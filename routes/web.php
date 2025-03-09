@@ -123,7 +123,8 @@ Route::middleware(['auth', 'role:3'])
 // })->name('user.dashboard');
 
 // 🚀 Khu vực dành riêng cho Moderator (role_id = 3)
-Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
+Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function (
+) {
     Route::get(
         '/list-article',
         [ModeratorArticleController::class, 'index']
