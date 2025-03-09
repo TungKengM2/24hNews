@@ -167,7 +167,12 @@ Route::middleware(['auth', 'role:4'])
     ->group(function () {
         Route::get('/dashboard', [ProfileController::class, 'dashboard'])
             ->name('user.dashboard');
-
+        // dat them
+        Route::get(
+                '/change-password',
+                [ProfileController::class, 'showChangePasswordForm'])
+            ->name('user.change-password');
+        
         // Yêu cầu nâng cấp vai trò lên Author
         Route::get('/upgrade', function () {
             return view('user.upgrade');
