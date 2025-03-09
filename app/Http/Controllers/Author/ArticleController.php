@@ -190,6 +190,7 @@ class ArticleController extends Controller
         $approver = User::where('username', 'ai')->first();
         $approvalData = [
             'type' => 'article',
+            'user_id' => auth()->id(),
             'status' => match ($moderationResult['violation_level']) {
                 'none', 'low' => 'approved',
                 'medium' => 'pending',
