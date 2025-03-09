@@ -163,12 +163,12 @@
                 </ul>
             </li>
             <!-- Control Sidebar Toggle Button -->
-            {{-- <li>
+            <li>
                 <a href="index.html#" data-toggle="control-sidebar" title="Setting"
                     class="waves-effect waves-light btn-outline no-border btn-danger-light text-dark hover-white">
                     <i data-feather="settings"></i>
                 </a>
-            </li> --}}
+            </li>
 
         </ul>
     </div>
