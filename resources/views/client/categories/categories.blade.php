@@ -123,8 +123,8 @@
     <section class="tc-trends-news-style6">
         <div class="container">
             <div class="content pb-50">
-                <strong class="color-000 text-uppercase mb-30 d-block  pt-15 border-2 border-top border-dark">Top Danh
-                    Mục Nhiều Lượt Xem: {{ $category->name }}</strong>
+                <strong class="color-000 text-uppercase mb-30 d-block  pt-15 border-2 border-top border-dark">
+                   Bài viết thịnh hành</strong>
                 <div class="tc-post-grid-style6">
                     <div class="tc-trends-news-slider6 tc-slider-style1">
                         <div class="swiper-container">
@@ -183,7 +183,7 @@
             <div class="row gx-5">
                 <div class="col-lg-12">
                     <div class="features-content pb-60">
-                        <p class="fw-bold text-uppercase fsz-14px mb-30 pt-15 border-2 border-top border-dark">Featured posts</p>
+                        <p class="fw-bold text-uppercase fsz-14px mb-30 pt-15 border-2 border-top border-dark">Bài viết nổi bật</p>
                         <div class="row gx-5">
                             @if($featuredArticle)
                             <div class="col-lg-8 border-1 border-end brd-gray">
