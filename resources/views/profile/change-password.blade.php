@@ -1,6 +1,8 @@
-@extends('layout.app')
+@extends('profile.layouts.master')
 
-@section('title', 'Đổi mật khẩu')
+@section('title')
+    Đổi mật khẩu
+@endsection
 
 @section('content')
 <div class="card p-4">
@@ -40,13 +42,5 @@
             {{ session('success') }}
         </div>
     @endif
-    
-    
-        
-    
-    
-    
-    
-    
 </div>
 @endsection
