@@ -62,17 +62,25 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])
         ->name('profile');
-    Route::post('/profile/update',
-        [ProfileController::class, 'updateProfile'])
+    Route::post(
+        '/profile/update',
+        [ProfileController::class, 'updateProfile']
+    )
         ->name('profile.update');
-    Route::get('/profile/change-password',
-        [ProfileController::class, 'showChangePasswordForm'])
+    Route::get(
+        '/profile/change-password',
+        [ProfileController::class, 'showChangePasswordForm']
+    )
         ->name('profile.change-password');
-    Route::post('/profile/update-password',
-        [ProfileController::class, 'updatePassword'])
+    Route::post(
+        '/profile/update-password',
+        [ProfileController::class, 'updatePassword']
+    )
         ->name('profile.update-password');
-    Route::post('/profile/upload-avatar',
-        [ProfileController::class, 'uploadAvatar'])
+    Route::post(
+        '/profile/upload-avatar',
+        [ProfileController::class, 'uploadAvatar']
+    )
         ->name('profile.upload-avatar');
 });
 
@@ -93,6 +101,12 @@ Route::middleware(['auth', 'role:3'])
     })
     ->name('moderator.profile-setting');
 
+Route::middleware(['auth', 'role:3'])
+    ->get('/moderator/profile', function () {
+        return view('moderator.profile');
+    })
+    ->name('moderator.profile');
+
 // 🚀 Dashboard cho từng vai trò
 // Route::middleware(['auth', 'role:1'])->get('/admin/dashboard', function () {
 //    return view('admin.dashboard');
@@ -109,10 +123,11 @@ Route::middleware(['auth', 'role:3'])
 // })->name('user.dashboard');
 
 // 🚀 Khu vực dành riêng cho Moderator (role_id = 3)
-Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function (
-) {
-    Route::get('/list-article',
-        [ModeratorArticleController::class, 'index'])
+Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
+    Route::get(
+        '/list-article',
+        [ModeratorArticleController::class, 'index']
+    )
         ->name('moderator.list-article');
 });
 
@@ -127,12 +142,16 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::get('/profile', [AuthorProfileController::class, 'index'])
         ->name('author.profile');
-    Route::put('/profile',
-        [AuthorProfileController::class, 'update'])
+    Route::put(
+        '/profile',
+        [AuthorProfileController::class, 'update']
+    )
         ->name('author.profile.update');
 
-    Route::resource('articles',
-        \App\Http\Controllers\Author\ArticleController::class)
+    Route::resource(
+        'articles',
+        \App\Http\Controllers\Author\ArticleController::class
+    )
         ->names('author.articles');
 
     Route::post('/articles/upload', [
@@ -141,8 +160,10 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     ])
         ->name('author.articles.upload');
 
-    Route::get('/articles/search',
-        [\App\Http\Controllers\Author\ArticleController::class, 'search'])
+    Route::get(
+        '/articles/search',
+        [\App\Http\Controllers\Author\ArticleController::class, 'search']
+    )
         ->name('author.articles.search');
 });
 
@@ -160,8 +181,10 @@ Route::middleware(['auth', 'role:4'])
         Route::get('/upgrade-result', function () {
             return view('user.upgrade-result');
         })->name('user.upgrade.result');
-        Route::post('/upgrade',
-            [ProfileController::class, 'requestAuthorRole'])
+        Route::post(
+            '/upgrade',
+            [ProfileController::class, 'requestAuthorRole']
+        )
             ->name('user.upgrade.author');
     });
 
@@ -173,8 +196,10 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     })->name('admin.dashboard');
 
     // Quản lý yêu cầu nâng cấp vai trò
-    Route::get('/role-upgrade-requests',
-        [UserController::class, 'roleUpgradeRequests'])
+    Route::get(
+        '/role-upgrade-requests',
+        [UserController::class, 'roleUpgradeRequests']
+    )
         ->name('admin.user-role-requests');
     Route::post('/admin/approve/{id}', [UserController::class, 'approve'])
         ->name('admin.approve.user');
@@ -184,8 +209,10 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     // Quản lý bài viết
     Route::get('/articles/approves', [ArticleController::class, 'Approves'])
         ->name('admin.articles.approves');
-    Route::patch('/articles/{article}/approve',
-        [ArticleController::class, 'approve'])->name('articles.approve');
+    Route::patch(
+        '/articles/{article}/approve',
+        [ArticleController::class, 'approve']
+    )->name('articles.approve');
     Route::resource('articles', ArticleController::class);
 
     // Quản lý danh mục
@@ -206,7 +233,11 @@ Route::post('/logout', [AuthUserController::class, 'logout'])
     ->name('logout');
 
 // 🌍 Đăng nhập với Google & Facebook
-Route::get('auth/{provider}',
-    [SocialAuthController::class, 'redirectToProvider']);
-Route::get('auth/{provider}/callback',
-    [SocialAuthController::class, 'handleProviderCallback']);
+Route::get(
+    'auth/{provider}',
+    [SocialAuthController::class, 'redirectToProvider']
+);
+Route::get(
+    'auth/{provider}/callback',
+    [SocialAuthController::class, 'handleProviderCallback']
+);
