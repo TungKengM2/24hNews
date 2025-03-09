@@ -9,21 +9,28 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
+        if (! Schema::hasColumn('approvals', 'type')) {
+            Schema::table('approvals', function (Blueprint $table) {
+                $table->enum('type', ['article', 'role_upgrade'])
+                    ->default('article')
+                    ->after('approval_id');
+            });
+        }
+
         Schema::table('approvals', function (Blueprint $table) {
+            $table->text('remarks')->nullable()->change();
             $table->enum('type', ['article', 'role_upgrade'])
                 ->default('article')
-                ->after('approval_id');
+                ->change();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::table('approvals', function (Blueprint $table) {
+            $table->text('remarks')->nullable(false)->change();
             $table->dropColumn('type');
         });
     }
