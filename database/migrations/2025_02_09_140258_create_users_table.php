@@ -17,23 +17,21 @@ return new class extends Migration
             $table->string('phone', 15)->nullable();
             $table->string('image', 255)->nullable();
             $table->string('email', 100)->unique();
-            $table->timestamp('email_verified_at')->nullable(); // Xác nhận email
-            $table->string('password', 255)->nullable(); // Có thể null nếu đăng nhập bằng Google/Facebook
-            $table->rememberToken(); // Token nhớ đăng nhập
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password', 255)->nullable();
+            $table->rememberToken();
 
-            // Khóa ngoại cho vai trò, đặt giá trị mặc định
-            $table->unsignedBigInteger('role_id')->default(4); // 2 là ID mặc định của User
+            $table->unsignedBigInteger('role_id')->default(4);
             $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('cascade');
 
             $table->boolean('is_promoted')->default(false);
             $table->integer('violation_count')->default(0);
             $table->timestamp('banned_until')->nullable();
 
-            // Đăng nhập Google/Facebook
-            $table->string('provider')->nullable(); // google, facebook
-            $table->string('provider_id')->nullable()->unique(); // ID tài khoản từ Google/Facebook
+            $table->string('provider')->nullable();
+            $table->string('provider_id')->nullable()->unique();
 
-            $table->timestamps(); // Tự động thêm created_at và updated_at
+            $table->timestamps();
         });
     }
 
