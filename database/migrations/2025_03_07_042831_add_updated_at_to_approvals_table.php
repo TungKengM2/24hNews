@@ -11,11 +11,11 @@
          */
         public function up(): void
         {
-            Schema::table('approvals', function (Blueprint $table) {
-                $table->timestamp('updated_at')
-                    ->nullable()
-                    ->after('created_at');
-            });
+            // Schema::table('approvals', function (Blueprint $table) {
+            //     $table->timestamp('updated_at')
+            //         ->nullable()
+            //         ->after('created_at');
+            // });
         }
 
         /**
@@ -23,9 +23,9 @@
          */
         public function down(): void
         {
-            Schema::table('approvals', function (Blueprint $table) {
-                $table->dropColumn('updated_at');
-            });
+            // Schema::table('approvals', function (Blueprint $table) {
+            //     $table->dropColumn('updated_at');
+            // });
         }
 
     };
