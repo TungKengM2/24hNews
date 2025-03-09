@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('role:author');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    //     $this->middleware('role:author');
+    // }
 
     public function edit()
     {

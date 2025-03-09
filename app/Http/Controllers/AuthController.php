@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Validator;
 
 
 
@@ -29,14 +29,14 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->has('remember'))) {
             $user = Auth::user();
 
-            if ($user->role_id == 3) {
-                return redirect()->intended('/writer/dashboard');
+            if ($user->role_id == 1) {
+                return redirect()->intended('/admin/dashboard');
             } elseif ($user->role_id == 2) {
-                return redirect()->intended('/moderator/dashboard');
+                return redirect()->intended('/article/dashboard');
+            } elseif ($user->role_id == 3) {
+                return redirect()->intended('/author/dashboard');
             } elseif ($user->role_id == 4) {
                 return redirect()->intended('/user/dashboard');
-            } elseif ($user->role_id == 1) {
-                return redirect()->intended('/admin/dashboard');
             } else {
                 return redirect()->intended('/');
             }
@@ -133,13 +133,11 @@ class AuthController extends Controller
     {
         Auth::logout();
 
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         // Xóa cookie remember me
         Cookie::queue(Cookie::forget('remember_web_' . $driver));
-
 
         return redirect('/')->with('status', 'You have been logged out.');
     }
