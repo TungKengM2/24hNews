@@ -119,11 +119,6 @@
                         </select>
                     </div>
 
-
-
-
-
-
                     <input type="hidden" name="author_id" value="{{ $article->author_id }}">
 
                     <div class="mt-3">
