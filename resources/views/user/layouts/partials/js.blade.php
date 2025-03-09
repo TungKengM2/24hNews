@@ -34,3 +34,20 @@
 <script src="{{ asset('client/assets/js/lib/back-to-top.js') }}"></script>
 <script src="{{ asset('client/assets/js/lib/parallaxie.js') }}"></script>
 <script src="{{ asset('client/assets/js/main.js') }}"></script>
+<script>
+    function updateDate() {
+    const daysOfWeek = ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"];
+    const months = ["/1", "/2", "/3", "/4", "/5", "/6", "/7", "/8", "/9", "/10", "/11", "/12"];
+
+    const now = new Date();
+    const dayOfWeek = daysOfWeek[now.getDay()];
+    const day = now.getDate();
+    const month = months[now.getMonth()];
+    const year = now.getFullYear();
+
+    const formattedDate = `${dayOfWeek},  ${day}${month}/${year}`;
+    document.getElementById("dateElement").innerText = formattedDate;
+}
+
+updateDate();
+</script>
