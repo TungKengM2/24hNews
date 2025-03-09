@@ -213,7 +213,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
+                    {{-- <div class="col-12">
                         <div class="box">
                             <div class="box-header">
                                 <h4 class="box-title">Report</h4>
@@ -276,7 +276,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <!-- /.row -->
             </section>

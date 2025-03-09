@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cookie;
+
+
 
 class AuthController extends Controller
 {
@@ -17,8 +19,6 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-<<<<<<< HEAD
-=======
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -47,7 +47,6 @@ class AuthController extends Controller
         ]);
     }
 
->>>>>>> nluan
     public function showSignupForm()
     {
         return view('auth.signup');
@@ -58,9 +57,9 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|string|max:15',
+            'phone'    => 'required|string|max:15',
             'password' => 'required|string|min:8|confirmed',
-            'terms' => 'accepted',
+            'terms'    => 'accepted'
 
         ]);
 
@@ -73,61 +72,54 @@ class AuthController extends Controller
         // Lưu dữ liệu đăng ký và OTP vào session
 
         session([
-            'signup_data' => $request->only('username', 'email', 'password',
-                'phone'),
+            'signup_data' => $request->only('username', 'email', 'password', 'phone'),
             'signup_otp' => $otp,
         ]);
 
         // Gửi OTP qua email
-        Mail::raw("Your OTP for registration is: $otp",
-            function ($message) use ($request) {
-                $message->to($request->email)
-                    ->subject('Your OTP for registration');
-            });
+        Mail::raw("Your OTP for registration is: $otp", function ($message) use ($request) {
+            $message->to($request->email)
+                ->subject('Your OTP for registration');
+        });
 
         // Chuyển hướng đến form nhập OTP
-        return redirect()
-            ->route('otp.verify.form')
-            ->with('status', 'OTP has been sent to your email.');
+        return redirect()->route('otp.verify.form')->with('status', 'OTP has been sent to your email.');
     }
+    // Hiển thị form  nhập otp
 
     public function showOtpForm()
     {
         return view('auth.verify-otp');
     }
 
-    // Hiển thị form  nhập otp
+    // Xử lý xác nhận otp
 
     public function verifyOtp(Request $request)
     {
         $request->validate([
-            'otp' => 'required|numeric',
+            'otp' => 'required|numeric'
         ]);
 
         $sessionOtp = session('signup_otp');
         if ($request->otp != $sessionOtp) {
-            return back()
-                ->withErrors(['otp' => 'OTP is incorrect'])
-                ->withInput();
+            return back()->withErrors(['otp' => "OTP is incorrect"])->withInput();
         }
 
         $signupData = session('signup_data');
-        if (! $signupData) {
-            return redirect()
-                ->route('signup')
-                ->withErrors(['email' => 'Dữ liệu đăng ký hết hạn, vui lòng đăng ký lại.']);
+        if (!$signupData) {
+            return redirect()->route('signup')->withErrors(['email' => 'Dữ liệu đăng ký hết hạn, vui lòng đăng ký lại.']);
         }
 
-        // Tạo tài khoản
+        //Tạo tài khoản
         $user = User::create([
             'username' => $signupData['username'],
             'email' => $signupData['email'],
-            'phone' => $signupData['phone'],
+            'phone'    => $signupData['phone'],
             'password' => Hash::make($signupData['password']),
             'role_id' => 4, // Mặc định là user
         ]);
 
-        // xóa dữ liệu tạm trong session
+        //xóa dữ liệu tạm trong session
         session()->forget(['signup_data', 'signup_otp']);
 
         // ĐĂng nhập người dùng
@@ -135,33 +127,6 @@ class AuthController extends Controller
         Auth::login($user);
 
         return redirect('/')->with('status', 'Đăng ký thành công');
-    }
-
-    // Xử lý xác nhận otp
-
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        if (Auth::attempt($credentials, $request->has('remember'))) {
-            $user = Auth::user();
-
-            $roleRoutes = [
-                1 => '/admin/dashboard',
-                2 => '/author/dashboard',
-                3 => '/moderator/dashboard',
-                4 => '/user/dashboard',
-            ];
-
-            return redirect()->intended($roleRoutes[$user->role_id] ?? '/');
-        }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
     }
 
     public function logout(Request $request)
@@ -172,7 +137,7 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         // Xóa cookie remember me
-        Cookie::queue(Cookie::forget('remember_web_'.$driver));
+        Cookie::queue(Cookie::forget('remember_web_' . $driver));
 
         return redirect('/')->with('status', 'You have been logged out.');
     }
