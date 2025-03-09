@@ -107,6 +107,20 @@ Route::middleware(['auth', 'role:3'])
     })
     ->name('moderator.profile');
 
+    Route::prefix('moderator')->name('moderator.')->group(function () {
+        Route::get('/articles', [ModeratorArticleController::class, 'index'])->name('articles.index');
+        Route::get('/articles/{article}', [ModeratorArticleController::class, 'show'])->name('articles.show');
+
+        Route::patch('/articles/{article}/approve', [ModeratorArticleController::class, 'approve'])
+            ->name('articles.approve'); // Sửa ở đây
+    });
+
+
+
+
+
+
+
 // 🚀 Dashboard cho từng vai trò
 // Route::middleware(['auth', 'role:1'])->get('/admin/dashboard', function () {
 //    return view('admin.dashboard');
