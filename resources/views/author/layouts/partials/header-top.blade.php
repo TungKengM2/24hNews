@@ -83,7 +83,7 @@
                     <li>
                         <!-- inner menu: contains the actual data -->
                         <ul class="menu sm-scrol">
-                            <li>
+                            {{-- <li>
                                 @php
                                     $pendingCount = \App\Models\Article::where('status', 'pending')->count();
                                 @endphp
@@ -91,7 +91,7 @@
                                     <a href="">
                                         {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
                                     </a>
-                                @endif
+                                @endif --}}
                                 {{-- </li>
                             <li>
                                 <a href="index.html#">
