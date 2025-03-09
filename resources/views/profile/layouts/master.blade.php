@@ -12,7 +12,7 @@
 
     <title>@yield('title')</title>
 
-    @include('user.layouts.partials.css')
+    @include('profile.layouts.partials.css')
 
 </head>
 
@@ -22,11 +22,11 @@
         <div id="loader"></div>
             <div class="container">
                 <!-- ====== start top navbar ====== -->
-               @include('user.layouts.partials.header-top')
+               @include('profile.layouts.partials.header-top')
                 <!-- ====== end top navbar ====== -->
         
                 <!-- ====== start navbar ====== -->
-                @include('user.layouts.partials.header-start')
+                @include('profile.layouts.partials.header-start')
                 <!-- ====== end navbar ====== -->
         
                 <!-- ====== start nav-search ====== -->
@@ -35,7 +35,7 @@
 
         <aside class="main-sidebar">
             <!-- sidebar-->
-            @include('user.layouts.partials.aside-sidebar')
+            @include('profile.layouts.partials.aside-sidebar')
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
@@ -44,10 +44,10 @@
 
         <!-- /.content-wrapper -->
 
-        @include('user.layouts.partials.footer')
+        @include('profile.layouts.partials.footer')
 
         <!-- Control Sidebar -->
-        @include('user.layouts.partials.control-sidebar')
+        @include('profile.layouts.partials.control-sidebar')
         <!-- /.control-sidebar -->
 
         <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
@@ -63,7 +63,7 @@
         class="waves-effect waves-light btn btn-success btn-flat mb-5 btn-sm" target="_blank">
         <span class="icon-Money"><span class="path1"></span><span class="path2"></span></span>
     </a>
-    <a href="https://themeforest.net/user/multipurposethemes/portfolio" data-bs-toggle="tooltip"
+    <a href="https://themeforest.net/profile/multipurposethemes/portfolio" data-bs-toggle="tooltip"
         data-bs-placement="left" title="Portfolio"
         class="waves-effect waves-light btn btn-danger btn-flat mb-5 btn-sm" target="_blank">
         <span class="icon-Image"></span>
