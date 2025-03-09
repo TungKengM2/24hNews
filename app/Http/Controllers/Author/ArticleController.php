@@ -36,12 +36,12 @@ class ArticleController extends Controller
                 if ($filter === 'active') {
                     $query->whereHas(
                         'category',
-                        fn($q) => $q->where('is_active', true)
+                        fn ($q) => $q->where('is_active', true)
                     );
                 } elseif ($filter === 'inactive') {
                     $query->whereHas(
                         'category',
-                        fn($q) => $q->where('is_active', false)
+                        fn ($q) => $q->where('is_active', false)
                     );
                 } elseif ($filter === 'no_category') {
                     $query->whereNull('category_id');
@@ -66,7 +66,7 @@ class ArticleController extends Controller
 
         $rules = [
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id',
+            'slug' => 'required|string|max:255|unique:articles,slug,'.$article->article_id.',article_id',
             'category_id' => 'required|exists:categories,category_id',
             'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:draft,pending,published,archived,rejected',
@@ -114,7 +114,7 @@ class ArticleController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->withErrors(['content' => 'Lỗi kiểm duyệt: ' . $moderationResult['message']]);
+                ->withErrors(['content' => 'Lỗi kiểm duyệt: '.$moderationResult['message']]);
         }
 
         if ($moderationResult['violation_level'] === 'high') {
@@ -122,7 +122,7 @@ class ArticleController extends Controller
                 ->back()
                 ->withInput()
                 ->withErrors([
-                    'content' => 'Nội dung vi phạm nghiêm trọng: ' . implode(
+                    'content' => 'Nội dung vi phạm nghiêm trọng: '.implode(
                         ', ',
                         $moderationResult['violations']
                     ),
@@ -185,18 +185,19 @@ class ArticleController extends Controller
         $approver = User::where('username', 'ai')->first();
         $approvalData = [
             'type' => 'article',
+            'user_id' => auth()->id(),
             'status' => match ($moderationResult['violation_level']) {
                 'none', 'low' => 'approved',
                 'medium' => 'pending',
                 default => 'pending',
             },
             'remarks' => $moderationResult['violation_level'] === 'high'
-                ? 'Nội dung vi phạm nghiêm trọng: ' . implode(
+                ? 'Nội dung vi phạm nghiêm trọng: '.implode(
                     ', ',
                     $moderationResult['violations']
                 )
                 : ($moderationResult['violation_level'] === 'medium'
-                    ? 'Nội dung vi phạm: ' . implode(
+                    ? 'Nội dung vi phạm: '.implode(
                         ', ',
                         $moderationResult['violations']
                     )
@@ -220,7 +221,7 @@ class ArticleController extends Controller
                 ->back()
                 ->withInput()
                 ->withErrors([
-                    'content' => 'Nội dung vi phạm nghiêm trọng: ' . implode(
+                    'content' => 'Nội dung vi phạm nghiêm trọng: '.implode(
                         ', ',
                         $moderationResult['violations']
                     ),
@@ -237,9 +238,10 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         try {
-            $tagInputs = array_filter($request->input('tags', []), function ($tag) {
-                return !empty(trim($tag));
-            });
+            $tagInputs = array_filter($request->input('tags', []),
+                function ($tag) {
+                    return ! empty(trim($tag));
+                });
 
             if (is_string($tagInputs)) {
                 $tagInputs = explode(',', $tagInputs);
@@ -251,7 +253,7 @@ class ArticleController extends Controller
                     $tagIds[] = (int) $tag;
                 } else {
                     $tag = trim($tag);
-                    if (!empty($tag)) {
+                    if (! empty($tag)) {
                         $tagModel = Tag::firstOrCreate(['name' => $tag]);
                         $tagIds[] = $tagModel->tag_id;
                     }
@@ -270,13 +272,14 @@ class ArticleController extends Controller
             $request->validate($rules);
 
             $apiKey = env('GOOGLE_API_KEY');
-            $moderationResult = $this->moderationService->moderateContent($request->input('content'), $apiKey);
+            $moderationResult = $this->moderationService->moderateContent($request->input('content'),
+                $apiKey);
 
             if ($moderationResult['status'] === 'error') {
                 return redirect()
                     ->back()
                     ->withInput()
-                    ->withErrors(['content' => 'Lỗi kiểm duyệt nội dung: ' . $moderationResult['message']]);
+                    ->withErrors(['content' => 'Lỗi kiểm duyệt nội dung: '.$moderationResult['message']]);
             }
 
             if ($moderationResult['violation_level'] === 'high') {
@@ -284,7 +287,8 @@ class ArticleController extends Controller
                     ->back()
                     ->withInput()
                     ->withErrors([
-                        'content' => 'Nội dung vi phạm nghiêm trọng: ' . implode(', ', $moderationResult['violations']),
+                        'content' => 'Nội dung vi phạm nghiêm trọng: '.implode(', ',
+                            $moderationResult['violations']),
                     ])
                     ->with('violation_reasons', $moderationResult['reason'])
                     ->with('violations', $moderationResult['violations']);
@@ -306,7 +310,8 @@ class ArticleController extends Controller
             ]);
 
             if ($request->hasFile('thumbnail_url')) {
-                $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+                $path = $request->file('thumbnail_url')
+                    ->store('thumbnails', 'public');
                 $article->update(['thumbnail_url' => $path]);
             }
 
@@ -320,7 +325,8 @@ class ArticleController extends Controller
 
             if ($status === 'pending') {
                 $approvalData['status'] = 'pending';
-                $approvalData['remarks'] = 'Nội dung vi phạm: ' . implode(', ', $moderationResult['reason']);
+                $approvalData['remarks'] = 'Nội dung vi phạm: '.implode(', ',
+                    $moderationResult['reason']);
             } elseif ($status === 'published') {
                 $approvalData['status'] = 'approved';
                 $approvalData['remarks'] = 'Approved by AI';
@@ -340,10 +346,10 @@ class ArticleController extends Controller
         } catch (\Exception $e) {
             return redirect()
                 ->route('author.articles.index')
-                ->with('success', 'Bài viết của bạn đang được xét duyệt, vui lòng chờ trong giây lát.');
+                ->with('success',
+                    'Bài viết của bạn đang được xét duyệt, vui lòng chờ trong giây lát.');
         }
     }
-
 
     public function create()
     {
@@ -431,7 +437,7 @@ class ArticleController extends Controller
         );
     }
 
-     public function destroy(Article $article)
+    public function destroy(Article $article)
     {
         if ($article->thumbnail_url) {
             Storage::disk('public')->delete($article->thumbnail_url);
@@ -441,9 +447,10 @@ class ArticleController extends Controller
 
         $article->delete();
 
-        return redirect()->route('author.articles.index')->with('success', 'Bài viết đã bị xóa!');
+        return redirect()
+            ->route('author.articles.index')
+            ->with('success', 'Bài viết đã bị xóa!');
     }
-
 
     public function uploadImage(Request $request)
     {
