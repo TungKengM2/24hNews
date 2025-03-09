@@ -49,12 +49,6 @@
                 <div class="form-content">
                     <div class="form-items">
                         <h3>Register new account</h3>
-                        <div>
-                            <input class="form-control" type="checkbox" name="terms"
-                                {{ old('terms') ? 'checked' : '' }} required>
-                            Tôi đồng ý với <a href="#">điều khoản sử dụng</a>
-
-                        </div>
 
                         <p>Access to the most powerful tools in the entire design and web industry.</p>
 
@@ -81,7 +75,7 @@
                             <input class="form-control" type="password" name="password_confirmation"
                                 placeholder="Confirm Password" required>
                                 <div>
-                                    <input class="form-control" type="checkbox" name="terms"
+                                    <input class="checkboox" type="checkbox" name="terms"
                                         {{ old('terms') ? 'checked' : '' }} required>
                                     Tôi đồng ý với <a href="#">điều khoản sử dụng</a>
         
@@ -94,9 +88,8 @@
 
                         <div class="other-links social-with-title">
                             <div class="text">Or register with</div>
-                            <a href="register21.html#"><i class="fab fa-facebook-f"></i> Facebook</a>
-                            <a href="register21.html#"><i class="fab fa-google"></i> Google</a>
-                            <a href="register21.html#"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+                            <a href="{{ url('auth/facebook') }}"><i class="fab fa-facebook-f"></i> Facebook</a>
+                            <a href="{{ url('auth/google') }}"><i class="fab fa-google"></i> Google</a>
                         </div>
 
                         <div class="page-links">

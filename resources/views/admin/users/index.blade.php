@@ -27,33 +27,33 @@
                     <div class="table-responsive">
                         <table class="table table-bordered table-dark mb-0">
                             <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Username</th>
-                                    <th>Email</th>
-                                    <th>Số điện thoại</th>
-                                    <th>Vai trò</th>
-                                    <th>Ảnh đại diện</th>
-                                </tr>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Vai trò</th>
+                                <th>Ảnh đại diện</th>
+                            </tr>
                             </thead>
                             <tbody id="user-table">
-                                @foreach ($users as $user)
-                                    <tr>
-                                        <td>{{ $user->user_id }}</td>
-                                        <td>{{ $user->username }}</td>
-                                        <td>{{ $user->email }}</td>
-                                        <td>{{ $user->phone }}</td>
-                                        <td>{{ ucfirst($user->role->name ?? 'Chưa có vai trò') }}</td>
-                                        <td>
-                                            @if ($user->image)
-                                                <img src="{{ asset('storage/' . $user->image) }}" alt="Avatar"
-                                                    width="50">
-                                            @else
-                                                Không có ảnh
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
+                            @foreach ($users as $user)
+                                <tr>
+                                    <td>{{ $user->user_id }}</td>
+                                    <td>{{ $user->username }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->phone }}</td>
+                                    <td>{{ ucfirst($user->role->name ?? 'Chưa có vai trò') }}</td>
+                                    <td>
+                                        @if ($user->image)
+                                            <img src="{{ asset('storage/' . $user->image) }}" alt="Avatar"
+                                                 width="50">
+                                        @else
+                                            Không có ảnh
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -70,9 +70,9 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             let roleFilter = document.getElementById('role-filter');
-            roleFilter.addEventListener('change', function() {
+            roleFilter.addEventListener('change', function () {
                 let selectedRole = this.value;
                 let url = new URL(window.location.href);
 

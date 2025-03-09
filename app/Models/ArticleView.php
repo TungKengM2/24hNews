@@ -1,14 +1,25 @@
-<?php 
+<?php
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ArticleView extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['article_id', 'user_id', 'anonymous', 'viewed_at'];
+    protected $table = 'article_views';
 
-    public $timestamps = false; // Không cần timestamps vì đã có `viewed_at`
+    protected $fillable = [
+        'anonymous',
+        'article_id',
+        'user_id',
+        'viewed_at',
+    ];
+
+    public function article()
+    {
+        return $this->belongsTo(Article::class);
+    }
 }

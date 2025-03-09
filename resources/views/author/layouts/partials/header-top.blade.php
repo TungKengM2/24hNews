@@ -73,9 +73,9 @@
                                 <div>
                                     <h4 class="mb-0 mt-0">Notifications</h4>
                                 </div>
-                                <div>
+                                {{-- <div>
                                     <a href="index.html#" class="text-danger">Clear All</a>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </li>
@@ -84,11 +84,15 @@
                         <!-- inner menu: contains the actual data -->
                         <ul class="menu sm-scrol">
                             <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-users text-info"></i> Curabitur id eros quis nunc
-                                    suscipit blandit.
-                                </a>
-                            </li>
+                                @php
+                                    $pendingCount = \App\Models\Article::where('status', 'pending')->count();
+                                @endphp
+                                @if ($pendingCount > 0)
+                                    <a href="">
+                                        {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
+                                    </a>
+                                @endif
+                                {{-- </li>
                             <li>
                                 <a href="index.html#">
                                     <i class="fa fa-warning text-warning"></i> Duis malesuada justo eu
@@ -123,7 +127,7 @@
                                     <i class="fa fa-user text-success"></i> Nullam euismod dolor ut quam
                                     interdum, at scelerisque ipsum imperdiet.
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </li>
                     <li class="footer">
@@ -141,24 +145,30 @@
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
-                        <a class="dropdown-item" href="{{route(name: "author.profile")}}"><i class="ti-user text-muted me-2"></i>
-                            Profile</a>
+                        {{-- <a class="dropdown-item" href="index.html#"><i class="ti-user text-muted me-2"></i>
+                            Profile</a> --}}
+                        {{-- <a class="dropdown-item" href="index.html#"><i class="ti-wallet text-muted me-2"></i> My
+                            Wallet</a>
+                        <a class="dropdown-item" href="index.html#"><i class="ti-settings text-muted me-2"></i>
+                            Settings</a> --}}
+                        <a class="dropdown-item" href="#"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="ti-lock text-muted me-2"></i> Logout
+                        </a>
 
-                        <a class="dropdown-item" href="{{route(name: "author.profile-setting")}}"><i class="ti-settings text-muted me-2"></i>
-                            Settings</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="index.html#"><i class="ti-lock text-muted me-2"></i>
-                            Logout</a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
                     </li>
                 </ul>
             </li>
             <!-- Control Sidebar Toggle Button -->
-            {{-- <li>
+            <li>
                 <a href="index.html#" data-toggle="control-sidebar" title="Setting"
                     class="waves-effect waves-light btn-outline no-border btn-danger-light text-dark hover-white">
                     <i data-feather="settings"></i>
                 </a>
-            </li> --}}
+            </li>
 
         </ul>
     </div>

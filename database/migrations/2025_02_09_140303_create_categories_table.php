@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id('category_id');
             $table->string('name', 100)->unique();
             $table->string('slug', 255)->unique();
-            $table->boolean('is_active')->default(true);
+            // $table->boolean('is_active')->default(true);
+            $table->boolean('is_active');
             $table->timestamps();
         });
 

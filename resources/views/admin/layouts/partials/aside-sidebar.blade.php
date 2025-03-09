@@ -35,7 +35,7 @@
                                         class="path1"></span><span class="path2"></span></i>Danh Mục
                             </a>
                         </li>
-                        <li><a href="{{ route('users.index') }}"><i class="icon-Commit"><span
+                        <li><a href="{{ route('admin.users.index') }}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Người Dùng
                             </a>
                         </li>
@@ -64,7 +64,7 @@
                                         class="path1"></span><span class="path2"></span></i>Duyệt Bài Viết</a>
                         </li>
                 </li>
-                <li><a href="#"><i class="icon-Commit"><span class="path1"></span><span
+                <li><a href="{{ route('admin.user-role-requests') }}"><i class="icon-Commit"><span class="path1"></span><span
                                 class="path2"></span></i>Nâng Cấp Tài Khoản
                     </a>
                 </li>
