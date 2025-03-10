@@ -9,6 +9,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/fontawesome-all.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/iofrm-style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/iofrm-theme21.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
     <style>
         .form-content input[type="checkbox"] {
             position: static !important;
@@ -48,11 +50,6 @@
 
                 <div class="form-content">
                     <div class="form-items">
-                        <h3>Register new account</h3>
-
-                        <p>Access to the most powerful tools in the entire design and web industry.</p>
-
-                        <!-- Display errors if any -->
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -62,6 +59,11 @@
                                 </ul>
                             </div>
                         @endif
+                        <h3>Register new account</h3>
+
+                        <p>Access to the most powerful tools in the entire design and web industry.</p>
+
+                        <!-- Display errors if any -->
 
                         <form action="{{ route('signupuser.process') }}" method="POST">
                             @csrf
@@ -74,12 +76,12 @@
                             <input class="form-control" type="password" name="password" placeholder="Password" required>
                             <input class="form-control" type="password" name="password_confirmation"
                                 placeholder="Confirm Password" required>
-                                <div>
-                                    <input class="checkboox" type="checkbox" name="terms"
-                                        {{ old('terms') ? 'checked' : '' }} required>
-                                    Tôi đồng ý với <a href="#">điều khoản sử dụng</a>
-        
-                                </div>
+                            <div>
+                                <input class="checkboox" type="checkbox" name="terms"
+                                    {{ old('terms') ? 'checked' : '' }} required>
+                                Tôi đồng ý với <a href="#">điều khoản sử dụng</a>
+
+                            </div>
 
                             <div class="form-button">
                                 <button type="submit" class="ibtn">Register</button>

@@ -14,6 +14,7 @@
                 <div class="tc-post-grid-default">
                     <div class="tc-slider-style1">
                         <div class="swiper-container">
+
                             <div class="swiper-wrapper">
                                 @foreach ($featuredArticles as $article)
                                     <div class="swiper-slide">
@@ -158,124 +159,8 @@
         <!-- ====== end trends news ====== -->
 
 
-        <div class="container">
-            <div class="tc-breaking-news-style8 bg-main mb-30">
-                <div class="tc-breaking-title">
-                    <h5>Tin Thể Thao</h5>
-                </div>
-                <div class="tc-post-grid-style9">
-                    <div class="tc-breaking-news-slider8">
-                        <div class="swiper-container">
-                            <div class="swiper-wrapper">
-                                @foreach ($sportsArticles as $article)
-                                    <div class="swiper-slide">
-                                        <div class="item text-white">
-                                            <div class="tags mb-20">
-                                                <a class="blue" href="#">{{ $article->category->name }}</a>
-                                            </div>
-                                            <div class="img img-cover th-230">
-                                                <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                    alt="">
-                                            </div>
-                                            <div class="info mt-20">
-                                                <h6 class="title">
-                                                    <a href="{{ Auth::check() ? route('client.articles.article', $article->article_id) : url('/login-user') }}"
-                                                        class="item hover-main d-block p-2 text-dark">
-                                                        {{ $article->title }}
-                                                    </a>
-                                                </h6>
-                                                <div class="meta-bot lh-1 mt-20">
-                                                    <span class="fsz-13px text-white">
-                                                        <i class="la la-clock me-1"></i>
-                                                        {{ $article->created_at->format('d M Y, h:i A') }}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-pagination"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
 
         <!-- ====== Top Nhà Báo Nổi Bật ====== -->
-
-        <section class="tc-columnist-style1">
-            <div class="container">
-                <div class="content pt-50 pb-50 border-1 border-top brd-gray">
-                    <p class="color-000 text-uppercase mb-40 ltspc-1 lh-1">Nhà Báo Mới<i
-                            class="la la-angle-right ms-1"></i> </p>
-                    <div class="columnist-slider1 tc-slider-style1">
-                        <div class="swiper-container">
-                            <div class="swiper-wrapper">
-                                @foreach ($journalists as $journalist)
-                                    <div class="swiper-slide">
-                                        <div class="columnist-card d-flex align-items-center">
-                                            <div
-                                                class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                                <img src="{{ $journalist->image ? asset('storage/' . $journalist->image) : 'https://i.pravatar.cc/150?img=4' }}"
-                                                    alt="{{ $journalist->username }}">
-
-                                            </div>
-                                            <div class="info">
-                                                <h6 class="name fsz-20px mb-10">
-                                                    {{ $journalist->username }}
-                                                </h6>
-                                                <div class="jop-title">
-                                                    <small class="fsz-13px color-999">Specialize in</small>
-                                                    <p class="fsz-13px text-uppercase">
-                                                        {{ $journalist->specializations ?? 'Unknown' }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                        <!-- arrows -->
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- ====== end another-news ====== -->
-
-        <!-- ====== start download ====== -->
-        <section class="tc-download-style1 pb-50">
-            <div class="container">
-                <div class="content">
-                    <div class="row align-items-center">
-                        <div class="col-lg-4">
-                            <div class="info">
-                                <strong class="title">Download Newzin App</strong>
-                                <div class="text">
-                                    Easy to update latest news, daily podcast and everything in your hand
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="img">
-                                <a href="home-default.html#">
-                                    <img src="client/img/apple1.png" alt="">
-                                </a>
-                                <a href="home-default.html#">
-                                    <img src="client/img/android1.png" alt="">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
         <!-- ====== end download ====== -->
 
         <!-- ====== start modals ====== -->
@@ -289,7 +174,7 @@
                         @foreach ($newsData as $data)
                             <div class="col-lg-4 col-md-6 mb-4">
                                 <div class="news-card">
-                                    <div class="img img-cover rounded">
+                                    <div class="img img-cover th-200 rounded">
                                         <img src="{{ $data['article']->thumbnail_url ? asset('storage/' . $data['article']->thumbnail_url) : 'https://via.placeholder.com/400' }}"
                                             alt="{{ $data['article']->title }}">
 
@@ -316,9 +201,6 @@
                 </div>
             </div>
         </section>
-
-        {{--    --}}{{-- end của dương --}}
-
 
         <!-- ====== start breaking news ====== -->
         {{-- <section class="tc-breaking-news-style1 pt-50 pb-50">
@@ -424,205 +306,11 @@
                 </div>
             </div>
         </div>
-    </section> --}}
+        </section> --}}
         <!-- ====== end breaking news ====== -->
 
         <!-- ====== start trends news ====== -->
-        <section class="tc-trends-news-style1 pt-50 pb-50 bg-gray1">
-            <div class="container">
-                <div class="hot-trends-tabs-style1 mb-4">
-                    <p class="color-999 text-uppercase ltspc-1 flex-shrink-0 me-4 pt-1"><i
-                            class="ion-arrow-graph-up-right me-2"></i> hot trends </p>
-                    <div class="links">
-                        <a href="home-default.html#" class="link">Covid-19</a>
-                        <a href="home-default.html#" class="link">Bitcoin</a>
-                        <a href="home-default.html#" class="link">Ukraine War</a>
-                        <a href="home-default.html#" class="link">NBA Playoffs</a>
-                        <a href="home-default.html#" class="link">Grammys 2022</a>
-                        <a href="home-default.html#" class="link">Stocks</a>
-                        <a href="home-default.html#" class="link">Amazon</a>
-                        <a href="home-default.html#" class="link">Ghost of Tsushima</a>
-                        <a href="home-default.html#" class="link">Elon Musk</a>
-                    </div>
-                </div>
-                <div class="section-content">
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <div class="tc-stock-card mb-30">
-                                <h2 class="color-main p-2">Thời tiết</h2>
-                                <div id="weather" class="weather-widget p-2">
-                                    <div class="icon me-3 pt-1 la-3x d-flex justify-content-center">
-                                        <img id="weather-icon" alt="Weather Icon">
-                                    </div>
-                                    <p id="weather-city"></p>
-                                    <p id="weather-description"></p>
-                                    <p id="weather-temperature"></p>
-                                    <p id="weather-humidity"></p>
-                                </div>
-                            </div>
-                            <div class="tc-post-grid-default">
-                                <div class="item">
-                                    <div class="img img-cover th-200">
-                                        <img src="client/assets/img/trend/1.png" alt="">
-                                    </div>
-                                    <div class="content py-4 px-3 bg-gray2">
-                                        <p class="color-main fsz-13px text-uppercase mb-1">Sponsored Content</p>
-                                        <h4 class="title ltspc--1"><a href="page-single-post-creative.html">3D2N at
-                                                Sixsense Resort 5 stars just
-                                                $1,299</a></h4>
-                                        <a href="home-default.html#" class="color-999 fsz-12px mt-20">booking.com <i
-                                                class="la la-external-link-square-alt"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="tc-trends-news-slider1 tc-slider-style2">
-                                <div class="swiper-container">
-                                    <div class="swiper-wrapper">
-                                        <div class="swiper-slide">
-                                            <div class="tc-post-overlay-default">
-                                                <div class="img th-650 img-cover">
-                                                    <img src="client/assets/img/trend/2.png" alt="">
-                                                    <div class="tags">
-                                                        <a href="home-default.html#">featured,</a>
-                                                        <a href="home-default.html#">news</a>
-                                                    </div>
-                                                </div>
-                                                <div class="content ps-40 pe-40 pb-40">
-                                                    <h2 class="title mb-20">
-                                                        <a href="page-single-post-creative.html">2022 NFL Craf predict:
-                                                            <br> Top 4 Quarterbacks
-                                                            selected</a>
-                                                    </h2>
-                                                    <div class="text mb-40">
-                                                        Its first decline in subscribers since 2011 triggered a $54
-                                                        billion stock value loss and raised questions [...]
-                                                    </div>
-                                                    <div class="meta-bot lh-1">
-                                                        <ul class="d-flex">
-                                                            <li class="date me-5">
-                                                                <a href="home-default.html#"><i
-                                                                        class="la la-calendar me-2"></i> Dec 14,
-                                                                    2022</a>
-                                                            </li>
-                                                            <li class="author me-5">
-                                                                <a href="home-default.html#"><i
-                                                                        class="la la-user me-2"></i>
-                                                                    by Admin</a>
-                                                            </li>
-                                                            <li class="comment">
-                                                                <a href="home-default.html#"><i
-                                                                        class="la la-comment me-2"></i> 55
-                                                                    Comments</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <div class="tc-post-overlay-default">
-                                                <div class="img th-650 img-cover">
-                                                    <img src="client/assets/img/trend/3.png" alt="">
-                                                    <div class="tags">
-                                                        <a href="home-default.html#">technology</a>
-                                                    </div>
-                                                </div>
-                                                <div class="content ps-40 pe-40 pb-40">
-                                                    <h2 class="title mb-20">
-                                                        <a href="page-single-post-creative.html">Myenergi's award
-                                                            winning product the zappi EV
-                                                            charger</a>
-                                                    </h2>
-                                                    <div class="text mb-40">
-                                                        Its first decline in subscribers since 2011 triggered a $54
-                                                        billion stock value loss and raised questions [...]
-                                                    </div>
-                                                    <div class="meta-bot lh-1">
-                                                        <ul class="d-flex">
-                                                            <li class="date me-5">
-                                                                <a href="home-default.html#"><i
-                                                                        class="la la-calendar me-2"></i> Dec 14,
-                                                                    2022</a>
-                                                            </li>
-                                                            <li class="author me-5">
-                                                                <a href="home-default.html#"><i
-                                                                        class="la la-user me-2"></i>
-                                                                    by Admin</a>
-                                                            </li>
-                                                            <li class="comment">
-                                                                <a href="home-default.html#"><i
-                                                                        class="la la-comment me-2"></i> 55
-                                                                    Comments</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- arrows -->
-                                <div class="swiper-button-next"></div>
-                                <div class="swiper-button-prev"></div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="tc-post-list-style1">
-                                <div class="tc-post-title-style1">
-                                    <a href="page-blog.html"> trending posts </a>
-                                </div>
-                                <div class="tc-post-overlay-default">
-                                    <div class="img th-200 img-cover">
-                                        <img src="client/assets/img/trend/4.png" alt="">
-                                    </div>
-                                    <div class="content ps-20 pe-20 pb-20 text-white">
-                                        <a href="page-single-post-creative.html"
-                                            class="text-uppercase fsz-13px mb-1">lifestyle</a>
-                                        <h4 class="title">
-                                            <a href="home-default.html#">The story about Hoki</a>
-                                        </h4>
-                                    </div>
-                                </div>
-                                <div class="items">
-                                    <a href="page-single-post-creative.html" class="item hover-main">
-                                        <h2 class="num">
-                                            2
-                                        </h2>
-                                        <div class="content">
-                                            <span class="fsz-12px color-999 text-uppercase mb-2">news</span>
-                                            <h6 class="title">Elon Musk got Twitter because he gets Twitter</h6>
-                                        </div>
-                                    </a>
-                                    <a href="page-single-post-creative.html" class="item hover-main">
-                                        <h2 class="num">
-                                            3
-                                        </h2>
-                                        <div class="content">
-                                            <span class="fsz-12px color-999 text-uppercase mb-2">technology</span>
-                                            <h6 class="title">NFT Technology is become trends in 2022</h6>
-                                        </div>
-                                    </a>
-                                    <a href="page-single-post-creative.html" class="item hover-main">
-                                        <h2 class="num">
-                                            4
-                                        </h2>
-                                        <div class="content">
-                                            <span class="fsz-12px color-999 text-uppercase mb-2">lifestyle</span>
-                                            <h6 class="title">MLB become 1st fashion brands in US</h6>
-                                        </div>
-                                    </a>
-                                    <a href="home-default.html#" class="fsz-13px color-999  pt-30 pb-30">
-                                        See all posts <i class="la la-angle-right"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+
         <!-- ====== end trends news ====== -->
 
         <!-- ====== start google web stories ====== -->

@@ -118,7 +118,9 @@ class ArticleController extends Controller
         ];
 
         $request->validate($rules);
-
+        if ($request->hasFile('thumbnail_url')) {
+            $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+        }
         $article = Article::create([
             'title' => $request->title,
             'slug' => $request->slug,
@@ -126,13 +128,8 @@ class ArticleController extends Controller
             'category_id' => $request->category_id ?? null,
             'status' => $request->status,
             'author_id' => auth()->id(),
+            'thumbnail_url' => $path ,
         ]);
-
-        if ($request->hasFile('thumbnail_url')) {
-            $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
-            $article->update(['thumbnail_url' => $path]);
-        }
-
         $article->tags()->sync($tagIds);
 
         // Gửi thông báo cho admin nếu bài viết cần duyệt
@@ -240,6 +237,20 @@ class ArticleController extends Controller
             ->paginate(5);
 
         return view('admin.articles.approve', compact('articles'));
+    }
+
+    public function reject(Article $article)
+    {
+        if ($article->status !== 'pending') {
+            return redirect()->back()->with('error', 'Bài viết không ở trạng thái chờ duyệt.');
+        }
+
+        // Đảm bảo 'rejected' nằm trong dấu nháy đơn
+        $article->update([
+            'status' => 'rejected',
+        ]);
+
+        return redirect()->back()->with('success', 'Bài viết đã bị từ chối.');
     }
 
 

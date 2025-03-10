@@ -145,24 +145,32 @@
                                                 <td>{{ $article->approved_by ? $article->approver->username : 'Not Approved' }}
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('moderator.articles.show', $article) }}"
-                                                        class="btn btn-info btn-sm"><i class="si-eye si"></i></a>
-
-                                                    {{-- <a href="{{ route('articles.edit', $article) }}"
-                                                        class="btn btn-warning btn-sm"><i class="si-pencil si"></i></a> --}}
-
+                                                    <a href="{{ route('moderator.articles.show', $article) }}" class="btn btn-info btn-sm">
+                                                        <i class="si-eye si"></i>
+                                                    </a>
 
                                                     @if ($article->status === 'pending')
-                                                    <form action="{{ route('moderator.articles.approve', $article) }}"
-                                                        method="POST" class="d-inline">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="btn btn-success btn-sm"
-                                                            onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
-                                                            Approve
-                                                        </button>
-                                                    </form>
-                                                @endif
+                                                        <form action="{{ route('moderator.articles.approve', $article) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" class="btn btn-success btn-sm"
+                                                                onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
+                                                                Approve
+                                                            </button>
+                                                        </form>
+
+                                                        <form action="{{ route('moderator.articles.reject', $article) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                                onclick="return confirm('Bạn có chắc chắn muốn từ chối bài viết này không?')">
+                                                                Reject
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                </td>
+
+
 
                                                     {{-- <form action="{{ route('articles.destroy', $article) }}" method="POST"
                                                         class="d-inline">
@@ -173,7 +181,7 @@
                                                             <i class="si-trash si"></i>
                                                         </button>
                                                     </form> --}}
-                                                </td>
+
                                             </tr>
                                         @endforeach
                                     </tbody>

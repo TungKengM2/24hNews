@@ -99,7 +99,8 @@
                                                 <td>
                                                     @if ($article->category)
                                                         @if (!$article->category->is_active)
-                                                            <span class="text-warning">{{$article->category->name}} (Không Hoạt Động)</span>
+                                                            <span class="text-warning">{{ $article->category->name }}
+                                                                (Không Hoạt Động)</span>
                                                         @else
                                                             {{ $article->category->name }}
                                                         @endif
