@@ -2,16 +2,13 @@
 
 namespace App\Models;
 
+use App\Notifications\NewArticleSubmitted;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Notification;
-use App\Models\User;
-use App\Notifications\NewArticleSubmitted;
-
 
 class Article extends Model
 {
-
     use HasFactory;
 
     protected $table = 'articles';
@@ -62,14 +59,13 @@ class Article extends Model
         );
     }
 
-
     public function getCategoryNameAttribute()
     {
-        if (!$this->category) {
-            return "Không có danh mục";
+        if (! $this->category) {
+            return 'Không có danh mục';
         }
 
-        return $this->category->is_active ? $this->category->name : "Không hoạt động";
+        return $this->category->is_active ? $this->category->name : 'Không hoạt động';
     }
 
     public function tags()
@@ -85,7 +81,6 @@ class Article extends Model
     /**
      * Quan hệ với `users` (người duyệt bài viết)
      */
-
     public function approver()
     {
         return $this->belongsTo(User::class, 'approved_by');
@@ -99,7 +94,8 @@ class Article extends Model
     public function notifyAdmins(): void
     {
         $admins = User::where('role_id', 1)->get(); // Lấy danh sách admin
-        Notification::send($admins, new NewArticleSubmitted($this)); // Gửi thông báo
+        Notification::send($admins,
+            new NewArticleSubmitted($this)); // Gửi thông báo
     }
 
     /**
@@ -115,5 +111,10 @@ class Article extends Model
         return $query->whereHas('category', function ($q) {
             $q->where('is_active', true);
         });
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'article_id', 'article_id');
     }
 }
