@@ -22,10 +22,10 @@
         scrollbar-width: thin;
         scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
     }
+
     .active-home i {
         color: rgb(249, 60, 50) !important;
     }
-
 </style>
 <div class="navbar-container">
     <div class="container">
@@ -72,19 +72,19 @@
                             <div class="row text-end align-items-center">
                                 <div class="col-6">
                                     <a href="home-default.html#0"
-                                       class="text-uppercase fs-6 border-bottom border-1 border-dark subs">
+                                        class="text-uppercase fs-6 border-bottom border-1 border-dark subs">
                                         <i class="la la-envelope fs-5 me-1"></i>
                                         Subscribe
                                     </a>
                                 </div>
                                 <div class="col-6">
                                     <div class="darkLight-btn">
-                                            <span class="icon active" id="light-icon">
-                                                <i class="la la-sun"></i>
-                                            </span>
+                                        <span class="icon active" id="light-icon">
+                                            <i class="la la-sun"></i>
+                                        </span>
                                         <span class="icon" id="dark-icon">
-                                                <i class="la la-moon"></i>
-                                            </span>
+                                            <i class="la la-moon"></i>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -92,15 +92,15 @@
                                 <p class="fsz-16px text-uppercase mb-20"> Newsletter </p>
                                 <div class="sub-form">
                                     <div class="form-group">
-                                            <span class="icon">
-                                                <i class="la la-envelope"></i>
-                                            </span>
+                                        <span class="icon">
+                                            <i class="la la-envelope"></i>
+                                        </span>
                                         <input type="text" class="form-control" placeholder="your email">
                                         <button>subscribe</button>
                                     </div>
                                     <p class="mt-3 color-666 fsz-12px fst-italic">By subscribing, you accepted the
                                         our <a href="home-default.html#0"
-                                               class="color-777 text-decoration-underline fst-normal">Policy</a></p>
+                                            class="color-777 text-decoration-underline fst-normal">Policy</a></p>
                                 </div>
                                 <span class="cls"> <i class="la la-times"></i> </span>
                             </div>
@@ -116,7 +116,7 @@
             <div class="container p-0">
                 <div class="mob-nav-toggles d-flex align-items-center justify-content-between">
                     <button class="navbarList-icon me-lg-5" data-bs-toggle="offcanvas" href="#offcanvasExample"
-                            role="button" aria-controls="offcanvasExample">
+                        role="button" aria-controls="offcanvasExample">
                         <span></span>
                         <span></span>
                     </button>
@@ -125,8 +125,8 @@
                         <img src="{{ asset('client/img/logo_home1_lt.png') }}" alt="" class="light-none">
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>
@@ -134,8 +134,7 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
                             <a class="nav-link active dropdown-toggle" href="home-default.html#" id="navbarDropdown1"
-                               role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 homes
                             </a>
                             <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
@@ -202,9 +201,9 @@
                     <form class="form">
                         <span class="color-777 fst-italic text-capitalize mb-2 fsz-13px">Enter Keyword</span>
                         <div class="form-group">
-                                <span class="icon">
-                                    <i class="la la-search"></i>
-                                </span>
+                            <span class="icon">
+                                <i class="la la-search"></i>
+                            </span>
                             <input type="text" class="form-control" placeholder="Elon Musk ... ">
                             <button type="submit">search</button>
                         </div>
