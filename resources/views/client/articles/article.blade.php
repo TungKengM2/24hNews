@@ -82,62 +82,58 @@
     <!--Contents-->
     <main class="product-page">
         <!-- ====== start product ====== -->
-        <section class="product pt-50">
-            <div class="container">
+       <section class="product pt-100 pb-100">
+    <div class="container">
 
-                <div class="container mt-4">
-                    <div class="row">
-                        <!-- Bài viết chính -->
-                        <div class="col-lg-8">
-                            <div class="card shadow-sm mb-4 border-0">
-                                <div class="position-relative">
-                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                        class="card-img-top rounded-top article-image" alt="{{ $article->title }}">
-                                    <div class="overlay d-flex align-items-center justify-content-center">
-                                        <h2 class="text-white text-center">{{ $article->title }}</h2>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <h2 class="card-title">{{ $article->title }}</h2>
-                                    <p class="text-muted">
-                                        <i class="fa fa-eye"></i> {{ $article->views }} lượt xem |
-                                        <i class="fa fa-user"></i> {{ $article->author->username ?? 'N/A' }}
-                                    </p>
-
-                                    <!-- Nút Like -->
-                                    <button id="likeButton" class="like-btn"
-                                        data-article-id="{{ $article->article_id }}"
-                                        data-liked="{{ $isLiked ? 'true' : 'false' }}">
-                                        <i class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-thumbs-up"
-                                            style="color: {{ $isLiked ? '#007bff' : 'black' }};"></i>
-                                        <span id="likeText"
-                                            style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $isLiked ? 'Đã thích' : 'Thích' }}</span>
-                                        <span id="likeCount"
-                                            style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $likeCount }}</span>
-                                    </button>
-
-                                    <div class="article-content mt-3">{!! $article->content !!}</div>
-                                </div>
+        <div class="container mt-5">
+            <div class="row">
+                <!-- Bài viết chính -->
+                <div class="col-12">
+                    <div class="card shadow-sm mb-5 border-0">
+                        <div class="position-relative">
+                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                class="card-img-top rounded-top article-image" alt="{{ $article->title }}">
+                            <div class="overlay d-flex align-items-center justify-content-center">
+                                <h2 class="text-white text-center">{{ $article->title }}</h2>
                             </div>
                         </div>
+                        <div class="card-body">
+                            <h2 class="card-title">{{ $article->title }}</h2>
+                            <p class="text-muted">
+                                <i class="fa fa-eye"></i> {{ $article->views }} lượt xem |
+                                <i class="fa fa-user"></i> {{ $article->author->username ?? 'N/A' }}
+                            </p>
 
+                            <!-- Nút Like -->
+                            <button id="likeButton" class="like-btn"
+                                data-article-id="{{ $article->article_id }}"
+                                data-liked="{{ $isLiked ? 'true' : 'false' }}">
+                                <i class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-thumbs-up"
+                                    style="color: {{ $isLiked ? '#007bff' : 'black' }};"></i>
+                                <span id="likeText"
+                                    style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $isLiked ? 'Đã thích' : 'Thích' }}</span>
+                                <span id="likeCount"
+                                    style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $likeCount }}</span>
+                            </button>
 
-                        <!-- Quảng cáo -->
-                        <div class="col-lg-4">
-                            <div class="advertisement fade-in"><a href="https://shop.mixigaming.com/">
-                                    <img src="https://th.bing.com/th/id/R.638f0378be501384598c313b9254a074?rik=4q27eEjjmHzVeA&riu=http%3a%2f%2fintemnhandecal.net%2fwp-content%2fuploads%2f2019%2f07%2fcac-mau-in-poster-quang-cao.jpg&ehk=xEa19xG1SoAREwQ5DcFB6e7uJVPbPgG6cHVQGMLTuvA%3d&risl=&pid=ImgRaw&r=0"
-                                        class="w-100" alt="Quảng cáo">
-                                </a>
-                            </div>
-
-
-
+                            <div class="article-content mt-4">{!! $article->content !!}</div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Quảng cáo -->
+                <div class="col-lg-4">
+                    <div class="advertisement fade-in"><a href="https://shop.mixigaming.com/">
+                            <img src="https://th.bing.com/th/id/R.638f0378be501384598c313b9254a074?rik=4q27eEjjmHzVeA&riu=http%3a%2f%2fintemnhandecal.net%2fwp-content%2fuploads%2f2019%2f07%2fcac-mau-in-poster-quang-cao.jpg&ehk=xEa19xG1SoAREwQ5DcFB6e7uJVPbPgG6cHVQGMLTuvA%3d&risl=&pid=ImgRaw&r=0"
+                                class="w-100" alt="Quảng cáo">
+                        </a>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
+
+    </div>
+</section>
         <!-- ====== end product ====== -->
 
 
