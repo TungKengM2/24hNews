@@ -14,7 +14,7 @@
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i
+                                    <li class="breadcrumb-item"><a href="{{ route('author.dashboard') }}"><i
                                                 class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Trang Chủ</li>
                                     <li class="breadcrumb-item active" aria-current="page">Danh Sách Bài Viết</li>
@@ -38,8 +38,6 @@
         {{ session('success') }}
     </div>
 @endif
-
-
                             <div class="d-flex">
                                 <form method="GET" action="{{ route('author.articles.index') }}" class="me-2">
                                     <div class="d-flex align-items-center">
