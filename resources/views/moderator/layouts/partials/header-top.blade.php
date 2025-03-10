@@ -84,18 +84,23 @@
                         <!-- inner menu: contains the actual data -->
                         <ul class="menu sm-scrol">
                             <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-users text-info"></i> Curabitur id eros quis nunc
-                                    suscipit blandit.
-                                </a>
-                            </li>
-                            <li>
+                                @php
+                                $pendingCount = \App\Models\Article::where('status', 'pending')->count();
+                            @endphp
+                            @if ($pendingCount > 0)
+                                    <a href="">
+                                        {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
+                                    </a>
+                            @endif
+                        </li>
+
+                            {{-- <li>
                                 <a href="index.html#">
                                     <i class="fa fa-warning text-warning"></i> Duis malesuada justo eu
                                     sapien elementum, in semper diam posuere.
                                 </a>
-                            </li>
-                            <li>
+                            </li> --}}
+                            {{-- <li>
                                 <a href="index.html#">
                                     <i class="fa fa-users text-danger"></i> Donec at nisi sit amet tortor
                                     commodo porttitor pretium a erat.
@@ -123,7 +128,7 @@
                                     <i class="fa fa-user text-success"></i> Nullam euismod dolor ut quam
                                     interdum, at scelerisque ipsum imperdiet.
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </li>
                     <li class="footer">
@@ -141,13 +146,21 @@
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
-                        <a class="dropdown-item" href="{{route("moderator.profile")}}"><i class="ti-user text-muted me-2"></i>
+                        <a class="dropdown-item" href="{{ route('moderator.profile') }}"><i
+                                class="ti-user text-muted me-2"></i>
                             Profile</a>
-                        <a class="dropdown-item" href="{{route("moderator.profile-setting")}}"><i class="ti-settings text-muted me-2"></i>
+                        <a class="dropdown-item" href="{{ route('moderator.profile-setting') }}"><i
+                                class="ti-settings text-muted me-2"></i>
                             Settings</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="index.html#"><i class="ti-lock text-muted me-2"></i>
-                            Logout</a>
+                        <a class="dropdown-item" href="#"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="ti-lock text-muted me-2"></i> Logout
+                        </a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
                     </li>
                 </ul>
             </li>

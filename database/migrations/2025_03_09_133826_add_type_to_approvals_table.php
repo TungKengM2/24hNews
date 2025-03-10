@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up()
     {
-        if (! Schema::hasColumn('approvals', 'user_id')) {
+        if (! Schema::hasColumn('approvals', 'type')) {
             Schema::table('approvals', function (Blueprint $table) {
-                $table->foreignId('user_id')
-                    ->nullable()
-                    ->constrained('users', 'user_id')
-                    ->after('article_id');
+                $table->enum('type', ['article', 'role_upgrade'])
+                    ->default('article')
+                    ->after('approval_id');
             });
         }
 
@@ -28,14 +27,11 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::table('approvals', function (Blueprint $table) {
-            $table->dropColumn('user_id');
             $table->text('remarks')->nullable(false)->change();
+            $table->dropColumn('type');
         });
     }
 };

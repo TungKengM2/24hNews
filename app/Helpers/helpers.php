@@ -1,24 +1,19 @@
 <?php
 
-function highlightWords($content, $violations)
+function highlightWords($content, $violations = [])
 {
-    if (empty($violations)) {
+    if (empty($violations) || ! is_array($violations)) {
         return $content;
     }
 
     foreach ($violations as $violation) {
-        $violation = trim($violation);
-
         $pattern = '/\b('.preg_quote($violation, '/').')\b/i';
-
         $content = preg_replace(
             $pattern,
-            '<span style="background-color: red; color: white; font-weight: bold; padding: 2px;">$1</span>',
+            '<span style="background: #ffcccc; color: red; padding: 2px;">$1</span>',
             $content
         );
     }
-    //    var_dump($content);
-    //    exit();
 
     return $content;
 }
