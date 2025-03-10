@@ -1,48 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('website.layouts.master')
 
-<head>
-    <!-- Metas -->
-    <meta charset="utf-8">
+@section('content')
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="keywords" content="HTML5 Template Iteck Multi-Purpose themeforest" />
-    <meta name="description" content="Iteck - Multi-Purpose HTML5 Template" />
-    <meta name="author" content="" />
+
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
-
-    <!-- Title  -->
-    <title>Newzin</title>
-
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('client/img/fav.png') }}" title="Favicon" sizes="16x16" />
-
-    <!-- bootstrap 5 -->
-    <link rel="stylesheet" href="{{ asset('client/css/lib/bootstrap.min.css') }}" />
-
-    <!-- font family -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-
-    <!-- ionicons icons  -->
-    <link rel="stylesheet" href="{{ asset('client/css/lib/ionicons.css') }}">
-    <!-- line-awesome icons  -->
-    <link rel="stylesheet" href="{{ asset('client/css/lib/line-awesome.css') }}">
-    <!-- animate css  -->
-    <link rel="stylesheet" href="{{ asset('client/css/lib/animate.css') }}" />
-    <!-- fancybox popup  -->
-    <link rel="stylesheet" href="{{ asset('client/css/lib/jquery.fancybox.css') }}" />
-    <!-- lity popup  -->
-    <link rel="stylesheet" href="{{ asset('client/css/lib/lity.css') }}" />
-    <!-- swiper slider  -->
-    <link rel="stylesheet" href="{{ asset('client/css/lib/swiper.min.css') }}" />
-
-    <!-- ====== main style ====== -->
-    <link rel="stylesheet" href="{{ asset('client/css/style.css') }}" />
-    <title> Trang Chi Tiết Bài Viết </title>
+   
     <style>
         .reply-content {
             white-space: pre-line;
@@ -111,77 +75,65 @@
             color: #007bff;
         }
     </style>
-</head>
 
-<body class="home-style1">
 
-    <!-- ====== start loading page ====== -->
-    @include('website.layouts.partials.loadingpage')
-    <!-- ====== end loading page ====== -->
-
-    <!-- ====== start navbar-container ====== -->
-    @include('website.layouts.partials.header')
-    <!-- ====== start navbar-container ====== -->
+    
 
     <!--Contents-->
     <main class="product-page">
         <!-- ====== start product ====== -->
-        <section class="product pt-50">
-            <div class="container">
+       <section class="product pt-100 pb-100">
+    <div class="container">
 
-                <div class="container mt-4">
-                    <div class="row">
-                        <!-- Bài viết chính -->
-                        <div class="col-lg-8">
-                            <div class="card shadow-sm mb-4 border-0">
-                                <div class="position-relative">
-                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                        class="card-img-top rounded-top article-image" alt="{{ $article->title }}">
-                                    <div class="overlay d-flex align-items-center justify-content-center">
-                                        <h2 class="text-white text-center">{{ $article->title }}</h2>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <h2 class="card-title">{{ $article->title }}</h2>
-                                    <p class="text-muted">
-                                        <i class="fa fa-eye"></i> {{ $article->views }} lượt xem |
-                                        <i class="fa fa-user"></i> {{ $article->author->username ?? 'N/A' }}
-                                    </p>
-
-                                    <!-- Nút Like -->
-                                    <button id="likeButton" class="like-btn"
-                                        data-article-id="{{ $article->article_id }}"
-                                        data-liked="{{ $isLiked ? 'true' : 'false' }}">
-                                        <i class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-thumbs-up"
-                                            style="color: {{ $isLiked ? '#007bff' : 'black' }};"></i>
-                                        <span id="likeText"
-                                            style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $isLiked ? 'Đã thích' : 'Thích' }}</span>
-                                        <span id="likeCount"
-                                            style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $likeCount }}</span>
-                                    </button>
-
-                                    <div class="article-content mt-3">{!! $article->content !!}</div>
-                                </div>
+        <div class="container mt-5">
+            <div class="row">
+                <!-- Bài viết chính -->
+                <div class="col-12">
+                    <div class="card shadow-sm mb-5 border-0">
+                        <div class="position-relative">
+                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                class="card-img-top rounded-top article-image" alt="{{ $article->title }}">
+                            <div class="overlay d-flex align-items-center justify-content-center">
+                                <h2 class="text-white text-center">{{ $article->title }}</h2>
                             </div>
                         </div>
+                        <div class="card-body">
+                            <h2 class="card-title">{{ $article->title }}</h2>
+                            <p class="text-muted">
+                                <i class="fa fa-eye"></i> {{ $article->views }} lượt xem |
+                                <i class="fa fa-user"></i> {{ $article->author->username ?? 'N/A' }}
+                            </p>
 
+                            <!-- Nút Like -->
+                            <button id="likeButton" class="like-btn"
+                                data-article-id="{{ $article->article_id }}"
+                                data-liked="{{ $isLiked ? 'true' : 'false' }}">
+                                <i class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-thumbs-up"
+                                    style="color: {{ $isLiked ? '#007bff' : 'black' }};"></i>
+                                <span id="likeText"
+                                    style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $isLiked ? 'Đã thích' : 'Thích' }}</span>
+                                <span id="likeCount"
+                                    style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $likeCount }}</span>
+                            </button>
 
-                        <!-- Quảng cáo -->
-                        <div class="col-lg-4">
-                            <div class="advertisement fade-in"><a href="https://shop.mixigaming.com/">
-                                    <img src="https://th.bing.com/th/id/R.638f0378be501384598c313b9254a074?rik=4q27eEjjmHzVeA&riu=http%3a%2f%2fintemnhandecal.net%2fwp-content%2fuploads%2f2019%2f07%2fcac-mau-in-poster-quang-cao.jpg&ehk=xEa19xG1SoAREwQ5DcFB6e7uJVPbPgG6cHVQGMLTuvA%3d&risl=&pid=ImgRaw&r=0"
-                                        class="w-100" alt="Quảng cáo">
-                                </a>
-                            </div>
-
-
-
+                            <div class="article-content mt-4">{!! $article->content !!}</div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Quảng cáo -->
+                <div class="col-lg-4">
+                    <div class="advertisement fade-in"><a href="https://shop.mixigaming.com/">
+                            <img src="https://th.bing.com/th/id/R.638f0378be501384598c313b9254a074?rik=4q27eEjjmHzVeA&riu=http%3a%2f%2fintemnhandecal.net%2fwp-content%2fuploads%2f2019%2f07%2fcac-mau-in-poster-quang-cao.jpg&ehk=xEa19xG1SoAREwQ5DcFB6e7uJVPbPgG6cHVQGMLTuvA%3d&risl=&pid=ImgRaw&r=0"
+                                class="w-100" alt="Quảng cáo">
+                        </a>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
+
+    </div>
+</section>
         <!-- ====== end product ====== -->
 
 
@@ -489,32 +441,6 @@
 
 
 
-    <!--End-Contents-->
-
-    <!-- ====== start footer ====== -->
-    @include('website.layouts.partials.footer')
-    <!-- ====== end footer ====== -->
-
-    <!-- ====== start to top button ====== -->
-    <!-- <div class="progress-wrap">
-        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102"><path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 220.587;"></path></svg>
-    </div> -->
-    <!-- ====== end to top button ====== -->
-
-    <!-- ====== request ====== -->
-    <script src="{{ asset('client/js/lib/jquery-3.0.0.min.js') }}"></script>
-    <script src="{{ asset('client/js/lib/jquery-migrate-3.0.0.min.js') }}"></script>
-    <script src="{{ asset('client/js/lib/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('client/js/lib/wow.min.js') }}"></script>
-    <script src="{{ asset('client/js/lib/jquery.fancybox.js') }}"></script>
-    <script src="{{ asset('client/js/lib/lity.js') }}"></script>
-    <script src="{{ asset('client/js/lib/swiper.min.js') }}"></script>
-    <script src="{{ asset('client/js/lib/jquery.waypoints.min.js') }}"></script>
-    <script src="{{ asset('client/js/lib/jquery.counterup.js') }}"></script>
-    <!-- <script src="client/js/lib/pace.js"></script> -->
-    <script src="{{ asset('client/js/lib/back-to-top.js') }}"></script>
-    <script src="{{ asset('client/js/lib/parallaxie.js') }}"></script>
-    <script src="{{ asset('client/js/main.js') }}"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -593,50 +519,7 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            let newComment = `
-                    <div class="comment-reply-cont bg-light py-3 px-4 mb-3 rounded shadow-sm">
-                        <div class="d-flex align-items-start">
-                            <div class="icon-60 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
-                                <img src="${data.comment.user_image}" alt="User Avatar">
-                            </div>
-                            <div class="inf w-100">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h6 class="fw-bold">${data.comment.username}</h6>
-                                    <span class="fs-12px text-muted"><i class="fas fa-clock"></i> ${data.comment.created_at}</span>
-                                </div>
-                                <div class="text color-000 fs-14px mt-2">${data.comment.content}</div>
-                                <div class="mt-2">
-                                    <a href="#" class="text-primary fw-bold reply-link" data-comment-id="${data.comment.comment_id}">
-                                        <i class="fas fa-reply"></i> Reply
-                                    </a>
-                                </div>
-                                <div class="reply-form-container mt-2 d-none" id="reply-form-${data.comment.comment_id}">
-                                    <form class="reply-form" data-comment-id="${data.comment.comment_id}">
-                                        <div class="d-flex align-items-start bg-white p-3 rounded shadow-sm">
-                                            <div class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
-                                                <img src="${data.comment.user_image}" alt="Your Avatar">
-                                            </div>
-                                            <div class="w-100">
-                                                <textarea class="form-control reply-content" name="content" rows="2" placeholder="Reply to @${data.comment.username}..."></textarea>
-                                                <input type="hidden" name="article_id" value="${data.comment.article_id}">
-                                                <input type="hidden" name="parent_id" value="${data.comment.comment_id}">
-                                                <div class="d-flex justify-content-end mt-2">
-                                                    <button type="button" class="btn btn-sm btn-secondary cancel-reply me-2">
-                                                        <i class="fas fa-times"></i> Cancel
-                                                    </button>
-                                                    <button type="button" class="btn btn-sm btn-primary send-reply" data-comment-id="${data.comment.comment_id}">
-                                                        <i class="fas fa-paper-plane"></i> Trả lời
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
+                            window.location.reload();
                             document.querySelector(".reviews-content").insertAdjacentHTML("beforeend",
                                 newComment);
                             e.target.reset();
@@ -695,52 +578,9 @@
                         data: form.serialize(),
                         success: function(response) {
                             if (response.success) {
-                                // Tạo comment mới trong HTML
-                                var newReply = `
-                                <div class="replies ms-5 mt-3">
-                            <div
-                                                            
-                                                                class="comment-reply-cont bg-white py-2 px-3 mb-2 rounded shadow-sm">
-                                                                <div class="d-flex align-items-start">
-                                                                    <div
-                                                                        class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
-                                                                        <img src="<?= $reply->user->image ?? 'assets/img/colums/default.png' ?>"
-                                                                            alt="User Avatar">
-                                                                    </div>
-                                                                    <div class="inf w-100">
-                                                                        <div
-                                                                            class="d-flex justify-content-between align-items-center">
-                                                                            <h6 class="fw-bold">
-                                                                                <?= htmlspecialchars($reply->user->username ?? 'Anonymous') ?>
-                                                                            </h6>
-                                                                            <span class="fs-12px text-muted"><i
-                                                                                    class="fas fa-clock"></i>
-                                                                                <?= date('F d, Y', strtotime($reply->created_at)) ?>
-                                                                            </span>
-                                                                        </div>
-                                                                        <div class="text color-000 fs-14px mt-1">
-                                                                            <?= nl2br(htmlspecialchars($reply->content)) ?>
-                                                                        </div>
+                             window.location.reload();
 
-                                                                        <!-- Thêm nút phản hồi -->
-                                                                        <div class="mt-2">
-                                                                            <button
-                                                                                class="btn btn-sm btn-outline-primary reply-btn d-flex align-items-center gap-1 px-3 py-1"
-                                                                                data-comment-id="<?= $comment->comment_id ?>"
-                                                                                data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
-                                                                                <i
-                                                                                    class="fas fa-reply fa-flip-horizontal"></i>
-                                                                                <span class="fw-bold">Trả lời</span>
-                                                                            </button>
-                                                                        </div>
-
-
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            </div>
-                        `;
+                     
 
                                 // Chèn bình luận mới vào giao diện
                                 $("#reply-form-" + commentId).before(newReply);
@@ -764,6 +604,7 @@
         });
     </script>
 
-</body>
 
-</html>
+
+
+@endsection

@@ -29,21 +29,14 @@ class ArticleController extends Controller
             'category',
             'approver',
             'tags',
-        ]) // Sửa lại đây
+        ])
             ->where('author_id', auth()->id())
             ->when($filter !== 'all', function ($query) use ($filter) {
-                if ($filter === 'active') {
-
-                    $query->whereHas(
-                        'category',
-                        fn ($q) => $q->where('is_active', true)
-                    );
-                } elseif ($filter === 'inactive') {
-                    $query->whereHas(
-                        'category',
-                        fn ($q) => $q->where('is_active', false)
-                    );
-
+                if (in_array($filter, ['active', 'inactive'])) {
+                    $query->whereHas('category',
+                        function ($q) use ($filter) {
+                            $q->where('is_active', $filter === 'active');
+                        });
                 } elseif ($filter === 'no_category') {
                     $query->whereNull('category_id');
                 }

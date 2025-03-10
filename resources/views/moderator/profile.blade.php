@@ -7,69 +7,79 @@
 @section('content')
     <div class="content-wrapper">
         <div class="container-full">
-            <div class="nav-tabs-custom">
-                <div class="content">
-                    <div class="pane" id="settings">
+            <section class="content">
 
-                        <div class="box no-shadow">
-                            <form class="form-horizontal form-element col-12">
-                                <div class="form-group row">
-                                    <label for="inputName" class="col-sm-2 form-label">Name</label>
-
-                                    <div class="col-sm-10">
-                                        <input type="email" class="form-control" id="inputName" placeholder="">
-                                    </div>
+                <div class="row">
+                    <div class="user-profile">
+                        <div class="box box-widget widget-user">
+                            <div class="box box-widget widget-user">
+                                <div class="widget-user-header bg-img bbsr-0 bber-0"
+                                    style="background: url('../images/gallery/full/10.jpg') center center;" data-overlay="5">
+                                    <h3 class="widget-user-username text-white">Username</h3>
+                                    <h6 class="widget-user-desc text-white">{{ $user->username }}</h6>
                                 </div>
-                                <div class="form-group row">
-                                    <label for="inputEmail" class="col-sm-2 form-label">Email</label>
-
-                                    <div class="col-sm-10">
-                                        <input type="email" class="form-control" id="inputEmail" placeholder="">
-                                    </div>
+                                <div class="widget-user-image">
+                                    <img class="rounded-circle"
+                                        src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/default-avatar.png') }}"
+                                        alt="Avatar">
+                                    <label for="avatarUpload" class="avatar-edit">
+                                        <i class="fa fa-camera" aria-hidden="true"></i>
+                                    </label>
+                                    <input type="file" id="avatarUpload" name="image" accept="image/*"
+                                        style="display: none;">
                                 </div>
-                                <div class="form-group row">
-                                    <label for="inputPhone" class="col-sm-2 form-label">Phone</label>
-
-                                    <div class="col-sm-10">
-                                        <input type="tel" class="form-control" id="inputPhone" placeholder="">
-                                    </div>
+                                <div class="box-footer">
                                 </div>
-                                <div class="form-group row">
-                                    <label for="inputExperience" class="col-sm-2 form-label">Experience</label>
+                            </div>
+                            <div class="box">
+                                <div class="box-body box-profile">
+                                    <h4>Thông tin tài khoản</h4>
 
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control" id="inputExperience" placeholder=""></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="inputSkills" class="col-sm-2 form-label">Skills</label>
+                                    @if (session('success'))
+                                        <div class="alert alert-success">{{ session('success') }}</div>
+                                    @endif
 
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="inputSkills" placeholder="">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="ms-auto col-sm-10">
-                                        <div class="checkbox">
-                                            <input type="checkbox" id="basic_checkbox_1" checked="">
-                                            <label for="basic_checkbox_1"> I agree to the</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;<a href="extra_profile.html#">Terms
-                                                and Conditions</a>
+                                    @if (session('error'))
+                                        <div class="alert alert-danger">{{ session('error') }}</div>
+                                    @endif
+
+                                    <form action="{{ route('profile.update') }}" method="POST">
+                                        @csrf
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Tên hiển thị</label>
+                                            <input type="text" name="username"
+                                                class="form-control @error('username') is-invalid @enderror"
+                                                value="{{ old('username', auth()->user()->username) }}" required>
+                                            @error('username')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
-                                    </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" class="form-control" value="{{ auth()->user()->email }}"
+                                                disabled>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Điện thoại</label>
+                                            <input type="text" name="phone"
+                                                class="form-control @error('phone') is-invalid @enderror"
+                                                value="{{ old('phone', auth()->user()->phone) }}">
+                                            @error('phone')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                    </form>
                                 </div>
-                                <div class="form-group row">
-                                    <div class="ms-auto col-sm-10">
-                                        <button type="submit" class="btn btn-success">Submit</button>
-                                    </div>
-                                </div>
-                            </form>
+                            </div>
                         </div>
+
                     </div>
-                    <!-- /.tab-pane -->
-                </div>
-                <!-- /.tab-content -->
-            </div>
+
+            </section>
         </div>
     </div>
 @endsection

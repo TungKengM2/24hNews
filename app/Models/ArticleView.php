@@ -9,17 +9,13 @@ class ArticleView extends Model
 {
     use HasFactory;
 
-    protected $table = 'article_views';
+    public $timestamps = false;
 
     protected $fillable = [
-        'anonymous',
         'article_id',
         'user_id',
+        'anonymous',
         'viewed_at',
-    ];
+    ]; // Không cần timestamps vì đã có `viewed_at`
 
-    public function article()
-    {
-        return $this->belongsTo(Article::class);
-    }
 }

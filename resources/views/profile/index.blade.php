@@ -1,51 +1,88 @@
-@extends('layout.app')
+@extends('profile.layouts.master')
 
-@section('title', 'Thông tin tài khoản')
+@section('title')
+    Thống tin tài khoản
+@endsection
 
 @section('content')
-<div class="card p-4">
-    <h4>Thông tin tài khoản</h4>
+    <div class="card p-4">
 
-    {{-- Thông báo thành công hoặc thất bại --}}
-    @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+        <div class="">
+            <div class="container-full">
+                <section class="content">
 
-    @if (session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
+                    <div class="row">
+                        <div class="user-profile">
+                            <div class="box box-widget widget-user">
+                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                <div class="widget-user-header bg-img bbsr-0 bber-0"
+                                    style="background: url('../images/gallery/full/10.jpg') center center;" data-overlay="5">
+                                    <h3 class="widget-user-username text-white">Username</h3>
+                                    <h6 class="widget-user-desc text-white">{{ $user->username }}</h6>
+                                </div>
+                                <div class="widget-user-image">
+                                    <img class="rounded-circle"
+                                        src="{{ $user->image ? asset('storage/' . $user->image) : '/admin/main/../images/user3-128x128.jpg' }}"
+                                        alt="User Avatar">
+                                </div>
+                                <div class="box-footer">
+                                </div>
+                            </div>
+                            <h4>Thông tin tài khoản</h4>
 
-    <form action="{{ route('profile.update') }}" method="POST">
-        @csrf
+                            {{-- Thông báo thành công hoặc thất bại --}}
+                            @if (session('success'))
+                                <div class="alert alert-success">{{ session('success') }}</div>
+                            @endif
 
-        {{-- Tên hiển thị --}}
-        <div class="mb-3">
-            <label class="form-label">Tên hiển thị</label>
-            <input type="text" name="username" class="form-control @error('username') is-invalid @enderror" 
-                value="{{ old('username', auth()->user()->username) }}" required>
-            @error('username')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+                            @if (session('error'))
+                                <div class="alert alert-danger">{{ session('error') }}</div>
+                            @endif
+
+                            <form action="{{ route('profile.update') }}" method="POST">
+                                @csrf
+
+                                {{-- Tên hiển thị --}}
+                                <div class="mb-3">
+                                    <label class="form-label">Tên hiển thị</label>
+                                    <input type="text" name="username"
+                                        class="form-control @error('username') is-invalid @enderror"
+                                        value="{{ old('username', auth()->user()->username) }}" required>
+                                    @error('username')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- Email (Không cho sửa) --}}
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" value="{{ auth()->user()->email }}" disabled>
+                                </div>
+
+                                {{-- Điện thoại --}}
+                                <div class="mb-3">
+                                    <label class="form-label">Điện thoại</label>
+                                    <input type="text" name="phone"
+                                        class="form-control @error('phone') is-invalid @enderror"
+                                        value="{{ old('phone', auth()->user()->phone) }}">
+                                    @error('phone')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- Nút lưu --}}
+                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                            </form>
+                        </div>
+
+                    </div>
+                    <!-- /.row -->
+
+                </section>
+                <!-- /.content -->
+            </div>
         </div>
 
-        {{-- Email (Không cho sửa) --}}
-        <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" value="{{ auth()->user()->email }}" disabled>
-        </div>
-
-        {{-- Điện thoại --}}
-        <div class="mb-3">
-            <label class="form-label">Điện thoại</label>
-            <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" 
-                value="{{ old('phone', auth()->user()->phone) }}">
-            @error('phone')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-        {{-- Nút lưu --}}
-        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-    </form>
-</div>
+        {{-- Thông báo thành công hoặc thất bại --}}
+    </div>
 @endsection

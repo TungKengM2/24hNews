@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Validator;
 
 
 
@@ -34,9 +34,7 @@ class AuthController extends Controller
             } elseif ($user->role_id == 2) {
                 return redirect()->intended('/article/dashboard');
             } elseif ($user->role_id == 3) {
-
-                return redirect()->intended('/moderator/dashboard');
-
+                return redirect()->intended('/author/dashboard');
             } elseif ($user->role_id == 4) {
                 return redirect()->intended('/user/dashboard');
             } else {

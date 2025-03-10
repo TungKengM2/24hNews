@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreign('author_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->foreignId('category_id')->nullable()->constrained('categories', 'category_id')->nullOnDelete();
             $table->string('thumbnail_url', 255)->nullable();
-            $table->enum('status', ['draft', 'pending', 'published', 'archived'])->default('draft');
+            $table->enum('status', ['draft', 'pending', 'published', 'archived', 'rejected'])->default('draft');
             $table->integer('views')->default(0);
             $table->foreignId('approved_by')->nullable()->constrained('users', 'user_id');
             $table->timestamps();
