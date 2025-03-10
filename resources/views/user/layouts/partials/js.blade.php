@@ -21,19 +21,19 @@
 
 {{-- <script src="/admin/main/js/pages/data-table.js"></script> --}}
 
-<script src="{{ asset('client/assets/js/lib/jquery-3.0.0.min.js') }}"></script>
-<script src="{{ asset('client/assets/js/lib/jquery-migrate-3.0.0.min.js') }}"></script>
-<script src="{{ asset('client/assets/js/lib/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('client/assets/js/lib/wow.min.js') }}"></script>
-<script src="{{ asset('client/assets/js/lib/jquery.fancybox.js') }}"></script>
-<script src="{{ asset('client/assets/js/lib/lity.js') }}"></script>
-<script src="{{ asset('client/assets/js/lib/swiper.min.js') }}"></script>
-<script src="{{ asset('client/assets/js/lib/jquery.waypoints.min.js') }}"></script>
-<script src="{{ asset('client/assets/js/lib/jquery.counterup.js') }}"></script>
+<script src="client/assets/js/lib/jquery-3.0.0.min.js"></script>
+<script src="client/assets/js/lib/jquery-migrate-3.0.0.min.js"></script>
+<script src="client/assets/js/lib/bootstrap.bundle.min.js"></script>
+<script src="client/assets/js/lib/wow.min.js"></script>
+<script src="client/assets/js/lib/jquery.fancybox.js"></script>
+<script src="client/assets/js/lib/lity.js"></script>
+<script src="client/assets/js/lib/swiper.min.js"></script>
+<script src="client/assets/js/lib/jquery.waypoints.min.js"></script>
+<script src="client/assets/js/lib/jquery.counterup.js"></script>
 <!-- <script src="client/js/lib/pace.js"></script> -->
-<script src="{{ asset('client/assets/js/lib/back-to-top.js') }}"></script>
-<script src="{{ asset('client/assets/js/lib/parallaxie.js') }}"></script>
-<script src="{{ asset('client/assets/js/main.js') }}"></script>
+<script src="client/assets/js/lib/back-to-top.js"></script>
+<script src="client/assets/js/lib/parallaxie.js"></script>
+<script src="client/assets/js/main.js"></script>
 <script>
     function updateDate() {
         const daysOfWeek = ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"];

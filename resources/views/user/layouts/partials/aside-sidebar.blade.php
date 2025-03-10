@@ -20,49 +20,54 @@
                 </li> --}}
                 <li class="header">Quản Lý</li>
                 <li class="treeview">
-                    <a href="index.html#">
+                    {{-- <a href="index.html#">
                         <i data-feather="grid"></i>
                         <span>Bài Viết Đã Lưu</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-right pull-right"></i>
                         </span>
+                    </a> --}}
+                    {{-- <ul class="treeview-menu"> --}}
+                <li class="{{ request()->routeIs('user.dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('user.dashboard') }}">
+                        <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                        Thông Tin Tài Khoản
                     </a>
-                    <ul class="treeview-menu">
-                        <li class="{{ request()->routeIs('profile') ? 'active' : '' }}">
-                            <a href="{{ route('profile') }}">
-                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Thông Tin Tài Khoản
-                            </a>
-                        </li>
-                        <li class="{{ request()->routeIs('profile.change-password') ? 'active' : '' }}">
-                            <a href="{{ route('profile.change-password') }}">
-                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Đổi Mật Khẩu
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Hoạt Động Bình Luận
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Tin Đã Lưu
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Tin Đã Xem
-                            </a>
-                        </li>
-                    </ul>
+                </li>
+                <li class="{{ request()->routeIs('user.change-password') ? 'active' : '' }}">
+                    <a href="{{ route('user.change-password') }}">
+                        <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                        Đổi Mật Khẩu
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                        Hoạt Động Bình Luận
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                        Tin Đã Lưu
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                        Tin Đã Xem
+                    </a>
+                </li>
+                {{-- </ul> --}}
                 </li>
             </ul>
 
             <ul class="sidebar-menu" data-widget="tree">
+                <li class="header"><a href="http://24hnews.test/">Quay Lại Trang Chủ</a></li>
+                <li class="treeview">
+            </ul>
+
+            {{-- <ul class="sidebar-menu" data-widget="tree">
                 <li class="header">
                     <a href="#"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -73,7 +78,7 @@
                         @csrf
                     </form>
                 </li>
-            </ul>
+            </ul> --}}
 
 
 

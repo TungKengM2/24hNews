@@ -24,25 +24,35 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Client Articles
-Route::get('/client/articles/{article_id}',
-    [ArticleUserController::class, 'show'])
+Route::get(
+    '/client/articles/{article_id}',
+    [ArticleUserController::class, 'show']
+)
     ->name('client.articles.article');
-Route::post('/client/articles/{article_id}/like',
-    [ArticleUserController::class, 'likeArticle'])
+Route::post(
+    '/client/articles/{article_id}/like',
+    [ArticleUserController::class, 'likeArticle']
+)
     ->name('client.articles.like');
-Route::post('/client/articles/{article_id}/comments',
-    [ArticleUserController::class, 'storeComment'])
+Route::post(
+    '/client/articles/{article_id}/comments',
+    [ArticleUserController::class, 'storeComment']
+)
     ->middleware('auth')
     ->name('client.articles.comment');
-Route::post('/client/articles/{article_id}/comments/{comment_id}/reply',
-    [ArticleUserController::class, 'storeReplyComment'])
+Route::post(
+    '/client/articles/{article_id}/comments/{comment_id}/reply',
+    [ArticleUserController::class, 'storeReplyComment']
+)
     ->middleware('auth')
     ->name('client.articles.replyComment');
 
 // Client Category
 
-Route::get('client/category/{categorySlug}',
-    [CategoryUserController::class, 'index'])->name('client.category.show');
+Route::get(
+    'client/category/{categorySlug}',
+    [CategoryUserController::class, 'index']
+)->name('client.category.show');
 
 // oke --
 // 🚀 Auth dành cho User
@@ -94,11 +104,11 @@ Route::middleware(['auth'])->group(function () {
         [ProfileController::class, 'updateProfile']
     )
         ->name('profile.update');
-    Route::get(
-        '/profile/change-password',
-        [ProfileController::class, 'showChangePasswordForm']
-    )
-        ->name('profile.change-password');
+    // Route::get(
+    //     '/profile/change-password',
+    //     [ProfileController::class, 'showChangePasswordForm']
+    // )->name('profile.change-password');
+
     Route::post(
         '/profile/update-password',
         [ProfileController::class, 'updatePassword']
@@ -118,9 +128,6 @@ Route::middleware(['auth', 'role:4'])
     })
     ->name('user.profile-setting');
 
-// Route::middleware(['auth', 'role:2'])->get('/author/profile-setting', function () {
-//    return view('author.profile-setting');
-// })->name('author.profile-setting');
 
 Route::middleware(['auth', 'role:3'])
     ->get('/moderator/profile-setting', function () {
@@ -137,18 +144,18 @@ Route::middleware(['auth', 'role:3'])
 Route::prefix('moderator')->name('moderator.')->group(function () {
     Route::get('/articles', [ModeratorArticleController::class, 'index'])
         ->name('articles.index');
-    Route::get('/articles/{article}',
-        [ModeratorArticleController::class, 'show'])->name('articles.show');
+    Route::get(
+        '/articles/{article}',
+        [ModeratorArticleController::class, 'show']
+    )->name('articles.show');
 
-    Route::patch('/articles/{article}/approve',
-        [ModeratorArticleController::class, 'approve'])
+    Route::patch(
+        '/articles/{article}/approve',
+        [ModeratorArticleController::class, 'approve']
+    )
         ->name('articles.approve'); // Sửa ở đây
 });
 
-// 🚀 Dashboard cho từng vai trò
-// Route::middleware(['auth', 'role:1'])->get('/admin/dashboard', function () {
-//    return view('admin.dashboard');
-// })->name('admin.dashboard');
 
 Route::middleware(['auth', 'role:3'])
     ->get('/moderator/dashboard', function () {
@@ -156,13 +163,10 @@ Route::middleware(['auth', 'role:3'])
     })
     ->name('moderator.dashboard');
 
-// Route::middleware(['auth', 'role:4'])->get('/user/dashboard', function () {
-//    return view('user.dashboard');
-// })->name('user.dashboard');
+
 
 // 🚀 Khu vực dành riêng cho Moderator (role_id = 3)
-Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function (
-) {
+Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     Route::get(
         '/list-article',
         [ModeratorArticleController::class, 'index']
@@ -189,19 +193,19 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::resource(
         'articles',
-        \App\Http\Controllers\Author\ArticleController::class
+        ArticleController::class
     )
         ->names('author.articles');
 
     Route::post('/articles/upload', [
-        \App\Http\Controllers\Author\ArticleController::class,
+        ArticleController::class,
         'uploadImage',
     ])
         ->name('author.articles.upload');
 
     Route::get(
         '/articles/search',
-        [\App\Http\Controllers\Author\ArticleController::class, 'search']
+        [ArticleController::class, 'search']
     )
         ->name('author.articles.search');
 });
@@ -225,6 +229,11 @@ Route::middleware(['auth', 'role:4'])
             [ProfileController::class, 'requestAuthorRole']
         )
             ->name('user.upgrade.author');
+
+        Route::get(
+            '/change-password',
+            [ProfileController::class, 'showChangePasswordForm']
+        )->name('user.change-password');
     });
 
 // 🚀 Khu vực dành riêng cho Admin (role_id = 1)

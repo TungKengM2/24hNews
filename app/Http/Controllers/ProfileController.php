@@ -192,7 +192,7 @@ class ProfileController extends Controller
                     'Tài khoản của bạn đăng nhập bằng Google/Facebook, không thể đổi mật khẩu.');
         }
 
-        return view('profile.change-password');
+        return view('user.change-password');
     }
 
     public function updatePassword(Request $request)
