@@ -37,4 +37,18 @@ class ModeratorArticleController extends Controller
         return redirect()->back()->with('success', 'Bài viết đã được duyệt.');
     }
 
+    public function reject(Article $article)
+    {
+        if ($article->status !== 'pending') {
+            return redirect()->back()->with('error', 'Bài viết không ở trạng thái chờ duyệt.');
+        }
+
+        // Đảm bảo 'rejected' nằm trong dấu nháy đơn
+        $article->update([
+            'status' => 'rejected',
+        ]);
+
+        return redirect()->back()->with('success', 'Bài viết đã bị từ chối.');
+    }
+
 }
