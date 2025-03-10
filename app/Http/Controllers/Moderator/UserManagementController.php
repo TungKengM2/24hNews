@@ -8,8 +8,7 @@ use App\Models\User;
 
 class UserManagementController extends Controller
 {
-    public function index()
-    {
+
 
         public function index()
         {
@@ -64,4 +63,8 @@ class UserManagementController extends Controller
         }
 
     }
+<<<<<<< HEAD
 }
+=======
+
+>>>>>>> 7a5c0706d7ba9de678b00327c0850ce260f83ab6

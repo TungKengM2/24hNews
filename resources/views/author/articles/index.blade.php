@@ -33,6 +33,12 @@
                             <button type="button" class="btn btn-secondary btn-sm">
                                 <a href="{{ route('author.dashboard') }}" class="text-white">Back to Dashboard</a>
                             </button>
+                            @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 
                             <div class="d-flex">
                                 <form method="GET" action="{{ route('author.articles.index') }}" class="me-2">
@@ -139,15 +145,22 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('author.articles.show', $article) }}"
-                                                   class="btn btn-info btn-sm"><i class="si-eye si"></i></a>
-                                                <a href="{{ route('author.articles.edit', $article) }}"
-                                                   class="btn btn-warning btn-sm"><i class="si-pencil si"></i></a>
-                                                <button class="btn btn-danger btn-sm"
-                                                        onclick="deleteArticle({{ $article->article_id }})">
-                                                    <i class="si-trash si"></i>
-                                                </button>
-                                            </td>
+                                                    <a href="{{ route('author.articles.show', $article) }}"
+                                                        class="btn btn-info btn-sm"><i class="si-eye si"></i></a>
+
+                                                    <a href="{{ route('author.articles.edit', $article) }}"
+                                                        class="btn btn-warning btn-sm"><i class="si-pencil si"></i></a>
+
+                                                    <form action="{{ route('author.articles.destroy', $article) }}" method="POST"
+                                                        class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="btn btn-danger btn-sm"
+                                                            onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
+                                                            <i class="si-trash si"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
                                         </tr>
                                     @endforeach
                                     </tbody>

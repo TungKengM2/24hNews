@@ -10,6 +10,7 @@ use App\Models\Tag;
 use App\Models\User;
 use App\Services\ModerationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
@@ -34,11 +35,15 @@ class ArticleController extends Controller
             ->where('author_id', auth()->id())
             ->when($filter !== 'all', function ($query) use ($filter) {
                 if ($filter === 'active') {
-                    $query->whereHas('category',
-                        fn ($q) => $q->where('is_active', true));
+                    $query->whereHas(
+                        'category',
+                        fn ($q) => $q->where('is_active', true)
+                    );
                 } elseif ($filter === 'inactive') {
-                    $query->whereHas('category',
-                        fn ($q) => $q->where('is_active', false));
+                    $query->whereHas(
+                        'category',
+                        fn ($q) => $q->where('is_active', false)
+                    );
                 } elseif ($filter === 'no_category') {
                     $query->whereNull('category_id');
                 }
@@ -54,8 +59,10 @@ class ArticleController extends Controller
         if ($article->author_id !== auth()->id()) {
             return redirect()
                 ->back()
-                ->with('error',
-                    'Bạn không có quyền cập nhật bài viết này.');
+                ->with(
+                    'error',
+                    'Bạn không có quyền cập nhật bài viết này.'
+                );
         }
 
         $rules = [
@@ -99,8 +106,10 @@ class ArticleController extends Controller
         }
 
         $apiKey = env('GOOGLE_API_KEY');
-        $moderationResult = $this->moderationService->moderateContent($request->input('content'),
-            $apiKey);
+        $moderationResult = $this->moderationService->moderateContent(
+            $request->input('content'),
+            $apiKey
+        );
 
         if ($moderationResult['status'] === 'error') {
             return redirect()
@@ -114,12 +123,18 @@ class ArticleController extends Controller
                 ->back()
                 ->withInput()
                 ->withErrors([
-                    'content' => 'Nội dung vi phạm nghiêm trọng: '.implode(', ',
-                        $moderationResult['violations']),
+                    'content' => 'Nội dung vi phạm nghiêm trọng: '.implode(
+                        ', ',
+                        $moderationResult['violations']
+                    ),
                 ])
                 ->with('violation_reasons', $moderationResult['reason'])
                 ->with('violations', $moderationResult['violations']);
         }
+        //        Log::info('Check helper status:', [
+        //            'function_exists' => function_exists('highlightWords'),
+        //            'session_violations' => session('violations'),
+        //        ]);
 
         $currentStatus = $article->status;
         $newStatus = $currentStatus;
@@ -175,17 +190,22 @@ class ArticleController extends Controller
         $approver = User::where('username', 'ai')->first();
         $approvalData = [
             'type' => 'article',
+            'user_id' => auth()->id(),
             'status' => match ($moderationResult['violation_level']) {
                 'none', 'low' => 'approved',
                 'medium' => 'pending',
                 default => 'pending',
             },
             'remarks' => $moderationResult['violation_level'] === 'high'
-                ? 'Nội dung vi phạm nghiêm trọng: '.implode(', ',
-                    $moderationResult['violations'])
+                ? 'Nội dung vi phạm nghiêm trọng: '.implode(
+                    ', ',
+                    $moderationResult['violations']
+                )
                 : ($moderationResult['violation_level'] === 'medium'
-                    ? 'Nội dung vi phạm: '.implode(', ',
-                        $moderationResult['violations'])
+                    ? 'Nội dung vi phạm: '.implode(
+                        ', ',
+                        $moderationResult['violations']
+                    )
                     : 'Approved by AI'),
             'approved_by' => $moderationResult['violation_level'] === 'high' ? null : $approver?->user_id,
         ];
@@ -195,8 +215,10 @@ class ArticleController extends Controller
         if ($approval) {
             $approval->update($approvalData);
         } else {
-            Approval::create(array_merge(['article_id' => $article->article_id],
-                $approvalData));
+            Approval::create(array_merge(
+                ['article_id' => $article->article_id],
+                $approvalData
+            ));
         }
 
         if ($moderationResult['violation_level'] === 'high') {
@@ -204,8 +226,10 @@ class ArticleController extends Controller
                 ->back()
                 ->withInput()
                 ->withErrors([
-                    'content' => 'Nội dung vi phạm nghiêm trọng: '.implode(', ',
-                        $moderationResult['violations']),
+                    'content' => 'Nội dung vi phạm nghiêm trọng: '.implode(
+                        ', ',
+                        $moderationResult['violations']
+                    ),
                 ])
                 ->with('violation_reasons', $moderationResult['reason'])
                 ->with('violations', $moderationResult['violations']);
@@ -218,105 +242,118 @@ class ArticleController extends Controller
 
     public function store(Request $request)
     {
-        $tagInputs = array_filter($request->input('tags', []),
-            function ($tag) {
-                return ! empty(trim($tag));
-            });
+        try {
+            $tagInputs = array_filter($request->input('tags', []),
+                function ($tag) {
+                    return ! empty(trim($tag));
+                });
 
-        if (is_string($tagInputs)) {
-            $tagInputs = explode(',', $tagInputs);
-        }
+            if (is_string($tagInputs)) {
+                $tagInputs = explode(',', $tagInputs);
+            }
 
-        $tagIds = [];
-        foreach ($tagInputs as $tag) {
-            if (is_numeric($tag)) {
-                $tagIds[] = (int) $tag;
-            } else {
-                $tag = trim($tag);
-                if (! empty($tag)) {
-                    $tagModel = Tag::firstOrCreate(['name' => $tag]);
-                    $tagIds[] = $tagModel->tag_id;
+            $tagIds = [];
+            foreach ($tagInputs as $tag) {
+                if (is_numeric($tag)) {
+                    $tagIds[] = (int) $tag;
+                } else {
+                    $tag = trim($tag);
+                    if (! empty($tag)) {
+                        $tagModel = Tag::firstOrCreate(['name' => $tag]);
+                        $tagIds[] = $tagModel->tag_id;
+                    }
                 }
             }
-        }
 
-        $rules = [
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:articles,slug',
-            'category_id' => 'required|exists:categories,category_id',
-            'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'required|in:draft,pending',
-            'content' => $request->status !== 'draft' ? 'required' : 'nullable',
-        ];
+            $rules = [
+                'title' => 'required|string|max:255',
+                'slug' => 'required|string|max:255|unique:articles,slug',
+                'category_id' => 'required|exists:categories,category_id',
+                'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'status' => 'required|in:draft,pending',
+                'content' => $request->status !== 'draft' ? 'required' : 'nullable',
+            ];
 
-        $request->validate($rules);
+            $request->validate($rules);
 
-        $apiKey = env('GOOGLE_API_KEY');
-        $moderationResult = $this->moderationService->moderateContent($request->input('content'),
-            $apiKey);
+            $apiKey = env('GOOGLE_API_KEY');
+            $moderationResult = $this->moderationService->moderateContent($request->input('content'),
+                $apiKey);
 
-        if ($moderationResult['status'] === 'error') {
+            if ($moderationResult['status'] === 'error') {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->withErrors(['content' => 'Lỗi kiểm duyệt nội dung: '.$moderationResult['message']]);
+            }
+
+            if ($moderationResult['violation_level'] === 'high') {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->withErrors([
+                        'content' => 'Nội dung vi phạm nghiêm trọng: '.implode(', ',
+                            $moderationResult['violations']),
+                    ])
+                    ->with('violation_reasons', $moderationResult['reason'])
+                    ->with('violations', $moderationResult['violations']);
+            }
+
+            $status = match ($moderationResult['violation_level']) {
+                'none', 'low' => 'published',
+                'medium' => 'pending',
+                default => 'pending',
+            };
+
+            $article = Article::create([
+                'title' => $request->title,
+                'slug' => $request->slug,
+                'content' => $request->input('content') ?? '',
+                'category_id' => $request->category_id,
+                'status' => $status,
+                'author_id' => auth()->id(),
+            ]);
+
+            if ($request->hasFile('thumbnail_url')) {
+                $path = $request->file('thumbnail_url')
+                    ->store('thumbnails', 'public');
+                $article->update(['thumbnail_url' => $path]);
+            }
+
+            $article->tags()->sync($tagIds);
+
+            $approver = User::where('username', 'ai')->first();
+            $approvalData = [
+                'article_id' => $article->article_id,
+                'type' => 'article',
+            ];
+
+            if ($status === 'pending') {
+                $approvalData['status'] = 'pending';
+                $approvalData['remarks'] = 'Nội dung vi phạm: '.implode(', ',
+                    $moderationResult['reason']);
+            } elseif ($status === 'published') {
+                $approvalData['status'] = 'approved';
+                $approvalData['remarks'] = 'Approved by AI';
+                $approvalData['approved_by'] = $approver->user_id ?? null;
+            }
+
+            Approval::create($approvalData);
+
+            return redirect()
+                ->route('author.articles.index')
+                ->with('success', 'Bài viết đã được tạo thành công!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()
                 ->back()
                 ->withInput()
-                ->withErrors(['content' => 'Lỗi kiểm duyệt nội dung: '.$moderationResult['message']]);
-        }
-
-        if ($moderationResult['violation_level'] === 'high') {
+                ->withErrors($e->errors());
+        } catch (\Exception $e) {
             return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors([
-                    'content' => 'Nội dung vi phạm nghiêm trọng: '.implode(', ',
-                        $moderationResult['violations']),
-                ])
-                ->with('violation_reasons', $moderationResult['reason'])
-                ->with('violations', $moderationResult['violations']);
+                ->route('author.articles.index')
+                ->with('success',
+                    'Bài viết của bạn đang được xét duyệt, vui lòng chờ trong giây lát.');
         }
-
-        $status = match ($moderationResult['violation_level']) {
-            'none', 'low' => 'published',
-            'medium' => 'pending',
-            default => 'pending',
-        };
-
-        $article = Article::create([
-            'title' => $request->title,
-            'slug' => $request->slug,
-            'content' => $request->input('content') ?? '',
-            'category_id' => $request->category_id,
-            'status' => $status,
-            'author_id' => auth()->id(),
-        ]);
-
-        if ($request->hasFile('thumbnail_url')) {
-            $path = $request->file('thumbnail_url')
-                ->store('thumbnails', 'public');
-            $article->update(['thumbnail_url' => $path]);
-        }
-
-        $article->tags()->sync($tagIds);
-        $approver = User::where('username', 'ai')->first();
-        $approvalData = [
-            'article_id' => $article->article_id,
-            'type' => 'article',
-        ];
-
-        if ($status === 'pending') {
-            $approvalData['status'] = 'pending';
-            $approvalData['remarks'] = 'Nội dung vi phạm: '.implode(', ',
-                $moderationResult['reason']);
-        } elseif ($status === 'published') {
-            $approvalData['status'] = 'approved';
-            $approvalData['remarks'] = 'Approved by AI';
-            $approvalData['approved_by'] = $approver->user_id ? $approver->user_id : null;
-        }
-
-        Approval::create($approvalData);
-
-        return redirect()
-            ->route('author.articles.index')
-            ->with('success', 'Bài viết đã được tạo thành công!');
     }
 
     public function create()
@@ -328,8 +365,10 @@ class ArticleController extends Controller
             ->get();
         $tags = Tag::all();
 
-        return view('author.articles.create',
-            compact('categories', 'authors', 'approvers', 'tags'));
+        return view(
+            'author.articles.create',
+            compact('categories', 'authors', 'approvers', 'tags')
+        );
     }
 
     private function processTags($tags)
@@ -364,8 +403,10 @@ class ArticleController extends Controller
         $preview_content = $matches[0] ?? '';
 
         //            dd($preview_content);
-        return view('author.articles.show',
-            compact('article', 'preview_content'));
+        return view(
+            'author.articles.show',
+            compact('article', 'preview_content')
+        );
     }
 
     public function edit(Article $article)
@@ -373,8 +414,10 @@ class ArticleController extends Controller
         if ($article->author_id !== auth()->id()) {
             return redirect()
                 ->back()
-                ->with('error',
-                    'Bạn không có quyền chỉnh sửa bài viết này.');
+                ->with(
+                    'error',
+                    'Bạn không có quyền chỉnh sửa bài viết này.'
+                );
         }
         $categories = Category::all();
         $authors = User::select('user_id', 'username')->get();
@@ -386,34 +429,42 @@ class ArticleController extends Controller
 
         $selectedTags = $article->tags->pluck('tag_id')->toArray();
 
-        return view('author.articles.edit',
-            compact('article', 'categories', 'authors', 'approvers', 'tags',
-                'selectedTags'));
+        return view(
+            'author.articles.edit',
+            compact(
+                'article',
+                'categories',
+                'authors',
+                'approvers',
+                'tags',
+                'selectedTags'
+            )
+        );
     }
 
     public function destroy(Article $article)
     {
-        if ($article->author_id !== auth()->id()) {
-            return response()->json(['message' => 'Bạn không có quyền xóa bài viết này.'],
-                403);
-        }
-
         if ($article->thumbnail_url) {
             Storage::disk('public')->delete($article->thumbnail_url);
         }
 
         $article->tags()->detach();
+
         $article->delete();
 
-        return response()->json(['message' => 'Bài viết đã bị xóa!']);
+        return redirect()
+            ->route('author.articles.index')
+            ->with('success', 'Bài viết đã bị xóa!');
     }
 
     public function uploadImage(Request $request)
     {
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $path = $file->store('uploads',
-                'public');
+            $path = $file->store(
+                'uploads',
+                'public'
+            );
 
             return response()->json([
                 'location' => asset("storage/$path"),

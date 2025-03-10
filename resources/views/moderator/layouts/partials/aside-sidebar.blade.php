@@ -51,13 +51,13 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="#"><i class="icon-Commit"><span class="path1"></span><span
-                                        class="path2"></span></i>Bài Viết</a>
-                        </li>
+                        <li><a href="{{ route('moderator.articles.index') }}"><i class="icon-Commit"><span
+                            class="path1"></span><span class="path2"></span></i>Bài Viết</a>
+            </li>
 
-                        <li><a href="#"><i class="icon-Commit"><span class="path1"></span><span
+                        {{-- <li><a href="#"><i class="icon-Commit"><span class="path1"></span><span
                                         class="path2"></span></i>Danh Sách Chờ</a>
-                        </li>
+                        </li> --}}
                         {{-- <li><a href="#"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Nâng Cấp Tài Khoản
                             </a>
