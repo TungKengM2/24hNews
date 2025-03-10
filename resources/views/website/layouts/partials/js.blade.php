@@ -25,9 +25,9 @@
                 const weatherTemperature = data.main.temp;
                 const weatherHumidity = data.main.humidity;
 
-                document.getElementById('weather-city').textContent = `Thành phố: ${weatherCity}`;
-                document.getElementById('weather-description').textContent = `Mô tả: ${weatherDescription}`;
-                document.getElementById('weather-temperature').textContent = `Nhiệt độ: ${weatherTemperature}°C`;
+                document.getElementById('weather-city').textContent = `${weatherCity}`;
+                document.getElementById('weather-description').textContent = `${weatherDescription}`;
+                document.getElementById('weather-temperature').textContent = `${weatherTemperature}°C`;
                 document.getElementById('weather-icon').src = `http://openweathermap.org/img/wn/${weatherIcon}@2x.png`;
                 document.getElementById('weather-humidity').textContent = `Độ ẩm: ${weatherHumidity}%`;
             })

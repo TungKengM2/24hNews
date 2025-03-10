@@ -32,7 +32,7 @@
                         </a>
                     </li>
                 @endforeach
-
+            </ul>
 
                 <div class="nav-side">
                     <a href="{{ route('loginuser') }} " class="icon-link">

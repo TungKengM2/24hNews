@@ -108,12 +108,12 @@
                                                 </td>
 
                                                 <td>
-                                                    <a href="{{ route('articles.show', $article) }}"
-                                                        class="btn btn-info btn-sm"><i class="si-eye si"></i></a>
+                                                    <a href="{{ route('articles.show', $article) }}" class="btn btn-info btn-sm">
+                                                        <i class="si-eye si"></i>
+                                                    </a>
 
                                                     @if ($article->status === 'pending')
-                                                        <form action="{{ route('articles.approve', $article) }}"
-                                                            method="POST" class="d-inline">
+                                                        <form action="{{ route('articles.approve', $article) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('PATCH')
                                                             <button type="submit" class="btn btn-success btn-sm"
@@ -121,10 +121,19 @@
                                                                 Approve
                                                             </button>
                                                         </form>
+
+                                                        <form action="{{ route('articles.reject', $article) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                                onclick="return confirm('Bạn có chắc chắn muốn từ chối bài viết này không?')">
+                                                                Reject
+                                                            </button>
+                                                        </form>
                                                     @endif
-
-
                                                 </td>
+
+
                                             </tr>
                                         @endforeach
                                     </tbody>
