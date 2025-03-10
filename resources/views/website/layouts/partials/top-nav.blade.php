@@ -14,6 +14,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-6">
+                            <div class="item">
+                                <div class="icon me-3 pt-1">
+                                    <img id="weather-icon" alt="Weather Icon">
+                                </div>
+                                <div class="inf">
+                                        <strong><p id="weather-temperature"></p><p id="weather-description"></p></strong>
+                                    <p id="weather-city"></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
