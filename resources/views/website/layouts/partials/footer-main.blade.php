@@ -232,6 +232,9 @@
                         <a href="home-default.html#" class="f-link">Term &
                             Conditions</a>
                     </li>
+                    <li>
+                        <a href="{{ route('loginadmin') }}" class="f-link">Admin</a>
+                    </li>
                 </ul>
             </div>
         </div>
