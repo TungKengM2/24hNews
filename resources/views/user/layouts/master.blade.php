@@ -20,18 +20,12 @@
 
     <div class="wrapper">
         <div id="loader"></div>
-            <div class="container">
-                <!-- ====== start top navbar ====== -->
-               @include('user.layouts.partials.header-top')
-                <!-- ====== end top navbar ====== -->
-        
-                <!-- ====== start navbar ====== -->
-                @include('user.layouts.partials.header-start')
-                <!-- ====== end navbar ====== -->
-        
-                <!-- ====== start nav-search ====== -->
-                <!-- ====== end nav-search ====== -->
-            </div>
+
+        <header class="main-header">
+            @include('user.layouts.partials.header-logo')
+            <!-- Header Navbar -->
+            @include('user.layouts.partials.header-top')
+        </header>
 
         <aside class="main-sidebar">
             <!-- sidebar-->
@@ -39,7 +33,7 @@
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="container">
+
         @yield('content')
 
         <!-- /.content-wrapper -->
@@ -52,7 +46,6 @@
 
         <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
         <div class="control-sidebar-bg"></div>
-        </div>
 
     </div>
     <!-- ./wrapper -->

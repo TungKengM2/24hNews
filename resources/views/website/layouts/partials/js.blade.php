@@ -12,7 +12,7 @@
 <script src="{{ asset('client/assets/js/lib/parallaxie.js') }}"></script>
 <script src="{{ asset('client/assets/js/main.js') }}"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const apiKey = '36277b82488afbd10f95af925ec6156a'; // Thay thế bằng API key của bạn
         const city = 'Hanoi'; // Thay thế bằng tên thành phố bạn muốn lấy thông tin thời tiết
 
@@ -25,9 +25,9 @@
                 const weatherTemperature = data.main.temp;
                 const weatherHumidity = data.main.humidity;
 
-                document.getElementById('weather-city').textContent = `Thành phố: ${weatherCity}`;
-                document.getElementById('weather-description').textContent = `Mô tả: ${weatherDescription}`;
-                document.getElementById('weather-temperature').textContent = `Nhiệt độ: ${weatherTemperature}°C`;
+                document.getElementById('weather-city').textContent = `${weatherCity}`;
+                document.getElementById('weather-description').textContent = `${weatherDescription}`;
+                document.getElementById('weather-temperature').textContent = `${weatherTemperature}°C`;
                 document.getElementById('weather-icon').src = `http://openweathermap.org/img/wn/${weatherIcon}@2x.png`;
                 document.getElementById('weather-humidity').textContent = `Độ ẩm: ${weatherHumidity}%`;
             })
@@ -37,18 +37,18 @@
 
 <script>
     function updateDate() {
-    const daysOfWeek = ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"];
-    const months = ["tháng 1", "tháng 2", "tháng 3", "tháng 4", "tháng 5", "tháng 6", "tháng 7", "tháng 8", "tháng 9", "tháng 10", "tháng 11", "tháng 12"];
+        const daysOfWeek = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
+        const months = ['tháng 1', 'tháng 2', 'tháng 3', 'tháng 4', 'tháng 5', 'tháng 6', 'tháng 7', 'tháng 8', 'tháng 9', 'tháng 10', 'tháng 11', 'tháng 12'];
 
-    const now = new Date();
-    const dayOfWeek = daysOfWeek[now.getDay()];
-    const day = now.getDate();
-    const month = months[now.getMonth()];
-    const year = now.getFullYear();
+        const now = new Date();
+        const dayOfWeek = daysOfWeek[now.getDay()];
+        const day = now.getDate();
+        const month = months[now.getMonth()];
+        const year = now.getFullYear();
 
-    const formattedDate = `${dayOfWeek}, ngày ${day} ${month} năm ${year}`;
-    document.getElementById("dateElement").innerText = formattedDate;
-}
+        const formattedDate = `${dayOfWeek}, ngày ${day} ${month} năm ${year}`;
+        document.getElementById('dateElement').innerText = formattedDate;
+    }
 
-updateDate();
+    updateDate();
 </script>

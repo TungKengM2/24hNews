@@ -4,20 +4,57 @@ use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\AuthUserController;
+use App\Http\Controllers\CategoryUserController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // 🌟 Trang chủ & bài viết chi tiết
-Route::view('/', 'welcome');
-Route::view('/article-detail', 'website.pages.articledetail.homedetail');
+// Route::view('/', 'welcome');
+// Route::view('/article-detail', 'website.pages.articledetail.homedetail');
+// Home duong chinh oke --
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Client Articles
+Route::get(
+    '/client/articles/{article_id}',
+    [ArticleUserController::class, 'show']
+)
+    ->name('client.articles.article');
+Route::post(
+    '/client/articles/{article_id}/like',
+    [ArticleUserController::class, 'likeArticle']
+)
+    ->name('client.articles.like');
+Route::post(
+    '/client/articles/{article_id}/comments',
+    [ArticleUserController::class, 'storeComment']
+)
+    ->middleware('auth')
+    ->name('client.articles.comment');
+Route::post(
+    '/client/articles/{article_id}/comments/{comment_id}/reply',
+    [ArticleUserController::class, 'storeReplyComment']
+)
+    ->middleware('auth')
+    ->name('client.articles.replyComment');
+
+// Client Category
+
+Route::get(
+    'client/category/{categorySlug}',
+    [CategoryUserController::class, 'index']
+)->name('client.category.show');
+
+// oke --
 // 🚀 Auth dành cho User
 Route::middleware('guest')
     ->controller(AuthUserController::class)
@@ -67,11 +104,11 @@ Route::middleware(['auth'])->group(function () {
         [ProfileController::class, 'updateProfile']
     )
         ->name('profile.update');
-    Route::get(
-        '/profile/change-password',
-        [ProfileController::class, 'showChangePasswordForm']
-    )
-        ->name('profile.change-password');
+    // Route::get(
+    //     '/profile/change-password',
+    //     [ProfileController::class, 'showChangePasswordForm']
+    // )->name('profile.change-password');
+
     Route::post(
         '/profile/update-password',
         [ProfileController::class, 'updatePassword']
@@ -91,9 +128,6 @@ Route::middleware(['auth', 'role:4'])
     })
     ->name('user.profile-setting');
 
-// Route::middleware(['auth', 'role:2'])->get('/author/profile-setting', function () {
-//    return view('author.profile-setting');
-// })->name('author.profile-setting');
 
 Route::middleware(['auth', 'role:3'])
     ->get('/moderator/profile-setting', function () {
@@ -107,24 +141,21 @@ Route::middleware(['auth', 'role:3'])
     })
     ->name('moderator.profile');
 
-    Route::prefix('moderator')->name('moderator.')->group(function () {
-        Route::get('/articles', [ModeratorArticleController::class, 'index'])->name('articles.index');
-        Route::get('/articles/{article}', [ModeratorArticleController::class, 'show'])->name('articles.show');
+Route::prefix('moderator')->name('moderator.')->group(function () {
+    Route::get('/articles', [ModeratorArticleController::class, 'index'])
+        ->name('articles.index');
+    Route::get(
+        '/articles/{article}',
+        [ModeratorArticleController::class, 'show']
+    )->name('articles.show');
 
-        Route::patch('/articles/{article}/approve', [ModeratorArticleController::class, 'approve'])
-            ->name('articles.approve'); // Sửa ở đây
-    });
+    Route::patch(
+        '/articles/{article}/approve',
+        [ModeratorArticleController::class, 'approve']
+    )
+        ->name('articles.approve'); // Sửa ở đây
+});
 
-
-
-
-
-
-
-// 🚀 Dashboard cho từng vai trò
-// Route::middleware(['auth', 'role:1'])->get('/admin/dashboard', function () {
-//    return view('admin.dashboard');
-// })->name('admin.dashboard');
 
 Route::middleware(['auth', 'role:3'])
     ->get('/moderator/dashboard', function () {
@@ -132,18 +163,23 @@ Route::middleware(['auth', 'role:3'])
     })
     ->name('moderator.dashboard');
 
-// Route::middleware(['auth', 'role:4'])->get('/user/dashboard', function () {
-//    return view('user.dashboard');
-// })->name('user.dashboard');
+
 
 // 🚀 Khu vực dành riêng cho Moderator (role_id = 3)
-Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function (
-) {
+Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     Route::get(
         '/list-article',
         [ModeratorArticleController::class, 'index']
     )
         ->name('moderator.list-article');
+
+    Route::get('/profile', [ProfileController::class, 'profileModerator'])
+        ->name('moderator.profile');
+
+    Route::get(
+        '/change-password',
+        [ProfileController::class, 'showChangePasswordFormModerator']
+    )->name('moderator.change-password');
 });
 
 // 🚀 Khu vực dành riêng cho Author (role_id = 2)
@@ -165,21 +201,29 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::resource(
         'articles',
-        \App\Http\Controllers\Author\ArticleController::class
+        ArticleController::class
     )
         ->names('author.articles');
 
     Route::post('/articles/upload', [
-        \App\Http\Controllers\Author\ArticleController::class,
+        ArticleController::class,
         'uploadImage',
     ])
         ->name('author.articles.upload');
 
     Route::get(
         '/articles/search',
-        [\App\Http\Controllers\Author\ArticleController::class, 'search']
+        [ArticleController::class, 'search']
     )
         ->name('author.articles.search');
+
+        Route::get('/profile', [ProfileController::class, 'profileAuthor'])
+        ->name('author.profile');
+
+    Route::get(
+        '/change-password',
+        [ProfileController::class, 'showChangePasswordFormAuthor']
+    )->name('author.change-password');
 });
 
 // 🚀 Khu vực dành riêng cho User (role_id = 4)
@@ -188,12 +232,7 @@ Route::middleware(['auth', 'role:4'])
     ->group(function () {
         Route::get('/dashboard', [ProfileController::class, 'dashboard'])
             ->name('user.dashboard');
-        // dat them
-        Route::get(
-                '/change-password',
-                [ProfileController::class, 'showChangePasswordForm'])
-            ->name('user.change-password');
-        
+
         // Yêu cầu nâng cấp vai trò lên Author
         Route::get('/upgrade', function () {
             return view('user.upgrade');
@@ -206,6 +245,11 @@ Route::middleware(['auth', 'role:4'])
             [ProfileController::class, 'requestAuthorRole']
         )
             ->name('user.upgrade.author');
+
+        Route::get(
+            '/change-password',
+            [ProfileController::class, 'showChangePasswordForm']
+        )->name('user.change-password');
     });
 
 // 🚀 Khu vực dành riêng cho Admin (role_id = 1)

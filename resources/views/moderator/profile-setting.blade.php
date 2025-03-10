@@ -7,68 +7,53 @@
 @section('content')
     <div class="content-wrapper">
         <div class="container-full">
-
             <div class="nav-tabs-custom">
                 <div class="content">
+                    <h4>Đổi mật khẩu</h4>
+
                     <div class="pane" id="settings">
+
                         <div class="box no-shadow">
-                            <form class="form-horizontal form-element col-12">
-                                <div class="form-group row">
-                                    <label for="inputName" class="col-sm-2 form-label">Name</label>
+                            <form action="{{ route('profile.update-password') }}" method="POST">
+                                @csrf
+                                <div class="form-group">
+                                    <label for="current_password">Mật khẩu hiện tại</label>
+                                    <input type="password" id="current_password" name="current_password"
+                                        class="form-control" required>
+                                    @error('current_password')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                                    <div class="col-sm-10">
-                                        <input type="email" class="form-control" id="inputName" placeholder="">
-                                    </div>
+                                <div class="form-group">
+                                    <label for="new_password">Mật khẩu mới</label>
+                                    <input type="password" id="new_password" name="new_password" class="form-control"
+                                        required>
+                                    @error('new_password')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="form-group row">
-                                    <label for="inputEmail" class="col-sm-2 form-label">Email</label>
 
-                                    <div class="col-sm-10">
-                                        <input type="email" class="form-control" id="inputEmail" placeholder="">
-                                    </div>
+                                <div class="form-group">
+                                    <label for="new_password_confirmation">Xác nhận mật khẩu mới</label>
+                                    <input type="password" id="new_password_confirmation" name="new_password_confirmation"
+                                        class="form-control" required>
+                                    @error('new_password_confirmation')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="form-group row">
-                                    <label for="inputPhone" class="col-sm-2 form-label">Phone</label>
 
-                                    <div class="col-sm-10">
-                                        <input type="tel" class="form-control" id="inputPhone" placeholder="">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="inputExperience" class="col-sm-2 form-label">Experience</label>
-
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control" id="inputExperience" placeholder=""></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="inputSkills" class="col-sm-2 form-label">Skills</label>
-
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="inputSkills" placeholder="">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="ms-auto col-sm-10">
-                                        <div class="checkbox">
-                                            <input type="checkbox" id="basic_checkbox_1" checked="">
-                                            <label for="basic_checkbox_1"> I agree to the</label>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;<a href="extra_profile.html#">Terms
-                                                and Conditions</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="ms-auto col-sm-10">
-                                        <button type="submit" class="btn btn-success">Submit</button>
-                                    </div>
-                                </div>
+                                <button type="submit" class="btn btn-primary">Cập nhật mật khẩu</button>
                             </form>
+
+                            @if (session('success'))
+                                <div class="alert alert-success mt-3">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
                         </div>
                     </div>
-                    <!-- /.tab-pane -->
                 </div>
-                <!-- /.tab-content -->
             </div>
         </div>
     </div>

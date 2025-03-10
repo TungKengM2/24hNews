@@ -12,13 +12,6 @@
 <script src="https://www.amcharts.com/lib/4/themes/dataviz.js"></script>
 <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
 
-<<<<<<< HEAD
- <!-- CrmX Admin App -->
- <script src="/admin/main/js/template.js"></script>
- <script src="/admin/main/js/demo.js"></script>
- <script src="/admin/main/js/pages/dashboard.js"></script>
- <script src="/admin/assets/vendor_components/select2/dist/js/select2.full.js"></script>
-=======
 <!-- CrmX Admin App -->
 <script src="/admin/main/js/template.js"></script>
 <script src="/admin/main/js/demo.js"></script>
@@ -27,13 +20,13 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script referrerpolicy="origin"
-        src="https://cdn.tiny.cloud/1/z5nmbwpgzi1mqfjo2czz0cu8h05tmwnkumfhvwkcnr16tn3a/tinymce/7/tinymce.min.js"></script>
+    src="https://cdn.tiny.cloud/1/z5nmbwpgzi1mqfjo2czz0cu8h05tmwnkumfhvwkcnr16tn3a/tinymce/7/tinymce.min.js"></script>
 
 
 <script>
     const fetchApi = import(
         'https://unpkg.com/@microsoft/fetch-event-source@2.0.1/lib/esm/index.js'
-        ).then((module) => module.fetchEventSource);
+    ).then((module) => module.fetchEventSource);
 
     // This example stores the OpenAI API key in the client side integration. This is not recommended for any purpose.
     // Instead, an alternate method for retrieving the API key should be used.
@@ -155,7 +148,9 @@
                         blobCache.add(blobInfo);
 
                         /* call the callback and populate the Title field with the file name */
-                        cb(blobInfo.blobUri(), { title: file.name });
+                        cb(blobInfo.blobUri(), {
+                            title: file.name
+                        });
                     });
                     reader.readAsDataURL(file);
                 });
@@ -177,11 +172,9 @@
             skin: useDarkMode ? 'oxide-dark' : 'oxide',
             content_css: useDarkMode ? 'dark' : 'default',
             autocorrect_capitalize: true,
-            mergetags_list: [
-                {
+            mergetags_list: [{
                     title: 'Client',
-                    menu: [
-                        {
+                    menu: [{
                             value: 'Client.LastCallDate',
                             title: 'Call date',
                         },
@@ -193,12 +186,10 @@
                 },
                 {
                     title: 'Proposal',
-                    menu: [
-                        {
-                            value: 'Proposal.SubmissionDate',
-                            title: 'Submission date',
-                        },
-                    ],
+                    menu: [{
+                        value: 'Proposal.SubmissionDate',
+                        title: 'Submission date',
+                    }, ],
                 },
                 {
                     value: 'Consultant',
@@ -239,9 +230,53 @@
         });
 </script>
 <script>
-    setTimeout(function () {
+    setTimeout(function() {
         let alerts = document.querySelectorAll('.alert');
         alerts.forEach(alert => alert.style.display = 'none');
     }, 5000);
 </script>
->>>>>>> tungkeng
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const imageUpload = document.getElementById("avatarUpload");
+        const imagePreview = document.getElementById("avatarPreview");
+
+        document.querySelector(".avatar-edit").addEventListener("click", function() {
+            imageUpload.click();
+        });
+
+        imageUpload.addEventListener("change", function() {
+            if (this.files && this.files[0]) {
+                const formData = new FormData();
+                formData.append("image", this.files[0]); // Attach the image to the FormData
+                formData.append("_token", "{{ csrf_token() }}"); // Add the CSRF token for security
+
+                // Send the request to the server to upload the image
+                fetch("{{ route('profile.upload-avatar') }}", {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Error uploading the image!");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            // Update the avatar preview with the new image URL
+                            imagePreview.src = data.image_url;
+                        } else {
+                            alert("Error uploading the image.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("An error occurred while uploading the image.");
+                    });
+
+                this.value = ""; // Reset input to allow re-uploading the same file
+            }
+        });
+    });
+</script>
