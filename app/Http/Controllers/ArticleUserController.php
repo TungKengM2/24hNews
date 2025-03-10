@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\Comment;
 use App\Models\ArticleLike;
 use App\Models\ArticleView;
+use App\Models\Category;
+use App\Models\Comment;
 use Illuminate\Http\Request;
-use App\Models\CommentReaction;
-use Illuminate\Support\Facades\Log;
 
 class ArticleUserController extends Controller
 {
@@ -16,7 +15,7 @@ class ArticleUserController extends Controller
     {
         $article = Article::where('article_id', $article_id)->first();
 
-        if (!$article) {
+        if (! $article) {
             abort(404, 'Bài viết không tồn tại!');
         }
 
@@ -26,13 +25,15 @@ class ArticleUserController extends Controller
         // Kiểm tra xem user đã like bài viết chưa
         $isLiked = false;
         if ($userId) {
-            $isLiked = ArticleLike::where('article_id', $article->article_id)
+            $isLiked = ArticleLike::where('article_id',
+                $article->article_id)
                 ->where('user_id', $userId)
                 ->exists();
         }
 
         // Lấy số lượt like
-        $likeCount = ArticleLike::where('article_id', $article->article_id)->count();
+        $likeCount = ArticleLike::where('article_id', $article->article_id)
+            ->count();
 
         // Kiểm tra xem user đã xem bài viết chưa
         $hasViewed = ArticleView::where('article_id', $article->article_id)
@@ -40,13 +41,14 @@ class ArticleUserController extends Controller
                 if ($userId) {
                     $query->where('user_id', $userId);
                 } else {
-                    $query->whereNull('user_id')->where('ip_address', $userIp);
+                    $query->whereNull('user_id')
+                        ->where('anonymous', $userIp);
                 }
             })
             ->exists();
 
         // Nếu chưa xem, thêm vào database & tăng lượt xem
-        if (!$hasViewed) {
+        if (! $hasViewed) {
             ArticleView::create([
                 'article_id' => $article->article_id,
                 'user_id' => $userId,
@@ -58,7 +60,8 @@ class ArticleUserController extends Controller
         }
 
         // Lấy bài viết liên quan
-        $relatedArticles = Article::where('category_id', $article->category_id)
+        $relatedArticles = Article::where('category_id',
+            $article->category_id)
             ->where('article_id', '!=', $article->article_id)
             ->limit(5)
             ->get();
@@ -66,102 +69,195 @@ class ArticleUserController extends Controller
         // Lấy danh sách bình luận
         $comments = Comment::where('article_id', $article->article_id)
             ->where('status', 'approved')
-            ->with(['user:user_id,username', 'replies', 'reactions'])
+            ->whereNull('parent_id') // Chỉ lấy bình luận gốc
+            ->with([
+                'user:user_id,username,image',
+                'reactions',
+            ])
             ->withCount([
                 'reactions as like_count' => function ($query) {
                     $query->where('is_like', true);
                 },
                 'reactions as dislike_count' => function ($query) {
                     $query->where('is_like', false);
-                }
+                },
             ])
+            ->orderBy('created_at', 'desc')
+            ->paginate(4); // Phân trang bình luận gốc (5 bình luận mỗi trang)
+
+        // ✅ Lấy tất cả các replies của các bình luận đã phân trang
+        $commentIds = $comments->pluck('comment_id'); // Lấy danh sách ID của bình luận gốc
+
+        $replies = Comment::whereIn('parent_id',
+            $commentIds) // Chỉ lấy replies của bình luận gốc
+            ->where('status', 'approved')
+            ->with([
+                'user:user_id,username,image',
+                'reactions',
+            ])
+            ->withCount([
+                'reactions as like_count' => function ($query) {
+                    $query->where('is_like', true);
+                },
+                'reactions as dislike_count' => function ($query) {
+                    $query->where('is_like', false);
+                },
+            ])
+            ->orderBy('created_at',
+                'asc') // Hiển thị replies theo thứ tự cũ -> mới
             ->get();
 
-        return view('client.articles.article', compact('article', 'relatedArticles', 'isLiked', 'likeCount', 'comments'));
+        // ✅ Gán replies vào từng comment
+        $groupedReplies = $replies->groupBy('parent_id');
+
+        foreach ($comments as $comment) {
+            $comment->replies = $groupedReplies->get($comment->comment_id,
+                collect()); // Gán danh sách replies vào từng comment
+        }
+
+        $categories = Category::where('is_active', 1)->get();
+
+        return view('client.articles.article',
+            compact('categories', 'article', 'relatedArticles', 'isLiked',
+                'likeCount', 'comments'));
     }
 
-    // Ghi nhận lượt xem
-    try {
-        ArticleView::create([
-            'article_id' => $article->article_id,
-            'user_id' => auth()->id(),
-            'anonymous' => auth()->check() ? 0 : 1,
-            'viewed_at' => now(),
-            $article->increment('views')
+    public function likeArticle(Request $request, $article_id)
+    {
+        $userId = auth()->id();
+
+        if (! $userId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn cần đăng nhập để like!',
+            ]);
+        }
+
+        $like = ArticleLike::where('article_id', $article_id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if ($like) {
+            try {
+                // Chỉ xóa nếu like thuộc về người dùng hiện tại
+                ArticleLike::where('like_id', $like->like_id)
+                    ->where('user_id', $userId)
+                    ->delete();
+                $liked = false;
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Lỗi khi hủy like: '.$e->getMessage(),
+                ]);
+            }
+        } else {
+            ArticleLike::create([
+                'article_id' => $article_id,
+                'user_id' => $userId,
+                'liked_at' => now(),
+            ]);
+            $liked = true;
+        }
+
+        $likeCount = ArticleLike::where('article_id', $article_id)->count();
+
+        return response()->json([
+            'success' => true,
+            'liked' => $liked,
+            'likeCount' => $likeCount,
         ]);
-    } catch (\Exception $e) {
-        report($e);
     }
-
-    // Lấy bài viết liên quan
-    $relatedArticles = Article::where('category_id', $article->category_id)
-                              ->where('article_id', '!=', $article->article_id)
-                              ->limit(5)
-                              ->get();
-
-    return view('client.articles.article', compact('article', 'relatedArticles'));
-}
-
-}
-
-
-
-
 
     public function storeComment(Request $request)
     {
         $request->validate([
             'article_id' => 'required|exists:articles,article_id',
             'content' => 'required|string',
-            'parent_id' => 'nullable|exists:comments,comment_id'
+            'parent_id' => 'nullable|exists:comments,comment_id',
         ]);
 
-        $badWords = ['tục1', 'tục2', 'tục3'];
-        $cleanContent = str_ireplace($badWords, '***', $request->content);
+        // Truy vấn `parentComment` trước để tối ưu
+        $parentComment = $request->parent_id ? Comment::find($request->parent_id) : null;
 
         $comment = Comment::create([
             'article_id' => $request->article_id,
             'user_id' => auth()->id(),
-            'content' => $cleanContent,
+            'content' => nl2br(e($request->content)), // Escape XSS
             'parent_id' => $request->parent_id,
-            'depth' => $request->parent_id ? Comment::find($request->parent_id)->depth + 1 : 0,
-            'status' => 'approved'
+            'depth' => $parentComment ? $parentComment->depth + 1 : 0,
+            'status' => 'approved',
         ]);
 
-        return response()->json(['success' => true, 'comment' => $comment]);
+        return response()->json([
+            'success' => true,
+            'comment' => [
+                'comment_id' => $comment->comment_id,
+                'parent_id' => $comment->parent_id,
+                'depth' => $comment->depth, // Trả depth về FE
+                'content' => $comment->content,
+                'username' => auth()->user()->username,
+                'user_image' => auth()->user()->image ?? 'assets/img/colums/default.png',
+                'created_at' => $comment->created_at->format('F d, Y'),
+            ],
+        ]);
     }
 
-    public function likeComment($commentId)
-    {
-        return $this->handleCommentReaction($commentId, true);
-    }
+    public function storeReplyComment(
+        Request $request,
+        $article_id,
+        $comment_id
+    ) {
+        // Kiểm tra người dùng đã đăng nhập chưa
+        if (! auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn cần đăng nhập để trả lời bình luận!',
+            ], 403);
+        }
 
-    public function dislikeComment($commentId)
-    {
-        return $this->handleCommentReaction($commentId, false);
-    }
+        // Validate dữ liệu đầu vào
+        $request->validate([
+            'content' => 'required|string|max:500',
+        ]);
 
-    public function react(Request $request, $commentId)
-    {
-        $comment = Comment::findOrFail($commentId);
-        $userId = auth()->id();
-        $isLike = $request->is_like;
-    
-        $reaction = CommentReaction::updateOrCreate(
-            ['comment_id' => $commentId, 'user_id' => $userId],
-            ['is_like' => $isLike, 'reacted_at' => now()]
-        );
-    
-        $comment->likes = CommentReaction::where('comment_id', $commentId)->where('is_like', true)->count();
-        $comment->dislikes = CommentReaction::where('comment_id', $commentId)->where('is_like', false)->count();
-        $comment->save();
-    
-        return response()->json(['success' => true, 'count' => $isLike ? $comment->likes : $comment->dislikes]);
-    }
-    
-    
-    
+        // Kiểm tra xem comment cha có tồn tại không
+        $parentComment = Comment::where('comment_id', $comment_id)->first();
 
-    
-    
+        if (! $parentComment) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bình luận không tồn tại!',
+            ], 404);
+        }
+
+        try {
+            // Tạo comment trả lời
+            $reply = new Comment;
+            $reply->content = $request->input('content');
+            $reply->parent_id = $parentComment->comment_id;
+            $reply->article_id = $article_id;
+            $reply->user_id = auth()->id();
+            $reply->depth = $parentComment->depth + 1;
+            $reply->status = 'approved';
+            $reply->save();
+
+            return response()->json([
+                'success' => true,
+                'reply' => [
+                    'comment_id' => $reply->comment_id ?? $reply->id,
+                    // Đảm bảo tồn tại
+                    'username' => auth()->user()->username,
+                    'user_image' => auth()->user()->image ?? asset('assets/img/colums/default.png'),
+                    'content' => nl2br(e($reply->content)),
+                    'status' => $reply->status,
+                    'created_at' => $reply->created_at->format('F d, Y'),
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi lưu bình luận: '.$e->getMessage(),
+            ], 500);
+        }
+    }
 }

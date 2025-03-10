@@ -1,6 +1,6 @@
 <div class="d-flex align-items-center logo-box justify-content-center">
     <!-- Logo -->
-    <a href="index.html" class="logo">
+    <a href="{{route('user.dashboard')}}" class="logo">
         <!-- logo-->
         <div class="logo-mini w-30">
             <span class="light-logo"><img src="/admin/main/../images/logo-letter.png" alt="logo"></span>

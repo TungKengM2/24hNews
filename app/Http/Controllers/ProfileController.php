@@ -18,9 +18,22 @@ class ProfileController extends Controller
     public function dashboard()
     {
         $user = auth()->user();
-
         //            dd($user);
         return view('user.dashboard', compact('user'));
+    }
+
+    public function profileModerator()
+    {
+        $user = auth()->user();
+        //            dd($user);
+        return view('moderator.profile', compact('user'));
+    }
+
+    public function profileAuthor()
+    {
+        $user = auth()->user();
+        //            dd($user);
+        return view('author.profile', compact('user'));
     }
 
     public function index()
@@ -68,8 +81,10 @@ class ProfileController extends Controller
 
         return redirect()
             ->route('user.upgrade.result')
-            ->with('status',
-                'Your request has been submitted successfully.');
+            ->with(
+                'status',
+                'Your request has been submitted successfully.'
+            );
     }
 
     /**
@@ -95,8 +110,10 @@ class ProfileController extends Controller
 
         // Kiểm tra nếu dữ liệu không thay đổi
         if ($request->username == $user->username && $request->phone == $user->phone) {
-            return back()->with('error',
-                'Không có thay đổi nào được thực hiện.');
+            return back()->with(
+                'error',
+                'Không có thay đổi nào được thực hiện.'
+            );
         }
 
         // Cập nhật dữ liệu
@@ -119,7 +136,7 @@ class ProfileController extends Controller
         // Validate the incoming request data
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.auth()->id(),
+            'email' => 'required|string|email|max:255|unique:users,email,' . auth()->id(),
         ]);
 
         // Retrieve the authenticated user
@@ -155,8 +172,10 @@ class ProfileController extends Controller
         // Check if the file exists
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imagePath = $image->store('avatars',
-                'public'); // Store the image in the 'avatars' folder in the 'public' disk
+            $imagePath = $image->store(
+                'avatars',
+                'public'
+            ); // Store the image in the 'avatars' folder in the 'public' disk
 
             // Update the user's image path in the database
             $user = auth()->user();
@@ -166,7 +185,7 @@ class ProfileController extends Controller
             // Return the updated image URL
             return response()->json([
                 'success' => true,
-                'image_url' => asset('storage/'.$imagePath),
+                'image_url' => asset('storage/' . $imagePath),
                 // Return the new image URL
             ]);
         }
@@ -188,11 +207,47 @@ class ProfileController extends Controller
         if (! $user->password) {
             return redirect()
                 ->route('profile')
-                ->with('error',
-                    'Tài khoản của bạn đăng nhập bằng Google/Facebook, không thể đổi mật khẩu.');
+                ->with(
+                    'error',
+                    'Tài khoản của bạn đăng nhập bằng Google/Facebook, không thể đổi mật khẩu.'
+                );
         }
 
-        return view('profile.change-password');
+        return view('user.change-password');
+    }
+
+    public function showChangePasswordFormModerator()
+    {
+        $user = Auth::user();
+
+        // Nếu user đăng nhập bằng Google/Facebook, chuyển hướng về profile với thông báo
+        if (! $user->password) {
+            return redirect()
+                ->route('profile')
+                ->with(
+                    'error',
+                    'Tài khoản của bạn đăng nhập bằng Google/Facebook, không thể đổi mật khẩu.'
+                );
+        }
+
+        return view('moderator.profile-setting');
+    }
+
+    public function showChangePasswordFormAuthor()
+    {
+        $user = Auth::user();
+
+        // Nếu user đăng nhập bằng Google/Facebook, chuyển hướng về profile với thông báo
+        if (! $user->password) {
+            return redirect()
+                ->route('profile')
+                ->with(
+                    'error',
+                    'Tài khoản của bạn đăng nhập bằng Google/Facebook, không thể đổi mật khẩu.'
+                );
+        }
+
+        return view('author.profile-setting');
     }
 
     public function updatePassword(Request $request)
@@ -203,8 +258,10 @@ class ProfileController extends Controller
         if (! $user->password) {
             return redirect()
                 ->route('profile')
-                ->with('error',
-                    'Tài khoản của bạn đăng nhập bằng Google/Facebook, không thể đổi mật khẩu.');
+                ->with(
+                    'error',
+                    'Tài khoản của bạn đăng nhập bằng Google/Facebook, không thể đổi mật khẩu.'
+                );
         }
 
         // Kiểm tra dữ liệu nhập vào

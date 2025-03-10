@@ -3,8 +3,10 @@
         <div class="col-lg-4">
             <div class="info">
                 <div class="foot-logo">
-                    <img src="assets/img/logo_home1.png" alt="" class="dark-none">
-                    <img src="assets/img/logo_home1_lt.png" alt="" class="light-none">
+                    <img src="assets/img/logo_home1.png" alt=""
+                         class="dark-none">
+                    <img src="assets/img/logo_home1_lt.png" alt=""
+                         class="light-none">
                 </div>
                 <div class="data-info">
                     <p>
@@ -14,7 +16,8 @@
                         <b> Tax Code: </b> 0514234567
                     </p>
                     <p>
-                        <b> Address: </b> 223 Thatcher Road St, Mahattan <br> NY 10632, United States
+                        <b> Address: </b> 223 Thatcher Road St, Mahattan <br> NY
+                        10632, United States
                     </p>
                     <p>
                         <b> Email : </b> support@Newzin.com
@@ -54,19 +57,23 @@
                         <a href="home-default.html#" class="f-link">Startup</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Business Trends</a>
+                        <a href="home-default.html#" class="f-link">Business
+                            Trends</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Work Culture</a>
+                        <a href="home-default.html#" class="f-link">Work
+                            Culture</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Personal Finance</a>
+                        <a href="home-default.html#" class="f-link">Personal
+                            Finance</a>
                     </li>
                     <li>
                         <a href="home-default.html#" class="f-link">Leaders</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Stocks Market</a>
+                        <a href="home-default.html#" class="f-link">Stocks
+                            Market</a>
                     </li>
                 </ul>
             </div>
@@ -74,13 +81,16 @@
                 <div class="title">Politics</div>
                 <ul>
                     <li>
-                        <a href="home-default.html#" class="f-link">Capital Journal</a>
+                        <a href="home-default.html#" class="f-link">Capital
+                            Journal</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">National Security</a>
+                        <a href="home-default.html#" class="f-link">National
+                            Security</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Politics Video</a>
+                        <a href="home-default.html#" class="f-link">Politics
+                            Video</a>
                     </li>
                 </ul>
             </div>
@@ -90,19 +100,23 @@
                 <div class="title">Technology</div>
                 <ul>
                     <li>
-                        <a href="home-default.html#" class="f-link">Personal Technology</a>
+                        <a href="home-default.html#" class="f-link">Personal
+                            Technology</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Product Reviews</a>
+                        <a href="home-default.html#" class="f-link">Product
+                            Reviews</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Video Games</a>
+                        <a href="home-default.html#" class="f-link">Video
+                            Games</a>
                     </li>
                     <li>
                         <a href="home-default.html#" class="f-link">Discover</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Knowledge</a>
+                        <a href="home-default.html#"
+                           class="f-link">Knowledge</a>
                     </li>
                 </ul>
             </div>
@@ -110,13 +124,15 @@
                 <div class="title">Lifestyle</div>
                 <ul>
                     <li>
-                        <a href="home-default.html#" class="f-link">Lifestyle Trends</a>
+                        <a href="home-default.html#" class="f-link">Lifestyle
+                            Trends</a>
                     </li>
                     <li>
                         <a href="home-default.html#" class="f-link">Family</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Psychology</a>
+                        <a href="home-default.html#"
+                           class="f-link">Psychology</a>
                     </li>
                     <li>
                         <a href="home-default.html#" class="f-link">Fashion</a>
@@ -135,10 +151,12 @@
                 <div class="title">Entertainment</div>
                 <ul>
                     <li>
-                        <a href="home-default.html#" class="f-link">Music & Podcasts</a>
+                        <a href="home-default.html#" class="f-link">Music &
+                            Podcasts</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Art & Design</a>
+                        <a href="home-default.html#" class="f-link">Art &
+                            Design</a>
                     </li>
                     <li>
                         <a href="home-default.html#" class="f-link">Movies</a>
@@ -155,13 +173,15 @@
                         <a href="home-default.html#" class="f-link">Tennis</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">F-1 Racing Tour</a>
+                        <a href="home-default.html#" class="f-link">F-1 Racing
+                            Tour</a>
                     </li>
                     <li>
                         <a href="home-default.html#" class="f-link">NBA</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Basketball</a>
+                        <a href="home-default.html#"
+                           class="f-link">Basketball</a>
                     </li>
                 </ul>
             </div>
@@ -171,19 +191,23 @@
                 <div class="title">Travel</div>
                 <ul>
                     <li>
-                        <a href="home-default.html#" class="f-link">Discovery</a>
+                        <a href="home-default.html#"
+                           class="f-link">Discovery</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Flight Tickets & Hotel</a>
+                        <a href="home-default.html#" class="f-link">Flight
+                            Tickets & Hotel</a>
                     </li>
                     <li>
                         <a href="home-default.html#" class="f-link">Tour</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Destination</a>
+                        <a href="home-default.html#"
+                           class="f-link">Destination</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Experience & Reviews</a>
+                        <a href="home-default.html#" class="f-link">Experience &
+                            Reviews</a>
                     </li>
                 </ul>
             </div>
@@ -197,13 +221,16 @@
                         <a href="home-default.html#" class="f-link">Contact</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Partners Programe</a>
+                        <a href="home-default.html#" class="f-link">Partners
+                            Programe</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Privacy Policy</a>
+                        <a href="home-default.html#" class="f-link">Privacy
+                            Policy</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Term & Conditions</a>
+                        <a href="home-default.html#" class="f-link">Term &
+                            Conditions</a>
                     </li>
                 </ul>
             </div>

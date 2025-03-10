@@ -34,10 +34,10 @@
                                 <a href="{{ route('author.dashboard') }}" class="text-white">Back to Dashboard</a>
                             </button>
                             @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
+                                <div class="alert alert-success">
+                                {{ session('success') }}
+                                </div>
+                            @endif
 
 
                             <div class="d-flex">
