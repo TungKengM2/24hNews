@@ -207,36 +207,57 @@ class ArticleUserController extends Controller
         $article_id,
         $comment_id
     ) {
+        // Kiểm tra người dùng đã đăng nhập chưa
+        if (! auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn cần đăng nhập để trả lời bình luận!',
+            ], 403);
+        }
+
+        // Validate dữ liệu đầu vào
         $request->validate([
             'content' => 'required|string|max:500',
         ]);
 
-        // Kiểm tra xem comment gốc có tồn tại không
-        $parentComment = Comment::where('comment_id', $comment_id)
-            ->firstOrFail();
+        // Kiểm tra xem comment cha có tồn tại không
+        $parentComment = Comment::where('comment_id', $comment_id)->first();
 
-        // Tạo comment trả lời
-        $reply = new Comment;
-        $reply->content = $request->input('content');
-        $reply->parent_id = $parentComment->comment_id; // ✅ Dùng comment_id thay vì id
-        $reply->article_id = $article_id;
-        $reply->user_id = auth()->id();
-        $reply->depth = $parentComment->depth + 1; // Tăng depth dựa trên comment cha
-        $reply->status = 'approved'; // ✅ Thêm cột status (có thể thay đổi theo yêu cầu)
-        $reply->save();
+        if (! $parentComment) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bình luận không tồn tại!',
+            ], 404);
+        }
 
-        return response()->json([
-            'success' => true,
-            'reply' => [
-                'comment_id' => $reply->comment_id,
-                // ✅ Trả về comment_id thay vì id
-                'username' => auth()->user()->username,
-                'user_image' => auth()->user()->image ?? asset('assets/img/colums/default.png'),
-                'content' => nl2br(e($reply->content)),
-                'status' => $reply->status,
-                // ✅ Trả về trạng thái của comment
-                'created_at' => $reply->created_at->format('F d, Y'),
-            ],
-        ]);
+        try {
+            // Tạo comment trả lời
+            $reply = new Comment;
+            $reply->content = $request->input('content');
+            $reply->parent_id = $parentComment->comment_id;
+            $reply->article_id = $article_id;
+            $reply->user_id = auth()->id();
+            $reply->depth = $parentComment->depth + 1;
+            $reply->status = 'approved';
+            $reply->save();
+
+            return response()->json([
+                'success' => true,
+                'reply' => [
+                    'comment_id' => $reply->comment_id ?? $reply->id,
+                    // Đảm bảo tồn tại
+                    'username' => auth()->user()->username,
+                    'user_image' => auth()->user()->image ?? asset('assets/img/colums/default.png'),
+                    'content' => nl2br(e($reply->content)),
+                    'status' => $reply->status,
+                    'created_at' => $reply->created_at->format('F d, Y'),
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi lưu bình luận: '.$e->getMessage(),
+            ], 500);
+        }
     }
 }
