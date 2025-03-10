@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -44,3 +45,4 @@ Route::post('/check-nsfw', function (Request $request) {
 
     return response()->json(json_decode($process->getOutput(), true));
 });
+Route::get('/test-storage', [TestController::class, 'listFiles']);
