@@ -31,8 +31,8 @@
                         <i data-feather="grid"></i>
                         <span>Bài Viết</span>
                         <span class="pull-right-container">
-            <i class="fa fa-angle-right pull-right"></i>
-        </span>
+                            <i class="fa fa-angle-right pull-right"></i>
+                        </span>
                     </a>
                     <ul class="treeview-menu">
                         <li>

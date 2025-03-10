@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\AuthAdminController;
+use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\AuthUserController;
@@ -201,23 +202,23 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::resource(
         'articles',
-        ArticleController::class
+        AuthorArticleController::class
     )
         ->names('author.articles');
 
     Route::post('/articles/upload', [
-        ArticleController::class,
+        AuthorArticleController::class,
         'uploadImage',
     ])
         ->name('author.articles.upload');
 
     Route::get(
         '/articles/search',
-        [ArticleController::class, 'search']
+        [AuthorArticleController::class, 'search']
     )
         ->name('author.articles.search');
 
-        Route::get('/profile', [ProfileController::class, 'profileAuthor'])
+    Route::get('/profile', [ProfileController::class, 'profileAuthor'])
         ->name('author.profile');
 
     Route::get(
