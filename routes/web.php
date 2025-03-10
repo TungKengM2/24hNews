@@ -172,6 +172,14 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
         [ModeratorArticleController::class, 'index']
     )
         ->name('moderator.list-article');
+
+    Route::get('/profile', [ProfileController::class, 'profileModerator'])
+        ->name('moderator.profile');
+
+    Route::get(
+        '/change-password',
+        [ProfileController::class, 'showChangePasswordFormModerator']
+    )->name('moderator.change-password');
 });
 
 // 🚀 Khu vực dành riêng cho Author (role_id = 2)
@@ -208,6 +216,14 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
         [ArticleController::class, 'search']
     )
         ->name('author.articles.search');
+
+        Route::get('/profile', [ProfileController::class, 'profileAuthor'])
+        ->name('author.profile');
+
+    Route::get(
+        '/change-password',
+        [ProfileController::class, 'showChangePasswordFormAuthor']
+    )->name('author.change-password');
 });
 
 // 🚀 Khu vực dành riêng cho User (role_id = 4)
