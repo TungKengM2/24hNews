@@ -46,7 +46,10 @@ class HomeController extends Controller
 
 
         //11111111
-        $categories = Category::where('is_active', 1)->get();
+        $categories = Category::where('is_active', 1)->get()->filter(function ($category) {
+            return $category->is_active == 1;
+        });
+        
         $newsData = [];
         foreach ($categories as $category) {
             $article = Article::where('category_id', $category->category_id)
@@ -62,7 +65,10 @@ class HomeController extends Controller
             }
         }
 
-        $categories = Category::where('is_active', 1)->get();
+        $categories = Category::where('is_active', 1)->get()->filter(function ($category) {
+            return $category->is_active == 1;
+        });
+        
                 
         // Truyền dữ liệu bài viết tới view
         return view('welcome', compact('categories','sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles'));
