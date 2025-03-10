@@ -1,7 +1,7 @@
-@extends('moderator.layouts.master')
+@extends('author.layouts.master')
 
 @section('title')
-    Moderator Profile
+    Author Profile
 @endsection
 
 @section('content')
