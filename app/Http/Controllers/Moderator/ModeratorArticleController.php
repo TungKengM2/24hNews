@@ -50,5 +50,8 @@ class ModeratorArticleController extends Controller
 
         return redirect()->back()->with('success', 'Bài viết đã bị từ chối.');
     }
-
+    public function show(Article $article)
+    {
+        return view('moderator.articles.show', compact('article'));
+    }
 }
