@@ -15,6 +15,7 @@ use App\Http\Controllers\CategoryUserController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -228,6 +229,9 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
         '/change-password',
         [ProfileController::class, 'showChangePasswordFormAuthor']
     )->name('author.change-password');
+
+    Route::get('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+
 });
 
 // 🚀 Khu vực dành riêng cho User (role_id = 4)
