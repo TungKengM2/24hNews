@@ -39,10 +39,7 @@
                         <i class="la la-user fs-4">
                         </i>
                     </a>
-                    <a href="home-default.html#" class="icon-link noti-dot">
-                        <i class="la la-shopping-bag fs-4"></i>
-                    </a>
-                    <a href="home-default.html#" class="icon-link search-btn-style1">
+                    <a class="icon-link search-btn-style1">
                         <i class="la la-search fs-4 sOpen-btn"></i>
                         <i class="la la-close fs-4 sClose-btn"></i>
                     </a>
