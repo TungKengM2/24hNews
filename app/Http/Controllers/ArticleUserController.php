@@ -13,9 +13,10 @@ use Illuminate\Support\Facades\Auth;
 
 class ArticleUserController extends Controller
 {
-    public function show($article_id)
+    public function show($slug)
     {
-        $article = Article::where('article_id', $article_id)->first();
+        $article = Article::where('slug', $slug)->first();
+
 
         if (! $article) {
             abort(404, 'Bài viết không tồn tại!');
