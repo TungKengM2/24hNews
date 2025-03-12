@@ -136,11 +136,10 @@
 
                     </div>
                 </div>
-
             </div>
         </section>
         <!-- ====== end product ====== -->
-
+        
 
         <!-- ====== start product details ====== -->
         <section class="product-details pt-20">
@@ -151,17 +150,27 @@
                     <div class="product-reviews pt-30">
                         <div class="row gx-5">
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-12">
                                     <div class="reviews-content pt-30">
-                                        <h5 class="color-000 mb-40 text-capitalize">Bình luận</h5>
+                                        <div class="comments-filter">
+                                            <div class="row align-items-center">
+                                                <div class="col-12">
+                                                    <p class="text-uppercase">{{ $comments->total() }} Bình Luận</p>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                        <br>
                                         <?php foreach ($comments as $comment): ?>
                                         <?php if (!$comment->parent_id): ?>
                                         <div class="comment-reply-cont bg-light py-3 px-4 mb-3 rounded shadow-sm">
                                             <div class="d-flex align-items-start">
                                                 <div
                                                     class="icon-60 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
-                                                    <img src="<?= $comment->user->image ?? 'assets/img/colums/default.png' ?>"
-                                                        alt="User Avatar">
+                                                    <img src="<?= !empty($comment->user->image) 
+                                                    ? asset('storage/' . $comment->user->image) 
+                                                    : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>" 
+                                                    alt="User Avatar">
                                                 </div>
                                                 <div class="inf w-100">
                                                     <div class="d-flex justify-content-between align-items-center">
@@ -177,12 +186,12 @@
                                                         <?= nl2br(htmlspecialchars($comment->content)) ?>
                                                     </div>
                                                     <div class="mt-2">
-                                                        <button
-                                                            class="btn btn-sm btn-outline-primary reply-btn d-flex align-items-center gap-1 px-3 py-1"
+                                                        <button class="btn reply-btn butn border border-1 mt-20 py-2 px-3"
                                                             data-comment-id="<?= $comment->comment_id ?>"
                                                             data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
-                                                            <i class="fas fa-reply fa-flip-horizontal"></i> <span
-                                                                class="fw-bold">Trả lời</span>
+
+                                                            <span class="fw-bold">Trả lời</span>
+
                                                         </button>
                                                     </div>
                                                     <!-- Danh sách replies -->
@@ -199,8 +208,10 @@
                                                             <div class="d-flex align-items-start">
                                                                 <div
                                                                     class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
-                                                                    <img src="<?= $reply->user->image ?? 'assets/img/colums/default.png' ?>"
-                                                                        alt="User Avatar">
+                                                                    <img src="<?= $reply->user->image 
+                                                                    ? asset('storage/' . $reply->user->image) 
+                                                                    : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>" 
+                                                                    alt="User Avatar">
                                                                 </div>
                                                                 <div class="inf w-100">
                                                                     <div
@@ -218,10 +229,10 @@
                                                                     </div>
                                                                     <div class="mt-2">
                                                                         <button
-                                                                            class="btn btn-sm btn-outline-primary reply-btn d-flex align-items-center gap-1 px-3 py-1"
+                                                                            class="btn reply-btn butn border border-1 mt-20 py-2 px-3 reply-btn "
                                                                             data-comment-id="<?= $comment->comment_id ?>"
                                                                             data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
-                                                                            <i class="fas fa-reply fa-flip-horizontal"></i>
+
                                                                             <span class="fw-bold">Trả lời</span>
                                                                         </button>
                                                                     </div>
@@ -264,7 +275,7 @@
                                                                 value="{{ $comment->article_id }}">
 
                                                             <div
-                                                                class="d-flex align-items-start bg-white p-3 rounded shadow-sm">
+                                                                class="d-flex align-items-start bg-white p-3 rounded shadow-sm border">
                                                                 <!-- Ảnh đại diện -->
                                                                 <div
                                                                     class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
@@ -275,25 +286,30 @@
                                                                 <div class="w-100">
                                                                     <!-- Ô nhập nội dung trả lời -->
                                                                     <textarea class="form-control form-control-sm reply-content" name="content" rows="2" required
-                                                                        placeholder="Trả lời: @php echo $comment->user->username ?? 'Người dùng ẩn danh'; @endphp"
-                                                                        onfocus="addUsernameToReply(this, '{{ $comment->user->username ?? 'Người dùng ẩn danh' }}')">
-                                                                        </textarea>
+                                                                        placeholder="Trả lời: {{ '@' . ($comment->user->username ?? 'Người dùng ẩn danh') }}"
+                                                                        onclick="addUsernameToReply(this, '{{ $comment->user->username ?? 'Người dùng ẩn danh' }}')">
+                                                                    </textarea>
 
                                                                     <script>
                                                                         function addUsernameToReply(textarea, username) {
-                                                                            if (textarea.value.trim() === '') {
-                                                                                textarea.value = '@' + username + ' ';
+                                                                            username = '@' + username.trim();
+                                                                            let currentValue = textarea.value.trim();
+
+                                                                            // Nếu chưa có @username ở đầu, mới thêm vào
+                                                                            if (!currentValue.startsWith(username)) {
+                                                                                textarea.value = username + ' ' + currentValue;
                                                                             }
+
+                                                                            textarea.focus();
                                                                         }
                                                                     </script>
+
                                                                     <!-- Nút hành động -->
                                                                     <div class="d-flex justify-content-end gap-2 mt-2">
                                                                         <button type="button"
-                                                                            class="btn btn-sm btn-outline-secondary cancel-reply">
-                                                                            Hủy
-                                                                        </button>
+                                                                            class="btn butn border border-1 mt-20 py-2 px-3 cancel-reply">Hủy</button>
                                                                         <button type="button"
-                                                                            class="btn btn-sm btn-primary send-reply"
+                                                                            class="btn butn border border-1 mt-20 py-2 px-3 send-reply"
                                                                             data-comment-id="{{ $comment->comment_id }}"
                                                                             data-article-id="{{ $comment->article_id }}">
                                                                             Trả lời
@@ -303,6 +319,7 @@
                                                             </div>
                                                         </form>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -315,9 +332,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-12">
                                     <form class="comment-form pt-30" method="POST"
-                                        action="<?= route('client.articles.comment', ['article_id' => $article->article_id]) ?>">
+                                        action="<?= route('articles.comment', ['article_id' => $article->article_id]) ?>">
                                         <?= csrf_field() ?>
                                         <h5 class="color-000 mb-40 text-capitalize"> Thêm bình luận </h5>
                                         <div class="row">
@@ -343,6 +360,8 @@
                 </div>
             </div>
             </div>
+
+           
         </section>
         <!-- ====== end product details ====== -->
 
@@ -363,14 +382,14 @@
                                                 alt="{{ $related->title }}">
                                             <div class="btns">
 
-                                                <a href="{{ route('client.articles.article', $related->article_id) }}"
+                                                <a href="{{ route('articles.article', $related->article_id) }}"
                                                     class="butn">
                                                     <span><i class="la la-eye me-2"></i>Đọc thêm</span>
                                                 </a>
                                             </div>
                                         </div>
                                         <div class="info pt-30">
-                                            <a href="{{ route('client.articles.article', $related->article_id) }}"
+                                            <a href="{{ route('articles.article', $related->article_id) }}"
                                                 class="title">{{ $related->title }}</a>
                                         </div>
                                     </div>
@@ -403,7 +422,7 @@
             likeButton.addEventListener("click", function() {
                 let articleId = likeButton.getAttribute("data-article-id");
 
-                fetch(`/client/articles/${articleId}/like`, {
+                fetch(`/articles/${articleId}/like`, {
                         method: "POST",
                         headers: {
                             "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
@@ -515,7 +534,7 @@
                     }
 
                     $.ajax({
-                        url: "{{ route('client.articles.replyComment', ['article_id' => '__ARTICLE_ID__', 'comment_id' => '__COMMENT_ID__']) }}"
+                        url: "{{ route('articles.replyComment', ['article_id' => '__ARTICLE_ID__', 'comment_id' => '__COMMENT_ID__']) }}"
                             .replace("__ARTICLE_ID__", articleId)
                             .replace("__COMMENT_ID__", commentId),
                         type: "POST",
