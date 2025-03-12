@@ -29,7 +29,7 @@
                     <ul>
                         @foreach($results as $result)
                             <li> 
-                                <a href="{{ Auth::check() ? route('client.articles.article', $result->article_id) : url('/login-user') }}" class="text-capitalize">{{ $result->title }}</a>
+                                <a href="{{ Auth::check() ? route('client.articles.article', $result->article_id) : url('/login-user') }}" class="btn btn-block">{{ $result->title }}</a>
                             </li>
                         @endforeach
                     </ul>
