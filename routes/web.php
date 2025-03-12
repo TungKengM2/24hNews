@@ -30,13 +30,13 @@ use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Client Articles
-Route::get('/client/articles/{article_id}',[ArticleUserController::class, 'show'])->name('client.articles.article');
-Route::post('/client/articles/{article_id}/like',[ArticleUserController::class, 'likeArticle'])->name('client.articles.like');
-Route::post('/client/articles/{article_id}/comments',[ArticleUserController::class, 'storeComment'])->middleware('auth')->name('client.articles.comment');
-Route::post('/client/articles/{article_id}/comments/{comment_id}/reply',[ArticleUserController::class, 'storeReplyComment'])->middleware('auth')->name('client.articles.replyComment');
+Route::get('/articles/{article_id}',[ArticleUserController::class, 'show'])->name('articles.article');
+Route::post('/articles/{article_id}/like',[ArticleUserController::class, 'likeArticle'])->name('articles.like');
+Route::post('/articles/{article_id}/comments',[ArticleUserController::class, 'storeComment'])->middleware('auth')->name('articles.comment');
+Route::post('/articles/{article_id}/comments/{comment_id}/reply',[ArticleUserController::class, 'storeReplyComment'])->middleware('auth')->name('articles.replyComment');
 
 // Client Category
-Route::get('client/category/{category_id}',[CategoryUserController::class, 'index'])->name('client.category.show');
+Route::get('{category_id}',[CategoryUserController::class, 'index'])->name('client.category.show');
 
 
 // 🚀 Auth dành cho User

@@ -139,7 +139,7 @@
             </div>
         </section>
         <!-- ====== end product ====== -->
-
+        
 
         <!-- ====== start product details ====== -->
         <section class="product-details pt-20">
@@ -334,7 +334,7 @@
                                 </div>
                                 <div class="col-lg-12">
                                     <form class="comment-form pt-30" method="POST"
-                                        action="<?= route('client.articles.comment', ['article_id' => $article->article_id]) ?>">
+                                        action="<?= route('articles.comment', ['article_id' => $article->article_id]) ?>">
                                         <?= csrf_field() ?>
                                         <h5 class="color-000 mb-40 text-capitalize"> Thêm bình luận </h5>
                                         <div class="row">
@@ -500,14 +500,14 @@
                                                 alt="{{ $related->title }}">
                                             <div class="btns">
 
-                                                <a href="{{ route('client.articles.article', $related->article_id) }}"
+                                                <a href="{{ route('articles.article', $related->article_id) }}"
                                                     class="butn">
                                                     <span><i class="la la-eye me-2"></i>Đọc thêm</span>
                                                 </a>
                                             </div>
                                         </div>
                                         <div class="info pt-30">
-                                            <a href="{{ route('client.articles.article', $related->article_id) }}"
+                                            <a href="{{ route('articles.article', $related->article_id) }}"
                                                 class="title">{{ $related->title }}</a>
                                         </div>
                                     </div>
@@ -540,7 +540,7 @@
             likeButton.addEventListener("click", function() {
                 let articleId = likeButton.getAttribute("data-article-id");
 
-                fetch(`/client/articles/${articleId}/like`, {
+                fetch(`/articles/${articleId}/like`, {
                         method: "POST",
                         headers: {
                             "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
@@ -652,7 +652,7 @@
                     }
 
                     $.ajax({
-                        url: "{{ route('client.articles.replyComment', ['article_id' => '__ARTICLE_ID__', 'comment_id' => '__COMMENT_ID__']) }}"
+                        url: "{{ route('articles.replyComment', ['article_id' => '__ARTICLE_ID__', 'comment_id' => '__COMMENT_ID__']) }}"
                             .replace("__ARTICLE_ID__", articleId)
                             .replace("__COMMENT_ID__", commentId),
                         type: "POST",

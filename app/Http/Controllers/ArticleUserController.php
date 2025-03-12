@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Comment;
+use App\Models\Category;
 use App\Models\ArticleLike;
 use App\Models\ArticleSave;
 use App\Models\ArticleView;
-use App\Models\Category;
-use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -138,7 +138,7 @@ class ArticleUserController extends Controller
         $categories = Category::where('is_active', 1)->get();
 
         return view(
-            'client.articles.article',
+            'website.articles.article',
             compact(
                 'categories',
                 'article',
