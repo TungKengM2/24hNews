@@ -29,7 +29,6 @@
                     <ul>
                         @foreach($results as $result)
                             <li>{{ $result->title }} 
-                                <a href="{{ Auth::check() ? route('client.articles.article', $article->article_id) : url('/login-user') }}" class="btn btn-sm btn-primary">Xem</a>
                             </li>
                         @endforeach
                     </ul>
