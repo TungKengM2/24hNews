@@ -61,14 +61,14 @@
                                                         <h4 class="number">{{ $index + 1 }}</h4>
                                                     </div>
                                                     <div class="col-4">
-                                                        <a href="{{ Auth::check() ? route('client.articles.article', ['article_id' => $articleviews->article_id]) : url('/login-user') }}">
+                                                        <a href="{{ Auth::check() ? route('articles.article', ['article_id' => $articleviews->article_id]) : url('/login-user') }}">
                                                             <img src="{{ asset('storage/' . $articleviews->thumbnail_url) }}" alt="{{ $articleviews->title }}">
                                                         </a>
                                                     </div>
                                                     <div class="col-6">
                                                         <div class="content">
                                                             <h5 class="title">
-                                                                <a href="{{ Auth::check() ? route('client.articles.article', ['article_id' => $articleviews->article_id]) : url('/login-user') }}">
+                                                                <a href="{{ Auth::check() ? route('articles.article', ['article_id' => $articleviews->article_id]) : url('/login-user') }}">
                                                                     {{ $articleviews->title }}
                                                                 </a>
                                                             </h5>
@@ -110,7 +110,7 @@
                                 <div class="col-lg-8 border-1 border-end brd-gray">
                                     <div class="tc-post-grid-default">
                                         <div class="item">
-                                            <a href="{{ route('client.articles.article', ['article_id' => $featuredArticle->article_id]) }}"
+                                            <a href="{{ route('articles.article', ['article_id' => $featuredArticle->article_id]) }}"
                                                 class="img img-cover th-400 d-block">
                                                 <img src="{{ asset('storage/' . $featuredArticle->thumbnail_url) }}"
                                                     alt="{{ $featuredArticle->title }}">
@@ -120,7 +120,7 @@
                                                     {{ $featuredArticle->category->name ?? 'Không có danh mục' }}
                                                 </a>
                                                 <h2 class="title ltspc--1 mb-20">
-                                                    <a href="{{ route('client.articles.article', ['article_id' => $featuredArticle->article_id]) }}">
+                                                    <a href="{{ route('articles.article', ['article_id' => $featuredArticle->article_id]) }}">
                                                         {{ $featuredArticle->title }}
                                                     </a>
                                                 </h2>
@@ -153,7 +153,7 @@
                                                             {{ $article->category->name }}
                                                         </a>
                                                         <h5 class="title">
-                                                            <a href="{{ route('client.articles.article', ['article_id' => $article->article_id]) }}" class="hover-underline">
+                                                            <a href="{{ route('articles.article', ['article_id' => $article->article_id]) }}" class="hover-underline">
                                                                 {{ $article->title }}
                                                             </a>
                                                         </h5>
