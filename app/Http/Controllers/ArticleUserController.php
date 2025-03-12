@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ArticleUserController extends Controller
 {
-    public function show($article_id)
+    public function show($article_id, Request $request)
     {
         $article = Article::where('article_id', $article_id)->first();
 
@@ -137,6 +137,10 @@ class ArticleUserController extends Controller
 
         $categories = Category::where('is_active', 1)->get();
 
+        // TungKeng Bổ Sung
+        $article = Article::with('comments')->findOrFail($article_id);
+        $highlightCommentId = $request->query('highlight');
+
         return view(
             'website.articles.article',
             compact(
@@ -146,7 +150,9 @@ class ArticleUserController extends Controller
                 'isLiked',
                 'likeCount',
                 'comments',
-                'isBookmarked'
+                //TungKeng Bổ Sung
+                'isBookmarked',
+                'highlightCommentId'
             )
         );
     }
