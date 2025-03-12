@@ -88,7 +88,7 @@
                         <ul class="menu sm-scrol">
                             <li>
                                 @if ($pendingCount > 0)
-                                    <a href="">
+                                    <a href="{{ route('moderator.list-article') }}">
                                         {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
                                     </a>
                                 @endif
@@ -106,7 +106,9 @@
                 <a href="index.html#"
                     class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white"
                     data-bs-toggle="dropdown" title="User">
-                    <img class="avatar avatar-pill" src="/admin/main/../images/avatar/3.jpg" alt="">
+                    <img class="avatar rounded-circle"
+                        src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : '/admin/main/../images/user3-128x128.jpg' }}"
+                        alt="User Avatar">
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">

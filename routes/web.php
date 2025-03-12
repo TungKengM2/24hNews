@@ -17,6 +17,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\User\ArticleSaveController;
+use App\Http\Controllers\User\ArticleViewController;
+use App\Http\Controllers\User\ArticleViewUserController;
 use Illuminate\Support\Facades\Route;
 
 // 🌟 Trang chủ & bài viết chi tiết
@@ -169,21 +172,33 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
         '/change-password',
         [ProfileController::class, 'showChangePasswordFormModerator']
     )->name('moderator.change-password');
-});
-Route::prefix('moderator')->name('moderator.')->group(function () {
     Route::get('/articles', [ModeratorArticleController::class, 'index'])
-        ->name('articles.index');
+        ->name('moderator.articles.index');
 
     Route::get('/articles/{article}', [ModeratorArticleController::class, 'show'])
-        ->name('articles.show');
+        ->name('moderator.articles.show');
 
     Route::patch('/articles/{article}/approve', [ModeratorArticleController::class, 'approve'])
-        ->name('articles.approve');
+        ->name('moderator.articles.approve');
 
     // Sửa lại route reject (bỏ 'moderator/' trong URL)
     Route::patch('/articles/{article}/reject', [ModeratorArticleController::class, 'reject'])
-        ->name('articles.reject');
+        ->name('moderator.articles.reject');
 });
+// Route::prefix('moderator')->name('moderator.')->group(function () {
+//     Route::get('/articles', [ModeratorArticleController::class, 'index'])
+//         ->name('articles.index');
+
+//     Route::get('/articles/{article}', [ModeratorArticleController::class, 'show'])
+//         ->name('articles.show');
+
+//     Route::patch('/articles/{article}/approve', [ModeratorArticleController::class, 'approve'])
+//         ->name('articles.approve');
+
+//     // Sửa lại route reject (bỏ 'moderator/' trong URL)
+//     Route::patch('/articles/{article}/reject', [ModeratorArticleController::class, 'reject'])
+//         ->name('articles.reject');
+// });
 
 
 
@@ -231,7 +246,6 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     )->name('author.change-password');
 
     Route::get('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-
 });
 
 // 🚀 Khu vực dành riêng cho User (role_id = 4)
@@ -258,7 +272,26 @@ Route::middleware(['auth', 'role:4'])
             '/change-password',
             [ProfileController::class, 'showChangePasswordForm']
         )->name('user.change-password');
+
+        // Route::post('/articles/view', [ArticleViewUserController::class, 'store']);
+        // Route::get('/articles/viewed', [ArticleViewUserController::class, 'index']);
+
+        // Bookmark By TungKeng
+        Route::post('/save-article', [ArticleSaveController::class, 'saveArticle'])->name('save.article');
+        Route::get('/saved-articles', [ArticleSaveController::class, 'savedArticles'])->name('user.saved');
+        Route::get('/article/{article_id}', [ArticleUserController::class, 'show'])->name('article.detail');
+        Route::delete('/user/remove-saved-article/{id}', [ArticleSaveController::class, 'removeSavedArticle'])->name('user.remove.saved');
+        Route::post('/bookmark/{article_id}', [ArticleSaveController::class, 'toggleBookmark']);
+
+        // Lịch sử bài viết đã xem của user
+        Route::get('/viewed-articles', [ArticleViewUserController::class, 'index'])->name('viewed.articles');
     });
+
+// Khu vực dùng cho BookMark By TungKeng
+Route::middleware(['auth'])->group(function () {
+    Route::post('/save-article', [ArticleSaveController::class, 'saveArticle'])->name('save.article');
+});
+
 
 // 🚀 Khu vực dành riêng cho Admin (role_id = 1)
 Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
