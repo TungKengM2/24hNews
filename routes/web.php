@@ -21,6 +21,7 @@ use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\User\ArticleViewUserController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
 use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
+use App\Http\Controllers\User\UserController as UserUserController;
 
 // 🌟 Trang chủ & bài viết chi tiết
 // Route::view('/', 'welcome');
@@ -30,13 +31,13 @@ use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Client Articles
-Route::get('/client/articles/{article_id}',[ArticleUserController::class, 'show'])->name('client.articles.article');
-Route::post('/client/articles/{article_id}/like',[ArticleUserController::class, 'likeArticle'])->name('client.articles.like');
-Route::post('/client/articles/{article_id}/comments',[ArticleUserController::class, 'storeComment'])->middleware('auth')->name('client.articles.comment');
-Route::post('/client/articles/{article_id}/comments/{comment_id}/reply',[ArticleUserController::class, 'storeReplyComment'])->middleware('auth')->name('client.articles.replyComment');
+Route::get('/client/articles/{article_id}', [ArticleUserController::class, 'show'])->name('client.articles.article');
+Route::post('/client/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('client.articles.like');
+Route::post('/client/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->middleware('auth')->name('client.articles.comment');
+Route::post('/client/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->middleware('auth')->name('client.articles.replyComment');
 
 // Client Category
-Route::get('client/category/{category_id}',[CategoryUserController::class, 'index'])->name('client.category.show');
+Route::get('client/category/{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
 
 
 // 🚀 Auth dành cho User
@@ -264,6 +265,9 @@ Route::middleware(['auth', 'role:4'])
 
         // Lịch sử bài viết đã xem của user
         Route::get('/viewed-articles', [ArticleViewUserController::class, 'index'])->name('viewed.articles');
+
+        // Hoạt động bình luận
+        Route::get('/{user_id}/comments', [UserUserController::class, 'getUserComments'])->name('user.comments');
     });
 
 // Khu vực dùng cho BookMark By TungKeng
