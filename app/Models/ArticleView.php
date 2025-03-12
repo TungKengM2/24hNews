@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class ArticleView extends Model
 {
@@ -16,6 +17,15 @@ class ArticleView extends Model
         'user_id',
         'anonymous',
         'viewed_at',
-    ]; // Không cần timestamps vì đã có `viewed_at`
+    ];
 
+    protected $casts = [
+        'viewed_at' => 'datetime',
+    ];
+
+    // Liên kết với bảng Articles
+    public function article()
+    {
+        return $this->belongsTo(Article::class, 'article_id', 'article_id');
+    }
 }
