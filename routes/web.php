@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Route;
 // Route::view('/article-detail', 'website.pages.articledetail.homedetail');
 // Home duong chinh oke --
 Route::get('/', [HomeController::class, 'index'])->name('home');
+// dat them
+Route::post('/search', [HomeController::class, 'search'])->name('search');
 
 // Client Articles
 Route::get(
