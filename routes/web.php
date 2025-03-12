@@ -1,65 +1,44 @@
 <?php
 
-use App\Http\Controllers\Admin\ArticleController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\UploadController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AuthUserController;
+use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ArticleUserController;
-use App\Http\Controllers\Auth\SocialAuthController;
-use App\Http\Controllers\AuthAdminController;
-use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
+use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Author\AuthorDashboard;
-use App\Http\Controllers\Author\AuthorProfileController;
-use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\CategoryUserController;
-use App\Http\Controllers\ForgotPasswordController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Moderator\ModeratorArticleController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\User\ArticleSaveController;
 use App\Http\Controllers\User\ArticleViewController;
+use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\User\ArticleViewUserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Moderator\ModeratorArticleController;
+use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 
 // 🌟 Trang chủ & bài viết chi tiết
 // Route::view('/', 'welcome');
 // Route::view('/article-detail', 'website.pages.articledetail.homedetail');
+
 // Home duong chinh oke --
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Client Articles
-Route::get(
-    '/client/articles/{article_id}',
-    [ArticleUserController::class, 'show']
-)
-    ->name('client.articles.article');
-Route::post(
-    '/client/articles/{article_id}/like',
-    [ArticleUserController::class, 'likeArticle']
-)
-    ->name('client.articles.like');
-Route::post(
-    '/client/articles/{article_id}/comments',
-    [ArticleUserController::class, 'storeComment']
-)
-    ->middleware('auth')
-    ->name('client.articles.comment');
-Route::post(
-    '/client/articles/{article_id}/comments/{comment_id}/reply',
-    [ArticleUserController::class, 'storeReplyComment']
-)
-    ->middleware('auth')
-    ->name('client.articles.replyComment');
+Route::get('/client/articles/{article_id}',[ArticleUserController::class, 'show'])->name('client.articles.article');
+Route::post('/client/articles/{article_id}/like',[ArticleUserController::class, 'likeArticle'])->name('client.articles.like');
+Route::post('/client/articles/{article_id}/comments',[ArticleUserController::class, 'storeComment'])->middleware('auth')->name('client.articles.comment');
+Route::post('/client/articles/{article_id}/comments/{comment_id}/reply',[ArticleUserController::class, 'storeReplyComment'])->middleware('auth')->name('client.articles.replyComment');
 
 // Client Category
+Route::get('client/category/{categorySlug}',[CategoryUserController::class, 'index'])->name('client.category.show');
 
-Route::get(
-    'client/category/{categorySlug}',
-    [CategoryUserController::class, 'index']
-)->name('client.category.show');
 
-// oke --
 // 🚀 Auth dành cho User
 Route::middleware('guest')
     ->controller(AuthUserController::class)
