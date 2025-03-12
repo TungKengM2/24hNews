@@ -52,16 +52,38 @@
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="{{ route('moderator.articles.index') }}"><i class="icon-Commit"><span
-                            class="path1"></span><span class="path2"></span></i>Bài Viết</a>
-            </li>
+                                        class="path1"></span><span class="path2"></span></i>Bài Viết</a>
+                        </li>
+                    </ul>
+                </li>
 
-                        {{-- <li><a href="#"><i class="icon-Commit"><span class="path1"></span><span
-                                        class="path2"></span></i>Danh Sách Chờ</a>
-                        </li> --}}
-                        {{-- <li><a href="#"><i class="icon-Commit"><span
-                                        class="path1"></span><span class="path2"></span></i>Nâng Cấp Tài Khoản
+                <li class="treeview">
+                    <a href="{{ route('moderator.articles.index') }}">
+                        <i data-feather="grid"></i>
+                        <span>Hoạt Động</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-right pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li>
+                            <a href="{{ route('moderator.comments', ['user_id' => Auth::id()]) }}">
+                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                Hoạt Động Bình Luận
                             </a>
-                        </li> --}}
+                        </li>
+                        <li>
+                            <a href="{{ route('moderator.saved') }}">
+                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                Tin Đã Lưu
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('moderator.viewed.articles') }}">
+                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                Tin Đã Xem
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
