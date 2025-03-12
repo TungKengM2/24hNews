@@ -26,9 +26,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($viewedArticles as $view)
+                                    @foreach ($viewedArticles as $index => $view)
                                         <tr>
-                                            <td>{{ $view->article->article_id }}</td>
+                                            <td>{{ $loop->iteration + ($viewedArticles->currentPage() - 1) * $viewedArticles->perPage() }}
+                                            </td>
                                             <td>
                                                 <a href="{{ route('articles.show', $view->article->article_id) }}">
                                                     <img src="{{ asset('storage/' . $view->article->thumbnail_url) }}"
