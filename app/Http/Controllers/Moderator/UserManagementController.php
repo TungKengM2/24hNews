@@ -63,8 +63,3 @@ class UserManagementController extends Controller
         }
 
     }
-<<<<<<< HEAD
-}
-=======
-
->>>>>>> 7a5c0706d7ba9de678b00327c0850ce260f83ab6
