@@ -18,15 +18,11 @@ class Comment extends Model
         'depth',
     ];
 
-    public function article()
-    {
-        return $this->belongsTo(Article::class);
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id')
             ->select([
+                // 'user_id',
                 'id',
                 'username',
                 'phone',
@@ -50,7 +46,15 @@ class Comment extends Model
     // Thêm quan hệ với reactions
     public function reactions()
     {
-        return $this->hasMany(CommentReaction::class, 'comment_id',
-            'comment_id');
+        return $this->hasMany(
+            CommentReaction::class,
+            'comment_id',
+            'comment_id'
+        );
+    }
+
+    public function article()
+    {
+        return $this->belongsTo(Article::class, 'article_id');
     }
 }

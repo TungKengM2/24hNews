@@ -52,3 +52,38 @@
 
     updateDate();
 </script>
+
+{{-- BookMark --}}
+<script>
+    $(document).ready(function () {
+    $("#bookmarkButton").click(function () {
+        let articleId = $(this).data("article-id");
+
+        $.ajax({
+            url: "/save-article",
+            type: "POST",
+            data: {
+                article_id: articleId,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function (response) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Thành công!",
+                    text: "Bài viết đã được lưu.",
+                    timer: 2000
+                });
+                $("#bookmarkText").text("Đã lưu");
+            },
+            error: function (xhr) {
+                let errorMessage = xhr.responseJSON ? xhr.responseJSON.message : "Lỗi khi lưu bài viết!";
+                Swal.fire({
+                    icon: "error",
+                    title: "Lỗi!",
+                    text: errorMessage
+                });
+            }
+        });
+    });
+});
+</script>

@@ -7,9 +7,9 @@ use App\Models\Category;
 
 class CategoryUserController extends Controller
 {
-    public function index($categorySlug)
+    public function index($categoryid)
     {
-        $category = Category::where('slug', $categorySlug)->firstOrFail();
+        $category = Category::where('slug', $categoryid)->firstOrFail();
 
         // Lấy bài viết thuộc danh mục
         $articles = Article::where('category_id', $category->category_id)
@@ -19,16 +19,20 @@ class CategoryUserController extends Controller
 
         // Lấy bài viết nhiều lượt xem nhất
         $articlesViews = Article::where('category_id', $category->category_id)
-            ->where('status', 'published')
-            ->orderBy('views', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->paginate(4);
+        ->where('status', 'published')
+        ->orderBy('views', 'desc')
+        ->orderBy('created_at', 'desc')
+        ->distinct() // Loại bỏ bản ghi trùng lặp
+        ->paginate(4);
+    
 
         // Lấy bài viết nổi bật (bài có nhiều lượt xem nhất)
-        $featuredArticle = Article::where('category_id', $category->category_id)
+        $featuredArticle = Article::with('category') // Load cả danh mục
+            ->where('category_id', $category->category_id)
             ->where('status', 'published')
             ->orderBy('views', 'desc')
             ->first();
+
 
         // Lấy 5 bài viết phụ (không trùng bài nổi bật)
         $relatedArticles = Article::where('category_id', $category->category_id)

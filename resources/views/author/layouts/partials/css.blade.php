@@ -15,7 +15,7 @@
            height: 120px;
            border-radius: 50%;
            overflow: hidden;
-           background: linear-gradient(135deg, #ff7e5f, #feb47b);
+           /* background: linear-gradient(135deg, #ff7e5f, #feb47b); */
            /* Viền gradient đẹp hơn */
            padding: 3px;
            /* Tạo khoảng cách giữa ảnh và viền */

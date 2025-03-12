@@ -52,6 +52,7 @@
     updateDate();
 </script>
 
+{{-- upload ảnh cho user --}}
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const imageUpload = document.getElementById("avatarUpload");
@@ -96,3 +97,4 @@
         });
     });
 </script>
+

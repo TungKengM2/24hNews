@@ -1,64 +1,47 @@
 <?php
 
-use App\Http\Controllers\Admin\ArticleController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\UploadController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AuthUserController;
+use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ArticleUserController;
-use App\Http\Controllers\Auth\SocialAuthController;
-use App\Http\Controllers\AuthAdminController;
-use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
+use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Author\AuthorDashboard;
-use App\Http\Controllers\Author\AuthorProfileController;
-use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\CategoryUserController;
-use App\Http\Controllers\ForgotPasswordController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Moderator\ModeratorArticleController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\Auth\SocialAuthController;
+use App\Http\Controllers\User\ArticleSaveController;
+use App\Http\Controllers\User\ArticleViewController;
+use App\Http\Controllers\Author\AuthorProfileController;
+use App\Http\Controllers\User\ArticleViewUserController;
+use App\Http\Controllers\Moderator\ModeratorArticleController;
+use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
+use App\Http\Controllers\User\UserController as UserUserController;
 
 // 🌟 Trang chủ & bài viết chi tiết
 // Route::view('/', 'welcome');
 // Route::view('/article-detail', 'website.pages.articledetail.homedetail');
+
 // Home duong chinh oke --
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // dat them
 Route::post('/search', [HomeController::class, 'search'])->name('search');
 
 // Client Articles
-Route::get(
-    '/client/articles/{article_id}',
-    [ArticleUserController::class, 'show']
-)
-    ->name('client.articles.article');
-Route::post(
-    '/client/articles/{article_id}/like',
-    [ArticleUserController::class, 'likeArticle']
-)
-    ->name('client.articles.like');
-Route::post(
-    '/client/articles/{article_id}/comments',
-    [ArticleUserController::class, 'storeComment']
-)
-    ->middleware('auth')
-    ->name('client.articles.comment');
-Route::post(
-    '/client/articles/{article_id}/comments/{comment_id}/reply',
-    [ArticleUserController::class, 'storeReplyComment']
-)
-    ->middleware('auth')
-    ->name('client.articles.replyComment');
+Route::get('/client/articles/{article_id}', [ArticleUserController::class, 'show'])->name('client.articles.article');
+Route::post('/client/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('client.articles.like');
+Route::post('/client/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->middleware('auth')->name('client.articles.comment');
+Route::post('/client/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->middleware('auth')->name('client.articles.replyComment');
 
 // Client Category
+Route::get('client/category/{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
 
-Route::get(
-    'client/category/{categorySlug}',
-    [CategoryUserController::class, 'index']
-)->name('client.category.show');
 
-// oke --
 // 🚀 Auth dành cho User
 Route::middleware('guest')
     ->controller(AuthUserController::class)
@@ -171,21 +154,33 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
         '/change-password',
         [ProfileController::class, 'showChangePasswordFormModerator']
     )->name('moderator.change-password');
-});
-Route::prefix('moderator')->name('moderator.')->group(function () {
     Route::get('/articles', [ModeratorArticleController::class, 'index'])
-        ->name('articles.index');
+        ->name('moderator.articles.index');
 
     Route::get('/articles/{article}', [ModeratorArticleController::class, 'show'])
-        ->name('articles.show');
+        ->name('moderator.articles.show');
 
     Route::patch('/articles/{article}/approve', [ModeratorArticleController::class, 'approve'])
-        ->name('articles.approve');
+        ->name('moderator.articles.approve');
 
     // Sửa lại route reject (bỏ 'moderator/' trong URL)
     Route::patch('/articles/{article}/reject', [ModeratorArticleController::class, 'reject'])
-        ->name('articles.reject');
+        ->name('moderator.articles.reject');
 });
+// Route::prefix('moderator')->name('moderator.')->group(function () {
+//     Route::get('/articles', [ModeratorArticleController::class, 'index'])
+//         ->name('articles.index');
+
+//     Route::get('/articles/{article}', [ModeratorArticleController::class, 'show'])
+//         ->name('articles.show');
+
+//     Route::patch('/articles/{article}/approve', [ModeratorArticleController::class, 'approve'])
+//         ->name('articles.approve');
+
+//     // Sửa lại route reject (bỏ 'moderator/' trong URL)
+//     Route::patch('/articles/{article}/reject', [ModeratorArticleController::class, 'reject'])
+//         ->name('articles.reject');
+// });
 
 
 
@@ -233,7 +228,6 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     )->name('author.change-password');
 
     Route::get('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-
 });
 
 // 🚀 Khu vực dành riêng cho User (role_id = 4)
@@ -260,7 +254,29 @@ Route::middleware(['auth', 'role:4'])
             '/change-password',
             [ProfileController::class, 'showChangePasswordForm']
         )->name('user.change-password');
+
+        // Route::post('/articles/view', [ArticleViewUserController::class, 'store']);
+        // Route::get('/articles/viewed', [ArticleViewUserController::class, 'index']);
+
+        // Bookmark By TungKeng
+        Route::post('/save-article', [ArticleSaveController::class, 'saveArticle'])->name('save.article');
+        Route::get('/saved-articles', [ArticleSaveController::class, 'savedArticles'])->name('user.saved');
+        Route::get('/article/{article_id}', [ArticleUserController::class, 'show'])->name('article.detail');
+        Route::delete('/user/remove-saved-article/{id}', [ArticleSaveController::class, 'removeSavedArticle'])->name('user.remove.saved');
+        Route::post('/bookmark/{article_id}', [ArticleSaveController::class, 'toggleBookmark']);
+
+        // Lịch sử bài viết đã xem của user
+        Route::get('/viewed-articles', [ArticleViewUserController::class, 'index'])->name('viewed.articles');
+
+        // Hoạt động bình luận
+        Route::get('/{user_id}/comments', [UserUserController::class, 'getUserComments'])->name('user.comments');
     });
+
+// Khu vực dùng cho BookMark By TungKeng
+Route::middleware(['auth'])->group(function () {
+    Route::post('/save-article', [ArticleSaveController::class, 'saveArticle'])->name('save.article');
+});
+
 
 // 🚀 Khu vực dành riêng cho Admin (role_id = 1)
 Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
