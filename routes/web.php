@@ -36,7 +36,7 @@ Route::post('/client/articles/{article_id}/comments',[ArticleUserController::cla
 Route::post('/client/articles/{article_id}/comments/{comment_id}/reply',[ArticleUserController::class, 'storeReplyComment'])->middleware('auth')->name('client.articles.replyComment');
 
 // Client Category
-Route::get('client/category/{categorySlug}',[CategoryUserController::class, 'index'])->name('client.category.show');
+Route::get('client/category/{category_id}',[CategoryUserController::class, 'index'])->name('client.category.show');
 
 
 // 🚀 Auth dành cho User
