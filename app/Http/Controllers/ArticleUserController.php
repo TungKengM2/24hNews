@@ -138,9 +138,7 @@ class ArticleUserController extends Controller
 
         $categories = Category::where('is_active', 1)->get();
 
-        // TungKeng Bổ Sung
-        $article = Article::with('comments')->findOrFail($article_id);
-        $highlightCommentId = $request->query('highlight');
+
 
         return view(
             'website.articles.article',
