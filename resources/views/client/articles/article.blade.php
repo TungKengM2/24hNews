@@ -1,12 +1,11 @@
 @extends('website.layouts.master')
 
 @section('content')
-
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-   
+
     <style>
         .reply-content {
             white-space: pre-line;
@@ -76,64 +75,76 @@
         }
     </style>
 
-
-    
-
     <!--Contents-->
     <main class="product-page">
         <!-- ====== start product ====== -->
-       <section class="product pt-100 pb-100">
-    <div class="container">
+        <section class="product pt-100 pb-100">
+            <div class="container">
+                {{-- Thông báo đã lưu bài viết --}}
+                @if (session('message'))
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        {{ session('message') }}
 
-        <div class="container mt-5">
-            <div class="row">
-                <!-- Bài viết chính -->
-                <div class="col-12">
-                    <div class="card shadow-sm mb-5 border-0">
-                        <div class="position-relative">
-                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                class="card-img-top rounded-top article-image" alt="{{ $article->title }}">
-                            <div class="overlay d-flex align-items-center justify-content-center">
-                                <h2 class="text-white text-center">{{ $article->title }}</h2>
+                    </div>
+                @endif
+
+                <div class="container mt-5">
+                    <div class="row">
+                        <!-- Bài viết chính -->
+                        <div class="col-12">
+                            <div class="card shadow-sm mb-5 border-0">
+                                <div class="position-relative">
+                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                        class="card-img-top rounded-top article-image" alt="{{ $article->title }}">
+                                    <div class="overlay d-flex align-items-center justify-content-center">
+                                        <h2 class="text-white text-center">{{ $article->title }}</h2>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h2 class="card-title">{{ $article->title }}</h2>
+                                    <p class="text-muted">
+                                        <i class="fa fa-eye"></i> {{ $article->views }} lượt xem |
+                                        <i class="fa fa-user"></i> {{ $article->author->username ?? 'N/A' }}
+                                    </p>
+
+                                    <!-- Nút Like -->
+                                    <button id="likeButton" class="like-btn" data-article-id="{{ $article->article_id }}"
+                                        data-liked="{{ $isLiked ? 'true' : 'false' }}">
+                                        <i class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-thumbs-up"
+                                            style="color: {{ $isLiked ? '#007bff' : 'black' }};"></i>
+                                        <span id="likeText"
+                                            style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $isLiked ? 'Đã thích' : 'Thích' }}</span>
+                                        <span id="likeCount"
+                                            style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $likeCount }}</span>
+                                    </button>
+                                    {{-- BookMark By TungKeng --}}
+                                    <a href="" id="bookmarkButton" class="me-40"
+                                        data-article-id="{{ $article->article_id }}"
+                                        onclick="toggleBookmark(this, {{ $article->article_id }})">
+                                        <i class="la la-bookmark me-1" id="bookmarkIcon"
+                                            style="color: {{ $isBookmarked ? 'gold' : 'inherit' }};">
+                                        </i>
+                                        {{ $isBookmarked ? 'Đã lưu' : 'Bookmark' }}
+                                    </a>
+
+                                    <div class="article-content mt-4">{!! $article->content !!}</div>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <h2 class="card-title">{{ $article->title }}</h2>
-                            <p class="text-muted">
-                                <i class="fa fa-eye"></i> {{ $article->views }} lượt xem |
-                                <i class="fa fa-user"></i> {{ $article->author->username ?? 'N/A' }}
-                            </p>
 
-                            <!-- Nút Like -->
-                            <button id="likeButton" class="like-btn"
-                                data-article-id="{{ $article->article_id }}"
-                                data-liked="{{ $isLiked ? 'true' : 'false' }}">
-                                <i class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-thumbs-up"
-                                    style="color: {{ $isLiked ? '#007bff' : 'black' }};"></i>
-                                <span id="likeText"
-                                    style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $isLiked ? 'Đã thích' : 'Thích' }}</span>
-                                <span id="likeCount"
-                                    style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $likeCount }}</span>
-                            </button>
-
-                            <div class="article-content mt-4">{!! $article->content !!}</div>
+                        <!-- Quảng cáo -->
+                        <div class="col-lg-4">
+                            <div class="advertisement fade-in"><a href="https://shop.mixigaming.com/">
+                                    <img src="https://th.bing.com/th/id/R.638f0378be501384598c313b9254a074?rik=4q27eEjjmHzVeA&riu=http%3a%2f%2fintemnhandecal.net%2fwp-content%2fuploads%2f2019%2f07%2fcac-mau-in-poster-quang-cao.jpg&ehk=xEa19xG1SoAREwQ5DcFB6e7uJVPbPgG6cHVQGMLTuvA%3d&risl=&pid=ImgRaw&r=0"
+                                        class="w-100" alt="Quảng cáo">
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Quảng cáo -->
-                <div class="col-lg-4">
-                    <div class="advertisement fade-in"><a href="https://shop.mixigaming.com/">
-                            <img src="https://th.bing.com/th/id/R.638f0378be501384598c313b9254a074?rik=4q27eEjjmHzVeA&riu=http%3a%2f%2fintemnhandecal.net%2fwp-content%2fuploads%2f2019%2f07%2fcac-mau-in-poster-quang-cao.jpg&ehk=xEa19xG1SoAREwQ5DcFB6e7uJVPbPgG6cHVQGMLTuvA%3d&risl=&pid=ImgRaw&r=0"
-                                class="w-100" alt="Quảng cáo">
-                        </a>
-                    </div>
-                </div>
             </div>
-        </div>
-
-    </div>
-</section>
+        </section>
         <!-- ====== end product ====== -->
 
 
@@ -173,8 +184,7 @@
                         </div>
                     </div>
 
-                    <div class="tab-pane fade" id="pills-reviews" role="tabpanel"
-                        aria-labelledby="pills-reviews-tab">
+                    <div class="tab-pane fade" id="pills-reviews" role="tabpanel" aria-labelledby="pills-reviews-tab">
                         <div class="product-reviews pt-30">
                             <div class="row gx-5">
                                 <div class="row">
@@ -330,8 +340,7 @@
 
 
                                                                         <!-- Nút hành động -->
-                                                                        <div
-                                                                            class="d-flex justify-content-end gap-2 mt-2">
+                                                                        <div class="d-flex justify-content-end gap-2 mt-2">
                                                                             <button type="button"
                                                                                 class="btn btn-sm btn-outline-secondary cancel-reply">
                                                                                 Hủy
@@ -578,9 +587,9 @@
                         data: form.serialize(),
                         success: function(response) {
                             if (response.success) {
-                             window.location.reload();
+                                window.location.reload();
 
-                     
+
 
                                 // Chèn bình luận mới vào giao diện
                                 $("#reply-form-" + commentId).before(newReply);
@@ -603,8 +612,4 @@
             });
         });
     </script>
-
-
-
-
 @endsection

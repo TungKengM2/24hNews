@@ -47,13 +47,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{route('user.saved')}}">
                         <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                         Tin Đã Lưu
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{route('viewed.articles')}}">
                         <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                         Tin Đã Xem
                     </a>

@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\ArticleLike;
+use App\Models\ArticleSave;
 use App\Models\ArticleView;
 use App\Models\Category;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleUserController extends Controller
 {
@@ -25,8 +27,10 @@ class ArticleUserController extends Controller
         // Kiểm tra xem user đã like bài viết chưa
         $isLiked = false;
         if ($userId) {
-            $isLiked = ArticleLike::where('article_id',
-                $article->article_id)
+            $isLiked = ArticleLike::where(
+                'article_id',
+                $article->article_id
+            )
                 ->where('user_id', $userId)
                 ->exists();
         }
@@ -58,10 +62,20 @@ class ArticleUserController extends Controller
 
             $article->increment('views');
         }
+        //BookMark By TungKeng
+        $isBookmarked = false;
+        if ($userId) { // Nếu có user đăng nhập
+            $isBookmarked = ArticleSave::where('user_id', $userId)
+                ->where('article_id', $article->article_id)
+                ->exists();
+        }
+
 
         // Lấy bài viết liên quan
-        $relatedArticles = Article::where('category_id',
-            $article->category_id)
+        $relatedArticles = Article::where(
+            'category_id',
+            $article->category_id
+        )
             ->where('article_id', '!=', $article->article_id)
             ->limit(5)
             ->get();
@@ -88,8 +102,10 @@ class ArticleUserController extends Controller
         // ✅ Lấy tất cả các replies của các bình luận đã phân trang
         $commentIds = $comments->pluck('comment_id'); // Lấy danh sách ID của bình luận gốc
 
-        $replies = Comment::whereIn('parent_id',
-            $commentIds) // Chỉ lấy replies của bình luận gốc
+        $replies = Comment::whereIn(
+            'parent_id',
+            $commentIds
+        ) // Chỉ lấy replies của bình luận gốc
             ->where('status', 'approved')
             ->with([
                 'user:user_id,username,image',
@@ -103,23 +119,36 @@ class ArticleUserController extends Controller
                     $query->where('is_like', false);
                 },
             ])
-            ->orderBy('created_at',
-                'asc') // Hiển thị replies theo thứ tự cũ -> mới
+            ->orderBy(
+                'created_at',
+                'asc'
+            ) // Hiển thị replies theo thứ tự cũ -> mới
             ->get();
 
         // ✅ Gán replies vào từng comment
         $groupedReplies = $replies->groupBy('parent_id');
 
         foreach ($comments as $comment) {
-            $comment->replies = $groupedReplies->get($comment->comment_id,
-                collect()); // Gán danh sách replies vào từng comment
+            $comment->replies = $groupedReplies->get(
+                $comment->comment_id,
+                collect()
+            ); // Gán danh sách replies vào từng comment
         }
 
         $categories = Category::where('is_active', 1)->get();
 
-        return view('client.articles.article',
-            compact('categories', 'article', 'relatedArticles', 'isLiked',
-                'likeCount', 'comments'));
+        return view(
+            'client.articles.article',
+            compact(
+                'categories',
+                'article',
+                'relatedArticles',
+                'isLiked',
+                'likeCount',
+                'comments',
+                'isBookmarked'
+            )
+        );
     }
 
     public function likeArticle(Request $request, $article_id)
@@ -147,7 +176,7 @@ class ArticleUserController extends Controller
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Lỗi khi hủy like: '.$e->getMessage(),
+                    'message' => 'Lỗi khi hủy like: ' . $e->getMessage(),
                 ]);
             }
         } else {
@@ -256,7 +285,7 @@ class ArticleUserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Lỗi khi lưu bình luận: '.$e->getMessage(),
+                'message' => 'Lỗi khi lưu bình luận: ' . $e->getMessage(),
             ], 500);
         }
     }
