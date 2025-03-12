@@ -1,4 +1,4 @@
-@extends('user.layouts.master')
+@extends('author.layouts.master')
 
 @section('title')
     Bài Viết Đã Lưu
@@ -60,10 +60,10 @@
                                                 </h5>
                                             </td>
                                             <td>
-                                                <a href="{{ route('article.detail', ['article_id' => $savedArticle->article->article_id]) }}"
+                                                <a href="{{ route('author.article.detail', ['article_id' => $savedArticle->article->article_id]) }}"
                                                     class="btn btn-primary btn-sm"><i class="si-eye si"></i>
                                                 </a>
-                                                <form action="{{ route('user.remove.saved', $savedArticle->id) }}"
+                                                <form action="{{ route('author.remove.saved', $savedArticle->id) }}"
                                                     method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')

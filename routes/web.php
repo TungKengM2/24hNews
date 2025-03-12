@@ -12,16 +12,23 @@ use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\CategoryUserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Author\AuthorController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\User\ArticleSaveController;
-use App\Http\Controllers\User\ArticleViewController;
+use App\Http\Controllers\Moderator\ModeratorController;
 use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\User\ArticleViewUserController;
+use App\Http\Controllers\Author\ArticleViewAuthorController;
+use App\Http\Controllers\User\ArticleViewModeratorController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
 use App\Http\Controllers\User\UserController as UserUserController;
 use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
+use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
+use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveController;
+use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
+use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
 
 // 🌟 Trang chủ & bài viết chi tiết
 // Route::view('/', 'welcome');
@@ -164,6 +171,19 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     // Sửa lại route reject (bỏ 'moderator/' trong URL)
     Route::patch('/articles/{article}/reject', [ModeratorArticleController::class, 'reject'])
         ->name('moderator.articles.reject');
+
+    // Bookmark By TungKeng
+    Route::post('/save-article', [ModeratorArticleSaveController::class, 'saveArticle'])->name('save.article');
+    Route::get('/saved-articles', [ModeratorArticleSaveController::class, 'savedArticles'])->name('moderator.saved');
+    Route::get('/article/{article_id}', [ArticleUserController::class, 'show'])->name('moderator.article.detail');
+    Route::delete('/user/remove-saved-article/{id}', [ModeratorArticleSaveController::class, 'removeSavedArticle'])->name('moderator.remove.saved');
+    Route::post('/bookmark/{article_id}', [ModeratorArticleSaveController::class, 'toggleBookmark']);
+
+    // Lịch sử bài viết đã xem của user
+    Route::get('/viewed-articles', [ModeratorArticleViewModeratorController::class, 'index'])->name('moderator.viewed.articles');
+
+    // Hoạt động bình luận
+    Route::get('/{user_id}/comments', [ModeratorController::class, 'getUserComments'])->name('moderator.comments');
 });
 // Route::prefix('moderator')->name('moderator.')->group(function () {
 //     Route::get('/articles', [ModeratorArticleController::class, 'index'])
@@ -226,6 +246,19 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     )->name('author.change-password');
 
     Route::get('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+    // Bookmark By TungKeng
+    Route::post('/save-article', [AuthorArticleSaveController::class, 'saveArticle'])->name('save.article');
+    Route::get('/saved-articles', [AuthorArticleSaveController::class, 'savedArticles'])->name('author.saved');
+    Route::get('/article/{article_id}', [ArticleUserController::class, 'show'])->name('author.article.detail');
+    Route::delete('/user/remove-saved-article/{id}', [AuthorArticleSaveController::class, 'removeSavedArticle'])->name('author.remove.saved');
+    Route::post('/bookmark/{article_id}', [AuthorArticleSaveController::class, 'toggleBookmark']);
+
+    // Lịch sử bài viết đã xem của user
+    Route::get('/viewed-articles', [ArticleViewAuthorController::class, 'index'])->name('author.viewed.articles');
+
+    // Hoạt động bình luận
+    Route::get('/{user_id}/comments', [AuthorController::class, 'getUserComments'])->name('author.comments');
 });
 
 // 🚀 Khu vực dành riêng cho User (role_id = 4)
