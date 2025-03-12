@@ -2,7 +2,8 @@
     <div class="row justify-content-center align-items-center gx-lg-5">
         <div class="col-lg-4">
             <div class="info">
-                <h5>you can search by category <br> or news title</h5>
+                <h1>News24h</h1>
+                <p>Kênh hóng chuyện hàng đầu Việt Nam .</p>
             </div>
         </div>
         <div class="col-lg-6">
