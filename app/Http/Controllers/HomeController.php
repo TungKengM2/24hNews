@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Article;
 use App\Models\Category;
-use App\Models\User;
 
 class HomeController extends Controller
 {
@@ -34,12 +34,16 @@ class HomeController extends Controller
             ->get(); // Lấy nhà báo có ID = 3
 
         $sportsArticles = Article::whereHas('category', function ($query) {
-            $query->where('name',
-                'Thể Thao'); // Hoặc sử dụng category_id cụ thể
+            $query->where(
+                'name',
+                'Thể Thao'
+            ); // Hoặc sử dụng category_id cụ thể
         })->inRandomOrder()->distinct()->get();
 
         // 11111111
-        $categories = Category::where('is_active', 1)->get();
+        $categories = Category::where('is_active', 1)->get()->filter(function ($category) {
+            return $category->is_active == 1;
+        });
         $newsData = [];
         foreach ($categories as $category) {
             $article = Article::where('category_id', $category->category_id)
@@ -55,12 +59,23 @@ class HomeController extends Controller
             }
         }
 
-        $categories = Category::where('is_active', 1)->get();
+        $categories = Category::where('is_active', 1)->get()->filter(function ($category) {
+            return $category->is_active == 1;
+        });
 
         // Truyền dữ liệu bài viết tới view
-        return view('welcome',
-            compact('categories', 'sportsArticles', 'newsData',
-                'journalists', 'trendingPosts', 'featuredArticles',
-                'articles', 'D1Articles'));
+        return view(
+            'welcome',
+            compact(
+                'categories',
+                'sportsArticles',
+                'newsData',
+                'journalists',
+                'trendingPosts',
+                'featuredArticles',
+                'articles',
+                'D1Articles'
+            )
+        );
     }
 }
