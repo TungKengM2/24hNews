@@ -34,7 +34,7 @@
 
                     <li>
                         <ul class="menu sm-scroll" id="notificationList">
-                            @forelse(auth()->user()->unreadNotifications as $notification)
+                            @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
                                 <li class="notification-item p-3" id="notification-{{ $notification->id }}">
                                     <a href="#" onclick="openNotification('{{ $notification->id }}', '{{ addslashes($notification->data['message']) }}'); return false;"
                                         style="font-size: 16px; display: block; padding: 10px;">
@@ -114,11 +114,42 @@
     function openNotification(id, message) {
         document.getElementById("customPopupContent").innerHTML = message;
         document.getElementById("customPopup").style.display = "block";
-        console.log("Popup opened"); // Debug log
+
+        fetch(`/notifications/${id}/read`, {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Xóa thông báo khỏi danh sách
+                let notificationItem = document.getElementById(`notification-${id}`);
+                if (notificationItem) {
+                    notificationItem.remove();
+                }
+
+                // Cập nhật số lượng thông báo
+                let countElement = document.getElementById("notificationCount");
+                if (countElement) {
+                    let count = parseInt(countElement.innerText, 10) || 0;
+                    if (count > 1) {
+                        countElement.innerText = count - 1;
+                    } else {
+                        countElement.remove(); // Nếu hết thông báo thì ẩn badge
+                    }
+                }
+            } else {
+                console.error("Failed to mark notification as read.");
+            }
+        })
+        .catch(error => console.error("Error marking notification as read:", error));
     }
 
     function closePopup() {
         document.getElementById("customPopup").style.display = "none";
-        console.log("Popup closed"); // Debug log
     }
 </script>
