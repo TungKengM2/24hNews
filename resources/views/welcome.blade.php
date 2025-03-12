@@ -18,7 +18,7 @@
                             <div class="swiper-wrapper">
                                 @foreach ($featuredArticles as $article)
                                     <div class="swiper-slide">
-                                        <a href="{{ Auth::check() ? route('client.articles.article', $article->article_id) : url('/login-user') }}"
+                                        <a href="{{ Auth::check() ? route('articles.article', $article->article_id) : url('/login-user') }}"
                                             class="item d-block">
                                             <div class="row gx-4 align-items-center">
                                                 <div class="col-4">
@@ -88,7 +88,7 @@
                                                     <div class="content ps-40 pe-40 pb-40">
                                                         <h2 class="title mb-20">
                                                             <a
-                                                                href="{{ Auth::check() ? route('client.articles.article', $article->article_id) : url('/login-user-user') }}">
+                                                                href="{{ Auth::check() ? route('articles.article', $article->article_id) : url('/login-user-user') }}">
 
                                                                 {{ $article->title }}
                                                             </a>
@@ -134,7 +134,7 @@
 
                                 @if ($trendingPosts->isNotEmpty())
                                     @foreach ($trendingPosts as $index => $post)
-                                        <a href="{{ Auth::check() ? route('client.articles.article', $post->article_id) : url('/login-user') }}"
+                                        <a href="{{ Auth::check() ? route('articles.article', $post->article_id) : url('/login-user') }}"
                                             class="item hover-main d-block p-2 text-dark">
                                             <h2 class="num">{{ $index + 1 }}</h2>
                                             <div class="content">
@@ -188,7 +188,7 @@
                                         <h5 class="title mb-2">{{ $data['article']->title }}</h5>
 
 
-                                        <a href="{{ Auth::check() ? route('client.articles.article', $data['article']->article_id) : url('/login-user') }}"
+                                        <a href="{{ Auth::check() ? route('articles.article', $data['article']->article_id) : url('/login-user') }}"
                                             class="item hover-main d-block p-2 text-dark">
                                             Xem chi tiết <i class="la la-angle-right"></i>
                                         </a>
