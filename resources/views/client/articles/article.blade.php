@@ -136,7 +136,6 @@
 
                     </div>
                 </div>
-
             </div>
         </section>
         <!-- ====== end product ====== -->
@@ -151,17 +150,27 @@
                     <div class="product-reviews pt-30">
                         <div class="row gx-5">
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-12">
                                     <div class="reviews-content pt-30">
-                                        <h5 class="color-000 mb-40 text-capitalize">Bình luận</h5>
+                                        <div class="comments-filter">
+                                            <div class="row align-items-center">
+                                                <div class="col-12">
+                                                    <p class="text-uppercase">{{ $comments->total() }} Bình Luận</p>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                        <br>
                                         <?php foreach ($comments as $comment): ?>
                                         <?php if (!$comment->parent_id): ?>
                                         <div class="comment-reply-cont bg-light py-3 px-4 mb-3 rounded shadow-sm">
                                             <div class="d-flex align-items-start">
                                                 <div
                                                     class="icon-60 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
-                                                    <img src="<?= $comment->user->image ?? 'assets/img/colums/default.png' ?>"
-                                                        alt="User Avatar">
+                                                    <img src="<?= !empty($comment->user->image) 
+                                                    ? asset('storage/' . $comment->user->image) 
+                                                    : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>" 
+                                                    alt="User Avatar">
                                                 </div>
                                                 <div class="inf w-100">
                                                     <div class="d-flex justify-content-between align-items-center">
@@ -177,12 +186,12 @@
                                                         <?= nl2br(htmlspecialchars($comment->content)) ?>
                                                     </div>
                                                     <div class="mt-2">
-                                                        <button
-                                                            class="btn btn-sm btn-outline-primary reply-btn d-flex align-items-center gap-1 px-3 py-1"
+                                                        <button class="btn reply-btn butn border border-1 mt-20 py-2 px-3"
                                                             data-comment-id="<?= $comment->comment_id ?>"
                                                             data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
-                                                            <i class="fas fa-reply fa-flip-horizontal"></i> <span
-                                                                class="fw-bold">Trả lời</span>
+
+                                                            <span class="fw-bold">Trả lời</span>
+
                                                         </button>
                                                     </div>
                                                     <!-- Danh sách replies -->
@@ -199,8 +208,10 @@
                                                             <div class="d-flex align-items-start">
                                                                 <div
                                                                     class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
-                                                                    <img src="<?= $reply->user->image ?? 'assets/img/colums/default.png' ?>"
-                                                                        alt="User Avatar">
+                                                                    <img src="<?= $reply->user->image 
+                                                                    ? asset('storage/' . $reply->user->image) 
+                                                                    : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>" 
+                                                                    alt="User Avatar">
                                                                 </div>
                                                                 <div class="inf w-100">
                                                                     <div
@@ -218,10 +229,10 @@
                                                                     </div>
                                                                     <div class="mt-2">
                                                                         <button
-                                                                            class="btn btn-sm btn-outline-primary reply-btn d-flex align-items-center gap-1 px-3 py-1"
+                                                                            class="btn reply-btn butn border border-1 mt-20 py-2 px-3 reply-btn "
                                                                             data-comment-id="<?= $comment->comment_id ?>"
                                                                             data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
-                                                                            <i class="fas fa-reply fa-flip-horizontal"></i>
+
                                                                             <span class="fw-bold">Trả lời</span>
                                                                         </button>
                                                                     </div>
@@ -264,7 +275,7 @@
                                                                 value="{{ $comment->article_id }}">
 
                                                             <div
-                                                                class="d-flex align-items-start bg-white p-3 rounded shadow-sm">
+                                                                class="d-flex align-items-start bg-white p-3 rounded shadow-sm border">
                                                                 <!-- Ảnh đại diện -->
                                                                 <div
                                                                     class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
@@ -275,25 +286,30 @@
                                                                 <div class="w-100">
                                                                     <!-- Ô nhập nội dung trả lời -->
                                                                     <textarea class="form-control form-control-sm reply-content" name="content" rows="2" required
-                                                                        placeholder="Trả lời: @php echo $comment->user->username ?? 'Người dùng ẩn danh'; @endphp"
-                                                                        onfocus="addUsernameToReply(this, '{{ $comment->user->username ?? 'Người dùng ẩn danh' }}')">
-                                                                        </textarea>
+                                                                        placeholder="Trả lời: {{ '@' . ($comment->user->username ?? 'Người dùng ẩn danh') }}"
+                                                                        onclick="addUsernameToReply(this, '{{ $comment->user->username ?? 'Người dùng ẩn danh' }}')">
+                                                                    </textarea>
 
                                                                     <script>
                                                                         function addUsernameToReply(textarea, username) {
-                                                                            if (textarea.value.trim() === '') {
-                                                                                textarea.value = '@' + username + ' ';
+                                                                            username = '@' + username.trim();
+                                                                            let currentValue = textarea.value.trim();
+
+                                                                            // Nếu chưa có @username ở đầu, mới thêm vào
+                                                                            if (!currentValue.startsWith(username)) {
+                                                                                textarea.value = username + ' ' + currentValue;
                                                                             }
+
+                                                                            textarea.focus();
                                                                         }
                                                                     </script>
+
                                                                     <!-- Nút hành động -->
                                                                     <div class="d-flex justify-content-end gap-2 mt-2">
                                                                         <button type="button"
-                                                                            class="btn btn-sm btn-outline-secondary cancel-reply">
-                                                                            Hủy
-                                                                        </button>
+                                                                            class="btn butn border border-1 mt-20 py-2 px-3 cancel-reply">Hủy</button>
                                                                         <button type="button"
-                                                                            class="btn btn-sm btn-primary send-reply"
+                                                                            class="btn butn border border-1 mt-20 py-2 px-3 send-reply"
                                                                             data-comment-id="{{ $comment->comment_id }}"
                                                                             data-article-id="{{ $comment->article_id }}">
                                                                             Trả lời
@@ -303,6 +319,7 @@
                                                             </div>
                                                         </form>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -315,7 +332,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-12">
                                     <form class="comment-form pt-30" method="POST"
                                         action="<?= route('client.articles.comment', ['article_id' => $article->article_id]) ?>">
                                         <?= csrf_field() ?>
@@ -342,6 +359,126 @@
                     </div>
                 </div>
             </div>
+            </div>
+
+            <div class="tc-single-post-comments">
+                <div class="comments-content pt-50 pb-50 border-1 border-top border-dark">
+                    <div class="content">
+                       
+                        <div class="comments-cards">
+                            <div class="comment-replay-cont border-bottom border-1 brd-gray pb-40 pt-40">
+                                <div class="d-flex comment-cont">
+                                    <div class="icon-60 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
+                                        <img src="https://newzin-html.themescamp.com/assets/img/colums/1.png"
+                                            alt="">
+                                    </div>
+                                    <div class="inf w-100">
+                                        <div class="title d-flex justify-content-between">
+                                            <h6 class="fw-bold fsz-14px">David Bowie</h6>
+                                            <span class="time fsz-12px text-uppercase color-999">
+                                                3 hours ago
+                                            </span>
+                                        </div>
+                                        <div class="text color-666 fsz-12px mt-10">
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                            incididunt ut labore et dolore magna aliqua. Atume nusaate staman utra phone
+                                            limo sumeria
+                                        </div>
+                                        <a href="page-single-post-features.html#"
+                                            class="butn border border-1 mt-20 py-2 px-3">
+                                            <span class="fsz-11px"> replay </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="d-flex comment-replay ps-5 mt-30 ms-4">
+                                    <div class="icon-40 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
+                                        <img src="https://newzin-html.themescamp.com/assets/img/colums/2.png"
+                                            alt="">
+                                    </div>
+                                    <div class="inf w-100">
+                                        <div class="title d-flex justify-content-between">
+                                            <h6 class="fw-bold fsz-14px">Logan Cee</h6>
+                                            <span class="time fsz-12px text-uppercase color-999">
+                                                2 dayes ago
+                                            </span>
+                                        </div>
+                                        <div class="text color-666 fsz-12px mt-10">
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                            incididunt ut labore et dolore magna aliqua. Atume nusaate staman utra phone
+                                            limo sumeria
+                                        </div>
+                                        <a href="page-single-post-features.html#"
+                                            class="butn border border-1 mt-20 py-2 px-3">
+                                            <span class="fsz-11px"> replay </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment-replay-cont pb-40 pt-40 border-bottom border-1 brd-gray">
+                                <div class="d-flex comment-cont">
+                                    <div class="icon-60 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
+                                        <img src="https://newzin-html.themescamp.com/assets/img/colums/3.png"
+                                            alt="">
+                                    </div>
+                                    <div class="inf w-100">
+                                        <div class="title d-flex justify-content-between">
+                                            <h6 class="fw-bold fsz-14px">Luis Diaz</h6>
+                                            <span class="time fsz-12px text-uppercase color-999">
+                                                December 25, 2022
+                                            </span>
+                                        </div>
+                                        <div class="text color-000 fsz-12px mt-10">
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                            incididunt
+                                        </div>
+                                        <a href="page-single-post-features.html#"
+                                            class="butn border border-1 mt-20 py-2 px-3">
+                                            <span class="fsz-11px"> replay </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form class="comment-form d-block pt-30">
+                            <p class="text-uppercase mb-30">Leave A Comment</p>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group mb-30">
+                                        <textarea class="form-control rounded-0 fsz-12px p-3" name="message" rows="6"
+                                            placeholder="Write your comment here"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group mb-4 mb-lg-0">
+                                        <input type="text" class="form-control fsz-12px rounded-0 p-3" name="name"
+                                            placeholder="Your Name *">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control fsz-12px rounded-0 p-3" name="email"
+                                            placeholder="Your Email *">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-check mt-20">
+                                        <input class="form-check-input" name="checkbox" type="checkbox" value=""
+                                            id="flexCheckDefault">
+                                        <label class="form-check-label fsz-12px" for="flexCheckDefault">
+                                            Save my name & email in this browser for next time I comment
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn bg-main text-white rounded-0 mt-40">
+                                        <span class="fsz-11px">Submit Comment </span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
             </div>
         </section>
         <!-- ====== end product details ====== -->
