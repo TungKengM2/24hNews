@@ -382,14 +382,14 @@
                                                 alt="{{ $related->title }}">
                                             <div class="btns">
 
-                                                <a href="{{ route('articles.article', $related->article_id) }}"
+                                                <a href="{{ route('articles.article', $related->slug) }}"
                                                     class="butn">
                                                     <span><i class="la la-eye me-2"></i>Đọc thêm</span>
                                                 </a>
                                             </div>
                                         </div>
                                         <div class="info pt-30">
-                                            <a href="{{ route('articles.article', $related->article_id) }}"
+                                            <a href="{{ route('articles.article', $related->slug) }}"
                                                 class="title">{{ $related->title }}</a>
                                         </div>
                                     </div>
