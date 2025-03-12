@@ -20,8 +20,8 @@ use App\Http\Controllers\User\ArticleViewController;
 use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\User\ArticleViewUserController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
-use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 use App\Http\Controllers\User\UserController as UserUserController;
+use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 
 // 🌟 Trang chủ & bài viết chi tiết
 // Route::view('/', 'welcome');
@@ -31,7 +31,7 @@ use App\Http\Controllers\User\UserController as UserUserController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Client Articles
-Route::get('/articles/{article_id}', [ArticleUserController::class, 'show'])->name('articles.article');
+Route::get('{slug}', [ArticleUserController::class, 'show'])->name('articles.article');
 Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
 Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->middleware('auth')->name('articles.comment');
 Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->middleware('auth')->name('articles.replyComment');
