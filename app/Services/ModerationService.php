@@ -6,6 +6,218 @@ class ModerationService
 {
     public function moderateContent($text, $apiKey)
     {
+        $normalizedText = $this->normalizeText($text);
+
+        $sentences = preg_split('/(?<=[.!?])\s+/', $normalizedText, -1,
+            PREG_SPLIT_NO_EMPTY);
+
+        $firstSentences = array_slice($sentences, 0,
+            min(3, count($sentences)));
+        foreach ($firstSentences as $sentence) {
+            if (mb_strlen($sentence) > 10) {
+                $sentenceResult = $this->callGeminiAPI($sentence, $apiKey);
+
+                if (! isset($sentenceResult['violation_level'])) {
+                    $sentenceResult['violation_level'] = 'none';
+                }
+
+                if ($sentenceResult['violation_level'] === 'high' || $sentenceResult['violation_level'] === 'medium') {
+                    return [
+                        'status' => 'success',
+                        'violation_level' => 'high',
+                        'violations' => $sentenceResult['violations'] ?? [],
+                        'reason' => $sentenceResult['reason'] ?? [],
+                        'original_text' => $text,
+                        'normalized_text' => $normalizedText,
+                        'detected_in' => 'first_sentence_analysis',
+                    ];
+                }
+            }
+        }
+
+        $fullTextResult = $this->callGeminiAPI($normalizedText, $apiKey);
+
+        if (! isset($fullTextResult['violation_level'])) {
+            $fullTextResult['violation_level'] = 'none';
+        }
+
+        if ($fullTextResult['violation_level'] === 'high') {
+            return $fullTextResult;
+        }
+
+        if (mb_strlen($normalizedText) > 500) {
+            if (preg_match_all('/"([^"]+)"/', $normalizedText, $matches)) {
+                foreach ($matches[1] as $quotedText) {
+                    $quoteResult = $this->callGeminiAPI($quotedText,
+                        $apiKey);
+
+                    if (! isset($quoteResult['violation_level'])) {
+                        $quoteResult['violation_level'] = 'none';
+                    }
+
+                    if ($quoteResult['violation_level'] === 'high') {
+                        return $quoteResult;
+                    }
+                }
+            }
+
+            $highestViolationLevel = $fullTextResult['violation_level'];
+            $allViolations = $fullTextResult['violations'] ?? [];
+            $allReasons = $fullTextResult['reason'] ?? [];
+
+            $sentenceGroups = [];
+            $currentGroup = [];
+            $currentLength = 0;
+
+            foreach ($sentences as $sentence) {
+                $sentenceLength = mb_strlen($sentence);
+
+                if ($currentLength + $sentenceLength > 500) {
+                    if (! empty($currentGroup)) {
+                        $sentenceGroups[] = $currentGroup;
+                    }
+
+                    $currentGroup = [$sentence];
+                    $currentLength = $sentenceLength;
+                } else {
+                    $currentGroup[] = $sentence;
+                    $currentLength += $sentenceLength;
+                }
+            }
+
+            if (! empty($currentGroup)) {
+                $sentenceGroups[] = $currentGroup;
+            }
+
+            foreach ($sentenceGroups as $group) {
+                $sentenceText = implode(' ', $group);
+
+                $result = $this->callGeminiAPI($sentenceText, $apiKey);
+
+                if ($result['status'] === 'error') {
+                    continue;
+                }
+
+                if (! isset($result['violation_level'])) {
+                    $result['violation_level'] = 'none';
+                }
+
+                if (
+                    $this->getViolationLevelPriority($result['violation_level']) >
+                    $this->getViolationLevelPriority($highestViolationLevel)
+                ) {
+                    $highestViolationLevel = $result['violation_level'];
+                }
+
+                if (isset($result['violations']) && ! empty($result['violations'])) {
+                    $allViolations = array_merge($allViolations,
+                        $result['violations']);
+                    $allReasons = array_merge($allReasons,
+                        $result['reason'] ?? []);
+                }
+
+                if ($highestViolationLevel === 'high') {
+                    break;
+                }
+            }
+
+            foreach ($firstSentences as $sentence) {
+                if (mb_strlen($sentence) > 20) {
+                    $sentenceResult = $this->callGeminiAPI($sentence,
+                        $apiKey);
+
+                    if (! isset($sentenceResult['violation_level'])) {
+                        $sentenceResult['violation_level'] = 'none';
+                    }
+
+                    if (
+                        $this->getViolationLevelPriority($sentenceResult['violation_level']) >
+                        $this->getViolationLevelPriority($highestViolationLevel)
+                    ) {
+                        $highestViolationLevel = $sentenceResult['violation_level'];
+
+                        if (isset($sentenceResult['violations']) && ! empty($sentenceResult['violations'])) {
+                            $allViolations = array_merge($allViolations,
+                                $sentenceResult['violations']);
+                            $allReasons = array_merge($allReasons,
+                                $sentenceResult['reason'] ?? []);
+                        }
+                    }
+
+                    if ($highestViolationLevel === 'high') {
+                        break;
+                    }
+                }
+            }
+
+            return [
+                'status' => 'success',
+                'violation_level' => $highestViolationLevel,
+                'violations' => array_unique($allViolations),
+                'reason' => $allReasons,
+                'original_text' => $text,
+                'normalized_text' => $normalizedText,
+            ];
+        }
+
+        return $fullTextResult;
+    }
+
+    private function normalizeText($text)
+    {
+        $text = mb_strtolower($text, 'UTF-8');
+
+        $replacements = [
+            '0' => 'o',
+            '1' => 'i',
+            '3' => 'e',
+            '4' => 'a',
+            '5' => 's',
+            '6' => 'g',
+            '7' => 't',
+            '8' => 'b',
+            '9' => 'g',
+
+            '@' => 'a',
+            '$' => 's',
+            '!' => 'i',
+            '*' => 'a',
+            '(' => 'c',
+            ')' => 'o',
+            '+' => 't',
+
+            '.' => ' ',
+            ',' => ' ',
+            '-' => ' ',
+            '_' => ' ',
+            '/' => ' ',
+            '\\' => ' ',
+            '|' => ' ',
+
+            '. ' => '. ',
+            '! ' => '! ',
+            '? ' => '? ',
+        ];
+
+        $text = str_replace(array_keys($replacements),
+            array_values($replacements), $text);
+
+        $text = preg_replace('/\s+/', ' ', $text);
+
+        $text = preg_replace('/[\x{1F600}-\x{1F64F}]/u', '',
+            $text); // Emoji
+        $text = preg_replace('/[\x{1F300}-\x{1F5FF}]/u', '',
+            $text); // Biểu tượng và ký hiệu
+        $text = preg_replace('/[\x{1F680}-\x{1F6FF}]/u', '',
+            $text); // Biểu tượng giao thông và bản đồ
+        $text = preg_replace('/[\x{2600}-\x{26FF}]/u', '',
+            $text); // Ký hiệu khác
+
+        return trim($text);
+    }
+
+    private function callGeminiAPI($text, $apiKey)
+    {
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro-exp-02-05:generateContent?key='.$apiKey;
 
         $prompt = "
@@ -40,7 +252,6 @@ class ModerationService
     **D. Văn bản cần kiểm tra**:
     \"$text\"
 ";
-        //        echo $prompt;
 
         $data = [
             'contents' => [
@@ -70,49 +281,66 @@ class ModerationService
         curl_close($ch);
 
         $responseData = json_decode($response, true);
-        //        var_dump($responseData);
-        //        exit();
         if (isset($responseData['error'])) {
             return [
                 'status' => 'error',
                 'message' => $responseData['error']['message'],
+                'violation_level' => 'none',
+            ];
+        }
+
+        if (! isset($responseData['candidates'][0]['content']['parts'][0]['text'])) {
+            return [
+                'status' => 'error',
+                'message' => 'Không thể phân tích phản hồi từ API',
+                'violation_level' => 'none',
             ];
         }
 
         $resultText = $responseData['candidates'][0]['content']['parts'][0]['text'];
+        $result = $this->parseModerationResult($resultText);
 
-        return $this->parseModerationResult($resultText);
+        if (! isset($result['violation_level'])) {
+            $result['violation_level'] = 'none';
+        }
+
+        return $result;
     }
 
     public function parseModerationResult($resultText)
     {
-        $resultText = trim(preg_replace('/\s+/', ' ',
-            $resultText));
+        $resultText = trim(preg_replace('/\s+/', ' ', $resultText));
 
-        if (stripos($resultText, 'không vi phạm') !== false) {
+        if (stripos($resultText,
+            'không vi phạm') !== false || empty($resultText)) {
             return [
                 'status' => 'success',
                 'violation_level' => 'none',
                 'violations' => [],
-                'reason' => null,
+                'reason' => [],
             ];
         }
 
         $parts = explode('|', $resultText, 2);
         if (count($parts) < 2) {
             return [
-                'status' => 'error',
-                'message' => 'Định dạng phản hồi không hợp lệ',
+                'status' => 'success',
+                'violation_level' => 'none',
+                'violations' => [],
+                'reason' => [],
             ];
         }
 
-        $level = trim(strtolower($parts[0]));
-        $violationLevel = match ($level) {
-            'thấp' => 'low',
-            'trung bình' => 'medium',
-            'cao' => 'high',
-            default => 'unknown'
-        };
+        $level = trim(strtoupper($parts[0]));
+        if (stripos($level, 'CAO') !== false) {
+            $violationLevel = 'high';
+        } elseif (stripos($level, 'TRUNG BÌNH') !== false) {
+            $violationLevel = 'medium';
+        } elseif (stripos($level, 'THẤP') !== false) {
+            $violationLevel = 'low';
+        } else {
+            $violationLevel = 'none';
+        }
 
         $violationReasonPairs = array_map('trim', explode(';', $parts[1]));
         $violations = [];
@@ -136,5 +364,20 @@ class ModerationService
             'violations' => $violations,
             'reason' => $reasons,
         ];
+    }
+
+    private function getViolationLevelPriority($level)
+    {
+        switch ($level) {
+            case 'high':
+                return 3;
+            case 'medium':
+                return 2;
+            case 'low':
+                return 1;
+            case 'none':
+            default:
+                return 0;
+        }
     }
 }
