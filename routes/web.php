@@ -15,10 +15,15 @@ use App\Http\Controllers\CategoryUserController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
-use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NotificationController;
+use Illuminate\Notifications\DatabaseNotification;
+use App\Http\Controllers\Controller;
+
+
 
 
 // 🌟 Trang chủ & bài viết chi tiết
@@ -233,17 +238,34 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     )->name('author.change-password');
     //xóa thông báo khi đã đọc
 
-    // Route::post('/notifications/{id}/read', function ($id): JsonResponse {
-    //     $notification = auth()->user()->notifications()->find($id);
+    // Route::post('/notifications/{id}/read', function ($id, User $user): JsonResponse {
+    //     $notification = $user->notifications()->find($id);
 
     //     if ($notification) {
-    //         $notification->delete(); // Xóa thông báo khỏi database
-    //         return response()->json(['success' => true]);
+    //         $notification->markAsRead();
+    //         return response()->json([
+    //             'success' => true,
+    //             'unreadCount' => $user->unreadNotifications()->count()
+    //         ]);
     //     }
 
     //     return response()->json(['success' => false], 404);
     // })->middleware('auth');
 
+});
+Route::post('/notifications/{id}/read', function ($id) {
+    $notification = \App\Models\User::find(auth()->id())->unreadNotifications()->find($id);
+
+    if ($notification) {
+        $notification->markAsRead();
+        return response()->json(['success' => true]);
+    }
+    return response()->json(['success' => false]);
+});
+
+Route::post('/notifications/clear', function () {
+    Auth::User()->unreadNotifications->markAsRead();
+    return response()->json(['success' => true]);
 });
 
 // 🚀 Khu vực dành riêng cho User (role_id = 4)
