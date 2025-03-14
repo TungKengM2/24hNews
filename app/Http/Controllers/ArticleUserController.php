@@ -151,7 +151,7 @@ class ArticleUserController extends Controller
                 'comments',
                 //TungKeng Bổ Sung
                 'isBookmarked',
-                'highlightCommentId'
+                // 'highlightCommentId'
             )
         );
     }

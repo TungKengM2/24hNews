@@ -25,7 +25,6 @@ use App\Http\Controllers\User\ArticleViewModeratorController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
 use App\Http\Controllers\User\UserController as UserUserController;
 use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
-use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveController;
 use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
 use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
