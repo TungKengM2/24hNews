@@ -9,12 +9,15 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Notifications\HasDatabaseNotifications;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Notifications\DatabaseNotification;
 
 class User extends Authenticatable implements CanResetPasswordContract
 {
-    use HasApiTokens, HasFactory, Notifiable, CanResetPassword, HasDatabaseNotifications;
+    use HasApiTokens, HasFactory, Notifiable, CanResetPassword;
 
-    protected $primaryKey = 'user_id'; // Định danh khóa chính
+    protected $primaryKey = 'user_id'; // Khóa chính
+    public $incrementing = true; // Vì user_id là AUTO_INCREMENT
+    protected $keyType = 'int'; // Kiểu dữ liệu là số nguyên
 
     protected $fillable = [
         'username',
@@ -53,4 +56,9 @@ class User extends Authenticatable implements CanResetPasswordContract
     {
         return $this->hasMany(Approval::class, 'user_id');
     }
+    public function notifications()
+    {
+        return $this->morphMany(DatabaseNotification::class, 'notifiable', 'notifiable_type', 'notifiable_id', 'user_id');
+    }
+
 }
