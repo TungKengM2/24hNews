@@ -221,17 +221,17 @@
         document.addEventListener("DOMContentLoaded", function() {
             const imageUpload = document.getElementById("avatarUpload");
             const imagePreview = document.getElementById("avatarPreview");
-    
+
             document.querySelector(".avatar-edit").addEventListener("click", function() {
                 imageUpload.click();
             });
-    
+
             imageUpload.addEventListener("change", function() {
                 if (this.files && this.files[0]) {
                     const formData = new FormData();
                     formData.append("image", this.files[0]); // Attach the image to the FormData
                     formData.append("_token", "{{ csrf_token() }}"); // Add the CSRF token for security
-    
+
                     // Send the request to the server to upload the image
                     fetch("{{ route('profile.upload-avatar') }}", {
                         method: "POST",
@@ -255,15 +255,44 @@
                         console.error("Error:", error);
                         alert("An error occurred while uploading the image.");
                     });
-    
+
                     this.value = ""; // Reset input to allow re-uploading the same file
                 }
             });
         });
+        function openNotification(notificationId, message) {
+        // Gửi request đánh dấu đã đọc và xóa luôn thông báo
+        fetch(`/notifications/${notificationId}/read`, {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                "Content-Type": "application/json",
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Ẩn thông báo đã đọc trên giao diện
+                document.getElementById(`notification-${notificationId}`).remove();
+
+                // Cập nhật số lượng thông báo chưa đọc
+                let countElem = document.getElementById("notificationCount");
+                if (countElem) {
+                    let count = parseInt(countElem.innerText) - 1;
+                    if (count <= 0) {
+                        countElem.remove(); // Xóa badge khi không còn thông báo nào
+                    } else {
+                        countElem.innerText = count;
+                    }
+                }
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
     </script>
-    
-    
-    
+
+
+
 
 
 

@@ -29,11 +29,12 @@ class ArticleStatusUpdated extends Notification implements ShouldQueue
     public function toDatabase($notifiable)
     {
         return [
-            'article_id' => $this->article->article_id,
+            'article_id' => $this->article->id, // Thay vì $this->article->article_id
             'title' => $this->article->title,
             'message' => $this->message,
             'status' => $this->article->status,
             'updated_at' => now(),
         ];
     }
+
 }

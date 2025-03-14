@@ -28,6 +28,13 @@ use App\Http\Controllers\Author\AuthorController;
 use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
 use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
 use App\Http\Controllers\User\UserController as UserUserController;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\DatabaseNotification;
+use App\Http\Controllers\Controller;
+
+
+
 
 // 🌟 Trang chủ & bài viết chi tiết
 // Route::view('/', 'welcome');
@@ -243,8 +250,10 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
         '/change-password',
         [ProfileController::class, 'showChangePasswordFormAuthor']
     )->name('author.change-password');
+    //xóa thông báo khi đã đọc
 
-    Route::get('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    // Route::post('/notifications/{id}/read', function ($id, User $user): JsonResponse {
+    //     $notification = $user->notifications()->find($id);
 
     // Bookmark By TungKeng
     Route::post('/save-article', [AuthorArticleSaveController::class, 'saveArticle'])->name('save.article');
@@ -258,6 +267,31 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     // Hoạt động bình luận
     Route::get('/{user_id}/comments', [AuthorController::class, 'getUserComments'])->name('author.comments');
+    //     if ($notification) {
+    //         $notification->markAsRead();
+    //         return response()->json([
+    //             'success' => true,
+    //             'unreadCount' => $user->unreadNotifications()->count()
+    //         ]);
+    //     }
+
+    //     return response()->json(['success' => false], 404);
+    // })->middleware('auth');
+
+});
+Route::post('/notifications/{id}/read', function ($id) {
+    $notification = \App\Models\User::find(auth()->id())->unreadNotifications()->find($id);
+
+    if ($notification) {
+        $notification->markAsRead();
+        return response()->json(['success' => true]);
+    }
+    return response()->json(['success' => false]);
+});
+
+Route::post('/notifications/clear', function () {
+    Auth::User()->unreadNotifications->markAsRead();
+    return response()->json(['success' => true]);
 });
 
 // 🚀 Khu vực dành riêng cho User (role_id = 4)
