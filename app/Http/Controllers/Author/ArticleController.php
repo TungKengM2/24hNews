@@ -8,6 +8,7 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Models\User;
+use App\Notifications\ArticleStatusUpdated;
 use App\Services\ModerationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -491,5 +492,37 @@ class ArticleController extends Controller
             'links' => $articles->links()->render(),
             'total' => $articles->total(),
         ]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $article = Article::find($id);
+
+        if (!$article) {
+            return response()->json(['message' => 'Bài viết không tồn tại'], 404);
+        }
+
+        // Cập nhật trạng thái bài viết
+        $article->status = $request->status;
+        $article->save();
+
+        // Kiểm tra tác giả bài viết có tồn tại không
+        if (!$article->author) {
+            Log::error("Không tìm thấy tác giả của bài viết ID: {$article->id}");
+            return response()->json(['message' => 'Không tìm thấy tác giả'], 500);
+        }
+
+        // Nội dung thông báo
+        $message = "Bài viết '{$article->title}' của bạn đã được " .
+                   ($article->status === 'published' ? 'duyệt.' : 'từ chối.');
+
+        // Gửi thông báo
+        try {
+            $article->author->notify(new ArticleStatusUpdated($article, $message));
+        } catch (\Exception $e) {
+            Log::error("Lỗi khi gửi thông báo: " . $e->getMessage());
+        }
+
+        return response()->json(['message' => 'Trạng thái bài viết đã được cập nhật.']);
     }
 }
