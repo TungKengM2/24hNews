@@ -36,11 +36,11 @@
                             @error('email')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
-                            
+
                             <input class="form-control" type="password" name="password" placeholder="Password" required>
                             @error('password')
                                 <span class="text-danger">{{ $message }}</span>
-                            @enderror  
+                            @enderror
                             <input type="checkbox" id="chk1" name="remember" {{ old('remember') ? 'checked' : '' }}>
                             <label for="chk1">Remember me</label>
                                                         <div class="form-button">
@@ -53,7 +53,7 @@
                             <a href="{{ url('auth/facebook') }}"><i class="fab fa-facebook-f"></i> Facebook</a>
                             <a href="{{ url('auth/google') }}"><i class="fab fa-google"></i> Google</a>
                         </div>
-                        
+
                         <div class="page-links">
                             <a href="{{ route('signupuser') }}">Register new account</a>
                         </div>

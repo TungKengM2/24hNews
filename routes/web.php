@@ -41,16 +41,51 @@ use App\Http\Controllers\Controller;
 // Route::view('/article-detail', 'website.pages.articledetail.homedetail');
 
 // Home duong chinh oke --
+// Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// // Client Articles
+// Route::get('/articles/{article_id}', [ArticleUserController::class, 'show'])->name('articles.article');
+// Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
+// Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->middleware('auth')->name('articles.comment');
+// Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->middleware('auth')->name('articles.replyComment');
+
+// // Client Category
+// Route::get('{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
+
+// TungKeng check route dương sai hết, không đăng nhập được vào login
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Client Articles
-Route::get('/articles/{article_id}', [ArticleUserController::class, 'show'])->name('articles.article');
-Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
-Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->middleware('auth')->name('articles.comment');
-Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->middleware('auth')->name('articles.replyComment');
+Route::get(
+    '/client/articles/{article_id}',
+    [ArticleUserController::class, 'show']
+)
+    ->name('client.articles.article');
+Route::post(
+    '/client/articles/{article_id}/like',
+    [ArticleUserController::class, 'likeArticle']
+)
+    ->name('client.articles.like');
+Route::post(
+    '/client/articles/{article_id}/comments',
+    [ArticleUserController::class, 'storeComment']
+)
+    ->middleware('auth')
+    ->name('client.articles.comment');
+Route::post(
+    '/client/articles/{article_id}/comments/{comment_id}/reply',
+    [ArticleUserController::class, 'storeReplyComment']
+)
+    ->middleware('auth')
+    ->name('client.articles.replyComment');
 
 // Client Category
-Route::get('{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
+
+Route::get(
+    'client/category/{categorySlug}',
+    [CategoryUserController::class, 'index']
+)->name('client.category.show');
 
 
 // 🚀 Auth dành cho User
@@ -279,6 +314,7 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     // })->middleware('auth');
 
 });
+
 Route::post('/notifications/{id}/read', function ($id) {
     $notification = \App\Models\User::find(auth()->id())->unreadNotifications()->find($id);
 
