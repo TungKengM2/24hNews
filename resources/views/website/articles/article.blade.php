@@ -487,7 +487,7 @@
                                 newComment);
                             e.target.reset();
                         } else {
-                            alert("Lỗi khi gửi comment!");
+                            alert("Lỗi khi gửi comment có thể là do có những từ không chuẩn đạo đức !");
                         }
                     })
                     .catch(error => console.error("Error:", error));
