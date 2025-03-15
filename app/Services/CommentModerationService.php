@@ -7,39 +7,45 @@ use Illuminate\Support\Facades\Log;
 
 class CommentModerationService
 {
-    protected $client;
-    protected $apiKey;
+    protected Client $client;
+    protected ?string $apiKey;
 
     public function __construct()
     {
         $this->client = new Client();
-        $this->apiKey = env('PERSPECTIVE_API_KEY'); // Lấy API Key từ .env
+        $this->apiKey = env('PERSPECTIVE_API_KEY');
     }
 
-    public function checkComment($text)
+    public function checkComment(string $text): bool
     {
-        Log::info("🔍 Đang kiểm tra bình luận: " . $text); // Debug xem hàm có chạy không
+        if (!$this->apiKey) {
+            Log::error("❌ PERSPECTIVE_API_KEY chưa được cấu hình trong .env");
+            return false;
+        }
+
+        Log::info("🔍 Kiểm tra bình luận: {$text}");
 
         try {
-            $response = $this->client->post('https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=' . $this->apiKey, [
+            $response = $this->client->post("https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key={$this->apiKey}", [
                 'json' => [
                     'comment' => ['text' => $text],
-                    'languages' => ['vi'], // Hỗ trợ tiếng Việt
-                    'requestedAttributes' => ['TOXICITY' => []]
-                ]
+                    'languages' => ['vi'],
+                    'requestedAttributes' => ['TOXICITY' => []],
+                    'doNotStore' => true, // Tránh lưu dữ liệu trên server Google
+                ],
+                'timeout' => 5, // Tránh request treo quá lâu
             ]);
 
             $result = json_decode($response->getBody(), true);
-            Log::info("📌 Kết quả từ API: " . json_encode($result)); // Ghi log kết quả
+            Log::info("📌 API Response: " . json_encode($result));
 
-            // Lấy điểm TOXICITY
-            $toxicityScore = $result['attributeScores']['TOXICITY']['summaryScore']['value'] ?? 0;
+            // Lấy điểm TOXICITY an toàn
+            $toxicityScore = data_get($result, 'attributeScores.TOXICITY.summaryScore.value', 0);
 
-            // Nếu score > 0 => Chặn 100%
-            return $toxicityScore == 0;
+            return $toxicityScore > 0.5;
         } catch (\Exception $e) {
-            Log::error("❌ Lỗi API Perspective: " . $e->getMessage());
-            return false; // Nếu API lỗi, mặc định từ chối bình luận
+            Log::error("❌ Lỗi gọi API Perspective: " . $e->getMessage());
+            return false; // Nếu API lỗi, không chặn bình luận
         }
     }
 }
