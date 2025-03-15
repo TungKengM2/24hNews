@@ -214,10 +214,10 @@ class ArticleUserController extends Controller
 
         $content = $request->content;
 
-        if (!$moderationService->checkComment($content)) {
-            Log::warning("🚫 Bình luận bị từ chối: " . $content);
-            return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
-        }
+    if (!$moderationService->checkComment($content)) {
+        Log::warning("🚫 Bình luận bị từ chối: " . $content);
+        return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
+    }
 
 
 
