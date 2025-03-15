@@ -4,6 +4,7 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Exception\RequestException;
 
 class CommentModerationService
 {
@@ -13,39 +14,60 @@ class CommentModerationService
     public function __construct()
     {
         $this->client = new Client();
-        $this->apiKey = env('PERSPECTIVE_API_KEY');
+        $this->apiKey = env('GEMINI_API_KEY'); // Lấy API Key từ .env
     }
 
     public function checkComment(string $text): bool
     {
         if (!$this->apiKey) {
-            Log::error("❌ PERSPECTIVE_API_KEY chưa được cấu hình trong .env");
+            Log::error("❌ GEMINI_API_KEY chưa được cấu hình trong .env");
             return false;
         }
 
-        Log::info("🔍 Kiểm tra bình luận: {$text}");
+        Log::info("🔍 Kiểm tra bình luận với Gemini: {$text}");
 
         try {
-            $response = $this->client->post("https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key={$this->apiKey}", [
+            $response = $this->client->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={$this->apiKey}", [
                 'json' => [
-                    'comment' => ['text' => $text],
-                    'languages' => ['vi'],
-                    'requestedAttributes' => ['TOXICITY' => []],
-                    'doNotStore' => true, // Tránh lưu dữ liệu trên server Google
+                    'contents' => [[
+                        'parts' => [[
+                            'text' => "Hãy phân tích câu sau và trả về JSON với định dạng {\"toxic\": true/false}. 
+                            Nếu bình luận có nội dung xúc phạm, thô tục, hãy đặt \"toxic\": true. Nếu không, đặt \"toxic\": false.
+                            Bình luận: \"{$text}\""
+                        ]]
+                    ]],
+                    'generationConfig' => [
+                        'temperature' => 0, // Để AI trả về kết quả ổn định
+                        'response_mime_type' => 'application/json'
+                    ]
                 ],
-                'timeout' => 5, // Tránh request treo quá lâu
+                'timeout' => 10,
             ]);
 
             $result = json_decode($response->getBody(), true);
             Log::info("📌 API Response: " . json_encode($result));
 
-            // Lấy điểm TOXICITY an toàn
-            $toxicityScore = data_get($result, 'attributeScores.TOXICITY.summaryScore.value', 0);
+            // Lấy nội dung AI phản hồi
+            $responseText = data_get($result, 'candidates.0.content.parts.0.text', '{}');
+            $aiResponse = json_decode($responseText, true);
 
-            return $toxicityScore > 0.5;
+            if (!isset($aiResponse['toxic'])) {
+                Log::error("⚠️ Không thể lấy được dữ liệu kiểm duyệt từ AI!");
+                return false;
+            }
+
+            Log::info("🔍 AI đánh giá bình luận: " . ($aiResponse['toxic'] ? "🚫 Xúc phạm" : "✅ Hợp lệ"));
+
+            return !$aiResponse['toxic']; // Nếu toxic = true, chặn bình luận
+        } catch (RequestException $e) {
+            Log::error("❌ Lỗi gọi API Gemini: " . $e->getMessage(), [
+                'response' => $e->hasResponse() ? $e->getResponse()->getBody()->getContents() : null,
+            ]);
         } catch (\Exception $e) {
-            Log::error("❌ Lỗi gọi API Perspective: " . $e->getMessage());
-            return false; // Nếu API lỗi, không chặn bình luận
+            Log::error("❌ Lỗi không xác định: " . $e->getMessage());
         }
+
+        Log::warning("⚠️ API gặp lỗi, mặc định CHẶN bình luận!");
+        return false;
     }
 }
