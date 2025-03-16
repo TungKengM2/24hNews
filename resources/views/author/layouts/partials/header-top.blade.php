@@ -14,18 +14,17 @@
     <div class="navbar-custom-menu r-side">
         <ul class="nav navbar-nav">
             <!-- Notifications -->
+
             <li class="dropdown notifications-menu" style="position: relative;">
                 <a href="#"
                     class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
                     id="notificationDropdown" data-bs-toggle="dropdown" title="Notifications"
                     style="position: relative; display: inline-block;">
                     <i class="fa fa-bell"></i>
-                    @if (auth()->user()->unreadNotifications->count() > 0)
-                        <span id="notificationCount" class="badge badge-danger"
-                            style="position: absolute; top: 6px; right: 5px; font-size: 12px; padding: 4px 7px; border-radius: 50%; background: red; color: white;">
-                            {{ auth()->user()->unreadNotifications->count() }}
-                        </span>
-                    @endif
+                    <span id="notificationCount" class="badge badge-danger"
+                        style="position: absolute; top: 6px; right: 5px; font-size: 12px; padding: 4px 7px; border-radius: 50%; background: red; color: white; display: {{ auth()->user()->unreadNotifications->count() > 0 ? 'inline-block' : 'none' }};">
+                        {{ auth()->user()->unreadNotifications->count() }}
+                    </span>
                 </a>
 
                 <ul class="dropdown-menu animated bounceIn" aria-labelledby="notificationDropdown"
@@ -38,7 +37,7 @@
 
                     <li>
                         <ul class="menu sm-scroll" id="notificationList">
-                            @forelse(auth()->user()->unreadNotifications as $notification)
+                            @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
                                 <li class="notification-item p-3" id="notification-{{ $notification->id }}">
                                     <a href="#"
                                         onclick="openNotification('{{ $notification->id }}', '{{ addslashes($notification->data['message']) }}'); return false;"
@@ -53,10 +52,78 @@
                     </li>
 
                     <li class="footer p-3">
-                        <a href="#" style="display: block; text-align: center;">View all</a>
+                        <a href="#" id="clearNotifications" style="display: block; text-align: center;">Xóa Thông
+                            Báo</a>
                     </li>
                 </ul>
             </li>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    document.querySelectorAll(".notification-item a").forEach(item => {
+                        item.addEventListener("click", function(event) {
+                            event.preventDefault();
+                            let notificationId = this.getAttribute("onclick").match(/'([^']+)'/)[1];
+
+                            fetch(`/notifications/${notificationId}/read`, {
+                                    method: "POST",
+                                    headers: {
+                                        "X-CSRF-TOKEN": document.querySelector(
+                                            'meta[name="csrf-token"]').getAttribute("content"),
+                                        "X-Requested-With": "XMLHttpRequest"
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        document.getElementById(`notification-${notificationId}`)
+                                            .remove();
+                                        updateNotificationCount();
+                                    }
+                                });
+                        });
+                    });
+
+                    document.getElementById("clearNotifications").addEventListener("click", function(event) {
+                        event.preventDefault();
+                        fetch(`/notifications/clear`, {
+                                method: "POST",
+                                headers: {
+                                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                                        .getAttribute("content"),
+                                    "X-Requested-With": "XMLHttpRequest"
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    document.getElementById("notificationList").innerHTML =
+                                        '<li class="text-muted dropdown-item p-3">Không có thông báo mới.</li>';
+                                    updateNotificationCount(0);
+                                }
+                            });
+                    });
+                });
+
+                function updateNotificationCount(count = null) {
+                    let badge = document.getElementById("notificationCount");
+                    if (badge) {
+                        if (count === null) {
+                            count = parseInt(badge.innerText) - 1;
+                        }
+                        if (count > 0) {
+                            badge.innerText = count;
+                            badge.style.display = "inline-block";
+                        } else {
+                            badge.style.display = "none";
+                        }
+                    }
+                }
+            </script>
+
+
+
+
 
             <!-- Custom Popup -->
             <div id="customPopup"
@@ -126,11 +193,42 @@
     function openNotification(id, message) {
         document.getElementById("customPopupContent").innerHTML = message;
         document.getElementById("customPopup").style.display = "block";
-        console.log("Popup opened"); // Debug log
+
+        fetch(`/notifications/${id}/read`, {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Xóa thông báo khỏi danh sách
+                    let notificationItem = document.getElementById(`notification-${id}`);
+                    if (notificationItem) {
+                        notificationItem.remove();
+                    }
+
+                    // Cập nhật số lượng thông báo
+                    let countElement = document.getElementById("notificationCount");
+                    if (countElement) {
+                        let count = parseInt(countElement.innerText, 10) || 0;
+                        if (count > 1) {
+                            countElement.innerText = count - 1;
+                        } else {
+                            countElement.remove(); // Nếu hết thông báo thì ẩn badge
+                        }
+                    }
+                } else {
+                    console.error("Failed to mark notification as read.");
+                }
+            })
+            .catch(error => console.error("Error marking notification as read:", error));
     }
 
     function closePopup() {
         document.getElementById("customPopup").style.display = "none";
-        console.log("Popup closed"); // Debug log
     }
 </script>

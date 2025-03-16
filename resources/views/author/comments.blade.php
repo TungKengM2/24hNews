@@ -1,4 +1,4 @@
-@extends('user.layouts.master')
+@extends('author.layouts.master')
 
 @section('title')
     Hoạt Động Bình Luận
@@ -42,7 +42,7 @@
                                                 <td>{{ $comment->created_at->diffForHumans() }}</td>
                                                 <td>
                                                     @if ($comment->article)
-                                                        <a href="{{ route('article.detail', ['slug' => $comment->article->slug, 'highlight' => $comment->comment_id]) }}"
+                                                        <a href="{{ route('author.article.detail', ['slug' => $comment->article->slug, 'highlight' => $comment->comment_id]) }}"
                                                             class="btn btn-sm btn-primary">
                                                             Xem Chi Tiết
                                                         </a>
