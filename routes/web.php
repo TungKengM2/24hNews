@@ -35,22 +35,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 
 // 🌟 Trang chủ & bài viết chi tiết
-// Route::view('/', 'welcome');
-// Route::view('/article-detail', 'website.pages.articledetail.homedetail');
-
-// Home duong chinh oke --
-// Route::get('/', [HomeController::class, 'index'])->name('home');
-
-// // Client Articles
-// Route::get('/articles/{article_id}', [ArticleUserController::class, 'show'])->name('articles.article');
-// Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
-// Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->middleware('auth')->name('articles.comment');
-// Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->middleware('auth')->name('articles.replyComment');
-
-// // Client Category
-// Route::get('{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
-
-// TungKeng check route dương sai hết, không đăng nhập được vào login
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // dat them
