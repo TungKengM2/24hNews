@@ -14,23 +14,23 @@
                     <span class="icon">
                         <i class="la la-search"></i>
                     </span>
-                    <input type="text" name="keyword" class="form-control" 
-                           placeholder="Elon Musk ..." 
-                           value="{{ old('keyword', $keyword ?? '') }}">
+                    <input type="text" name="keyword" class="form-control" placeholder="Elon Musk ..."
+                        value="{{ old('keyword', $keyword ?? '') }}">
                     <button type="submit">search</button>
                 </div>
             </form>
 
             {{-- // dat thêm --}}
             <!-- Hiển thị kết quả tìm kiếm ngay tại trang home -->
-            @if(isset($results))
+            @if (isset($results))
             <div class="search-results mt-4">
                 <h6>Kết quả tìm kiếm cho: "{{ $keyword }}"</h6>
-                @if($results->count() > 0)
+                @if ($results->count() > 0)
                     <ul>
-                        @foreach($results as $result)
-                            <li> 
-                                <a href="{{ Auth::check() ? route('client.articles.article', $result->article_id) : url('/login-user') }}" class="btn btn-block">{{ $result->title }}</a>
+                        @foreach ($results as $result)
+                            <li>
+                                <a href="{{ Auth::check() ? route('articles.article', $result->slug) : url('/login-user') }}"
+                                    class="btn btn-block">{{ $result->title }}</a>
                             </li>
                         @endforeach
                     </ul>
