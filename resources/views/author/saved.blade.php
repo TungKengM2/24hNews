@@ -60,7 +60,7 @@
                                                 </h5>
                                             </td>
                                             <td>
-                                                <a href="{{ route('author.article.detail', ['article_id' => $savedArticle->article->article_id]) }}"
+                                                <a href="{{ route('author.article.detail', ['slug' => $savedArticle->article->slug]) }}"
                                                     class="btn btn-primary btn-sm"><i class="si-eye si"></i>
                                                 </a>
                                                 <form action="{{ route('author.remove.saved', $savedArticle->id) }}"

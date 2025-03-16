@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Controllers\Author\ArticleViewAuthorController;
-use App\Http\Controllers\Moderator\ModeratorController;
-use App\Http\Controllers\User\ArticleViewModeratorController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -15,26 +12,27 @@ use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\CategoryUserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Author\AuthorController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\User\ArticleSaveController;
+use App\Http\Controllers\Moderator\ModeratorController;
 use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\User\ArticleViewUserController;
+use App\Http\Controllers\Author\ArticleViewAuthorController;
+use App\Http\Controllers\User\ArticleViewModeratorController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
+use App\Http\Controllers\User\UserController as UserUserController;
 use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveController;
-use App\Http\Controllers\Author\AuthorController;
 use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
 use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
-use App\Http\Controllers\User\UserController as UserUserController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\DatabaseNotification;
 use App\Http\Controllers\Controller;
-
-
-
+use App\Models\User;
 
 // 🌟 Trang chủ & bài viết chi tiết
 // Route::view('/', 'welcome');
@@ -57,35 +55,13 @@ use App\Http\Controllers\Controller;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Client Articles
-Route::get(
-    '/client/articles/{article_id}',
-    [ArticleUserController::class, 'show']
-)
-    ->name('client.articles.article');
-Route::post(
-    '/client/articles/{article_id}/like',
-    [ArticleUserController::class, 'likeArticle']
-)
-    ->name('client.articles.like');
-Route::post(
-    '/client/articles/{article_id}/comments',
-    [ArticleUserController::class, 'storeComment']
-)
-    ->middleware('auth')
-    ->name('client.articles.comment');
-Route::post(
-    '/client/articles/{article_id}/comments/{comment_id}/reply',
-    [ArticleUserController::class, 'storeReplyComment']
-)
-    ->middleware('auth')
-    ->name('client.articles.replyComment');
+Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])->name('articles.article');
+Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
+Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->middleware('auth')->name('articles.comment');
+Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->middleware('auth')->name('articles.replyComment');
 
 // Client Category
-
-Route::get(
-    'client/category/{categorySlug}',
-    [CategoryUserController::class, 'index']
-)->name('client.category.show');
+Route::get('/category/{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
 
 
 // 🚀 Auth dành cho User
@@ -216,7 +192,7 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     // Bookmark By TungKeng
     Route::post('/save-article', [ModeratorArticleSaveController::class, 'saveArticle'])->name('save.article');
     Route::get('/saved-articles', [ModeratorArticleSaveController::class, 'savedArticles'])->name('moderator.saved');
-    Route::get('/article/{article_id}', [ArticleUserController::class, 'show'])->name('moderator.article.detail');
+    Route::get('/article/{slug}', [ArticleUserController::class, 'show'])->name('moderator.article.detail');
     Route::delete('/user/remove-saved-article/{id}', [ModeratorArticleSaveController::class, 'removeSavedArticle'])->name('moderator.remove.saved');
     Route::post('/bookmark/{article_id}', [ModeratorArticleSaveController::class, 'toggleBookmark']);
 
@@ -293,7 +269,7 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     // Bookmark By TungKeng
     Route::post('/save-article', [AuthorArticleSaveController::class, 'saveArticle'])->name('save.article');
     Route::get('/saved-articles', [AuthorArticleSaveController::class, 'savedArticles'])->name('author.saved');
-    Route::get('/article/{article_id}', [ArticleUserController::class, 'show'])->name('author.article.detail');
+    Route::get('/article/{slug}', [ArticleUserController::class, 'show'])->name('author.article.detail');
     Route::delete('/user/remove-saved-article/{id}', [AuthorArticleSaveController::class, 'removeSavedArticle'])->name('author.remove.saved');
     Route::post('/bookmark/{article_id}', [AuthorArticleSaveController::class, 'toggleBookmark']);
 
@@ -316,7 +292,7 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 });
 
 Route::post('/notifications/{id}/read', function ($id) {
-    $notification = \App\Models\User::find(auth()->id())->unreadNotifications()->find($id);
+    $notification = User::find(auth()->id())->unreadNotifications()->find($id);
 
     if ($notification) {
         $notification->markAsRead();
@@ -361,7 +337,7 @@ Route::middleware(['auth', 'role:4'])
         // Bookmark By TungKeng
         Route::post('/save-article', [ArticleSaveController::class, 'saveArticle'])->name('save.article');
         Route::get('/saved-articles', [ArticleSaveController::class, 'savedArticles'])->name('user.saved');
-        Route::get('/article/{article_id}', [ArticleUserController::class, 'show'])->name('article.detail');
+        Route::get('/article/{slug}', [ArticleUserController::class, 'show'])->name('article.detail');
         Route::delete('/user/remove-saved-article/{id}', [ArticleSaveController::class, 'removeSavedArticle'])->name('user.remove.saved');
         Route::post('/bookmark/{article_id}', [ArticleSaveController::class, 'toggleBookmark']);
 

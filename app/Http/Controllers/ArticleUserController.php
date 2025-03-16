@@ -9,13 +9,16 @@ use App\Models\ArticleLike;
 use App\Models\ArticleSave;
 use App\Models\ArticleView;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Services\CommentModerationService;
 
 class ArticleUserController extends Controller
 {
-    public function show($article_id, Request $request)
+    public function show($slug)
     {
-        $article = Article::where('article_id', $article_id)->first();
+        $article = Article::where('slug', $slug)->first();
+
 
         if (! $article) {
             abort(404, 'Bài viết không tồn tại!');
@@ -62,6 +65,7 @@ class ArticleUserController extends Controller
 
             $article->increment('views');
         }
+        
         //BookMark By TungKeng
         $isBookmarked = false;
         if ($userId) { // Nếu có user đăng nhập
@@ -137,9 +141,7 @@ class ArticleUserController extends Controller
 
         $categories = Category::where('is_active', 1)->get();
 
-        // TungKeng Bổ Sung
-        $article = Article::with('comments')->findOrFail($article_id);
-        $highlightCommentId = $request->query('highlight');
+
 
         return view(
             'website.articles.article',
@@ -152,7 +154,7 @@ class ArticleUserController extends Controller
                 'comments',
                 //TungKeng Bổ Sung
                 'isBookmarked',
-                'highlightCommentId'
+                // 'highlightCommentId'
             )
         );
     }
@@ -203,13 +205,22 @@ class ArticleUserController extends Controller
         ]);
     }
 
-    public function storeComment(Request $request)
+    public function storeComment(Request $request, CommentModerationService $moderationService)
     {
         $request->validate([
             'article_id' => 'required|exists:articles,article_id',
             'content' => 'required|string',
             'parent_id' => 'nullable|exists:comments,comment_id',
         ]);
+
+        $content = $request->content;
+
+    if (!$moderationService->checkComment($content)) {
+        Log::warning("🚫 Bình luận bị từ chối: " . $content);
+        return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
+    }
+
+
 
         // Truy vấn `parentComment` trước để tối ưu
         $parentComment = $request->parent_id ? Comment::find($request->parent_id) : null;
@@ -225,22 +236,14 @@ class ArticleUserController extends Controller
 
         return response()->json([
             'success' => true,
-            'comment' => [
-                'comment_id' => $comment->comment_id,
-                'parent_id' => $comment->parent_id,
-                'depth' => $comment->depth, // Trả depth về FE
-                'content' => $comment->content,
-                'username' => auth()->user()->username,
-                'user_image' => auth()->user()->image ?? 'assets/img/colums/default.png',
-                'created_at' => $comment->created_at->format('F d, Y'),
-            ],
+
         ]);
     }
 
     public function storeReplyComment(
         Request $request,
         $article_id,
-        $comment_id
+        $comment_id ,CommentModerationService $moderationService
     ) {
         // Kiểm tra người dùng đã đăng nhập chưa
         if (! auth()->check()) {
@@ -248,6 +251,13 @@ class ArticleUserController extends Controller
                 'success' => false,
                 'message' => 'Bạn cần đăng nhập để trả lời bình luận!',
             ], 403);
+        }
+
+        $content = $request->content;
+
+        if (!$moderationService->checkComment($content)) {
+            Log::warning("🚫 Bình luận bị từ chối: " . $content);
+            return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
         }
 
         // Validate dữ liệu đầu vào
