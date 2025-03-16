@@ -44,6 +44,6 @@ class CategoryUserController extends Controller
 
         $categories = Category::where('is_active', 1)->get();
 
-        return view('client.categories.categories', compact('categories', 'articles', 'articlesViews', 'category', 'featuredArticle', 'relatedArticles'));
+        return view('website.categories.categories', compact('categories', 'articles', 'articlesViews', 'category', 'featuredArticle', 'relatedArticles'));
     }
 }
