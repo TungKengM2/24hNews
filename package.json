@@ -1,12 +1,15 @@
 {
-    "private": true,
+    "name": "content-moderation",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "Content moderation using Gemini API",
+    "main": "moderation-check.js",
     "scripts": {
         "dev": "vite",
         "watch": "vite",
         "watch-poll": "vite --watch",
         "build": "vite build"
     },
-    "type": "module",
     "devDependencies": {
         "axios": "^1.8.2",
         "laravel-vite-plugin": "^1.0.0",
@@ -15,12 +18,15 @@
     "dependencies": {
         "@ckeditor/ckeditor5-build-decoupled-document": "^44.2.0",
         "@ckeditor/ckeditor5-cloud-services": "^44.2.0",
+        "@google/generative-ai": "^0.2.1",
         "@tensorflow/tfjs-node": "^4.22.0",
         "bootstrap": "^5.3.3",
         "buffer": "^6.0.3",
         "ckeditor5": "^44.2.0",
         "ckeditor5-premium-features": "^44.2.0",
         "mammoth": "^1.9.0",
-        "nsfwjs": "^4.2.1"
+        "node-fetch": "^3.3.2",
+        "nsfwjs": "^4.2.1",
+        "dotenv": "^16.4.5"
     }
 }

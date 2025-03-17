@@ -10,6 +10,8 @@ use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\Author\AuthorProfileController;
+use App\Http\Controllers\Author\ImageModerationController;
+use App\Http\Controllers\Author\TinyMCEUploadController;
 use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\CategoryUserController;
 use App\Http\Controllers\ForgotPasswordController;
@@ -129,7 +131,6 @@ Route::middleware(['auth', 'role:4'])
     })
     ->name('user.profile-setting');
 
-
 Route::middleware(['auth', 'role:3'])
     ->get('/moderator/profile-setting', function () {
         return view('moderator.profile-setting');
@@ -142,19 +143,15 @@ Route::middleware(['auth', 'role:3'])
     })
     ->name('moderator.profile');
 
-
-
-
 Route::middleware(['auth', 'role:3'])
     ->get('/moderator/dashboard', function () {
         return view('moderator.dashboard');
     })
     ->name('moderator.dashboard');
 
-
-
 // 🚀 Khu vực dành riêng cho Moderator (role_id = 3)
-Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
+Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function (
+) {
     Route::get(
         '/list-article',
         [ModeratorArticleController::class, 'index']
@@ -173,18 +170,19 @@ Route::prefix('moderator')->name('moderator.')->group(function () {
     Route::get('/articles', [ModeratorArticleController::class, 'index'])
         ->name('articles.index');
 
-    Route::get('/articles/{article}', [ModeratorArticleController::class, 'show'])
+    Route::get('/articles/{article}',
+        [ModeratorArticleController::class, 'show'])
         ->name('articles.show');
 
-    Route::patch('/articles/{article}/approve', [ModeratorArticleController::class, 'approve'])
+    Route::patch('/articles/{article}/approve',
+        [ModeratorArticleController::class, 'approve'])
         ->name('articles.approve');
 
     // Sửa lại route reject (bỏ 'moderator/' trong URL)
-    Route::patch('/articles/{article}/reject', [ModeratorArticleController::class, 'reject'])
+    Route::patch('/articles/{article}/reject',
+        [ModeratorArticleController::class, 'reject'])
         ->name('articles.reject');
 });
-
-
 
 // 🚀 Khu vực dành riêng cho Author (role_id = 2)
 Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
@@ -228,6 +226,16 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
         '/change-password',
         [ProfileController::class, 'showChangePasswordFormAuthor']
     )->name('author.change-password');
+
+    // TinyMCE API
+    Route::post('tinymce/upload',
+        [TinyMCEUploadController::class, 'uploadImage']);
+
+    // Moderation API
+    Route::post('moderate-image',
+        [ImageModerationController::class, 'moderateImage']);
+    Route::get('test-moderation',
+        [ImageModerationController::class, 'testModeration']);
 });
 
 // 🚀 Khu vực dành riêng cho User (role_id = 4)
@@ -282,10 +290,9 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
         [ArticleController::class, 'approve']
     )->name('articles.approve');
     Route::resource('articles', ArticleController::class);
-    Route::patch('/articles/{article}/reject', [ArticleController::class, 'reject'])
+    Route::patch('/articles/{article}/reject',
+        [ArticleController::class, 'reject'])
         ->name('articles.reject');
-
-
 
     // Quản lý danh mục
     Route::resource('categories', CategoryController::class);
@@ -313,3 +320,8 @@ Route::get(
     'auth/{provider}/callback',
     [SocialAuthController::class, 'handleProviderCallback']
 );
+
+Route::post('tinymce/upload',
+    [TinyMCEUploadController::class, 'uploadImage']);
+Route::get('tinymce/clear-blocked-images',
+    [TinyMCEUploadController::class, 'clearBlockedImages']);
