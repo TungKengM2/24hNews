@@ -2,20 +2,53 @@
     <div class="row justify-content-center align-items-center gx-lg-5">
         <div class="col-lg-4">
             <div class="info">
-                <h5> you can search by category <br> or news title </h5>
+                <h1>News24h</h1>
+                <p>Kênh hóng chuyện hàng đầu Việt Nam .</p>
             </div>
         </div>
         <div class="col-lg-6">
-            <form class="form">
+            <form class="form" method="POST" action="{{ route('search') }}">
+                @csrf
                 <span class="color-777 fst-italic text-capitalize mb-2 fsz-13px">Enter Keyword</span>
                 <div class="form-group">
                     <span class="icon">
                         <i class="la la-search"></i>
                     </span>
-                    <input type="text" class="form-control" placeholder="Elon Musk ... ">
+                    <input type="text" name="keyword" class="form-control" placeholder="Elon Musk ..." required
+                        value="{{ old('keyword', $keyword ?? '') }}">
                     <button type="submit">search</button>
                 </div>
+                <script>
+                document.querySelector('form').addEventListener('submit', function(e) {
+                    const keyword = this.querySelector('input[name="keyword"]');
+                    if (!keyword.value.trim()) {
+                        e.preventDefault();
+                        alert('Vui lòng nhập từ khóa để tìm kiếm');
+                        keyword.focus();
+                    }
+                });
+                </script>
             </form>
+
+            {{-- // dat thêm --}}
+            <!-- Hiển thị kết quả tìm kiếm ngay tại trang home -->
+            @if (isset($results))
+            <div class="search-results mt-4">
+                <h6>Kết quả tìm kiếm cho: "{{ $keyword }}"</h6>
+                @if ($results->count() > 0)
+                    <ul>
+                        @foreach ($results as $result)
+                            <li>
+                                <a href="{{ Auth::check() ? route('articles.article', $result->slug) : url('/login-user') }}"
+                                    class="btn btn-block">{{ $result->title }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p>Không tìm thấy kết quả nào.</p>
+                @endif
+            </div>
+        @endif
         </div>
     </div>
 </div>

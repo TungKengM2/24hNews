@@ -2,8 +2,7 @@
 
 @section('head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- TinyMCE -->
-    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
 
     <!-- Style -->
     <style>
@@ -190,15 +189,15 @@
                         </div>
                         @enderror
                         @if (session('thumbnail_reasons'))
-                        <div class="alert alert-warning mt-2">
-                            <strong>Ảnh đại diện vi phạm quy định!</strong>
-                            <ul>
-                                @foreach(session('thumbnail_reasons') as $key => $reason)
-                                    <li>{{ $reason }}</li>
-                                @endforeach
-                            </ul>
-                            <p>Vui lòng chọn ảnh đại diện khác phù hợp với quy định.</p>
-                        </div>
+                            <div class="alert alert-warning mt-2">
+                                <strong>Ảnh đại diện vi phạm quy định!</strong>
+                                <ul>
+                                    @foreach(session('thumbnail_reasons') as $key => $reason)
+                                        <li>{{ $reason }}</li>
+                                    @endforeach
+                                </ul>
+                                <p>Vui lòng chọn ảnh đại diện khác phù hợp với quy định.</p>
+                            </div>
                         @endif
                         @if (old('thumbnail_url'))
                             <p>File đã chọn trước đó: {{ old('thumbnail_url') }}</p>
@@ -393,7 +392,7 @@
                         }
                     });
                 </script>
-                
+
 
             </div>
         </div>

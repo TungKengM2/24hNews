@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Tag;
+use App\Notifications\ArticleStatusUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
@@ -64,10 +65,6 @@ class ArticleController extends Controller
      */
     public function approve(Article $article)
     {
-        if ($article->status === 'published') {
-            return redirect()->back()->with('error', 'Bài viết đã được duyệt trước đó.');
-        }
-
         if ($article->status !== 'pending') {
             return redirect()->back()->with('error', 'Bài viết không hợp lệ để duyệt.');
         }
@@ -77,8 +74,12 @@ class ArticleController extends Controller
             'approved_by' => auth()->id(),
         ]);
 
+        // Gửi thông báo cho tác giả
+        $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã được duyệt."));
+
         return redirect()->back()->with('success', 'Bài viết đã được duyệt.');
     }
+
 
     /**
      *
@@ -242,16 +243,19 @@ class ArticleController extends Controller
     public function reject(Article $article)
     {
         if ($article->status !== 'pending') {
-            return redirect()->back()->with('error', 'Bài viết không ở trạng thái chờ duyệt.');
+            return redirect()->back()->with('error', 'Bài viết không hợp lệ để từ chối.');
         }
 
-        // Đảm bảo 'rejected' nằm trong dấu nháy đơn
         $article->update([
             'status' => 'rejected',
         ]);
 
+        // Gửi thông báo cho tác giả
+        $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã bị từ chối."));
+
         return redirect()->back()->with('success', 'Bài viết đã bị từ chối.');
     }
+
 
 
     /**

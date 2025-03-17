@@ -3,17 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\ArticleLike;
-use App\Models\ArticleView;
-use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Category;
+use App\Models\ArticleLike;
+use App\Models\ArticleSave;
+use App\Models\ArticleView;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Services\CommentModerationService;
 
 class ArticleUserController extends Controller
 {
-    public function show($article_id)
+    public function show($slug)
     {
-        $article = Article::where('article_id', $article_id)->first();
+        $article = Article::where('slug', $slug)->first();
+
 
         if (! $article) {
             abort(404, 'Bài viết không tồn tại!');
@@ -25,8 +30,10 @@ class ArticleUserController extends Controller
         // Kiểm tra xem user đã like bài viết chưa
         $isLiked = false;
         if ($userId) {
-            $isLiked = ArticleLike::where('article_id',
-                $article->article_id)
+            $isLiked = ArticleLike::where(
+                'article_id',
+                $article->article_id
+            )
                 ->where('user_id', $userId)
                 ->exists();
         }
@@ -58,10 +65,21 @@ class ArticleUserController extends Controller
 
             $article->increment('views');
         }
+        
+        //BookMark By TungKeng
+        $isBookmarked = false;
+        if ($userId) { // Nếu có user đăng nhập
+            $isBookmarked = ArticleSave::where('user_id', $userId)
+                ->where('article_id', $article->article_id)
+                ->exists();
+        }
+
 
         // Lấy bài viết liên quan
-        $relatedArticles = Article::where('category_id',
-            $article->category_id)
+        $relatedArticles = Article::where(
+            'category_id',
+            $article->category_id
+        )
             ->where('article_id', '!=', $article->article_id)
             ->limit(5)
             ->get();
@@ -88,8 +106,10 @@ class ArticleUserController extends Controller
         // ✅ Lấy tất cả các replies của các bình luận đã phân trang
         $commentIds = $comments->pluck('comment_id'); // Lấy danh sách ID của bình luận gốc
 
-        $replies = Comment::whereIn('parent_id',
-            $commentIds) // Chỉ lấy replies của bình luận gốc
+        $replies = Comment::whereIn(
+            'parent_id',
+            $commentIds
+        ) // Chỉ lấy replies của bình luận gốc
             ->where('status', 'approved')
             ->with([
                 'user:user_id,username,image',
@@ -103,23 +123,40 @@ class ArticleUserController extends Controller
                     $query->where('is_like', false);
                 },
             ])
-            ->orderBy('created_at',
-                'asc') // Hiển thị replies theo thứ tự cũ -> mới
+            ->orderBy(
+                'created_at',
+                'asc'
+            ) // Hiển thị replies theo thứ tự cũ -> mới
             ->get();
 
         // ✅ Gán replies vào từng comment
         $groupedReplies = $replies->groupBy('parent_id');
 
         foreach ($comments as $comment) {
-            $comment->replies = $groupedReplies->get($comment->comment_id,
-                collect()); // Gán danh sách replies vào từng comment
+            $comment->replies = $groupedReplies->get(
+                $comment->comment_id,
+                collect()
+            ); // Gán danh sách replies vào từng comment
         }
 
         $categories = Category::where('is_active', 1)->get();
 
-        return view('client.articles.article',
-            compact('categories', 'article', 'relatedArticles', 'isLiked',
-                'likeCount', 'comments'));
+
+
+        return view(
+            'website.articles.article',
+            compact(
+                'categories',
+                'article',
+                'relatedArticles',
+                'isLiked',
+                'likeCount',
+                'comments',
+                //TungKeng Bổ Sung
+                'isBookmarked',
+                // 'highlightCommentId'
+            )
+        );
     }
 
     public function likeArticle(Request $request, $article_id)
@@ -147,7 +184,7 @@ class ArticleUserController extends Controller
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Lỗi khi hủy like: '.$e->getMessage(),
+                    'message' => 'Lỗi khi hủy like: ' . $e->getMessage(),
                 ]);
             }
         } else {
@@ -168,13 +205,22 @@ class ArticleUserController extends Controller
         ]);
     }
 
-    public function storeComment(Request $request)
+    public function storeComment(Request $request, CommentModerationService $moderationService)
     {
         $request->validate([
             'article_id' => 'required|exists:articles,article_id',
             'content' => 'required|string',
             'parent_id' => 'nullable|exists:comments,comment_id',
         ]);
+
+        $content = $request->content;
+
+    if (!$moderationService->checkComment($content)) {
+        Log::warning("🚫 Bình luận bị từ chối: " . $content);
+        return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
+    }
+
+
 
         // Truy vấn `parentComment` trước để tối ưu
         $parentComment = $request->parent_id ? Comment::find($request->parent_id) : null;
@@ -190,22 +236,14 @@ class ArticleUserController extends Controller
 
         return response()->json([
             'success' => true,
-            'comment' => [
-                'comment_id' => $comment->comment_id,
-                'parent_id' => $comment->parent_id,
-                'depth' => $comment->depth, // Trả depth về FE
-                'content' => $comment->content,
-                'username' => auth()->user()->username,
-                'user_image' => auth()->user()->image ?? 'assets/img/colums/default.png',
-                'created_at' => $comment->created_at->format('F d, Y'),
-            ],
+
         ]);
     }
 
     public function storeReplyComment(
         Request $request,
         $article_id,
-        $comment_id
+        $comment_id ,CommentModerationService $moderationService
     ) {
         // Kiểm tra người dùng đã đăng nhập chưa
         if (! auth()->check()) {
@@ -213,6 +251,13 @@ class ArticleUserController extends Controller
                 'success' => false,
                 'message' => 'Bạn cần đăng nhập để trả lời bình luận!',
             ], 403);
+        }
+
+        $content = $request->content;
+
+        if (!$moderationService->checkComment($content)) {
+            Log::warning("🚫 Bình luận bị từ chối: " . $content);
+            return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
         }
 
         // Validate dữ liệu đầu vào
@@ -256,7 +301,7 @@ class ArticleUserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Lỗi khi lưu bình luận: '.$e->getMessage(),
+                'message' => 'Lỗi khi lưu bình luận: ' . $e->getMessage(),
             ], 500);
         }
     }

@@ -93,14 +93,12 @@
                 <a href="index.html#"
                     class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white"
                     data-bs-toggle="dropdown" title="User">
-                    <img class="avatar avatar-pill" src="/admin/main/../images/avatar/3.jpg" alt="">
+                    <img class="avatar rounded-circle"
+                        src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : '/admin/main/../images/user3-128x128.jpg' }}"
+                        alt="User Avatar">
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
-                        {{-- <a class="dropdown-item" href="{{ route('profile') }}"><i
-                                class="ti-settings text-muted me-2"></i>
-                            Profile</a>
-                        <div class="dropdown-divider"></div> --}}
                         <a class="dropdown-item" href="{{ route('user.upgrade') }}">
                             <i class="ti-arrow-up text-muted me-2"></i> Upgrade to author
                         </a>
