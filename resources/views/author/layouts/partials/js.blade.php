@@ -380,11 +380,15 @@
                                         }
 
                                         setTimeout(function() {
-                                            editor.notificationManager.open({
-                                                text: 'Một hình ảnh trong nội dung đã bị chặn: ' + errorMessage,
-                                                type: 'warning',
+                                            var notification = tinymce.activeEditor.notificationManager.open({
+                                                text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
+                                                type: 'error',
                                                 timeout: 5000,
                                             });
+                                            
+                                            setTimeout(function() {
+                                                notification.close();
+                                            }, 5000);
                                         }, 200);
                                     } else if (result.status === 'error' || !result.location) {
                                         console.log('Lỗi kiểm duyệt:', result);
@@ -408,11 +412,15 @@
                                         }
 
                                         setTimeout(function() {
-                                            editor.notificationManager.open({
-                                                text: errorMessage,
+                                            var notification = tinymce.activeEditor.notificationManager.open({
+                                                text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
                                                 type: 'error',
                                                 timeout: 5000,
                                             });
+                                            
+                                            setTimeout(function() {
+                                                notification.close();
+                                            }, 5000);
                                         }, 200);
                                     } else {
                                        
@@ -522,11 +530,15 @@
                                         }
 
                                         setTimeout(function() {
-                                            editor.notificationManager.open({
-                                                text: 'Một hình ảnh trong nội dung đã bị chặn: ' + errorMessage,
-                                                type: 'warning',
+                                            var notification = tinymce.activeEditor.notificationManager.open({
+                                                text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
+                                                type: 'error',
                                                 timeout: 5000,
                                             });
+                                            
+                                            setTimeout(function() {
+                                                notification.close();
+                                            }, 5000);
                                         }, 200);
                                     }
 
@@ -856,11 +868,15 @@
                             }
 
                             setTimeout(function() {
-                                tinymce.activeEditor.notificationManager.open({
+                                var notification = tinymce.activeEditor.notificationManager.open({
                                     text: 'Không thể tải lên hình ảnh: ' + errorMessage,
                                     type: 'error',
                                     timeout: 5000,
                                 });
+                                
+                                setTimeout(function() {
+                                    notification.close();
+                                }, 5000);
                             }, 200);
 
                             reject({message: errorMessage, remove: true});
@@ -904,11 +920,15 @@
                                 }
 
                                 setTimeout(function() {
-                                    tinymce.activeEditor.notificationManager.open({
+                                    var notification = tinymce.activeEditor.notificationManager.open({
                                         text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
                                         type: 'error',
                                         timeout: 5000,
                                     });
+                                    
+                                    setTimeout(function() {
+                                        notification.close();
+                                    }, 5000);
                                 }, 200);
 
                                 reject({message: 'Hình ảnh không vượt qua kiểm duyệt', remove: true});
@@ -924,11 +944,15 @@
                             console.log('Ảnh đã được tải lên thành công, đường dẫn: ' + json.location);
 
                             setTimeout(function() {
-                                tinymce.activeEditor.notificationManager.open({
+                                var notification = tinymce.activeEditor.notificationManager.open({
                                     text: 'Hình ảnh đã được tải lên thành công!',
                                     type: 'success',
                                     timeout: 3000,
                                 });
+                                
+                                setTimeout(function() {
+                                    notification.close();
+                                }, 3000);
                             }, 200);
 
                             resolve(json.location);
@@ -1177,11 +1201,15 @@
                                     }
 
                                     setTimeout(function() {
-                                        tinymce.activeEditor.notificationManager.open({
+                                        var notification = tinymce.activeEditor.notificationManager.open({
                                             text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
                                             type: 'error',
                                             timeout: 5000,
                                         });
+                                        
+                                        setTimeout(function() {
+                                            notification.close();
+                                        }, 5000);
                                     }, 200);
                                     return;
                                 }
@@ -1189,11 +1217,15 @@
                                 console.log('Ảnh đã được tải lên thành công, đường dẫn: ' + json.location);
 
                                 setTimeout(function() {
-                                    tinymce.activeEditor.notificationManager.open({
+                                    var notification = tinymce.activeEditor.notificationManager.open({
                                         text: 'Hình ảnh đã được tải lên thành công!',
                                         type: 'success',
                                         timeout: 3000,
                                     });
+                                    
+                                    setTimeout(function() {
+                                        notification.close();
+                                    }, 3000);
                                 }, 200);
 
                                 cb(json.location, { title: file.name });
