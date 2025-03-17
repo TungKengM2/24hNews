@@ -19,6 +19,14 @@ class Approval extends Model
         'status',
         'auto_reviewed',
         'remarks',
+        'violation_level',
+        'violations',
+        'violation_details',
+    ];
+
+    protected $casts = [
+        'violations' => 'array',
+        'violation_details' => 'array',
     ];
 
     public function user()
