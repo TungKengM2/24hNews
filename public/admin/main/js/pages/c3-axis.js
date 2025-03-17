@@ -6,7 +6,7 @@
 
 $(function () {
     "use strict";
-	
+
 	var a = c3.generate({
         bindto: "#axis-rotated",
         size: { height: 350 },
@@ -21,7 +21,7 @@ $(function () {
         axis: { rotated: !0 },
         grid: { y: { show: !0 } }
     });
-	
+
 	 var t = c3.generate({
         bindto: "#axis-category",
         size: { height: 350 },
@@ -34,7 +34,7 @@ $(function () {
         axis: { x: { type: "data", categories: ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018"] } },
         grid: { y: { show: !0 } }
     });
-	
+
 	var i = c3.generate({
         bindto: "#axis-tick-culling",
         size: { height: 350 },
@@ -47,7 +47,7 @@ $(function () {
         axis: { x: { type: "category", tick: { culling: { max: 10 } } } },
         grid: { y: { show: !0 } }
     });
-	
+
 	var i = c3.generate({
         bindto: "#axis-tick-fitting",
         size: { height: 350 },
@@ -63,7 +63,7 @@ $(function () {
         axis: { x: { type: "timeseries", tick: { fit: !0, format: "%e %b %y" } } },
         grid: { y: { show: !0 } }
     });
-	
+
 	var t = c3.generate({
         bindto: "#axis-timezone",
         size: { height: 350 },
@@ -82,7 +82,7 @@ $(function () {
         axis: { x: { type: "timeseries", localtime: !1, tick: { format: "%Y-%m-%d %H:%M:%S" } } },
         grid: { y: { show: !0 } }
     });
-	
+
 	 var o = c3.generate({
         bindto: "#y-axis",
         size: { height: 350 },
@@ -95,7 +95,7 @@ $(function () {
         axis: { y: { tick: { format: d3.format("$,") } } },
         grid: { y: { show: !0 } }
     });
-	
+
 	var n = c3.generate({
         bindto: "#range-y-axis",
         size: { height: 350 },
@@ -108,6 +108,6 @@ $(function () {
         axis: { y: { max: 400, min: -400 } },
         grid: { y: { show: !0 } }
     });
-	
-    
+
+
   });

@@ -58,7 +58,7 @@ $(function () {
         hideHover: 'auto',
         lineColors: ['#0bb2d4', '#17b3a3', '#3e8ef7'],
         resize: true
-        
+
     });
 
 Morris.Area({
@@ -67,38 +67,38 @@ Morris.Area({
             period: '2013',
             data1: 0,
             data2: 0,
-            
+
         }, {
             period: '2014',
             data1: 135,
             data2: 105,
-            
+
         }, {
             period: '2015',
             data1: 85,
             data2: 65,
-            
+
         }, {
             period: '2016',
             data1: 75,
             data2: 205,
-            
+
         }, {
             period: '2017',
             data1: 185,
             data2: 155,
-            
+
         }, {
             period: '2018',
             data1: 110,
             data2: 95,
-            
+
         },
          {
             period: '2019',
             data1: 255,
             data2: 155,
-           
+
         }],
         xkey: 'period',
         ykeys: ['data1', 'data2'],
@@ -113,7 +113,7 @@ Morris.Area({
         hideHover: 'auto',
         lineColors: ['#faa700', '#ff4c52'],
         resize: true
-        
+
     });
 
 
@@ -142,7 +142,7 @@ Morris.Area({
           hideHover: 'auto'
         });
  // donut chart
-        
+
     Morris.Donut({
         element: 'donut-chart',
         data: [{
@@ -260,8 +260,8 @@ Morris.Area({
                 behaveLikeLine: true,
                 gridLineColor: '#e0e0e0',
                 hideHover: 'auto'
-        
+
     });
-	
-	
+
+
   });
