@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -346,6 +347,8 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
+    Route::get('/user-stats', [AdminDashboardController::class, 'getUserStats'])->name('admin.userStats');
+    Route::get('/article-stats', [AdminDashboardController::class, 'getArticleStats'])->name('admin.articleStats');
 
     // Quản lý yêu cầu nâng cấp vai trò
     Route::get(
