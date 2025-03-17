@@ -50,7 +50,38 @@
                     </ul>
                 </li>
 
-                {{-- <li class="treeview">
+                <li class="treeview">
+                    <a href="{{ route('author.articles.index') }}">
+                        <i data-feather="grid"></i>
+                        <span>Hoạt Động</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-right pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li>
+                            <a href="{{ route('author.comments', ['user_id' => Auth::id()]) }}">
+                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                Hoạt Động Bình Luận
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('author.saved') }}">
+                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                Tin Đã Lưu
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('author.viewed.articles') }}">
+                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                Tin Đã Xem
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            {{-- <li class="treeview">
                     <a href="index.html#">
                         <i data-feather="edit"></i>
                         <span>Widgets</span>

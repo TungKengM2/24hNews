@@ -3,152 +3,165 @@
     <div class="app-menu">
         <ul class="header-megamenu nav">
             <li class="btn-group nav-item">
-                <a href="index.html#"
+                <a href="#"
                     class="waves-effect waves-light nav-link push-btn btn-outline no-border btn-primary-light text-dark hover-white"
                     data-toggle="push-menu" role="button">
                     <i data-feather="align-left"></i>
                 </a>
             </li>
-            {{-- <li class="btn-group d-lg-inline-flex d-none">
-                <div class="app-menu">
-                    <div class="search-bx mx-5">
-                        <form>
-                            <div class="input-group">
-                                <input type="search" class="form-control" placeholder="Search" aria-label="Search"
-                                    aria-describedby="button-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn" type="submit" id="button-addon3"><i
-                                            data-feather="search"></i></button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </li> --}}
-            {{-- <li class="btn-group nav-item d-none d-xl-inline-block">
-                <a href="contact_app_chat.html"
-                    class="waves-effect waves-light nav-link btn-outline no-border svg-bt-icon btn-info-light text-dark hover-white"
-                    title="Chat">
-                    <i data-feather="message-circle"></i>
-                </a>
-            </li> --}}
-            {{-- <li class="btn-group nav-item d-none d-xl-inline-block">
-                <a href="mailbox.html"
-                    class="waves-effect waves-light nav-link btn-outline no-border svg-bt-icon btn-danger-light text-dark hover-white"
-                    title="Mailbox">
-                    <i data-feather="at-sign"></i>
-                </a>
-            </li> --}}
-            {{-- <li class="btn-group nav-item d-none d-xl-inline-block">
-                <a href="extra_taskboard.html"
-                    class="waves-effect waves-light btn-outline no-border nav-link svg-bt-icon btn-success-light text-dark hover-white"
-                    title="Taskboard">
-                    <i data-feather="clipboard"></i>
-                </a>
-            </li> --}}
         </ul>
     </div>
-
     <div class="navbar-custom-menu r-side">
         <ul class="nav navbar-nav">
-            {{-- <li class="btn-group nav-item d-lg-inline-flex d-none">
-                <a href="index.html#" data-provide="fullscreen"
-                    class="waves-effect waves-light nav-link btn-outline no-border full-screen btn-warning-light text-dark hover-white"
-                    title="Full Screen">
-                    <i data-feather="maximize"></i>
-                </a>
-            </li> --}}
             <!-- Notifications -->
-            <li class="dropdown notifications-menu">
-                <a href="index.html#"
-                    class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
-                    data-bs-toggle="dropdown" title="Notifications">
-                    <i data-feather="bell"></i>
-                </a>
-                <ul class="dropdown-menu animated bounceIn">
 
+            <li class="dropdown notifications-menu" style="position: relative;">
+                <a href="#"
+                    class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
+                    id="notificationDropdown" data-bs-toggle="dropdown" title="Notifications"
+                    style="position: relative; display: inline-block;">
+                    <i class="fa fa-bell"></i>
+                    <span id="notificationCount" class="badge badge-danger"
+                        style="position: absolute; top: 6px; right: 5px; font-size: 12px; padding: 4px 7px; border-radius: 50%; background: red; color: white; display: {{ auth()->user()->unreadNotifications->count() > 0 ? 'inline-block' : 'none' }};">
+                        {{ auth()->user()->unreadNotifications->count() }}
+                    </span>
+                </a>
+
+                <ul class="dropdown-menu animated bounceIn" aria-labelledby="notificationDropdown"
+                    style="width: 350px;">
                     <li class="header">
-                        <div class="p-20">
-                            <div class="flexbox">
-                                <div>
-                                    <h4 class="mb-0 mt-0">Notifications</h4>
-                                </div>
-                                {{-- <div>
-                                    <a href="index.html#" class="text-danger">Clear All</a>
-                                </div> --}}
-                            </div>
+                        <div class="p-3">
+                            <h4 class="mb-0">Notifications</h4>
                         </div>
                     </li>
 
                     <li>
-                        <!-- inner menu: contains the actual data -->
-                        <ul class="menu sm-scrol">
-                            {{-- <li>
-                                @php
-                                    $pendingCount = \App\Models\Article::where('status', 'pending')->count();
-                                @endphp
-                                @if ($pendingCount > 0)
-                                    <a href="">
-                                        {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
+                        <ul class="menu sm-scroll" id="notificationList">
+                            @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
+                                <li class="notification-item p-3" id="notification-{{ $notification->id }}">
+                                    <a href="#"
+                                        onclick="openNotification('{{ $notification->id }}', '{{ addslashes($notification->data['message']) }}'); return false;"
+                                        style="font-size: 16px; display: block; padding: 10px;">
+                                        {{ Str::limit($notification->data['message'], 40, '...') }}
                                     </a>
-                                @endif --}}
-                            {{-- </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-warning text-warning"></i> Duis malesuada justo eu
-                                    sapien elementum, in semper diam posuere.
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-users text-danger"></i> Donec at nisi sit amet tortor
-                                    commodo porttitor pretium a erat.
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-shopping-cart text-success"></i> In gravida mauris et
-                                    nisi
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-user text-danger"></i> Praesent eu lacus in libero
-                                    dictum fermentum.
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-user text-primary"></i> Nunc fringilla lorem
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-user text-success"></i> Nullam euismod dolor ut quam
-                                    interdum, at scelerisque ipsum imperdiet.
-                                </a>
-                            </li> --}}
+                                </li>
+                            @empty
+                                <li class="text-muted dropdown-item p-3">Không có thông báo mới.</li>
+                            @endforelse
                         </ul>
                     </li>
-                    <li class="footer">
-                        <a href="index.html#">View all</a>
+
+                    <li class="footer p-3">
+                        <a href="#" id="clearNotifications" style="display: block; text-align: center;">Xóa Thông
+                            Báo</a>
                     </li>
                 </ul>
             </li>
 
-            <!-- User Account-->
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    document.querySelectorAll(".notification-item a").forEach(item => {
+                        item.addEventListener("click", function(event) {
+                            event.preventDefault();
+                            let notificationId = this.getAttribute("onclick").match(/'([^']+)'/)[1];
+
+                            fetch(`/notifications/${notificationId}/read`, {
+                                    method: "POST",
+                                    headers: {
+                                        "X-CSRF-TOKEN": document.querySelector(
+                                            'meta[name="csrf-token"]').getAttribute("content"),
+                                        "X-Requested-With": "XMLHttpRequest"
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        document.getElementById(`notification-${notificationId}`)
+                                            .remove();
+                                        updateNotificationCount();
+                                    }
+                                });
+                        });
+                    });
+
+                    document.getElementById("clearNotifications").addEventListener("click", function(event) {
+                        event.preventDefault();
+                        fetch(`/notifications/clear`, {
+                                method: "POST",
+                                headers: {
+                                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                                        .getAttribute("content"),
+                                    "X-Requested-With": "XMLHttpRequest"
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    document.getElementById("notificationList").innerHTML =
+                                        '<li class="text-muted dropdown-item p-3">Không có thông báo mới.</li>';
+                                    updateNotificationCount(0);
+                                }
+                            });
+                    });
+                });
+
+                function updateNotificationCount(count = null) {
+                    let badge = document.getElementById("notificationCount");
+                    if (badge) {
+                        if (count === null) {
+                            count = parseInt(badge.innerText) - 1;
+                        }
+                        if (count > 0) {
+                            badge.innerText = count;
+                            badge.style.display = "inline-block";
+                        } else {
+                            badge.style.display = "none";
+                        }
+                    }
+                }
+            </script>
+
+
+
+
+
+            <!-- Custom Popup -->
+            <div id="customPopup"
+                style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1050;">
+                <div
+                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 400px; max-width: 90%; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #dee2e6;">
+                        <h5 style="margin: 0; font-size: 18px;">Chi tiết thông báo</h5>
+                        <button onclick="closePopup()"
+                            style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+                    </div>
+                    <div id="customPopupContent" style="padding: 20px; font-size: 16px; min-height: 100px;">
+                        <!-- Nội dung thông báo sẽ được thêm vào đây -->
+                    </div>
+                    <div style="padding: 15px; border-top: 1px solid #dee2e6; text-align: right;">
+                        <button onclick="closePopup()"
+                            style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Đóng</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Account -->
             <li class="dropdown user user-menu">
-                <a href="index.html#"
-                    class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white"
+                <a href="#" class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white"
                     data-bs-toggle="dropdown" title="User">
-                    <img class="avatar avatar-pill" src="/admin/main/../images/avatar/3.jpg" alt="">
+                    <img class="avatar rounded-circle"
+                        src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : '/admin/main/../images/user3-128x128.jpg' }}"
+                        alt="User Avatar">
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
-                        <a class="dropdown-item" href="{{route('author.profile')}}"><i class="ti-user text-muted me-2"></i>
-                            Profile</a>
-                        <a class="dropdown-item" href="{{route('author.change-password')}}"><i class="ti-settings text-muted me-2"></i>
-                            Settings</a>
+                        <a class="dropdown-item" href="{{ route('author.profile') }}">
+                            <i class="ti-user text-muted me-2"></i> Profile
+                        </a>
+                        <a class="dropdown-item" href="{{ route('author.change-password') }}">
+                            <i class="ti-settings text-muted me-2"></i> Settings
+                        </a>
                         <a class="dropdown-item" href="#"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="ti-lock text-muted me-2"></i> Logout
@@ -162,12 +175,60 @@
             </li>
             <!-- Control Sidebar Toggle Button -->
             <li>
-                <a href="index.html#" data-toggle="control-sidebar" title="Setting"
+                <a href="#" data-toggle="control-sidebar" title="Setting"
                     class="waves-effect waves-light btn-outline no-border btn-danger-light text-dark hover-white">
                     <i data-feather="settings"></i>
                 </a>
             </li>
-
         </ul>
     </div>
 </nav>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+<script>
+    feather.replace();
+
+    function openNotification(id, message) {
+        document.getElementById("customPopupContent").innerHTML = message;
+        document.getElementById("customPopup").style.display = "block";
+
+        fetch(`/notifications/${id}/read`, {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Xóa thông báo khỏi danh sách
+                    let notificationItem = document.getElementById(`notification-${id}`);
+                    if (notificationItem) {
+                        notificationItem.remove();
+                    }
+
+                    // Cập nhật số lượng thông báo
+                    let countElement = document.getElementById("notificationCount");
+                    if (countElement) {
+                        let count = parseInt(countElement.innerText, 10) || 0;
+                        if (count > 1) {
+                            countElement.innerText = count - 1;
+                        } else {
+                            countElement.remove(); // Nếu hết thông báo thì ẩn badge
+                        }
+                    }
+                } else {
+                    console.error("Failed to mark notification as read.");
+                }
+            })
+            .catch(error => console.error("Error marking notification as read:", error));
+    }
+
+    function closePopup() {
+        document.getElementById("customPopup").style.display = "none";
+    }
+</script>

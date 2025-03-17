@@ -1,8 +1,11 @@
 <div class="user-profile">
     <div class="profile-pic">
-        <img src="/admin/main/../images/user5-128x128.jpg" alt="user">
+        <img src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : '/admin/main/../images/user3-128x128.jpg' }}"
+            alt="User Avatar">
         <div class="profile-info">
-            <h4>{{ $username }}</h4>
+            <h4>
+                {{ Auth::check() ? Auth::user()->username : 'Guest' }}
+            </h4>
             <div class="list-icons-item dropdown">
                 <a href="index.html#" class="list-icons-item dropdown-toggle" data-bs-toggle="dropdown"><span
                         class="badge badge-ring fill badge-primary mx-2"></span>Online</a>

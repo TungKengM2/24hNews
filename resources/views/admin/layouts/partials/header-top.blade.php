@@ -59,75 +59,40 @@
                 </a>
             </li> --}}
             <!-- Notifications -->
-            <li class="dropdown notifications-menu">
+            <li class="dropdown notifications-menu" style="position: relative;">
                 <a href="index.html#"
                     class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
-                    data-bs-toggle="dropdown" title="Notifications">
+                    data-bs-toggle="dropdown" title="Notifications" style="position: relative; display: inline-block;">
                     <i data-feather="bell"></i>
+                    @php
+                        $pendingCount = \App\Models\Article::where('status', 'pending')->count();
+                    @endphp
+                    @if ($pendingCount > 0)
+                        <span class="badge badge-danger"
+                            style="position: absolute; top: 6px; right: 5px; font-size: 10px; padding: 2px 5px; border-radius: 50%; line-height: 1; background: red; color: white;">
+                            {{ $pendingCount }}
+                        </span>
+                    @endif
                 </a>
                 <ul class="dropdown-menu animated bounceIn">
-
                     <li class="header">
                         <div class="p-20">
                             <div class="flexbox">
                                 <div>
                                     <h4 class="mb-0 mt-0">Notifications</h4>
                                 </div>
-                                {{-- <div>
-                                    <a href="index.html#" class="text-danger">Clear All</a>
-                                </div> --}}
                             </div>
                         </div>
                     </li>
-
                     <li>
-                        <!-- inner menu: contains the actual data -->
                         <ul class="menu sm-scrol">
                             <li>
-                                    @php
-                                    $pendingCount = \App\Models\Article::where('status', 'pending')->count();
-                                @endphp
                                 @if ($pendingCount > 0)
-                                        <a href="">
-                                            {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
-                                        </a>
+                                    <a href="{{ route('admin.articles.approves') }}">
+                                        {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
+                                    </a>
                                 @endif
-                            {{-- </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-warning text-warning"></i> Duis malesuada justo eu
-                                    sapien elementum, in semper diam posuere.
-                                </a>
                             </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-users text-danger"></i> Donec at nisi sit amet tortor
-                                    commodo porttitor pretium a erat.
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-shopping-cart text-success"></i> In gravida mauris et
-                                    nisi
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-user text-danger"></i> Praesent eu lacus in libero
-                                    dictum fermentum.
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-user text-primary"></i> Nunc fringilla lorem
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-user text-success"></i> Nullam euismod dolor ut quam
-                                    interdum, at scelerisque ipsum imperdiet.
-                                </a>
-                            </li> --}}
                         </ul>
                     </li>
                     <li class="footer">
@@ -141,7 +106,9 @@
                 <a href="index.html#"
                     class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white"
                     data-bs-toggle="dropdown" title="User">
-                    <img class="avatar avatar-pill" src="/admin/main/../images/avatar/3.jpg" alt="">
+                    <img class="avatar rounded-circle"
+                        src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : '/admin/main/../images/user3-128x128.jpg' }}"
+                        alt="User Avatar">
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
