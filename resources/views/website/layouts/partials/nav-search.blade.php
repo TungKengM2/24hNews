@@ -14,10 +14,20 @@
                     <span class="icon">
                         <i class="la la-search"></i>
                     </span>
-                    <input type="text" name="keyword" class="form-control" placeholder="Elon Musk ..."
+                    <input type="text" name="keyword" class="form-control" placeholder="Elon Musk ..." required
                         value="{{ old('keyword', $keyword ?? '') }}">
                     <button type="submit">search</button>
                 </div>
+                <script>
+                document.querySelector('form').addEventListener('submit', function(e) {
+                    const keyword = this.querySelector('input[name="keyword"]');
+                    if (!keyword.value.trim()) {
+                        e.preventDefault();
+                        alert('Vui lòng nhập từ khóa để tìm kiếm');
+                        keyword.focus();
+                    }
+                });
+                </script>
             </form>
 
             {{-- // dat thêm --}}
