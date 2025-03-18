@@ -2086,42 +2086,22 @@
                 <div class="sidebar-categories mt-40">
                     <h6 class="color-000 text-uppercase mb-30 ltspc-1"> categories <i class="la la-angle-right ms-1"></i>
                     </h6>
-                    <a href="home-default.html#" class="cat-card">
-                        <div class="img img-cover">
-                            <img src="client/assets/img/bussines/1.png" alt="">
-                        </div>
-                        <div class="info">
-                            <h5>bussines</h5>
-                            <span class="num">12</span>
-                        </div>
-                    </a>
-                    <a href="home-default.html#" class="cat-card">
-                        <div class="img img-cover">
-                            <img src="client/assets/img/trend/3.png" alt="">
-                        </div>
-                        <div class="info">
-                            <h5>technology</h5>
-                            <span class="num">14</span>
-                        </div>
-                    </a>
-                    <a href="home-default.html#" class="cat-card">
-                        <div class="img img-cover">
-                            <img src="client/assets/img/must_read/3.png" alt="">
-                        </div>
-                        <div class="info">
-                            <h5>culture</h5>
-                            <span class="num">20</span>
-                        </div>
-                    </a>
-                    <a href="home-default.html#" class="cat-card">
-                        <div class="img img-cover">
-                            <img src="client/assets/img/videos/1.png" alt="">
-                        </div>
-                        <div class="info">
-                            <h5>videos</h5>
-                            <span class="num">14</span>
-                        </div>
-                    </a>
+
+                    @foreach ($category2 as $category)
+                        <a href="{{ route('client.category.show', $category->slug) }}" class="cat-card">
+                            <div class="img img-cover " >
+                                
+                                <div class="info">
+                                    <h5 href="{{ route('client.category.show', $category->slug) }}">
+                                        {{ $category->name }}
+                                    </h5>
+                                    <span class="num">{{ $loop->iteration }}</span> <!-- Số thứ tự danh mục -->
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+
+                    
                 </div>
                 <div class="sidebar-contact-info mt-50">
                     <h6 class="color-000 text-uppercase mb-20 ltspc-1"> Contact & follow <i
