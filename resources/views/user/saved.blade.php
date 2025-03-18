@@ -44,7 +44,7 @@
                                                 {{ $loop->iteration + ($savedArticles->currentPage() - 1) * $savedArticles->perPage() }}
                                             </td>
                                             <td>
-                                                <a href="{{ route('articles.show', $savedArticle->article->article_id) }}">
+                                                <a href="{{ route('articles.show', $savedArticle->article->slug) }}">
                                                     <img src="{{ asset('storage/' . $savedArticle->article->thumbnail_url) }}"
                                                         width="100px" height="100px">
                                                 </a>
@@ -60,7 +60,7 @@
                                                 </h5>
                                             </td>
                                             <td>
-                                                <a href="{{ route('article.detail', ['article_id' => $savedArticle->article->article_id]) }}"
+                                                <a href="{{ route('article.detail', ['slug' => $savedArticle->article->slug]) }}"
                                                     class="btn btn-primary btn-sm"><i class="si-eye si"></i>
                                                 </a>
                                                 <form action="{{ route('user.remove.saved', $savedArticle->id) }}"
