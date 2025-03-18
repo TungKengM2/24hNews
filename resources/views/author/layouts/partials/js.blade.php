@@ -20,7 +20,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script referrerpolicy="origin"
-        src="https://cdn.tiny.cloud/1/z5nmbwpgzi1mqfjo2czz0cu8h05tmwnkumfhvwkcnr16tn3a/tinymce/7/tinymce.min.js"></script>
+        src="https://cdn.tiny.cloud/1/{{ env('TINYMCE_API_KEY') }}/tinymce/7/tinymce.min.js"></script>
 
 
 <script>
@@ -123,7 +123,23 @@
     tinymce
         .init({
             selector: 'textarea#full-featured',
-            plugins: 'preview searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link math media mediaembed codesample table charmap pagebreak nonbreaking anchor tableofcontents insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker editimage help formatpainter permanentpen pageembed charmap tinycomments mentions quickbars linkchecker emoticons advtable footnotes mergetags autocorrect typography advtemplate markdown casechange importcss tinydrive exportword exportpdf importword',
+            plugins: 'preview searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media table charmap pagebreak anchor insertdatetime advlist lists wordcount help formatpainter permanentpen charmap emoticons',
+            toolbar: 'undo redo | styles | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen preview save print | image media link anchor',
+            autosave_ask_before_unload: true,
+            autosave_interval: '30s',
+            autosave_prefix: '{path}{query}-{id}-',
+            autosave_restore_when_empty: false,
+            autosave_retention: '2m',
+            image_advtab: true,
+            height: 600,
+            image_caption: true,
+            quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+            noneditable_class: 'mceNonEditable',
+            toolbar_mode: 'sliding',
+            contextmenu: 'link image table',
+            skin: useDarkMode ? 'oxide-dark' : 'oxide',
+            content_css: useDarkMode ? 'dark' : 'default',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
 
             paste_data_images: true,
             automatic_uploads: true,
@@ -137,22 +153,89 @@
             convert_urls: false,
             relative_urls: false,
             images_upload_url: '/author/tinymce/upload',
+            
             paste_as_text: false,
-
             paste_remove_styles_if_webkit: false,
             paste_remove_styles: false,
             paste_filter_drop: false,
             paste_strip_class_attributes: 'none',
             paste_merge_formats: false,
-
+            
+            paste_webkit_styles: 'color font-size font-family font-weight text-decoration display float width height margin padding border',
+            
+            paste_retain_style_properties: 'all',
+            paste_retain_class_attributes: 'all',
+            
             powerpaste_word_import: 'clean',
-            powerpaste_html_import: 'clean',
+            powerpaste_html_import: 'merge',
             powerpaste_block_drop: false,
 
             paste_preprocess: function (plugin, args) {
                 console.log('Bắt đầu xử lý paste_preprocess');
                 const div = document.createElement('div');
                 div.innerHTML = args.content;
+                
+                const allElements = div.querySelectorAll('*');
+                allElements.forEach(function(el) {
+                    if (el.style) {
+                        el.style.removeProperty('background');
+                        el.style.removeProperty('background-color');
+                        el.style.removeProperty('background-image');
+                        
+                        if (el.tagName === 'IMG') {
+                            if (!el.style.width && !el.hasAttribute('width') && el.naturalWidth) {
+                                el.setAttribute('width', el.naturalWidth);
+                            }
+                            if (!el.style.height && !el.hasAttribute('height') && el.naturalHeight) {
+                                el.setAttribute('height', el.naturalHeight);
+                            }
+                            
+                            if (!el.style.display) {
+                                el.style.display = 'block';
+                            }
+                            
+                            if (el.style.margin === '0px auto' || el.style.margin === 'auto') {
+                                el.style.margin = '0';
+                            }
+                        }
+                        
+                        if (el.tagName === 'P' || el.tagName === 'DIV') {
+                            if (el.style.clear === 'none') el.style.removeProperty('clear');
+                            if (el.style.float === 'none') el.style.removeProperty('float');
+                        }
+                    }
+                    
+                    if (el.hasAttribute('bgcolor')) {
+                        el.removeAttribute('bgcolor');
+                    }
+                    
+                    if (el.className && (
+                        el.className.includes('bg-') || 
+                        el.className.includes('background-')
+                    )) {
+                        const classes = el.className.split(' ');
+                        const filteredClasses = classes.filter(cls => 
+                            !cls.startsWith('bg-') && 
+                            !cls.includes('background-')
+                        );
+                        el.className = filteredClasses.join(' ');
+                    }
+                });
+                
+                const brs = div.querySelectorAll('br');
+                brs.forEach(br => {
+                    if (br.parentNode && br.parentNode.tagName === 'P' && 
+                        br.parentNode.childNodes.length === 1) {
+                    } else {
+                        if (br.nextSibling && br.nextSibling.nodeType === 3 && 
+                            br.previousSibling && br.previousSibling.nodeType === 3) {
+                            const wrapper = document.createElement('p');
+                            wrapper.appendChild(br.cloneNode());
+                            br.parentNode.replaceChild(wrapper, br);
+                        }
+                    }
+                });
+                
                 const images = div.querySelectorAll('img');
 
                 if (images.length > 0) {
@@ -165,82 +248,40 @@
                             img.setAttribute('data-need-moderation', 'true');
                             img.setAttribute('data-paste-id', imgId);
 
-                            if (img.hasAttribute('data-mce-src')) {
-                                img.removeAttribute('data-mce-src');
-                            }
-                            if (img.hasAttribute('data-mce-selected')) {
-                                img.removeAttribute('data-mce-selected');
-                            }
-                            if (img.hasAttribute('data-mce-object')) {
-                                img.removeAttribute('data-mce-object');
-                            }
-                            if (img.hasAttribute('data-mce-placeholder')) {
-                                img.removeAttribute('data-mce-placeholder');
-                            }
-                            if (img.hasAttribute('contenteditable')) {
-                                img.removeAttribute('contenteditable');
-                            }
-                            if (img.hasAttribute('data-mce-resize')) {
-                                img.removeAttribute('data-mce-resize');
-                            }
-                            if (img.hasAttribute('data-mce-bogus')) {
-                                img.removeAttribute('data-mce-bogus');
-                            }
+                            ['data-mce-src', 'data-mce-selected', 'data-mce-object', 
+                             'data-mce-placeholder', 'contenteditable', 'data-mce-resize', 
+                             'data-mce-bogus'].forEach(attr => {
+                                if (img.hasAttribute(attr)) {
+                                    img.removeAttribute(attr);
+                                }
+                            });
 
                             img.setAttribute('onload', 'this.removeAttribute("data-mce-src")');
-
                             img.classList.add('waiting-moderation');
+                            
+                            if (img.parentNode && img.parentNode.tagName !== 'P' && 
+                                img.parentNode.tagName !== 'DIV') {
+                                const wrapper = document.createElement('p');
+                                img.parentNode.replaceChild(wrapper, img);
+                                wrapper.appendChild(img);
+                            }
                         }
                     });
-
-                    args.content = div.innerHTML;
-                    console.log('Đã xử lý và đánh dấu ảnh trong paste_preprocess');
                 }
-            },
-
-            paste_postprocess: function (plugin, args) {
-                console.log('Bắt đầu xử lý paste_postprocess');
-
-                const images = args.node.querySelectorAll('img:not([data-need-moderation])');
-
-                if (images.length > 0) {
-                    console.log('Phát hiện ' + images.length + ' hình ảnh chưa đánh dấu trong paste_postprocess');
-
-                    [...images].forEach(img => {
-                        const imgId = 'img-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
-
-                        img.setAttribute('data-need-moderation', 'true');
-                        img.setAttribute('data-paste-id', imgId);
-
-                        if (img.hasAttribute('data-mce-src')) {
-                            img.removeAttribute('data-mce-src');
-                        }
-                        if (img.hasAttribute('data-mce-selected')) {
-                            img.removeAttribute('data-mce-selected');
-                        }
-                        if (img.hasAttribute('data-mce-object')) {
-                            img.removeAttribute('data-mce-object');
-                        }
-                        if (img.hasAttribute('data-mce-placeholder')) {
-                            img.removeAttribute('data-mce-placeholder');
-                        }
-
-                        img.classList.add('waiting-moderation');
-                    });
-
-                    console.log('Đã đánh dấu ảnh trong paste_postprocess');
-                }
+                
+                args.content = div.innerHTML;
+                console.log('Đã xử lý paste_preprocess, nội dung mới:', args.content);
             },
 
             setup: function (editor) {
-                
+
                 function needsModeration(img) {
-                    if (img.hasAttribute('data-moderated') || 
-                        img.hasAttribute('data-no-remoderation') || 
+                    if (img.hasAttribute('data-moderated') ||
+                        img.hasAttribute('data-no-remoderation') ||
                         img.hasAttribute('moderated')) {
                         return false;
                     }
-                    
+
                     const src = img.getAttribute('src');
                     if (src && (src.includes('/storage/uploads/') || src.includes('/uploads/'))) {
                         img.setAttribute('data-moderated', 'true');
@@ -248,10 +289,10 @@
                         img.setAttribute('moderated', 'true');
                         return false;
                     }
-                    
+
                     return true;
                 }
-                
+
                 function scanAndProcessImages() {
                     if (window.checkingImages) {
                         return;
@@ -270,9 +311,9 @@
                         type: 'info',
                         progressBar: true,
                         timeout: false,
-                        closeButton: false
+                        closeButton: false,
                     });
-                    
+
                     let processedImages = 0;
                     const totalImages = images.length;
 
@@ -285,10 +326,10 @@
                             img.setAttribute('data-moderated', 'true');
                             img.setAttribute('data-no-remoderation', 'true');
                             img.setAttribute('moderated', 'true');
-                            
+
                             img._moderationState = {
                                 moderated: true,
-                                noRemoderation: true
+                                noRemoderation: true,
                             };
 
                             img.classList.remove('moderating');
@@ -357,13 +398,12 @@
                                             img.parentNode.removeChild(img);
                                         }
 
-                                        
                                         let errorMessage = 'Vi phạm quy định nội dung';
-                                        
+
                                         if (result.reasons && Array.isArray(result.reasons)) {
                                             errorMessage = result.reasons.join(', ');
                                         } else if (result.reasons) {
-                                            errorMessage = typeof result.reasons === 'object' ? 
+                                            errorMessage = typeof result.reasons === 'object' ?
                                                 JSON.stringify(result.reasons) : String(result.reasons);
                                         } else if (result.reason) {
                                             if (typeof result.reason === 'object') {
@@ -379,14 +419,14 @@
                                             errorMessage = result.message;
                                         }
 
-                                        setTimeout(function() {
+                                        setTimeout(function () {
                                             var notification = tinymce.activeEditor.notificationManager.open({
                                                 text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
                                                 type: 'error',
                                                 timeout: 5000,
                                             });
-                                            
-                                            setTimeout(function() {
+
+                                            setTimeout(function () {
                                                 notification.close();
                                             }, 5000);
                                         }, 200);
@@ -407,34 +447,33 @@
 
                                         let errorMessage = 'Lỗi kiểm duyệt';
                                         if (result.message) {
-                                            errorMessage = typeof result.message === 'object' ? 
+                                            errorMessage = typeof result.message === 'object' ?
                                                 JSON.stringify(result.message) : String(result.message);
                                         }
 
-                                        setTimeout(function() {
+                                        setTimeout(function () {
                                             var notification = tinymce.activeEditor.notificationManager.open({
                                                 text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
                                                 type: 'error',
                                                 timeout: 5000,
                                             });
-                                            
-                                            setTimeout(function() {
+
+                                            setTimeout(function () {
                                                 notification.close();
                                             }, 5000);
                                         }, 200);
                                     } else {
-                                       
+
                                         if (result.location) {
                                             img.setAttribute('src', result.location);
                                         }
                                         img.setAttribute('data-moderated', 'true');
                                         img.setAttribute('data-no-remoderation', 'true');
                                         img.setAttribute('moderated', 'true');
-                                        
-                                       
+
                                         img._moderationState = {
                                             moderated: true,
-                                            noRemoderation: true
+                                            noRemoderation: true,
                                         };
 
                                         if (img.hasAttribute('data-mce-src')) {
@@ -486,11 +525,10 @@
                                         img.setAttribute('data-moderated', 'true');
                                         img.setAttribute('data-no-remoderation', 'true');
                                         img.setAttribute('moderated', 'true');
-                                        
-                                     
+
                                         img._moderationState = {
                                             moderated: true,
-                                            noRemoderation: true
+                                            noRemoderation: true,
                                         };
 
                                         if (img.hasAttribute('data-mce-src')) {
@@ -511,9 +549,8 @@
                                             img.parentNode.removeChild(img);
                                         }
 
-                                        
                                         let errorMessage = 'Vi phạm quy định nội dung';
-                                        
+
                                         if (result.reason) {
                                             if (typeof result.reason === 'object') {
                                                 try {
@@ -525,18 +562,18 @@
                                                 errorMessage = String(result.reason);
                                             }
                                         } else if (result.message) {
-                                            errorMessage = typeof result.message === 'object' ? 
+                                            errorMessage = typeof result.message === 'object' ?
                                                 JSON.stringify(result.message) : String(result.message);
                                         }
 
-                                        setTimeout(function() {
+                                        setTimeout(function () {
                                             var notification = tinymce.activeEditor.notificationManager.open({
                                                 text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
                                                 type: 'error',
                                                 timeout: 5000,
                                             });
-                                            
-                                            setTimeout(function() {
+
+                                            setTimeout(function () {
                                                 notification.close();
                                             }, 5000);
                                         }, 200);
@@ -597,12 +634,11 @@
                     editor.getBody().addEventListener('paste', function (e) {
                         console.log('Bắt được sự kiện DOM paste');
                     }, true);
-                    
-                    
-                    editor.getBody().addEventListener('dblclick', function(e) {
+
+                    editor.getBody().addEventListener('dblclick', function (e) {
                         const target = e.target;
                         if (target.nodeName === 'IMG') {
-                  
+
                             if (!target.hasAttribute('data-no-remoderation')) {
                                 target.setAttribute('data-no-remoderation', 'true');
                             }
@@ -612,22 +648,20 @@
                             if (!target.hasAttribute('moderated')) {
                                 target.setAttribute('moderated', 'true');
                             }
-                            
-                          
+
                             target._moderationState = {
                                 moderated: true,
-                                noRemoderation: true
+                                noRemoderation: true,
                             };
                         }
                     }, true);
-                    
-                    
-                    editor.getBody().addEventListener('mousedown', function(e) {
-                        
+
+                    editor.getBody().addEventListener('mousedown', function (e) {
+
                         const allImages = editor.getBody().querySelectorAll('img');
                         allImages.forEach(img => {
                             if (img.complete && img.naturalWidth > 0) {
-                               
+
                                 if (!img.hasAttribute('data-no-remoderation')) {
                                     img.setAttribute('data-no-remoderation', 'true');
                                 }
@@ -640,9 +674,9 @@
                             }
                         });
                     });
-                    
+
                     const originalSetAttrib = editor.dom.setAttrib;
-                    editor.dom.setAttrib = function(elm, name, value) {
+                    editor.dom.setAttrib = function (elm, name, value) {
                         if ((name === 'data-moderated' || name === 'data-no-remoderation' || name === 'moderated') && value === null && elm._moderationState) {
                             return elm;
                         }
@@ -661,7 +695,7 @@
                                         if (!needsModeration(node)) {
                                             continue;
                                         }
-                                        
+
                                         node.setAttribute('data-need-moderation', 'true');
                                         hasNewImages = true;
                                     } else if (node.querySelectorAll) {
@@ -671,7 +705,7 @@
                                                 if (!needsModeration(img)) {
                                                     return;
                                                 }
-                                                
+
                                                 img.setAttribute('data-need-moderation', 'true');
                                                 hasNewImages = true;
                                             });
@@ -803,7 +837,7 @@
                 return new Promise((resolve, reject) => {
                     if (!blobInfo || typeof blobInfo.blob !== 'function') {
                         console.error('blobInfo không hợp lệ:', blobInfo);
-                        reject({message: 'Dữ liệu hình ảnh không hợp lệ', remove: false});
+                        reject({ message: 'Dữ liệu hình ảnh không hợp lệ', remove: false });
                         return;
                     }
 
@@ -811,7 +845,7 @@
                         text: 'Đang tải lên hình ảnh...',
                         type: 'info',
                         progressBar: true,
-                        closeButton: false
+                        closeButton: false,
                     });
 
                     var formData = new FormData();
@@ -826,7 +860,7 @@
                     } catch (e) {
                         console.error('Lỗi khi xử lý blob:', e);
                         notification.close();
-                        reject({message: 'Lỗi khi xử lý hình ảnh: ' + e.message, remove: true});
+                        reject({ message: 'Lỗi khi xử lý hình ảnh: ' + e.message, remove: true });
                         return;
                     }
 
@@ -867,19 +901,19 @@
                                 }
                             }
 
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 var notification = tinymce.activeEditor.notificationManager.open({
                                     text: 'Không thể tải lên hình ảnh: ' + errorMessage,
                                     type: 'error',
                                     timeout: 5000,
                                 });
-                                
-                                setTimeout(function() {
+
+                                setTimeout(function () {
                                     notification.close();
                                 }, 5000);
                             }, 200);
 
-                            reject({message: errorMessage, remove: true});
+                            reject({ message: errorMessage, remove: true });
                             return;
                         }
 
@@ -899,11 +933,11 @@
                                 }
 
                                 let errorMessage = 'Vi phạm quy định nội dung';
-                                
+
                                 if (json.reasons && Array.isArray(json.reasons)) {
                                     errorMessage = json.reasons.join(', ');
                                 } else if (json.reasons) {
-                                    errorMessage = typeof json.reasons === 'object' ? 
+                                    errorMessage = typeof json.reasons === 'object' ?
                                         JSON.stringify(json.reasons) : String(json.reasons);
                                 } else if (json.reason) {
                                     if (typeof json.reason === 'object') {
@@ -919,38 +953,38 @@
                                     errorMessage = json.message;
                                 }
 
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     var notification = tinymce.activeEditor.notificationManager.open({
                                         text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
                                         type: 'error',
                                         timeout: 5000,
                                     });
-                                    
-                                    setTimeout(function() {
+
+                                    setTimeout(function () {
                                         notification.close();
                                     }, 5000);
                                 }, 200);
 
-                                reject({message: 'Hình ảnh không vượt qua kiểm duyệt', remove: true});
+                                reject({ message: 'Hình ảnh không vượt qua kiểm duyệt', remove: true });
                                 return;
                             }
 
                             if (!json.location) {
                                 console.error('Không tìm thấy URL hình ảnh trong phản hồi:', json);
-                                reject({message: 'Phản hồi thiếu URL hình ảnh', remove: true});
+                                reject({ message: 'Phản hồi thiếu URL hình ảnh', remove: true });
                                 return;
                             }
 
                             console.log('Ảnh đã được tải lên thành công, đường dẫn: ' + json.location);
 
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 var notification = tinymce.activeEditor.notificationManager.open({
                                     text: 'Hình ảnh đã được tải lên thành công!',
                                     type: 'success',
                                     timeout: 3000,
                                 });
-                                
-                                setTimeout(function() {
+
+                                setTimeout(function () {
                                     notification.close();
                                 }, 3000);
                             }, 200);
@@ -961,24 +995,24 @@
                                 try {
                                     console.log('Tìm kiếm ảnh có src=' + json.location);
                                     const allImages = tinymce.activeEditor.getBody().querySelectorAll('img');
-                                    
+
                                     allImages.forEach(function (img) {
                                         const imgSrc = img.getAttribute('src');
-                                        
+
                                         if (imgSrc === json.location ||
                                             (imgSrc && json.location && imgSrc.includes(json.location.split('/').pop()))) {
                                             console.log('Tìm thấy và đánh dấu ảnh đã được kiểm duyệt:', imgSrc);
-                                            
+
                                             img.setAttribute('data-moderated', 'true');
                                             img.setAttribute('data-no-remoderation', 'true');
                                             img.setAttribute('moderated', 'true'); // Thuộc tính tùy chỉnh
-                                            
-                                            img.onmousedown = function(e) {
+
+                                            img.onmousedown = function (e) {
                                                 if (this.hasAttribute('data-moderated')) {
                                                     this.setAttribute('data-no-remoderation', 'true');
                                                 }
                                             };
-                                            
+
                                             if (img.hasAttribute('data-mce-src')) {
                                                 img.removeAttribute('data-mce-src');
                                             }
@@ -1003,24 +1037,24 @@
 
                         } catch (e) {
                             console.error('Lỗi parse JSON:', e, xhr.responseText);
-                            reject({message: 'Lỗi xử lý phản hồi: ' + e.message, remove: true});
+                            reject({ message: 'Lỗi xử lý phản hồi: ' + e.message, remove: true });
                         }
                     };
 
                     xhr.onerror = function () {
                         notification.close();
                         console.error('Lỗi kết nối');
-                        reject({message: 'Lỗi kết nối mạng', remove: true});
+                        reject({ message: 'Lỗi kết nối mạng', remove: true });
                     };
 
                     xhr.onabort = function () {
                         notification.close();
-                        reject({message: 'Việc tải lên bị hủy', remove: true});
+                        reject({ message: 'Việc tải lên bị hủy', remove: true });
                     };
 
                     xhr.ontimeout = function () {
                         notification.close();
-                        reject({message: 'Thao tác tải lên đã hết thời gian', remove: true});
+                        reject({ message: 'Thao tác tải lên đã hết thời gian', remove: true });
                     };
 
                     xhr.send(formData);
@@ -1032,7 +1066,7 @@
             // tinydrive_token_provider: 'ae65bcdf52b2b51143d84279e4393ca0129cad1971389dce9efe133d92adeb88',
 
             mobile: {
-                plugins: ' preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link math media mediaembed codesample table charmap pagebreak nonbreaking anchor tableofcontents insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable footnotes mergetags autocorrect typography advtemplate',
+                plugins: ' preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link math media mediaembed codesample table charmap pagebreak nonbreaking anchor tableofcontents insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker editimage help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable footnotes mergetags autocorrect typography advtemplate',
             },
             menu: {
                 tc: {
@@ -1105,7 +1139,6 @@
 
                         console.log('File đã chọn:', file.name, 'type:', file.type);
 
-
                         if (!file.type.match(/^image\//)) {
                             tinymce.activeEditor.notificationManager.open({
                                 text: 'Vui lòng chọn file hình ảnh',
@@ -1119,7 +1152,7 @@
                             text: 'Đang tải lên và kiểm duyệt hình ảnh...',
                             type: 'info',
                             progressBar: true,
-                            closeButton: false
+                            closeButton: false,
                         });
 
                         var formData = new FormData();
@@ -1140,7 +1173,7 @@
                             if (xhr.status < 200 || xhr.status >= 300) {
                                 notification.close();
                                 console.error('Lỗi HTTP:', xhr.status, xhr.statusText);
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     tinymce.activeEditor.notificationManager.open({
                                         text: 'Lỗi khi tải lên: ' + xhr.statusText,
                                         type: 'error',
@@ -1158,7 +1191,7 @@
 
                                 if (!json || typeof json.location !== 'string') {
                                     console.error('Phản hồi không hợp lệ:', json);
-                                    setTimeout(function() {
+                                    setTimeout(function () {
                                         tinymce.activeEditor.notificationManager.open({
                                             text: 'Phản hồi từ server không hợp lệ',
                                             type: 'error',
@@ -1180,11 +1213,11 @@
                                     }
 
                                     let errorMessage = 'Vi phạm quy định nội dung';
-                                    
+
                                     if (json.reasons && Array.isArray(json.reasons)) {
                                         errorMessage = json.reasons.join(', ');
                                     } else if (json.reasons) {
-                                        errorMessage = typeof json.reasons === 'object' ? 
+                                        errorMessage = typeof json.reasons === 'object' ?
                                             JSON.stringify(json.reasons) : String(json.reasons);
                                     } else if (json.reason) {
                                         if (typeof json.reason === 'object') {
@@ -1200,30 +1233,30 @@
                                         errorMessage = json.message;
                                     }
 
-                                    setTimeout(function() {
+                                    setTimeout(function () {
                                         var notification = tinymce.activeEditor.notificationManager.open({
                                             text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
                                             type: 'error',
                                             timeout: 5000,
                                         });
-                                        
-                                        setTimeout(function() {
-                                            notification.close();
-                                        }, 5000);
+
+                                            setTimeout(function () {
+                                                notification.close();
+                                            }, 5000);
                                     }, 200);
                                     return;
                                 }
 
                                 console.log('Ảnh đã được tải lên thành công, đường dẫn: ' + json.location);
 
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     var notification = tinymce.activeEditor.notificationManager.open({
                                         text: 'Hình ảnh đã được tải lên thành công!',
                                         type: 'success',
                                         timeout: 3000,
                                     });
-                                    
-                                    setTimeout(function() {
+
+                                    setTimeout(function () {
                                         notification.close();
                                     }, 3000);
                                 }, 200);
@@ -1238,13 +1271,13 @@
                                         img.setAttribute('data-moderated', 'true');
                                         img.setAttribute('data-no-remoderation', 'true');
                                         img.setAttribute('moderated', 'true');
-                                        
+
                                         img._moderationState = {
                                             moderated: true,
-                                            noRemoderation: true
+                                            noRemoderation: true,
                                         };
 
-                                        img.onmousedown = function(e) {
+                                        img.onmousedown = function (e) {
                                             if (this.hasAttribute('data-moderated')) {
                                                 this.setAttribute('data-no-remoderation', 'true');
                                             }
@@ -1271,7 +1304,7 @@
                             } catch (e) {
                                 notification.close();
                                 console.error('Lỗi parse JSON:', e, xhr.responseText);
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     tinymce.activeEditor.notificationManager.open({
                                         text: 'Lỗi xử lý phản hồi từ server',
                                         type: 'error',
@@ -1284,7 +1317,7 @@
                         xhr.onerror = function () {
                             notification.close();
                             console.error('Lỗi kết nối khi upload');
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 tinymce.activeEditor.notificationManager.open({
                                     text: 'Lỗi kết nối khi tải lên hình ảnh',
                                     type: 'error',
