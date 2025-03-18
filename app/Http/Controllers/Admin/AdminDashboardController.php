@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Approval;
+use App\Models\ArticleLike;
+use App\Models\ArticleView;
+use App\Models\Comment;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class AdminDashboardController extends Controller
@@ -15,11 +19,39 @@ class AdminDashboardController extends Controller
      * @return \Illuminate\View\View
      */
     public function index()
-    // POST
     {
-        // return view('admin.layouts.dashboard');
         return view('admin.dashboard');
     }
+
+    public function getArticleStats()
+    {
+        $data = [
+            'likes' => ArticleLike::count(),
+            'comments' => Comment::count(),
+            'views' => ArticleView::count()
+        ];
+
+        return response()->json($data);
+    }
+
+
+    public function getUserStats()
+    {
+        $users = User::join('roles', 'users.role_id', '=', 'roles.role_id')
+            ->selectRaw("DATE_FORMAT(users.created_at, '%Y-%m') as period,
+                COUNT(CASE WHEN roles.name = 'user' THEN 1 END) as users,
+                COUNT(CASE WHEN roles.name = 'author' THEN 1 END) as authors,
+                COUNT(CASE WHEN roles.name = 'moderator' THEN 1 END) as moderators")
+            ->groupBy('period')
+            ->orderBy('period', 'asc')
+            ->get();
+
+        return response()->json($users);
+    }
+
+
+
+
 
     public function showListPost()
     {

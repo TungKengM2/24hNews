@@ -1,8 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\ArticleController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\UploadController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\Auth\SocialAuthController;
@@ -395,6 +393,12 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
+    Route::get('/user-stats',
+        [AdminDashboardController::class, 'getUserStats'])
+        ->name('admin.userStats');
+    Route::get('/article-stats',
+        [AdminDashboardController::class, 'getArticleStats'])
+        ->name('admin.articleStats');
 
     // Quản lý yêu cầu nâng cấp vai trò
     Route::get(
