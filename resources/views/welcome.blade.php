@@ -88,7 +88,7 @@
                                                     <div class="content ps-40 pe-40 pb-40">
                                                         <h2 class="title mb-20">
                                                             <a
-                                                                href="{{ Auth::check() ? route('articles.article', $article->slug) : url('/login-user-user') }}">
+                                                                href="{{ Auth::check() ? route('articles.article', $article->slug) : url('/login-user') }}">
 
                                                                 {{ $article->title }}
                                                             </a>
