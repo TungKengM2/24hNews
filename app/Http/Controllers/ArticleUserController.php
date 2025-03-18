@@ -65,6 +65,7 @@ class ArticleUserController extends Controller
 
             $article->increment('views');
         }
+        
         //BookMark By TungKeng
         $isBookmarked = false;
         if ($userId) { // Nếu có user đăng nhập

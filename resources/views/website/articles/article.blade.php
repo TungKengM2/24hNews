@@ -139,7 +139,7 @@
             </div>
         </section>
         <!-- ====== end product ====== -->
-        
+
 
         <!-- ====== start product details ====== -->
         <section class="product-details pt-20">
@@ -157,7 +157,7 @@
                                                 <div class="col-12">
                                                     <p class="text-uppercase">{{ $comments->total() }} Bình Luận</p>
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                         <br>
@@ -167,10 +167,8 @@
                                             <div class="d-flex align-items-start">
                                                 <div
                                                     class="icon-60 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
-                                                    <img src="<?= !empty($comment->user->image) 
-                                                    ? asset('storage/' . $comment->user->image) 
-                                                    : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>" 
-                                                    alt="User Avatar">
+                                                    <img src="<?= !empty($comment->user->image) ? asset('storage/' . $comment->user->image) : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>"
+                                                        alt="User Avatar">
                                                 </div>
                                                 <div class="inf w-100">
                                                     <div class="d-flex justify-content-between align-items-center">
@@ -182,7 +180,8 @@
                                                             <?= date('F d, Y', strtotime($comment->created_at)) ?>
                                                         </span>
                                                     </div>
-                                                    <div class="text color-000 fs-14px mt-2">
+                                                    <div id="comment-<?= $comment->comment_id ?>"
+                                                        class="text color-000 fs-14px mt-2">
                                                         <?= nl2br(htmlspecialchars($comment->content)) ?>
                                                     </div>
                                                     <div class="mt-2">
@@ -208,10 +207,8 @@
                                                             <div class="d-flex align-items-start">
                                                                 <div
                                                                     class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
-                                                                    <img src="<?= $reply->user->image 
-                                                                    ? asset('storage/' . $reply->user->image) 
-                                                                    : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>" 
-                                                                    alt="User Avatar">
+                                                                    <img src="<?= $reply->user->image ? asset('storage/' . $reply->user->image) : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>"
+                                                                        alt="User Avatar">
                                                                 </div>
                                                                 <div class="inf w-100">
                                                                     <div
@@ -224,7 +221,8 @@
                                                                             <?= date('F d, Y', strtotime($reply->created_at)) ?>
                                                                         </span>
                                                                     </div>
-                                                                    <div class="text color-000 fs-14px mt-1">
+                                                                    <div id="comment-<?= $reply->comment_id ?>"
+                                                                        class="text color-000 fs-14px mt-1">
                                                                         <?= nl2br(htmlspecialchars($reply->content)) ?>
                                                                     </div>
                                                                     <div class="mt-2">
@@ -361,7 +359,7 @@
             </div>
             </div>
 
-           
+
         </section>
         <!-- ====== end product details ====== -->
 
@@ -382,8 +380,7 @@
                                                 alt="{{ $related->title }}">
                                             <div class="btns">
 
-                                                <a href="{{ route('articles.article', $related->slug) }}"
-                                                    class="butn">
+                                                <a href="{{ route('articles.article', $related->slug) }}" class="butn">
                                                     <span><i class="la la-eye me-2"></i>Đọc thêm</span>
                                                 </a>
                                             </div>
@@ -564,6 +561,25 @@
                     $(this).closest(".reply-form-container").addClass("d-none");
                 });
             });
+        });
+    </script>
+
+    {{-- TungKeng làm tìm comment --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (window.location.hash) {
+                let target = document.querySelector(window.location.hash);
+                if (target) {
+                    setTimeout(() => {
+                        let offset = 400; // Điều chỉnh khoảng cách (px) tùy theo giao diện
+                        let elementPosition = target.getBoundingClientRect().top + window.scrollY;
+                        window.scrollTo({
+                            top: elementPosition - offset,
+                            behavior: "smooth"
+                        });
+                    }, 500);
+                }
+            }
         });
     </script>
 @endsection

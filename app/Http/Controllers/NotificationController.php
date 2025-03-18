@@ -1,21 +1,30 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Notifications\DatabaseNotification;
 
 use Illuminate\Http\Request;
-use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationController extends Controller
 {
+    // Đánh dấu một thông báo là đã đọc
     public function markAsRead($id)
-    {
-        $notification = DatabaseNotification::find($id);
+{
+    $notification = auth()->user()->notifications()->where('id', $id)->first();
 
-        if ($notification && $notification->notifiable_id == auth()->id()) {
-            $notification->markAsRead();
-        }
-
+    if ($notification) {
+        $notification->markAsRead();
         return response()->json(['success' => true]);
     }
+
+    return response()->json(['success' => false, 'message' => 'Notification not found'], 404);
+}
+
+   public function clear()
+{
+    auth()->user()->unreadNotifications->markAsRead();
+    return response()->json(['success' => true]);
+}
+
 
 }
