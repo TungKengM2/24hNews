@@ -19,6 +19,9 @@ class Approval extends Model
         'status',
         'auto_reviewed',
         'remarks',
+        'cccd_front',
+        'cccd_back',
+        'cccd_number'
     ];
 
     public function user()
