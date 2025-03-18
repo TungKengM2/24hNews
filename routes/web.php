@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UploadController;
-use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\Auth\SocialAuthController;
@@ -42,20 +42,28 @@ Route::post('/search', [HomeController::class, 'search'])->name('search');
 // Client Articles
 Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])
     ->name('articles.article');
-Route::post('/articles/{article_id}/like',
-    [ArticleUserController::class, 'likeArticle'])->name('articles.like');
-Route::post('/articles/{article_id}/comments',
-    [ArticleUserController::class, 'storeComment'])
+Route::post(
+    '/articles/{article_id}/like',
+    [ArticleUserController::class, 'likeArticle']
+)->name('articles.like');
+Route::post(
+    '/articles/{article_id}/comments',
+    [ArticleUserController::class, 'storeComment']
+)
     ->middleware('auth')
     ->name('articles.comment');
-Route::post('/articles/{article_id}/comments/{comment_id}/reply',
-    [ArticleUserController::class, 'storeReplyComment'])
+Route::post(
+    '/articles/{article_id}/comments/{comment_id}/reply',
+    [ArticleUserController::class, 'storeReplyComment']
+)
     ->middleware('auth')
     ->name('articles.replyComment');
 
 // Client Category
-Route::get('/category/{category_id}',
-    [CategoryUserController::class, 'index'])->name('client.category.show');
+Route::get(
+    '/category/{category_id}',
+    [CategoryUserController::class, 'index']
+)->name('client.category.show');
 
 // 🚀 Auth dành cho User
 Route::middleware('guest')
@@ -149,8 +157,7 @@ Route::middleware(['auth', 'role:3'])
     ->name('moderator.dashboard');
 
 // 🚀 Khu vực dành riêng cho Moderator (role_id = 3)
-Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function (
-) {
+Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     Route::get(
         '/list-article',
         [ModeratorArticleController::class, 'index']
@@ -167,42 +174,60 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function (
     Route::get('/articles', [ModeratorArticleController::class, 'index'])
         ->name('moderator.articles.index');
 
-    Route::get('/articles/{article}',
-        [ModeratorArticleController::class, 'show'])
+    Route::get(
+        '/articles/{article}',
+        [ModeratorArticleController::class, 'show']
+    )
         ->name('moderator.articles.show');
 
-    Route::patch('/articles/{article}/approve',
-        [ModeratorArticleController::class, 'approve'])
+    Route::patch(
+        '/articles/{article}/approve',
+        [ModeratorArticleController::class, 'approve']
+    )
         ->name('moderator.articles.approve');
 
     // Sửa lại route reject (bỏ 'moderator/' trong URL)
-    Route::patch('/articles/{article}/reject',
-        [ModeratorArticleController::class, 'reject'])
+    Route::patch(
+        '/articles/{article}/reject',
+        [ModeratorArticleController::class, 'reject']
+    )
         ->name('moderator.articles.reject');
 
     // Bookmark By TungKeng
-    Route::post('/save-article',
-        [ModeratorArticleSaveController::class, 'saveArticle'])
+    Route::post(
+        '/save-article',
+        [ModeratorArticleSaveController::class, 'saveArticle']
+    )
         ->name('save.article');
-    Route::get('/saved-articles',
-        [ModeratorArticleSaveController::class, 'savedArticles'])
+    Route::get(
+        '/saved-articles',
+        [ModeratorArticleSaveController::class, 'savedArticles']
+    )
         ->name('moderator.saved');
     Route::get('/article/{slug}', [ArticleUserController::class, 'show'])
         ->name('moderator.article.detail');
-    Route::delete('/user/remove-saved-article/{id}',
-        [ModeratorArticleSaveController::class, 'removeSavedArticle'])
+    Route::delete(
+        '/user/remove-saved-article/{id}',
+        [ModeratorArticleSaveController::class, 'removeSavedArticle']
+    )
         ->name('moderator.remove.saved');
-    Route::post('/bookmark/{article_id}',
-        [ModeratorArticleSaveController::class, 'toggleBookmark']);
+    Route::post(
+        '/bookmark/{article_id}',
+        [ModeratorArticleSaveController::class, 'toggleBookmark']
+    );
 
     // Lịch sử bài viết đã xem của user
-    Route::get('/viewed-articles',
-        [ModeratorArticleViewModeratorController::class, 'index'])
+    Route::get(
+        '/viewed-articles',
+        [ModeratorArticleViewModeratorController::class, 'index']
+    )
         ->name('moderator.viewed.articles');
 
     // Hoạt động bình luận
-    Route::get('/{user_id}/comments',
-        [ModeratorController::class, 'getUserComments'])
+    Route::get(
+        '/{user_id}/comments',
+        [ModeratorController::class, 'getUserComments']
+    )
         ->name('moderator.comments');
 });
 // Route::prefix('moderator')->name('moderator.')->group(function () {
@@ -263,38 +288,54 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
         [ProfileController::class, 'showChangePasswordFormAuthor']
     )->name('author.change-password');
 
-    Route::post('moderate-image',
-        [ImageModerationController::class, 'moderateImage']);
-    Route::get('test-moderation',
-        [ImageModerationController::class, 'testModeration']);
+    Route::post(
+        'moderate-image',
+        [ImageModerationController::class, 'moderateImage']
+    );
+    Route::get(
+        'test-moderation',
+        [ImageModerationController::class, 'testModeration']
+    );
     // xóa thông báo khi đã đọc
 
     // Route::post('/notifications/{id}/read', function ($id, User $user): JsonResponse {
     //     $notification = $user->notifications()->find($id);
 
     // Bookmark By TungKeng
-    Route::post('/save-article',
-        [AuthorArticleSaveController::class, 'saveArticle'])
+    Route::post(
+        '/save-article',
+        [AuthorArticleSaveController::class, 'saveArticle']
+    )
         ->name('save.article');
-    Route::get('/saved-articles',
-        [AuthorArticleSaveController::class, 'savedArticles'])
+    Route::get(
+        '/saved-articles',
+        [AuthorArticleSaveController::class, 'savedArticles']
+    )
         ->name('author.saved');
     Route::get('/article/{slug}', [ArticleUserController::class, 'show'])
         ->name('author.article.detail');
-    Route::delete('/user/remove-saved-article/{id}',
-        [AuthorArticleSaveController::class, 'removeSavedArticle'])
+    Route::delete(
+        '/user/remove-saved-article/{id}',
+        [AuthorArticleSaveController::class, 'removeSavedArticle']
+    )
         ->name('author.remove.saved');
-    Route::post('/bookmark/{article_id}',
-        [AuthorArticleSaveController::class, 'toggleBookmark']);
+    Route::post(
+        '/bookmark/{article_id}',
+        [AuthorArticleSaveController::class, 'toggleBookmark']
+    );
 
     // Lịch sử bài viết đã xem của user
-    Route::get('/viewed-articles',
-        [ArticleViewAuthorController::class, 'index'])
+    Route::get(
+        '/viewed-articles',
+        [ArticleViewAuthorController::class, 'index']
+    )
         ->name('author.viewed.articles');
 
     // Hoạt động bình luận
-    Route::get('/{user_id}/comments',
-        [AuthorController::class, 'getUserComments'])
+    Route::get(
+        '/{user_id}/comments',
+        [AuthorController::class, 'getUserComments']
+    )
         ->name('author.comments');
     //     if ($notification) {
     //         $notification->markAsRead();
@@ -358,35 +399,51 @@ Route::middleware(['auth', 'role:4'])
         // Route::get('/articles/viewed', [ArticleViewUserController::class, 'index']);
 
         // Bookmark By TungKeng
-        Route::post('/save-article',
-            [ArticleSaveController::class, 'saveArticle'])
+        Route::post(
+            '/save-article',
+            [ArticleSaveController::class, 'saveArticle']
+        )
             ->name('save.article');
-        Route::get('/saved-articles',
-            [ArticleSaveController::class, 'savedArticles'])
+        Route::get(
+            '/saved-articles',
+            [ArticleSaveController::class, 'savedArticles']
+        )
             ->name('user.saved');
-        Route::get('/article/{slug}',
-            [ArticleUserController::class, 'show'])->name('article.detail');
-        Route::delete('/user/remove-saved-article/{id}',
-            [ArticleSaveController::class, 'removeSavedArticle'])
+        Route::get(
+            '/article/{slug}',
+            [ArticleUserController::class, 'show']
+        )->name('article.detail');
+        Route::delete(
+            '/user/remove-saved-article/{id}',
+            [ArticleSaveController::class, 'removeSavedArticle']
+        )
             ->name('user.remove.saved');
-        Route::post('/bookmark/{article_id}',
-            [ArticleSaveController::class, 'toggleBookmark']);
+        Route::post(
+            '/bookmark/{article_id}',
+            [ArticleSaveController::class, 'toggleBookmark']
+        );
 
         // Lịch sử bài viết đã xem của user
-        Route::get('/viewed-articles',
-            [ArticleViewUserController::class, 'index'])
+        Route::get(
+            '/viewed-articles',
+            [ArticleViewUserController::class, 'index']
+        )
             ->name('viewed.articles');
 
         // Hoạt động bình luận
-        Route::get('/{user_id}/comments',
-            [UserUserController::class, 'getUserComments'])
+        Route::get(
+            '/{user_id}/comments',
+            [UserUserController::class, 'getUserComments']
+        )
             ->name('user.comments');
     });
 
 // Khu vực dùng cho BookMark By TungKeng
 Route::middleware(['auth'])->group(function () {
-    Route::post('/save-article',
-        [ArticleSaveController::class, 'saveArticle'])
+    Route::post(
+        '/save-article',
+        [ArticleSaveController::class, 'saveArticle']
+    )
         ->name('save.article');
 });
 
@@ -396,8 +453,16 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
-    Route::get('/user-stats', [AdminDashboardController::class, 'getUserStats'])->name('admin.userStats');
-    Route::get('/article-stats', [AdminDashboardController::class, 'getArticleStats'])->name('admin.articleStats');
+    Route::get(
+        '/user-stats',
+        [AdminDashboardController::class, 'getUserStats']
+    )
+        ->name('admin.userStats');
+    Route::get(
+        '/article-stats',
+        [AdminDashboardController::class, 'getArticleStats']
+    )
+        ->name('admin.articleStats');
 
     // Quản lý yêu cầu nâng cấp vai trò
     Route::get(
@@ -418,8 +483,10 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
         [ArticleController::class, 'approve']
     )->name('articles.approve');
     Route::resource('articles', ArticleController::class);
-    Route::patch('/articles/{article}/reject',
-        [ArticleController::class, 'reject'])
+    Route::patch(
+        '/articles/{article}/reject',
+        [ArticleController::class, 'reject']
+    )
         ->name('articles.reject');
 
     // Quản lý danh mục
@@ -449,7 +516,11 @@ Route::get(
     [SocialAuthController::class, 'handleProviderCallback']
 );
 
-Route::post('author/tinymce/upload',
-    [TinyMCEUploadController::class, 'uploadImage']);
-Route::get('tinymce/clear-blocked-images',
-    [TinyMCEUploadController::class, 'clearBlockedImages']);
+Route::post(
+    'author/tinymce/upload',
+    [TinyMCEUploadController::class, 'uploadImage']
+);
+Route::get(
+    'tinymce/clear-blocked-images',
+    [TinyMCEUploadController::class, 'clearBlockedImages']
+);

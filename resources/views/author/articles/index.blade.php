@@ -34,9 +34,17 @@
                                 <a href="{{ route('author.dashboard') }}" class="text-white">Back to Dashboard</a>
                             </button>
                             @if (session('success'))
-                                <div class="alert alert-success">
+                                <div class="alert alert-success alert-dismissible fade show">
                                     {{ session('success') }}
                                 </div>
+                                <script>
+                                    setTimeout(function() {
+                                        document.querySelector('.alert-success').classList.remove('show');
+                                        setTimeout(function() {
+                                            document.querySelector('.alert-success').style.display = 'none';
+                                        }, 150);
+                                    }, 3000);
+                                </script>
                             @endif
                             <div class="d-flex">
                                 <form method="GET" action="{{ route('author.articles.index') }}" class="me-2">
