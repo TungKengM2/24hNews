@@ -43,7 +43,13 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('avatar',
                     $user->image ?? '/admin/main/../images/user5-128x128.jpg');
             }
+            
         );
+        // dat them
+        View::composer('website.layouts.partials.start-nav', function ($view) {
+            $view->with('categories', Category::where('is_active', 1)->get());
+        });
+        // dat them
         Category::observe(CategoryObserver::class);
     }
 
