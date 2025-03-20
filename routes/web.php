@@ -58,7 +58,7 @@ Route::post('/search', [HomeController::class, 'search'])->name('search');
         return view('website.profiles.moderator');
     })->name('moderator.profile');
 
-
+// profile trang chủ dat them
 
 // Client Articles
 Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])
