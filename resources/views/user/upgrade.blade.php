@@ -32,9 +32,9 @@
 
                             {{-- Họ và tên --}}
                             <div class="form-group mb-3">
-                                <label for="full_name">Họ và Tên <span class="text-danger">*</span></label>
-                                <input type="text" id="full_name" name="full_name" class="form-control"
-                                       value="{{ old('full_name', auth()->user()->fullname) }}" required>
+                                <label for="fullname">Họ và Tên <span class="text-danger">*</span></label>
+                                <input type="text" id="fullname" name="fullname" class="form-control"
+                                       value="{{ old('fullname', auth()->user()->fullname) }}" required>
                             </div>
 
                             {{-- Ngày sinh --}}
@@ -87,6 +87,15 @@
                                     </div>
                                 </div>
                             </div>
+
+                            {{-- Tải lên Chứng chỉ --}}
+                            <div class="form-group mb-3">
+                                <label for="certificate">Chứng chỉ hành nghề <span class="text-danger">*</span></label>
+                                <input type="file" id="certificates" name="certificates[]" class="form-control"
+                                accept="image/*,application/pdf" multiple required>
+                         
+                            </div>
+                            
 
                             {{-- Lý do nâng cấp --}}
                             <div class="form-group mb-3">

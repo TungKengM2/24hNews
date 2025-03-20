@@ -35,6 +35,7 @@ return new class extends Migration
             $table->string('cccd_front')->nullable();
             $table->string('cccd_back')->nullable();
             $table->string('cccd_number')->nullable()->unique();
+            $table->json('certificates')->nullable();
             $table->timestamps();
         });
     }

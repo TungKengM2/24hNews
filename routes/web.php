@@ -356,6 +356,11 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
         [UserController::class, 'roleUpgradeRequests']
     )
         ->name('admin.user-role-requests');
+
+    Route::get('/role-upgrade-requests/{id}', [UserController::class, 'showApprovalDetail'])
+        ->name('admin.user-role-request.show');
+
+
     Route::post('/admin/approve/{id}', [UserController::class, 'approve'])
         ->name('admin.approve.user');
     Route::delete('/admin/reject/{id}', [UserController::class, 'reject'])

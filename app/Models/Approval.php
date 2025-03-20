@@ -21,7 +21,8 @@ class Approval extends Model
         'remarks',
         'cccd_front',
         'cccd_back',
-        'cccd_number'
+        'cccd_number',
+        'certificates'
     ];
 
     public function user()
