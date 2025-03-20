@@ -36,17 +36,15 @@
                 </li>
 
                 {{-- dat them --}}
-                @if(isset($categories))
                 @foreach ($categories as $category)
-                    @if ($category->is_active == 1)
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
-                                {{ $category->name }}
-                            </a>
-                        </li>
-                    @endif
-                @endforeach
+                @if ($category->is_active == 1)
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
+                            {{ $category->name }}
+                        </a>
+                    </li>
                 @endif
+                @endforeach
                  {{-- dat them --}}
             </ul>
 
