@@ -15,10 +15,13 @@
                         <div class="card-body text-center p-5">
                             <div class="position-relative mb-4">
                                 <div class="rounded-circle overflow-hidden mx-auto" style="width: 150px; height: 150px;">
-                                    <img src="client/assets/img/team_page/4.jpg" alt="" class="img-fluid w-100 h-100 object-fit-cover">
+                                    @if($user->image)
+                                    <img src="{{ asset('storage/' . $user->image) }}" alt="Profile Image"
+                                         style="max-width: 100px; margin-top: 10px;">
+                                    @endif
                                 </div>
                             </div>
-                            <h4 class="mb-3">Logan H. Himer</h4>
+                            <h4 class="mb-3">{{ $user->username }}</h4>
                             <p class="text-muted mb-4"> author</p>
                             <p class="text-muted mb-4">Together happy feelings continue juvenile had off one. Unknown may service subject her letters one bed</p>
                             <div class="d-flex align-items-center justify-content-center gap-3 mb-4">
