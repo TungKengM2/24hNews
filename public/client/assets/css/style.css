@@ -13630,7 +13630,7 @@ small.text {
 /* ----------  team page style ------------ */
 .tc-team-page .tc-team-header .content {
   position: relative;
-  background-image: url(client/../img/about_page/header_back.png);
+  background-image: url(../img/about_page/header_back.png);
   background-size: cover;
   background-repeat: no-repeat;
   color: #fff;
@@ -13677,7 +13677,7 @@ small.text {
 /* ----------  author page style ------------ */
 .tc-author-page .tc-author-header .content {
   position: relative;
-  background-image: url(client/../img/about_page/header_back.png);
+  background-image: url(../img/about_page/header_back.png);
   background-size: cover;
   background-repeat: no-repeat;
   color: #fff;
