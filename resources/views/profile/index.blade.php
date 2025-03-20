@@ -54,7 +54,7 @@
                         <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">recently added</a> <i class="la la-angle-right ms-1"></i></p>
                         <div class="tc-post-overlay-default">
                             <div class="img th-600 img-cover">
-                                <img src="assets/img/technology/1.png" alt="">
+                                <img src="client/assets/img/technology/1.png" alt="">
                                 <div class="tags">
                                     <a href="page-author.html#">technology</a>
                                 </div>
