@@ -32,7 +32,10 @@ return new class extends Migration
                 ->references('user_id')
                 ->on('users')
                 ->onDelete('set null');
-
+            $table->string('cccd_front')->nullable();
+            $table->string('cccd_back')->nullable();
+            $table->string('cccd_number')->nullable()->unique();
+            $table->json('certificates')->nullable();
             $table->timestamps();
         });
     }

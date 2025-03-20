@@ -24,9 +24,30 @@ class UserController extends Controller
             })
             ->paginate(10);
 
-        return view('admin.users.index',
-            compact('users', 'roles', 'role_id'));
+        return view(
+            'admin.users.index',
+            compact('users', 'roles', 'role_id')
+        );
     }
+    public function showApprovalDetail($id)
+    {
+        $approval = Approval::with('user')->findOrFail($id);
+        $user = $approval->user;
+    
+        // Tính số ngày hoạt động
+        $accountAge = now()->diffInDays($user->created_at);
+    
+        // Kiểm tra tình trạng cấm tài khoản
+        $isBanned = $user->banned_until !== null && now()->lessThan($user->banned_until);
+        $banMessage = $isBanned ? "Bị cấm đến " . $user->banned_until->format('d/m/Y') : "Không bị cấm";
+    
+        // Lấy danh sách chứng chỉ
+        $certificates = json_decode($approval->certificates, true) ?? [];
+    
+        return view('admin.users.show', compact('approval', 'user', 'accountAge', 'isBanned', 'banMessage', 'certificates'));
+    }
+    
+    
 
     public function roleUpgradeRequests(Request $request)
     {
@@ -36,15 +57,19 @@ class UserController extends Controller
         $approvals = Approval::with('user.role')
             ->where('type', 'role_upgrade')
             ->when($role_id, function ($query) use ($role_id) {
-                return $query->whereHas('user',
+                return $query->whereHas(
+                    'user',
                     function ($q) use ($role_id) {
                         $q->where('role_id', $role_id);
-                    });
+                    }
+                );
             })
             ->paginate(10);
 
-        return view('admin.users.upgrade-requests',
-            compact('approvals', 'roles', 'role_id'));
+        return view(
+            'admin.users.upgrade-requests',
+            compact('approvals', 'roles', 'role_id')
+        );
     }
 
     public function approve(Request $request, $id)
