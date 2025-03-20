@@ -35,7 +35,8 @@
                     </ul>
                 </li>
 
-
+                {{-- dat them --}}
+                @if(isset($categories))
                 @foreach ($categories as $category)
                     @if ($category->is_active == 1)
                         <li class="nav-item">
@@ -45,6 +46,8 @@
                         </li>
                     @endif
                 @endforeach
+                @endif
+                 {{-- dat them --}}
             </ul>
 
                 <div class="nav-side">
