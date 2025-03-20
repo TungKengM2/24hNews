@@ -57,9 +57,7 @@ Route::post('/search', [HomeController::class, 'search'])->name('search');
     Route::get('/profiles/moderator', function () {
         return view('website.profiles.moderator');
     })->name('moderator.profile');
-    
 
-// Client Categories
 
 
 // Client Articles
