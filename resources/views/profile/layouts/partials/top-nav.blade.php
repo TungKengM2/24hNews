@@ -14,6 +14,23 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-6">
+                            <div class="item position-relative">
+                                <div class="icon me-3 pt-1">
+                                    <img id="weather-icon" alt="Weather Icon">
+                                </div>
+                                <div class="inf">
+                                    <strong><p id="weather-temperature"></p><p id="weather-description"></p></strong>
+                                    <p id="weather-city"></p>
+                                </div>
+                                <div class="weather-form position-absolute bg-white p-3 rounded shadow" style="display: none; top: 100%; left: 0; z-index: 1000; min-width: 250px;">
+                                    <div class="form-group">
+                                        <input type="text" id="cityInput" class="form-control mb-2" placeholder="Enter city name">
+                                        <button class="btn btn-primary btn-sm w-100" onclick="updateWeather()">Update Weather</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -27,7 +44,7 @@
                     <div class="row text-end align-items-center">
                         <div class="col-6">
                             <a href="home-default.html#0"
-                                class="text-uppercase fs-6 border-bottom border-1 border-dark subs">
+                               class="text-uppercase fs-6 border-bottom border-1 border-dark subs">
                                 <i class="la la-envelope fs-5 me-1"></i>
                                 Subscribe
                             </a>
@@ -55,7 +72,7 @@
                             </div>
                             <p class="mt-3 color-666 fsz-12px fst-italic">By subscribing, you accepted the
                                 our <a href="home-default.html#0"
-                                    class="color-777 text-decoration-underline fst-normal">Policy</a></p>
+                                       class="color-777 text-decoration-underline fst-normal">Policy</a></p>
                         </div>
                         <span class="cls"> <i class="la la-times"></i> </span>
                     </div>
