@@ -36,7 +36,7 @@
                 </li>
 
 
-                @foreach ($categories as $category)
+                {{-- @foreach ($categories as $category)
                     @if ($category->is_active == 1)
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
@@ -44,7 +44,7 @@
                             </a>
                         </li>
                     @endif
-                @endforeach
+                @endforeach --}}
             </ul>
 
                 <div class="nav-side">

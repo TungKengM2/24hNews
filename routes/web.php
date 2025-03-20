@@ -39,6 +39,29 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // dat them
 Route::post('/search', [HomeController::class, 'search'])->name('search');
 
+// profile trang chủ dat them
+
+    // Admin Profile
+    Route::get('/profiles/admin', function () {
+        return view('website.profiles.admin');
+    })->name('admin.profile');
+    // User Profile
+    Route::get('/profiles/user', function () {
+        return view('website.profiles.user');
+    })->name('user.profile');
+    // Author Profile
+    Route::get('/profiles/author', function () {
+        return view('website.profiles.author');
+    })->name('author.profile');
+    // Moderator Profile
+    Route::get('/profiles/moderator', function () {
+        return view('website.profiles.moderator');
+    })->name('moderator.profile');
+    
+
+// Client Categories
+
+
 // Client Articles
 Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])
     ->name('articles.article');

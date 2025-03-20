@@ -111,4 +111,7 @@ class HomeController extends Controller
 
         return view('welcome', compact('results', 'keyword', 'categories', 'sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles'));
     }
+    function profileadmin() {
+        return view('admin.profile');
+    }
 }
