@@ -4,7 +4,7 @@
 function moderateContent($text, $apiKey)
 {
     // Endpoint của API
-    $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro-exp-02-05:generateContent?key='.$apiKey;
+    $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro-exp-02-05:generateContent?key=' . $apiKey;
 
     // Prompt mẫu
     $prompt = "
@@ -121,9 +121,9 @@ if ($result['status'] === 'success') {
     if ($result['violation_level'] === 'none') {
         echo 'Không vi phạm.';
     } else {
-        echo 'Mức độ vi phạm: '.$result['violation_level']."\n";
-        echo 'Các từ vi phạm: '.implode(', ', $result['violations']);
+        echo 'Mức độ vi phạm: ' . $result['violation_level'] . "\n";
+        echo 'Các từ vi phạm: ' . implode(', ', $result['violations']);
     }
 } else {
-    echo 'Lỗi: '.$result['message'];
+    echo 'Lỗi: ' . $result['message'];
 }

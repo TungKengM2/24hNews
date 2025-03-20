@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
+use thiagoalessio\TesseractOCR\TesseractOCR;
+
+
 
 class ProfileController extends Controller
 {
@@ -57,35 +61,111 @@ class ProfileController extends Controller
 
     public function requestAuthorRole(Request $request)
     {
-        $existingRequest = Approval::where('type', 'role_upgrade')
-            ->where('status', 'pending')
-            ->where('requested_role', 'author')
-            ->where('user_id', auth()->id())
-            ->exists();
+        $user = auth()->user();
+
+        // Kiểm tra xem user đã gửi yêu cầu chưa
+        $existingRequest = Approval::where([
+            'type'           => 'role_upgrade',
+            'status'         => 'pending',
+            'requested_role' => 'author',
+            'user_id'        => auth()->id(),
+        ])->first();
 
         if ($existingRequest) {
-            return redirect()
-                ->route('user.upgrade.result')
-                ->with('error', 'You have already submitted a request.');
+            return redirect()->route('user.upgrade.result')
+                ->with('error', 'Bạn đã gửi yêu cầu trước đó và đang chờ duyệt.');
         }
 
-        Approval::create([
-            'type' => 'role_upgrade',
-            'article_id' => null,
-            'approved_by' => null,
-            'status' => 'pending',
-            'requested_role' => 'author',
-            'remarks' => $request->input('reason', 'No reason provided'),
-            'user_id' => auth()->id(),
+        // Validate dữ liệu đầu vào
+        $request->validate([
+            'fullname'   => 'nullable|string|max:255',
+            'phone'       => 'nullable|string|max:15',
+            'address'     => 'nullable|string|max:255',
+            'dob'         => 'nullable|date',
+            'reason'      => 'required|string',
+            'cccd_number' => 'required|string|size:12|unique:approvals,cccd_number',
+            'cccd_front'  => 'required|image|mimes:jpeg,png,jpg|max:4048',
+            'cccd_back'   => 'required|image|mimes:jpeg,png,jpg|max:4048',
+            'certificates.*' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048', // Cho phép nhiều file
         ]);
 
-        return redirect()
-            ->route('user.upgrade.result')
-            ->with(
-                'status',
-                'Your request has been submitted successfully.'
-            );
+        // Kiểm tra file CCCD
+        if (!$request->hasFile('cccd_front') || !$request->hasFile('cccd_back')) {
+            return redirect()->back()->with('error', 'Vui lòng tải đủ ảnh CCCD.');
+        }
+
+        // Lưu ảnh CCCD
+        $cccdFrontPath = $request->file('cccd_front')->store('cccd_images', 'public');
+        $cccdBackPath = $request->file('cccd_back')->store('cccd_images', 'public');
+
+        // OCR trích xuất số CCCD từ ảnh
+        Log::info("Ảnh CCCD Front: " . $cccdFrontPath);
+
+        // Sử dụng OCR để trích xuất số CCCD từ ảnh mặt trước
+        $ocr = new TesseractOCR(storage_path("app/public/" . $cccdFrontPath));
+        $extractedText = $ocr->psm(3)->oem(1)->lang('eng')->run();
+
+        // Trích xuất số CCCD từ chuỗi text bằng regex
+        preg_match('/\d{12}/', str_replace(' ', '', $extractedText), $matches);
+        $extractedCCCD = $matches[0] ?? null;
+
+        if (!$extractedCCCD) {
+            Log::warning("Không thể đọc được số CCCD từ ảnh", ['extracted_text' => $extractedText]);
+            return redirect()->back()->with('error', 'Không thể đọc được số CCCD từ ảnh. Vui lòng tải ảnh rõ hơn.');
+        }
+
+        if ($extractedCCCD !== $request->cccd_number) {
+            Log::warning("Số CCCD trên ảnh không khớp với số người dùng nhập", [
+                'extracted' => $extractedCCCD,
+                'input' => $request->cccd_number
+            ]);
+            return redirect()->back()->with('error', 'Số CCCD trên ảnh không khớp với số bạn nhập. Vui lòng kiểm tra lại.');
+        }
+
+
+
+        // Lưu chứng chỉ
+        $certificates = [];
+        if ($request->hasFile('certificates')) {
+            foreach ($request->file('certificates') as $file) {
+                $path = $file->store('certificates', 'public');
+                $certificates[] = $path;
+            }
+        }
+        Log::info('Chứng chỉ đã lưu:', ['certificates' => $certificates]);
+
+        // Cập nhật thông tin user
+        $user->update([
+            'fullname' => $request->fullname ?? $user->fullname,
+            'phone'     => $request->phone ?? $user->phone,
+            'address'   => $request->address ?? $user->address,
+            'dob'       => $request->dob ?? $user->dob,
+        ]);
+        // // Kiểm tra xem danh sách chứng chỉ đã được tạo đúng chưa
+        // dd($certificates);
+
+        // Lưu vào database
+        $approval = Approval::create([
+            'type'           => 'role_upgrade',
+            'article_id'     => null,
+            'approved_by'    => null,
+            'status'         => 'pending',
+            'requested_role' => 'author',
+            'remarks'        => $request->input('reason', 'Không có lý do'),
+            'user_id'        => auth()->id(),
+            'cccd_number'    => $request->cccd_number,
+            'cccd_front'     => $cccdFrontPath,
+            'cccd_back'      => $cccdBackPath,
+            'certificates'   => count($certificates) ? json_encode($certificates) : json_encode([]),
+        ]);
+
+        return redirect()->route('user.upgrade.result')
+            ->with('status', 'Yêu cầu nâng cấp tài khoản đã được gửi thành công.');
     }
+
+
+
+
 
     /**
      * Hiển thị trang profile
