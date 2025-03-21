@@ -18,6 +18,8 @@ class HomeController extends Controller
             ->take(7)
             ->get();
 
+
+
         // top 2 bài viết nhiều lượt xem
         $D1Articles = Article::where('status', 'published')
             ->orderByDesc('views') // Sắp xếp bài viết nhiều views nhất
@@ -149,5 +151,8 @@ class HomeController extends Controller
 
 
         return view('welcome', compact('results', 'categoryCount','category2', 'keyword', 'categories', 'sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles'));
+    }
+    function profileadmin() {
+        return view('admin.profile');
     }
 }

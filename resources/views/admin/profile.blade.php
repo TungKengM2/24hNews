@@ -1,7 +1,7 @@
-@extends('user.layouts.master')
+@extends('admin.layouts.master')
 
 @section('title')
-    Thống tin tài khoản
+    Admin Profile
 @endsection
 
 @section('content')

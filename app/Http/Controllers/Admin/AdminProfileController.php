@@ -1,6 +1,6 @@
 <?php
 
-    namespace App\Http\Controllers\Author;
+    namespace App\Http\Controllers\Admin;
 
     use App\Http\Controllers\Controller;
     use Exception;
@@ -8,7 +8,7 @@
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Support\Facades\Storage;
 
-    class AuthorProfileController extends Controller
+    class AdminProfileController extends Controller
     {
 
         /**
@@ -18,7 +18,7 @@
         {
             $user = auth()->user();
 
-            return view('admin.profile.index', compact('user'));
+            return view('admin.profile', compact('user'));
         }
 
         public function update(Request $request)
@@ -52,7 +52,7 @@
                 $user->save();
 
                 return redirect()
-                    ->route('admin.profile')
+                    ->route('author.profile')
                     ->with('success', 'Profile updated successfully!');
             } catch (Exception $e) {
                 return redirect()
