@@ -185,11 +185,12 @@ class ProfileController extends Controller
                 'max:50',
                 Rule::unique('users')->ignore($user->user_id, 'user_id'),
             ],
+            'description' => ['nullable', 'string', 'max:150'],
             'phone' => ['nullable', 'regex:/^0[0-9]{9}$/'],
         ]);
 
         // Kiểm tra nếu dữ liệu không thay đổi
-        if ($request->username == $user->username && $request->phone == $user->phone) {
+        if ($request->username == $user->username && $request->description == $user->description && $request->phone == $user->phone) {
             return back()->with(
                 'error',
                 'Không có thay đổi nào được thực hiện.'
@@ -199,6 +200,7 @@ class ProfileController extends Controller
         // Cập nhật dữ liệu
         $user->update([
             'username' => $request->username,
+            'description' => $request->description ?? '',
             'phone' => $request->phone,
         ]);
 
@@ -216,12 +218,14 @@ class ProfileController extends Controller
         // Validate the incoming request data
         $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'required|string|max:150',
             'email' => 'required|string|email|max:255|unique:users,email,' . auth()->id(),
         ]);
 
         // Retrieve the authenticated user
         $user = auth()->user();
         $user->name = $request->name;
+        $user->description = $request->description;
         $user->email = $request->email;
 
         // Update the password if provided

@@ -1,259 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('website.layouts.master')
 
-<head>
-    <!-- Metas -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="keywords" content="HTML5 Template Iteck Multi-Purpose themeforest" />
-    <meta name="description" content="Iteck - Multi-Purpose HTML5 Template" />
-    <meta name="author" content="" />
-
-    <!-- Title  -->
-    <title>Newzin</title>
-
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="assets/img/fav.png" title="Favicon" sizes="16x16" />
-
-    <!-- bootstrap 5 -->
-    <link rel="stylesheet" href="assets/css/lib/bootstrap.min.css">
-
-    <!-- font family -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-
-    <!-- ionicons icons  -->
-    <link rel="stylesheet" href="assets/css/lib/ionicons.css">
-    <!-- line-awesome icons  -->
-    <link rel="stylesheet" href="assets/css/lib/line-awesome.css">
-    <!-- animate css  -->
-    <link rel="stylesheet" href="assets/css/lib/animate.css" />
-    <!-- fancybox popup  -->
-    <link rel="stylesheet" href="assets/css/lib/jquery.fancybox.css" />
-    <!-- lity popup  -->
-    <link rel="stylesheet" href="assets/css/lib/lity.css" />
-    <!-- swiper slider  -->
-    <link rel="stylesheet" href="assets/css/lib/swiper.min.css" />
-
-    <!-- ====== main style ====== -->
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <title> Newzin </title>
-</head>
-
-<body class="home-style1 tc-author-page">
-
-    <!-- ====== start loading page ====== -->
-    <div id="preloader">
-    </div>
-    <!-- ====== end loading page ====== -->
-
-    <!-- ====== start navbar-container ====== -->
-    <div class="navbar-container">
-        <div class="container">
-            <!-- ====== start top navbar ====== -->
-            <div class="top-navbar style-1">
-                <div class="container p-0">
-                    <div class="row align-items-center">
-                        <div class="col-lg-4">
-                            <div class="date-weather mb-3 mb-lg-0">
-                                <div class="row align-items-center">
-                                    <div class="col-6">
-                                        <div class="item">
-                                            <div class="icon me-3 pt-1">
-                                                <i class="la la-calendar"></i>
-                                            </div>
-                                            <div class="inf">
-                                                <strong>Monday</strong>
-                                                <p>Nov 25, 2023</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="item">
-                                            <div class="icon me-3 pt-1">
-                                                <i class="la la-cloud-sun"></i>
-                                            </div>
-                                            <div class="inf">
-                                                <strong>32oC, Cloudy</strong>
-                                                <p>New York</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <a href="page-author.html#" class="logo-brand d-none d-lg-block">
-                                <img src="assets/img/logo_home1.png" alt="" class="dark-none">
-                                <img src="assets/img/logo_home1_lt.png" alt="" class="light-none">
-                            </a>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="sub-darkLight">
-                                <div class="row text-end align-items-center">
-                                    <div class="col-6">
-                                        <a href="page-author.html#"
-                                            class="text-uppercase fs-6 border-bottom border-1 border-dark">
-                                            <i class="la la-envelope fs-5 me-1"></i>
-                                            Subscribe
-                                        </a>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="darkLight-btn">
-                                            <span class="icon active" id="light-icon">
-                                                <i class="la la-sun"></i>
-                                            </span>
-                                            <span class="icon" id="dark-icon">
-                                                <i class="la la-moon"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- ====== end top navbar ====== -->
-
-            <!-- ====== start navbar ====== -->
-            <nav class="navbar navbar-expand-lg navbar-light style-1">
-                <div class="container p-0">
-                    <div class="mob-nav-toggles d-flex align-items-center justify-content-between">
-                        <button class="navbarList-icon me-lg-5" data-bs-toggle="offcanvas" href="#offcanvasExample"
-                            role="button" aria-controls="offcanvasExample">
-                            <span></span>
-                            <span></span>
-                        </button>
-                        <a href="page-author.html#" class="logo-brand d-block d-lg-none w-50 my-4">
-                            <img src="assets/img/logo_home1.png" alt="" class="dark-none">
-                            <img src="assets/img/logo_home1_lt.png" alt="" class="light-none">
-                        </a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                    </div>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link active dropdown-toggle" href="page-author.html#" id="navbarDropdown1"
-                                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    homes
-                                </a>
-                                <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
-                                    <li><a class="dropdown-item" href="home-default.html">home default</a></li>
-                                    <li><a class="dropdown-item" href="home-technology.html">home techonology</a></li>
-                                    <li><a class="dropdown-item" href="home-gaming.html">home gaming</a></li>
-                                    <li><a class="dropdown-item" href="home-food.html">home food</a></li>
-                                    <li><a class="dropdown-item" href="home-bussiness.html">home bussiness</a></li>
-                                    <li><a class="dropdown-item" href="home-politic.html">home politic</a></li>
-                                    <li><a class="dropdown-item" href="home-nft.html">home NFT</a></li>
-                                    <li><a class="dropdown-item" href="home-sport.html">home sport</a></li>
-                                    <li><a class="dropdown-item" href="home-cars.html">home cars</a></li>
-                                    <li><a class="dropdown-item" href="home-10.html">original</a></li>
-                                    <li><a class="dropdown-item" href="rtl-home-sport.html">home sport RTL</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="page-author.html#" id="navbarDropdown1"
-                                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Blog
-                                </a>
-                                <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
-                                    <li><a class="dropdown-item" href="page-blog.html">Blog</a></li>
-                                    <li><a class="dropdown-item" href="page-author.html">authors</a></li>
-                                    <li><a class="dropdown-item" href="page-author-details.html">author details</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="page-author.html#" id="navbarDropdown1"
-                                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Single posts
-                                </a>
-                                <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
-                                    <li><a class="dropdown-item" href="page-single-post-creative.html">single post
-                                            creative</a></li>
-                                    <li><a class="dropdown-item" href="page-single-post-creative.html">single post
-                                            features</a></li>
-                                    <li><a class="dropdown-item" href="rtl-page-single-post-creative.html">single post
-                                            creative RTL</a></li>
-                                    <li><a class="dropdown-item" href="rtl-page-single-post-features.html">single post
-                                            features RTL</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="page-author.html#" id="navbarDropdown1"
-                                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Pages
-                                </a>
-                                <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
-                                    <li><a class="dropdown-item" href="page-about.html">About</a></li>
-                                    <li><a class="dropdown-item" href="page-team.html">Team</a></li>
-                                    <li><a class="dropdown-item" href="page-product.html">Product</a></li>
-                                    <li><a class="dropdown-item" href="page-404.html">404 page</a></li>
-                                </ul>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link" href="page-contact.html">
-                                    contact
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="page-shop.html">
-                                    shop
-                                    <small class="hot">hot</small>
-                                </a>
-                            </li>
-                        </ul>
-                        <div class="nav-side">
-                            <a href="page-author.html#" class="icon-link">
-                                <i class="la la-user fs-4"></i>
-                            </a>
-                            <a href="page-author.html#" class="icon-link noti-dot">
-                                <i class="la la-shopping-bag fs-4"></i>
-                            </a>
-                            <a href="page-author.html#" class="icon-link search-btn-style1">
-                                <i class="la la-search fs-4 sOpen-btn"></i>
-                                <i class="la la-close fs-4 sClose-btn"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <!-- ====== end navbar ====== -->
-
-            <!-- ====== start nav-search ====== -->
-            <div class="nav-search-style1">
-                <div class="row justify-content-center align-items-center gx-lg-5">
-                    <div class="col-lg-4">
-                        <div class="info">
-                            <h5> you can search by category <br> or news title </h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <form class="form">
-                            <span class="color-777 fst-italic text-capitalize mb-2 fsz-13px">Enter Keyword</span>
-                            <div class="form-group">
-                                <span class="icon">
-                                    <i class="la la-search"></i>
-                                </span>
-                                <input type="text" class="form-control" placeholder="Elon Musk ... ">
-                                <button type="submit">search</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <!-- ====== end nav-search ====== -->
-        </div>
-    </div>
-    <!-- ====== start navbar-container ====== -->
-
-    <!--Contents-->
+@section('content')
     <main>
 
         <!-- ====== start author header ====== -->
@@ -277,11 +24,11 @@
                     <div class="col-lg-5">
                         <div class="content">
                             <div class="author-img img-cover">
-                                <img src="assets/img/team_page/4.jpg" alt="">
+                                <img src="/client/assets/img/team_page/4.jpg" alt="">
                             </div>
                             <div class="info">
-                                <p class="color-666 mb-20"> Together happy feelings continue juvenile had off one.
-                                    Unknown may service subject her letters one bed </p>
+                                <p class="color-666 mb-20"> Together happy feelings continue juvenile had off one. Unknown
+                                    may service subject her letters one bed </p>
                                 <p class="color-666 mb-20"> <i class="la la-book"></i> 23 Posts <span class="mx-3"> |
                                     </span> <i class="la la-comments"></i> 100 Comment </p>
                                 <div class="social-links">
@@ -305,19 +52,20 @@
                 <div class="row">
                     <div class="col-lg-9">
                         <div class="posts-side">
-                            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">recently
-                                    added</a> <i class="la la-angle-right ms-1"></i></p>
+                            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">recently added</a>
+                                <i class="la la-angle-right ms-1"></i>
+                            </p>
                             <div class="tc-post-overlay-default">
                                 <div class="img th-600 img-cover">
-                                    <img src="assets/img/technology/1.png" alt="">
+                                    <img src="/client/assets/img/technology/1.png" alt="">
                                     <div class="tags">
                                         <a href="page-author.html#">technology</a>
                                     </div>
                                 </div>
                                 <div class="content ps-40 pe-40 pb-40">
                                     <h2 class="title mb-30">
-                                        <a href="page-single-post-creative.html">Myenergi's award winning product <br>
-                                            the zappi EV charger</a>
+                                        <a href="page-single-post-creative.html">Myenergi's award winning product <br> the
+                                            zappi EV charger</a>
                                     </h2>
                                     <div class="meta-bot lh-1">
                                         <ul class="d-flex">
@@ -342,7 +90,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="assets/img/technology/2.png" alt="">
+                                                    <img src="/client/assets/img/technology/2.png" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -363,8 +111,8 @@
                                                                     2022</a>
                                                             </li>
                                                             <li class="author me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-user me-2"></i> by Admin
+                                                                <a href="page-author.html#"><i class="la la-user me-2"></i>
+                                                                    by Admin
                                                                 </a>
                                                             </li>
                                                             <li class="comment">
@@ -382,7 +130,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="assets/img/technology/3.png" alt="">
+                                                    <img src="/client/assets/img/technology/3.png" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -392,8 +140,8 @@
                                                             Content</a>
                                                     </div>
                                                     <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Oppoturnity become
-                                                            Lead of Backend Developer at
+                                                        <a href="page-single-post-creative.html"> Oppoturnity become Lead of
+                                                            Backend Developer at
                                                             Google Studio </a>
                                                     </h3>
                                                     <div class="meta-bot lh-1 mt-80">
@@ -413,7 +161,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="assets/img/page_author/1.jpg" alt="">
+                                                    <img src="/client/assets/img/page_author/1.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -453,7 +201,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="assets/img/page_author/2.jpg" alt="">
+                                                    <img src="/client/assets/img/page_author/2.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -493,7 +241,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="assets/img/page_author/3.jpg" alt="">
+                                                    <img src="/client/assets/img/page_author/3.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -533,7 +281,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="assets/img/page_author/4.jpg" alt="">
+                                                    <img src="/client/assets/img/page_author/4.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -573,7 +321,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="assets/img/page_author/5.jpg" alt="">
+                                                    <img src="/client/assets/img/page_author/5.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -613,7 +361,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="assets/img/page_author/6.jpg" alt="">
+                                                    <img src="/client/assets/img/page_author/6.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -653,7 +401,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="assets/img/page_author/7.jpg" alt="">
+                                                    <img src="/client/assets/img/page_author/7.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -693,7 +441,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="assets/img/page_author/8.jpg" alt="">
+                                                    <img src="/client/assets/img/page_author/8.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -777,7 +525,7 @@
                                         class="la la-angle-right ms-1"></i> </p>
                                 <div class="main-card">
                                     <div class="img img-cover">
-                                        <img src="assets/img/pdc1.png" alt="">
+                                        <img src="/client/assets/img/pdc1.png" alt="">
                                     </div>
                                     <div class="info pt-10">
                                         <small>2 Hours ago</small>
@@ -794,7 +542,7 @@
                                 <div class="podcast-list">
                                     <div class="item">
                                         <a href="page-author.html#" class="img">
-                                            <img src="assets/img/pdc1.png" alt="">
+                                            <img src="/client/assets/img/pdc1.png" alt="">
                                         </a>
                                         <div class="info">
                                             <small> 3 Hours ago </small>
@@ -806,9 +554,9 @@
                                         </div>
                                     </div>
                                     <div class="item">
-                                        <a href="https://www.youtube.com/watch?v=pGbIOC83-So&t=21s"
-                                            data-fancybox="video" class="img img-vid">
-                                            <img src="assets/img/pdc2.png" alt="">
+                                        <a href="https://www.youtube.com/watch?v=pGbIOC83-So&t=21s" data-fancybox="video"
+                                            class="img img-vid">
+                                            <img src="/client/assets/img/pdc2.png" alt="">
                                             <i class="ion-arrow-right-b play-icon"></i>
                                         </a>
                                         <div class="info">
@@ -822,7 +570,7 @@
                                     </div>
                                     <div class="item mb-0">
                                         <a href="page-author.html#" class="img">
-                                            <img src="assets/img/pdc3.png" alt="">
+                                            <img src="/client/assets/img/pdc3.png" alt="">
                                         </a>
                                         <div class="info">
                                             <small> 3 Hours ago </small>
@@ -838,7 +586,7 @@
                             <!-- widget-sponsored -->
                             <div class="tc-widget-sponsored-style1">
                                 <div class="img img-cover">
-                                    <img src="assets/img/sponsored/1.png" alt="">
+                                    <img src="/client/assets/img/sponsored/1.png" alt="">
                                 </div>
                                 <div class="info pt-10">
                                     <div class="spon-cat"> Sponsored Content </div>
@@ -858,7 +606,7 @@
                                 <p class="color-000 text-uppercase mb-20 ltspc-1"> popular posts </p>
                                 <div class="main-card">
                                     <div class="img th-300 img-cover">
-                                        <img src="assets/img/wid_popular/1.png" alt="">
+                                        <img src="/client/assets/img/wid_popular/1.png" alt="">
                                         <div class="tags">
                                             <a href="page-author.html#">business</a>
                                         </div>
@@ -875,8 +623,7 @@
                                                         14, 2022</a>
                                                 </li>
                                                 <li class="comment">
-                                                    <a href="page-author.html#"><i class="la la-comment me-1"></i> 55
-                                                    </a>
+                                                    <a href="page-author.html#"><i class="la la-comment me-1"></i> 55 </a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -885,7 +632,7 @@
                                 <div class="tc-widget-popular-list">
                                     <a href="page-single-post-creative.html" class="item">
                                         <div class="img img-cover">
-                                            <img src="assets/img/wid_popular/2.png" alt="">
+                                            <img src="/client/assets/img/wid_popular/2.png" alt="">
                                         </div>
                                         <div class="info">
                                             <h6 class="title">
@@ -895,7 +642,7 @@
                                     </a>
                                     <a href="page-single-post-creative.html" class="item">
                                         <div class="img img-cover">
-                                            <img src="assets/img/wid_popular/3.png" alt="">
+                                            <img src="/client/assets/img/wid_popular/3.png" alt="">
                                         </div>
                                         <div class="info">
                                             <h6 class="title">
@@ -905,7 +652,7 @@
                                     </a>
                                     <a href="page-single-post-creative.html" class="item">
                                         <div class="img img-cover">
-                                            <img src="assets/img/wid_popular/4.png" alt="">
+                                            <img src="/client/assets/img/wid_popular/4.png" alt="">
                                         </div>
                                         <div class="info">
                                             <h6 class="title">
@@ -918,7 +665,7 @@
                             <!-- widget-adbox -->
                             <div class="tc-widget-adbox-style1">
                                 <a href="page-author.html#" class="img">
-                                    <img src="assets/img/banner12.png" alt="" class="">
+                                    <img src="/client/assets/img/banner12.png" alt="" class="">
                                 </a>
                             </div>
                             <!-- widget-survey -->
@@ -976,26 +723,25 @@
             aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
                 <div class="logo">
-                    <img src="assets/img/logo_home1.png" alt="" class="dark-none">
-                    <img src="assets/img/logo_home1_lt.png" alt="" class="light-none">
+                    <img src="/client/assets/img/logo_home1.png" alt="" class="dark-none">
+                    <img src="/client/assets/img/logo_home1_lt.png" alt="" class="light-none">
                 </div>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                     aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mt-4">
-                <h6 class="color-000 text-uppercase mb-10 ltspc-1"> about us <i class="la la-angle-right ms-1"></i>
-                </h6>
+                <h6 class="color-000 text-uppercase mb-10 ltspc-1"> about us <i class="la la-angle-right ms-1"></i> </h6>
                 <div class="text">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem optio tempora quia iure quae.
-                    Soluta corporis quidem aperiam amet nihil.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem optio tempora quia iure quae. Soluta
+                    corporis quidem aperiam amet nihil.
                 </div>
 
                 <div class="sidebar-categories mt-40">
-                    <h6 class="color-000 text-uppercase mb-30 ltspc-1"> categories <i
-                            class="la la-angle-right ms-1"></i> </h6>
+                    <h6 class="color-000 text-uppercase mb-30 ltspc-1"> categories <i class="la la-angle-right ms-1"></i>
+                    </h6>
                     <a href="page-author.html#" class="cat-card">
                         <div class="img img-cover">
-                            <img src="assets/img/bussines/1.png" alt="">
+                            <img src="/client/assets/img/bussines/1.png" alt="">
                         </div>
                         <div class="info">
                             <h5>bussines</h5>
@@ -1004,7 +750,7 @@
                     </a>
                     <a href="page-author.html#" class="cat-card">
                         <div class="img img-cover">
-                            <img src="assets/img/trend/3.png" alt="">
+                            <img src="/client/assets/img/trend/3.png" alt="">
                         </div>
                         <div class="info">
                             <h5>technology</h5>
@@ -1013,7 +759,7 @@
                     </a>
                     <a href="page-author.html#" class="cat-card">
                         <div class="img img-cover">
-                            <img src="assets/img/must_read/3.png" alt="">
+                            <img src="/client/assets/img/must_read/3.png" alt="">
                         </div>
                         <div class="info">
                             <h5>culture</h5>
@@ -1022,7 +768,7 @@
                     </a>
                     <a href="page-author.html#" class="cat-card">
                         <div class="img img-cover">
-                            <img src="assets/img/videos/1.png" alt="">
+                            <img src="/client/assets/img/videos/1.png" alt="">
                         </div>
                         <div class="info">
                             <h5>videos</h5>
@@ -1070,285 +816,4 @@
         <!-- ====== end modals ====== -->
 
     </main>
-    <!--End-Contents-->
-
-    <!-- ====== start footer ====== -->
-    <footer class="footer-style1">
-        <div class="container">
-            <div class="tc-subscribe-style1">
-                <div class="row justify-content-between align-items-center">
-                    <div class="col-lg-4">
-                        <div class="sub-info">
-                            <h5>Get the best blog stories into your inbox</h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="sub-form">
-                            <div class="form-group">
-                                <span class="icon">
-                                    <i class="la la-envelope"></i>
-                                </span>
-                                <input type="text" class="form-control" placeholder="Enter your email">
-                                <button>subscribe</button>
-                            </div>
-                            <p class="mt-2 color-666 fsz-13px fst-italic">By subscribing, you accepted the our <a
-                                    href="page-author.html#"
-                                    class="text-decoration-underline fst-normal color-000">Policy</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="content">
-                <div class="row gx-lg-5">
-                    <div class="col-lg-4">
-                        <div class="info">
-                            <div class="foot-logo">
-                                <img src="assets/img/logo_home1.png" alt="" class="dark-none">
-                                <img src="assets/img/logo_home1_lt.png" alt="" class="light-none">
-                            </div>
-                            <div class="data-info">
-                                <p>
-                                    <b>Operated by : </b> ThemesCamp Company, Inc.
-                                </p>
-                                <p>
-                                    <b> Tax Code: </b> 0514234567
-                                </p>
-                                <p>
-                                    <b> Address: </b> 223 Thatcher Road St, Mahattan <br> NY 10632, United States
-                                </p>
-                                <p>
-                                    <b> Email : </b> support@Newzin.com
-                                </p>
-                                <p>
-                                    <b> Phone : </b> (+051) 3235 68 69
-                                </p>
-                                <p>
-                                    License No. 12/AB-BCDEF, Signed on <br> January 29, 2022
-                                </p>
-                            </div>
-
-                            <div class="social-links">
-                                <a href="page-author.html#">
-                                    <i class="la la-twitter"></i>
-                                </a>
-                                <a href="page-author.html#">
-                                    <i class="la la-facebook-f"></i>
-                                </a>
-                                <a href="page-author.html#">
-                                    <i class="la la-instagram"></i>
-                                </a>
-                                <a href="page-author.html#">
-                                    <i class="la la-youtube"></i>
-                                </a>
-                                <a href="page-author.html#">
-                                    <i class="la la-spotify"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <div class="link-group">
-                            <div class="title">Business</div>
-                            <ul>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Startup</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Business Trends</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Work Culture</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Personal Finance</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Leaders</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Stocks Market</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="link-group">
-                            <div class="title">Politics</div>
-                            <ul>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Capital Journal</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">National Security</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Politics Video</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <div class="link-group">
-                            <div class="title">Technology</div>
-                            <ul>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Personal Technology</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Product Reviews</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Video Games</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Discover</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Knowledge</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="link-group">
-                            <div class="title">Lifestyle</div>
-                            <ul>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Lifestyle Trends</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Family</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Psychology</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Fashion</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Foods</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Culture</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <div class="link-group">
-                            <div class="title">Entertainment</div>
-                            <ul>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Music & Podcasts</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Art & Design</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Movies</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="link-group">
-                            <div class="title">Sport</div>
-                            <ul>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Football</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Tennis</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">F-1 Racing Tour</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">NBA</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Basketball</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <div class="link-group">
-                            <div class="title">Travel</div>
-                            <ul>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Discovery</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Flight Tickets & Hotel</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Tour</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Destination</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Experience & Reviews</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="link-group">
-                            <div class="title">Help Center</div>
-                            <ul>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">About Us</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Contact</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Partners Programe</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Privacy Policy</a>
-                                </li>
-                                <li>
-                                    <a href="page-author.html#" class="f-link">Term & Conditions</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="foot text-center py-4 border-1 border-top brd-gray">
-                <p class="fsz-13px color-666">© 2023 Copyrights by <a href="page-author.html#"
-                        class="color-000">Newzin</a>. All Rights
-                    Reserved. Developed by <a href="page-author.html#"
-                        class="color-000 text-decoration-underline">ThemesCamp</a></p>
-            </div>
-        </div>
-        <!-- ====== start to top button ====== -->
-        <a href="page-author.html#" class="to_top">
-            <i class="la la-angle-up"></i>
-        </a>
-        <!-- ====== end to top button ====== -->
-    </footer>
-    <!-- ====== end footer ====== -->
-
-    <!-- ====== start to top button ====== -->
-    <!-- <div class="progress-wrap">
-        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102"><path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 220.587;"></path></svg>
-    </div> -->
-    <!-- ====== end to top button ====== -->
-
-    <!-- ====== request ====== -->
-    <script src="assets/js/lib/jquery-3.0.0.min.js"></script>
-    <script src="assets/js/lib/jquery-migrate-3.0.0.min.js"></script>
-    <script src="assets/js/lib/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/lib/wow.min.js"></script>
-    <script src="assets/js/lib/jquery.fancybox.js"></script>
-    <script src="assets/js/lib/lity.js"></script>
-    <script src="assets/js/lib/swiper.min.js"></script>
-    <script src="assets/js/lib/jquery.waypoints.min.js"></script>
-    <script src="assets/js/lib/jquery.counterup.js"></script>
-    <script src="assets/js/lib/pace.js"></script>
-    <script src="assets/js/lib/back-to-top.js"></script>
-    <script src="assets/js/lib/parallaxie.js"></script>
-    <script src="assets/js/main.js"></script>
-
-
-</body>
-
-</html>
+@endsection

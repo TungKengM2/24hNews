@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UploadController;
@@ -38,6 +39,27 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // dat them
 Route::post('/search', [HomeController::class, 'search'])->name('search');
+
+// profile trang chủ dat them
+
+    // Admin Profile
+    Route::get('/profiles/admin', function () {
+        return view('website.profiles.admin');
+    })->name('admin.profile');
+    // User Profile
+    Route::get('/profiles/user', function () {
+        return view('website.profiles.user');
+    })->name('user.profile');
+    // Author Profile
+    Route::get('/profiles/author', function () {
+        return view('website.profiles.author');
+    })->name('author.profile');
+    // Moderator Profile
+    Route::get('/profiles/moderator', function () {
+        return view('website.profiles.moderator');
+    })->name('moderator.profile');
+
+// profile trang chủ dat them
 
 // Client Articles
 Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])
@@ -453,6 +475,8 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
+    Route::get('/profile', [AdminProfileController::class, 'index'])
+        ->name('admin.profile');
     Route::get(
         '/user-stats',
         [AdminDashboardController::class, 'getUserStats']

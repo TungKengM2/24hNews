@@ -21,6 +21,7 @@ class User extends Authenticatable implements CanResetPasswordContract
 
     protected $fillable = [
         'username',
+        'description',
         'email',
         'password',
         'phone',
@@ -33,8 +34,7 @@ class User extends Authenticatable implements CanResetPasswordContract
         'provider_id',
         'fullname',
         'dob',
-        'address'
-       
+        'address',
     ];
 
     protected $hidden = [
@@ -73,5 +73,4 @@ class User extends Authenticatable implements CanResetPasswordContract
     {
         return $this->morphMany(DatabaseNotification::class, 'notifiable', 'notifiable_type', 'notifiable_id', 'user_id');
     }
-
 }
