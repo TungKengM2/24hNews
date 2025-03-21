@@ -21,7 +21,7 @@
     <title> News24h </title>
 </head>
 
-<body class="home-style1">
+<body class="home-style1 tc-author-page">
 
 <!-- ====== start loading page ====== -->
 @include('website.layouts.partials.loadingpage')
