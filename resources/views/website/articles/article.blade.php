@@ -2,6 +2,8 @@
 
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="article-id" content="{{ $article->article_id }}">
+
 
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -185,12 +187,16 @@
                                                         <?= nl2br(htmlspecialchars($comment->content)) ?>
                                                     </div>
                                                     <div class="mt-2">
-                                                        <button class="btn reply-btn butn border border-1 mt-20 py-2 px-3"
+                                                        <button
+                                                            class="btn reply-btn butn border border-1 py-2 px-3 d-inline-block"
                                                             data-comment-id="<?= $comment->comment_id ?>"
                                                             data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
-
                                                             <span class="fw-bold">Trả lời</span>
-
+                                                        </button>
+                                                        <button class="btn repost-btn butn border border-1 py-2 px-3"
+                                                            data-comment-id="<?= $comment->comment_id ?>"
+                                                            data-content="<?= htmlspecialchars($comment->content) ?>">
+                                                            <span class="fw-bold">Repost</span>
                                                         </button>
                                                     </div>
                                                     <!-- Danh sách replies -->
@@ -227,13 +233,20 @@
                                                                     </div>
                                                                     <div class="mt-2">
                                                                         <button
-                                                                            class="btn reply-btn butn border border-1 mt-20 py-2 px-3 reply-btn "
+                                                                            class="btn reply-btn butn border border-1 py-2 px-3 d-inline-block"
                                                                             data-comment-id="<?= $comment->comment_id ?>"
                                                                             data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
-
                                                                             <span class="fw-bold">Trả lời</span>
                                                                         </button>
+                                                                        <button
+                                                                            class="btn repost-btn butn border border-1 py-2 px-3"
+                                                                            data-comment-id="<?= $comment->comment_id ?>"
+                                                                            data-content="<?= htmlspecialchars($comment->content) ?>">
+                                                                            <span class="fw-bold">Repost</span>
+                                                                        </button>
+
                                                                     </div>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -424,8 +437,8 @@
 
                     @foreach ($category2 as $category)
                         <a href="{{ route('client.category.show', $category->slug) }}" class="cat-card">
-                            <div class="img img-cover " >
-                                
+                            <div class="img img-cover ">
+
                                 <div class="info">
                                     <h5 href="{{ route('client.category.show', $category->slug) }}">
                                         {{ $category->name }}
@@ -436,7 +449,7 @@
                         </a>
                     @endforeach
 
-                    
+
                 </div>
                 <div class="sidebar-contact-info mt-50">
                     <h6 class="color-000 text-uppercase mb-20 ltspc-1"> Contact & follow <i
@@ -471,6 +484,31 @@
                         <a href="home-default.html#">
                             <i class="la la-spotify"></i>
                         </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal nhập lý do Repost -->
+        <div id="repostModal" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Repost - Nhập lý do</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Lưu comment_id cần repost -->
+                        <input type="hidden" id="repost-comment-id">
+                        <div class="mb-3">
+                            <label for="repost-reason" class="form-label">Lý do repost (bạn có thể chỉnh sửa nội dung nếu
+                                muốn):</label>
+                            <textarea id="repost-reason" class="form-control" rows="4" placeholder="Nhập nội dung repost ..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="confirmRepost">Xác nhận</button>
                     </div>
                 </div>
             </div>
@@ -658,4 +696,59 @@
             }
         });
     </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Khi nhấn nút Repost, hiển thị modal và prefill nội dung ban đầu
+        document.querySelectorAll(".repost-btn").forEach(button => {
+            button.addEventListener("click", function() {
+                let commentId = this.getAttribute("data-comment-id");
+                let content = this.getAttribute("data-content");
+                
+                document.getElementById("repost-comment-id").value = commentId;
+                // Pre-fill textarea với nội dung gốc (người dùng có thể chỉnh sửa)
+                document.getElementById("repost-reason").value = content;
+                
+                let modal = new bootstrap.Modal(document.getElementById("repostModal"));
+                modal.show();
+            });
+        });
+        
+        // Khi người dùng xác nhận Repost
+        document.getElementById("confirmRepost").addEventListener("click", function() {
+            let commentId = document.getElementById("repost-comment-id").value;
+            let reason = document.getElementById("repost-reason").value.trim();
+            // Lấy article_id từ meta tag
+            let articleMeta = document.querySelector("meta[name='article-id']");
+            if (!articleMeta || !articleMeta.getAttribute("content")) {
+                console.error("Không tìm thấy article ID!");
+                return;
+            }
+            let articleId = articleMeta.getAttribute("content").trim();
+            
+            // Gửi request đến route: /articles/{article_id}/comments/{comment_id}/repost
+            fetch(`/articles/${articleId}/comments/${commentId}/repost`, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                },
+                body: JSON.stringify({ reason: reason })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Repost thành công!");
+                    location.reload();
+                } else {
+                    alert("Repost thất bại: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi fetch:", error);
+                alert("Có lỗi xảy ra khi repost!");
+            });
+        });
+    });
+</script>
 @endsection

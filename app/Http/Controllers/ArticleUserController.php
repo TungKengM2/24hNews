@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\Category;
+use App\Models\Violation;
 use App\Models\ArticleLike;
 use App\Models\ArticleSave;
 use App\Models\ArticleView;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Services\CommentModerationService;
@@ -65,7 +67,7 @@ class ArticleUserController extends Controller
 
             $article->increment('views');
         }
-        
+
         //BookMark By TungKeng
         $isBookmarked = false;
         if ($userId) { // Nếu có user đăng nhập
@@ -140,9 +142,9 @@ class ArticleUserController extends Controller
         }
 
         $categories = Category::where('is_active', 1)->limit(7)->get();
-       
+
         $category2 = Category::where('is_active', 1)->get();
-        
+
 
 
         return view(
@@ -218,10 +220,10 @@ class ArticleUserController extends Controller
 
         $content = $request->content;
 
-    if (!$moderationService->checkComment($content)) {
-        Log::warning("🚫 Bình luận bị từ chối: " . $content);
-        return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
-    }
+        if (!$moderationService->checkComment($content)) {
+            Log::warning("🚫 Bình luận bị từ chối: " . $content);
+            return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
+        }
 
 
 
@@ -239,6 +241,7 @@ class ArticleUserController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Bạn Comment thành công!',
 
         ]);
     }
@@ -246,7 +249,8 @@ class ArticleUserController extends Controller
     public function storeReplyComment(
         Request $request,
         $article_id,
-        $comment_id ,CommentModerationService $moderationService
+        $comment_id,
+        CommentModerationService $moderationService
     ) {
         // Kiểm tra người dùng đã đăng nhập chưa
         if (! auth()->check()) {
@@ -308,4 +312,63 @@ class ArticleUserController extends Controller
             ], 500);
         }
     }
+
+    public function repostComment(Request $request, $article_id, $comment_id)
+    {
+        // Validate dữ liệu: chỉ cần kiểm tra 'reason' nếu có (article_id và comment_id lấy từ route)
+        $request->validate([
+            'reason' => 'nullable|string'
+        ]);
+        
+        try {
+            // Tìm bài viết dựa trên article_id
+            $article = Article::findOrFail($article_id);
+            // Tìm bình luận gốc cần repost theo comment_id
+            $originalComment = Comment::findOrFail($comment_id);
+
+            // Xác định nội dung repost: nếu có nhập 'reason' thì dùng, nếu không dùng nội dung của bình luận gốc.
+            $content = $request->input('reason') ?: $originalComment->content;
+            // Vì trường detected_word của violations có độ dài 50 ký tự, cắt gọn nếu cần.
+            $detected_word = substr($content, 0, 50);
+
+            // Tạo bản sao của bình luận làm repost
+            $repost = Comment::create([
+                'article_id' => $article->article_id,
+                'user_id'    => auth()->id(),   // Yêu cầu người dùng phải đăng nhập
+                'content'    => nl2br(e($content)),  // Escape XSS và chuyển xuống dòng nếu có
+                'parent_id'  => null,           // Repost là bình luận gốc
+                'depth'      => 0,
+                'status'     => 'approved'      // Hoặc bạn có thể đặt là 'pending' nếu cần duyệt
+            ]);
+
+            // Ghi nhận thông tin repost vào bảng violations với trạng thái "pending"
+            Violation::create([
+                'type'          => 'repost',
+                'reference_id'  => $repost->comment_id,  // ID của repost vừa tạo
+                'detected_word' => $detected_word,
+                'detected_at'   => now(),
+                'handled_by'    => null,
+                'status'        => 'pending',         // Theo migration, mặc định là 'pending'
+                'warning_sent'  => false
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Repost đã gửi lên chờ xử lý.'
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error in repostComment", ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+        
 }
+
+    
+    
+    
+    
+
