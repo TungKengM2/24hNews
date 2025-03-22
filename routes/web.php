@@ -1,38 +1,38 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\AdminProfileController;
-use App\Http\Controllers\Admin\ArticleController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\UploadController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\ArticleUserController;
-use App\Http\Controllers\Auth\SocialAuthController;
-use App\Http\Controllers\AuthAdminController;
-use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
-use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveController;
-use App\Http\Controllers\Author\ArticleViewAuthorController;
-use App\Http\Controllers\Author\AuthorController;
-use App\Http\Controllers\Author\AuthorDashboard;
-use App\Http\Controllers\Author\AuthorProfileController;
-use App\Http\Controllers\Author\ImageModerationController;
-use App\Http\Controllers\Author\TinyMCEUploadController;
-use App\Http\Controllers\AuthUserController;
-use App\Http\Controllers\CategoryUserController;
-use App\Http\Controllers\ForgotPasswordController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
-use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
-use App\Http\Controllers\Moderator\ModeratorArticleController;
-use App\Http\Controllers\Moderator\ModeratorController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\User\ArticleSaveController;
-use App\Http\Controllers\User\ArticleViewUserController;
-use App\Http\Controllers\User\UserController as UserUserController;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AuthUserController;
+use App\Http\Controllers\AuthAdminController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ArticleUserController;
+use App\Http\Controllers\Admin\UploadController;
+use App\Http\Controllers\Author\AuthorDashboard;
+use App\Http\Controllers\CategoryUserController;
+use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Author\AuthorController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\Auth\SocialAuthController;
+use App\Http\Controllers\User\ArticleSaveController;
+use App\Http\Controllers\Admin\AdminProfileController;
+use App\Http\Controllers\Moderator\ModeratorController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Author\AuthorProfileController;
+use App\Http\Controllers\Author\TinyMCEUploadController;
+use App\Http\Controllers\User\ArticleViewUserController;
+use App\Http\Controllers\Author\ImageModerationController;
+use App\Http\Controllers\Author\ArticleViewAuthorController;
+use App\Http\Controllers\Moderator\ModeratorArticleController;
+use App\Http\Controllers\User\UserController as UserUserController;
+use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
+use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveController;
+use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
+use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
 
 // 🌟 Trang chủ & bài viết chi tiết
 
@@ -74,6 +74,9 @@ Route::post(
 )
     ->middleware('auth')
     ->name('articles.comment');
+    
+    Route::post('/articles/{article_id}/comments/{comment_id}/repost', [ArticleUserController::class, 'repostComment']);
+
 Route::post(
     '/articles/{article_id}/comments/{comment_id}/reply',
     [ArticleUserController::class, 'storeReplyComment']
