@@ -22,11 +22,19 @@ class Approval extends Model
         'violation_level',
         'violations',
         'violation_details',
+        'cccd_front',
+        'cccd_back',
+        'cccd_number',
+        'certificates'
     ];
 
     protected $casts = [
         'violations' => 'array',
         'violation_details' => 'array',
+        'cccd_front',
+        'cccd_back',
+        'cccd_number',
+        'certificates'
     ];
 
     public function user()
