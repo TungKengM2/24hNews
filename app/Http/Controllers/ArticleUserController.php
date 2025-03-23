@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\Category;
@@ -9,6 +10,7 @@ use App\Models\Violation;
 use App\Models\ArticleLike;
 use App\Models\ArticleSave;
 use App\Models\ArticleView;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -19,12 +21,9 @@ class ArticleUserController extends Controller
 {
     public function show($slug)
     {
-        $article = Article::where('slug', $slug)->first();
+        $article = Article::with('tags', 'author')->where('slug', $slug)->firstOrFail();
 
 
-        if (! $article) {
-            abort(404, 'Bài viết không tồn tại!');
-        }
 
         $userId = auth()->id();
         $userIp = request()->ip();
@@ -77,14 +76,35 @@ class ArticleUserController extends Controller
         }
 
 
-        // Lấy bài viết liên quan
-        $relatedArticles = Article::where(
-            'category_id',
-            $article->category_id
-        )
+        // Lấy bài viết cùng author
+        $relatedAuthorArticles = Article::where('author_id', $article->author_id)
             ->where('article_id', '!=', $article->article_id)
-            ->limit(5)
+            ->withCount('comments')
+            ->get(); // Trả về Collection
+
+        // Chuyển thành mảng các article_id
+        $relatedAuthorArticleIds = $relatedAuthorArticles->pluck('article_id')->toArray();
+
+        // Lấy bài viết cùng danh mục nhưng không trùng với bài của tác giả trên
+        $relatedCategoryArticles = Article::where('category_id', $article->category_id)
+            ->whereNotIn('article_id', $relatedAuthorArticleIds) // Không lấy bài đã có trong danh sách tác giả
+            ->where('article_id', '!=', $article->article_id) // Loại trừ bài hiện tại
+            ->withCount('comments')
             ->get();
+
+        //khuyencao
+        $displayedArticleIds = array_merge(
+            $relatedAuthorArticleIds,
+            $relatedCategoryArticles->pluck('article_id')->toArray(),
+            [$article->article_id]
+        );
+        $khuyencao = Article::whereNotIn('article_id', $displayedArticleIds)
+            ->orderBy('views', 'desc') // Sắp xếp theo lượt xem cao nhất
+            ->get();
+
+
+
+
 
         // Lấy danh sách bình luận
         $comments = Comment::where('article_id', $article->article_id)
@@ -153,7 +173,9 @@ class ArticleUserController extends Controller
                 'category2',
                 'categories',
                 'article',
-                'relatedArticles',
+                'relatedAuthorArticles',
+                'relatedCategoryArticles',
+                'khuyencao',
                 'isLiked',
                 'likeCount',
                 'comments',
@@ -313,13 +335,13 @@ class ArticleUserController extends Controller
         }
     }
 
-    public function repostComment(Request $request, $article_id, $comment_id)
+    public function reportComment(Request $request, $article_id, $comment_id)
     {
         // Validate dữ liệu: chỉ cần kiểm tra 'reason' nếu có (article_id và comment_id lấy từ route)
         $request->validate([
             'reason' => 'nullable|string'
         ]);
-        
+
         try {
             // Tìm bài viết dựa trên article_id
             $article = Article::findOrFail($article_id);
@@ -343,7 +365,7 @@ class ArticleUserController extends Controller
 
             // Ghi nhận thông tin repost vào bảng violations với trạng thái "pending"
             Violation::create([
-                'type'          => 'repost',
+                'type'          => 'comment',
                 'reference_id'  => $repost->comment_id,  // ID của repost vừa tạo
                 'detected_word' => $detected_word,
                 'detected_at'   => now(),
@@ -364,11 +386,67 @@ class ArticleUserController extends Controller
             ], 500);
         }
     }
-        
+
+    public function reportArticle(Request $request, $article_id)
+    {
+        // Validate dữ liệu: 'reason' là nullable string
+        $request->validate([
+            'reason' => 'nullable|string'
+        ]);
+
+        try {
+            // Tìm bài viết gốc cần repost
+            $originalArticle = Article::findOrFail($article_id);
+
+            // Xác định nội dung repost: nếu có nhập 'reason' thì dùng, nếu không dùng nội dung bài viết gốc
+            $content = $request->input('reason') ?: $originalArticle->content;
+            // Lấy 50 ký tự đầu làm detected_word (loại bỏ HTML)
+            $detected_word = substr(strip_tags($content), 0, 50);
+
+            DB::beginTransaction();
+
+            // Tạo bài viết mới dựa trên bài viết gốc
+            $repost = Article::create([
+                'title'           => '[Repost] ' . $originalArticle->title,
+                // Sử dụng Str::slug() để tạo slug duy nhất, thêm timestamp để tránh trùng lặp
+                'slug'            => Str::slug($originalArticle->title) . '-repost-' . time(),
+                'content'         => nl2br(e($content)), // Escape XSS và chuyển xuống dòng nếu có
+                'preview_content' => substr(strip_tags($content), 0, 150) . '...',
+                'author_id'       => auth()->id(), // Người repost trở thành tác giả mới
+                'category_id'     => $originalArticle->category_id,
+                'thumbnail_url'   => $originalArticle->thumbnail_url,
+                'status'          => 'pending', // Cần duyệt trước khi hiển thị
+                'views'           => 0,
+                'approved_by'     => null,
+            ]);
+
+            // Ghi nhận thông tin violation cho repost bài viết
+            Violation::create([
+                'type'          => 'article',
+                'reference_id'  => $repost->article_id, // ID của bài repost mới tạo
+                'detected_word' => $detected_word,
+                'detected_at'   => now(),
+                'handled_by'    => null,
+                'status'        => 'pending',
+                'warning_sent'  => false
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Repost bài viết đã gửi lên chờ xử lý.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Error in repostArticle", ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    
+
 }
-
-    
-    
-    
-    
-
