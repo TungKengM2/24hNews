@@ -75,7 +75,9 @@ Route::post(
     ->middleware('auth')
     ->name('articles.comment');
     
-    Route::post('/articles/{article_id}/comments/{comment_id}/repost', [ArticleUserController::class, 'repostComment']);
+    Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
+
+Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
 
 Route::post(
     '/articles/{article_id}/comments/{comment_id}/reply',

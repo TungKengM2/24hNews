@@ -58,28 +58,12 @@ class HomeController extends Controller
             }
         }
 
-        $category2 = Category::where('is_active', 1)->get(); // Lấy danh sách danh mục
-        $categoryCount = $category2->count(); // Đếm số danh mục
-
-        $newsData = [];
-        foreach ($category2 as $category) {
-            $article = Article::where('category_id', $category->category_id)
-                ->where('status', 'published')
-                ->orderBy('created_at', 'desc')
-                ->first();
-
-            if ($article) {
-                $newsData[] = [
-                    'category' => $category,
-                    'article' => $article,
-                ];
-            }
-        }
+        $category2 = Category::where('is_active', 1)->get();
 
 
 
         // Truyền dữ liệu bài viết tới view
-        return view('welcome', compact('categoryCount','categories', 'category2', 'sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles'));
+        return view('welcome', compact('categories', 'category2', 'sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles'));
     }
 
     // dat thêm hàm search
@@ -131,26 +115,10 @@ class HomeController extends Controller
             }
         }
 
-        $category2 = Category::where('is_active', 1)->get(); // Lấy danh sách danh mục
-        $categoryCount = $category2->count(); // Đếm số danh mục
-
-        $newsData = [];
-        foreach ($category2 as $category) {
-            $article = Article::where('category_id', $category->category_id)
-                ->where('status', 'published')
-                ->orderBy('created_at', 'desc')
-                ->first();
-
-            if ($article) {
-                $newsData[] = [
-                    'category' => $category,
-                    'article' => $article,
-                ];
-            }
-        }
+        $category2 = Category::where('is_active', 1)->get();
 
 
-        return view('welcome', compact('results', 'categoryCount','category2', 'keyword', 'categories', 'sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles'));
+        return view('welcome', compact('results','category2', 'keyword', 'categories', 'sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles'));
     }
     function profileadmin() {
         return view('admin.profile');
