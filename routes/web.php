@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UploadController;
@@ -474,6 +475,8 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
+    Route::get('/profile', [AdminProfileController::class, 'index'])
+        ->name('admin.profile');
     Route::get(
         '/user-stats',
         [AdminDashboardController::class, 'getUserStats']
@@ -491,6 +494,11 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
         [UserController::class, 'roleUpgradeRequests']
     )
         ->name('admin.user-role-requests');
+
+    Route::get('/role-upgrade-requests/{id}', [UserController::class, 'showApprovalDetail'])
+        ->name('admin.user-role-request.show');
+
+
     Route::post('/admin/approve/{id}', [UserController::class, 'approve'])
         ->name('admin.approve.user');
     Route::delete('/admin/reject/{id}', [UserController::class, 'reject'])

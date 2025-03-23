@@ -2,55 +2,62 @@
 
 @section('content')
     <main>
-             <!-- ====== start author header ====== -->
-             <section class="tc-author-header">
-                <div class="container">
-                    <div class="content">
-                        <div class="title">
-                            <p class="fsz-14px color-fff op-5 mb-2"> Author </p>
-                            <h2> Logan H. Himer </h2>
-                        </div>
+
+        <!-- ====== start author header ====== -->
+        <section class="tc-author-header">
+            <div class="container">
+                <div class="content">
+                    <div class="title">
+                        <p class="fsz-14px color-fff op-5 mb-2"> Author </p>
+                        <h2> Logan H. Himer </h2>
                     </div>
                 </div>
-            </section>
-            <!-- ====== end author header ====== -->
-    
-    
-            <!-- ====== start author-details ====== -->
-            <section class="tc-author-details">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-5">
-                            <div class="content">
-                                <div class="author-img img-cover">
-                                    <img src="{{ asset('client/assets/img/team_page/4.jpg') }}" alt="">
-                                </div>
-                                <div class="info">
-                                    <p class="color-666 mb-20"> Together happy feelings continue juvenile had off one. Unknown may service subject her letters one bed </p>
-                                    <p class="color-666 mb-20"> <i class="la la-book"></i> 23 Posts    <span class="mx-3"> | </span>    <i class="la la-comments"></i> 100 Comment </p>
-                                    <div class="social-links">
-                                        <a href="page-author.html#"> <i class="la la-facebook-f"></i> </a>
-                                        <a href="page-author.html#"> <i class="la la-twitter"></i> </a>
-                                        <a href="page-author.html#"> <i class="la la-behance"></i> </a>
-                                        <a href="page-author.html#"> <i class="la la-youtube"></i> </a>
-                                    </div>
+            </div>
+        </section>
+        <!-- ====== end author header ====== -->
+
+
+        <!-- ====== start author-details ====== -->
+        <section class="tc-author-details">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-5">
+                        <div class="content">
+                            <div class="author-img img-cover">
+                                <img src="/client/assets/img/team_page/4.jpg" alt="">
+                            </div>
+                            <div class="info">
+                                <p class="color-666 mb-20"> Together happy feelings continue juvenile had off one. Unknown
+                                    may service subject her letters one bed </p>
+                                <p class="color-666 mb-20"> <i class="la la-book"></i> 23 Posts <span class="mx-3"> |
+                                    </span> <i class="la la-comments"></i> 100 Comment </p>
+                                <div class="social-links">
+                                    <a href="page-author.html#"> <i class="la la-facebook-f"></i> </a>
+                                    <a href="page-author.html#"> <i class="la la-twitter"></i> </a>
+                                    <a href="page-author.html#"> <i class="la la-behance"></i> </a>
+                                    <a href="page-author.html#"> <i class="la la-youtube"></i> </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-            <!-- ====== end author-details ====== -->
+            </div>
+        </section>
+        <!-- ====== end author-details ====== -->
+
+
+        <!-- ====== start author-posts ====== -->
         <section class="tc-author-posts pb-100">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9">
                         <div class="posts-side">
                             <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">recently added</a>
-                                <i class="la la-angle-right ms-1"></i></p>
+                                <i class="la la-angle-right ms-1"></i>
+                            </p>
                             <div class="tc-post-overlay-default">
                                 <div class="img th-600 img-cover">
-                                    <img src="{{ asset('client/assets/img/technology/1.png') }}" alt="">
+                                    <img src="/client/assets/img/technology/1.png" alt="">
                                     <div class="tags">
                                         <a href="page-author.html#">technology</a>
                                     </div>
@@ -83,8 +90,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/technology/2.png') }}"
-                                                        alt="">
+                                                    <img src="/client/assets/img/technology/2.png" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -124,8 +130,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/technology/3.png') }}"
-                                                        alt="">
+                                                    <img src="/client/assets/img/technology/3.png" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -135,8 +140,8 @@
                                                             Content</a>
                                                     </div>
                                                     <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Oppoturnity become Lead
-                                                            of Backend Developer at
+                                                        <a href="page-single-post-creative.html"> Oppoturnity become Lead of
+                                                            Backend Developer at
                                                             Google Studio </a>
                                                     </h3>
                                                     <div class="meta-bot lh-1 mt-80">
@@ -156,8 +161,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/1.jpg') }}"
-                                                        alt="">
+                                                    <img src="/client/assets/img/page_author/1.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -197,8 +201,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/2.jpg') }}"
-                                                        alt="">
+                                                    <img src="/client/assets/img/page_author/2.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -238,7 +241,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/3.jpg') }}" alt="">
+                                                    <img src="/client/assets/img/page_author/3.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -278,7 +281,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/4.jpg') }}" alt="">
+                                                    <img src="/client/assets/img/page_author/4.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -318,7 +321,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/5.jpg') }}" alt="">
+                                                    <img src="/client/assets/img/page_author/5.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -358,7 +361,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/6.jpg') }}" alt="">
+                                                    <img src="/client/assets/img/page_author/6.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -398,7 +401,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/7.jpg') }}" alt="">
+                                                    <img src="/client/assets/img/page_author/7.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -438,7 +441,7 @@
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/8.jpg') }}" alt="">
+                                                    <img src="/client/assets/img/page_author/8.jpg" alt="">
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
@@ -522,7 +525,7 @@
                                         class="la la-angle-right ms-1"></i> </p>
                                 <div class="main-card">
                                     <div class="img img-cover">
-                                        <img src="{{ asset('client/assets/img/pdc1.png') }}" alt="">
+                                        <img src="/client/assets/img/pdc1.png" alt="">
                                     </div>
                                     <div class="info pt-10">
                                         <small>2 Hours ago</small>
@@ -533,13 +536,13 @@
                                         </h5>
                                     </div>
                                     <audio controls class="audio">
-                                        <source src="client/assets/img/audio1.mp3" type="audio/mpeg">
+                                        <source src="assets/img/audio1.mp3" type="audio/mpeg">
                                     </audio>
                                 </div>
                                 <div class="podcast-list">
                                     <div class="item">
                                         <a href="page-author.html#" class="img">
-                                            <img src="{{ asset('client/assets/img/pdc1.png') }}" alt="">
+                                            <img src="/client/assets/img/pdc1.png" alt="">
                                         </a>
                                         <div class="info">
                                             <small> 3 Hours ago </small>
@@ -553,7 +556,7 @@
                                     <div class="item">
                                         <a href="https://www.youtube.com/watch?v=pGbIOC83-So&t=21s" data-fancybox="video"
                                             class="img img-vid">
-                                            <img src="{{ asset('client/assets/img/pdc2.png') }}" alt="">
+                                            <img src="/client/assets/img/pdc2.png" alt="">
                                             <i class="ion-arrow-right-b play-icon"></i>
                                         </a>
                                         <div class="info">
@@ -567,7 +570,7 @@
                                     </div>
                                     <div class="item mb-0">
                                         <a href="page-author.html#" class="img">
-                                            <img src="{{ asset('client/assets/img/pdc3.png') }}" alt="">
+                                            <img src="/client/assets/img/pdc3.png" alt="">
                                         </a>
                                         <div class="info">
                                             <small> 3 Hours ago </small>
@@ -583,7 +586,7 @@
                             <!-- widget-sponsored -->
                             <div class="tc-widget-sponsored-style1">
                                 <div class="img img-cover">
-                                    <img src="{{ asset('client/assets/img/sponsored/1.png') }}" alt="">
+                                    <img src="/client/assets/img/sponsored/1.png" alt="">
                                 </div>
                                 <div class="info pt-10">
                                     <div class="spon-cat"> Sponsored Content </div>
@@ -603,7 +606,7 @@
                                 <p class="color-000 text-uppercase mb-20 ltspc-1"> popular posts </p>
                                 <div class="main-card">
                                     <div class="img th-300 img-cover">
-                                        <img src="{{asset('client/assets/img/wid_popular/1.png')}}" alt="">
+                                        <img src="/client/assets/img/wid_popular/1.png" alt="">
                                         <div class="tags">
                                             <a href="page-author.html#">business</a>
                                         </div>
@@ -629,7 +632,7 @@
                                 <div class="tc-widget-popular-list">
                                     <a href="page-single-post-creative.html" class="item">
                                         <div class="img img-cover">
-                                            <img src="{{asset('client/assets/img/wid_popular/2.png')}}" alt="">
+                                            <img src="/client/assets/img/wid_popular/2.png" alt="">
                                         </div>
                                         <div class="info">
                                             <h6 class="title">
@@ -639,7 +642,7 @@
                                     </a>
                                     <a href="page-single-post-creative.html" class="item">
                                         <div class="img img-cover">
-                                            <img src="{{asset('client/assets/img/wid_popular/3.png')}}" alt="">
+                                            <img src="/client/assets/img/wid_popular/3.png" alt="">
                                         </div>
                                         <div class="info">
                                             <h6 class="title">
@@ -649,7 +652,7 @@
                                     </a>
                                     <a href="page-single-post-creative.html" class="item">
                                         <div class="img img-cover">
-                                            <img src="{{asset('client/assets/img/wid_popular/4.png')}}" alt="">
+                                            <img src="/client/assets/img/wid_popular/4.png" alt="">
                                         </div>
                                         <div class="info">
                                             <h6 class="title">
@@ -662,7 +665,7 @@
                             <!-- widget-adbox -->
                             <div class="tc-widget-adbox-style1">
                                 <a href="page-author.html#" class="img">
-                                    <img src="{{asset('client/assets/img/banner12.png')}}" alt="" class="">
+                                    <img src="/client/assets/img/banner12.png" alt="" class="">
                                 </a>
                             </div>
                             <!-- widget-survey -->
@@ -720,8 +723,8 @@
             aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
                 <div class="logo">
-                    <img src="client/assets/img/logo_home1.png" alt="" class="dark-none">
-                    <img src="client/assets/img/logo_home1_lt.png" alt="" class="light-none">
+                    <img src="/client/assets/img/logo_home1.png" alt="" class="dark-none">
+                    <img src="/client/assets/img/logo_home1_lt.png" alt="" class="light-none">
                 </div>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                     aria-label="Close"></button>
@@ -738,7 +741,7 @@
                     </h6>
                     <a href="page-author.html#" class="cat-card">
                         <div class="img img-cover">
-                            <img src="client/assets/img/bussines/1.png" alt="">
+                            <img src="/client/assets/img/bussines/1.png" alt="">
                         </div>
                         <div class="info">
                             <h5>bussines</h5>
@@ -747,7 +750,7 @@
                     </a>
                     <a href="page-author.html#" class="cat-card">
                         <div class="img img-cover">
-                            <img src="client/assets/img/trend/3.png" alt="">
+                            <img src="/client/assets/img/trend/3.png" alt="">
                         </div>
                         <div class="info">
                             <h5>technology</h5>
@@ -756,7 +759,7 @@
                     </a>
                     <a href="page-author.html#" class="cat-card">
                         <div class="img img-cover">
-                            <img src="client/assets/img/must_read/3.png" alt="">
+                            <img src="/client/assets/img/must_read/3.png" alt="">
                         </div>
                         <div class="info">
                             <h5>culture</h5>
@@ -765,7 +768,7 @@
                     </a>
                     <a href="page-author.html#" class="cat-card">
                         <div class="img img-cover">
-                            <img src="client/assets/img/videos/1.png" alt="">
+                            <img src="/client/assets/img/videos/1.png" alt="">
                         </div>
                         <div class="info">
                             <h5>videos</h5>
