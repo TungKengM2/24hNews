@@ -43,7 +43,7 @@ class CommentModerationService
                         'response_mime_type' => 'application/json'
                     ]
                 ],
-                'timeout' => 10,
+                'timeout' => 8,
             ]);
 
             $result = json_decode($response->getBody(), true);
