@@ -25,10 +25,18 @@
                     <div class="col-lg-5">
                         <div class="content">
                             <div class="author-img img-cover">
-                                <img src="{{ asset('storage/' . $author->image ?? 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg') }}"
+                                <img src="{{ $author->image ? asset('storage/' . $author->image) : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' }}"
                                     alt="{{ $author->username }}">
+
                             </div>
                             <div class="info">
+                                <div class="color-666 mb-20 rating">
+                                    <span>Đánh giá tương tác: </span>
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <i
+                                            class="la la-star {{ $i <= round($rating) ? 'text-warning' : 'text-muted' }}"></i>
+                                    @endfor
+                                </div>
                                 <p class="color-666 mb-20"> {{ $author->description ?? 'No description available' }} </p>
                                 <p class="color-666 mb-20"> <i class="la la-book"></i> {{ $author->articles_count }} Posts
                                     <span class="mx-3"> |
