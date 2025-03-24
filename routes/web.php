@@ -33,6 +33,7 @@ use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveController;
 use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
 use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
+use App\Http\Controllers\Profile\AuthorProfileController as ProfileAuthorProfileController;
 
 // 🌟 Trang chủ & bài viết chi tiết
 
@@ -42,22 +43,20 @@ Route::post('/search', [HomeController::class, 'search'])->name('search');
 
 // profile trang chủ dat them
 
-    // Admin Profile
-    Route::get('/profiles/admin', function () {
-        return view('website.profiles.admin');
-    })->name('admin.profile');
-    // User Profile
-    Route::get('/profiles/user', function () {
-        return view('website.profiles.user');
-    })->name('user.profile');
-    // Author Profile
-    Route::get('/profiles/author', function () {
-        return view('website.profiles.author');
-    })->name('author.profile');
-    // Moderator Profile
-    Route::get('/profiles/moderator', function () {
-        return view('website.profiles.moderator');
-    })->name('moderator.profile');
+// Admin Profile
+Route::get('/profiles/admin', function () {
+    return view('website.profiles.admin');
+})->name('admin.profile');
+// User Profile
+Route::get('/profiles/user', function () {
+    return view('website.profiles.user');
+})->name('user.profile');
+// Author Profile
+Route::get('/profiles/author/{id}', [ProfileAuthorProfileController::class, 'show'])->name('website.profile')->middleware('auth');
+// Moderator Profile
+Route::get('/profiles/moderator', function () {
+    return view('website.profiles.moderator');
+})->name('moderator.profile');
 
 // profile trang chủ dat them
 
@@ -74,8 +73,8 @@ Route::post(
 )
     ->middleware('auth')
     ->name('articles.comment');
-    
-    Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
+
+Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
 
 Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
 
