@@ -353,20 +353,11 @@ class ArticleUserController extends Controller
             // Vì trường detected_word của violations có độ dài 50 ký tự, cắt gọn nếu cần.
             $detected_word = substr($content, 0, 50);
 
-            // Tạo bản sao của bình luận làm repost
-            $repost = Comment::create([
-                'article_id' => $article->article_id,
-                'user_id'    => auth()->id(),   // Yêu cầu người dùng phải đăng nhập
-                'content'    => nl2br(e($content)),  // Escape XSS và chuyển xuống dòng nếu có
-                'parent_id'  => null,           // Repost là bình luận gốc
-                'depth'      => 0,
-                'status'     => 'approved'      // Hoặc bạn có thể đặt là 'pending' nếu cần duyệt
-            ]);
-
+            
             // Ghi nhận thông tin repost vào bảng violations với trạng thái "pending"
             Violation::create([
                 'type'          => 'comment',
-                'reference_id'  => $repost->comment_id,  // ID của repost vừa tạo
+                'reference_id'  => $comment_id,  // ID của repost vừa tạo
                 'detected_word' => $detected_word,
                 'detected_at'   => now(),
                 'handled_by'    => null,
@@ -405,25 +396,12 @@ class ArticleUserController extends Controller
 
             DB::beginTransaction();
 
-            // Tạo bài viết mới dựa trên bài viết gốc
-            $repost = Article::create([
-                'title'           => '[Repost] ' . $originalArticle->title,
-                // Sử dụng Str::slug() để tạo slug duy nhất, thêm timestamp để tránh trùng lặp
-                'slug'            => Str::slug($originalArticle->title) . '-repost-' . time(),
-                'content'         => nl2br(e($content)), // Escape XSS và chuyển xuống dòng nếu có
-                'preview_content' => substr(strip_tags($content), 0, 150) . '...',
-                'author_id'       => auth()->id(), // Người repost trở thành tác giả mới
-                'category_id'     => $originalArticle->category_id,
-                'thumbnail_url'   => $originalArticle->thumbnail_url,
-                'status'          => 'pending', // Cần duyệt trước khi hiển thị
-                'views'           => 0,
-                'approved_by'     => null,
-            ]);
+           
 
             // Ghi nhận thông tin violation cho repost bài viết
             Violation::create([
                 'type'          => 'article',
-                'reference_id'  => $repost->article_id, // ID của bài repost mới tạo
+                'reference_id'  => $article_id, // ID của bài repost mới tạo
                 'detected_word' => $detected_word,
                 'detected_at'   => now(),
                 'handled_by'    => null,
