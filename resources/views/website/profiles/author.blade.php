@@ -2,483 +2,110 @@
 
 @section('content')
     <main>
-             <!-- ====== start author header ====== -->
-             <section class="tc-author-header">
-                <div class="container">
-                    <div class="content">
-                        <div class="title">
-                            <p class="fsz-14px color-fff op-5 mb-2"> Author </p>
-                            <h2> Logan H. Himer </h2>
-                        </div>
+        <!-- ====== start author header ====== -->
+        <section class="tc-author-header">
+            <div class="container">
+                <div class="content">
+                    <div class="title">
+                        @if ($author->role)
+                            <p class="fsz-14px color-fff op-5 mb-2">{{ ucfirst($author->role->name) }}</p>
+                        @endif
+                        <h2> {{ $author->username }} </h2>
                     </div>
                 </div>
-            </section>
-            <!-- ====== end author header ====== -->
-    
-    
-            <!-- ====== start author-details ====== -->
-            <section class="tc-author-details">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-5">
-                            <div class="content">
-                                <div class="author-img img-cover">
-                                    <img src="{{ asset('client/assets/img/team_page/4.jpg') }}" alt="">
-                                </div>
-                                <div class="info">
-                                    <p class="color-666 mb-20"> Together happy feelings continue juvenile had off one. Unknown may service subject her letters one bed </p>
-                                    <p class="color-666 mb-20"> <i class="la la-book"></i> 23 Posts    <span class="mx-3"> | </span>    <i class="la la-comments"></i> 100 Comment </p>
-                                    <div class="social-links">
+            </div>
+        </section>
+        <!-- ====== end author header ====== -->
+
+
+        <!-- ====== start author-details ====== -->
+        <section class="tc-author-details">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-5">
+                        <div class="content">
+                            <div class="author-img img-cover">
+                                <img src="{{ asset('storage/' . $author->image ?? 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg') }}"
+                                    alt="{{ $author->username }}">
+                            </div>
+                            <div class="info">
+                                <p class="color-666 mb-20"> {{ $author->description ?? 'No description available' }} </p>
+                                <p class="color-666 mb-20"> <i class="la la-book"></i> {{ $author->articles_count }} Posts
+                                    <span class="mx-3"> |
+                                    </span> <i class="la la-comments"></i> 100 Comment
+                                </p>
+                                {{-- <div class="social-links">
                                         <a href="page-author.html#"> <i class="la la-facebook-f"></i> </a>
                                         <a href="page-author.html#"> <i class="la la-twitter"></i> </a>
                                         <a href="page-author.html#"> <i class="la la-behance"></i> </a>
                                         <a href="page-author.html#"> <i class="la la-youtube"></i> </a>
-                                    </div>
-                                </div>
+                                    </div> --}}
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-            <!-- ====== end author-details ====== -->
+            </div>
+        </section>
+        <!-- ====== end author-details ====== -->
         <section class="tc-author-posts pb-100">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9">
                         <div class="posts-side">
-                            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">recently added</a>
-                                <i class="la la-angle-right ms-1"></i></p>
-                            <div class="tc-post-overlay-default">
-                                <div class="img th-600 img-cover">
-                                    <img src="{{ asset('client/assets/img/technology/1.png') }}" alt="">
-                                    <div class="tags">
-                                        <a href="page-author.html#">technology</a>
-                                    </div>
-                                </div>
-                                <div class="content ps-40 pe-40 pb-40">
-                                    <h2 class="title mb-30">
-                                        <a href="page-single-post-creative.html">Myenergi's award winning product <br> the
-                                            zappi EV charger</a>
-                                    </h2>
-                                    <div class="meta-bot lh-1">
-                                        <ul class="d-flex">
-                                            <li class="date me-5">
-                                                <a href="page-author.html#"><i class="la la-calendar me-2"></i> Dec 14,
-                                                    2022</a>
-                                            </li>
-                                            <li class="author me-5">
-                                                <a href="page-author.html#"><i class="la la-user me-2"></i> by Admin</a>
-                                            </li>
-                                            <li class="comment">
-                                                <a href="page-author.html#"><i class="la la-comment me-2"></i> 55
-                                                    Comments</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tc-post-list-style2">
-                                <div class="items">
-                                    <div class="item pt-30 pb-30 mt-30 border-1 border-top border-bottom brd-gray">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/technology/2.png') }}"
-                                                        alt="">
-                                                </div>
+                            <p class="color-000 text-uppercase mb-30 ltspc-1">
+                                <a href="{{ route('articles.index') }}">Recently Added</a>
+                                <i class="la la-angle-right ms-1"></i>
+                            </p>
+
+                            @if ($author->articles->count() > 0)
+                                @foreach ($author->articles as $article)
+                                    <div class="tc-post-overlay-default">
+                                        <div class="img th-600 img-cover">
+                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}">
+                                            <div class="tags">
+                                                <a href="{{ route('categories.show', $article->category_id) }}">
+                                                    {{ $article->category->name ?? 'Uncategorized' }}
+                                                </a>
                                             </div>
-                                            <div class="col-lg-8">
-                                                <div class="content">
-                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
-                                                        <a href="page-author.html#">technology</a>
-                                                    </div>
-                                                    <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Big Title for featured
-                                                            post with double line and
-                                                            more text </a>
-                                                    </h3>
-                                                    <div class="meta-bot lh-1 mt-80">
-                                                        <ul class="d-flex">
-                                                            <li class="date me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-calendar me-2"></i> Dec 14,
-                                                                    2022</a>
-                                                            </li>
-                                                            <li class="author me-5">
-                                                                <a href="page-author.html#"><i class="la la-user me-2"></i>
-                                                                    by Admin
-                                                                </a>
-                                                            </li>
-                                                            <li class="comment">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-comment me-2"></i> 55
-                                                                    Comments</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
+                                        </div>
+                                        <div class="content ps-40 pe-40 pb-40">
+                                            <h2 class="title mb-30">
+                                                <a href="{{ route('articles.article', $article->slug) }}">
+                                                    {{ $article->title }}
+                                                </a>
+                                            </h2>
+                                            <div class="meta-bot lh-1">
+                                                <ul class="d-flex">
+                                                    <li class="date me-5">
+                                                        <a href="#">
+                                                            <i class="la la-calendar me-2"></i>
+                                                            {{ $article->created_at->format('M d, Y') }}
+                                                        </a>
+                                                    </li>
+                                                    <li class="author me-5">
+                                                        <a href="{{ route('website.profile', $article->author_id) }}">
+                                                            <i class="la la-user me-2"></i>
+                                                            by {{ $article->author->username }}
+                                                        </a>
+                                                    </li>
+                                                    <li class="comment">
+                                                        <a href="{{ route('articles.show', $article->slug) }}#comments">
+                                                            <i class="la la-comment me-2"></i>
+                                                            {{ $article->comments->count() }} Comments
+                                                        </a>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="item border-0 bg-gray1 p-3 mt-30">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/technology/3.png') }}"
-                                                        alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="content">
-                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
-                                                        <a href="page-author.html#" class="text-danger">Sponsored
-                                                            Content</a>
-                                                    </div>
-                                                    <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Oppoturnity become Lead
-                                                            of Backend Developer at
-                                                            Google Studio </a>
-                                                    </h3>
-                                                    <div class="meta-bot lh-1 mt-80">
-                                                        <ul class="d-flex">
-                                                            <li class="comment">
-                                                                <a href="page-author.html#"> totalworks.com <i
-                                                                        class="las la-external-link-square-alt ms-2"></i>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/1.jpg') }}"
-                                                        alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="content">
-                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
-                                                        <a href="page-author.html#">technology</a>
-                                                    </div>
-                                                    <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Big Title for featured
-                                                            post with double line and
-                                                            more text </a>
-                                                    </h3>
-                                                    <div class="meta-bot lh-1 mt-80">
-                                                        <ul class="d-flex">
-                                                            <li class="date me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-calendar me-2"></i> Dec 14,
-                                                                    2022</a>
-                                                            </li>
-                                                            <li class="author me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-user me-2"></i> by Admin
-                                                                </a>
-                                                            </li>
-                                                            <li class="comment">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-comment me-2"></i> 55
-                                                                    Comments</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/2.jpg') }}"
-                                                        alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="content">
-                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
-                                                        <a href="page-author.html#">technology</a>
-                                                    </div>
-                                                    <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Big Title for featured
-                                                            post with double line and
-                                                            more text </a>
-                                                    </h3>
-                                                    <div class="meta-bot lh-1 mt-80">
-                                                        <ul class="d-flex">
-                                                            <li class="date me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-calendar me-2"></i> Dec 14,
-                                                                    2022</a>
-                                                            </li>
-                                                            <li class="author me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-user me-2"></i> by Admin
-                                                                </a>
-                                                            </li>
-                                                            <li class="comment">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-comment me-2"></i> 55
-                                                                    Comments</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/3.jpg') }}" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="content">
-                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
-                                                        <a href="page-author.html#">technology</a>
-                                                    </div>
-                                                    <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Big Title for featured
-                                                            post with double line and
-                                                            more text </a>
-                                                    </h3>
-                                                    <div class="meta-bot lh-1 mt-80">
-                                                        <ul class="d-flex">
-                                                            <li class="date me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-calendar me-2"></i> Dec 14,
-                                                                    2022</a>
-                                                            </li>
-                                                            <li class="author me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-user me-2"></i> by Admin
-                                                                </a>
-                                                            </li>
-                                                            <li class="comment">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-comment me-2"></i> 55
-                                                                    Comments</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/4.jpg') }}" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="content">
-                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
-                                                        <a href="page-author.html#">technology</a>
-                                                    </div>
-                                                    <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Big Title for featured
-                                                            post with double line and
-                                                            more text </a>
-                                                    </h3>
-                                                    <div class="meta-bot lh-1 mt-80">
-                                                        <ul class="d-flex">
-                                                            <li class="date me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-calendar me-2"></i> Dec 14,
-                                                                    2022</a>
-                                                            </li>
-                                                            <li class="author me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-user me-2"></i> by Admin
-                                                                </a>
-                                                            </li>
-                                                            <li class="comment">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-comment me-2"></i> 55
-                                                                    Comments</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/5.jpg') }}" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="content">
-                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
-                                                        <a href="page-author.html#">technology</a>
-                                                    </div>
-                                                    <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Big Title for featured
-                                                            post with double line and
-                                                            more text </a>
-                                                    </h3>
-                                                    <div class="meta-bot lh-1 mt-80">
-                                                        <ul class="d-flex">
-                                                            <li class="date me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-calendar me-2"></i> Dec 14,
-                                                                    2022</a>
-                                                            </li>
-                                                            <li class="author me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-user me-2"></i> by Admin
-                                                                </a>
-                                                            </li>
-                                                            <li class="comment">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-comment me-2"></i> 55
-                                                                    Comments</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/6.jpg') }}" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="content">
-                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
-                                                        <a href="page-author.html#">technology</a>
-                                                    </div>
-                                                    <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Big Title for featured
-                                                            post with double line and
-                                                            more text </a>
-                                                    </h3>
-                                                    <div class="meta-bot lh-1 mt-80">
-                                                        <ul class="d-flex">
-                                                            <li class="date me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-calendar me-2"></i> Dec 14,
-                                                                    2022</a>
-                                                            </li>
-                                                            <li class="author me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-user me-2"></i> by Admin
-                                                                </a>
-                                                            </li>
-                                                            <li class="comment">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-comment me-2"></i> 55
-                                                                    Comments</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/7.jpg') }}" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="content">
-                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
-                                                        <a href="page-author.html#">technology</a>
-                                                    </div>
-                                                    <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Big Title for featured
-                                                            post with double line and
-                                                            more text </a>
-                                                    </h3>
-                                                    <div class="meta-bot lh-1 mt-80">
-                                                        <ul class="d-flex">
-                                                            <li class="date me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-calendar me-2"></i> Dec 14,
-                                                                    2022</a>
-                                                            </li>
-                                                            <li class="author me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-user me-2"></i> by Admin
-                                                                </a>
-                                                            </li>
-                                                            <li class="comment">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-comment me-2"></i> 55
-                                                                    Comments</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('client/assets/img/page_author/8.jpg') }}" alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="content">
-                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
-                                                        <a href="page-author.html#">technology</a>
-                                                    </div>
-                                                    <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Big Title for featured
-                                                            post with double line and
-                                                            more text </a>
-                                                    </h3>
-                                                    <div class="meta-bot lh-1 mt-80">
-                                                        <ul class="d-flex">
-                                                            <li class="date me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-calendar me-2"></i> Dec 14,
-                                                                    2022</a>
-                                                            </li>
-                                                            <li class="author me-5">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-user me-2"></i> by Admin
-                                                                </a>
-                                                            </li>
-                                                            <li class="comment">
-                                                                <a href="page-author.html#"><i
-                                                                        class="la la-comment me-2"></i> 55
-                                                                    Comments</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                @endforeach
+                            @else
+                                <p>Chưa có bài viết nào.</p>
+                            @endif
                         </div>
                     </div>
-                    <div class="col-lg-3">
+
+                    {{-- <div class="col-lg-3">
                         <div class="tc-side-widgets mt-5 mt-lg-0">
                             <!-- widget-social -->
                             <div class="tc-widget-social-style1">
@@ -603,7 +230,7 @@
                                 <p class="color-000 text-uppercase mb-20 ltspc-1"> popular posts </p>
                                 <div class="main-card">
                                     <div class="img th-300 img-cover">
-                                        <img src="{{asset('client/assets/img/wid_popular/1.png')}}" alt="">
+                                        <img src="{{ asset('client/assets/img/wid_popular/1.png') }}" alt="">
                                         <div class="tags">
                                             <a href="page-author.html#">business</a>
                                         </div>
@@ -629,7 +256,7 @@
                                 <div class="tc-widget-popular-list">
                                     <a href="page-single-post-creative.html" class="item">
                                         <div class="img img-cover">
-                                            <img src="{{asset('client/assets/img/wid_popular/2.png')}}" alt="">
+                                            <img src="{{ asset('client/assets/img/wid_popular/2.png') }}" alt="">
                                         </div>
                                         <div class="info">
                                             <h6 class="title">
@@ -639,7 +266,7 @@
                                     </a>
                                     <a href="page-single-post-creative.html" class="item">
                                         <div class="img img-cover">
-                                            <img src="{{asset('client/assets/img/wid_popular/3.png')}}" alt="">
+                                            <img src="{{ asset('client/assets/img/wid_popular/3.png') }}" alt="">
                                         </div>
                                         <div class="info">
                                             <h6 class="title">
@@ -649,7 +276,7 @@
                                     </a>
                                     <a href="page-single-post-creative.html" class="item">
                                         <div class="img img-cover">
-                                            <img src="{{asset('client/assets/img/wid_popular/4.png')}}" alt="">
+                                            <img src="{{ asset('client/assets/img/wid_popular/4.png') }}" alt="">
                                         </div>
                                         <div class="info">
                                             <h6 class="title">
@@ -662,7 +289,8 @@
                             <!-- widget-adbox -->
                             <div class="tc-widget-adbox-style1">
                                 <a href="page-author.html#" class="img">
-                                    <img src="{{asset('client/assets/img/banner12.png')}}" alt="" class="">
+                                    <img src="{{ asset('client/assets/img/banner12.png') }}" alt=""
+                                        class="">
                                 </a>
                             </div>
                             <!-- widget-survey -->
@@ -705,7 +333,7 @@
                                 </small>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </section>
@@ -723,8 +351,7 @@
                     <img src="client/assets/img/logo_home1.png" alt="" class="dark-none">
                     <img src="client/assets/img/logo_home1_lt.png" alt="" class="light-none">
                 </div>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                    aria-label="Close"></button>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mt-4">
                 <h6 class="color-000 text-uppercase mb-10 ltspc-1"> about us <i class="la la-angle-right ms-1"></i> </h6>
