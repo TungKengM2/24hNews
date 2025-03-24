@@ -268,71 +268,38 @@ class ArticleUserController extends Controller
         ]);
     }
 
-    public function storeReplyComment(
-        Request $request,
-        $article_id,
-        $comment_id,
-        CommentModerationService $moderationService
-    ) {
-        // Kiểm tra người dùng đã đăng nhập chưa
-        if (! auth()->check()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn cần đăng nhập để trả lời bình luận!',
-            ], 403);
-        }
+    public function storeReplyComment(Request $request, CommentModerationService $moderationService)
+    {
+
+        $request->validate([
+            'article_id' => 'required|exists:articles,article_id',
+            'content' => 'required|string',
+            'parent_id' => 'required|exists:comments,comment_id',
+        ]);
 
         $content = $request->content;
 
         if (!$moderationService->checkComment($content)) {
             Log::warning("🚫 Bình luận bị từ chối: " . $content);
-            return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
+            return response()->json(['error' => 'Bình luận không được chấp gggg nhận vì chứa từ ngữ không phù hợp.'], 403);
         }
 
-        // Validate dữ liệu đầu vào
-        $request->validate([
-            'content' => 'required|string|max:500',
+        // Truy vấn `parentComment` trước để tối ưu
+        $parentComment = Comment::find($request->parent_id);
+
+        $reply = Comment::create([
+            'article_id' => $request->article_id,
+            'user_id' => auth()->id(),
+            'content' => nl2br(e($request->content)), // Escape XSS
+            'parent_id' => $request->parent_id,
+            'depth' => $parentComment ? $parentComment->depth + 1 : 0,
+            'status' => 'approved',
         ]);
 
-        // Kiểm tra xem comment cha có tồn tại không
-        $parentComment = Comment::where('comment_id', $comment_id)->first();
-
-        if (! $parentComment) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bình luận không tồn tại!',
-            ], 404);
-        }
-
-        try {
-            // Tạo comment trả lời
-            $reply = new Comment;
-            $reply->content = $request->input('content');
-            $reply->parent_id = $parentComment->comment_id;
-            $reply->article_id = $article_id;
-            $reply->user_id = auth()->id();
-            $reply->depth = $parentComment->depth + 1;
-            $reply->status = 'approved';
-            $reply->save();
-
-            return response()->json([
-                'success' => true,
-                'reply' => [
-                    'comment_id' => $reply->comment_id ?? $reply->id,
-                    // Đảm bảo tồn tại
-                    'username' => auth()->user()->username,
-                    'user_image' => auth()->user()->image ?? asset('assets/img/colums/default.png'),
-                    'content' => nl2br(e($reply->content)),
-                    'status' => $reply->status,
-                    'created_at' => $reply->created_at->format('F d, Y'),
-                ],
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Lỗi khi lưu bình luận: ' . $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Bạn trả lời bình luận thành công!',
+        ]);
     }
 
     public function reportComment(Request $request, $article_id, $comment_id)
@@ -353,7 +320,7 @@ class ArticleUserController extends Controller
             // Vì trường detected_word của violations có độ dài 50 ký tự, cắt gọn nếu cần.
             $detected_word = substr($content, 0, 50);
 
-            
+
             // Ghi nhận thông tin repost vào bảng violations với trạng thái "pending"
             Violation::create([
                 'type'          => 'comment',
@@ -396,7 +363,7 @@ class ArticleUserController extends Controller
 
             DB::beginTransaction();
 
-           
+
 
             // Ghi nhận thông tin violation cho repost bài viết
             Violation::create([
@@ -424,7 +391,4 @@ class ArticleUserController extends Controller
             ], 500);
         }
     }
-
-    
-
 }
