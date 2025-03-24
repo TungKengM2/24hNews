@@ -73,4 +73,9 @@ class User extends Authenticatable implements CanResetPasswordContract
     {
         return $this->morphMany(DatabaseNotification::class, 'notifiable', 'notifiable_type', 'notifiable_id', 'user_id');
     }
+
+    public function articles()
+    {
+        return $this->hasMany(Article::class, 'author_id');
+    }
 }

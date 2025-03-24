@@ -37,7 +37,7 @@
                                             alt="User Avatar">
                                     </span>
                                     <span>By</span>
-                                    <a href="page-single-post-creative.html#"
+                                    <a href="{{ route('website.profile', ['id' => $article->author->user_id]) }}"
                                         class="text-decoration-underline text-primary ms-1">{{ $article->author->username }}</a>
                                 </div>
                                 <span class="me-40">
@@ -79,7 +79,7 @@
                                     </i>
                                     <span
                                         style="font-size: 20px; font-weight: bold; color: {{ $isBookmarked ? '#e60023' : 'black' }};">
-                                        {{ $isBookmarked ? 'Đã lưu' : 'Bookmark' }}
+                                        {{ $isBookmarked ? 'Đã lưu' : '' }}
                                     </span>
                                 </a>
 

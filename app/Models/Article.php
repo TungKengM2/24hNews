@@ -30,7 +30,7 @@ class Article extends Model
     ];
 
     protected $with = ['tags'];
-    
+
 
     /**
      * Lấy danh sách bài viết đã xuất bản
