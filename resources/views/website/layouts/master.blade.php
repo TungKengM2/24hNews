@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="keywords" content="HTML5 Template Iteck Multi-Purpose themeforest" />
     <meta name="description" content="Iteck - Multi-Purpose HTML5 Template" />
-    
+
     <meta name="author" content="" />
     @yield('title')
     @include('website.layouts.partials.css')
 </head>
 
-<body class="home-style1 tc-author-page">
+<body class="home-style1 tc-author-page tc-single-post-creative-page">
 
     <!-- ====== start loading page ====== -->
     @include('website.layouts.partials.loadingpage')
