@@ -14,10 +14,20 @@ class AuthorProfileController extends Controller
         $user = auth()->user();
         $author = User::withCount('articles')->with('articles')->findOrFail($user_id);
 
-        if ($user->role === 'admin' || $user->id == $author->id) {
-            return view('website.profiles.author', compact('author'));
-        } else {
-            abort(403, 'Bạn không có quyền truy cập trang này!');
-        }
+        // Tính trung bình lượt tương tác trong 7 ngày qua
+        $oneWeekAgo = now()->subDays(7);
+        $articles = $author->articles()->where('created_at', '>=', $oneWeekAgo)->get();
+        $totalInteractions = $articles->sum(function ($article) {
+            return $article->likes_count + $article->comments_count + $article->views_count;
+        });
+
+        $averageInteractions = $articles->count() > 0 ? $totalInteractions / $articles->count() : 0;
+
+        // Tính số sao dựa trên mức trung bình
+        $maxRating = 5; // 5 sao tối đa
+        $threshold = 100; // Giới hạn tối đa để đạt 5 sao
+        $rating = min($maxRating, ($averageInteractions / $threshold) * $maxRating);
+
+        return view('website.profiles.author', compact('author', 'rating'));
     }
 }
