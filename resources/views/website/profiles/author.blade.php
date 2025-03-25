@@ -37,13 +37,15 @@
                                             class="la la-star {{ $i <= round($rating) ? 'text-warning' : 'text-muted' }}"></i>
                                     @endfor
                                 </div> --}}
+
+
                                 <div class="rate">
                                     {{-- <p>Đánh giá trung bình:</p> --}}
                                     @for ($i = 1; $i <= 5; $i++)
                                         @if ($i <= $ratingStars)
-                                            <i class="la la-star text-warning"></i> {{-- Ngôi sao đầy --}}
+                                            <i class="la la-star text-warning"></i>
                                         @else
-                                            <i class="la la-star-o text-secondary"></i> {{-- Ngôi sao rỗng --}}
+                                            <i class="la la-star-o text-secondary"></i>
                                         @endif
                                     @endfor
                                 </div>
@@ -53,8 +55,23 @@
                                     <p class="color-666 mb-20"> <i class="la la-book"></i> {{ $author->articles_count }}
                                         Posts
                                         <span class="mx-3"> |
-                                        </span> <i class="la la-comments"></i> 100 Comment
+                                        </span> <i class="la la-user"></i> {{ $followerCount }} Followers
                                     </p>
+                                </div>
+                                <div class="follow">
+                                    @if (auth()->check() && auth()->id() !== $author->user_id)
+                                        @if (auth()->user()->following()->where('following_id', $author->user_id)->exists())
+                                            <form action="{{ route('user.unfollow', $author->user_id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger">Unfollow</button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('user.follow', $author->user_id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-primary">Follow</button>
+                                            </form>
+                                        @endif
+                                    @endif
                                 </div>
 
                                 {{-- <div class="social-links">

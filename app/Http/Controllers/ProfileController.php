@@ -47,6 +47,14 @@ class ProfileController extends Controller
         return view('profile.index', compact('user'));
     }
 
+    public function followingList()
+    {
+        $user = auth()->user();
+        $followingUsers = $user->following()->paginate(10);
+
+        return view('user.following', compact('followingUsers'));
+    }
+
     public function edit()
     {
         return view('client.profile.layouts.home');
