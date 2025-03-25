@@ -39,7 +39,6 @@ use App\Http\Controllers\Profile\AuthorProfileController as ProfileAuthorProfile
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // dat them
-Route::post('/search', [HomeController::class, 'search'])->name('search');
 
 // profile trang chủ dat them
 
