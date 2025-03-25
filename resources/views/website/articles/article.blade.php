@@ -1033,70 +1033,69 @@
 
 
 
-          
-});
 
-
+        });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             console.log("Script loaded!");
             let buttons = document.querySelectorAll(".send-reply");
             console.log("Found", buttons.length, "send-reply buttons");
-        
+
             buttons.forEach(button => {
-                button.addEventListener("click", function () {
+                button.addEventListener("click", function() {
                     console.log("Clicked send-reply button!");
                     let commentId = this.getAttribute("data-comment-id");
                     let articleId = this.getAttribute("data-article-id");
                     let replyForm = document.querySelector(`#reply-form-${commentId} .reply-form`);
                     let content = replyForm.querySelector(".reply-content").value.trim();
-        
+
                     console.log("articleId =", articleId, "commentId =", commentId);
                     console.log("content =", content);
-        
+
                     // Kiểm tra xem form có input CSRF hay meta CSRF không
-                    let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
-        
+                    let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute(
+                        "content");
+
                     if (content === "") {
                         alert("Vui lòng nhập nội dung bình luận!");
                         return;
                     }
-        
+
                     fetch(`/articles/${articleId}/comments/${commentId}/reply`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": csrfToken
-                        },
-                        body: JSON.stringify({
-                            content: content,
-                            article_id: articleId,
-                            parent_id: commentId
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": csrfToken
+                            },
+                            body: JSON.stringify({
+                                content: content,
+                                article_id: articleId,
+                                parent_id: commentId
+                            })
                         })
-                    })
-                    .then(response => {
-                        console.log("Response status:", response.status);
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log("Server data:", data);
-                        if (data.success) {
-                            // Reload trang
-                            location.reload();
-                        } else {
-                            alert(data.message || "Có lỗi xảy ra, vui lòng thử lại!");
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Lỗi khi gửi bình luận:", error);
-                        alert("Lỗi khi gửi bình luận!");
-                    });
+                        .then(response => {
+                            console.log("Response status:", response.status);
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log("Server data:", data);
+                            if (data.success) {
+                                // Reload trang
+                                location.reload();
+                            } else {
+                                alert(data.message || "Có lỗi xảy ra, vui lòng thử lại!");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Lỗi khi gửi bình luận:", error);
+                            alert("Lỗi khi gửi bình luận!");
+                        });
                 });
             });
         });
-        </script>
-        
+    </script>
+
 
     {{-- TungKeng làm tìm comment --}}
     <script>
