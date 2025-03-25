@@ -22,6 +22,8 @@ class AuthorProfileController extends Controller
             abort(403, 'Bạn không có quyền truy cập trang này!');
         }
 
+        $followerCount = $author->followers()->count();
+
         // Lấy các bài viết của user trong 1 tuần qua
         $articles = Article::where('author_id', $user_id)
             ->where('status', 'published')
@@ -38,6 +40,30 @@ class AuthorProfileController extends Controller
         $maxScore = 10;
         $ratingStars = min(5, max(1, round(($averageInteraction / $maxScore) * 5)));
 
-        return view('website.profiles.author', compact('author', 'articles', 'ratingStars'));
+        return view('website.profiles.author', compact('author', 'articles', 'ratingStars',  'followerCount'));
+    }
+
+    public function follow(User $user)
+    {
+        $authUser = auth()->user();
+
+        // Kiểm tra nếu user đang cố follow chính mình
+        if ($authUser->id === $user->id) {
+            return back()->with('error', 'Bạn không thể tự follow chính mình!');
+        }
+
+        // Kiểm tra nếu đã follow rồi
+        if (!$authUser->following()->where('following_id', $user->user_id)->exists()) {
+            $authUser->following()->attach($user->user_id);
+            return back()->with('success', 'Bạn đã follow ' . $user->username);
+        }
+
+        return back()->with('error', 'Bạn đã follow người này rồi!');
+    }
+
+    public function unfollow(User $user)
+    {
+        auth()->user()->following()->detach($user->user_id);
+        return back()->with('success', 'Bạn đã unfollow ' . $user->username);
     }
 }
