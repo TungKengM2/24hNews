@@ -53,6 +53,8 @@ Route::get('/profiles/user', function () {
 })->name('user.profile');
 // Author Profile
 Route::get('/profiles/author/{id}', [ProfileAuthorProfileController::class, 'show'])->name('website.profile')->middleware('auth');
+Route::post('/user/{user}/follow', [ProfileAuthorProfileController::class, 'follow'])->name('user.follow');
+Route::post('/user/{user}/unfollow', [ProfileAuthorProfileController::class, 'unfollow'])->name('user.unfollow');
 // Moderator Profile
 Route::get('/profiles/moderator', function () {
     return view('website.profiles.moderator');
@@ -421,6 +423,10 @@ Route::middleware(['auth', 'role:4'])
             [ProfileController::class, 'showChangePasswordForm']
         )->name('user.change-password');
 
+        Route::get(
+            '/following',
+            [ProfileController::class, 'followingList']
+        )->name('user.following');
         // Route::post('/articles/view', [ArticleViewUserController::class, 'store']);
         // Route::get('/articles/viewed', [ArticleViewUserController::class, 'index']);
 
