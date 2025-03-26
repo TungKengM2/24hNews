@@ -23,8 +23,6 @@ class ArticleUserController extends Controller
     {
         $article = Article::with('tags', 'author')->where('slug', $slug)->firstOrFail();
 
-
-
         $userId = auth()->id();
         $userIp = request()->ip();
 
@@ -101,10 +99,6 @@ class ArticleUserController extends Controller
         $khuyencao = Article::whereNotIn('article_id', $displayedArticleIds)
             ->orderBy('views', 'desc') // Sắp xếp theo lượt xem cao nhất
             ->get();
-
-
-
-
 
         // Lấy danh sách bình luận
         $comments = Comment::where('article_id', $article->article_id)

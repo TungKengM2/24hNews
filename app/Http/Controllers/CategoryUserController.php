@@ -11,6 +11,14 @@ class CategoryUserController extends Controller
     {
         $category = Category::where('slug', $categoryid)->firstOrFail();
 
+
+        $articlesNews = Article::where('category_id', $category->category_id)
+            ->where('status', 'published')
+            ->orderBy('created_at', 'desc') // Sắp xếp theo bài viết mới nhất
+            ->limit(4)
+            ->get();
+
+
         // Lấy bài viết thuộc danh mục
         $articles = Article::where('category_id', $category->category_id)
             ->where('status', 'published')
@@ -77,6 +85,6 @@ class CategoryUserController extends Controller
         }
 
 
-        return view('website.categories.categories', compact('categories', 'category2', 'articles', 'articlesViews', 'category', 'featuredArticle', 'relatedArticles'));
+        return view('website.categories.categories', compact('categories','articlesNews', 'category2', 'articles', 'articlesViews', 'category', 'featuredArticle', 'relatedArticles'));
     }
 }
