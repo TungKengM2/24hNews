@@ -199,13 +199,13 @@
                 </div>
                 <div class="col-lg-6">
                     <form class="form">
-                        <span class="color-777 fst-italic text-capitalize mb-2 fsz-13px">Enter Keyword</span>
+                        <span class="color-777 fst-italic text-capitalize mb-2 fsz-13px">Nhập từ khóa </span>
                         <div class="form-group">
                             <span class="icon">
                                 <i class="la la-search"></i>
                             </span>
                             <input type="text" class="form-control" placeholder="Elon Musk ... ">
-                            <button type="submit">search</button>
+                            <button type="submit">Tìm Kiếm </button>
                         </div>
                     </form>
                 </div>
