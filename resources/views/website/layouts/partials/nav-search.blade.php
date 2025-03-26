@@ -9,14 +9,14 @@
         <div class="col-lg-6">
             <form class="form" method="GET" action="{{ route('home') }}">
                 @csrf
-                <span class="color-777 fst-italic text-capitalize mb-2 fsz-13px">Enter Keyword</span>
+                <span class="color-777 fst-italic text-capitalize mb-2 fsz-13px">Nhập Từ Khóa </span>
                 <div class="form-group">
                     <span class="icon">
                         <i class="la la-search"></i>
                     </span>
                     <input type="text" name="keyword" class="form-control" placeholder="Elon Musk ..." required
                         value="{{ old('keyword', $keyword ?? '') }}">
-                    <button type="submit">search</button>
+                    <button type="submit">Tìm Kiếm </button>
                 </div>
                 <script>
                 document.querySelector('form').addEventListener('submit', function(e) {

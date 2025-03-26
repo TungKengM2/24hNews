@@ -2,7 +2,7 @@
     <div class="row justify-content-between align-items-center">
         <div class="col-lg-4">
             <div class="sub-info">
-                <h5>Get the best blog stories into your inbox</h5>
+                <h5>Nhận những câu chuyện blog hay nhất vào hộp thư đến của bạn</h5>
             </div>
         </div>
         <div class="col-lg-6">
@@ -11,12 +11,12 @@
                     <span class="icon">
                         <i class="la la-envelope"></i>
                     </span>
-                    <input type="text" class="form-control" placeholder="Enter your email">
-                    <button>subscribe</button>
+                    <input type="text" class="form-control" placeholder="Nhập email của bạn">
+                    <button>Đăng ký</button>
                 </div>
-                <p class="mt-2 color-666 fsz-13px fst-italic">By subscribing, you accepted the our <a
-                        href="home-default.html#"
-                        class="text-decoration-underline fst-normal color-000">Policy</a></p>
+                <p class="mt-2 color-666 fsz-13px fst-italic">Bằng cách đăng ký, bạn đã chấp nhận <a
+                        href="home-default.html#" class="text-decoration-underline fst-normal color-000">Chính sách</a>
+                </p>
             </div>
         </div>
     </div>
