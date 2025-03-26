@@ -14,7 +14,6 @@
                 <div class="tc-post-grid-default">
                     <div class="tc-slider-style1">
                         <div class="swiper-container">
-
                             <div class="swiper-wrapper">
                                 @foreach ($featuredArticles as $article)
                                     <div class="swiper-slide">
