@@ -150,8 +150,10 @@
                                 <div class="col-lg-12">
                                     <div class="btm-tags d-flex flex-wrap justify-content-center gap-2">
                                         @foreach ($article->tags as $tag)
-                                            <a href=""
-                                                class="btn border border-1 mt-20 py-2 px-3">{{ $tag->name }}</a>
+                                            <a href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}"
+                                                class="btn border border-1 mt-20 py-2 px-3">
+                                                {{ $tag->name }}
+                                            </a>
                                         @endforeach
 
                                     </div>
