@@ -3,10 +3,7 @@
 @section('content')
 
  <main>
-
         <!-- ====== start  ====== -->
-
-        <main>
             <section class="tc-breaking-news-style1">
                 <div class="container">
                     @php
@@ -21,7 +18,7 @@
                                     <div class="swiper-wrapper">
                                         @foreach ($articlesNews as $news)
                                             <div class="swiper-slide">
-                                                <div class="item border-1 border-end brd-gray ">
+                                                <div class="item border-1  brd-gray ">
                                                     <div class="row gx-4 align-items-center">
                                                         <div class="col-4">
                                                             <a href="{{ route('articles.article', ['slug' => $news->slug]) }}"
@@ -68,232 +65,11 @@
     
                 </div>
             </section>
+         
            
-    
-            <section class="pb-60 overflow-hidden">
-                <div class="container">
-                    <div class="row gx-5">
-                        <div class="col-lg-11,5">
-                            <div class="features-content pb-60">
-                                <p class="fw-bold text-uppercase fsz-14px mb-30 pt-15 border-2 border-top border-dark">Bài viết
-                                    nổi bật</p>
-                                <div class="row gx-5">
-                                    @if ($featuredArticle)
-                                        <div class="col-lg-8 border-1 border-end brd-gray">
-                                            <div class="tc-post-grid-default">
-                                                <div class="item">
-                                                    <a href="{{ route('articles.article', ['slug' => $featuredArticle->slug]) }}"
-                                                        class="img img-cover th-400 d-block">
-                                                        <img src="{{ asset('storage/' . $featuredArticle->thumbnail_url) }}"
-                                                            alt="{{ $featuredArticle->title }}">
-                                                    </a>
-                                                    <div class="content pt-30">
-                                                        <a href="#"
-                                                            class="news-cat color-main fsz-13px text-uppercase mb-15 fw-bold">
-                                                            {{ $featuredArticle->category->name ?? 'Không có danh mục' }}
-                                                        </a>
-                                                        <h2 class="title ltspc--1 mb-20">
-                                                            <a
-                                                                href="{{ route('articles.article', ['slug' => $featuredArticle->slug]) }}">
-                                                                {{ $featuredArticle->title }}
-                                                            </a>
-                                                        </h2>
-                                                        <div class="text color-666">
-                                                            {{ Str::limit($featuredArticle->preview_content, 150, '...') }}
-                                                        </div>
-                                                        <div class="meta-bot lh-1 mt-40">
-                                                            <span class="fsz-11px color-000 text-uppercase">
-                                                                {{ $featuredArticle->created_at->diffForHumans() }}
-                                                                <span class="color-999">by</span>
-                                                                {{ $featuredArticle->author->name ?? 'Admin' }}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @else
-                                        <p class="text-center text-muted">Không có bài viết nổi bật nào.</p>
-                                    @endif
-    
-                                    <div class="col-lg-4 border-1 border-end brd-gray">
-                                        <div class="tc-post-list-style2">
-                                            <div class="items">
-                                                @if ($relatedArticles->count() > 0)
-                                                    @foreach ($relatedArticles as $article)
-                                                        <div class="item">
-                                                            <div class="content">
-                                                                <a href="#"
-                                                                    class="news-cat fsz-13px text-uppercase mb-2 fw-bold color-main">
-                                                                    {{ $article->category->name }}
-                                                                </a>
-                                                                <h5 class="title">
-                                                                    <a href="{{ route('articles.article', ['slug' => $article->slug]) }}"
-                                                                        class="hover-underline">
-                                                                        {{ $article->title }}
-                                                                    </a>
-                                                                </h5>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                @else
-                                                    <p class="text-center text-muted">Không có bài viết liên quan.</p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-    
-    
-                                </div>
-                            </div>
-                        </div>
-    
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="tc-post-list-style3">
-                                <div class="items mt-5 mt-lg-0">
-                                    <div class="item gary-item rounded-0 m-0">
-                                        <div class="row">
-                                            <div class="col-lg-5">
-                                                <div class="img img-cover overflow-hidden">
-                                                    <img src="https://newzin-html.themescamp.com/assets/img/latest/28.png"
-                                                        alt="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-7">
-                                                <div class="content mt-20 mt-lg-0">
-                                                    <div class="tags mb-10">
-                                                        <a href="home-politic.html#">Sponsored</a>
-                                                    </div>
-                                                    <h4 class="title fw-bold">
-                                                        <a href="page-single-post-creative.html" class="hover-underline">
-                                                            LG Oled Television 4K Utral HD, Sale 10% Off on Amazon
-                                                        </a>
-                                                    </h4>
-                                                    <a href="home-politic.html#" class="meta-bot fsz-13px color-666">
-                                                        www.amazon.com <i class="la la-external-link-alt"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="tc-widget-podcast-style6 mt-5 mt-lg-0">
-                                <div
-                                    class="d-flex justify-content-between align-items-center mb-20 pt-15 border-2 border-top border-dark">
-                                    <p class="fw-bold text-uppercase fsz-14px">Featured posts</p>
-                                    <a href="page-blog.html" class="fsz-13px">See more <i
-                                            class="la la-angle-right me-2"></i></a>
-                                </div>
-                                <div class="widget-card">
-                                    <div class="row">
-                                        <div class="col-lg-4">
-                                            <a href="home-politic.html#" class="img img-cover">
-                                                <img src="https://newzin-html.themescamp.com/assets/img/latest/59.png"
-                                                    alt="">
-                                            </a>
-                                        </div>
-                                        <div class="col-lg-8">
-                                            <div class="info mt-4 mt-lg-0">
-                                                <a href="home-politic.html#"
-                                                    class="news-cat fsz-13px text-uppercase mb-2 fw-bold color-main">Business</a>
-                                                <h5 class="title">
-                                                    <a href="page-single-post-creative.html" class="hover-underline">Episode
-                                                        15: Mike Pence Day at the
-                                                        January 6 Committee</a>
-                                                </h5>
-                                                <audio controls class="audio">
-                                                    <source src="https://newzin-html.themescamp.com/assets/img/audio1.mp3"
-                                                        type="audio/mpeg">
-                                                </audio>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-    
-                </div>
-            </section>
+            
     
         <!-- ====== end ====== -->
-
-        <!-- ====== start tc-post-grid-style2 ====== -->
-        <div class="tc-post-grid-style2">
-            <div class="container">
-                <div class="content">
-                    <p class="color-000 text-uppercase mb-30 ltspc-1 fw-bold">editor’s pick</p>
-                    <div class="tc-editors-pick-slider">
-                        <div class="swiper-container">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <div class="item">
-                                        <a href="https://newzin-html.themescamp.com/assets/img/edit_choice/5.png" class="img th-230 img-cover d-block" data-fancybox="editors_pick">
-                                            <img src="https://newzin-html.themescamp.com/assets/img/edit_choice/5.png" alt="">
-                                        </a>
-                                        <div class="info">
-                                            <h3 class="title mt-30">
-                                                <a href="page-single-post-creative.html">Start a new day with a simple breakfast</a>
-                                            </h3>
-                                            <span class="color-666 fsz-12px text-uppercase mt-15">receipes, breakfast</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="item">
-                                        <a href="https://newzin-html.themescamp.com/assets/img/edit_choice/6.png" class="img th-230 img-cover d-block" data-fancybox="editors_pick">
-                                            <img src="https://newzin-html.themescamp.com/assets/img/edit_choice/6.png" alt="">
-                                        </a>
-                                        <div class="info">
-                                            <h3 class="title mt-30">
-                                                <a href="page-single-post-creative.html">Stories give inspiration amd feel about art of food by Japan’s chefs</a>
-                                            </h3>
-                                            <span class="color-666 fsz-12px text-uppercase mt-15">cuisine, news</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="item">
-                                        <a href="https://youtu.be/pGbIOC83-So?t=21" class="img th-230 img-cover d-block" data-lity="editors_pick">
-                                            <img src="https://newzin-html.themescamp.com/assets/img/edit_choice/7.png" alt="">
-                                            <span class="video_icon icon-70">
-                                                <i class="ion-play"></i>
-                                            </span>
-                                        </a>
-                                        <div class="info">
-                                            <h3 class="title mt-30">
-                                                <a href="page-single-post-features.html">Poseidon Sea Foods</a>
-                                            </h3>
-                                            <span class="color-666 fsz-12px text-uppercase mt-15">receipes, videos</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="item">
-                                        <a href="https://newzin-html.themescamp.com/assets/img/edit_choice/6.png" class="img th-230 img-cover d-block" data-fancybox="editors_pick">
-                                            <img src="https://newzin-html.themescamp.com/assets/img/edit_choice/6.png" alt="">
-                                        </a>
-                                        <div class="info">
-                                            <h3 class="title mt-30">
-                                                <a href="page-single-post-creative.html">Start a new day with a simple breakfast</a>
-                                            </h3>
-                                            <span class="color-666 fsz-12px text-uppercase mt-15">receipes, breakfast</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-pagination"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- ====== end tc-post-grid-style2 ====== -->
 
         <!-- ====== start Latest news ====== -->
         <section class="tc-latest-news-style1">
