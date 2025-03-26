@@ -231,7 +231,7 @@
                                                 </div>
                                             </div>
                                         @endforeach
-    
+
                                     </div>
                                 </div>
                                 <!-- arrows -->
@@ -240,11 +240,11 @@
                             </div>
                         </div>
                     </div>
-    
+
                 </div>
             </section>
-           
-    
+
+
             <section class="pb-60 overflow-hidden">
                 <div class="container">
                     <div class="row gx-5">
@@ -290,7 +290,7 @@
                                     @else
                                         <p class="text-center text-muted">Không có bài viết nổi bật nào.</p>
                                     @endif
-    
+
                                     <div class="col-lg-4 border-1 border-end brd-gray">
                                         <div class="tc-post-list-style2">
                                             <div class="items">
@@ -317,12 +317,12 @@
                                             </div>
                                         </div>
                                     </div>
-    
-    
+
+
                                 </div>
                             </div>
                         </div>
-    
+
                     </div>
                     <div class="row">
                         <div class="col-lg-6">
@@ -454,11 +454,11 @@
                                         class="btn btn-sm btn-outline-primary mt-2">
                                         Xem chi tiết <i class="la la-angle-right"></i>
 =======
-    
+
                 </div>
             </section>
-    
-    
+
+
             <!-- ====== start latest posts style4 ====== -->
             <section class="tc-latest-posts-style4 pt-70 pb-70">
                 <div class="container">
@@ -587,7 +587,7 @@
                 </div>
             </section>
             <!-- ====== end latest posts style4 ====== -->
-    
+
             <!-- ====== start columnist ====== -->
             <section class="tc-columnist-style1 pt-60 pb-60">
                 <div class="container">
@@ -695,7 +695,7 @@
                 </div>
             </section>
             <!-- ====== end columnist ====== -->
-    
+
             <!-- ====== start must read ====== -->
             <section>
                 <div class="container">
@@ -1597,12 +1597,12 @@
                     </div>
                 </div>
             </section>
-    
-    
-    
-           
+
+
+
+
         </main>
-        
+
         <!-- ====== end ====== -->
 
         <!-- ====== start trends news ====== -->
@@ -1957,10 +1957,10 @@
                                                 <img src="https://newzin-html.themescamp.com/assets/img/top_fav/1.png" alt="">
                                             </div>
                                             <div class="content pt-30">
-                                                <h2 class="title ltspc--1 mb-20 fw-normal"> 
+                                                <h2 class="title ltspc--1 mb-20 fw-normal">
                                                     <a href="page-single-post-creative.html">
                                                         How to make a pizza with bacoon at home
-                                                    </a> 
+                                                    </a>
                                                 </h2>
                                                 <div class="meta-bot mt-20 fsz-12px color-666 text-uppercase">
                                                     receipes, fast food
@@ -2171,7 +2171,7 @@
                                     <button type="submit">subscribe</button>
                                 </div>
                             </form>
-                            <p class="fsz-12px color-666 text-capitalize mt-20">By subscribing, you accepted our <a href="home-food.html#" class="color-000 text-decoration-underline">Policy</a></p>        
+                            <p class="fsz-12px color-666 text-capitalize mt-20">By subscribing, you accepted our <a href="home-food.html#" class="color-000 text-decoration-underline">Policy</a></p>
                         </div>
                     </div>
                 </div>
@@ -2262,7 +2262,7 @@
                                         <a href="page-single-post-creative.html">The Japanese Art of Tea Ceremony</a>
                                     </h4>
                                     <div class="tags">
-                                        <a href="home-food.html#">breakfast,</a> 
+                                        <a href="home-food.html#">breakfast,</a>
                                         <a href="home-food.html#">asia</a>
                                     </div>
                                     <div class="text">
@@ -2302,7 +2302,7 @@
                                         <a href="page-single-post-creative.html">5 Benefits from Eggs</a>
                                     </h4>
                                     <div class="tags">
-                                        <a href="home-food.html#">Europe,</a> 
+                                        <a href="home-food.html#">Europe,</a>
                                         <a href="home-food.html#">breakfast</a>
                                     </div>
                                     <div class="text">
@@ -2320,7 +2320,7 @@
                                         <a href="page-single-post-creative.html">How to make cheese ice cream with slices strawberries</a>
                                     </h4>
                                     <div class="tags">
-                                        <a href="home-food.html#">dessert,</a> 
+                                        <a href="home-food.html#">dessert,</a>
                                         <a href="home-food.html#">asia</a>
                                     </div>
                                     <div class="text">
@@ -2341,8 +2341,8 @@
                                         <a href="page-single-post-features.html">Sapo Cake Tutorial</a>
                                     </h4>
                                     <div class="tags">
-                                        <a href="home-food.html#">europe,</a> 
-                                        <a href="home-food.html#">videos,</a> 
+                                        <a href="home-food.html#">europe,</a>
+                                        <a href="home-food.html#">videos,</a>
                                         <a href="home-food.html#">guide</a>
                                     </div>
                                     <div class="text">
@@ -2366,7 +2366,7 @@
                                         <a href="page-single-post-features.html">How to make grilled cake with blueberries greasy</a>
                                     </h4>
                                     <div class="tags">
-                                        <a href="home-food.html#">receipes,</a> 
+                                        <a href="home-food.html#">receipes,</a>
                                         <a href="home-food.html#">breakfast</a>
                                     </div>
                                     <div class="text">
@@ -2384,7 +2384,7 @@
                                         <a href="page-single-post-creative.html">Fastfood Party!</a>
                                     </h4>
                                     <div class="tags">
-                                        <a href="home-food.html#">fastfood,</a> 
+                                        <a href="home-food.html#">fastfood,</a>
                                         <a href="home-food.html#">drink</a>
                                     </div>
                                     <div class="text">
@@ -2399,7 +2399,7 @@
                                         <a href="page-single-post-creative.html">Sample Post with no images and three lines text content</a>
                                     </h4>
                                     <div class="tags">
-                                        <a href="home-food.html#">Europe,</a> 
+                                        <a href="home-food.html#">Europe,</a>
                                         <a href="home-food.html#">breakfast</a>
                                     </div>
                                     <div class="text">
@@ -2437,7 +2437,7 @@
                                         <a href="page-single-post-creative.html">[Talk Show] Kitchen Corner #5, Masterchef Robert Ederson share about the taste</a>
                                     </h4>
                                     <div class="tags">
-                                        <a href="home-food.html#">latest,</a> 
+                                        <a href="home-food.html#">latest,</a>
                                         <a href="home-food.html#">video</a>
                                     </div>
                                     <div class="text">
@@ -2455,7 +2455,7 @@
                                         <a href="page-single-post-creative.html">Vegan Restaurant with Japan’s style</a>
                                     </h4>
                                     <div class="tags">
-                                        <a href="home-food.html#">vegan,</a> 
+                                        <a href="home-food.html#">vegan,</a>
                                         <a href="home-food.html#">asia</a>
                                     </div>
                                     <div class="text">
@@ -2498,7 +2498,7 @@
             </div>
         </section>
         <!-- ====== end tabs ====== -->
-        
+
 >>>>>>> dadf66f2 (có trang tag)
 
         <!-- ====== start modals ====== -->
