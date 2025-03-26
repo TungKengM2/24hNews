@@ -178,10 +178,7 @@
                                                 @endforeach
 =======
  <main>
-
         <!-- ====== start  ====== -->
-
-        <main>
             <section class="tc-breaking-news-style1">
                 <div class="container">
                     @php
@@ -196,7 +193,7 @@
                                     <div class="swiper-wrapper">
                                         @foreach ($articlesNews as $news)
                                             <div class="swiper-slide">
-                                                <div class="item border-1 border-end brd-gray ">
+                                                <div class="item border-1  brd-gray ">
                                                     <div class="row gx-4 align-items-center">
                                                         <div class="col-4">
                                                             <a href="{{ route('articles.article', ['slug' => $news->slug]) }}"
@@ -243,6 +240,7 @@
 
                 </div>
             </section>
+<<<<<<< HEAD
 
 
             <section class="pb-60 overflow-hidden">
@@ -1942,6 +1940,14 @@
         </div>
         <!-- ====== end tc-post-grid-style2 ====== -->
 
+=======
+         
+           
+            
+    
+        <!-- ====== end ====== -->
+
+>>>>>>> aadf17a8 (giao dien tag new)
         <!-- ====== start Latest news ====== -->
         <section class="tc-latest-news-style1">
             <div class="container">
