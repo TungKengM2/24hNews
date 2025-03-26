@@ -10,11 +10,10 @@
         <!-- ====== start breaking news ====== -->
         <section class="tc-breaking-news-style1 pt-50 pb-50">
             <div class="container">
-                <p class="color-999 text-uppercase mb-30 ltspc-1">Báo Mới</p>
+                <p class="color-999 text-uppercase mb-30 ltspc-1">Tin mới nhất</p>
                 <div class="tc-post-grid-default">
                     <div class="tc-slider-style1">
                         <div class="swiper-container">
-
                             <div class="swiper-wrapper">
                                 @foreach ($featuredArticles as $article)
                                     <div class="swiper-slide">

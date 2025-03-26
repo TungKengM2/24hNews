@@ -18,6 +18,7 @@ use App\Http\Controllers\Author\AuthorController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Auth\SocialAuthController;
+use App\Http\Controllers\User\ArticleTagController;
 use App\Http\Controllers\User\ArticleSaveController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Moderator\ModeratorController;
@@ -70,9 +71,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
     Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
     Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
+    
 });
 // Client Category
 Route::get('/category/{category_id}',[CategoryUserController::class, 'index'])->name('client.category.show');
+Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.show');
+
+
+
 
 // 🚀 Auth dành cho User
 Route::middleware('guest')

@@ -2,102 +2,68 @@
 
 @section('content')
     <main>
-        <section class="tc-breaking-news-style6 pb-50 mt-4 mt-lg-0" style="padding-top: 50px">
+        <section class="tc-breaking-news-style1">
             <div class="container">
-                <div class="content">
-                    <div class="breaking-title">
-                        <strong> <i class="ion-flash me-2"></i> Tin mới nhất</strong>
-                    </div>
-                    <div class="breaking-body">
-                        <div class="tc-breaking-news-slider6">
+                @php
+                    use Illuminate\Support\Str;
+                    use Carbon\Carbon;
+                @endphp
+                <div class="content pt-50 pb-50 border-1 border-bottom brd-gray">
+                    <p class="color-000 fw-bold text-uppercase mb-30 ltspc-1">Tin mới nhất</p>
+                    <div class="tc-post-grid-default">
+                        <div class="tc-breaking-news-slider4 tc-slider-style1 slider-color-creamy1">
                             <div class="swiper-container">
                                 <div class="swiper-wrapper">
-                                    @php
-                                        use Illuminate\Support\Str;
-                                    @endphp
                                     @foreach ($articlesNews as $news)
                                         <div class="swiper-slide">
-                                            <div class="item">
-                                                <a href="{{ route('articles.article', ['slug' => $news->slug]) }}"
-                                                    class="hover-underline">
-                                                    {{ Str::limit($news->title, 50) }}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                        <!-- arrows -->
-                        <div class="arrows">
-                            <div class="swiper-button-next"></div>
-                            <div class="swiper-button-prev"></div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-        <section class="tc-trends-news-style6">
-            <div class="container">
-                <div class="content pb-50">
-                    <strong class="color-000 text-uppercase mb-30 d-block pt-15 border-2 border-top border-dark">
-                        Bài viết thịnh hành
-                    </strong>
-                    <div class="tc-post-grid-style6">
-                        <div class="tc-trends-news-slider6 tc-slider-style1">
-                            <div class="swiper-container">
-                                <div class="swiper-wrapper">
-                                    @if ($articlesViews->count() > 0)
-                                        @foreach ($articlesViews as $index => $articleviews)
-                                            <div class="swiper-slide">
-                                                <div class="item">
-                                                    <div class="row gx-4 align-items-center">
-                                                        <div class="col-2">
-                                                            <h4 class="number">{{ $index + 1 }}</h4>
-                                                        </div>
-                                                        <div class="col-4">
-                                                            <a
-                                                                href="{{ Auth::check() ? route('articles.article', ['slug' => $articleviews->slug]) : url('/login-user') }}">
-                                                                <img src="{{ asset('storage/' . $articleviews->thumbnail_url) }}"
-                                                                    alt="{{ $articleviews->title }}">
-                                                            </a>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <div class="content">
-                                                                <h5 class="title">
-                                                                    <a
-                                                                        href="{{ Auth::check() ? route('articles.article', ['slug' => $articleviews->slug]) : url('/login-user') }}">
-                                                                        {{ $articleviews->title }}
-                                                                    </a>
-                                                                </h5>
-                                                                <div
-                                                                    class="meta-bot mt-10 color-666 fsz-11px text-uppercase">
-                                                                    <ul>
-                                                                        <li class="date"><i class="la la-clock"></i>
-                                                                            {{ $articleviews->created_at->diffForHumans() }}
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
+                                            <div class="item border-1 border-end brd-gray ">
+                                                <div class="row gx-4 align-items-center">
+                                                    <div class="col-4">
+                                                        <a href="{{ route('articles.article', ['slug' => $news->slug]) }}"
+                                                            class="d-block">
+                                                            <div class="w-100"
+                                                                style="width: 80px; height: 80px; overflow: hidden; border-radius: 8px;">
+                                                                <img src="{{ asset('storage/' . $news->thumbnail_url) }}"
+                                                                    class="w-100 h-100 object-fit-cover"
+                                                                    alt="{{ $news->title }}">
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <h5 class="title">
+                                                                <a href="{{ route('articles.article', ['slug' => $news->slug]) }}"
+                                                                    class="hover-underline">
+                                                                    {{ Str::limit($news->title, 100) }}
+                                                                </a>
+                                                            </h5>
+                                                            <div class="meta-bot mt-10 color-666">
+                                                                <ul>
+                                                                    <li class="date">
+                                                                        <i class="la la-clock"></i>
+                                                                        {{ Carbon::parse($news->created_at)->diffForHumans() }}
+                                                                    </li>
+                                                                </ul>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endforeach
-                                    @else
-                                        <p class="text-center text-muted">Không có bài viết nào được hiển thị.</p>
-                                    @endif
+                                        </div>
+                                    @endforeach
+
                                 </div>
                             </div>
                             <!-- arrows -->
-                            <div class="swiper-button-next"></div>
-                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next rounded-0"></div>
+                            <div class="swiper-button-prev rounded-0"></div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
+       
 
         <section class="pb-60 overflow-hidden">
             <div class="container">
