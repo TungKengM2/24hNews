@@ -7,7 +7,11 @@
         <!-- ====== Tin tức nổi bật ====== -->
         <section class="tc-breaking-news-style1 pt-50 pb-50">
             <div class="container">
+<<<<<<< HEAD
                 <p class="color-999 text-uppercase mb-30 ltspc-1 fw-bold">Tin Tức Nổi Bật</p>
+=======
+                <p class="color-999 text-uppercase mb-30 ltspc-1">Tin mới nhất</p>
+>>>>>>> dadf66f2 (có trang tag)
                 <div class="tc-post-grid-default">
                     <div class="tc-slider-style1">
                         <div class="swiper-container">

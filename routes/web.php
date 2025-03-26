@@ -24,7 +24,10 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\User\ArticleTagController;
+<<<<<<< HEAD
 use App\Http\Controllers\Admin\ViolationsController;
+=======
+>>>>>>> dadf66f2 (có trang tag)
 use App\Http\Controllers\User\ArticleSaveController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Client\UserProfileController;
@@ -84,6 +87,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
     Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
     Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
+<<<<<<< HEAD
     Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
     Route::post('/comments/{comment}/like', [ArticleUserController::class, 'toggleLike'])->name('comments.toggleLike');
     Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
@@ -102,6 +106,13 @@ Route::get('/danh-muc/{slug}/{childSlug?}', [CategoryUserController::class, 'ind
     ->name('client.category.show');
 
 Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.shows');
+=======
+    
+});
+// Client Category
+Route::get('/category/{category_id}',[CategoryUserController::class, 'index'])->name('client.category.show');
+Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.show');
+>>>>>>> dadf66f2 (có trang tag)
 
 
 

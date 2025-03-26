@@ -183,6 +183,7 @@ $topSideArticles = $mostViewedArticles->slice(2);
             ->get();
 
 
+<<<<<<< HEAD
 
         // Lấy bài viết liên quan (không trùng với recentArticles và bài nổi bật)
         $relatedArticles = Article::where('category_id', $category->category_id)
@@ -247,6 +248,11 @@ $topSideArticles = $mostViewedArticles->slice(2);
             // Gán danh sách danh mục con cho danh mục cha
             $parentCat->children = $children;
         }
+=======
+        $categories = Category::where('is_active', 1)->limit(7)->get();
+        $category2 = Category::where('is_active', 1)->get(); // Lấy danh sách danh mục
+        
+>>>>>>> dadf66f2 (có trang tag)
 
         // Trả về view với các biến cần thiết
         return view('website.categories.categories', [

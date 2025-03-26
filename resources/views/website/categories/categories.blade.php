@@ -2,6 +2,7 @@
 
 @section('content')
     <main>
+<<<<<<< HEAD
         <!-- ====== start category header ====== -->
 
         <section class="tc-post-list-style1 py-4  border-bottom">
@@ -144,12 +145,74 @@
                         <div class="arrows">
                             <div class="swiper-button-next"></div>
                             <div class="swiper-button-prev"></div>
+=======
+        <section class="tc-breaking-news-style1">
+            <div class="container">
+                @php
+                    use Illuminate\Support\Str;
+                    use Carbon\Carbon;
+                @endphp
+                <div class="content pt-50 pb-50 border-1 border-bottom brd-gray">
+                    <p class="color-000 fw-bold text-uppercase mb-30 ltspc-1">Tin mới nhất</p>
+                    <div class="tc-post-grid-default">
+                        <div class="tc-breaking-news-slider4 tc-slider-style1 slider-color-creamy1">
+                            <div class="swiper-container">
+                                <div class="swiper-wrapper">
+                                    @foreach ($articlesNews as $news)
+                                        <div class="swiper-slide">
+                                            <div class="item border-1 border-end brd-gray ">
+                                                <div class="row gx-4 align-items-center">
+                                                    <div class="col-4">
+                                                        <a href="{{ route('articles.article', ['slug' => $news->slug]) }}"
+                                                            class="d-block">
+                                                            <div class="w-100"
+                                                                style="width: 80px; height: 80px; overflow: hidden; border-radius: 8px;">
+                                                                <img src="{{ asset('storage/' . $news->thumbnail_url) }}"
+                                                                    class="w-100 h-100 object-fit-cover"
+                                                                    alt="{{ $news->title }}">
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <h5 class="title">
+                                                                <a href="{{ route('articles.article', ['slug' => $news->slug]) }}"
+                                                                    class="hover-underline">
+                                                                    {{ Str::limit($news->title, 100) }}
+                                                                </a>
+                                                            </h5>
+                                                            <div class="meta-bot mt-10 color-666">
+                                                                <ul>
+                                                                    <li class="date">
+                                                                        <i class="la la-clock"></i>
+                                                                        {{ Carbon::parse($news->created_at)->diffForHumans() }}
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                </div>
+                            </div>
+                            <!-- arrows -->
+                            <div class="swiper-button-next rounded-0"></div>
+                            <div class="swiper-button-prev rounded-0"></div>
+>>>>>>> dadf66f2 (có trang tag)
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
+<<<<<<< HEAD
         <!-- ====== end breaking news ====== -->
+=======
+       
+>>>>>>> dadf66f2 (có trang tag)
 
 
 

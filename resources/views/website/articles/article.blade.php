@@ -445,7 +445,11 @@ body.dark-theme .content1 * {
                                 <div class="col-lg-12">
                                     <div class="btm-tags d-flex flex-wrap justify-content-center gap-2">
                                         @foreach ($article->tags as $tag)
+<<<<<<< HEAD
                                             <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}"
+=======
+                                            <a href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}"
+>>>>>>> dadf66f2 (có trang tag)
                                                 class="btn border border-1 mt-20 py-2 px-3">
                                                 {{ $tag->name }}
                                             </a>
