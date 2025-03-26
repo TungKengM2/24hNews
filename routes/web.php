@@ -32,8 +32,8 @@ use App\Http\Controllers\User\UserController as UserUserController;
 use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveController;
 use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
-use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
 use App\Http\Controllers\Profile\AuthorProfileController as ProfileAuthorProfileController;
+use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
 
 // 🌟 Trang chủ & bài viết chi tiết
 
@@ -63,35 +63,16 @@ Route::get('/profiles/moderator', function () {
 // profile trang chủ dat them
 
 // Client Articles
-Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])
-    ->name('articles.article');
-Route::post(
-    '/articles/{article_id}/like',
-    [ArticleUserController::class, 'likeArticle']
-)->name('articles.like');
-Route::post(
-    '/articles/{article_id}/comments',
-    [ArticleUserController::class, 'storeComment']
-)
-    ->middleware('auth')
-    ->name('articles.comment');
-
-Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
-
-Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
-
-Route::post(
-    '/articles/{article_id}/comments/{comment_id}/reply',
-    [ArticleUserController::class, 'storeReplyComment']
-)
-    ->middleware('auth')
-    ->name('articles.replyComment');
-
+Route::middleware('auth')->group(function () {
+    Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])->name('articles.article');
+    Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
+    Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
+    Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
+    Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
+    Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
+});
 // Client Category
-Route::get(
-    '/category/{category_id}',
-    [CategoryUserController::class, 'index']
-)->name('client.category.show');
+Route::get('/category/{category_id}',[CategoryUserController::class, 'index'])->name('client.category.show');
 
 // 🚀 Auth dành cho User
 Route::middleware('guest')
