@@ -55,10 +55,6 @@ class ProfileController extends Controller
         return view('user.following', compact('followingUsers'));
     }
 
-    public function edit()
-    {
-        return view('client.profile.layouts.home');
-    }
 
     public function upgradeToAuthor()
     {
@@ -172,12 +168,6 @@ class ProfileController extends Controller
     }
 
 
-
-
-
-    /**
-     * Hiển thị trang profile
-     */
 
     /**
      * Cập nhật thông tin cá nhân

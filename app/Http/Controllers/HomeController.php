@@ -66,8 +66,40 @@ class HomeController extends Controller
 
         $category2 = Category::where('is_active', 1)->get();
 
+        //TungKeng làm hiển thị bài viết của author mà user đã fl
+        $user = auth()->user();
+
+        if (!$user) {
+            return view('welcome', [
+                'categories' => $categories ?? null,
+                'category2' => $category2 ?? null,
+                'sportsArticles' => $sportsArticles ?? null,
+                'newsData' => $newsData ?? null,
+                'journalists' => $journalists ?? null,
+                'trendingPosts' => $trendingPosts ?? null,
+                'featuredArticles' => $featuredArticles ?? null,
+                'articles' => $articles ?? null,
+                'D1Articles' => $D1Articles ?? null,
+                'articlesfollow' => collect(),
+                'followMessage' => 'Bạn chưa đăng ký/đăng nhập để theo dõi tác giả.'
+            ]);
+        }
+
+        $followMessage = $user ? '' : 'Bạn chưa đăng ký/đăng nhập để theo dõi tác giả.';
+
+
+        // Lấy danh sách ID của những tác giả mà user đang follow
+        $followingIds = $user->following()->pluck('following_id');
+
+        // Lấy bài viết của những tác giả đó
+        $articlesfollow = Article::whereIn('author_id', $followingIds)
+            ->where('status', 'published') // Chỉ lấy bài đã đăng
+            ->latest() // Sắp xếp theo mới nhất
+            ->get();
+
+
         // Truyền dữ liệu bài viết tới view
-        return view('welcome', compact('results','category2', 'keyword','categories', 'category2', 'sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles'));
+        return view('welcome', compact('categories', 'category2', 'sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles', 'articlesfollow', 'followMessage'));
     }
 
     // dat thêm hàm search
@@ -121,10 +153,4 @@ class HomeController extends Controller
 
     //     $category2 = Category::where('is_active', 1)->get();
 
-
-    //     return view('welcome', compact('results','category2', 'keyword', 'categories', 'sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles'));
-    // }
-    function profileadmin() {
-        return view('admin.profile');
-    }
 }

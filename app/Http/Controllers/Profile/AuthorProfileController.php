@@ -18,29 +18,44 @@ class AuthorProfileController extends Controller
             $query->where('status', 'published');
         }])->findOrFail($user_id);
 
+        // Kiểm tra quyền truy cập
         if ($user->role !== 'admin' && $user->id !== $author->id) {
             abort(403, 'Bạn không có quyền truy cập trang này!');
         }
 
+        // Số người theo dõi
         $followerCount = $author->followers()->count();
 
-        // Lấy các bài viết của user trong 1 tuần qua
+        // Lấy tất cả bài viết
         $articles = Article::where('author_id', $user_id)
             ->where('status', 'published')
-            ->where('created_at', '>=', now()->subWeek())
             ->get();
 
+        $articleIds = $articles->pluck('article_id');
+
+        // Tính tổng tương tác trước để tránh N+1 Query
+        $likesCount = ArticleLike::whereIn('article_id', $articleIds)->count();
+        $commentsCount = Comment::whereIn('article_id', $articleIds)->count();
         $totalViews = $articles->sum('views');
-        $totalLikes = ArticleLike::whereIn('article_id', $articles->pluck('article_id'))->count();
-        $totalComments = Comment::whereIn('article_id', $articles->pluck('article_id'))->count();
-        // Tính điểm trung bình
+
+        $maxScore = 100;
+        $totalStars = 0;
+
+        foreach ($articles as $article) {
+            $articleInteractions = $article->views +
+                ArticleLike::where('article_id', $article->id)->count() +
+                Comment::where('article_id', $article->id)->count();
+
+
+            $articleStars = min(5, max(1, ($articleInteractions / $maxScore) * 5));
+            $totalStars += $articleStars;
+        }
+
+        // Tính trung bình rating sao của tất cả bài viết
         $totalArticles = max($articles->count(), 1);
-        $averageInteraction = ($totalViews + $totalLikes + $totalComments) / $totalArticles;
-
-        $maxScore = 10;
-        $ratingStars = min(5, max(1, round(($averageInteraction / $maxScore) * 5)));
-
-        return view('website.profiles.author', compact('author', 'articles', 'ratingStars',  'followerCount'));
+        $averageRating = number_format($totalStars / $totalArticles, 1);
+        // dd($averageRating);
+        return view('website.profiles.author', compact('author', 'articles', 'averageRating', 'followerCount'));
     }
 
     public function follow(User $user)
@@ -48,7 +63,7 @@ class AuthorProfileController extends Controller
         $authUser = auth()->user();
 
         // Kiểm tra nếu user đang cố follow chính mình
-        if ($authUser->id === $user->id) {
+        if ($authUser->user_id === $user->user_id) {
             return back()->with('error', 'Bạn không thể tự follow chính mình!');
         }
 
