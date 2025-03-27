@@ -8,7 +8,7 @@
             <div class="container">
                 <div class="content">
                     <div class="title">
-                        <p class="fsz-14px color-fff op-5 mb-2"> Author </p>
+                        <p class="fsz-14px color-fff op-5 mb-2"> Tác giả </p>
                         <h2> Logan H. Himer </h2>
                     </div>
                 </div>
@@ -744,7 +744,7 @@
                     @foreach ($category2 as $category)
                         <a href="{{ route('client.category.show', $category->slug) }}" class="cat-card">
                             <div class="img img-cover " >
-                                
+
                                 <div class="info">
                                     <h5 href="{{ route('client.category.show', $category->slug) }}">
                                         {{ $category->name }}
@@ -755,7 +755,7 @@
                         </a>
                     @endforeach
 
-                    
+
                 </div>
                 <div class="sidebar-contact-info mt-50">
                     <h6 class="color-000 text-uppercase mb-20 ltspc-1"> Contact & follow <i
