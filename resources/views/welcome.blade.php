@@ -210,7 +210,7 @@
                     <div class="swiper-container">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <a href="page-single-post-creative.html" class="item d-block">
+                                <a href="{{ url('/') }}" class="item d-block">
                                     <div class="row gx-4 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-70 img-cover">
@@ -232,7 +232,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="page-single-post-creative.html" class="item d-block">
+                                <a href="{{ url('/') }}" class="item d-block">
                                     <div class="row gx-4 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-70 img-cover">
@@ -254,7 +254,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="page-single-post-creative.html" class="item d-block">
+                                <a href="{{ url('/') }}" class="item d-block">
                                     <div class="row gx-4 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-70 img-cover">
@@ -276,7 +276,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="page-single-post-creative.html" class="item d-block">
+                                <a href="{{ url('/') }}" class="item d-block">
                                     <div class="row gx-4 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-70 img-cover">
@@ -321,7 +321,7 @@
                     <div class="swiper-container">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <a href="home-default.html#" class="story-item">
+                                <a href="{{ url('/') }}" class="story-item">
                                     <div class="img img-cover">
                                         <img src="client/img/google-stories/1.png" alt="">
                                     </div>
@@ -331,7 +331,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item seen">
+                                <a href="{{ url('/') }}" class="story-item seen">
                                     <div class="img img-cover">
                                         <img src="client/img/google-stories/2.png" alt="">
                                     </div>
@@ -341,7 +341,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
+                                <a href="{{ url('/') }}" class="story-item">
                                     <div class="img img-cover">
                                         <img src="client/img/google-stories/3.png" alt="">
                                     </div>
@@ -351,7 +351,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
+                                <a href="{{ url('/') }}" class="story-item">
                                     <div class="img img-cover">
                                         <img src="client/img/google-stories/4.png" alt="">
                                     </div>
@@ -361,7 +361,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
+                                <a href="{{ url('/') }}" class="story-item">
                                     <div class="img img-cover">
                                         <img src="client/img/google-stories/5.png" alt="">
                                     </div>
@@ -371,7 +371,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
+                                <a href="{{ url('/') }}" class="story-item">
                                     <div class="img img-cover">
                                         <img src="client/img/google-stories/6.png" alt="">
                                     </div>
@@ -381,7 +381,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
+                                <a href="{{ url('/') }}" class="story-item">
                                     <div class="img img-cover">
                                         <img src="client/img/google-stories/7.png" alt="">
                                     </div>
@@ -391,7 +391,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
+                                <a href="{{ url('/') }}" class="story-item">
                                     <div class="img img-cover">
                                         <img src="client/img/google-stories/8.png" alt="">
                                     </div>
@@ -401,7 +401,7 @@
                                 </a>
                             </div>
                             <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
+                                <a href="{{ url('/') }}" class="story-item">
                                     <div class="img img-cover">
                                         <img src="client/img/google-stories/3.png" alt="">
                                     </div>
@@ -425,7 +425,7 @@
         <section class="tc-latest-news-style1">
             <div class="container">
                 <div class="section-content pt-50 pb-50 border-bottom border-1 brd-gray">
-                    <p class="color-000 text-uppercase mb-30 ltspc-1"><a href="page-blog.html"> Tin tức mới nhất </a> <i
+                    <p class="color-000 text-uppercase mb-30 ltspc-1"><a href="{{ url('/') }}"> Tin tức mới nhất </a> <i
                             class="la la-angle-right ms-1"></i>
                     </p>
                     <div class="row">
@@ -439,10 +439,10 @@
                                         </a>
                                     </div>
                                     <div class="content pt-30">
-                                        <a href="page-blog.html"
+                                        <a href="{{ url('/') }}"
                                             class="news-cat color-999 fsz-13px text-uppercase mb-10">chính trị</a>
                                         <h2 class="title mb-20">
-                                            <a href="page-single-post-features.html">Biden yêu cầu Quốc hội cấp 33 tỷ đô la
+                                            <a href="{{ url('/') }}">Biden yêu cầu Quốc hội cấp 33 tỷ đô la
                                                 để hỗ trợ Ukraine</a>
                                         </h2>
                                         <div class="text color-666">
@@ -486,7 +486,7 @@
 chính trị
 </div>
 <h5 class="title ltspc--1">
-<a href="page-single-post-creative.html"
+<a href="{{ url('/') }}"
 class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu kết thúc</a>
 </h5>
                                                 </div>
@@ -508,7 +508,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                             live</b>
                                                     </div>
                                                     <h5 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"
+                                                        <a href="{{ url('/') }}"
                                                             class="hover-underline">Trực tiếp giải bóng chày MLB 2022:
                                                             NY Yankees Vs NY Mets</a>
                                                     </h5>
@@ -529,7 +529,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                         Lối Sống
                                                     </div>
                                                     <h5 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"
+                                                        <a href="{{ url('/') }}"
                                                             class="hover-underline">Chèo thuyền ở bãi biển Miami</a>
                                                     </h5>
                                                 </div>
@@ -549,7 +549,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                         Kinh Doanh
                                                     </div>
                                                     <h5 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"
+                                                        <a href="{{ url('/') }}"
                                                             class="hover-underline">Thị trường chứng khoán tuần trước:
                                                             "Sức mạnh của phe bò"</a>
                                                     </h5>
@@ -570,7 +570,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                         Lối Sống
                                                     </div>
                                                     <h5 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"
+                                                        <a href="{{ url('/') }}"
                                                             class="hover-underline">Thị trường chứng khoán tuần trước:
                                                             "Sức mạnh của phe bò"</a>
                                                     </h5>
@@ -591,7 +591,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                         Lối Sống
                                                     </div>
                                                     <h5 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"
+                                                        <a href="{{ url('/') }}"
                                                             class="hover-underline">Kem Helm Extract Infuse,
                                                             1000mg Phổ đầy đủ</a>
                                                     </h5>
@@ -609,9 +609,9 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                         <img src="client/assets/img/latest/2.png" alt="">
                                     </div>
                                     <div class="content pt-20">
-                                        <a href="home-default.html#"
+                                        <a href="{{ url('/') }}"
                                             class="news-cat color-999 fsz-13px text-uppercase mb-10">Du lịch</a>
-                                        <h5 class="title ltspc--1 mb-10"><a href="page-single-post-creative.html">Sự thật
+                                        <h5 class="title ltspc--1 mb-10"><a href="{{ url('/') }}">Sự thật
                                             về lạc đà ở Dubai</a></h5>
                                         <div class="text color-666">
                                             Tỷ lệ tội phạm trên tàu hỏa và xe buýt đang tăng ở một số thành phố lớn nhất của quốc gia [...]
@@ -631,19 +631,19 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                             </div>
                             <div class="pt-15">
                                 <span class="fsz-12px color-999 text-capitalize fst-italic">Bài viết liên quan</span>
-                                <a href="page-single-post-creative.html" class="d-flex my-3">
+                                <a href="{{ url('/') }}" class="d-flex my-3">
                                     <span class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
                                     <h6 class="fsz-16px">
                                     10 Điểm đến không thể bỏ qua trong mùa hè này
                                     </h6>
                                     </a>
-                                    <a href="page-single-post-creative.html" class="d-flex my-3">
+                                    <a href="{{ url('/') }}" class="d-flex my-3">
                                     <span class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
                                     <h6 class="fsz-16px">
                                     Trải nghiệm du lịch tự túc Thụy Sĩ trong 4N3Đ
                                     </h6>
                                     </a>
-                                    <a href="page-single-post-creative.html" class="d-flex my-3">
+                                    <a href="{{ url('/') }}" class="d-flex my-3">
                                     <span class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
                                     <h6 class="fsz-16px">
                                     Khám phá đảo Devon, Canada
@@ -663,7 +663,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
             <div class="content pt-50 pb-50 border-bottom border-1 brd-gray">
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
-                        <a href="home-default.html#" class="d-block img-cover">
+                        <a href="{{ url('/') }}" class="d-block img-cover">
                             <img src="client/img/banner1.png" alt="">
                         </a>
                     </div>
@@ -680,7 +680,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                 <div class="col-lg-9">
                     <!-- must-read -->
                     <section class="tc-must-read-style1 bg-gray2 p-30">
-                        <p class="color-000 text-uppercase mb-20 ltspc-1"> <a href="page-blog.html"> must read </a> <i
+                        <p class="color-000 text-uppercase mb-20 ltspc-1"> <a href="{{ url('/') }}"> must read </a> <i
                                 class="la la-angle-right ms-1"></i> </p>
                         <div class="tc-post-grid-default border-1 border-bottom brd-gray pb-30">
                             <div class="item">
@@ -692,8 +692,8 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                     </div>
                                     <div class="col-lg-7">
                                         <div class="content">
-                                            <a href="home-default.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">Sport</a>
-                                            <h3 class="title mb-15"> <a href="page-single-post-creative.html">Manoah dominates, closes in on Blue
+                                            <a href="{{ url('/') }}" class="news-cat color-999 fsz-13px text-uppercase mb-10">Sport</a>
+                                            <h3 class="title mb-15"> <a href="{{ url('/') }}">Manoah dominates, closes in on Blue
                    Jays history</a> </h3>
                                                 <div class="text color-666">
                                                     The social-media company is in discussions to sell itself to Elon, a
@@ -726,10 +726,10 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                 <img src="client/img/must_read/2.png" alt="">
                                             </div>
                                             <div class="content">
-                                                <a href="home-default.html#"
+                                                <a href="{{ url('/') }}"
                                                     class="news-cat color-999 fsz-13px text-uppercase mb-1">business</a>
                                                 <h4 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html" class="hover-underline">
+                                                    <a href="{{ url('/') }}" class="hover-underline">
                                                         Sponsored Content Post with Double line
                                                     </a>
                                                 </h4>
@@ -742,10 +742,10 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                 <img src="client/img/must_read/3.png" alt="">
                                             </div>
                                             <div class="content">
-                                                <a href="home-default.html#"
+                                                <a href="{{ url('/') }}"
                                                     class="news-cat color-999 fsz-13px text-uppercase mb-1">culture</a>
                                                 <h4 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html" class="hover-underline">
+                                                    <a href="{{ url('/') }}" class="hover-underline">
                                                         Discovery the culture of Japan. Oriental beauty & the legend of
                                                         Samurai
                                                     </a>
@@ -759,10 +759,10 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                 <img src="client/img/must_read/4.png" alt="">
                                             </div>
                                             <div class="content">
-                                                <a href="home-default.html#"
+                                                <a href="{{ url('/') }}"
                                                     class="news-cat color-999 fsz-13px text-uppercase mb-1">technology</a>
                                                 <h4 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html" class="hover-underline">
+                                                    <a href="{{ url('/') }}" class="hover-underline">
                                                         Tiktok will pass Facebook?
                                                     </a>
                                                 </h4>
@@ -775,7 +775,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
 
                         <!-- business -->
                         <section class="tc-business-style1 pt-50 pb-50">
-                            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">business</a> <i
+                            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="{{ url('/') }}">business</a> <i
                                     class="la la-angle-right ms-1"></i> </p>
                             <div class="main-blog pb-30 border-1 border-bottom brd-gray">
                                 <div class="row">
@@ -784,12 +784,12 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                             <div class="img th-400 img-cover">
                                                 <img src="client/img/bussines/1.png" alt="">
                                                 <div class="tags">
-                                                    <a href="home-default.html#">business</a>
+                                                    <a href="{{ url('/') }}">business</a>
                                                 </div>
                                             </div>
                                             <div class="content ps-30 pe-30 pb-30">
                                                 <h3 class="title mb-20">
-                                                    <a href="page-single-post-creative.html">Become master of strategy from playing chess</a>
+                                                    <a href="{{ url('/') }}">Become master of strategy from playing chess</a>
                                                     </h2>
                                                     <div class="meta-bot lh-1">
                                                         <ul class="d-flex">
@@ -814,38 +814,38 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                             <div class="items">
                                                 <div class="item pb-20">
                                                     <div class="content">
-                                                        <a href="home-default.html#"
+                                                        <a href="{{ url('/') }}"
                                                             class="news-cat color-999 fsz-13px text-uppercase mb-1">business</a>
                                                         <h5 class="title ltspc--1">
-                                                            <a href="page-single-post-creative.html">Global financial markets after covid 2022</a>
+                                                            <a href="{{ url('/') }}">Global financial markets after covid 2022</a>
                                                         </h5>
                                                     </div>
                                                 </div>
                                                 <div class="item pb-20">
                                                     <div class="content">
-                                                        <a href="home-default.html#"
+                                                        <a href="{{ url('/') }}"
                                                             class="news-cat color-999 fsz-13px text-uppercase mb-1">business</a>
                                                         <h5 class="title ltspc--1">
-                                                            <a href="page-single-post-creative.html">U.S Stocks Market today</a>
+                                                            <a href="{{ url('/') }}">U.S Stocks Market today</a>
                                                         </h5>
                                                     </div>
                                                 </div>
                                                 <div class="item pb-20">
                                                     <div class="content">
-                                                        <a href="home-default.html#"
+                                                        <a href="{{ url('/') }}"
                                                             class="news-cat color-999 fsz-13px text-uppercase mb-1">business</a>
                                                         <h5 class="title ltspc--1">
-                                                            <a href="page-single-post-creative.html">Stock Market meltdowns have FAANGs looking
+                                                            <a href="{{ url('/') }}">Stock Market meltdowns have FAANGs looking
                                                                 increasingly toothless</a>
                                                         </h5>
                                                     </div>
                                                 </div>
                                                 <div class="item pb-20 border-0">
                                                     <div class="content">
-                                                        <a href="home-default.html#"
+                                                        <a href="{{ url('/') }}"
                                                             class="news-cat color-999 fsz-13px text-uppercase mb-1">business</a>
                                                         <h5 class="title ltspc--1">
-                                                            <a href="page-single-post-creative.html">Success Stories of Starbuck</a>
+                                                            <a href="{{ url('/') }}">Success Stories of Starbuck</a>
                                                         </h5>
                                                     </div>
                                                 </div>
@@ -858,7 +858,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                 <div class="items">
                                     <div class="row">
                                         <div class="col-lg-6">
-                                            <a href="page-single-post-creative.html" class="item d-block border-0 pt-30">
+                                            <a href="{{ url('/') }}" class="item d-block border-0 pt-30">
                                                 <div class="row gx-3 align-items-center">
                                                     <div class="col-4">
                                                         <div class="img th-90 img-cover">
@@ -878,7 +878,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                             </a>
                                         </div>
                                         <div class="col-lg-6">
-                                            <a href="page-single-post-creative.html" class="item d-block border-0 pt-30">
+                                            <a href="{{ url('/') }}" class="item d-block border-0 pt-30">
                                                 <div class="row gx-3 align-items-center">
                                                     <div class="col-4">
                                                         <div class="img th-90 img-cover">
@@ -909,7 +909,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                 <div class="content">
                                     <div class="row justify-content-center">
                                         <div class="col-lg-10">
-                                            <a href="home-default.html#" class="d-block img-cover">
+                                            <a href="{{ url('/') }}" class="d-block img-cover">
                                                 <img src="client/img/banner2.png" alt="">
                                             </a>
                                         </div>
@@ -920,18 +920,18 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
 
                         <!-- technology -->
                         <div class="tc-technology-style1 pt-50">
-                            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">technology</a> <i
+                            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="{{ url('/') }}">technology</a> <i
                                     class="la la-angle-right ms-1"></i> </p>
                             <div class="tc-post-overlay-default">
                                 <div class="img th-600 img-cover">
                                     <img src="client/img/technology/1.png" alt="">
                                     <div class="tags">
-                                        <a href="home-default.html#">technology</a>
+                                        <a href="{{ url('/') }}">technology</a>
                                     </div>
                                 </div>
                                 <div class="content ps-40 pe-40 pb-40">
                                     <h2 class="title mb-30">
-                                        <a href="page-single-post-creative.html">Myenergi's award winning product <br> the zappi EV charger</a>
+                                        <a href="{{ url('/') }}">Myenergi's award winning product <br> the zappi EV charger</a>
                                     </h2>
                                     <div class="meta-bot lh-1">
                                         <ul class="d-flex">
@@ -960,10 +960,10 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                             <div class="col-lg-8">
                                                 <div class="content">
                                                     <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
-                                                        <a href="home-default.html#">technology</a>
+                                                        <a href="{{ url('/') }}">technology</a>
                                                     </div>
                                                     <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Big Title for featured post with double line and
+                                                        <a href="{{ url('/') }}"> Big Title for featured post with double line and
                                                             more text </a>
                                                     </h3>
                                                     <div class="meta-bot lh-1 mt-80">
@@ -996,10 +996,10 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                             <div class="col-lg-8">
                                                 <div class="content">
                                                     <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
-                                                        <a href="home-default.html#" class="text-danger">Sponsored Content</a>
+                                                        <a href="{{ url('/') }}" class="text-danger">Sponsored Content</a>
                                                     </div>
                                                     <h3 class="title ltspc--1">
-                                                        <a href="page-single-post-creative.html"> Oppoturnity become Lead of Backend Developer at
+                                                        <a href="{{ url('/') }}"> Oppoturnity become Lead of Backend Developer at
                                                             Google Studio </a>
                                                     </h3>
                                                     <div class="meta-bot lh-1 mt-80">
@@ -1026,31 +1026,31 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                             <div class="tc-widget-social-style1">
                                 <p class="color-000 text-uppercase mb-30 ltspc-1 lh-2"> stay connected </p>
                                 <div class="content">
-                                    <a href="home-default.html#" class="social-card">
+                                    <a href="{{ url('/') }}" class="social-card">
                                         <div class="icon facebook-icon">
                                             <i class="lab la-facebook-f"></i>
                                         </div>
                                         <h6>1,5M</h6>
                                     </a>
-                                    <a href="home-default.html#" class="social-card">
+                                    <a href="{{ url('/') }}" class="social-card">
                                         <div class="icon twitter-icon">
                                             <i class="lab la-twitter"></i>
                                         </div>
                                         <h6>920K</h6>
                                     </a>
-                                    <a href="home-default.html#" class="social-card">
+                                    <a href="{{ url('/') }}" class="social-card">
                                         <div class="icon insta-icon">
                                             <i class="lab la-instagram"></i>
                                         </div>
                                         <h6>25,7K</h6>
                                     </a>
-                                    <a href="home-default.html#" class="social-card mb-0">
+                                    <a href="{{ url('/') }}" class="social-card mb-0">
                                         <div class="icon youtube-icon">
                                             <i class="lab la-youtube"></i>
                                         </div>
                                         <h6>1,5M</h6>
                                     </a>
-                                    <a href="home-default.html#" class="social-card mb-0">
+                                    <a href="{{ url('/') }}" class="social-card mb-0">
                                         <div class="icon spotify-icon">
                                             <i class="lab la-spotify"></i>
                                         </div>
@@ -1069,7 +1069,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                     <div class="info pt-10">
                                         <small>2 Hours ago</small>
                                         <h5>
-                                            <a href="home-default.html#" class="title">
+                                            <a href="{{ url('/') }}" class="title">
                                                 Start A New Day with A Smile
                                             </a>
                                         </h5>
@@ -1080,13 +1080,13 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                 </div>
                                 <div class="podcast-list">
                                     <div class="item">
-                                        <a href="home-default.html#" class="img">
+                                        <a href="{{ url('/') }}" class="img">
                                             <img src="client/img/pdc1.png" alt="">
                                         </a>
                                         <div class="info">
                                             <small> 3 Hours ago </small>
                                             <h6 class="title">
-                                                <a href="home-default.html#">
+                                                <a href="{{ url('/') }}">
                                                     Release energy and activity
                                                 </a>
                                             </h6>
@@ -1101,20 +1101,20 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                         <div class="info">
                                             <small> 3 Hours ago </small>
                                             <h6 class="title">
-                                                <a href="home-default.html#">
+                                                <a href="{{ url('/') }}">
                                                     Cafe, Chill and focus to study
                                                 </a>
                                             </h6>
                                         </div>
                                     </div>
                                     <div class="item mb-0">
-                                        <a href="home-default.html#" class="img">
+                                        <a href="{{ url('/') }}" class="img">
                                             <img src="client/img/pdc3.png" alt="">
                                         </a>
                                         <div class="info">
                                             <small> 3 Hours ago </small>
                                             <h6 class="title">
-                                                <a href="home-default.html#">
+                                                <a href="{{ url('/') }}">
                                                     A long day mood
                                                 </a>
                                             </h6>
@@ -1130,11 +1130,11 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                 <div class="info pt-10">
                                     <div class="spon-cat"> Sponsored Content </div>
                                     <h6 class="title">
-                                        <a href="home-default.html#">
+                                        <a href="{{ url('/') }}">
                                             Dile & Kamine Soap from pure natura 100%
                                         </a>
                                     </h6>
-                                    <a href="home-default.html#">
+                                    <a href="{{ url('/') }}">
                                         <small>dileandkamina.com <i
                                                 class="las la-external-link-square-alt ms-2"></i></small>
                                     </a>
@@ -1147,12 +1147,12 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                     <div class="img th-300 img-cover">
                                         <img src="client/img/wid_popular/1.png" alt="">
                                         <div class="tags">
-                                            <a href="home-default.html#">business</a>
+                                            <a href="{{ url('/') }}">business</a>
                                         </div>
                                     </div>
                                     <div class="content">
                                         <h4 class="title">
-                                            <a href="page-single-post-creative.html">Big Title for featured post with double</a>
+                                            <a href="{{ url('/') }}">Big Title for featured post with double</a>
                                         </h4>
                                         <div class="meta-bot">
                                             <ul class="d-flex">
@@ -1167,7 +1167,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                     </div>
                                 </div>
                                 <div class="tc-widget-popular-list">
-                                    <a href="page-single-post-creative.html" class="item">
+                                    <a href="{{ url('/') }}" class="item">
                                         <div class="img img-cover">
                                             <img src="client/img/wid_popular/2.png" alt="">
                                         </div>
@@ -1177,7 +1177,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                             </h6>
                                         </div>
                                     </a>
-                                    <a href="page-single-post-creative.html" class="item">
+                                    <a href="{{ url('/') }}" class="item">
                                         <div class="img img-cover">
                                             <img src="client/img/wid_popular/3.png" alt="">
                                         </div>
@@ -1187,7 +1187,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                             </h6>
                                         </div>
                                     </a>
-                                    <a href="page-single-post-creative.html" class="item">
+                                    <a href="{{ url('/') }}" class="item">
                                         <div class="img img-cover">
                                             <img src="client/img/wid_popular/4.png" alt="">
                                         </div>
@@ -1201,7 +1201,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                             </div>
                             <!-- widget-adbox -->
                             <div class="tc-widget-adbox-style1">
-                                <a href="home-default.html#" class="img">
+                                <a href="{{ url('/') }}" class="img">
                                     <img src="client/img/banner12.png" alt="" class="">
                                 </a>
                             </div>
@@ -1232,7 +1232,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                     </div>
                                 </div>
                                 <div class="btns">
-                                    <a href="home-default.html#" class="btn active me-2">
+                                    <a href="{{ url('/') }}" class="btn active me-2">
                                         Submit
                                     </a>
                                     <a href="home-default.html#" class="btn">
@@ -1287,7 +1287,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                             <div class="swiper-slide">
                                                 <div class="slider-content">
                                                     <p class="sub-title">featured, video</p>
-                                                    <h3 class="title">  <a href="page-single-post-features.html"> Amazing View! Catch the sunrise <br> in high
+                                                    <h3 class="title">  <a href="{{ url('/') }}"> Amazing View! Catch the sunrise <br> in high
                                                         moutain </a> </h3>
                                                     <div class="meta-bot lh-1">
                                                         <ul class="d-flex">
@@ -1333,11 +1333,11 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                 </a>
                                             </div>
                                             <div class="content pt-20">
-                                                <a href="home-default.html#"
+                                                <a href="{{ url('/') }}"
                                                     class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">travel,
                                                     video</a>
                                                 <h4 class="title ltspc--1 text-white">
-                                                    <a href="page-single-post-features.html">Amazing View! Catch the sunrise in high mountain</a>
+                                                    <a href="{{ url('/') }}">Amazing View! Catch the sunrise in high mountain</a>
                                                 </h4>
                                             </div>
                                         </div>
@@ -1350,11 +1350,11 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                 </a>
                                             </div>
                                             <div class="content pt-20">
-                                                <a href="home-default.html#"
+                                                <a href="{{ url('/') }}"
                                                     class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">culture,
                                                     video</a>
                                                 <h4 class="title ltspc--1 text-white">
-                                                    <a href="page-single-post-features.html">Bhutan! The happiest country on the world</a>
+                                                    <a href="{{ url('/') }}">Bhutan! The happiest country on the world</a>
                                                 </h4>
                                             </div>
                                         </div>
@@ -1372,7 +1372,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                             <div class="swiper-slide">
                                                 <div class="slider-content">
                                                     <p class="sub-title">featured, video</p>
-                                                    <h3 class="title"> <a href="page-single-post-features.html"> Amazing View! Catch the sunrise <br> in high
+                                                    <h3 class="title"> <a href="{{ url('/') }}"> Amazing View! Catch the sunrise <br> in high
                                                         moutain </a> </h3>
                                                     <div class="meta-bot lh-1">
                                                         <ul class="d-flex">
@@ -1418,11 +1418,11 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                 </a>
                                             </div>
                                             <div class="content pt-20">
-                                                <a href="home-default.html#"
+                                                <a href="{{ url('/') }}"
                                                     class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">travel,
                                                     video</a>
                                                 <h4 class="title ltspc--1 text-white">
-                                                    <a href="page-single-post-features.html">Amazing View! Catch the sunrise in high mountain</a>
+                                                    <a href="{{ url('/') }}">Amazing View! Catch the sunrise in high mountain</a>
                                                 </h4>
                                             </div>
                                         </div>
@@ -1435,11 +1435,11 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                 </a>
                                             </div>
                                             <div class="content pt-20">
-                                                <a href="home-default.html#"
+                                                <a href="{{ url('/') }}"
                                                     class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">culture,
                                                     video</a>
                                                 <h4 class="title ltspc--1 text-white">
-                                                    <a href="page-single-post-features.html">Bhutan! The happiest country on the world</a>
+                                                    <a href="{{ url('/') }}">Bhutan! The happiest country on the world</a>
                                                 </h4>
                                             </div>
                                         </div>
@@ -1457,7 +1457,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
         <!-- ====== start lifestyle ====== -->
         {{-- <section class="tc-lifestyle pt-50 pb-50">
         <div class="container">
-            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">lifestyle</a> <i class="la la-angle-right ms-1"></i> </p>
+            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="{{ url('/') }}">lifestyle</a> <i class="la la-angle-right ms-1"></i> </p>
             <div class="content">
                 <div class="row">
                     <div class="col-lg-6 border-end brd-gray border-1">
@@ -1467,9 +1467,9 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                     <img src="client/img/lifestyle/1.png" alt="">
                                 </div>
                                 <div class="content pt-30">
-                                    <a href="home-default.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">life
+                                    <a href="{{ url('/') }}" class="news-cat color-999 fsz-13px text-uppercase mb-10">life
                                         style</a>
-                                    <h3 class="title ltspc--1 mb-20"> <a href="page-single-post-creative.html">
+                                    <h3 class="title ltspc--1 mb-20"> <a href="{{ url('/') }}">
                                             Hotdog styles on 20 countries
                                         </a> </h3>
                                     <div class="text color-666">
@@ -1500,10 +1500,10 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                     <img src="client/img/lifestyle/2.png" alt="">
                                 </div>
                                 <div class="content pt-20">
-                                    <a href="home-default.html#"
+                                    <a href="{{ url('/') }}"
                                         class="news-cat color-999 fsz-13px text-uppercase mb-10">lifestyle</a>
                                     <h5 class="title ltspc--1 mb-10">
-                                        <a href="page-single-post-creative.html">
+                                        <a href="{{ url('/') }}">
                                             Grand Pera Coffee
                                         </a>
                                     </h5>
@@ -1525,7 +1525,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                         </div>
                         <div class="tc-post-list-style2">
                             <div class="items">
-                                <a href="page-single-post-creative.html"
+                                <a href="{{ url('/') }}"
                                     class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15">
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
@@ -1542,7 +1542,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                         </div>
                                     </div>
                                 </a>
-                                <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
+                                <a href="{{ url('/') }}" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-50 img-cover">
@@ -1558,7 +1558,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                         </div>
                                     </div>
                                 </a>
-                                <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
+                                <a href="{{ url('/') }}" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-50 img-cover">
@@ -1584,10 +1584,10 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                     <img src="client/img/lifestyle/6.png" alt="">
                                 </div>
                                 <div class="content pt-20">
-                                    <a href="home-default.html#"
+                                    <a href="{{ url('/') }}"
                                         class="news-cat color-999 fsz-13px text-uppercase mb-10">lifestyle</a>
                                     <h5 class="title ltspc--1 mb-10">
-                                        <a href="page-single-post-creative.html">
+                                        <a href="{{ url('/') }}">
                                             Enviroment Protection
                                         </a>
                                     </h5>
@@ -1609,7 +1609,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                         </div>
                         <div class="tc-post-list-style2">
                             <div class="items">
-                                <a href="page-single-post-creative.html"
+                                <a href="{{ url('/') }}"
                                     class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15">
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
@@ -1626,7 +1626,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                         </div>
                                     </div>
                                 </a>
-                                <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
+                                <a href="{{ url('/') }}" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-50 img-cover">
@@ -1642,7 +1642,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                         </div>
                                     </div>
                                 </a>
-                                <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
+                                <a href="{{ url('/') }}" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
                                             <div class="img th-50 img-cover">
@@ -1761,7 +1761,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                 <div class="content">
                     <div class="row">
                         <div class="col-lg-4">
-                            <p class="color-000 text-uppercase mb-30 ltspc-1"><a href="page-blog.html">Thể Thao </a> <i
+                            <p class="color-000 text-uppercase mb-30 ltspc-1"><a href="{{ url('/') }}">Thể Thao </a> <i
                                     class="la la-angle-right ms-1"></i></p>
                             <div class="row">
                                 <div class="col-12 border-1 border-end brd-gray">
@@ -1771,10 +1771,10 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                 <img src="client/assets/img/another_news/1.png" alt="">
                                             </div>
                                             <div class="content pt-20">
-                                                <a href="home-default.html#"
+                                                <a href="{{ url('/') }}"
                                                     class="news-cat color-999 fsz-13px text-uppercase mb-10">Thể Thao </a>
                                                 <h4 class="title ltspc--1 mb-10">
-                                                    <a href="page-single-post-creative.html">
+                                                    <a href="{{ url('/') }}">
                                                         Đội tuyển điền kinh của Hoa Kỳ đã giành chiến thắng tại Thế vận hội Olympic 2022?
                                                         </a>
                                                         </h4>
@@ -1801,7 +1801,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                     </div>
                                     <div class="tc-post-list-style2">
                                         <div class="items">
-                                            <a href="page-single-post-creative.html"
+                                            <a href="{{ url('/') }}"
                                                 class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
                                                 <div class="row gx-3 align-items-center">
                                                     <div class="col-4">
@@ -1821,7 +1821,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                     </div>
                                                 </div>
                                             </a>
-                                            <a href="page-single-post-creative.html"
+                                            <a href="{{ url('/') }}"
                                                 class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
                                                 <div class="row gx-3 align-items-center">
                                                     <div class="col-4">
@@ -1848,7 +1848,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                         </div>
 
                         <div class="col-lg-4">
-                            <p class="color-000 text-uppercase mb-30 ltspc-1"><a href="page-blog.html">Giải Trí </a> <i
+                            <p class="color-000 text-uppercase mb-30 ltspc-1"><a href="{{ url('/') }}">Giải Trí </a> <i
                                     class="la la-angle-right ms-1"></i></p>
                             <div class="row">
                                 <div class="col-12 border-1 border-end brd-gray">
@@ -1858,10 +1858,10 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                 <img src="client/assets/img/another_news/4.png" alt="">
                                             </div>
                                             <div class="content pt-20">
-                                                <a href="home-default.html#"
+                                                <a href="{{ url('/') }}"
                                                     class="news-cat color-999 fsz-13px text-uppercase mb-10">Giải Trí </a>
                                                     <h4 class="title ltspc--1 mb-10">
-                                                        <a href="page-single-post-creative.html">
+                                                        <a href="{{ url('/') }}">
                                                         Những tác phẩm nghệ thuật đương đại hay nhất của Logan Cee
                                                         </a>
                                                         </h4>
@@ -1888,7 +1888,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                     </div>
                                     <div class="tc-post-list-style2">
                                         <div class="items">
-                                            <a href="page-single-post-creative.html"
+                                            <a href="{{ url('/') }}"
                                                 class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
                                                 <div class="row gx-3 align-items-center">
                                                     <div class="col-4">
@@ -1908,7 +1908,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                     </div>
                                                 </div>
                                             </a>
-                                            <a href="page-single-post-creative.html"
+                                            <a href="{{ url('/') }}"
                                                 class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
                                                 <div class="row gx-3 align-items-center">
                                                     <div class="col-4">
@@ -1935,7 +1935,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                         </div>
 
                         <div class="col-lg-4">
-                            <p class="color-000 text-uppercase mb-30 ltspc-1"><a href="page-blog.html">Du Lịch </a> <i
+                            <p class="color-000 text-uppercase mb-30 ltspc-1"><a href="{{ url('/') }}">Du Lịch </a> <i
                                     class="la la-angle-right ms-1"></i></p>
                             <div class="row">
                                 <div class="col-12">
@@ -1945,10 +1945,10 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                 <img src="client/assets/img/another_news/7.png" alt="">
                                             </div>
                                             <div class="content pt-20">
-                                                <a href="home-default.html#"
+                                                <a href="{{ url('/') }}"
                                                     class="news-cat color-999 fsz-13px text-uppercase mb-10">Du Lịch </a>
                                                 <h4 class="title ltspc--1 mb-10">
-                                                    <a href="page-single-post-creative.html">
+                                                    <a href="{{ url('/') }}">
                                                         10 suối nước nóng đẹp nhất thế giới
                                                         </a>
                                                         </h4>
@@ -1975,7 +1975,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                     </div>
                                     <div class="tc-post-list-style2">
                                         <div class="items">
-                                            <a href="page-single-post-creative.html"
+                                            <a href="{{ url('/') }}"
                                                 class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
                                                 <div class="row gx-3 align-items-center">
                                                     <div class="col-4">
@@ -1995,7 +1995,7 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                                                     </div>
                                                 </div>
                                             </a>
-                                            <a href="page-single-post-creative.html"
+                                            <a href="{{ url('/') }}"
                                                 class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
                                                 <div class="row gx-3 align-items-center">
                                                     <div class="col-4">
@@ -2041,10 +2041,10 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                         </div>
                         <div class="col-lg-3">
                             <div class="img">
-                                <a href="home-default.html#">
+                                <a href="{{ url('/') }}">
                                     <img src="client/assets/img/apple1.png" alt="">
                                 </a>
-                                <a href="home-default.html#">
+                                <a href="{{ url('/') }}">
                                     <img src="client/assets/img/android1.png" alt="">
                                 </a>
                             </div>
@@ -2112,19 +2112,19 @@ class="hover-underline">Tranh chấp ở Biển Đông không có dấu hiệu k
                         </li>
                     </ul>
                     <div class="social-links">
-                        <a href="home-default.html#">
+                        <a href="{{ url('/') }}">
                             <i class="la la-twitter"></i>
                         </a>
-                        <a href="home-default.html#">
+                        <a href="{{ url('/') }}">
                             <i class="la la-facebook-f"></i>
                         </a>
-                        <a href="home-default.html#">
+                        <a href="{{ url('/') }}">
                             <i class="la la-instagram"></i>
                         </a>
-                        <a href="home-default.html#">
+                        <a href="{{ url('/') }}">
                             <i class="la la-youtube"></i>
                         </a>
-                        <a href="home-default.html#">
+                        <a href="{{ url('/') }}">
                             <i class="la la-spotify"></i>
                         </a>
                     </div>
