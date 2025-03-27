@@ -44,7 +44,7 @@
                                     <div class="col-6">
                                         <a href="page-single-post-creative.html#" class="text-uppercase fs-6 border-bottom border-1 border-dark">
                                             <i class="la la-envelope fs-5 me-1"></i>
-                                            Subscribe
+                                            Đăng Ký
                                         </a>
                                     </div>
                                     <div class="col-6">
