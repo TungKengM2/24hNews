@@ -38,6 +38,7 @@ use App\Http\Controllers\Profile\AuthorProfileController as ProfileAuthorProfile
 // 🌟 Trang chủ & bài viết chi tiết
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/search', [HomeController::class, 'search'])->name('search');
 // dat them
 
 // profile trang chủ dat them
