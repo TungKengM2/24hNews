@@ -13,18 +13,6 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        $keyword = $request->input('keyword');
-        $results = null;
-
-        if ($keyword) {
-            $results = Article::where('status', 'published')
-                ->where(function($query) use ($keyword) {
-                    $query->where('title', 'LIKE', "%{$keyword}%")
-                        ->orWhere('content', 'LIKE', "%{$keyword}%");
-                })
-                ->get();
-        }
-
         // breaking news
         $featuredArticles = Article::where('status', 'published')
             ->orderByDesc('created_at') // Sắp xếp theo thời gian mới nhất
@@ -86,9 +74,7 @@ class HomeController extends Controller
                 'articles' => $articles ?? null,
                 'D1Articles' => $D1Articles ?? null,
                 'articlesfollow' => collect(),
-                'followMessage' => 'Bạn chưa đăng ký/đăng nhập để theo dõi tác giả.',
-                'keyword' => $keyword,
-                'results' => $results
+                'followMessage' => 'Bạn chưa đăng ký/đăng nhập để theo dõi tác giả.'
             ]);
         }
 
@@ -104,7 +90,7 @@ class HomeController extends Controller
             ->get();
 
         // Truyền dữ liệu bài viết tới view
-        return view('welcome', compact('categories', 'category2', 'sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles', 'articlesfollow', 'followMessage', 'keyword', 'results'));
+        return view('welcome', compact('categories', 'category2', 'sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles', 'articlesfollow', 'followMessage'));
     }
 
     public function search(Request $request)
@@ -113,19 +99,46 @@ class HomeController extends Controller
         $results = [];
 
         if ($keyword) {
+            // Tìm kiếm chính xác theo từng ký tự trong tiêu đề
             $articles = Article::where('status', 'published')
                 ->where(function($query) use ($keyword) {
-                    $query->where('title', 'LIKE', "%{$keyword}%")
-                        ->orWhere('content', 'LIKE', "%{$keyword}%");
+                    $query->where('title', 'LIKE', "%{$keyword}%");
                 })
+                ->orderBy('views', 'desc')
                 ->get();
 
             foreach ($articles as $article) {
-                $results[] = [
-                    'title' => $article->title,
-                    'url' => Auth::check() ? route('articles.article', $article->slug) : url('/login-user')
-                ];
+                // Tính độ phù hợp dựa trên vị trí xuất hiện của từ khóa trong tiêu đề
+                $relevance = 0;
+                $title = mb_strtolower($article->title);
+                $keyword = mb_strtolower($keyword);
+                
+                // Tăng điểm nếu từ khóa xuất hiện ở đầu tiêu đề
+                if (mb_strpos($title, $keyword) === 0) {
+                    $relevance += 3;
+                }
+                // Tăng điểm nếu từ khóa xuất hiện trong tiêu đề
+                elseif (mb_strpos($title, $keyword) !== false) {
+                    $relevance += 2;
+                }
+
+                // Chỉ thêm kết quả có độ phù hợp > 0
+                if ($relevance > 0) {
+                    $results[] = [
+                        'title' => $article->title,
+                        'url' => Auth::check() ? route('articles.article', $article->slug) : url('/login-user'),
+                        'relevance' => $relevance
+                    ];
+                }
             }
+
+            // Sắp xếp kết quả theo độ phù hợp
+            usort($results, function($a, $b) {
+                return $b['relevance'] - $a['relevance'];
+            });
+
+            // Chỉ trả về 10 kết quả phù hợp nhất
+            $results = array_slice($results, 0, 10);
         }
 
         return response()->json(['results' => $results]);
