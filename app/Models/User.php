@@ -88,4 +88,9 @@ class User extends Authenticatable implements CanResetPasswordContract
     {
         return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
     }
+
+    public function followedArticles()
+    {
+        return Article::whereIn('author_id', $this->following()->pluck('users.id'))->where('status', 'published')->get();
+    }
 }

@@ -30,27 +30,23 @@
 
                             </div>
                             <div class="info">
-                                {{-- <div class="color-666 mb-20 rating">
-                                    <span>Đánh giá tương tác: </span>
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        <i
-                                            class="la la-star {{ $i <= round($rating) ? 'text-warning' : 'text-muted' }}"></i>
-                                    @endfor
-                                </div> --}}
-
-
                                 <div class="rate">
                                     {{-- <p>Đánh giá trung bình:</p> --}}
                                     @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= $ratingStars)
+                                        @if ($i <= floor($averageRating))
                                             <i class="la la-star text-warning"></i>
+                                        @elseif ($i == ceil($averageRating) && $averageRating - floor($averageRating) > 0)
+                                            <i class="la la-star-half-alt text-warning"></i>
                                         @else
                                             <i class="la la-star-o text-secondary"></i>
                                         @endif
                                     @endfor
+
+
+
                                 </div>
                                 <div class="description mt-20">
-                                    <p class="color-666 mb-20"> {{ $author->description ?? 'No description available' }}
+                                    <p class="color-666 mb-20"> {{ $author->description ?? 'Không Có Mô Tả Trang Cá Nhân' }}
                                     </p>
                                     <p class="color-666 mb-20"> <i class="la la-book"></i> {{ $author->articles_count }}
                                         Posts
