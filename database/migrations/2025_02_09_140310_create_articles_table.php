@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('article_id');
             $table->string('title', 255);
             $table->string('slug', 255)->unique();
-            $table->text('content');
+            $table->longText('content');
             $table->text('preview_content')->nullable();
             $table->boolean('contains_sensitive_content')->default(false);
             $table->unsignedBigInteger('author_id');
