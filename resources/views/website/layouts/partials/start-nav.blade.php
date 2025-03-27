@@ -23,17 +23,6 @@
                         <i class="la la-home fs-4"></i>
                     </a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="page-author.html#" id="navbarDropdown1" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Blog
-                    </a>
-                    <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
-                        <li><a class="dropdown-item" href="page-blog.html">Blog</a></li>
-                        <li><a class="dropdown-item" href="{{ url('/profile') }}">authors</a></li>
-                        <li><a class="dropdown-item" href="page-author-details.html">author details</a></li>
-                    </ul>
-                </li>
 
                 {{-- dat them --}}
                 @foreach ($categories as $category)
@@ -48,9 +37,20 @@
                 {{-- dat them --}}
             </ul>
 
-            <div class="nav-side navbar-nav me-auto mb-2 mb-lg-0 ">
+            <div class="nav-side navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item dropdown">
-                    <a  class="icon-link">
+                    <a class="icon-link">
+                        <i class="la la-bell fs-4"></i>
+                    </a>
+                    <ul class="dropdownMenu " style="margin-top: 0 ; margin-top: -50px;" aria-labelledby="">
+                        <li><a class="dropdown-item" href="#">
+                            <i class="la la-bell fs-4"></i> Notifications
+                        </a></li>
+                    </ul>
+                </li>
+                
+                <li class="nav-item dropdown">
+                    <a class="icon-link">
                         <i class="la la-user fs-4"></i>
                     </a>
                     <ul class="dropdownMenu " style="margin-top: 0 ; margin-top: -50px;" aria-labelledby="">
@@ -62,7 +62,6 @@
                         </a></li>
                     </ul>
                 </li>
-
 
                      <a class="icon-link search-btn-style1">
                          <i class="la la-search fs-4 sOpen-btn"></i>
