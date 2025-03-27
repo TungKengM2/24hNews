@@ -29,19 +29,19 @@
                 </div>
 
                 <div class="social-links">
-                    <a href="home-default.html#">
+                    <a href="#">
                         <i class="la la-twitter"></i>
                     </a>
-                    <a href="home-default.html#">
+                    <a href="#">
                         <i class="la la-facebook-f"></i>
                     </a>
-                    <a href="home-default.html#">
+                    <a href="#">
                         <i class="la la-instagram"></i>
                     </a>
-                    <a href="home-default.html#">
+                    <a href="#">
                         <i class="la la-youtube"></i>
                     </a>
-                    <a href="home-default.html#">
+                    <a href="#">
                         <i class="la la-spotify"></i>
                     </a>
                 </div>
@@ -53,22 +53,22 @@
                 <div class="title">Kinh doanh</div>
                 <ul>
                     <li>
-                        <a href="home-default.html#" class="f-link">Khởi nghiệp</a>
+                        <a href="#" class="f-link">Khởi nghiệp</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Xu hướng kinh doanh</a>
+                        <a href="#" class="f-link">Xu hướng kinh doanh</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Văn hóa làm việc</a>
+                        <a href="#" class="f-link">Văn hóa làm việc</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Tài chính cá nhân</a>
+                        <a href="#" class="f-link">Tài chính cá nhân</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Lãnh đạo</a>
+                        <a href="#" class="f-link">Lãnh đạo</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Thị trường chứng khoán</a>
+                        <a href="#" class="f-link">Thị trường chứng khoán</a>
                     </li>
                 </ul>
             </div>
@@ -76,13 +76,13 @@
                 <div class="title">Chính trị</div>
                 <ul>
                     <li>
-                        <a href="home-default.html#" class="f-link">Nhật ký chính trị</a>
+                        <a href="#" class="f-link">Nhật ký chính trị</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">An ninh quốc gia</a>
+                        <a href="#" class="f-link">An ninh quốc gia</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Video chính trị</a>
+                        <a href="#" class="f-link">Video chính trị</a>
                     </li>
                 </ul>
             </div>
@@ -92,19 +92,19 @@
                 <div class="title">Công nghệ</div>
                 <ul>
                     <li>
-                        <a href="home-default.html#" class="f-link">Công nghệ cá nhân</a>
+                        <a href="#" class="f-link">Công nghệ cá nhân</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Đánh giá sản phẩm</a>
+                        <a href="#" class="f-link">Đánh giá sản phẩm</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Trò chơi điện tử</a>
+                        <a href="#" class="f-link">Trò chơi điện tử</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Khám phá</a>
+                        <a href="#" class="f-link">Khám phá</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Kiến thức</a>
+                        <a href="#" class="f-link">Kiến thức</a>
                     </li>
                 </ul>
             </div>
@@ -112,22 +112,22 @@
                 <div class="title">Phong cách sống</div>
                 <ul>
                     <li>
-                        <a href="home-default.html#" class="f-link">Xu hướng phong cách sống</a>
+                        <a href="#" class="f-link">Xu hướng phong cách sống</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Gia đình</a>
+                        <a href="#" class="f-link">Gia đình</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Tâm lý học</a>
+                        <a href="#" class="f-link">Tâm lý học</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Thời trang</a>
+                        <a href="#" class="f-link">Thời trang</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Ẩm thực</a>
+                        <a href="#" class="f-link">Ẩm thực</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Văn hóa</a>
+                        <a href="#" class="f-link">Văn hóa</a>
                     </li>
                 </ul>
             </div>
@@ -137,13 +137,13 @@
                 <div class="title">Giải trí</div>
                 <ul>
                     <li>
-                        <a href="home-default.html#" class="f-link">Âm nhạc & Podcast</a>
+                        <a href="#" class="f-link">Âm nhạc & Podcast</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Nghệ thuật & Thiết kế</a>
+                        <a href="#" class="f-link">Nghệ thuật & Thiết kế</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Phim ảnh</a>
+                        <a href="#" class="f-link">Phim ảnh</a>
                     </li>
                 </ul>
             </div>
@@ -151,19 +151,19 @@
                 <div class="title">Thể thao</div>
                 <ul>
                     <li>
-                        <a href="home-default.html#" class="f-link">Bóng đá</a>
+                        <a href="#" class="f-link">Bóng đá</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Quần vợt</a>
+                        <a href="#" class="f-link">Quần vợt</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Giải đua F1</a>
+                        <a href="#" class="f-link">Giải đua F1</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">NBA</a>
+                        <a href="#" class="f-link">NBA</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Bóng rổ</a>
+                        <a href="#" class="f-link">Bóng rổ</a>
                     </li>
                 </ul>
             </div>
@@ -173,19 +173,19 @@
                 <div class="title">Du lịch</div>
                 <ul>
                     <li>
-                        <a href="home-default.html#" class="f-link">Khám phá</a>
+                        <a href="#" class="f-link">Khám phá</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Vé máy bay & Khách sạn</a>
+                        <a href="#" class="f-link">Vé máy bay & Khách sạn</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Tour du lịch</a>
+                        <a href="#" class="f-link">Tour du lịch</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Điểm đến</a>
+                        <a href="#" class="f-link">Điểm đến</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Trải nghiệm & Đánh giá</a>
+                        <a href="#" class="f-link">Trải nghiệm & Đánh giá</a>
                     </li>
                 </ul>
             </div>
@@ -193,19 +193,19 @@
                 <div class="title">Trung tâm hỗ trợ</div>
                 <ul>
                     <li>
-                        <a href="home-default.html#" class="f-link">Về chúng tôi</a>
+                        <a href="#" class="f-link">Về chúng tôi</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Liên hệ</a>
+                        <a href="#" class="f-link">Liên hệ</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Chương trình đối tác</a>
+                        <a href="#" class="f-link">Chương trình đối tác</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Chính sách bảo mật</a>
+                        <a href="#" class="f-link">Chính sách bảo mật</a>
                     </li>
                     <li>
-                        <a href="home-default.html#" class="f-link">Điều khoản & Điều kiện</a>
+                        <a href="#" class="f-link">Điều khoản & Điều kiện</a>
                     </li>
                     <li>
                         <a href="{{ route('loginadmin') }}" class="f-link">Quản trị viên</a>
