@@ -7,50 +7,66 @@
             </div>
         </div>
         <div class="col-lg-6">
-            <form class="form" method="GET" action="{{ route('home') }}">
+            <form class="form" id="searchForm" method="GET">
                 @csrf
                 <span class="color-777 fst-italic text-capitalize mb-2 fsz-13px">Nhập Từ Khóa </span>
                 <div class="form-group">
                     <span class="icon">
                         <i class="la la-search"></i>
                     </span>
-                    <input type="text" name="keyword" class="form-control" placeholder="Elon Musk ..." required
-                        value="{{ old('keyword', $keyword ?? '') }}">
+                    <input type="text" name="keyword" class="form-control" placeholder="Elon Musk ..." required>
                     <button type="submit">Tìm Kiếm </button>
                 </div>
-                <script>
-                document.querySelector('form').addEventListener('submit', function(e) {
-                    const keyword = this.querySelector('input[name="keyword"]');
-                    if (!keyword.value.trim()) {
-                        e.preventDefault();
-                        alert('Vui lòng nhập từ khóa để tìm kiếm');
-                        keyword.focus();
-                    }
-                });
-                </script>
             </form>
 
-            {{-- Hiển thị kết quả tìm kiếm chỉ khi form đã được submit --}}
-            @if (request()->has('keyword') && isset($results))
-            <div class="search-results mt-4">
-                <h6>Kết quả tìm kiếm cho: "{{ $keyword }}"</h6>
-                @if ($results->count() > 0)
-                    <ul>
-                        @foreach ($results->where('status', 'published') as $result)
-                            <li>
-                                <a href="{{ Auth::check() ? route('articles.article', $result->slug) : url('/login-user') }}"
-                                    class="btn btn-block">{{ $result->title }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                    @if ($results->where('status', 'published')->count() == 0)
-                        <p>Không tìm thấy kết quả nào.</p>
-                    @endif
-                @else
-                    <p>Không tìm thấy kết quả nào.</p>
-                @endif
+            <div id="searchResults" class="search-results mt-4" style="display: none;">
+                <h6>Kết quả tìm kiếm cho: "<span id="searchKeyword"></span>"</h6>
+                <div id="searchResultsList"></div>
             </div>
-            @endif
+
+            <script>
+            document.getElementById('searchForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const keyword = this.querySelector('input[name="keyword"]').value.trim();
+                
+                if (!keyword) {
+                    alert('Vui lòng nhập từ khóa để tìm kiếm');
+                    keyword.focus();
+                    return;
+                }
+
+                // Hiển thị loading state
+                document.getElementById('searchResults').style.display = 'block';
+                document.getElementById('searchKeyword').textContent = keyword;
+                document.getElementById('searchResultsList').innerHTML = '<p>Đang tìm kiếm...</p>';
+
+                // Gửi request AJAX
+                fetch(`/search?keyword=${encodeURIComponent(keyword)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultsList = document.getElementById('searchResultsList');
+                        
+                        if (data.results && data.results.length > 0) {
+                            let html = '<ul>';
+                            data.results.forEach(result => {
+                                html += `
+                                    <li>
+                                        <a href="${result.url}" class="btn btn-block">${result.title}</a>
+                                    </li>
+                                `;
+                            });
+                            html += '</ul>';
+                            resultsList.innerHTML = html;
+                        } else {
+                            resultsList.innerHTML = '<p>Không tìm thấy kết quả nào.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('searchResultsList').innerHTML = '<p>Có lỗi xảy ra khi tìm kiếm.</p>';
+                    });
+            });
+            </script>
         </div>
     </div>
 </div>
