@@ -36,13 +36,16 @@
                 <h6>Kết quả tìm kiếm cho: "{{ $keyword }}"</h6>
                 @if ($results->count() > 0)
                     <ul>
-                        @foreach ($results as $result)
+                        @foreach ($results->where('status', 'published') as $result)
                             <li>
                                 <a href="{{ Auth::check() ? route('articles.article', $result->slug) : url('/login-user') }}"
                                     class="btn btn-block">{{ $result->title }}</a>
                             </li>
                         @endforeach
                     </ul>
+                    @if ($results->where('status', 'published')->count() == 0)
+                        <p>Không tìm thấy kết quả nào.</p>
+                    @endif
                 @else
                     <p>Không tìm thấy kết quả nào.</p>
                 @endif

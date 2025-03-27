@@ -15,7 +15,7 @@
                     <button>Đăng ký</button>
                 </div>
                 <p class="mt-2 color-666 fsz-13px fst-italic">Bằng cách đăng ký, bạn đã chấp nhận <a
-                        href="home-default.html#" class="text-decoration-underline fst-normal color-000">Chính sách</a>
+                        href="#" class="text-decoration-underline fst-normal color-000">Chính sách</a>
                 </p>
             </div>
         </div>

@@ -13,8 +13,11 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->input('keyword');
-        $results = Article::where('title', 'LIKE', "%{$keyword}%")
-            ->orWhere('category_id', 'LIKE', "%{$keyword}%")
+        $results = Article::where('status', 'published')
+            ->where(function($query) use ($keyword) {
+                $query->where('title', 'LIKE', "%{$keyword}%")
+                    ->orWhere('category_id', 'LIKE', "%{$keyword}%");
+            })
             ->get();
 
         // breaking news
@@ -22,8 +25,6 @@ class HomeController extends Controller
             ->orderByDesc('created_at') // Sắp xếp theo thời gian mới nhất
             ->take(7)
             ->get();
-
-
 
         // top 2 bài viết nhiều lượt xem
         $D1Articles = Article::where('status', 'published')
@@ -64,8 +65,6 @@ class HomeController extends Controller
         }
 
         $category2 = Category::where('is_active', 1)->get();
-
-
 
         // Truyền dữ liệu bài viết tới view
         return view('welcome', compact('results','category2', 'keyword','categories', 'category2', 'sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles'));
