@@ -22,7 +22,6 @@
                                         <th>Ảnh Đại Diện</th>
                                         <th>Tiêu Đề</th>
                                         <th>Nội Dung</th>
-                                        <th>Hành Động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
