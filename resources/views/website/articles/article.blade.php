@@ -68,47 +68,48 @@
                 </div>
                 <div class="tc-main-post-content color-000">
                     <div class="row">
-                        <div class="col-lg-2">
-                            <div class="sharing d-flex flex-column align-items-start gap-4">
-                                <a href="#" id="bookmarkButton"
-                                    class="d-flex align-items-center gap-2 text-decoration-none"
-                                    data-article-id="{{ $article->article_id }}"
-                                    onclick="toggleBookmark(this, {{ $article->article_id }}); return false;">
-                                    <i class="la la-bookmark" id="bookmarkIcon"
-                                        style="font-size: 28px; color: {{ $isBookmarked ? 'gold' : 'inherit' }};">
-                                    </i>
-                                    <span
-                                        style="font-size: 20px; font-weight: bold; color: {{ $isBookmarked ? '#e60023' : 'black' }};">
-                                        {{ $isBookmarked ? 'Đã lưu' : '' }}
-                                    </span>
-                                </a>
-
-
-                                <button type="button"
-                                    class="report-article-btn d-flex align-items-center gap-2 border-0 bg-transparent"
-                                    data-article-id="{{ $article->article_id }}"
-                                    style="outline: none; box-shadow: none; cursor: pointer;">
-                                    <i class="la la-exclamation-triangle" style="font-size: 28px; color: red;"></i>
-                                    <span style="font-size: 20px; font-weight: bold; color: black;"></span>
-                                </button>
-
-
-                                <button id="likeButton" class="d-flex align-items-center gap-2 border-0 bg-transparent"
+                        <div class="col-lg-1">
+                            <div class="sharing d-flex flex-column align-items-center gap-4 sticky-top" style="top: 100px; padding-top: 20px;">
+                                <!-- Nút Like -->
+                                <button id="likeButton" class="d-flex flex-column align-items-center gap-1 border-0 bg-transparent mb-3"
                                     data-article-id="{{ $article->article_id }}"
                                     data-liked="{{ $isLiked ? 'true' : 'false' }}"
                                     style="outline: none; box-shadow: none; cursor: pointer;">
                                     <i id="likeIcon" class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-heart"
-                                        style="font-size: 28px; {{ $isLiked ? 'color: #e60023;' : 'color: black; -webkit-text-stroke: 1px white;' }}">
+                                        style="font-size: 28px; {{ $isLiked ? 'color: #e60023;' : 'color: black;' }}">
                                     </i>
                                     <span id="likeCount"
-                                        style="font-size: 20px; font-weight: bold; color: {{ $isLiked ? '#e60023' : 'black' }};">
+                                        style="font-size: 14px; font-weight: bold; color: {{ $isLiked ? '#e60023' : 'black' }};">
                                         {{ $likeCount }}
                                     </span>
                                 </button>
+
+                                <!-- Nút Bookmark -->
+                                <a href="#" id="bookmarkButton"
+                                    class="d-flex flex-column align-items-center gap-1 text-decoration-none mb-3"
+                                    data-article-id="{{ $article->article_id }}"
+                                    onclick="toggleBookmark(this, {{ $article->article_id }}); return false;">
+                                    <i class="la la-bookmark" id="bookmarkIcon"
+                                        style="font-size: 28px; color: {{ $isBookmarked ? 'gold' : '#555' }};">
+                                    </i>
+                                    <span
+                                        style="font-size: 14px; font-weight: bold; color: {{ $isBookmarked ? 'gold' : '#555' }};">
+                                        {{ $isBookmarked ? 'Đã lưu' : 'Lưu' }}
+                                    </span>
+                                </a>
+
+                                <!-- Nút Report -->
+                                <button type="button"
+                                    class="report-article-btn d-flex flex-column align-items-center gap-1 border-0 bg-transparent"
+                                    data-article-id="{{ $article->article_id }}"
+                                    style="outline: none; box-shadow: none; cursor: pointer;">
+                                    <i class="la la-exclamation-triangle" style="font-size: 28px; color: #777;"></i>
+                                    <span style="font-size: 14px; font-weight: bold; color: #777;">Báo cáo</span>
+                                </button>
                             </div>
                         </div>
-                        <div class="col-lg-10">
-                            <h3 class="lead">{!! $article->title !!}</h3>
+                        
+                        <div class="col-lg-11">
                             <div class="content">
                                 @foreach (explode("\n", $article->content) as $paragraph)
                                     @if (trim($paragraph) !== '')
@@ -116,7 +117,6 @@
                                     @endif
                                 @endforeach
                             </div>
-
                         </div>
                     </div>
                 </div>
