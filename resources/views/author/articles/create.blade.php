@@ -3,7 +3,6 @@
 @section('head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-
     <!-- Style -->
     <style>
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -55,6 +54,27 @@
         .violation-none {
             color: #28a745;
         }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .form-section-title {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+        }
     </style>
 @endsection
 
@@ -68,8 +88,10 @@
         <div class="container-full">
             <div class="wrapper">
                 <div class="container mt-5 ">
-                    <div class="card p-2">
+                    <div class="card p-4">
                         <h2 class="mb-4">Tạo Bài Viết Mới</h2>
+                        
+                        <!-- Hiển thị thông báo lỗi -->
                         @if ($errors->any())
                             <div class="alert alert-danger error_message">
                                 <ul>
@@ -80,6 +102,7 @@
                             </div>
                         @endif
 
+                        <!-- Cảnh báo hình ảnh bị chặn -->
                         @if(session('blocked_images'))
                             <div class="alert alert-warning error_message">
                                 <strong>Cảnh báo: Một số hình ảnh đã bị chặn</strong>
@@ -100,6 +123,7 @@
                             </div>
                         @endif
 
+                        <!-- Lý do vi phạm -->
                         @if(session('violation_reasons'))
                             <div class="alert alert-warning error_message">
                                 <strong>Lý do vi phạm:</strong>
@@ -115,108 +139,128 @@
                             </div>
                         @endif
 
-
                         <form action="{{ route('author.articles.store') }}" method="POST" enctype="multipart/form-data"
                             id="articleForm">
                             @csrf
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Tiêu đề</label>
-                                <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}"
-                                    required>
-                            </div>
+                            
+                            <!-- Thông tin cơ bản -->
+                            <div class="form-section">
+                                <h4 class="form-section-title">Thông tin cơ bản</h4>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="title" class="form-label">Tiêu đề</label>
+                                        <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}"
+                                            required>
+                                    </div>
 
-                            <div class="mb-3">
-                                <label for="slug" class="form-label">Đường dẫn</label>
-                                <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug') }}"
-                                    required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="content" class="form-label">Nội dung</label>
-                                @if(session()->has('violations') && !empty(session('violations')))
-                                    <textarea id="full-featured" name="content"
-                                            style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
-                                    {!! highlightWords(old('content', isset($article) ? $article->content : ''), session('violations')) !!}
-                                    </textarea>
-                                @else
-                                    <textarea id="full-featured" name="content"
-                                            style="height: 800px;">
-                            {{ old('content', isset($article) ? $article->content : '') }}
-                            </textarea>
-                                @endif
-                            </div>
-
-
-                            <div class="mb-3">
-                                <label for="tags">Chọn hoặc thêm thẻ:</label>
-                                <select name="tags[]" id="tags" class="form-control" multiple="multiple">
-                                    @foreach ($tags as $tag)
-                                        <option
-                                            value="{{ $tag->tag_id }}" {{ in_array($tag->tag_id, old('tags', [])) ? 'selected' : '' }}>
-                                            {{ $tag->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Danh mục</label>
-                                <select name="category_id" class="form-control">
-                                    @foreach ($categories as $category)
-                                        @if ($category->is_active)
-                                            <option value="{{ $category->category_id }}">{{ $category->name }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="thumbnail_url" class="form-label">Ảnh đại diện</label>
-                                <input type="file" class="form-control @error('thumbnail_url') is-invalid @enderror"
-                                    id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
-
-                                <div id="image-preview-container" style="display: none;">
-                                    <img id="image-preview" src="#" alt="Xem trước" class="img-fluid mb-2">
-                                </div>
-
-                                <div id="moderation-result" style="display: none;">
-                                    <div id="moderation-error" class="alert alert-danger" style="display: none;">
-                                        <strong>Lỗi!</strong> <span id="error-message"></span>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="slug" class="form-label">Đường dẫn</label>
+                                        <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug') }}"
+                                            required>
                                     </div>
                                 </div>
 
-                                @error('thumbnail_url')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                                @if (session('thumbnail_reasons'))
-                                    <div class="alert alert-warning mt-2">
-                                        <strong>Ảnh đại diện vi phạm quy định!</strong>
-                                        <ul>
-                                            @foreach(session('thumbnail_reasons') as $key => $reason)
-                                                <li>{{ $reason }}</li>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Danh mục</label>
+                                        <select name="category_id" class="form-control">
+                                            @foreach ($categories as $category)
+                                                @if ($category->is_active)
+                                                    <option value="{{ $category->category_id }}">{{ $category->name }}</option>
+                                                @endif
                                             @endforeach
-                                        </ul>
-                                        <p>Vui lòng chọn ảnh đại diện khác phù hợp với quy định.</p>
+                                        </select>
                                     </div>
-                                @endif
-                                @if (old('thumbnail_url'))
-                                    <p>File đã chọn trước đó: {{ old('thumbnail_url') }}</p>
-                                @endif
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="tags">Chọn hoặc thêm thẻ:</label>
+                                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
+                                            @foreach ($tags as $tag)
+                                                <option
+                                                    value="{{ $tag->tag_id }}" {{ in_array($tag->tag_id, old('tags', [])) ? 'selected' : '' }}>
+                                                    {{ $tag->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
+                            <!-- Ảnh đại diện -->
+                            <div class="form-section">
+                                <h4 class="form-section-title">Ảnh đại diện</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="thumbnail_url" class="form-label">Chọn ảnh đại diện</label>
+                                        <input type="file" class="form-control @error('thumbnail_url') is-invalid @enderror"
+                                            id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
 
-                            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-                            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+                                        @error('thumbnail_url')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                        
+                                        @if (session('thumbnail_reasons'))
+                                            <div class="alert alert-warning mt-2">
+                                                <strong>Ảnh đại diện vi phạm quy định!</strong>
+                                                <ul>
+                                                    @foreach(session('thumbnail_reasons') as $key => $reason)
+                                                        <li>{{ $reason }}</li>
+                                                    @endforeach
+                                                </ul>
+                                                <p>Vui lòng chọn ảnh đại diện khác phù hợp với quy định.</p>
+                                            </div>
+                                        @endif
+                                        
+                                        @if (old('thumbnail_url'))
+                                            <p>File đã chọn trước đó: {{ old('thumbnail_url') }}</p>
+                                        @endif
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div id="image-preview-container" style="display: none;">
+                                            <img id="image-preview" src="#" alt="Xem trước" class="img-fluid mb-2">
+                                        </div>
+
+                                        <div id="moderation-result" style="display: none;">
+                                            <div id="moderation-error" class="alert alert-danger" style="display: none;">
+                                                <strong>Lỗi!</strong> <span id="error-message"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nội dung bài viết -->
+                            <div class="form-section">
+                                <h4 class="form-section-title">Nội dung bài viết</h4>
+                                <div class="mb-3">
+                                    <label for="content" class="form-label">Nội dung</label>
+                                    @if(session()->has('violations') && !empty(session('violations')))
+                                        <textarea id="full-featured" name="content"
+                                                style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                                        {!! highlightWords(old('content', isset($article) ? $article->content : ''), session('violations')) !!}
+                                        </textarea>
+                                    @else
+                                        <textarea id="full-featured" name="content"
+                                                style="height: 800px;">
+                                {{ old('content', isset($article) ? $article->content : '') }}
+                                </textarea>
+                                    @endif
+                                </div>
+                            </div>
 
                             <input type="hidden" name="author_id" value="{{ auth()->id() }}">
                             <input type="hidden" name="status" id="articleStatus" value="pending">
 
-                            <button type="submit" class="btn btn-primary" id="submitButton">Gửi đi</button>
-                            <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
+                            <div class="action-buttons">
+                                <button type="submit" class="btn btn-primary" id="submitButton">Gửi đi</button>
+                                <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
+                            </div>
                         </form>
 
+                        <!-- Scripts -->
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
@@ -394,8 +438,6 @@
                                 }
                             });
                         </script>
-
-
                     </div>
                 </div>
             </div>
