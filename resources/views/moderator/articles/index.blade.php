@@ -52,20 +52,6 @@
                         
                         <div class="box-body">
                             <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <form method="GET" action="{{ route('moderator.articles.index') }}" id="filter-form">
-                                        <div class="d-flex align-items-center">
-                                            <label for="filter" class="me-2 fw-bold">Lọc bài viết:</label>
-                                            <select name="filter" class="form-select w-auto" onchange="document.getElementById('filter-form').submit()">
-                                                <option value="all" {{ request('filter') == 'all' ? 'selected' : '' }}>Tất cả bài viết</option>
-                                                <option value="pending" {{ request('filter') == 'pending' ? 'selected' : '' }}>Bài viết chờ duyệt</option>
-                                                <option value="active" {{ request('filter') == 'active' ? 'selected' : '' }}>Bài viết có danh mục hoạt động</option>
-                                                <option value="inactive" {{ request('filter') == 'inactive' ? 'selected' : '' }}>Bài viết có danh mục bị vô hiệu hóa</option>
-                                                <option value="no_category" {{ request('filter') == 'no_category' ? 'selected' : '' }}>Bài viết không có danh mục</option>
-                                            </select>
-                                        </div>
-                                    </form>
-                                </div>
                                 <div class="col-md-6 text-end">
                                     <span class="badge bg-info">Tổng số: {{ $articles->total() }} bài viết</span>
                                 </div>
