@@ -23,7 +23,6 @@
                             </nav>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -32,10 +31,9 @@
                 <div class="col-12">
                     <div class="box">
                         <div class="box-header">
-
                             <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
                                     href="{{ route('admin.dashboard') }}">
-                                    Back to Dashboard
+                                    Quay Lại Bảng Điều Khiển
                                 </a></button>
                             <button type="button" class="waves-effect waves-light btn btn-primary mb-5"> <a
                                     href="{{ route('articles.create') }}">
@@ -45,56 +43,49 @@
 
                         <div class="box-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-dark mb-0"
-                                    style="width:100%">
+                                <table class="table table-bordered table-dark mb-0" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th>Title</th>
-                                            <th>Contains Sensitive Content</th>
-                                            <th>Author</th>
-                                            <th>Category</th>
-                                            <th>Thumbnail</th>
-                                            <th>Status</th>
-                                            <th>Tags</th>
-                                            <th>Actions</th>
+                                            <th>Tiêu Đề</th>
+                                            <th>Nội Dung Nhạy Cảm</th>
+                                            <th>Tác Giả</th>
+                                            <th>Danh Mục</th>
+                                            <th>Hình Ảnh</th>
+                                            <th>Trạng Thái</th>
+                                            <th>Thẻ</th>
+                                            <th>Thao Tác</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($articles as $article)
                                             <tr>
-
                                                 <td>{{ $article->title }}</td>
                                                 <td class="text-center">
                                                     @if ($article->contains_sensitive_content)
-                                                        <span class="badge bg-danger">Yes</span>
+                                                        <span class="badge bg-danger">Có</span>
                                                     @else
-                                                        <span class="badge bg-success">No</span>
+                                                        <span class="badge bg-success">Không</span>
                                                     @endif
                                                 </td>
-                                                <td>{{ $article->author->username ?? 'Unknown' }}</td>
-                                                <td>{{ $article->category->name ?? 'Uncategorized' }}</td>
+                                                <td>{{ $article->author->username ?? 'Chưa xác định' }}</td>
+                                                <td>{{ $article->category->name ?? 'Chưa phân loại' }}</td>
                                                 <td>
-                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                        alt="Thumbnail" width="100" height="150">
-
+                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Hình ảnh" width="100" height="150">
                                                 </td>
                                                 <td>
                                                     @switch($article->status)
                                                         @case('draft')
-                                                            <span class="badge bg-secondary">Draft</span>
-                                                        @break
-
+                                                            <span class="badge bg-secondary">Bản Nháp</span>
+                                                            @break
                                                         @case('pending')
-                                                            <span class="badge bg-warning">Pending</span>
-                                                        @break
-
+                                                            <span class="badge bg-warning">Chờ Duyệt</span>
+                                                            @break
                                                         @case('published')
-                                                            <span class="badge bg-success">Published</span>
-                                                        @break
-
+                                                            <span class="badge bg-success">Đã Đăng</span>
+                                                            @break
                                                         @case('archived')
-                                                            <span class="badge bg-danger">Archived</span>
-                                                        @break
+                                                            <span class="badge bg-danger">Đã Lưu Trữ</span>
+                                                            @break
                                                     @endswitch
                                                 </td>
                                                 <td>
@@ -103,12 +94,11 @@
                                                             <span class="badge bg-primary">{{ $tag->name }}</span>
                                                         @endforeach
                                                     @else
-                                                        <span class="text-muted">Không có tag</span>
+                                                        <span class="text-muted">Không có thẻ</span>
                                                     @endif
                                                 </td>
-
                                                 <td>
-                                                    <a href="{{ route('articles.show', $article) }}" class="btn btn-info btn-sm">
+                                                    <a href="{{ route('articles.show', $article) }}" class="btn btn-info btn-sm" title="Xem chi tiết">
                                                         <i class="si-eye si"></i>
                                                     </a>
 
@@ -116,24 +106,22 @@
                                                         <form action="{{ route('articles.approve', $article) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('PATCH')
-                                                            <button type="submit" class="btn btn-success btn-sm"
+                                                            <button type="submit" class="btn btn-success btn-sm" title="Duyệt bài viết"
                                                                 onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
-                                                                Approve
+                                                                Duyệt
                                                             </button>
                                                         </form>
 
                                                         <form action="{{ route('articles.reject', $article) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('PATCH')
-                                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                            <button type="submit" class="btn btn-danger btn-sm" title="Từ chối bài viết"
                                                                 onclick="return confirm('Bạn có chắc chắn muốn từ chối bài viết này không?')">
-                                                                Reject
+                                                                Từ Chối
                                                             </button>
                                                         </form>
                                                     @endif
                                                 </td>
-
-
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -150,7 +138,6 @@
                     </div>
                 </div>
             </div>
-            <!-- /.content-wrapper -->
         </div>
     </div>
 @endsection
