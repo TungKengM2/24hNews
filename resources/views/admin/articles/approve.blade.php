@@ -35,9 +35,6 @@
                                 <a href="{{ route('admin.dashboard') }}" class="btn btn-default">
                                     <i class="fa fa-arrow-left me-1"></i> Quay Lại Bảng Điều Khiển
                                 </a>
-                                <a href="{{ route('articles.create') }}" class="btn btn-primary ms-2">
-                                    <i class="si-plus si me-1"></i> Thêm Bài Viết Mới
-                                </a>
                             </div>
                             
                             <div class="d-flex">
