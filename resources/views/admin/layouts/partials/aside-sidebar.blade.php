@@ -107,12 +107,6 @@
                     </li>
                 </ul>
             </li>
-
-            <div class="sidebar-widgets">
-                <div class="copyright text-start m-25">
-                    <p><strong class="d-block">CrmX Admin Dashboard</strong> © 2021 All Rights Reserved</p>
-                </div>
-            </div>
         </div>
     </div>
 </section>
