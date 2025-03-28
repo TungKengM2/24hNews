@@ -69,7 +69,7 @@
             <div class="wrapper">
                 <div class="container mt-5 ">
                     <div class="card p-2">
-                        <h2 class="mb-4">Create New Post</h2>
+                        <h2 class="mb-4">Tạo Bài Viết Mới</h2>
                         @if ($errors->any())
                             <div class="alert alert-danger error_message">
                                 <ul>
@@ -126,7 +126,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="slug" class="form-label">Slug</label>
+                                <label for="slug" class="form-label">Đường dẫn</label>
                                 <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug') }}"
                                     required>
                             </div>
@@ -148,7 +148,7 @@
 
 
                             <div class="mb-3">
-                                <label for="tags">Chọn hoặc thêm tags:</label>
+                                <label for="tags">Chọn hoặc thêm thẻ:</label>
                                 <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                                     @foreach ($tags as $tag)
                                         <option
@@ -176,7 +176,7 @@
                                     id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
 
                                 <div id="image-preview-container" style="display: none;">
-                                    <img id="image-preview" src="#" alt="Preview" class="img-fluid mb-2">
+                                    <img id="image-preview" src="#" alt="Xem trước" class="img-fluid mb-2">
                                 </div>
 
                                 <div id="moderation-result" style="display: none;">
@@ -225,7 +225,7 @@
                                 $('#tags').select2({
                                     tags: true,
                                     tokenSeparators: [','],
-                                    placeholder: 'Chọn hoặc nhập tags mới',
+                                    placeholder: 'Chọn hoặc nhập thẻ mới',
                                     allowClear: true,
                                 });
                             });

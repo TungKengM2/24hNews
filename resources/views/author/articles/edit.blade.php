@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
@@ -66,7 +65,7 @@
 @endsection
 
 @section('title')
-    Chỉnh Sửa Bải Viết
+    Chỉnh Sửa Bài Viết
 @endsection
 
 @section('content')
@@ -76,7 +75,7 @@
             <div class="content-header">
                 <div class="d-flex align-items-center">
                     <div class="me-auto">
-                        <h4 class="page-title">Cập Nhập Bài Viết</h4>
+                        <h4 class="page-title">Cập Nhật Bài Viết</h4>
                         @if ($errors->any())
                             <div class="alert alert-danger error_message">
                                 <ul>
@@ -106,7 +105,7 @@
                                     <li class="breadcrumb-item"><a href="tables_data.html#"><i
                                                 class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Danh Sách Bài Viết</li>
-                                    <li class="breadcrumb-item active" aria-current="page">Cập Nhập</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Cập Nhật</li>
                                 </ol>
                             </nav>
                         </div>
@@ -123,7 +122,7 @@
                     @csrf
                     @method('PUT')
                     <div class="form-group">
-                        <h5>Title:</h5>
+                        <h5>Tiêu đề:</h5>
                         <div class="controls">
                             <input type="text" class="form-control" id="title" name="title"
                                 value="{{ $article->title }}" required>
@@ -133,7 +132,7 @@
 
 
                     <div class="form-group">
-                        <h5>Slug:</h5>
+                        <h5>Đường dẫn:</h5>
                         <div class="controls">
                             <input type="text" class="form-control" id="slug" name="slug"
                                 value="{{ $article->slug }}" required>
@@ -168,7 +167,7 @@
 
 
                     <div class="form-group">
-                        <h5>Chọn hoặc thêm tags:</h5>
+                        <h5>Chọn hoặc thêm thẻ:</h5>
                         <select name="tags[]" class="form-control select2" multiple="multiple">
                             @foreach ($tags as $tag)
                                 <option value="{{ $tag->tag_id }}" @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
@@ -210,7 +209,7 @@
                             @if ($article->thumbnail_url)
                                 <div>
                                     <p><strong>Ảnh đại diện hiện tại:</strong></p>
-                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Thumbnail"
+                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Ảnh đại diện"
                                          class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
                                 </div>
                             @endif
@@ -218,7 +217,7 @@
                         
                         <div id="image-preview-container" style="display: none;">
                             <p class="mt-2"><strong>Ảnh xem trước:</strong></p>
-                            <img id="image-preview" src="#" alt="Preview" class="img-fluid mb-2">
+                            <img id="image-preview" src="#" alt="Xem trước" class="img-fluid mb-2">
                         </div>
 
                         <div id="moderation-result" style="display: none;">
@@ -267,7 +266,7 @@
                     $('.select2').select2({
                         tags: true,
                         tokenSeparators: [','],
-                        placeholder: 'Chọn hoặc nhập tags mới',
+                        placeholder: 'Chọn hoặc nhập thẻ mới',
                         allowClear: true,
                     });
                 });
@@ -325,11 +324,9 @@
                             if (file) {
                                 isImageValid = false; 
                                 
-                                
                                 if (currentImageContainer) {
                                     currentImageContainer.style.display = 'none';
                                 }
-                                
                                 
                                 const reader = new FileReader();
                                 reader.onload = function (e) {
@@ -338,12 +335,10 @@
                                 };
                                 reader.readAsDataURL(file);
                                 
-                                
                                 moderationResult.style.display = 'block';
                                 moderationLoading.style.display = 'block';
                                 errorDiv.style.display = 'none';
                                 submitButton.disabled = true; 
-                                
                                 
                                 if (document.querySelector('meta[name="csrf-token"]')) {
                                     const formData = new FormData();
@@ -398,7 +393,6 @@
                                     });
                                 }
                             } else {
-                                
                                 if (currentImageContainer) {
                                     currentImageContainer.style.display = 'block';
                                 }
@@ -411,11 +405,9 @@
                         });
                     }
                     
-                    
                     document.getElementById('articleForm').addEventListener('submit', function(e) {
                         if (document.activeElement.id !== 'saveDraft') {
                             document.getElementById('articleStatus').value = 'pending';
-                            
                             
                             if (imageUpload.files && imageUpload.files[0] && !isImageValid) {
                                 e.preventDefault();

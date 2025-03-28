@@ -31,7 +31,7 @@
 
                         <div class="box-header d-flex justify-content-between align-items-center">
                             <button type="button" class="btn btn-secondary btn-sm">
-                                <a href="{{ route('author.dashboard') }}" class="text-white">Back to Dashboard</a>
+                                <a href="{{ route('author.dashboard') }}" class="text-white">Quay lại</a>
                             </button>
                             @if (session('success'))
                                 <div class="alert alert-success alert-dismissible fade show">
@@ -82,16 +82,16 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Title</th>
-                                            <th>Slug</th>
-                                            <th class="text-center">Contains Sensitive Content</th>
-                                            <th>Author</th>
-                                            <th>Category</th>
-                                            <th>Thumbnail</th>
-                                            <th class="text-center">Status</th>
-                                            <th>Views</th>
-                                            <th>Tags</th>
-                                            <th>Actions</th>
+                                            <th>Tiêu đề</th>
+                                            <th>Đường dẫn</th>
+                                            <th class="text-center">Nội dung nhạy cảm</th>
+                                            <th>Tác giả</th>
+                                            <th>Danh mục</th>
+                                            <th>Ảnh đại diện</th>
+                                            <th class="text-center">Trạng thái</th>
+                                            <th>Lượt xem</th>
+                                            <th>Thẻ</th>
+                                            <th>Thao tác</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -102,12 +102,12 @@
                                                 <td>{{ $article->slug }}</td>
                                                 <td class="text-center">
                                                     @if ($article->contains_sensitive_content)
-                                                        <span class="badge bg-danger">Yes</span>
+                                                        <span class="badge bg-danger">Có</span>
                                                     @else
-                                                        <span class="badge bg-success">No</span>
+                                                        <span class="badge bg-success">Không</span>
                                                     @endif
                                                 </td>
-                                                <td>{{ $article->author->username ?? 'Unknown' }}</td>
+                                                <td>{{ $article->author->username ?? 'Không xác định' }}</td>
                                                 <td>
                                                     @if ($article->category)
                                                         @if (!$article->category->is_active)
@@ -123,24 +123,24 @@
                                                 </td>
                                                 <td>
                                                     <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                        alt="Thumbnail" width="100" height="150">
+                                                        alt="Ảnh đại diện" width="100" height="150">
                                                 </td>
                                                 <td class="text-center">
                                                     @switch($article->status)
                                                         @case('draft')
-                                                            <span class="badge bg-secondary">Draft</span>
+                                                            <span class="badge bg-secondary">Bản nháp</span>
                                                         @break
 
                                                         @case('pending')
-                                                            <span class="badge bg-warning">Pending</span>
+                                                            <span class="badge bg-warning">Chờ duyệt</span>
                                                         @break
 
                                                         @case('published')
-                                                            <span class="badge bg-success">Published</span>
+                                                            <span class="badge bg-success">Đã xuất bản</span>
                                                         @break
 
                                                         @case('archived')
-                                                            <span class="badge bg-danger">Archived</span>
+                                                            <span class="badge bg-danger">Đã lưu trữ</span>
                                                         @break
                                                     @endswitch
                                                 </td>
@@ -151,7 +151,7 @@
                                                             <span class="badge bg-primary">{{ $tag->name }}</span>
                                                         @endforeach
                                                     @else
-                                                        <span class="text-muted">Không có tag</span>
+                                                        <span class="text-muted">Không có thẻ</span>
                                                     @endif
                                                 </td>
                                                 <td>
