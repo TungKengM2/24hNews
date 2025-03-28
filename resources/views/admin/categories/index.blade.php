@@ -35,7 +35,7 @@
 
                             <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
                                     href="{{ route('admin.dashboard') }}">
-                                    Back to Dashboard
+                                    Quay lại
                                 </a></button>
                             <button type="button" class="waves-effect waves-light btn btn-primary mb-5"> <a
                                     href="{{ route('categories.create') }}">
@@ -51,10 +51,10 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">ID</th>
-                                            <th scope="col">NAME</th>
-                                            <th scope="col">SLUG</th>
-                                            <th scope="col">IS ACTIVE</th>
-                                            <th scope="col">ACTION</th>
+                                            <th scope="col">Tên danh mục</th>
+                                            <th scope="col">Đường dẫn</th>
+                                            <th scope="col">Trạng thái</th>
+                                            <th scope="col">Thao tác</th>
                                         </tr>
                                     </thead>
                                     <tbody>

@@ -24,7 +24,7 @@
             <div class="wrapper">
                 <div class="container mt-5 ">
                     <div class="card p-2">
-                        <h2 class="mb-4">Create New Post</h2>
+                        <h2 class="mb-4">Thêm Bài Viết Mới</h2>
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -38,8 +38,7 @@
                         <script src="/tinymce/js/tinymce/tinymce.min.js"></script>
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
 
-                        <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data"
-                            id="articleForm">
+                        <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data" id="articleForm">
                             @csrf
                             <div class="mb-3">
                                 <label for="title" class="form-label">Tiêu đề</label>
@@ -47,7 +46,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="slug" class="form-label">Slug</label>
+                                <label for="slug" class="form-label">Đường dẫn</label>
                                 <input type="text" class="form-control" id="slug" name="slug" required>
                             </div>
 
@@ -62,7 +61,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="tags">Chọn hoặc thêm tags:</label>
+                                <label for="tags">Chọn hoặc thêm thẻ:</label>
                                 <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                                     @foreach ($tags as $tag)
                                         <option value="{{ $tag->tag_id }}">{{ $tag->name }}</option>
@@ -84,8 +83,7 @@
 
                             <div class="mb-3">
                                 <label for="thumbnail_url" class="form-label">Ảnh đại diện</label>
-                                <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url"
-                                    accept="image/*" required>
+                                <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
                             </div>
 
                             <input type="hidden" name="author_id" value="{{ auth()->id() }}">
@@ -94,7 +92,7 @@
                             <button type="submit" class="btn btn-primary">Gửi</button>
                             <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
                             <button type="button" class="waves-effect waves-light btn btn-default">
-                                <a href="{{ route('articles.index') }}">Back to List</a>
+                                <a href="{{ route('articles.index') }}">Quay Lại Danh Sách</a>
                             </button>
                         </form>
 
@@ -104,7 +102,7 @@
                                 $('#tags').select2({
                                     tags: true,
                                     tokenSeparators: [','],
-                                    placeholder: "Chọn hoặc nhập tags mới",
+                                    placeholder: "Chọn hoặc nhập thẻ mới",
                                     allowClear: true
                                 });
                             });

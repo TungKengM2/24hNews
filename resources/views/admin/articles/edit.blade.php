@@ -22,7 +22,7 @@
 @endsection
 
 @section('title')
-    Chỉnh Sửa Bải Viết
+    Chỉnh Sửa Bài Viết
 @endsection
 
 @section('content')
@@ -32,14 +32,14 @@
             <div class="content-header">
                 <div class="d-flex align-items-center">
                     <div class="me-auto">
-                        <h4 class="page-title">Cập Nhập Bài Viết</h4>
+                        <h4 class="page-title">Cập Nhật Bài Viết</h4>
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ route('articles.index') }}"><i
                                                 class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Danh Sách Bài Viết</li>
-                                    <li class="breadcrumb-item active" aria-current="page">Cập Nhập</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Cập Nhật</li>
                                 </ol>
                             </nav>
                         </div>
@@ -65,7 +65,7 @@
                     @csrf
                     @method('PUT')
                     <div class="form-group">
-                        <h5>Title:</h5>
+                        <h5>Tiêu đề:</h5>
                         <div class="controls">
                             <input type="text" id="title" name="title" class="form-control"
                                 value="{{ $article->title }}" required>
@@ -73,7 +73,7 @@
                     </div>
 
                     <div class="form-group">
-                        <h5>Slug:</h5>
+                        <h5>Đường dẫn:</h5>
                         <div class="controls">
                             <input type="text" id="slug" name="slug" class="form-control"
                                 value="{{ $article->slug }}" required>
@@ -83,14 +83,14 @@
                     <script src="/tinymce/js/tinymce/tinymce.min.js"></script>
 
                     <div class="form-group">
-                        <h5>Content:</h5>
+                        <h5>Nội dung:</h5>
                         <div class="controls">
                             <textarea id="editor" name="content" class="form-control"> {!! $article->content !!} </textarea>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <h5>Slect Tags Or Add New Tags:</h5>
+                        <h5>Chọn Thẻ Hoặc Thêm Thẻ Mới:</h5>
                         <select name="tags[]" class="form-control select2" multiple="multiple">
                             @foreach ($tags as $tag)
                                 <option value="{{ $tag->tag_id }}" @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
@@ -102,9 +102,9 @@
 
 
                     <div class="form-group">
-                        <h5>Category</h5>
+                        <h5>Danh Mục</h5>
                         <select name="category_id" class="form-control">
-                            <option value="">-- Không có danh mục --</option> <!-- Tùy chọn không có danh mục -->
+                            <option value="">-- Không có danh mục --</option>
                             @foreach ($categories as $category)
                                 @if ($category->is_active || $article->category_id == $category->category_id)
                                     <option value="{{ $category->category_id }}"
@@ -125,7 +125,7 @@
                         <label class="form-label" for="thumbnail_url">Ảnh Đại Diện</label>
                         <input class="form-control" type="file" name="thumbnail_url" id="thumbnail_url">
                         @if ($article->thumbnail_url)
-                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Current Thumbnail"
+                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Ảnh hiện tại"
                                 width="100">
                         @endif
                     </div>
@@ -140,7 +140,7 @@
                     $('.select2').select2({
                         tags: true,
                         tokenSeparators: [','],
-                        placeholder: "Chọn hoặc nhập tags mới",
+                        placeholder: "Chọn hoặc nhập thẻ mới",
                         allowClear: true
                     });
                 });

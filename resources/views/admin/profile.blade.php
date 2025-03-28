@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    Admin Profile
+    Thông Tin Cá Nhân
 @endsection
 
 @section('content')
@@ -15,14 +15,14 @@
                             <div class="box box-widget widget-user">
                                 <div class="widget-user-header bg-img bbsr-0 bber-0"
                                     style="background: url('../images/gallery/full/10.jpg') center center;" data-overlay="5">
-                                    <h3 class="widget-user-username text-white">Username</h3>
+                                    <h3 class="widget-user-username text-white">Tên người dùng</h3>
                                     <h6 class="widget-user-desc text-white">{{ $user->username }}</h6>
                                     <h6 class="widget-user-desc text-white">{{ $user->description }}</h6>
                                 </div>
                                 <div class="widget-user-image">
                                     <img class="rounded-circle"
                                         src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/default-avatar.png') }}"
-                                        alt="Avatar">
+                                        alt="Ảnh đại diện">
                                     <label for="avatarUpload" class="avatar-edit">
                                         <i class="fa fa-camera" aria-hidden="true"></i>
                                     </label>
