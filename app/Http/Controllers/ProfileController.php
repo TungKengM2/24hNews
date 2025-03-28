@@ -46,7 +46,7 @@ class ProfileController extends Controller
 
         return view('profile.index', compact('user'));
     }
-
+    //fl user
     public function followingList()
     {
         $user = auth()->user();
@@ -54,7 +54,30 @@ class ProfileController extends Controller
 
         return view('user.following', compact('followingUsers'));
     }
+    //fl author
+    public function followingOfAuthorList()
+    {
+        $user = auth()->user();
+        $followingUsers = $user->following()->paginate(10);
 
+        return view('author.following', compact('followingUsers'));
+    }
+    //fl moderator
+    public function followingOfModeratorList()
+    {
+        $user = auth()->user();
+        $followingUsers = $user->following()->paginate(10);
+
+        return view('moderator.following', compact('followingUsers'));
+    }
+    //fl admin
+    public function followingOfAdminList()
+    {
+        $user = auth()->user();
+        $followingUsers = $user->following()->paginate(10);
+
+        return view('admin.following', compact('followingUsers'));
+    }
 
     public function upgradeToAuthor()
     {

@@ -94,7 +94,7 @@
                     class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white"
                     data-bs-toggle="dropdown" title="User">
                     <img class="avatar rounded-circle"
-                        src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : '/admin/main/../images/user3-128x128.jpg' }}"
+                        src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/default-avatar.png') }}"
                         alt="User Avatar">
                 </a>
                 <ul class="dropdown-menu animated flipInX">

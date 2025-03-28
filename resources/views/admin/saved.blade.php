@@ -1,4 +1,4 @@
-@extends('user.layouts.master')
+@extends('admin.layouts.master')
 
 @section('title')
     Bài Viết Đã Lưu
@@ -44,7 +44,7 @@
                                                 {{ $loop->iteration + ($savedArticles->currentPage() - 1) * $savedArticles->perPage() }}
                                             </td>
                                             <td>
-                                                <a href="{{ route('articles.show', $savedArticle->article->slug) }}">
+                                                <a href="{{ route('articles.show', $savedArticle->article->article_id) }}">
                                                     <img src="{{ asset('storage/' . $savedArticle->article->thumbnail_url) }}"
                                                         width="100px" height="100px">
                                                 </a>
@@ -60,10 +60,10 @@
                                                 </h5>
                                             </td>
                                             <td>
-                                                <a href="{{ route('article.detail', ['slug' => $savedArticle->article->slug]) }}"
+                                                <a href="{{ route('admin.article.detail', ['slug' => $savedArticle->article->slug]) }}"
                                                     class="btn btn-primary btn-sm"><i class="si-eye si"></i>
                                                 </a>
-                                                <form action="{{ route('user.remove.saved', $savedArticle->id) }}"
+                                                <form action="{{ route('admin.remove.saved', $savedArticle->id) }}"
                                                     method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')

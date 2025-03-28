@@ -1,4 +1,4 @@
-@extends('moderator.layouts.master')
+@extends('admin.layouts.master')
 
 @section('title')
     Hoạt Động Bình Luận
@@ -42,7 +42,7 @@
                                                 <td>{{ optional($comment->created_at)->diffForHumans() }}</td>
                                                 <td>
                                                     @if ($comment->article)
-                                                        <a href="{{ route('moderator.article.detail', ['slug' => $comment->article->slug]) }}#comment-{{ $comment->comment_id }}"
+                                                        <a href="{{ route('admin.article.detail', ['slug' => $comment->article->slug]) }}#comment-{{ $comment->comment_id }}"
                                                             class="btn btn-sm btn-primary">
                                                             Xem Chi Tiết
                                                         </a>

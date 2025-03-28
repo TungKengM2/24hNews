@@ -1,4 +1,4 @@
-@extends('moderator.layouts.master')
+@extends('admin.layouts.master')
 
 @section('title')
     Lịch Sử Bài Viết Đã Xem
@@ -39,7 +39,7 @@
                                             <td>{{ $view->article->title }}</td>
                                             <td>{!! Str::limit(strip_tags($view->article->content), 100, '...') !!}</td>
                                             <td>
-                                                <a href="{{ route('moderator.article.detail', ['slug' => $view->article->slug]) }}"
+                                                <a href="{{ route('admin.article.detail', ['slug' => $view->article->slug]) }}"
                                                     class="btn btn-primary btn-sm">
                                                     <i class="si-eye si"></i>
                                                 </a>
