@@ -28,12 +28,12 @@
                 <div class="container-full">
                     <div class="card">
                         <div class="card-img-top">
-                            <h5 class="card-title">Thumbnail:
+                            <h5 class="card-title">Ảnh đại diện:
                                 <div class="thumbnail">
                                     @if ($article->thumbnail_url)
                                         <div class="mb-3">
                                             <br>
-                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Thumbnail"
+                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Ảnh đại diện"
                                                  class="img-thumbnail" style="max-width: 100px;">
                                         </div>
                                     @endif
@@ -42,35 +42,34 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <h6 class="card-title">Title: {{ $article->title }}</h6>
-                                <h6 class="card-title">Slug: {{ $article->slug }}</h6>
-                                <h6 class="card-title">Contains Sensitive Content:
-                                    {{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</h6>
-                                <h6 class="card-title">Author: {{ $article->author->username ?? 'N/A' }}</h6>
-                                <h6 class="card-title">Category: {{ $article->category->name ?? 'N/A' }}</h6>
-                                <h6 class="card-title">Status: {{ ucfirst($article->status) }}</h6>
-                                <h6 class="card-title">Views: {{ $article->views }}</h6>
-                                <h6 class="card-title">Approved
-                                    By: {{ $article->approver->username ?? 'Not Approved' }}</h6>
-                                <h6 class="card-title">Tags:
+                                <h6 class="card-title">Tiêu đề: {{ $article->title }}</h6>
+                                <h6 class="card-title">Đường dẫn: {{ $article->slug }}</h6>
+                                <h6 class="card-title">Chứa nội dung nhạy cảm:
+                                    {{ $article->contains_sensitive_content ? 'Có' : 'Không' }}</h6>
+                                <h6 class="card-title">Tác giả: {{ $article->author->username ?? 'Không có' }}</h6>
+                                <h6 class="card-title">Danh mục: {{ $article->category->name ?? 'Không có' }}</h6>
+                                <h6 class="card-title">Trạng thái: {{ ucfirst($article->status) }}</h6>
+                                <h6 class="card-title">Lượt xem: {{ $article->views }}</h6>
+                                <h6 class="card-title">Được duyệt bởi: {{ $article->approver->username ?? 'Chưa được duyệt' }}</h6>
+                                <h6 class="card-title">Thẻ:
                                     <div class="tags">
                                         @if ($article->tags->isNotEmpty())
                                             @foreach ($article->tags as $tag)
                                                 <span class="badge bg-primary">{{ $tag->name }}</span>
                                             @endforeach
                                         @else
-                                            <span class="text-muted">Không có tag</span>
+                                            <span class="text-muted">Không có thẻ</span>
                                         @endif
                                     </div>
                                 </h6>
                             </div>
-                            <p class="card-text">Preview Content:</p>
+                            <p class="card-text">Nội dung xem trước:</p>
                         </div>
                         <div class="card-footer justify-content-between d-flex">
                             <div class="box-body">
                                 <div id="slimtest2">
                                     <div class="row">
-                                        <h5 class="card-text">Preview Content: {{ $article->preview_content }}</h5>
+                                        <h5 class="card-text">Nội dung xem trước: {{ $article->preview_content }}</h5>
                                         <div class="col-md-7">
                                             <p>{!! $article->content !!}</p>
                                         </div>
@@ -81,7 +80,7 @@
                         <div class="mt-4">
                             <button type="button" class="waves-effect waves-light btn btn-default mb-5">
                                 <a href="{{ route('author.articles.index') }}">
-                                    Back to Dashboard
+                                    Quay lại
                                 </a>
                             </button>
                             <a href="{{ route('author.articles.edit', $article) }}" class="btn btn-warning btn-sm">
