@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Category;
 use App\Observers\CategoryObserver;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -23,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+        Paginator::useBootstrap();
+
+
         View::composer(
             [
                 'author.articles.index',
@@ -43,13 +48,15 @@ class AppServiceProvider extends ServiceProvider
             function ($view) {
                 $user = Auth::user();
                 $view->with('username', $user->username ?? 'Tác Giả');
-                $view->with('avatar',
-                    $user->image ?? '/admin/main/../images/user5-128x128.jpg');
+                $view->with(
+                    'avatar',
+                    $user->image ?? '/admin/main/../images/user5-128x128.jpg'
+                );
                 // dat them
                 $view->with('categories', Category::where('is_active', 1)->get());
                 // dat them
             }
-            
+
         );
         Category::observe(CategoryObserver::class);
     }
