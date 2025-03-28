@@ -9,7 +9,7 @@ class Comment extends Model
 {
     protected $table = 'comments';      // Tên bảng
     protected $primaryKey = 'comment_id'; // Khóa chính
-    public $timestamps = false;         // Nếu không có cột created_at, updated_at
+        // Nếu không có cột created_at, updated_at
 
     protected $fillable = [
         'article_id',

@@ -70,7 +70,7 @@
                     <div class="row">
                         <div class="col-lg-2">
                             <div class="sharing d-flex flex-column align-items-start gap-4">
-                                <a href="#" id="bookmarkButton"
+                                <a href="" id="bookmarkButton"
                                     class="d-flex align-items-center gap-2 text-decoration-none"
                                     data-article-id="{{ $article->article_id }}"
                                     onclick="toggleBookmark(this, {{ $article->article_id }}); return false;">
@@ -391,6 +391,7 @@
                                         <div class="d-flex justify-content-center mt-4">
                                             {{ $comments->links() }}
                                         </div>
+                                        
                                     </div>
                                 </div>
                                 <div class="col-lg-12">

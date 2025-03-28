@@ -253,7 +253,10 @@ class ArticleUserController extends Controller
             'parent_id' => $request->parent_id,
             'depth' => $parentComment ? $parentComment->depth + 1 : 0,
             'status' => 'approved',
+            'created_at' => now(), // Thời gian tạo comment
+            'updated_at' => now(), // Thời gian cập nhật comment
         ]);
+        
 
         return response()->json([
             'success' => true,
@@ -288,6 +291,8 @@ class ArticleUserController extends Controller
             'parent_id' => $request->parent_id,
             'depth' => $parentComment ? $parentComment->depth + 1 : 0,
             'status' => 'approved',
+            'created_at' => now(), // Thời gian tạo comment
+            'updated_at' => now(),
         ]);
 
         return response()->json([
