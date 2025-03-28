@@ -36,7 +36,7 @@
 
                             <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
                                     href="{{ route('moderator.dashboard') }}">
-                                    Back to Dashboard
+                                    Quay lại Trang Chủ
                                 </a></button>
                             {{-- <button type="button" class="waves-effect waves-light btn btn-primary mb-5"> <a
                                     href="{{ route('articles.create') }}">
@@ -69,17 +69,17 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Title</th>
+                                            <th>Tiêu Đề</th>
                                             <th>Slug</th>
-                                            <th>Contains Sensitive Content</th>
-                                            <th>Author</th>
-                                            <th>Category</th>
-                                            <th>Thumbnail</th>
-                                            <th>Status</th>
-                                            <th>Views</th>
-                                            <th>Tags</th>
-                                            <th>Approved By</th>
-                                            <th>Actions</th>
+                                            <th>Chứa Nội Dung Nhạy Cảm</th>
+                                            <th>Tác Giả</th>
+                                            <th>Danh Mục</th>
+                                            <th>Ảnh Đại Diện</th>
+                                            <th>Trạng Thái</th>
+                                            <th>Lượt Xem</th>
+                                            <th>Thẻ</th>
+                                            <th>Người Duyệt</th>
+                                            <th>Hành Động</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -90,9 +90,9 @@
                                                 <td>{{ $article->slug }}</td>
                                                 <td class="text-center">
                                                     @if ($article->contains_sensitive_content)
-                                                        <span class="badge bg-danger">Yes</span>
+                                                        <span class="badge bg-danger">Có</span>
                                                     @else
-                                                        <span class="badge bg-success">No</span>
+                                                        <span class="badge bg-success">Không</span>
                                                     @endif
                                                 </td>
                                                 <td>{{ $article->author->username ?? 'Unknown' }}</td>
@@ -116,19 +116,19 @@
                                                 <td>
                                                     @switch($article->status)
                                                         @case('draft')
-                                                            <span class="badge bg-secondary">Draft</span>
+                                                            <span class="badge bg-secondary">Nháp</span>
                                                         @break
 
                                                         @case('pending')
-                                                            <span class="badge bg-warning">Pending</span>
+                                                            <span class="badge bg-warning">Chờ Duyệt</span>
                                                         @break
 
                                                         @case('published')
-                                                            <span class="badge bg-success">Published</span>
+                                                            <span class="badge bg-success">Đã Xuất Bản</span>
                                                         @break
 
                                                         @case('archived')
-                                                            <span class="badge bg-danger">Archived</span>
+                                                            <span class="badge bg-danger">Đã Lưu Trữ</span>
                                                         @break
                                                     @endswitch
                                                 </td>
@@ -139,10 +139,10 @@
                                                             <span class="badge bg-primary">{{ $tag->name }}</span>
                                                         @endforeach
                                                     @else
-                                                        <span class="text-muted">Không có tag</span>
+                                                        <span class="text-muted">Không có thẻ</span>
                                                     @endif
                                                 </td>
-                                                <td>{{ $article->approved_by ? $article->approver->username : 'Not Approved' }}
+                                                <td>{{ $article->approved_by ? $article->approver->username : 'Chưa Duyệt' }}
                                                 </td>
                                                 <td>
                                                     <a href="{{ route('moderator.articles.show', $article) }}" class="btn btn-info btn-sm">
