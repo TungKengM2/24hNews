@@ -39,7 +39,7 @@
                                                 </td>
 
                                                 <td>{{ $comment->content }}</td>
-                                                <td>{{ $comment->created_at->diffForHumans() }}</td>
+                                                <td>{{ optional($comment->created_at)->diffForHumans() }}</td>
                                                 <td>
                                                     @if ($comment->article)
                                                         <a href="{{ route('author.article.detail', ['slug' => $comment->article->slug]) }}#comment-{{ $comment->comment_id }}"

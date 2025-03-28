@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,8 @@ use App\Http\Controllers\User\ArticleSaveController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Moderator\ModeratorController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\ArticleSaveController as AdminArticleSaveController;
+use App\Http\Controllers\Admin\ArticleViewAdminController;
 use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\Author\TinyMCEUploadController;
 use App\Http\Controllers\User\ArticleViewUserController;
@@ -196,9 +199,15 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
         ->name('moderator.profile');
 
     Route::get(
+        '/following',
+        [ProfileController::class, 'followingOfModeratorList']
+    )->name('moderator.following');
+
+    Route::get(
         '/change-password',
         [ProfileController::class, 'showChangePasswordFormModerator']
     )->name('moderator.change-password');
+
     Route::get('/articles', [ModeratorArticleController::class, 'index'])
         ->name('moderator.articles.index');
 
@@ -244,7 +253,7 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
         [ModeratorArticleSaveController::class, 'toggleBookmark']
     );
 
-    // Lịch sử bài viết đã xem của user
+    // Lịch sử bài viết đã xem của moderator
     Route::get(
         '/viewed-articles',
         [ModeratorArticleViewModeratorController::class, 'index']
@@ -289,6 +298,11 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
         [AuthorProfileController::class, 'update']
     )
         ->name('author.profile.update');
+
+    Route::get(
+        '/following',
+        [ProfileController::class, 'followingOfAuthorList']
+    )->name('author.following');
 
     Route::resource(
         'articles',
@@ -352,7 +366,7 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
         [AuthorArticleSaveController::class, 'toggleBookmark']
     );
 
-    // Lịch sử bài viết đã xem của user
+    // Lịch sử bài viết đã xem của author
     Route::get(
         '/viewed-articles',
         [ArticleViewAuthorController::class, 'index']
@@ -427,6 +441,7 @@ Route::middleware(['auth', 'role:4'])
             '/following',
             [ProfileController::class, 'followingList']
         )->name('user.following');
+
         // Route::post('/articles/view', [ArticleViewUserController::class, 'store']);
         // Route::get('/articles/viewed', [ArticleViewUserController::class, 'index']);
 
@@ -487,6 +502,50 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     })->name('admin.dashboard');
     Route::get('/profile', [AdminProfileController::class, 'index'])
         ->name('admin.profile');
+
+    Route::get(
+        '/following',
+        [ProfileController::class, 'followingOfAdminList']
+    )->name('admin.following');
+
+    // Bookmark By TungKeng
+    Route::post(
+        '/save-article',
+        [AdminArticleSaveController::class, 'saveArticle']
+    )
+        ->name('save.article');
+    Route::get(
+        '/saved-articles',
+        [AdminArticleSaveController::class, 'savedArticles']
+    )
+        ->name('admin.saved');
+    Route::get('/article/{slug}', [ArticleUserController::class, 'show'])
+        ->name('admin.article.detail');
+    Route::delete(
+        '/user/remove-saved-article/{id}',
+        [AdminArticleSaveController::class, 'removeSavedArticle']
+    )
+        ->name('admin.remove.saved');
+    Route::post(
+        '/bookmark/{article_id}',
+        [AdminArticleSaveController::class, 'toggleBookmark']
+    );
+
+    // Lịch sử bài viết đã xem của admin
+    Route::get(
+        '/viewed-articles',
+        [ArticleViewAdminController::class, 'index']
+    )
+        ->name('admin.viewed.articles');
+
+    // Hoạt động bình luận
+    Route::get(
+        '/{user_id}/comments',
+        [AdminController::class, 'getUserComments']
+    )
+        ->name('admin.comments');
+
+
     Route::get(
         '/user-stats',
         [AdminDashboardController::class, 'getUserStats']
