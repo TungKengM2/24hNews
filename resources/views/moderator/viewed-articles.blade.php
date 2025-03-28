@@ -36,7 +36,7 @@
                                                 </a>
                                             </td>
                                             <td>{{ $view->article->title }}</td>
-                                            <td>{!! Str::limit($view->article->content, 100) !!}</td>
+                                            <td>{!! Str::limit(strip_tags($view->article->content), 100, '...') !!}</td>
                                             <td>
                                                 <a href="{{ route('moderator.article.detail', ['slug' => $view->article->slug]) }}"
                                                     class="btn btn-primary btn-sm">
