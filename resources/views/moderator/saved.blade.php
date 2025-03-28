@@ -53,7 +53,7 @@
                                                 <h5 class="card-title">{{ $savedArticle->article->title }}</h5>
                                             </td>
                                             <td>
-                                                <p class="card-text">{!! Str::limit($savedArticle->article->content, 100) !!}</p>
+                                                {!! Str::limit(strip_tags($savedArticle->article->content), 100, '...') !!}
                                             </td>
                                             <td>
                                                 <h5 class="card-title">{{ $savedArticle->created_at->diffForHumans() }}

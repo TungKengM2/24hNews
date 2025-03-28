@@ -23,41 +23,30 @@
                         <i class="la la-home fs-4"></i>
                     </a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="page-author.html#" id="navbarDropdown1" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Blog
-                    </a>
-                    <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
-                        <li><a class="dropdown-item" href="page-blog.html">Blog</a></li>
-                        <li><a class="dropdown-item" href="{{url('/profile')}}">authors</a></li>
-                        <li><a class="dropdown-item" href="page-author-details.html">author details</a></li>
-                    </ul>
-                </li>
 
                 {{-- dat them --}}
                 @foreach ($categories as $category)
-                @if ($category->is_active == 1)
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
-                            {{ $category->name }}
-                        </a>
-                    </li>
-                @endif
+                    @if ($category->is_active == 1)
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
+                                {{ $category->name }}
+                            </a>
+                        </li>
+                    @endif
                 @endforeach
-                 {{-- dat them --}}
+                {{-- dat them --}}
             </ul>
 
-                <div class="nav-side">
-                    <a href="{{ route('loginuser') }} " class="icon-link">
-                        <i class="la la-user fs-4">
-                        </i>
-                    </a>
-                    <a class="icon-link search-btn-style1">
-                        <i class="la la-search fs-4 sOpen-btn"></i>
-                        <i class="la la-close fs-4 sClose-btn"></i>
-                    </a>
-                </div>
+            <div class="nav-side">
+                <a href="{{ route('loginuser') }} " class="icon-link">
+                    <i class="la la-user fs-4">
+                    </i>
+                </a>
+                <a class="icon-link search-btn-style1">
+                    <i class="la la-search fs-4 sOpen-btn"></i>
+                    <i class="la la-close fs-4 sClose-btn"></i>
+                </a>
+            </div>
         </div>
     </div>
 </nav>
