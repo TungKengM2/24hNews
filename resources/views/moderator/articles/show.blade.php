@@ -34,7 +34,7 @@
 
                     <div class="card">
                         <div class="card-img-top">
-                            <h5 class="card-title">Thumbnail:
+                            <h5 class="card-title">Ảnh Đại Diện:
                                 <div class="thumbnail">
                                     @if ($article->thumbnail_url)
                                         <div class="mb-3">
@@ -49,36 +49,36 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <h6 class="card-title">Title: {{ $article->title }}</h6>
+                                <h6 class="card-title">Tiêu Đề: {{ $article->title }}</h6>
                                 <h6 class="card-title">Slug: {{ $article->slug }}</h6>
-                                <h6 class="card-title">Contains Sensitive Content:
-                                    {{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</h6>
-                                <h6 class="card-title">Author: {{ $article->author->username ?? 'N/A' }}</h6>
-                                <h6 class="card-title">Category: {{ $article->category->name ?? 'N/A' }}</h6>
-                                <h6 class="card-title">Status: {{ ucfirst($article->status) }}</h6>
-                                <h6 class="card-title">Views: {{ $article->views }}</h6>
-                                <h6 class="card-title">Approved By: {{ $article->approver->username ?? 'Not Approved' }}
+                                <h6 class="card-title">Chứa Nội Dung Nhạy Cảm:
+                                    {{ $article->contains_sensitive_content ? 'Có' : 'Không' }}</h6>
+                                <h6 class="card-title">Tác Giả: {{ $article->author->username ?? 'Không Rõ' }}</h6>
+                                <h6 class="card-title">Danh Mục: {{ $article->category->name ?? 'Không Có' }}</h6>
+                                <h6 class="card-title">Trạng Thái: {{ ucfirst($article->status) }}</h6>
+                                <h6 class="card-title">Lượt Xem: {{ $article->views }}</h6>
+                                <h6 class="card-title">Người Duyệt: {{ $article->approver->username ?? 'Chưa Duyệt' }}
                                 </h6>
-                                <h6 class="card-title">Tags:
+                                <h6 class="card-title">Thẻ:
                                     <div class="tags">
                                         @if ($article->tags->isNotEmpty())
                                             @foreach ($article->tags as $tag)
                                                 <span class="badge bg-primary">{{ $tag->name }}</span>
                                             @endforeach
                                         @else
-                                            <span class="text-muted">Không có tag</span>
+                                            <span class="text-muted">Không có thẻ</span>
                                         @endif
                                     </div>
                                 </h6>
                             </div>
 
-                            <p class="card-text">Preview Content:</p>
+                            <p class="card-text">Xem Trước Nội Dung:</p>
                         </div>
                         <div class="card-footer justify-content-between d-flex">
                             <div class="box-body">
                                 <div id="slimtest2">
                                     <div class="row">
-                                        <h5 class="card-text">Preview Content: {{ $article->preview_content }}</h5>
+                                        <h5 class="card-text">Xem Trước Nội Dung: {{ $article->preview_content }}</h5>
 
                                         {{-- <div class="col-md-5"><img src="../images/gallery/thumb/2.jpg"
                                                 class="img-responsive" alt="" /></div> --}}
@@ -93,7 +93,7 @@
                         <div class="mt-4">
                             <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
                                     href="{{ route('moderator.articles.index') }}">
-                                    Back to Articles List
+                                    Quay lại Danh Sách Bài Viết
                                 </a></button>
                             {{-- <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm"><i
                                     class="si-pencil si"></i></a>
