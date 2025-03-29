@@ -49,26 +49,15 @@ Route::post('/search', [HomeController::class, 'search'])->name('search');
 
 // profile trang chủ dat them
 
-// Admin Profile
-Route::get('/profiles/admin', function () {
-    return view('website.profiles.admin');
-})->name('admin.profile');
-// User Profile
-Route::get('/profiles/user', function () {
-    return view('website.profiles.user');
-})->name('user.profile');
+// // User Profile
+// Route::get('/profiles/user/{id}', [ProfileAuthorProfileController::class, 'showUser'])->name('website.profileUser')->middleware('auth');
+
 // Author Profile
-Route::get('/profiles/author/{id}', [ProfileAuthorProfileController::class, 'show'])->name('website.profile')->middleware('auth');
+Route::get('/profiles/author/{id}', [ProfileAuthorProfileController::class, 'showAuth'])->name('website.profileAuth')->middleware('auth');
+
 Route::post('/user/{user}/follow', [ProfileAuthorProfileController::class, 'follow'])->name('user.follow');
+
 Route::post('/user/{user}/unfollow', [ProfileAuthorProfileController::class, 'unfollow'])->name('user.unfollow');
-
-// Moderator Profile
-Route::get('/profiles/moderator', function () {
-    return view('website.profiles.moderator');
-})->name('moderator.profile');
-
-// profile trang chủ dat them
-
 
 
 
