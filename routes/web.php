@@ -36,6 +36,7 @@ use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveController;
 use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
 use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Profile\AuthorProfileController as ProfileAuthorProfileController;
 
 // 🌟 Trang chủ & bài viết chi tiết
@@ -223,7 +224,18 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     Route::get('/{user_id}/comments', [ModeratorController::class, 'getUserComments'])->name('moderator.comments');
 });
 
+// Đặt trong nhóm auth middleware
+Route::middleware(['auth'])->group(function () {
+    // ... các route khác ...
 
+    // Notification Routes
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
+        Route::get('/unread-count', [NotificationController::class, 'countUnread'])->name('notifications.unreadCount');
+    });
+});
 
 // Route::prefix('moderator')->name('moderator.')->group(function () {
 //     Route::get('/articles', [ModeratorArticleController::class, 'index'])
