@@ -1,4 +1,4 @@
-@extends('user.layouts.master')
+@extends('moderator.layouts.master')
 
 @section('title')
     Hoạt Động Bình Luận
@@ -33,7 +33,7 @@
                                     </td>
                                     <td>
                                         <a
-                                            href="{{ route('website.profile', ['id' => $user->user_id]) }}">{{ $user->username }}</a>
+                                            href="{{ route('website.profileAuth', ['id' => $user->user_id]) }}">{{ $user->username }}</a>
                                     </td>
                                     <td>
                                         <form action="{{ route('user.unfollow', $user->user_id) }}" method="POST">

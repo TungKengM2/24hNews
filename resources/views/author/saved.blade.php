@@ -32,10 +32,10 @@
                                         <tr>
                                             <th>STT</th>
                                             <th>Ảnh Đại Diện</th>
-                                            <th>Title</th>
-                                            <th>Content</th>
-                                            <th>Time</th>
-                                            <th>Actions</th>
+                                            <th>Tiêu Đề</th>
+                                            <th>Nội Dung</th>
+                                            <th>Thời Gian</th>
+                                            <th>Hành Động</th>
                                         </tr>
                                     </thead>
                                     @foreach ($savedArticles as $index => $savedArticle)
