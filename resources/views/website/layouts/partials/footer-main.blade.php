@@ -5,8 +5,7 @@
                 <div class="row align-items-center mb-4">
                     <div class="col-lg-3">
                         <div class="foot-logo">
-                            <img src="assets/img/logo_home1.png" alt="" class="dark-none">
-                            <img src="assets/img/logo_home1_lt.png" alt="" class="light-none">
+                            <h1>News24h</h1>
                         </div>
                     </div>
                     <div class="col-lg-9">
@@ -15,18 +14,11 @@
                                 <p class="me-4">
                                     <b>Vận hành bởi: </b> Bảy Anh Tài
                                 </p>
-                                <p class="me-4">
-                                    <b>Mã số thuế: </b> 0514234567
-                                </p>
                                 <p>
                                     <b>Địa chỉ: </b> FPT POLYTECHNIX Hà Nội
                                 </p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col d-flex">
                                 <p class="me-4">
-                                    <b>Email: </b> support@Newzin.com
+                                    <b>Email: </b> bayanhtai@gmail.com
                                 </p>
                                 <p class="me-4">
                                     <b>Điện thoại: </b> (+051) 3235 68 69
