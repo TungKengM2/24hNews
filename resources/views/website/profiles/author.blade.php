@@ -30,25 +30,25 @@
 
                             </div>
                             <div class="info">
-                                <div class="rate">
-                                    {{-- <p>Đánh giá trung bình:</p> --}}
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= floor($averageRating))
-                                            <i class="la la-star text-warning"></i>
-                                        @elseif ($i == ceil($averageRating) && $averageRating - floor($averageRating) > 0)
-                                            <i class="la la-star-half-alt text-warning"></i>
-                                        @else
-                                            <i class="la la-star-o text-secondary"></i>
-                                        @endif
-                                    @endfor
-
-
-
-                                </div>
+                                @if ($averageRating > 0)
+                                    <div class="rate">
+                                        {{-- <p>Đánh giá trung bình:</p> --}}
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= floor($averageRating))
+                                                <i class="la la-star text-warning"></i>
+                                            @elseif ($i == ceil($averageRating) && $averageRating - floor($averageRating) > 0)
+                                                <i class="la la-star-half-alt text-warning"></i>
+                                            @else
+                                                <i class="la la-star-o text-secondary"></i>
+                                            @endif
+                                        @endfor
+                                    </div>
+                                @endif
                                 <div class="description mt-20">
                                     <p class="color-666 mb-20"> {{ $author->description ?? 'Không Có Mô Tả Trang Cá Nhân' }}
                                     </p>
-                                    <p class="color-666 mb-20"> <i class="la la-book"></i> {{ $author->articles_count }}
+                                    <p class="color-666 mb-20">
+                                        <i class="la la-book"></i> {{ $author->articles_count }}
                                         Posts
                                         <span class="mx-3"> |
                                         </span> <i class="la la-user"></i> {{ $followerCount }} Followers
@@ -69,13 +69,6 @@
                                         @endif
                                     @endif
                                 </div>
-
-                                {{-- <div class="social-links">
-                                        <a href="page-author.html#"> <i class="la la-facebook-f"></i> </a>
-                                        <a href="page-author.html#"> <i class="la la-twitter"></i> </a>
-                                        <a href="page-author.html#"> <i class="la la-behance"></i> </a>
-                                        <a href="page-author.html#"> <i class="la la-youtube"></i> </a>
-                                    </div> --}}
                             </div>
                         </div>
                     </div>
@@ -89,7 +82,7 @@
                     <div class="posts">
                         <div class="posts-side">
                             <p class="color-000 text-uppercase mb-30 ltspc-1">
-                                <a href="{{ route('articles.index') }}">Recently Added</a>
+                                <a href="#">Recently Added</a>
                                 <i class="la la-angle-right ms-1"></i>
                             </p>
 
@@ -119,7 +112,7 @@
                                                         </a>
                                                     </li>
                                                     <li class="author me-5">
-                                                        <a href="{{ route('website.profile', $article->author_id) }}">
+                                                        <a href="{{ route('website.profileAuth', $article->author_id) }}">
                                                             <i class="la la-user me-2"></i>
                                                             by {{ $article->author->username }}
                                                         </a>

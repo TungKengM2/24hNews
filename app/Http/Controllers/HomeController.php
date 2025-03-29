@@ -6,6 +6,7 @@ use App\Models\News;
 use App\Models\User;
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -86,7 +87,7 @@ class HomeController extends Controller
         $followingIds = $user->following()->pluck('following_id');
 
         // Lấy bài viết của những tác giả đó
-        $articlesfollow = Article::whereIn('author_id', $followingIds)
+        $articlesfollow = Article::whereIn('author_id',  $followingIds)
             ->where('status', 'published') // Chỉ lấy bài đã đăng
             ->latest() // Sắp xếp theo mới nhất
             ->get();

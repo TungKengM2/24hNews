@@ -7,6 +7,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
+
         <!-- ====== start breaking news ====== -->
         <section class="tc-breaking-news-style1 pt-50 pb-50">
             <div class="container">
@@ -52,6 +53,70 @@
             </div>
         </section>
         <!-- ====== end breaking news ====== -->
+
+
+        {{-- Bài viết của author đã fl --}}
+        <div class="container">
+            <div class="tc-technology-style1 pt-50">
+                <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">bài viết tác giả bạn quan
+                        tâm</a> <i class="la la-angle-right ms-1"></i> </p>
+
+                <div class="tc-post-list-style2">
+                    <div class="items">
+                        @auth
+                            @if ($articlesfollow->isEmpty())
+                                <p class="text-center">Bạn chưa follow ai hoặc chưa có bài viết nào!</p>
+                            @else
+                                @foreach ($articlesfollow as $article)
+                                    <div class="item pt-30 pb-30 mt-30 border-1 border-top border-bottom brd-gray">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="img th-200 img-cover">
+                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                                        alt="{{ $article->title }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
+                                                        <a href="#">{{ $article->category->name }}</a>
+                                                    </div>
+                                                    <h3 class="title ltspc--1">
+                                                        <a href="{{ route('articles.article', $article->slug) }}"
+                                                            class="item hover-main d-block p-2 text-dark">
+                                                            {{ $article->title }}
+                                                        </a>
+                                                    </h3>
+                                                    <div class="meta-bot lh-1 mt-80">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="#"><i class="la la-calendar me-2"></i>
+                                                                    {{ $article->created_at->format('M d, Y') }}</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="#"><i class="la la-user me-2"></i> by
+                                                                    {{ $article->author->username }}</a>
+                                                            </li>
+                                                            <li class="views me-5">
+                                                                <a href="#"><i class="la la-eye me-2"></i>
+                                                                    {{ $article->views ?? 0 }} Lượt Xem</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+                        @else
+                            <p class="text-center text-danger">Bạn chưa đăng ký/đăng nhập để theo dõi tác giả.</p>
+                        @endauth
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
         <!-- ====== start trends news ====== -->
         <section class="tc-trends-news-style1 pt-50 pb-50 bg-gray1">
@@ -201,68 +266,8 @@
                 </div>
             </div>
         </section>
-        {{-- Bài viết của author đã fl --}}
-        <div class="container">
-            <div class="tc-technology-style1 pt-50">
-                <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">bài viết tác giả bạn quan
-                        tâm</a> <i class="la la-angle-right ms-1"></i> </p>
 
-                <div class="tc-post-list-style2">
-                    <div class="items">
-                        @auth
-                            @if ($articlesfollow->isEmpty())
-                                <p class="text-center">Bạn chưa follow ai hoặc chưa có bài viết nào!</p>
-                            @else
-                                @foreach ($articlesfollow as $article)
-                                    <div class="item pt-30 pb-30 mt-30 border-1 border-top border-bottom brd-gray">
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div class="img th-200 img-cover">
-                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                        alt="{{ $article->title }}">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="content">
-                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
-                                                        <a href="#">{{ $article->category->name }}</a>
-                                                    </div>
-                                                    <h3 class="title ltspc--1">
-                                                        <a href="{{ route('articles.article', $article->slug) }}"
-                                                            class="item hover-main d-block p-2 text-dark">
-                                                            {{ $article->title }}
-                                                        </a>
-                                                    </h3>
-                                                    <div class="meta-bot lh-1 mt-80">
-                                                        <ul class="d-flex">
-                                                            <li class="date me-5">
-                                                                <a href="#"><i class="la la-calendar me-2"></i>
-                                                                    {{ $article->created_at->format('M d, Y') }}</a>
-                                                            </li>
-                                                            <li class="author me-5">
-                                                                <a href="#"><i class="la la-user me-2"></i> by
-                                                                    {{ $article->author->username }}</a>
-                                                            </li>
-                                                            <li class="comment">
-                                                                <a href="#"><i class="la la-comment me-2"></i>
-                                                                    {{ $article->comments_count ?? 0 }} Comments</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endif
-                        @else
-                            <p class="text-center text-danger">Bạn chưa đăng ký/đăng nhập để theo dõi tác giả.</p>
-                        @endauth
-                    </div>
-                </div>
 
-            </div>
-        </div>
 
     </main>
 @endsection

@@ -37,7 +37,7 @@
                                             alt="User Avatar">
                                     </span>
                                     <span>By</span>
-                                    <a href="{{ route('website.profile', ['id' => $article->author->user_id]) }}"
+                                    <a href="{{ route('website.profileAuth', ['id' => $article->author->user_id]) }}"
                                         class="text-decoration-underline text-primary ms-1">{{ $article->author->username }}</a>
                                 </div>
                                 <span class="me-40">
@@ -71,6 +71,7 @@
                         <div class="col-lg-2">
                             <div class="sharing d-flex flex-column align-items-start gap-4">
                                 <a href="#" id="bookmarkButton"
+                                style="margin-left: 7px"
                                     class="d-flex align-items-center gap-2 text-decoration-none"
                                     data-article-id="{{ $article->article_id }}"
                                     onclick="toggleBookmark(this, {{ $article->article_id }}); return false;">
@@ -98,7 +99,7 @@
                                     data-liked="{{ $isLiked ? 'true' : 'false' }}"
                                     style="outline: none; box-shadow: none; cursor: pointer;">
                                     <i id="likeIcon" class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-heart"
-                                        style="font-size: 28px; {{ $isLiked ? 'color: #e60023;' : 'color: black; -webkit-text-stroke: 1px white;' }}">
+                                        style="font-size: 25px; {{ $isLiked ? 'color: #e60023;' : 'color: black; -webkit-text-stroke: 1px white;' }}">
                                     </i>
                                     <span id="likeCount"
                                         style="font-size: 20px; font-weight: bold; color: {{ $isLiked ? '#e60023' : 'black' }};">
@@ -223,7 +224,7 @@
                                                 <div class="inf w-100">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <h6 class="fw-bold">
-                                                            <?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>
+                                                           <a href="{{ route('website.profileAuth', ['id' => $comment->user->user_id]) }}"><?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?></a>
                                                         </h6>
                                                         <span class="fs-12px text-muted">
                                                             <i class="fas fa-clock"></i>
