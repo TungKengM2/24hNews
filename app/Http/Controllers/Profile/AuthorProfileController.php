@@ -11,9 +11,10 @@ use Illuminate\Http\Request;
 
 class AuthorProfileController extends Controller
 {
-    public function show($user_id)
+    public function showAuth($user_id)
     {
         $user = auth()->user();
+
         $author = User::withCount(['articles' => function ($query) {
             $query->where('status', 'published');
         }])->findOrFail($user_id);

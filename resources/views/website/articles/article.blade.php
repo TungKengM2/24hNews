@@ -37,7 +37,7 @@
                                             alt="User Avatar">
                                     </span>
                                     <span>By</span>
-                                    <a href="{{ route('website.profile', ['id' => $article->author->user_id]) }}"
+                                    <a href="{{ route('website.profileAuth', ['id' => $article->author->user_id]) }}"
                                         class="text-decoration-underline text-primary ms-1">{{ $article->author->username }}</a>
                                 </div>
                                 <span class="me-40">
@@ -223,7 +223,7 @@
                                                 <div class="inf w-100">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <h6 class="fw-bold">
-                                                            <?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>
+                                                           <a href="{{ route('website.profileAuth', ['id' => $comment->user->user_id]) }}"><?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?></a>
                                                         </h6>
                                                         <span class="fs-12px text-muted">
                                                             <i class="fas fa-clock"></i>
