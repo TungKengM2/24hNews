@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id('category_id');
             $table->string('name', 100)->unique();
             $table->string('slug', 255)->unique();
-            // $table->boolean('is_active')->default(true);
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(true);
+
+            $table->unsignedBigInteger('moderator_id')->nullable(); // Thêm cột kiểm duyệt viên
+            $table->foreign('moderator_id')->references('user_id')->on('users')->onDelete('SET NULL');
+
             $table->timestamps();
         });
-
     }
 
     /**
