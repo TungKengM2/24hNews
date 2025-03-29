@@ -258,12 +258,10 @@ class ArticleController extends Controller
 
         // Lưu ảnh đại diện nếu có và đã vượt qua kiểm duyệt
         if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
-            if ($article->thumbnail_url) {
-                Storage::disk('public')->delete($article->thumbnail_url);
-            }
-            $path = $request->file('thumbnail_url')
-                ->store('thumbnails', 'public');
-            $article->update(['thumbnail_url' => $path]);
+            $file = $request->file('thumbnail_url');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move('D:\laragon\www\24hNews\storage\app\public\thumbnails', $filename);
+            $article->update(['thumbnail_url' => 'thumbnails/' . $filename]);
         }
 
         $tagIds = $this->processTags($request->input('tags', []));
@@ -516,9 +514,10 @@ class ArticleController extends Controller
 
             // Lưu ảnh đại diện nếu có và đã vượt qua kiểm duyệt
             if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
-                $path = $request->file('thumbnail_url')
-                    ->store('thumbnails', 'public');
-                $article->update(['thumbnail_url' => $path]);
+                $file = $request->file('thumbnail_url');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move('D:\laragon\www\24hNews\storage\app\public\thumbnails', $filename);
+                $article->update(['thumbnail_url' => 'thumbnails/' . $filename]);
             }
 
             $tagIds = $this->processTags($request->input('tags', []));

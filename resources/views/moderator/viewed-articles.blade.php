@@ -20,8 +20,8 @@
                                     <tr>
                                         <th>STT</th>
                                         <th>Ảnh Đại Diện</th>
-                                        <th>Title</th>
-                                        <th>Content</th>
+                                        <th>Tiêu Đề</th>
+                                        <th>Nội Dung</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

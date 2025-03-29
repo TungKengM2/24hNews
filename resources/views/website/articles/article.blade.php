@@ -68,48 +68,48 @@
                 </div>
                 <div class="tc-main-post-content color-000">
                     <div class="row">
-                        <div class="col-lg-2">
-                            <div class="sharing d-flex flex-column align-items-start gap-4">
-                                <a href="#" id="bookmarkButton"
-                                style="margin-left: 7px"
-                                    class="d-flex align-items-center gap-2 text-decoration-none"
-                                    data-article-id="{{ $article->article_id }}"
-                                    onclick="toggleBookmark(this, {{ $article->article_id }}); return false;">
-                                    <i class="la la-bookmark" id="bookmarkIcon"
-                                        style="font-size: 28px; color: {{ $isBookmarked ? 'gold' : 'inherit' }};">
-                                    </i>
-                                    <span
-                                        style="font-size: 20px; font-weight: bold; color: {{ $isBookmarked ? '#e60023' : 'black' }};">
-                                        {{ $isBookmarked ? 'Đã lưu' : '' }}
-                                    </span>
-                                </a>
-
-
-                                <button type="button"
-                                    class="report-article-btn d-flex align-items-center gap-2 border-0 bg-transparent"
-                                    data-article-id="{{ $article->article_id }}"
-                                    style="outline: none; box-shadow: none; cursor: pointer;">
-                                    <i class="la la-exclamation-triangle" style="font-size: 28px; color: red;"></i>
-                                    <span style="font-size: 20px; font-weight: bold; color: black;"></span>
-                                </button>
-
-
-                                <button id="likeButton" class="d-flex align-items-center gap-2 border-0 bg-transparent"
+                        <div class="col-lg-1">
+                            <div class="sharing d-flex flex-column align-items-center gap-4 sticky-top" style="top: 100px; padding-top: 20px;">
+                                <!-- Nút Like -->
+                                <button id="likeButton" class="d-flex flex-column align-items-center gap-1 border-0 bg-transparent mb-3"
                                     data-article-id="{{ $article->article_id }}"
                                     data-liked="{{ $isLiked ? 'true' : 'false' }}"
                                     style="outline: none; box-shadow: none; cursor: pointer;">
                                     <i id="likeIcon" class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-heart"
-                                        style="font-size: 25px; {{ $isLiked ? 'color: #e60023;' : 'color: black; -webkit-text-stroke: 1px white;' }}">
+                                        style="font-size: 28px; {{ $isLiked ? 'color: #e60023;' : 'color: black;' }}">
                                     </i>
                                     <span id="likeCount"
-                                        style="font-size: 20px; font-weight: bold; color: {{ $isLiked ? '#e60023' : 'black' }};">
+                                        style="font-size: 14px; font-weight: bold; color: {{ $isLiked ? '#e60023' : 'black' }};">
                                         {{ $likeCount }}
                                     </span>
                                 </button>
+
+                                <!-- Nút Bookmark -->
+                                <a href="#" id="bookmarkButton"
+                                    class="d-flex flex-column align-items-center gap-1 text-decoration-none mb-3"
+                                    data-article-id="{{ $article->article_id }}"
+                                    onclick="toggleBookmark(this, {{ $article->article_id }}); return false;">
+                                    <i class="la la-bookmark" id="bookmarkIcon"
+                                        style="font-size: 28px; color: {{ $isBookmarked ? 'gold' : '#555' }};">
+                                    </i>
+                                    <span
+                                        style="font-size: 14px; font-weight: bold; color: {{ $isBookmarked ? 'gold' : '#555' }};">
+                                        {{ $isBookmarked ? 'Đã lưu' : 'Lưu' }}
+                                    </span>
+                                </a>
+
+                                <!-- Nút Report -->
+                                <button type="button"
+                                    class="report-article-btn d-flex flex-column align-items-center gap-1 border-0 bg-transparent"
+                                    data-article-id="{{ $article->article_id }}"
+                                    style="outline: none; box-shadow: none; cursor: pointer;">
+                                    <i class="la la-exclamation-triangle" style="font-size: 28px; color: #777;"></i>
+                                    <span style="font-size: 14px; font-weight: bold; color: #777;">Báo cáo</span>
+                                </button>
                             </div>
                         </div>
-                        <div class="col-lg-10">
-                            <h3 class="lead">{!! $article->title !!}</h3>
+
+                        <div class="col-lg-11">
                             <div class="content">
                                 @foreach (explode("\n", $article->content) as $paragraph)
                                     @if (trim($paragraph) !== '')
@@ -117,7 +117,6 @@
                                     @endif
                                 @endforeach
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -694,99 +693,82 @@
 
 
 
-        <!-- ====== start modals ====== -->
+            <!-- ====== start modals ====== -->
 
-        <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
+            <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
             aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
                 <div class="logo">
-                    <img src="https://newzin-html.themescamp.com/assets/img/logo_home1.png" alt=""
-                        class="dark-none">
-                    <img src="https://newzin-html.themescamp.com/assets/img/logo_home1_lt.png" alt=""
-                        class="light-none">
+                    <h1>News24h</h1>
                 </div>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                     aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mt-4">
-                <h6 class="color-000 text-uppercase mb-15 ltspc-1"> about us <i class="la la-angle-right ms-1"></i> </h6>
-                <div class="text">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem optio tempora quia iure quae. Soluta
-                    corporis quidem aperiam amet nihil.
+                <h6 class="color-000 text-uppercase mb-15 ltspc-1 fw-bold"> Giới Thiệu News24h <i class="la la-angle-right ms-1"></i>
+                </h6>
+                <div class="text mb-4">
+                    News24h là nền tảng tin tức hàng đầu Việt Nam, cung cấp thông tin chính xác, đa dạng và cập nhật 24/7.
+                    Chúng tôi cam kết mang đến cho độc giả những tin tức chất lượng và đáng tin cậy từ mọi lĩnh vực.
                 </div>
 
-                <div class="sidebar-categories mt-40">
-                    <h6 class="color-000 text-uppercase mb-30 ltspc-1"> categories <i class="la la-angle-right ms-1"></i>
-                    </h6>
-                    <a href="page-single-post-creative.html#" class="cat-card">
-                        <div class="img img-cover">
-                            <img src="https://newzin-html.themescamp.com/assets/img/bussines/1.png" alt="">
+                <div class="mt-4">
+                    <h6 class="color-000 mb-3 fw-bold">Tại sao chọn News24h?</h6>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-box me-3 bg-light rounded p-2" style="color: var(--bs-primary);">
+                            <i class="la la-newspaper-o text-primary"></i>
                         </div>
-                        <div class="info">
-                            <h5>bussines</h5>
-                            <span class="num">12</span>
+                        <div>
+                            <p class="mb-0">Tin tức chính xác, đa chiều</p>
                         </div>
-                    </a>
-                    <a href="page-single-post-creative.html#" class="cat-card">
-                        <div class="img img-cover">
-                            <img src="https://newzin-html.themescamp.com/assets/img/trend/3.png" alt="">
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-box me-3 bg-light rounded p-2" style="color: var(--bs-primary);">
+                            <i class="la la-bolt text-primary"></i>
                         </div>
-                        <div class="info">
-                            <h5>technology</h5>
-                            <span class="num">14</span>
+                        <div>
+                            <p class="mb-0">Cập nhật tin tức 24/7</p>
                         </div>
-                    </a>
-                    <a href="page-single-post-creative.html#" class="cat-card">
-                        <div class="img img-cover">
-                            <img src="https://newzin-html.themescamp.com/assets/img/must_read/3.png" alt="">
+                    </div>
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-box me-3 bg-light rounded p-2" style="color: var(--bs-primary);">
+                            <i class="la la-users text-primary"></i>
                         </div>
-                        <div class="info">
-                            <h5>culture</h5>
-                            <span class="num">20</span>
+                        <div>
+                            <p class="mb-0">Cộng đồng độc giả lớn mạnh</p>
                         </div>
-                    </a>
-                    <a href="page-single-post-creative.html#" class="cat-card">
-                        <div class="img img-cover">
-                            <img src="https://newzin-html.themescamp.com/assets/img/videos/1.png" alt="">
-                        </div>
-                        <div class="info">
-                            <h5>videos</h5>
-                            <span class="num">14</span>
-                        </div>
-                    </a>
+                    </div>
                 </div>
-                <div class="sidebar-contact-info mt-50">
-                    <h6 class="color-000 text-uppercase mb-20 ltspc-1"> Contact & follow <i
+
+                <div class="sidebar-contact-info mt-4 pt-4 border-top">
+                    <h6 class="color-000 text-uppercase mb-20 ltspc-1 fw-bold"> Liên Hệ & Theo Dõi <i
                             class="la la-angle-right ms-1"></i> </h6>
                     <ul class="m-0">
                         <li class="mb-3">
                             <i class="las la-map-marker me-2 color-main fs-5"></i>
-                            <a href="page-single-post-creative.html#">streat name 12, hollywood City, USA</a>
+                            <a href="#">Tòa nhà FPT Polytechnic., Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội</a>
                         </li>
                         <li class="mb-3">
                             <i class="las la-envelope me-2 color-main fs-5"></i>
-                            <a href="page-single-post-creative.html#">Newzin@gmail.com</a>
+                            <a href="#">bayanhtai@gmail.com</a>
                         </li>
                         <li class="mb-3">
                             <i class="las la-phone-volume me-2 color-main fs-5"></i>
-                            <a href="page-single-post-creative.html#">+12 123 456 789</a>
+                            <a href="#">0981 725 836</a>
                         </li>
                     </ul>
-                    <div class="social-links">
-                        <a href="page-single-post-creative.html#">
+                    <div class="social-links mt-3">
+                        <a href="#" class="me-2">
                             <i class="la la-twitter"></i>
                         </a>
-                        <a href="page-single-post-creative.html#">
+                        <a href="#" class="me-2">
                             <i class="la la-facebook-f"></i>
                         </a>
-                        <a href="page-single-post-creative.html#">
+                        <a href="#" class="me-2">
                             <i class="la la-instagram"></i>
                         </a>
-                        <a href="page-single-post-creative.html#">
+                        <a href="#" class="me-2">
                             <i class="la la-youtube"></i>
-                        </a>
-                        <a href="page-single-post-creative.html#">
-                            <i class="la la-spotify"></i>
                         </a>
                     </div>
                 </div>
