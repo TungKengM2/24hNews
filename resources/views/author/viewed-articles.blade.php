@@ -22,6 +22,7 @@
                                         <th>Ảnh Đại Diện</th>
                                         <th>Tiêu Đề</th>
                                         <th>Nội Dung</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>

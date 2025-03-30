@@ -15,7 +15,7 @@
                                     <b>Vận hành bởi: </b> Bảy Anh Tài
                                 </p>
                                 <p>
-                                    <b>Địa chỉ: </b> FPT POLYTECHNIX Hà Nội
+                                    <b>Địa chỉ: </b> FPT POLYTECHNIC Hà Nội
                                 </p>
                                 <p class="me-4">
                                     <b>Email: </b> bayanhtai@gmail.com
