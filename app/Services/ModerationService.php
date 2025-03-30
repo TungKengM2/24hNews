@@ -95,6 +95,8 @@ EOD;
             ['Content-Type: application/json']);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
         $response = curl_exec($ch);
         curl_close($ch);
@@ -212,6 +214,8 @@ EOD;
                 'User-Agent: Mozilla/5.0 (compatible; 24hNews/1.0)',
                 'Accept: application/json',
             ],
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
         ]);
 
         $response = curl_exec($ch);
@@ -512,6 +516,8 @@ EOD;
                 'User-Agent: Mozilla/5.0 (compatible; 24hNews/1.0)',
                 'Accept: application/json',
             ],
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
         ]);
 
         $cfile = new CURLFile(
@@ -704,6 +710,8 @@ EOD;
 
         $ch = curl_init('https://api.sightengine.com/1.0/check.json?'.http_build_query($params));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         $response = curl_exec($ch);
 
         if ($response === false) {
@@ -828,6 +836,8 @@ EOD;
         $ch = curl_init('https://api.sightengine.com/1.0/check.json');
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
         $cfile = new CURLFile(
             $file->getPathname(),
@@ -994,6 +1004,8 @@ EOD;
 
         $ch = curl_init('https://api.sightengine.com/1.0/check-account.json?'.http_build_query($params));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
