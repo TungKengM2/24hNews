@@ -11,13 +11,6 @@
 </head>
 <body>
     <div class="form-body">
-        <div class="website-logo">
-            <a href="{{ route('password.request') }}">
-                <div class="logo">
-                    <img class="logo-size" src="https://brandio.io/envato/iofrm/html/images/logo-light.svg" alt="Logo">
-                </div>
-            </a>
-        </div>
         <div class="iofrm-layout">
             <div class="img-holder">
                 <div class="bg"></div>
