@@ -260,6 +260,9 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::resource('articles', AuthorArticleController::class)->names('author.articles');
 
+    Route::put('/articles/{article}/hide', [AuthorArticleController::class, 'hide'])
+    ->name('author.articles.hide');
+    
     Route::post('/articles/upload', [AuthorArticleController::class, 'uploadImage',])->name('author.articles.upload');
 
     Route::get('/articles/search', [AuthorArticleController::class, 'search'])->name('author.articles.search');

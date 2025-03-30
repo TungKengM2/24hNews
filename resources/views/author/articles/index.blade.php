@@ -188,6 +188,15 @@
                                                             <i class="si-pencil si"></i>
                                                         </a>
 
+                                                        <form action="{{ route('author.articles.hide', $article) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button class="btn btn-secondary btn-sm" title="Ẩn bài viết"
+                                                                onclick="return confirm('Bạn có chắc chắn muốn ẩn bài viết này không?')">
+                                                                <i class="fa fa-eye-slash"></i>
+                                                            </button>
+                                                        </form>
+
                                                         <form action="{{ route('author.articles.destroy', $article) }}"
                                                             method="POST" class="d-inline">
                                                             @csrf
