@@ -190,7 +190,7 @@
                             }
 
                             if (!el.style.display) {
-                                el.style.display = 'block';
+                                el.style.display = 'inline';
                             }
 
                             if (el.style.margin === '0px auto' || el.style.margin === 'auto') {

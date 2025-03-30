@@ -637,6 +637,15 @@ class ArticleController extends Controller
         );
     }
 
+    public function hide(Article $article)
+    {
+        $article->status = 'draft';
+        $article->save();
+        return redirect()
+        ->route('author.articles.index')
+        ->with('success', 'Đã ẩn bài viết thành công!');
+    }
+    
     public function destroy(Article $article)
     {
         if ($article->thumbnail_url) {

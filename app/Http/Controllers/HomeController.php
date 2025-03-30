@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Comment;
+use App\Models\ArticleLike;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -36,6 +37,10 @@ class HomeController extends Controller
 
         $journalists = User::where('role_id', 3)
             ->get(); // Lấy nhà báo có ID = 3
+
+        
+        $topAuthors = $this->getTopAuthorsOfWeek();
+        // dd($topAuthors);
 
         $sportsArticles = Article::whereHas('category', function ($query) {
             $query->where('name', 'Thể Thao'); // Hoặc sử dụng category_id cụ thể
@@ -75,7 +80,8 @@ class HomeController extends Controller
                 'articles' => $articles ?? null,
                 'D1Articles' => $D1Articles ?? null,
                 'articlesfollow' => collect(),
-                'followMessage' => 'Bạn chưa đăng ký/đăng nhập để theo dõi tác giả.'
+                'followMessage' => 'Bạn chưa đăng ký/đăng nhập để theo dõi tác giả.',
+                'topAuthors' => $topAuthors ?? collect(),
             ]);
         }
 
@@ -91,7 +97,8 @@ class HomeController extends Controller
             ->get();
 
         // Truyền dữ liệu bài viết tới view
-        return view('welcome', compact('categories', 'category2', 'sportsArticles', 'newsData', 'journalists', 'trendingPosts', 'featuredArticles', 'articles', 'D1Articles', 'articlesfollow', 'followMessage'));
+        return view('welcome', compact('categories', 'category2', 'sportsArticles', 'newsData', 'journalists', 
+            'trendingPosts', 'featuredArticles', 'articles', 'D1Articles', 'articlesfollow', 'followMessage', 'topAuthors'));
     }
 
     public function search(Request $request)
@@ -143,5 +150,79 @@ class HomeController extends Controller
         }
 
         return response()->json(['results' => $results]);
+    }
+
+   
+    private function getTopAuthorsOfWeek()
+    {
+        $startDate = now()->subDays(7);
+        $endDate = now();
+
+        $authors = User::where('role_id', 2) 
+            ->whereHas('articles', function($query) use ($startDate, $endDate) {
+                $query->where('status', 'published')
+                    ->whereBetween('created_at', [$startDate, $endDate]);
+            })
+            ->with(['articles' => function($query) use ($startDate, $endDate) {
+                $query->where('status', 'published')
+                    ->whereBetween('created_at', [$startDate, $endDate]);
+            }])
+            ->get();
+
+        $authorRatings = [];
+        $maxScore = 100;
+        
+        foreach ($authors as $author) {
+            $articleIds = $author->articles->pluck('article_id');
+            
+            if ($articleIds->isEmpty()) {
+                continue;
+            }
+            
+            $likesCount = ArticleLike::whereIn('article_id', $articleIds)->count();
+            $commentsCount = Comment::whereIn('article_id', $articleIds)->count();
+            $totalViews = $author->articles->sum('views');
+            
+            $totalInteractions = $totalViews + $likesCount + $commentsCount;
+            $totalArticles = $author->articles->count();
+            
+            $avgRating = min(5, max(1, ($totalInteractions / ($totalArticles * $maxScore)) * 5));
+            
+            $authorRatings[] = [
+                'author' => $author,
+                'rating' => $avgRating,
+                'interactions' => $totalInteractions,
+                'articles_count' => $totalArticles,
+                'specializes_in' => $this->getAuthorSpecialization($author)
+            ];
+        }
+        
+        usort($authorRatings, function($a, $b) {
+            return $b['rating'] <=> $a['rating'];
+        });
+        
+        return array_slice($authorRatings, 0, 3);
+    }
+    
+   
+    private function getAuthorSpecialization($author)
+    {
+        $categoryCounts = [];
+        
+        foreach ($author->articles as $article) {
+            if (!$article->category) continue;
+            
+            $categoryName = $article->category->name;
+            if (!isset($categoryCounts[$categoryName])) {
+                $categoryCounts[$categoryName] = 0;
+            }
+            $categoryCounts[$categoryName]++;
+        }
+        
+        arsort($categoryCounts);
+        
+        $topCategories = array_slice(array_keys($categoryCounts), 0, 3);
+        
+        return implode(', ', $topCategories);
     }
 }
