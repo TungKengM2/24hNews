@@ -252,11 +252,7 @@ class ArticleController extends Controller
         ]);
 
         if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
-            if ($article->thumbnail_url) {
-                Storage::disk('public')->delete($article->thumbnail_url);
-            }
-            $path = $request->file('thumbnail_url')
-                ->store('thumbnails', 'public');
+            $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
             $article->update(['thumbnail_url' => $path]);
         }
 
@@ -505,8 +501,7 @@ class ArticleController extends Controller
             ]);
 
             if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
-                $path = $request->file('thumbnail_url')
-                    ->store('thumbnails', 'public');
+                $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
                 $article->update(['thumbnail_url' => $path]);
             }
 

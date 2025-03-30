@@ -15,7 +15,8 @@
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#"><i class="mdi mdi-home-outline"></i></a></li>
+                                    <li class="breadcrumb-item"><a href="#"><i class="mdi mdi-home-outline"></i></a>
+                                    </li>
                                     <li class="breadcrumb-item" aria-current="page">Danh Sách Bài Viết</li>
                                     <li class="breadcrumb-item active" aria-current="page">Chi Tiết</li>
                                 </ol>
@@ -29,94 +30,129 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h4 class="box-title">Chi Tiết Bài Viết</h4>
-                </div>
-                <div class="box-body">
-                    <div id="slimtest2">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="col-md-12 p-3 ">
-                                    <p><i class="mdi mdi-title"></i> <strong>Title:</strong> {{ $article->title }}</p>
-
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="col-md-12 p-3 ">
-
-                                    <p><i class="mdi mdi-link-variant"></i> <strong>Slug:</strong> {{ $article->slug }}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <p class="col-md-5 mx-3"><strong>Preview Content:</strong> {{ $article->preview_content }}</p>
-                        <div class="bg-white p-3 m-2">
-                            <p class="col-md-5 text-bold">Content:</p>
-                            <div class="col-md-7 mb-3">
-                                <p>{!! $article->content !!}</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12 mt-4 mx-2" >
-                           <div class="row">
-                            @if ($article->thumbnail_url)
-                            <div class="mb-3 col-md-4">
-                                <strong>Thumbnail:</strong>
-                                <br>
-                                <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Thumbnail"
-                                     class="img-thumbnail" style="max-width: 200px;">
-                            </div>
-                        @endif
-                        <div class="col-md-4">
-                            <div class="d-flex ">
-                                <strong>Contains Sensitive Content?</strong>
-                                <p>{{ $article->contains_sensitive_content ? 'Yes' : 'No' }}</p>
-                            </div>
-
-                            <div class="d-flex ">
-                                <strong>Author:</strong>
-                                <p>{{ $article->author->username ?? 'N/A' }}</p>
-                            </div>
-
-                            <div class="d-flex ">
-                                <strong>Category:</strong>
-                                <p>{{ $article->category->name ?? 'N/A' }}</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="d-flex">
-                                <strong>Status:</strong>
-                                <p>{{ ucfirst($article->status) }}</p>
-                            </div>
-
-                            <div class="d-flex">
-                                <strong>Views:</strong>
-                                <p>{{ $article->views }}</p>
-                            </div>
-
-                            <div class="d-flex">
-                                <strong>Approved By:</strong>
-                                <p>{{ $article->approver->username ?? 'Not Approved' }}</p>
-                            </div>
-                        </div>
-                           </div>
-                        </div>
-
-
-
-                        <div class="mt-4">
-                            <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
-                                    href="{{ route('articles.index') }}">
-                                    Back to Dashboard
-                                </a></button>
-                            <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm"><i
-                                    class="si-pencil si"></i></a>
-                            <form action="{{ route('articles.destroy', $article) }}" method="POST" class="d-inline">
+                    <div class="box-tools">
+                        <div class="btn-group">
+                            <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm m-5">
+                                <i class="si-pencil si"></i> Chỉnh sửa
+                            </a>
+                            <form action="{{ route('articles.destroy', $article) }}" method="POST" class="d-inline m-5">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
-                                    <i class="si-trash si"></i>
+                                    onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
+                                    <i class="si-trash si"></i> Xóa
                                 </button>
                             </form>
+                            <a href="{{ route('articles.index') }}" class="btn btn-default btn-sm m-5">
+                                <i class="mdi mdi-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <!-- Thông tin cơ bản -->
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Thông tin cơ bản</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <h4><i class="mdi mdi-title"></i> {{ $article->title }}</h4>
+                                            <p class="text-muted"><i class="mdi mdi-link-variant"></i> {{ $article->slug }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {{-- <div class="row mb-4">
+                                        <div class="col-md-12">
+                                            <h5>Nội dung tóm tắt:</h5>
+                                            <p>{{ $article->preview_content }}</p>
+                                        </div>
+                                    </div> --}}
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h5>Nội dung chi tiết:</h5>
+                                            <div class="bg-light p-3 rounded">
+                                                {!! $article->content !!}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin bổ sung -->
+                        <div class="col-md-4">
+                            @if ($article->thumbnail_url)
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Ảnh đại diện</h5>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Ảnh đại diện"
+                                            class="img-fluid rounded" style="max-height: 200px;">
+                                    </div>
+                                </div>
+                            @endif
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Thông tin khác</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-account"></i> Tác giả:</span>
+                                            <span
+                                                class="badge bg-primary rounded-pill">{{ $article->author->username ?? 'Không có' }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-folder"></i> Danh mục:</span>
+                                            <span
+                                                class="badge bg-info rounded-pill">{{ $article->category->name ?? 'Không có' }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-eye"></i> Lượt xem:</span>
+                                            <span class="badge bg-secondary rounded-pill">{{ $article->views }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-check-circle"></i> Trạng thái:</span>
+                                            <span
+                                                class="badge bg-{{ $article->status == 'published' ? 'success' : 'warning' }} rounded-pill">
+                                                {{ ucfirst($article->status) }}
+                                            </span>
+                                        </li>
+                                        {{-- <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-alert-circle"></i> Nội dung nhạy cảm:</span>
+                                            <span
+                                                class="badge bg-{{ $article->contains_sensitive_content ? 'danger' : 'success' }} rounded-pill">
+                                                {{ $article->contains_sensitive_content ? 'Có' : 'Không' }}
+                                            </span>
+                                        </li> --}}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-alert-circle"></i> Tags:</span>
+                                            <span class="badge bg-{{ $article->tags }} rounded-pill">
+                                                @if ($article->tags->isNotEmpty())
+                                                    @foreach ($article->tags as $tag)
+                                                        <span class="badge bg-primary">{{ $tag->name }}</span>
+                                                    @endforeach
+                                                @else
+                                                    <small class="text-muted">Không có thẻ</small>
+                                                @endif
+                                            </span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-account-check"></i> Được duyệt bởi:</span>
+                                            <span
+                                                class="badge bg-dark rounded-pill">{{ $article->approver->username ?? 'Chưa được duyệt' }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

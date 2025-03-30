@@ -2,146 +2,196 @@
 
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <!-- Font Awesome CDN -->
+    <meta name="article-id" content="{{ $article->article_id }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <style>
-        .reply-content {
-            white-space: pre-line;
-        }
-
-        .article-image {
-            height: 400px;
-            object-fit: cover;
-            width: 100%;
-        }
-
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            border-radius: 10px;
-        }
-
-        .position-relative:hover .overlay {
-            opacity: 1;
-        }
-
-        .like-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: none;
-            background: transparent;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 8px;
-            transition: background-color 0.3s ease, transform 0.2s ease-in-out;
-        }
-
-        .like-btn i {
-            font-size: 20px;
-            transition: color 0.3s ease, transform 0.2s ease;
-        }
-
-        /* Khi hover vào nút */
-        .like-btn:hover {
-            background-color: rgba(0, 0, 0, 0.1);
-            transform: scale(1.05);
-        }
-
-        /* Khi đã like */
-        .liked {
-            background-color: rgba(0, 123, 255, 0.2);
-            border-radius: 8px;
-        }
-
-        .liked i {
-            color: #007bff;
-            /* Màu xanh dương */
-            transform: scale(1.2);
-        }
-
-        .liked span {
-            color: #007bff;
-        }
-    </style>
 
     <!--Contents-->
     <main class="product-page">
-        <!-- ====== start product ====== -->
-        <section class="product pt-100 pb-100">
+        @if (session('message'))
+            <div class="alert alert-success alert-dismissible" role="alert">
+                {{ session('message') }}
+
+            </div>
+        @endif
+        <!--Contents-->
+
+        <!-- ====== start tc-main-post-style1 ====== -->
+        <section class="tc-main-post-style1 pb-60">
             <div class="container">
-                {{-- Thông báo đã lưu bài viết --}}
-                @if (session('message'))
-                    <div class="alert alert-success alert-dismissible" role="alert">
-                        {{ session('message') }}
-
-                    </div>
-                @endif
-
-                <div class="container mt-5">
+                <div class="tc-main-post-title pt-40 pb-40">
                     <div class="row">
-                        <!-- Bài viết chính -->
-                        <div class="col-12">
-                            <div class="card shadow-sm mb-5 border-0">
-                                <div class="position-relative">
-                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                        class="card-img-top rounded-top article-image" alt="{{ $article->title }}">
-                                    <div class="overlay d-flex align-items-center justify-content-center">
-                                        <h2 class="text-white text-center">{{ $article->title }}</h2>
-                                    </div>
+                        <div class="col-lg-8">
+                            <p class="text-uppercase mb-15">{{ $article->category->name }}</p>
+                            <h2 class="title">{{ $article->title }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="meta-nav pt-30 pb-30 border-top border-1 brd-gray">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="author-side color-666 fsz-13px">
+                                <div class="author me-40 d-flex d-lg-inline-flex align-items-center">
+                                    <span class="icon-30 rounded-circle overflow-hidden me-10">
+                                        <img src="<?= !empty($article->author->image) ? asset('storage/' . $article->author->image) : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>"
+                                            alt="User Avatar">
+                                    </span>
+                                    <span>By</span>
+                                    <a href="{{ route('website.profileAuth', ['id' => $article->author->user_id]) }}"
+                                        class="text-decoration-underline text-primary ms-1">{{ $article->author->username }}</a>
                                 </div>
-                                <div class="card-body">
-                                    <h2 class="card-title">{{ $article->title }}</h2>
-                                    <p class="text-muted">
-                                        <i class="fa fa-eye"></i> {{ $article->views }} lượt xem |
-                                        <i class="fa fa-user"></i> {{ $article->author->username ?? 'N/A' }}
-                                    </p>
+                                <span class="me-40">
+                                    <a href="page-single-post-creative.html#"><i class="la la-calendar me-1"></i>
+                                        <?= date('F d, Y', strtotime($article->created_at)) ?></a>
+                                </span>
+                                <span class="me-40">
+                                    <a href="page-single-post-creative.html#"><i class="la la-calendar me-1"></i>
+                                        {{ $article->views }} Lượt xem </a>
+                                </span>
 
-                                    <!-- Nút Like -->
-                                    <button id="likeButton" class="like-btn" data-article-id="{{ $article->article_id }}"
-                                        data-liked="{{ $isLiked ? 'true' : 'false' }}">
-                                        <i class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-thumbs-up"
-                                            style="color: {{ $isLiked ? '#007bff' : 'black' }};"></i>
-                                        <span id="likeText"
-                                            style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $isLiked ? 'Đã thích' : 'Thích' }}</span>
-                                        <span id="likeCount"
-                                            style="color: {{ $isLiked ? '#007bff' : 'black' }};">{{ $likeCount }}</span>
-                                    </button>
-                                    {{-- BookMark By TungKeng --}}
-                                    <a href="" id="bookmarkButton" class="me-40"
-                                        data-article-id="{{ $article->article_id }}"
-                                        onclick="toggleBookmark(this, {{ $article->article_id }})">
-                                        <i class="la la-bookmark me-1" id="bookmarkIcon"
-                                            style="color: {{ $isBookmarked ? 'gold' : 'inherit' }};">
-                                        </i>
-                                        {{ $isBookmarked ? 'Đã lưu' : 'Bookmark' }}
-                                    </a>
+                                <span class="">
+                                    <a href="page-single-post-creative.html#"><i class="la la-comment me-1"></i>
+                                        {{ $comments->total() }}
+                                        Bình luận</a>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 text-lg-end">
+                            <div class="links-side color-000 fsz-13px">
 
-                                    <div class="article-content mt-4">{!! $article->content !!}</div>
-                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tc-main-post-img img-cover mb-50">
+                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="{{ $article->title }}">
+                </div>
+                <div class="tc-main-post-content color-000">
+                    <div class="row">
+                        <div class="col-lg-1">
+                            <div class="sharing d-flex flex-column align-items-center gap-4 sticky-top" style="top: 100px; padding-top: 20px;">
+                                <!-- Nút Like -->
+                                <button id="likeButton" class="d-flex flex-column align-items-center gap-1 border-0 bg-transparent mb-3"
+                                    data-article-id="{{ $article->article_id }}"
+                                    data-liked="{{ $isLiked ? 'true' : 'false' }}"
+                                    style="outline: none; box-shadow: none; cursor: pointer;">
+                                    <i id="likeIcon" class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-heart"
+                                        style="font-size: 28px; {{ $isLiked ? 'color: #e60023;' : 'color: black;' }}">
+                                    </i>
+                                    <span id="likeCount"
+                                        style="font-size: 14px; font-weight: bold; color: {{ $isLiked ? '#e60023' : 'black' }};">
+                                        {{ $likeCount }}
+                                    </span>
+                                </button>
+
+                                <!-- Nút Bookmark -->
+                                <a href="#" id="bookmarkButton"
+                                    class="d-flex flex-column align-items-center gap-1 text-decoration-none mb-3"
+                                    data-article-id="{{ $article->article_id }}"
+                                    onclick="toggleBookmark(this, {{ $article->article_id }}); return false;">
+                                    <i class="la la-bookmark" id="bookmarkIcon"
+                                        style="font-size: 28px; color: {{ $isBookmarked ? 'gold' : '#555' }};">
+                                    </i>
+                                    <span
+                                        style="font-size: 14px; font-weight: bold; color: {{ $isBookmarked ? 'gold' : '#555' }};">
+                                        {{ $isBookmarked ? 'Đã lưu' : 'Lưu' }}
+                                    </span>
+                                </a>
+
+                                <!-- Nút Report -->
+                                <button type="button"
+                                    class="report-article-btn d-flex flex-column align-items-center gap-1 border-0 bg-transparent"
+                                    data-article-id="{{ $article->article_id }}"
+                                    style="outline: none; box-shadow: none; cursor: pointer;">
+                                    <i class="la la-exclamation-triangle" style="font-size: 28px; color: #777;"></i>
+                                    <span style="font-size: 14px; font-weight: bold; color: #777;">Báo cáo</span>
+                                </button>
                             </div>
                         </div>
 
-                        <!-- Quảng cáo -->
-
+                        <div class="col-lg-11">
+                            <div class="content">
+                                @foreach (explode("\n", $article->content) as $paragraph)
+                                    @if (trim($paragraph) !== '')
+                                        <p class="info-text xm-content-width mt-30">{!! $paragraph !!}</p>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-        <!-- ====== end product ====== -->
+        <!-- ====== end tc-main-post-style ====== -->
+
+        <!-- ====== start banner18 ====== -->
+        <section class="banner18">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-11">
+                        <div class="content border-1 border-top border-bottom brd-gray pt-50 pb-50">
+                            <a href="page-single-post-creative.html#" class="d-block img-cover">
+                                <img src="https://newzin-html.themescamp.com/assets/img/banner18.png" alt="">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end banner18 ====== -->
+
+        <!-- ====== start video content ====== -->
+        <section class="tc-main-post-style1 pt-20 pb-20">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-11">
+                        <div class="btm-share-post mt-30">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="btm-tags d-flex flex-wrap justify-content-center gap-2">
+                                        @foreach ($article->tags as $tag)
+                                            <a href=""
+                                                class="btn border border-1 mt-20 py-2 px-3">{{ $tag->name }}</a>
+                                        @endforeach
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end next prev post slider ====== -->
+
+        <!-- ====== start author info ====== -->
+        @if ($article->author)
+            <section class="tc-author-info-style1 pb-50">
+                <div class="container">
+                    <div class="tc-author-card border-1 border-top brd-gray">
+                        <div class="content mt-50 p-50 d-block d-lg-flex bg-gray1">
+                            <div class="img img-cover icon-85 rounded-circle overflow-hidden flex-shrink-0 me-30">
+                                <img src="{{ $article->author->avatar ?? 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' }}"
+                                    alt="{{ $article->author->username }}">
+                            </div>
+                            <div class="info">
+                                <h5 class="title fsz-24px fw-bold">{{ $article->author->username }}</h5>
+                                <small class="fsz-12px color-main text-uppercase">Tác giả </small>
+                                <div class="text fsz-15px color-666 mt-20">
+                                    {{ $article->author->description ?? 'Không có mô tả.' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        @endif
 
 
-        <!-- ====== start product details ====== -->
+        <!-- ====== end author info ====== -->
+
+        <!-- ====== start comments ====== -->
         <section class="product-details pt-20">
             <div class="container">
                 <ul class="nav nav-pills" id="pills-tab" role="tablist"></ul>
@@ -173,7 +223,7 @@
                                                 <div class="inf w-100">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <h6 class="fw-bold">
-                                                            <?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>
+                                                           <a href="{{ route('website.profileAuth', ['id' => $comment->user->user_id]) }}"><?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?></a>
                                                         </h6>
                                                         <span class="fs-12px text-muted">
                                                             <i class="fas fa-clock"></i>
@@ -185,12 +235,16 @@
                                                         <?= nl2br(htmlspecialchars($comment->content)) ?>
                                                     </div>
                                                     <div class="mt-2">
-                                                        <button class="btn reply-btn butn border border-1 mt-20 py-2 px-3"
+                                                        <button
+                                                            class="btn reply-btn butn border border-1 py-2 px-3 d-inline-block"
                                                             data-comment-id="<?= $comment->comment_id ?>"
                                                             data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
-
                                                             <span class="fw-bold">Trả lời</span>
-
+                                                        </button>
+                                                        <button class="btn repost-btn butn border border-1 py-2 px-3"
+                                                            data-comment-id="<?= $comment->comment_id ?>"
+                                                            data-content="<?= htmlspecialchars($comment->content) ?>">
+                                                            <span class="fw-bold">Repost</span>
                                                         </button>
                                                     </div>
                                                     <!-- Danh sách replies -->
@@ -227,13 +281,20 @@
                                                                     </div>
                                                                     <div class="mt-2">
                                                                         <button
-                                                                            class="btn reply-btn butn border border-1 mt-20 py-2 px-3 reply-btn "
+                                                                            class="btn reply-btn butn border border-1 py-2 px-3 d-inline-block"
                                                                             data-comment-id="<?= $comment->comment_id ?>"
                                                                             data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
-
                                                                             <span class="fw-bold">Trả lời</span>
                                                                         </button>
+                                                                        <button
+                                                                            class="btn repost-btn butn border border-1 py-2 px-3"
+                                                                            data-comment-id="<?= $comment->comment_id ?>"
+                                                                            data-content="<?= htmlspecialchars($comment->content) ?>">
+                                                                            <span class="fw-bold">Repost</span>
+                                                                        </button>
+
                                                                     </div>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -358,66 +419,516 @@
                 </div>
             </div>
             </div>
-
-
         </section>
-        <!-- ====== end product details ====== -->
+        <!-- ====== end comments ====== -->
 
-        <!-- ====== start Related products ====== -->
-        <section class="tc-products-content section-padding">
+
+
+        <!-- ====== start another posts ====== -->
+        <section class="another-news" style="padding-top: 100px">
             <div class="container">
-                <div class="title mb-30">
-                    <h4>Bài viết liên quan</h4>
-                </div>
-                <div class="related-products-slider tc-products position-relative tc-slider-style1">
-                    <div class="swiper-container">
-                        <div class="swiper-wrapper">
-                            @foreach ($relatedArticles as $related)
-                                <div class="swiper-slide">
-                                    <div class="product-card">
-                                        <div class="img">
-                                            <img src="{{ asset('storage/' . $related->thumbnail_url) }}"
-                                                alt="{{ $related->title }}">
-                                            <div class="btns">
-
-                                                <a href="{{ route('articles.article', $related->slug) }}" class="butn">
-                                                    <span><i class="la la-eye me-2"></i>Đọc thêm</span>
-                                                </a>
+                <div class="content pt-50 pb-50 border-1 border-top border-dark">
+                    <div class="row">
+                        <div class="col-lg-4 mb-5 mb-lg-0">
+                            <a href="" class="color-000 text-uppercase mb-30 ltspc-1"> Xem thêm từ tác giả này
+                                <i class="la la-angle-right ms-1"></i>
+                            </a>
+                            <div class="row">
+                                <div class="col-12 border-1 border-end brd-gray">
+                                    @if ($relatedAuthorArticles->isNotEmpty())
+                                        {{-- Bài đầu tiên --}}
+                                        <div class="tc-post-grid-default">
+                                            @php $firstArticle = $relatedAuthorArticles->shift(); @endphp
+                                            <div class="item">
+                                                <div class="img img-cover th-250">
+                                                    <img src="{{ asset('storage/' . $firstArticle->thumbnail_url) }}"
+                                                        alt="{{ $firstArticle->title }}">
+                                                </div>
+                                                <div class="content pt-20">
+                                                    <a href="#"
+                                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">
+                                                        {{ $firstArticle->category->name ?? 'Uncategorized' }}
+                                                    </a>
+                                                    <h4 class="title ltspc--1 mb-10">
+                                                        <a
+                                                            href="{{ Auth::check() ? route('articles.article', $firstArticle->slug) : url('/login-user') }}">
+                                                            {{ $firstArticle->title }}
+                                                        </a>
+                                                    </h4>
+                                                    <div class="text color-666">
+                                                        {{ Str::limit($firstArticle->preview_content, 100, '...') }}
+                                                    </div>
+                                                    <div class="meta-bot lh-1 mt-20">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="#"><i class="la la-calendar me-2"></i>
+                                                                    {{ $firstArticle->created_at->format('M d, Y') }}</a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="#"><i class="la la-comment me-2"></i>
+                                                                    {{ $firstArticle->comments_count }}</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="info pt-30">
-                                            <a href="{{ route('articles.article', $related->slug) }}"
-                                                class="title">{{ $related->title }}</a>
+
+                                        {{-- Các bài còn lại --}}
+                                        <div class="tc-post-list-style2">
+                                            <div class="items">
+                                                @foreach ($relatedAuthorArticles as $article)
+                                                    <a href="{{ Auth::check() ? route('articles.article', $article->slug) : url('/login-user') }}"
+                                                        class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15">
+                                                        <div class="row gx-3 align-items-center">
+                                                            <div class="col-4">
+                                                                <div class="img th-70 img-cover">
+                                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) ?? 'default-image.jpg' }}"
+                                                                        alt="{{ $article->title }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <div class="content">
+                                                                    <small
+                                                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">
+                                                                        {{ $article->category->name ?? 'Uncategorized' }}
+                                                                    </small>
+                                                                    <h5 class="title ltspc--1">
+                                                                        {{ $article->title }}
+                                                                    </h5>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                @endforeach
+                                            </div>
                                         </div>
-                                    </div>
+                                    @else
+                                        <p class="text-center text-muted">Hiện tại chưa có bài viết nào.</p>
+                                    @endif
                                 </div>
-                            @endforeach
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-lg-4 mb-5 mb-lg-0">
+                            <a href="page-blog.html" class="color-000 text-uppercase mb-30 ltspc-1">
+                                {{ $article->category->name }} <i class="la la-angle-right ms-1"></i> </a>
+                            <div class="row">
+                                <div class="col-12 border-1 border-end brd-gray">
+                                    @if ($relatedCategoryArticles->isNotEmpty())
+                                        <div class="tc-post-grid-default">
+                                            @if ($relatedCategoryArticles->isNotEmpty())
+                                                @php $firstRelated = $relatedCategoryArticles->first(); @endphp
+                                                <div class="item">
+                                                    <div class="img img-cover th-250">
+                                                        <img src="{{ asset('storage/' . $firstRelated->thumbnail_url) }}"
+                                                            alt="{{ $firstRelated->title }}">
+                                                    </div>
+                                                    <div class="content pt-20">
+                                                        <a href="{{ Auth::check() ? route('articles.article', $firstRelated->slug) : url('/login-user') }}"
+                                                            class="item d-block">
+                                                            {{ $firstRelated->category->name ?? 'Uncategorized' }}
+                                                        </a>
+                                                        <h4 class="title ltspc--1 mb-10">
+                                                            <a href="{{ Auth::check() ? route('articles.article', $firstRelated->slug) : url('/login-user') }}"
+                                                                class="item d-block">
+                                                                {{ $firstRelated->title }}
+                                                            </a>
+                                                        </h4>
+                                                        <div class="text color-666">
+                                                            {{ Str::limit($firstRelated->preview_content, 100, ' [...]') }}
+                                                        </div>
+                                                        <div class="meta-bot lh-1 mt-20">
+                                                            <ul class="d-flex">
+                                                                <li class="date me-5">
+                                                                    <a href="{{ Auth::check() ? route('articles.article', $firstRelated->slug) : url('/login-user') }}"
+                                                                        class="item d-block">
+                                                                        <i class="la la-calendar me-2"></i>
+                                                                        {{ $firstRelated->created_at->format('M d, Y') }}
+                                                                    </a>
+                                                                </li>
+                                                                <li class="comment">
+                                                                    <a href="{{ Auth::check() ? route('articles.article', $firstRelated->slug) : url('/login-user') }}"
+                                                                        class="item d-block">
+                                                                        <i class="la la-comment me-2"></i>
+                                                                        {{ $firstRelated->comments_count ?? 0 }}
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        <div class="tc-post-list-style2">
+                                            <div class="items">
+                                                @foreach ($relatedCategoryArticles->skip(1)->take(2) as $related)
+                                                    <a href="{{ Auth::check() ? route('articles.article', $related->slug) : url('/login-user') }}"
+                                                        class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
+                                                        <div class="row gx-3 align-items-center">
+                                                            <div class="col-4">
+                                                                <div class="img th-70 img-cover">
+                                                                    <img src="{{ asset('storage/' . $related->thumbnail_url) ?? 'default-thumbnail.jpg' }}"
+                                                                        alt="{{ $related->title }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <div class="content">
+                                                                    <small
+                                                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">{{ $related->category->name ?? 'Uncategorized' }}</small>
+                                                                    <h5 class="title ltspc--1">
+                                                                        {{ $related->title }}
+                                                                    </h5>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @else
+                                        <p class="text-center text-muted">Hiện tại chưa có bài viết nào.</p>
+                                    @endif
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-4">
+                            <a href="page-blog.html" class="color-000 text-uppercase mb-30 ltspc-1"> Khuyến cáo <i
+                                    class="la la-angle-right ms-1"></i> </a>
+                            <div class="row">
+                                <div class="col-12">
+                                    @if ($khuyencao->isNotEmpty())
+                                        {{-- Hiển thị bài viết nổi bật đầu tiên --}}
+                                        <div class="tc-post-grid-default">
+                                            @php
+                                                $firstArticle = $khuyencao->shift();
+                                            @endphp
+                                            <div class="item">
+                                                <div class="img img-cover th-250">
+                                                    <img src="{{ asset('storage/' . $firstArticle->thumbnail_url) }}"
+                                                        alt="{{ $firstArticle->title }}">
+                                                </div>
+                                                <div class="content pt-20">
+                                                    <a href="{{ route('articles.article', $firstArticle->slug) }}"
+                                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">
+                                                        {{ $firstArticle->category->name ?? 'Uncategorized' }}
+                                                    </a>
+                                                    <h4 class="title ltspc--1 mb-10">
+                                                        <a href="{{ route('articles.article', $firstArticle->slug) }}">
+                                                            {{ $firstArticle->title }}
+                                                        </a>
+                                                    </h4>
+                                                    <div class="text color-666">
+                                                        {{ Str::limit($firstArticle->preview_content, 100, '...') }}
+                                                    </div>
+                                                    <div class="meta-bot lh-1 mt-20">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="#">
+                                                                    <i class="la la-calendar me-2"></i>
+                                                                    {{ $firstArticle->created_at->format('M d, Y') }}
+                                                                </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="#">
+                                                                    <i class="la la-comment me-2"></i>
+                                                                    {{ $firstArticle->comments_count }}
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- Hiển thị các bài còn lại ở dạng danh sách --}}
+                                        <div class="tc-post-list-style2">
+                                            <div class="items">
+                                                @foreach ($khuyencao as $article)
+                                                    <a href="{{ route('articles.article', $article->slug) }}"
+                                                        class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15">
+                                                        <div class="row gx-3 align-items-center">
+                                                            <div class="col-4">
+                                                                <div class="img th-70 img-cover">
+                                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                                                        alt="{{ $article->title }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <div class="content">
+                                                                    <small
+                                                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">
+                                                                        {{ $article->category->name ?? 'Uncategorized' }}
+                                                                    </small>
+                                                                    <h5 class="title ltspc--1">
+                                                                        {{ $article->title }}
+                                                                    </h5>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @else
+                                        <p class="text-center text-muted">Hiện tại chưa có bài viết nào !</p>
+                                    @endif
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
                 </div>
             </div>
         </section>
+        <!-- ====== start another posts ====== -->
+
+
+
+
+
+            <!-- ====== start modals ====== -->
+
+            <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
+            aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <div class="logo">
+                    <h1>News24h</h1>
+                </div>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body mt-4">
+                <h6 class="color-000 text-uppercase mb-15 ltspc-1 fw-bold"> Giới Thiệu News24h <i class="la la-angle-right ms-1"></i>
+                </h6>
+                <div class="text mb-4">
+                    News24h là nền tảng tin tức hàng đầu Việt Nam, cung cấp thông tin chính xác, đa dạng và cập nhật 24/7.
+                    Chúng tôi cam kết mang đến cho độc giả những tin tức chất lượng và đáng tin cậy từ mọi lĩnh vực.
+                </div>
+
+                <div class="mt-4">
+                    <h6 class="color-000 mb-3 fw-bold">Tại sao chọn News24h?</h6>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-box me-3 bg-light rounded p-2" style="color: var(--bs-primary);">
+                            <i class="la la-newspaper-o text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="mb-0">Tin tức chính xác, đa chiều</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-box me-3 bg-light rounded p-2" style="color: var(--bs-primary);">
+                            <i class="la la-bolt text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="mb-0">Cập nhật tin tức 24/7</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-box me-3 bg-light rounded p-2" style="color: var(--bs-primary);">
+                            <i class="la la-users text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="mb-0">Cộng đồng độc giả lớn mạnh</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-contact-info mt-4 pt-4 border-top">
+                    <h6 class="color-000 text-uppercase mb-20 ltspc-1 fw-bold"> Liên Hệ & Theo Dõi <i
+                            class="la la-angle-right ms-1"></i> </h6>
+                    <ul class="m-0">
+                        <li class="mb-3">
+                            <i class="las la-map-marker me-2 color-main fs-5"></i>
+                            <a href="#">Tòa nhà FPT Polytechnic., Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="las la-envelope me-2 color-main fs-5"></i>
+                            <a href="#">bayanhtai@gmail.com</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="las la-phone-volume me-2 color-main fs-5"></i>
+                            <a href="#">0981 725 836</a>
+                        </li>
+                    </ul>
+                    <div class="social-links mt-3">
+                        <a href="#" class="me-2">
+                            <i class="la la-twitter"></i>
+                        </a>
+                        <a href="#" class="me-2">
+                            <i class="la la-facebook-f"></i>
+                        </a>
+                        <a href="#" class="me-2">
+                            <i class="la la-instagram"></i>
+                        </a>
+                        <a href="#" class="me-2">
+                            <i class="la la-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ====== end modals ====== -->
+
+
+
+
+
+
+
+
+
+
+
+        <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
+            aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <div class="logo">
+                    <img src="client/assets/img/logo_home1.png" alt="" class="dark-none">
+                    <img src="client/assets/img/logo_home1_lt.png" alt="" class="light-none">
+                </div>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body mt-4">
+                <h6 class="color-000 text-uppercase mb-15 ltspc-1"> about us <i class="la la-angle-right ms-1"></i>
+                </h6>
+                <div class="text">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem optio tempora quia iure quae.
+                    Soluta corporis quidem aperiam amet nihil.
+                </div>
+
+                <div class="sidebar-categories mt-40">
+                    <h6 class="color-000 text-uppercase mb-30 ltspc-1"> categories <i class="la la-angle-right ms-1"></i>
+                    </h6>
+
+                    @foreach ($category2 as $category)
+                        <a href="{{ route('client.category.show', $category->slug) }}" class="cat-card">
+                            <div class="img img-cover ">
+
+                                <div class="info">
+                                    <h5 href="{{ route('client.category.show', $category->slug) }}">
+                                        {{ $category->name }}
+                                    </h5>
+                                    <span class="num">{{ $loop->iteration }}</span> <!-- Số thứ tự danh mục -->
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+
+
+                </div>
+                <div class="sidebar-contact-info mt-50">
+                    <h6 class="color-000 text-uppercase mb-20 ltspc-1"> Contact & follow <i
+                            class="la la-angle-right ms-1"></i></h6>
+                    <ul class="m-0">
+                        <li class="mb-3">
+                            <i class="las la-map-marker me-2 color-main fs-5"></i>
+                            <a href="home-default.html#">streat name 12, hollywood City, USA</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="las la-envelope me-2 color-main fs-5"></i>
+                            <a href="home-default.html#">Newzin@gmail.com</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="las la-phone-volume me-2 color-main fs-5"></i>
+                            <a href="home-default.html#">+12 123 456 789</a>
+                        </li>
+                    </ul>
+                    <div class="social-links">
+                        <a href="home-default.html#">
+                            <i class="la la-twitter"></i>
+                        </a>
+                        <a href="home-default.html#">
+                            <i class="la la-facebook-f"></i>
+                        </a>
+                        <a href="home-default.html#">
+                            <i class="la la-instagram"></i>
+                        </a>
+                        <a href="home-default.html#">
+                            <i class="la la-youtube"></i>
+                        </a>
+                        <a href="home-default.html#">
+                            <i class="la la-spotify"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal báo cáo bài viết -->
+        <div id="reportArticleModal" class="modal fade" tabindex="-1" aria-labelledby="reportArticleLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="reportArticleLabel">Báo cáo bài viết</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="report-article-id">
+                        <div class="mb-3">
+                            <label for="report-article-reason" class="form-label">Lý do báo cáo:</label>
+                            <textarea id="report-article-reason" class="form-control" rows="4"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-danger" id="confirmReportArticle">Gửi báo cáo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal nhập lý do RepostComment -->
+        <div id="repostModal" class="modal fade" tabindex="-1" aria-labelledby="repostModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content shadow-lg border-0">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="repostModalLabel"><i class="fas fa-retweet me-2"></i> Repost - Nhập
+                            lý do</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="repost-comment-id">
+                        <div class="mb-3">
+                            <label for="repost-reason" class="form-label fw-bold">Lý do repost (có thể chỉnh sửa):</label>
+                            <textarea id="repost-reason" class="form-control border-primary shadow-sm" rows="4"
+                                placeholder="Nhập nội dung repost ..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Hủy
+                        </button>
+                        <button type="button" class="btn btn-primary" id="confirmRepost">
+                            Xác nhận
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ====== end Related products ====== -->
     </main>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let likeButton = document.getElementById("likeButton");
-            let likeText = document.getElementById("likeText");
             let likeCount = document.getElementById("likeCount");
-            let icon = likeButton.querySelector("i");
-
-            let isLiked = likeButton.getAttribute("data-liked") === "true";
-
-            // Cập nhật trạng thái ban đầu khi load trang
-            if (isLiked) {
-                updateLikeUI(true);
-            }
+            let likeIcon = document.getElementById("likeIcon");
 
             likeButton.addEventListener("click", function() {
                 let articleId = likeButton.getAttribute("data-article-id");
+                let isLiked = likeButton.getAttribute("data-liked") === "true";
 
                 fetch(`/articles/${articleId}/like`, {
                         method: "POST",
@@ -432,33 +943,21 @@
                     .then(data => {
                         if (data.success) {
                             likeButton.setAttribute("data-liked", data.liked ? "true" : "false");
-                            likeText.textContent = data.liked ? "Đã thích" : "Thích";
                             likeCount.textContent = data.likeCount;
 
-                            // Cập nhật giao diện theo trạng thái like
-                            updateLikeUI(data.liked);
-                        } else {
-                            alert("Lỗi: " + data.message);
+                            if (data.liked) {
+                                likeIcon.classList.remove("fa-regular");
+                                likeIcon.classList.add("fa-solid");
+                                likeIcon.style.color = "#e60023";
+                            } else {
+                                likeIcon.classList.remove("fa-solid");
+                                likeIcon.classList.add("fa-regular");
+                                likeIcon.style.color = "white";
+                            }
                         }
-                    });
+                    })
+                    .catch(error => console.error("Lỗi:", error));
             });
-
-            // Hàm cập nhật UI
-            function updateLikeUI(liked) {
-                if (liked) {
-                    likeText.style.color = "#007bff"; // Màu xanh 💙
-                    likeCount.style.color = "#007bff"; // Màu xanh 💙
-                    icon.classList.remove("fa-regular");
-                    icon.classList.add("fa-solid");
-                    icon.style.color = "#007bff"; // Màu xanh 💙
-                } else {
-                    likeText.style.color = "black"; // Màu đen 🖤
-                    likeCount.style.color = "black"; // Màu đen 🖤
-                    icon.classList.remove("fa-solid");
-                    icon.classList.add("fa-regular");
-                    icon.style.color = "black"; // Màu đen 🖤
-                }
-            }
         });
     </script>
 
@@ -517,52 +1016,69 @@
 
 
 
-            $(document).ready(function() {
-                $(".send-reply").click(function() {
-                    var btn = $(this);
-                    var form = btn.closest("form");
-                    var content = form.find(".reply-content").val();
-                    var articleId = btn.data("article-id");
-                    var commentId = btn.data("comment-id");
 
-                    if (content.trim() === "") {
-                        alert("Nội dung không được để trống!");
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("Script loaded!");
+            let buttons = document.querySelectorAll(".send-reply");
+            console.log("Found", buttons.length, "send-reply buttons");
+
+            buttons.forEach(button => {
+                button.addEventListener("click", function() {
+                    console.log("Clicked send-reply button!");
+                    let commentId = this.getAttribute("data-comment-id");
+                    let articleId = this.getAttribute("data-article-id");
+                    let replyForm = document.querySelector(`#reply-form-${commentId} .reply-form`);
+                    let content = replyForm.querySelector(".reply-content").value.trim();
+
+                    console.log("articleId =", articleId, "commentId =", commentId);
+                    console.log("content =", content);
+
+                    // Kiểm tra xem form có input CSRF hay meta CSRF không
+                    let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute(
+                        "content");
+
+                    if (content === "") {
+                        alert("Vui lòng nhập nội dung bình luận!");
                         return;
                     }
 
-                    $.ajax({
-                        url: "{{ route('articles.replyComment', ['article_id' => '__ARTICLE_ID__', 'comment_id' => '__COMMENT_ID__']) }}"
-                            .replace("__ARTICLE_ID__", articleId)
-                            .replace("__COMMENT_ID__", commentId),
-                        type: "POST",
-                        data: form.serialize(),
-                        success: function(response) {
-                            if (response.success) {
-                                window.location.reload();
-
-
-
-                                // Chèn bình luận mới vào giao diện
-                                $("#reply-form-" + commentId).before(newReply);
-
-                                // Ẩn form & xóa nội dung nhập vào
-                                form.find(".reply-content").val("");
-                                $("#reply-form-" + commentId).addClass("d-none");
+                    fetch(`/articles/${articleId}/comments/${commentId}/reply`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": csrfToken
+                            },
+                            body: JSON.stringify({
+                                content: content,
+                                article_id: articleId,
+                                parent_id: commentId
+                            })
+                        })
+                        .then(response => {
+                            console.log("Response status:", response.status);
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log("Server data:", data);
+                            if (data.success) {
+                                // Reload trang
+                                location.reload();
+                            } else {
+                                alert(data.message || "Có lỗi xảy ra, vui lòng thử lại!");
                             }
-                        },
-                        error: function() {
-                            alert("Có lỗi xảy ra, vui lòng thử lại!");
-                        }
-                    });
-                });
-
-                // Nút hủy: Ẩn form khi nhấn "Hủy"
-                $(".cancel-reply").click(function() {
-                    $(this).closest(".reply-form-container").addClass("d-none");
+                        })
+                        .catch(error => {
+                            console.error("Lỗi khi gửi bình luận:", error);
+                            alert("Lỗi khi gửi bình luận!");
+                        });
                 });
             });
         });
     </script>
+
 
     {{-- TungKeng làm tìm comment --}}
     <script>
@@ -580,6 +1096,115 @@
                     }, 500);
                 }
             }
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Mở modal báo cáo bài viết khi nhấn vào nút có class .report-article-btn
+            document.querySelectorAll(".report-article-btn").forEach(button => {
+                button.addEventListener("click", function(event) {
+                    event.preventDefault(); // Ngăn chặn hành động mặc định nếu button hoặc link
+                    let articleId = this.getAttribute("data-article-id");
+                    console.log("Article ID:", articleId); // Debug: kiểm tra giá trị articleId
+                    if (!articleId) {
+                        console.error("Không tìm thấy article id!");
+                        return;
+                    }
+                    document.getElementById("report-article-id").value = articleId;
+                    new bootstrap.Modal(document.getElementById("reportArticleModal")).show();
+                });
+            });
+
+            // Gửi báo cáo bài viết khi nhấn nút "Gửi báo cáo"
+            document.getElementById("confirmReportArticle").addEventListener("click", function(event) {
+                event.preventDefault();
+                let articleId = document.getElementById("report-article-id").value;
+                let reason = document.getElementById("report-article-reason").value.trim();
+
+                // Kiểm tra giá trị articleId
+                if (!articleId) {
+                    console.error("Không tìm thấy article id trước khi gửi request!");
+                    return;
+                }
+
+                fetch(`/articles/${articleId}/report`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute("content")
+                        },
+                        body: JSON.stringify({
+                            reason: reason
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        location.reload();
+                    })
+                    .catch(error => console.error("Lỗi:", error));
+            });
+        });
+    </script>
+
+    <script>
+        //reportcommet
+        document.addEventListener("DOMContentLoaded", function() {
+            // Khi nhấn nút Repost, hiển thị modal và prefill nội dung ban đầu
+            document.querySelectorAll(".repost-btn").forEach(button => {
+                button.addEventListener("click", function() {
+                    let commentId = this.getAttribute("data-comment-id");
+                    let content = this.getAttribute("data-content");
+
+                    document.getElementById("repost-comment-id").value = commentId;
+                    // Pre-fill textarea với nội dung gốc (người dùng có thể chỉnh sửa)
+                    document.getElementById("repost-reason").value = content;
+
+                    let modal = new bootstrap.Modal(document.getElementById("repostModal"));
+                    modal.show();
+                });
+            });
+
+            // Khi người dùng xác nhận Repost
+            document.getElementById("confirmRepost").addEventListener("click", function() {
+                let commentId = document.getElementById("repost-comment-id").value;
+                let reason = document.getElementById("repost-reason").value.trim();
+                // Lấy article_id từ meta tag
+                let articleMeta = document.querySelector("meta[name='article-id']");
+                if (!articleMeta || !articleMeta.getAttribute("content")) {
+                    console.error("Không tìm thấy article ID!");
+                    return;
+                }
+                let articleId = articleMeta.getAttribute("content").trim();
+
+                // Gửi request đến route: /articles/{article_id}/comments/{comment_id}/repost
+                fetch(`/articles/${articleId}/comments/${commentId}/report`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute("content")
+                        },
+                        body: JSON.stringify({
+                            reason: reason
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Repost thành công!");
+                            location.reload();
+                        } else {
+                            alert("Repost thất bại: " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Lỗi fetch:", error);
+                        alert("Có lỗi xảy ra khi repost!");
+                    });
+            });
         });
     </script>
 @endsection

@@ -36,13 +36,26 @@ class AppServiceProvider extends ServiceProvider
                 'user.dashboard',
                 'user.layouts.master',
                 'user.layouts.partials.header-top',
+                //dat them
+                'website.layouts.partials.start-nav',
+                'website.profiles.admin',
+                'website.profiles.author',
+                'website.profiles.moderator',
+                'website.profiles.user',
+                //dat them
             ],
             function ($view) {
                 $user = Auth::user();
                 $view->with('username', $user->username ?? 'Tác Giả');
                 $view->with('avatar',
                     $user->image ?? '/admin/main/../images/user5-128x128.jpg');
+                // dat them
+                $view->with('categories', Category::where('is_active', 1)->get());
+                $view->with('category2', Category::where('is_active', 1)->get());
+
+                // dat them
             }
+            
         );
         Category::observe(CategoryObserver::class);
     }

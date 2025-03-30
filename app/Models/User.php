@@ -21,6 +21,7 @@ class User extends Authenticatable implements CanResetPasswordContract
 
     protected $fillable = [
         'username',
+        'description',
         'email',
         'password',
         'phone',
@@ -31,6 +32,9 @@ class User extends Authenticatable implements CanResetPasswordContract
         'banned_until',
         'provider',
         'provider_id',
+        'fullname',
+        'dob',
+        'address',
     ];
 
     protected $hidden = [
@@ -70,4 +74,23 @@ class User extends Authenticatable implements CanResetPasswordContract
         return $this->morphMany(DatabaseNotification::class, 'notifiable', 'notifiable_type', 'notifiable_id', 'user_id');
     }
 
+    public function articles()
+    {
+        return $this->hasMany(Article::class, 'author_id');
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id');
+    }
+
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
+    }
+
+    public function followedArticles()
+    {
+        return Article::whereIn('author_id', $this->following()->pluck('users.id'))->where('status', 'published')->get();
+    }
 }

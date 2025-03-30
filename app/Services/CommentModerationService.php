@@ -14,15 +14,17 @@ class CommentModerationService
     public function __construct()
     {
         $this->client = new Client();
-        $this->apiKey = env('GEMINI_API_KEY'); // Lấy API Key từ .env
+        $this->apiKey = env('GEMINI_API_KEYY'); // Lấy API Key từ .env
     }
 
     public function checkComment(string $text): bool
     {
+        
         if (!$this->apiKey) {
             Log::error("❌ GEMINI_API_KEY chưa được cấu hình trong .env");
             return false;
         }
+    
 
         Log::info("🔍 Kiểm tra bình luận với Gemini: {$text}");
 
@@ -41,7 +43,7 @@ class CommentModerationService
                         'response_mime_type' => 'application/json'
                     ]
                 ],
-                'timeout' => 10,
+                'timeout' => 8,
             ]);
 
             $result = json_decode($response->getBody(), true);

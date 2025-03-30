@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Notifications\NewArticleSubmitted;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Notifications\NewArticleSubmitted;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Article extends Model
 {
@@ -30,6 +30,7 @@ class Article extends Model
     ];
 
     protected $with = ['tags'];
+
 
     /**
      * Lấy danh sách bài viết đã xuất bản

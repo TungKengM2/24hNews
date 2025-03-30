@@ -17,7 +17,7 @@
 
 </head>
 
-<body class="hold-transition dark-skin sidebar-mini theme-primary fixed">
+<body class="hold-transition light-skin sidebar-mini theme-primary fixed">
 
     <div class="wrapper">
         <div id="loader"></div>

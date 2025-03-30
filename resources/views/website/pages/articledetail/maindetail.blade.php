@@ -3,7 +3,7 @@
     <!-- ====== start breaking news ====== -->
     <section class="tc-breaking-news-style1 pt-50 pb-50">
         <div class="container">
-            <p class="color-999 text-uppercase mb-30 ltspc-1">breaking news</p>
+            <p class="color-999 text-uppercase mb-30 ltspc-1">tin tức mới nhất</p>
             <div class="tc-post-grid-default">
                 <div class="tc-slider-style1">
                     <div class="swiper-container">
@@ -50,7 +50,7 @@
         <div class="container">
             <div class="hot-trends-tabs-style1 mb-4">
                 <p class="color-999 text-uppercase ltspc-1 flex-shrink-0 me-4 pt-1"> <i
-                        class="ion-arrow-graph-up-right me-2"></i> hot trends </p>
+                        class="ion-arrow-graph-up-right me-2"></i> Xu hướng nóng </p>
                 <div class="links">
                     {{-- @foreach ($hottrendsArticles as $article)
                 <a class="link" href="{{ Auth::check() ? route('client.articles.article', $article->id) : route('login') }}" class="item d-block">{{ $article->preview_contentt }}
@@ -63,7 +63,7 @@
                     <div class="col-lg-3">
                         <div class="tc-stock-card mb-30">
                             <a href="home-default.html#" class="stock-card-title">
-                                Stocks Market today
+                                Thị trường chứng khoán hôm nay
                                 <span class="la la-arrow-circle-o-right color-666"></span>
                             </a>
                             <div class="stock-card-body">
@@ -74,7 +74,7 @@
                                         <span class="price">33,811.47</span>
                                     </div>
                                     <div class="inf">
-                                        <p>Dow Jones Indus. Avg</p>
+                                        <p>Chỉ số công nghiệp Dow Jones</p>
                                         <span class="price text-danger">-981.36</span>
                                     </div>
                                 </div>
@@ -85,7 +85,7 @@
                                         <span class="price">12,839.95</span>
                                     </div>
                                     <div class="inf">
-                                        <p>NASDQ Composite Index</p>
+                                        <p>Chỉ số tổng hợp NASDAQ</p>
                                         <span class="price text-danger">-217.86</span>
                                     </div>
                                 </div>
@@ -96,7 +96,7 @@
                                         <span class="price">4,271.7</span>
                                     </div>
                                     <div class="inf">
-                                        <p>S&P 500 Index</p>
+                                        <p>Chỉ số S&P 500</p>
                                         <span class="price text-success">+125.8</span>
                                     </div>
                                 </div>
@@ -108,15 +108,16 @@
                                     <img src="client/img/trend/1.png" alt="">
                                 </div>
                                 <div class="content py-4 px-3 bg-gray2">
-                                    <p class="color-main fsz-13px text-uppercase mb-1">Sponsored Content</p>
-                                    <h4 class="title ltspc--1"> <a href="page-single-post-creative.html">3D2N at
-                                            Sixsense Resort 5 stars just
+                                    <p class="color-main fsz-13px text-uppercase mb-1">Nội dung tài trợ</p>
+                                    <h4 class="title ltspc--1"> <a href="page-single-post-creative.html">3 ngày 2 đêm tại
+                                            Khu nghỉ dưỡng Sixsense 5 sao chỉ với
                                             $1,299</a> </h4>
                                     <a href="home-default.html#" class="color-999 fsz-12px mt-20">booking.com <i
                                             class="la la-external-link-square-alt"></i></a>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="col-lg-6">
                         <div class="tc-trends-news-slider1 tc-slider-style2">
@@ -177,17 +178,16 @@
                     <div class="col-lg-3">
                         <div class="tc-post-list-style1">
                             <div class="tc-post-title-style1">
-                                <a href="page-blog.html"> trending posts </a>
+                                <a href="page-blog.html"> Bài viết thịnh hành </a>
                             </div>
                             <div class="tc-post-overlay-default">
                                 <div class="img th-200 img-cover">
                                     <img src="client/img/trend/4.png" alt="">
                                 </div>
                                 <div class="content ps-20 pe-20 pb-20 text-white">
-                                    <a href="page-single-post-creative.html"
-                                        class="text-uppercase fsz-13px mb-1">lifestyle</a>
+                                    <a href="page-single-post-creative.html" class="text-uppercase fsz-13px mb-1">phong cách sống</a>
                                     <h4 class="title">
-                                        <a href="home-default.html#">The story about Hoki</a>
+                                        <a href="home-default.html#">Câu chuyện về Hoki</a>
                                     </h4>
                                 </div>
                             </div>
@@ -197,8 +197,8 @@
                                         2
                                     </h2>
                                     <div class="content">
-                                        <span class="fsz-12px color-999 text-uppercase mb-2">news</span>
-                                        <h6 class="title">Elon Musk got Twitter because he gets Twitter</h6>
+                                        <span class="fsz-12px color-999 text-uppercase mb-2">tin tức</span>
+                                        <h6 class="title">Elon Musk sở hữu Twitter vì anh ấy hiểu Twitter</h6>
                                     </div>
                                 </a>
                                 <a href="page-single-post-creative.html" class="item hover-main">
@@ -206,8 +206,8 @@
                                         3
                                     </h2>
                                     <div class="content">
-                                        <span class="fsz-12px color-999 text-uppercase mb-2">technology</span>
-                                        <h6 class="title">NFT Technology is become trends in 2022</h6>
+                                        <span class="fsz-12px color-999 text-uppercase mb-2">công nghệ</span>
+                                        <h6 class="title">Công nghệ NFT trở thành xu hướng năm 2022</h6>
                                     </div>
                                 </a>
                                 <a href="page-single-post-creative.html" class="item hover-main">
@@ -215,137 +215,140 @@
                                         4
                                     </h2>
                                     <div class="content">
-                                        <span class="fsz-12px color-999 text-uppercase mb-2">lifestyle</span>
-                                        <h6 class="title">MLB become 1st fashion brands in US</h6>
+                                        <span class="fsz-12px color-999 text-uppercase mb-2">phong cách sống</span>
+                                        <h6 class="title">MLB trở thành thương hiệu thời trang số 1 tại Mỹ</h6>
                                     </div>
                                 </a>
-                                <a href="home-default.html#" class="fsz-13px color-999  pt-30 pb-30">
-                                    See all posts <i class="la la-angle-right"></i>
+                                <a href="home-default.html#" class="fsz-13px color-999 pt-30 pb-30">
+                                    Xem tất cả bài viết <i class="la la-angle-right"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </section>
     <!-- ====== end trends news ====== -->
 
-    <!-- ====== start google web stories ====== -->
-    <section class="tc-google-stories-style1">
-        <div class="container">
-            <div class="section-content pt-70 pb-70 border-0 border-bottom brd-gray">
-                <p class="color-000 text-uppercase mb-30 ltspc-1">google web stories</p>
-                <div class="tc-google-stories-slider1 tc-slider-style1">
-                    <div class="swiper-container">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <a href="home-default.html#" class="story-item">
-                                    <div class="img img-cover">
-                                        <img src="client/img/google-stories/1.png" alt="">
-                                    </div>
-                                    <div class="title fsz-14px color-000 mt-10">
-                                        Kayak stories
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item seen">
-                                    <div class="img img-cover">
-                                        <img src="client/img/google-stories/2.png" alt="">
-                                    </div>
-                                    <div class="title fsz-14px color-000 mt-10">
-                                        6 Tips Succe ...
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
-                                    <div class="img img-cover">
-                                        <img src="client/img/google-stories/3.png" alt="">
-                                    </div>
-                                    <div class="title fsz-14px color-000 mt-10">
-                                        PS Controller
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
-                                    <div class="img img-cover">
-                                        <img src="client/img/google-stories/4.png" alt="">
-                                    </div>
-                                    <div class="title fsz-14px color-000 mt-10">
-                                        What’s love in ...
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
-                                    <div class="img img-cover">
-                                        <img src="client/img/google-stories/5.png" alt="">
-                                    </div>
-                                    <div class="title fsz-14px color-000 mt-10">
-                                        News war Uk ...
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
-                                    <div class="img img-cover">
-                                        <img src="client/img/google-stories/6.png" alt="">
-                                    </div>
-                                    <div class="title fsz-14px color-000 mt-10">
-                                        Top Real Est ...
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
-                                    <div class="img img-cover">
-                                        <img src="client/img/google-stories/7.png" alt="">
-                                    </div>
-                                    <div class="title fsz-14px color-000 mt-10">
-                                        Top Real Est ...
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
-                                    <div class="img img-cover">
-                                        <img src="client/img/google-stories/8.png" alt="">
-                                    </div>
-                                    <div class="title fsz-14px color-000 mt-10">
-                                        The Moment
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a href="page-blog.html" class="story-item">
-                                    <div class="img img-cover">
-                                        <img src="client/img/google-stories/3.png" alt="">
-                                    </div>
-                                    <div class="title fsz-14px color-000 mt-10">
-                                        PS Controller
-                                    </div>
-                                </a>
-                            </div>
+   <!-- ====== Bắt đầu Google Web Stories ====== -->
+<section class="tc-google-stories-style1">
+    <div class="container">
+        <div class="section-content pt-70 pb-70 border-0 border-bottom brd-gray">
+            <p class="color-000 text-uppercase mb-30 ltspc-1">Google Web Stories</p>
+            <div class="tc-google-stories-slider1 tc-slider-style1">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <a href="home-default.html#" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/1.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    Câu chuyện Kayak
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item seen">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/2.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    6 Mẹo thành công ...
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/3.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    Tay cầm PS
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/4.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    Tình yêu là gì ...
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/5.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    Cuộc chiến tin tức ở Anh ...
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/6.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    Bất động sản hàng đầu ...
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/7.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    Bất động sản hàng đầu ...
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/8.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    Khoảnh khắc
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="page-blog.html" class="story-item">
+                                <div class="img img-cover">
+                                    <img src="client/img/google-stories/3.png" alt="">
+                                </div>
+                                <div class="title fsz-14px color-000 mt-10">
+                                    Tay cầm PS
+                                </div>
+                            </a>
                         </div>
                     </div>
-                    <!-- arrows -->
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
                 </div>
+                <!-- Nút điều hướng -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
     <!-- ====== end google web stories ====== -->
 
     <!-- ====== start Latest news ====== -->
     <section class="tc-latest-news-style1">
         <div class="container">
             <div class="section-content pt-50 pb-50 border-bottom border-1 brd-gray">
-                <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html"> latest news </a> <i
-                        class="la la-angle-right ms-1"></i>
+                <p class="color-000 text-uppercase mb-30 ltspc-1">
+                    <a href="page-blog.html"> Tin tức mới nhất </a>
+                    <i class="la la-angle-right ms-1"></i>
                 </p>
                 <div class="row">
                     <div class="col-lg-5 border-end brd-gray border-1">
@@ -359,28 +362,25 @@
                                 </div>
                                 <div class="content pt-30">
                                     <a href="page-blog.html"
-                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">politics</a>
+                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">Chính trị</a>
                                     <h2 class="title mb-20">
-                                        <a href="page-single-post-features.html">Biden asks Congress for $33 billion
-                                            to support Ukraine</a>
+                                        <a href="page-single-post-features.html">
+                                            Biden yêu cầu Quốc hội hỗ trợ 33 tỷ USD cho Ukraine
+                                        </a>
                                     </h2>
                                     <div class="text color-666">
-                                        The social-media company is in discussions to sell itself to Elon, a
-                                        dramatic turn of events just 11 days after the [...]
+                                        Công ty mạng xã hội này đang đàm phán để bán mình cho Elon, một diễn biến bất ngờ chỉ 11 ngày sau khi [...]
                                     </div>
                                     <div class="meta-bot lh-1 mt-40">
                                         <ul class="d-flex">
                                             <li class="date me-5">
-                                                <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec
-                                                    14, 2022</a>
+                                                <a href="home-default.html#"><i class="la la-calendar me-2"></i> 14 Tháng 12, 2022</a>
                                             </li>
                                             <li class="author me-5">
-                                                <a href="home-default.html#"><i class="la la-user me-2"></i> by Admin
-                                                </a>
+                                                <a href="home-default.html#"><i class="la la-user me-2"></i> bởi Admin </a>
                                             </li>
                                             <li class="comment">
-                                                <a href="home-default.html#"><i class="la la-comment me-2"></i> 55
-                                                    Comments</a>
+                                                <a href="home-default.html#"><i class="la la-comment me-2"></i> 55 Bình luận</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -388,6 +388,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-4 border-end brd-gray border-1">
                         <div class="tc-post-list-style2">
                             <div class="items">
@@ -400,18 +401,17 @@
                                         </div>
                                         <div class="col-8">
                                             <div class="content">
-                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
-                                                    politics
-                                                </div>
+                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">Chính trị</div>
                                                 <h5 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html"
-                                                        class="hover-underline">Disputes in the South China
-                                                        Sea show no sign of ending</a>
+                                                    <a href="page-single-post-creative.html" class="hover-underline">
+                                                        Tranh chấp Biển Đông chưa có dấu hiệu kết thúc
+                                                    </a>
                                                 </h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="item">
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
@@ -421,20 +421,23 @@
                                         </div>
                                         <div class="col-8">
                                             <div class="content">
-                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">sport
-                                                    <b class="text-danger"> <i
-                                                            class="icon-6 rounded-circle bg-danger ms-2 me-1 d-inline-block"></i>
-                                                        live</b>
+                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                                                    Thể thao
+                                                    <b class="text-danger">
+                                                        <i class="icon-6 rounded-circle bg-danger ms-2 me-1 d-inline-block"></i>
+                                                        Trực tiếp
+                                                    </b>
                                                 </div>
                                                 <h5 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html"
-                                                        class="hover-underline">Live of MLB Baseball 2022:
-                                                        NY Yankees Vs NY Mets</a>
+                                                    <a href="page-single-post-creative.html" class="hover-underline">
+                                                        Trận đấu trực tiếp MLB 2022: NY Yankees vs NY Mets
+                                                    </a>
                                                 </h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="item">
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
@@ -444,16 +447,17 @@
                                         </div>
                                         <div class="col-8">
                                             <div class="content">
-                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
-                                                    lifestyle</div>
+                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">Phong cách sống</div>
                                                 <h5 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html"
-                                                        class="hover-underline">Paddling in Miami Beach</a>
+                                                    <a href="page-single-post-creative.html" class="hover-underline">
+                                                        Chèo thuyền tại bãi biển Miami
+                                                    </a>
                                                 </h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="item">
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
@@ -463,61 +467,21 @@
                                         </div>
                                         <div class="col-8">
                                             <div class="content">
-                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
-                                                    business
-                                                </div>
+                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">Kinh doanh</div>
                                                 <h5 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html"
-                                                        class="hover-underline">Stock market in last week:
-                                                        "The strength of bulls"</a>
+                                                    <a href="page-single-post-creative.html" class="hover-underline">
+                                                        Thị trường chứng khoán tuần qua: "Sức mạnh của phe bò"
+                                                    </a>
                                                 </h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="item">
-                                    <div class="row gx-3 align-items-center">
-                                        <div class="col-4">
-                                            <div class="img th-70 img-cover">
-                                                <img src="client/img/latest/7.png" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-8">
-                                            <div class="content">
-                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
-                                                    lifestyle</div>
-                                                <h5 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html"
-                                                        class="hover-underline">Stock market in last week:
-                                                        "The strength of bulls"</a>
-                                                </h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item border-0">
-                                    <div class="row gx-3 align-items-center">
-                                        <div class="col-4">
-                                            <div class="img th-70 img-cover">
-                                                <img src="client/img/latest/8.png" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-8">
-                                            <div class="content">
-                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
-                                                    lifestyle</div>
-                                                <h5 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html"
-                                                        class="hover-underline">Helm Extract Infuse cream,
-                                                        1000mg Full spectrum</a>
-                                                </h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-3">
                         <div class="tc-post-grid-default border-1 border-bottom brd-gray pb-10">
                             <div class="item">
@@ -525,18 +489,17 @@
                                     <img src="client/img/latest/2.png" alt="">
                                 </div>
                                 <div class="content pt-20">
-                                    <a href="home-default.html#"
-                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">travel</a>
-                                    <h5 class="title ltspc--1 mb-10"> <a href="page-single-post-creative.html">Fact
-                                            of Camel in Dubai</a> </h5>
+                                    <a href="home-default.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">Du lịch</a>
+                                    <h5 class="title ltspc--1 mb-10">
+                                        <a href="page-single-post-creative.html"> Sự thật về loài lạc đà ở Dubai </a>
+                                    </h5>
                                     <div class="text color-666">
-                                        Crime rates on trains and buses are up in some of the nation’s biggest [...]
+                                        Tỷ lệ tội phạm trên tàu và xe buýt gia tăng tại một số thành phố lớn nhất quốc gia [...]
                                     </div>
                                     <div class="meta-bot lh-1 mt-20">
                                         <ul class="d-flex">
                                             <li class="date me-5">
-                                                <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec
-                                                    25, 2022</a>
+                                                <a href="home-default.html#"><i class="la la-calendar me-2"></i> 25 Tháng 12, 2022</a>
                                             </li>
                                             <li class="comment">
                                                 <a href="home-default.html#"><i class="la la-comment me-2"></i> 8 </a>
@@ -546,24 +509,22 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="pt-15">
-                            <span class="fsz-12px color-999 text-capitalize fst-italic">Related Post</span>
+                            <span class="fsz-12px color-999 text-capitalize fst-italic">Bài viết liên quan</span>
                             <a href="page-single-post-creative.html" class="d-flex my-3">
-                                <span class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
                                 <h6 class="fsz-16px">
-                                    Top 10 Destinations not to be missed this summer
+                                    10 địa điểm không thể bỏ lỡ mùa hè này
                                 </h6>
                             </a>
                             <a href="page-single-post-creative.html" class="d-flex my-3">
-                                <span class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
                                 <h6 class="fsz-16px">
-                                    Travel experience Switzerland self-sufficient in 4D3N
+                                    Kinh nghiệm du lịch Thụy Sĩ tự túc 4 ngày 3 đêm
                                 </h6>
                             </a>
                             <a href="page-single-post-creative.html" class="d-flex my-3">
-                                <span class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
                                 <h6 class="fsz-16px">
-                                    Discovery Devon island, Canada
+                                    Khám phá đảo Devon, Canada
                                 </h6>
                             </a>
                         </div>
@@ -572,6 +533,7 @@
             </div>
         </div>
     </section>
+
     <!-- ====== end Latest news ====== -->
 
     <!-- ====== start banner1 ====== -->
@@ -590,14 +552,14 @@
     </section>
     <!-- ====== end banner1 ====== -->
 
-    <!-- ====== start must read ====== -->
+    <!-- ====== start Phải Đọc  ====== -->
     <section class="pt-50 pb-50">
         <div class="container">
             <div class="row">
                 <div class="col-lg-9">
                     <!-- must-read -->
                     <section class="tc-must-read-style1 bg-gray2 p-30">
-                        <p class="color-000 text-uppercase mb-20 ltspc-1"> <a href="page-blog.html"> must read </a> <i
+                        <p class="color-000 text-uppercase mb-20 ltspc-1"> <a href="page-blog.html"> Phải Đọc  </a> <i
                                 class="la la-angle-right ms-1"></i> </p>
                         <div class="tc-post-grid-default border-1 border-bottom brd-gray pb-30">
                             <div class="item">
@@ -1191,28 +1153,28 @@
         </div>
     </section>
 
-    <!-- ====== end must read ====== -->
+    <!-- ====== end Phải Đọc  ====== -->
 
     <!-- ====== start hot videos ====== -->
     <section class="tc-hot-videos-style1 pt-30 pb-50 parallaxie">
         <div class="container">
             <div class="content">
                 <div class="section-head">
-                    <p class="text-white text-uppercase ltspc-1"> hot videos LAST WEEK <i
+                    <p class="text-white text-uppercase ltspc-1"> VIDEO NỔI BẬT TUẦN TRƯỚC <i
                             class="la la-angle-right ms-1"></i> </p>
                     <ul class="nav nav-pills" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="pills-Popular-tab" data-bs-toggle="pill"
                                 data-bs-target="#pills-Popular" type="button" role="tab"
                                 aria-controls="pills-Popular" aria-selected="true">
-                                Popular
+                                Phổ biến
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="pills-Latest-tab" data-bs-toggle="pill"
                                 data-bs-target="#pills-Latest" type="button" role="tab"
                                 aria-controls="pills-Latest" aria-selected="false">
-                                Latest
+                                Mới nhất
                             </button>
                         </li>
                     </ul>
@@ -1227,22 +1189,23 @@
                                         <div class="swiper-wrapper">
                                             <div class="swiper-slide">
                                                 <div class="slider-content">
-                                                    <p class="sub-title">featured, video</p>
-                                                    <h3 class="title"> <a href="page-single-post-features.html">
-                                                            Amazing View! Catch the sunrise <br> in high
-                                                            moutain </a> </h3>
+                                                    <p class="sub-title">Nổi bật, Video</p>
+                                                    <h3 class="title">
+                                                        <a href="page-single-post-features.html">
+                                                            Khung cảnh tuyệt vời! Đón bình minh <br> trên núi cao
+                                                        </a>
+                                                    </h3>
                                                     <div class="meta-bot lh-1">
                                                         <ul class="d-flex">
                                                             <li class="date me-5">
-                                                                <a href="home-default.html#"><i
-                                                                        class="la la-calendar me-2"></i>
-                                                                    Dec 24, 2022
+                                                                <a href="home-default.html#">
+                                                                    <i class="la la-calendar me-2"></i>
+                                                                    24 Tháng 12, 2022
                                                                 </a>
                                                             </li>
                                                             <li class="comment">
                                                                 <i class="las la-chart-line me-2"></i>
-                                                                25,6K Views
-                                                                </a>
+                                                                25,6K Lượt xem
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -1250,22 +1213,21 @@
                                                         class="play-cont">
                                                         <i class="ion-play me-3"></i>
                                                         <span>
-                                                            play <br> video
+                                                            Phát <br> video
                                                         </span>
                                                     </a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- arrows -->
+                                    <!-- nút điều hướng -->
                                     <div class="swiper-button-next"></div>
                                     <div class="swiper-button-prev"></div>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="tc-side-video-posts">
-                                    <p class="text-white text-uppercase ltspc-1 mb-40 lh-2 fsz-13px">videos up next
-                                    </p>
+                                    <p class="text-white text-uppercase ltspc-1 mb-40 lh-2 fsz-13px">Video tiếp theo</p>
                                     <div class="tc-post-grid-default">
                                         <div class="item mb-40">
                                             <div class="img img-cover th-180">
@@ -1277,11 +1239,13 @@
                                             </div>
                                             <div class="content pt-20">
                                                 <a href="home-default.html#"
-                                                    class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">travel,
-                                                    video</a>
+                                                    class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">
+                                                    Du lịch, Video
+                                                </a>
                                                 <h4 class="title ltspc--1 text-white">
-                                                    <a href="page-single-post-features.html">Amazing View! Catch the
-                                                        sunrise in high mountain</a>
+                                                    <a href="page-single-post-features.html">
+                                                        Khung cảnh tuyệt vời! Đón bình minh trên núi cao
+                                                    </a>
                                                 </h4>
                                             </div>
                                         </div>
@@ -1295,11 +1259,13 @@
                                             </div>
                                             <div class="content pt-20">
                                                 <a href="home-default.html#"
-                                                    class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">culture,
-                                                    video</a>
+                                                    class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">
+                                                    Văn hóa, Video
+                                                </a>
                                                 <h4 class="title ltspc--1 text-white">
-                                                    <a href="page-single-post-features.html">Bhutan! The happiest
-                                                        country on the world</a>
+                                                    <a href="page-single-post-features.html">
+                                                        Bhutan! Quốc gia hạnh phúc nhất thế giới
+                                                    </a>
                                                 </h4>
                                             </div>
                                         </div>
@@ -1316,22 +1282,23 @@
                                         <div class="swiper-wrapper">
                                             <div class="swiper-slide">
                                                 <div class="slider-content">
-                                                    <p class="sub-title">featured, video</p>
-                                                    <h3 class="title"> <a href="page-single-post-features.html">
-                                                            Amazing View! Catch the sunrise <br> in high
-                                                            moutain </a> </h3>
+                                                    <p class="sub-title">Nổi bật, Video</p>
+                                                    <h3 class="title">
+                                                        <a href="page-single-post-features.html">
+                                                            Khung cảnh tuyệt vời! Đón bình minh <br> trên núi cao
+                                                        </a>
+                                                    </h3>
                                                     <div class="meta-bot lh-1">
                                                         <ul class="d-flex">
                                                             <li class="date me-5">
-                                                                <a href="home-default.html#"><i
-                                                                        class="la la-calendar me-2"></i>
-                                                                    Dec 24, 2022
+                                                                <a href="home-default.html#">
+                                                                    <i class="la la-calendar me-2"></i>
+                                                                    24 Tháng 12, 2022
                                                                 </a>
                                                             </li>
                                                             <li class="comment">
                                                                 <i class="las la-chart-line me-2"></i>
-                                                                25,6K Views
-                                                                </a>
+                                                                25,6K Lượt xem
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -1339,22 +1306,21 @@
                                                         class="play-cont">
                                                         <i class="ion-play me-3"></i>
                                                         <span>
-                                                            play <br> video
+                                                            Phát <br> video
                                                         </span>
                                                     </a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- arrows -->
+                                    <!-- nút điều hướng -->
                                     <div class="swiper-button-next"></div>
                                     <div class="swiper-button-prev"></div>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="tc-side-video-posts">
-                                    <p class="text-white text-uppercase ltspc-1 mb-40 lh-2 fsz-13px">videos up next
-                                    </p>
+                                    <p class="text-white text-uppercase ltspc-1 mb-40 lh-2 fsz-13px">Video tiếp theo</p>
                                     <div class="tc-post-grid-default">
                                         <div class="item mb-40">
                                             <div class="img img-cover th-180">
@@ -1366,11 +1332,13 @@
                                             </div>
                                             <div class="content pt-20">
                                                 <a href="home-default.html#"
-                                                    class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">travel,
-                                                    video</a>
+                                                    class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">
+                                                    Du lịch, Video
+                                                </a>
                                                 <h4 class="title ltspc--1 text-white">
-                                                    <a href="page-single-post-features.html">Amazing View! Catch the
-                                                        sunrise in high mountain</a>
+                                                    <a href="page-single-post-features.html">
+                                                        Khung cảnh tuyệt vời! Đón bình minh trên núi cao
+                                                    </a>
                                                 </h4>
                                             </div>
                                         </div>
@@ -1383,12 +1351,8 @@
                                                 </a>
                                             </div>
                                             <div class="content pt-20">
-                                                <a href="home-default.html#"
-                                                    class="news-cat text-white fsz-13px text-uppercase mb-1 fw-lighter">culture,
-                                                    video</a>
                                                 <h4 class="title ltspc--1 text-white">
-                                                    <a href="page-single-post-features.html">Bhutan! The happiest
-                                                        country on the world</a>
+                                                    Bhutan! Quốc gia hạnh phúc nhất thế giới
                                                 </h4>
                                             </div>
                                         </div>
@@ -1401,319 +1365,280 @@
             </div>
         </div>
     </section>
+
     <!-- ====== end hot vedios ====== -->
 
-    <!-- ====== start lifestyle ====== -->
-    <section class="tc-lifestyle pt-50 pb-50">
-        <div class="container">
-            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">lifestyle</a> <i
-                    class="la la-angle-right ms-1"></i> </p>
-            <div class="content">
-                <div class="row">
-                    <div class="col-lg-6 border-end brd-gray border-1">
-                        <div class="tc-post-grid-default">
-                            <div class="item">
-                                <div class="img img-cover th-400">
-                                    <img src="client/img/lifestyle/1.png" alt="">
+   <!-- ====== bắt đầu phong cách sống ====== -->
+<section class="tc-lifestyle pt-50 pb-50">
+    <div class="container">
+        <p class="color-000 text-uppercase mb-30 ltspc-1">
+            <a href="page-blog.html">Phong cách sống</a>
+            <i class="la la-angle-right ms-1"></i>
+        </p>
+        <div class="content">
+            <div class="row">
+                <div class="col-lg-6 border-end brd-gray border-1">
+                    <div class="tc-post-grid-default">
+                        <div class="item">
+                            <div class="img img-cover th-400">
+                                <img src="client/img/lifestyle/1.png" alt="">
+                            </div>
+                            <div class="content pt-30">
+                                <a href="home-default.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">
+                                    Phong cách sống
+                                </a>
+                                <h3 class="title ltspc--1 mb-20">
+                                    <a href="page-single-post-creative.html">
+                                        Các phong cách hotdog tại 20 quốc gia
+                                    </a>
+                                </h3>
+                                <div class="text color-666">
+                                    Công ty truyền thông xã hội đang đàm phán để bán mình cho Elon, một sự kiện
+                                    đầy kịch tính chỉ sau 11 ngày [...]
                                 </div>
-                                <div class="content pt-30">
-                                    <a href="home-default.html#"
-                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">life
-                                        style</a>
-                                    <h3 class="title ltspc--1 mb-20"> <a href="page-single-post-creative.html">
-                                            Hotdog styles on 20 countries
-                                        </a> </h3>
-                                    <div class="text color-666">
-                                        The social-media company is in discussions to sell itself to Elon, a
-                                        dramatic turn of events just 11 days after the [...]
-                                    </div>
-                                    <div class="meta-bot lh-1 mt-40">
-                                        <ul class="d-flex">
-                                            <li class="date me-5">
-                                                <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec
-                                                    14, 2022</a>
-                                            </li>
-                                            <li class="author me-5">
-                                                <a href="home-default.html#"><i class="la la-user me-2"></i> by Admin
-                                                </a>
-                                            </li>
-                                            <li class="comment">
-                                                <a href="home-default.html#"><i class="la la-comment me-2"></i> 55
-                                                    Comments</a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div class="meta-bot lh-1 mt-40">
+                                    <ul class="d-flex">
+                                        <li class="date me-5">
+                                            <a href="home-default.html#"><i class="la la-calendar me-2"></i> 14 Tháng 12, 2022</a>
+                                        </li>
+                                        <li class="author me-5">
+                                            <a href="home-default.html#"><i class="la la-user me-2"></i> bởi Admin</a>
+                                        </li>
+                                        <li class="comment">
+                                            <a href="home-default.html#"><i class="la la-comment me-2"></i> 55 Bình luận</a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3 border-end brd-gray border-1">
-                        <div class="tc-post-grid-default">
-                            <div class="item">
-                                <div class="img img-cover th-200">
-                                    <img src="client/img/lifestyle/2.png" alt="">
-                                </div>
-                                <div class="content pt-20">
-                                    <a href="home-default.html#"
-                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">lifestyle</a>
-                                    <h5 class="title ltspc--1 mb-10">
-                                        <a href="page-single-post-creative.html">
-                                            Grand Pera Coffee
-                                        </a>
-                                    </h5>
-                                    <div class="text color-666">
-                                        Crime rates on trains and buses are up in some of the nation’s biggest [...]
-                                    </div>
-                                    <div class="meta-bot lh-1 mt-20">
-                                        <ul class="d-flex">
-                                            <li class="date me-5">
-                                                <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec
-                                                    14, 2022</a>
-                                            </li>
-                                            <li class="comment">
-                                                <a href="home-default.html#"><i class="la la-comment me-2"></i> 7</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
+                </div>
+                <div class="col-lg-3 border-end brd-gray border-1">
+                    <div class="tc-post-grid-default">
+                        <div class="item">
+                            <div class="img img-cover th-200">
+                                <img src="client/img/lifestyle/2.png" alt="">
                             </div>
-                        </div>
-                        <div class="tc-post-list-style2">
-                            <div class="items">
-                                <a href="page-single-post-creative.html"
-                                    class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15">
-                                    <div class="row gx-3 align-items-center">
-                                        <div class="col-4">
-                                            <div class="img th-50 img-cover">
-                                                <img src="client/img/lifestyle/3.png" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-8">
-                                            <div class="content">
-                                                <h6 class="title ltspc--1">
-                                                    Top 10 Best of Mustache for Hipster 2022
-                                                </h6>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div class="content pt-20">
+                                <a href="home-default.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">
+                                    Phong cách sống
                                 </a>
-                                <a href="page-single-post-creative.html"
-                                    class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
-                                    <div class="row gx-3 align-items-center">
-                                        <div class="col-4">
-                                            <div class="img th-50 img-cover">
-                                                <img src="client/img/lifestyle/4.png" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-8">
-                                            <div class="content">
-                                                <h6 class="title ltspc--1">
-                                                    Dad and “his son”
-                                                </h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="page-single-post-creative.html"
-                                    class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
-                                    <div class="row gx-3 align-items-center">
-                                        <div class="col-4">
-                                            <div class="img th-50 img-cover">
-                                                <img src="client/img/lifestyle/5.png" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-8">
-                                            <div class="content">
-                                                <h6 class="title ltspc--1">
-                                                    The fashion trend for “old guys”
-                                                </h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
+                                <h5 class="title ltspc--1 mb-10">
+                                    <a href="page-single-post-creative.html">
+                                        Cà phê Grand Pera
+                                    </a>
+                                </h5>
+                                <div class="text color-666">
+                                    Tỷ lệ tội phạm trên tàu và xe buýt gia tăng tại một số thành phố lớn nhất của quốc gia [...]
+                                </div>
+                                <div class="meta-bot lh-1 mt-20">
+                                    <ul class="d-flex">
+                                        <li class="date me-5">
+                                            <a href="home-default.html#"><i class="la la-calendar me-2"></i> 14 Tháng 12, 2022</a>
+                                        </li>
+                                        <li class="comment">
+                                            <a href="home-default.html#"><i class="la la-comment me-2"></i> 7</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="tc-post-grid-default">
-                            <div class="item">
-                                <div class="img img-cover th-200">
-                                    <img src="client/img/lifestyle/6.png" alt="">
+                    <div class="tc-post-list-style2">
+                        <div class="items">
+                            <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-50 img-cover">
+                                            <img src="client/img/lifestyle/3.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <h6 class="title ltspc--1">
+                                                Top 10 kiểu ria mép đẹp nhất cho Hipster 2022
+                                            </h6>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="content pt-20">
-                                    <a href="home-default.html#"
-                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">lifestyle</a>
-                                    <h5 class="title ltspc--1 mb-10">
-                                        <a href="page-single-post-creative.html">
-                                            Enviroment Protection
-                                        </a>
-                                    </h5>
-                                    <div class="text color-666">
-                                        Crime rates on trains and buses are up in some of the nation’s biggest [...]
+                            </a>
+                            <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-50 img-cover">
+                                            <img src="client/img/lifestyle/4.png" alt="">
+                                        </div>
                                     </div>
-                                    <div class="meta-bot lh-1 mt-20">
-                                        <ul class="d-flex">
-                                            <li class="date me-5">
-                                                <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec
-                                                    14, 2022</a>
-                                            </li>
-                                            <li class="comment">
-                                                <a href="home-default.html#"><i class="la la-comment me-2"></i> 7</a>
-                                            </li>
-                                        </ul>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <h6 class="title ltspc--1">
+                                                Bố và "cậu con trai"
+                                            </h6>
+                                        </div>
                                     </div>
+                                </div>
+                            </a>
+                            <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-50 img-cover">
+                                            <img src="client/img/lifestyle/5.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <h6 class="title ltspc--1">
+                                                Xu hướng thời trang cho "các quý ông lớn tuổi"
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="tc-post-grid-default">
+                        <div class="item">
+                            <div class="img img-cover th-200">
+                                <img src="client/img/lifestyle/6.png" alt="">
+                            </div>
+                            <div class="content pt-20">
+                                <a href="home-default.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">
+                                    Phong cách sống
+                                </a>
+                                <h5 class="title ltspc--1 mb-10">
+                                    <a href="page-single-post-creative.html">
+                                        Bảo vệ môi trường
+                                    </a>
+                                </h5>
+                                <div class="text color-666">
+                                    Tỷ lệ tội phạm trên tàu và xe buýt gia tăng tại một số thành phố lớn nhất của quốc gia [...]
+                                </div>
+                                <div class="meta-bot lh-1 mt-20">
+                                    <ul class="d-flex">
+                                        <li class="date me-5">
+                                            <a href="home-default.html#"><i class="la la-calendar me-2"></i> 14 Tháng 12, 2022</a>
+                                        </li>
+                                        <li class="comment">
+                                            <a href="home-default.html#"><i class="la la-comment me-2"></i> 7</a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                        <div class="tc-post-list-style2">
-                            <div class="items">
-                                <a href="page-single-post-creative.html"
-                                    class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15">
-                                    <div class="row gx-3 align-items-center">
-                                        <div class="col-4">
-                                            <div class="img th-50 img-cover">
-                                                <img src="client/img/lifestyle/7.png" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-8">
-                                            <div class="content">
-                                                <h6 class="title ltspc--1">
-                                                    10 Best of Scadinavia Interior styles
-                                                </h6>
-                                            </div>
+                    </div>
+                    <div class="tc-post-list-style2">
+                        <div class="items">
+                            <a href="page-single-post-creative.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15">
+                                <div class="row gx-3 align-items-center">
+                                    <div class="col-4">
+                                        <div class="img th-50 img-cover">
+                                            <img src="client/img/lifestyle/7.png" alt="">
                                         </div>
                                     </div>
-                                </a>
-                                <a href="page-single-post-creative.html"
-                                    class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
-                                    <div class="row gx-3 align-items-center">
-                                        <div class="col-4">
-                                            <div class="img th-50 img-cover">
-                                                <img src="client/img/lifestyle/8.png" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-8">
-                                            <div class="content">
-                                                <h6 class="title ltspc--1">
-                                                    How to make a toast with burberry
-                                                </h6>
-                                            </div>
+                                    <div class="col-8">
+                                        <div class="content">
+                                            <h6 class="title ltspc--1">
+                                                10 phong cách nội thất Scandinavia đẹp nhất
+                                            </h6>
                                         </div>
                                     </div>
-                                </a>
-                                <a href="page-single-post-creative.html"
-                                    class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15">
-                                    <div class="row gx-3 align-items-center">
-                                        <div class="col-4">
-                                            <div class="img th-50 img-cover">
-                                                <img src="client/img/lifestyle/9.png" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-8">
-                                            <div class="content">
-                                                <h6 class="title ltspc--1">
-                                                    Enhance water in your body with Boxed Water
-                                                </h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- ====== end lifestyle ====== -->
+    </div>
+</section>
+<!-- ====== kết thúc phong cách sống ====== -->
 
-    <!-- ====== start columnist ====== -->
-    <section class="tc-columnist-style1">
-        <div class="container">
-            <div class="content pt-50 pb-50 border-1 border-top brd-gray">
-                <p class="color-000 text-uppercase mb-40 ltspc-1 lh-1">top columnist <i
-                        class="la la-angle-right ms-1"></i> </p>
-                <div class="columnist-slider1 tc-slider-style1">
-                    <div class="swiper-container">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="columnist-card d-flex align-items-center">
-                                    <div
-                                        class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                        <img src="client/img/colums/1.png" alt="">
-                                    </div>
-                                    <div class="info">
-                                        <h6 class="name fsz-20px mb-10">
-                                            Conor Bradley
-                                        </h6>
-                                        <div class="jop-title">
-                                            <small class="fsz-13px color-999">Specialize in</small>
-                                            <p class="fsz-13px text-uppercase">Business, technology</p>
-                                        </div>
+
+   <!-- ====== bắt đầu chuyên mục tác giả ====== -->
+<section class="tc-columnist-style1">
+    <div class="container">
+        <div class="content pt-50 pb-50 border-1 border-top brd-gray">
+            <p class="color-000 text-uppercase mb-40 ltspc-1 lh-1">Tác giả hàng đầu <i class="la la-angle-right ms-1"></i></p>
+            <div class="columnist-slider1 tc-slider-style1">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="columnist-card d-flex align-items-center">
+                                <div class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                    <img src="client/img/colums/1.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="name fsz-20px mb-10">
+                                        Conor Bradley
+                                    </h6>
+                                    <div class="jop-title">
+                                        <small class="fsz-13px color-999">Chuyên về</small>
+                                        <p class="fsz-13px text-uppercase">Kinh doanh, công nghệ</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="swiper-slide">
-                                <div class="columnist-card d-flex align-items-center">
-                                    <div
-                                        class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                        <img src="client/img/colums/2.png" alt="">
-                                    </div>
-                                    <div class="info">
-                                        <h6 class="name fsz-20px mb-10">
-                                            Luis Diaz
-                                        </h6>
-                                        <div class="jop-title">
-                                            <small class="fsz-13px color-999">Specialize in</small>
-                                            <p class="fsz-13px text-uppercase">Politic, lifestyle</p>
-                                        </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="columnist-card d-flex align-items-center">
+                                <div class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                    <img src="client/img/colums/2.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="name fsz-20px mb-10">
+                                        Luis Diaz
+                                    </h6>
+                                    <div class="jop-title">
+                                        <small class="fsz-13px color-999">Chuyên về</small>
+                                        <p class="fsz-13px text-uppercase">Chính trị, phong cách sống</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="swiper-slide">
-                                <div class="columnist-card d-flex align-items-center">
-                                    <div
-                                        class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                        <img src="client/img/colums/3.png" alt="">
-                                    </div>
-                                    <div class="info">
-                                        <h6 class="name fsz-20px mb-10">
-                                            Alberto Moreno
-                                        </h6>
-                                        <div class="jop-title">
-                                            <small class="fsz-13px color-999">Specialize in</small>
-                                            <p class="fsz-13px text-uppercase">Entertaiment, culture, wolrd </p>
-                                        </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="columnist-card d-flex align-items-center">
+                                <div class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                    <img src="client/img/colums/3.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="name fsz-20px mb-10">
+                                        Alberto Moreno
+                                    </h6>
+                                    <div class="jop-title">
+                                        <small class="fsz-13px color-999">Chuyên về</small>
+                                        <p class="fsz-13px text-uppercase">Giải trí, văn hóa, thế giới</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="swiper-slide">
-                                <div class="columnist-card d-flex align-items-center">
-                                    <div
-                                        class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                        <img src="client/img/colums/2.png" alt="">
-                                    </div>
-                                    <div class="info">
-                                        <h6 class="name fsz-20px mb-10">
-                                            Luis Diaz
-                                        </h6>
-                                        <div class="jop-title">
-                                            <small class="fsz-13px color-999">Specialize in</small>
-                                            <p class="fsz-13px text-uppercase">Politic, lifestyle</p>
-                                        </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="columnist-card d-flex align-items-center">
+                                <div class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                    <img src="client/img/colums/2.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="name fsz-20px mb-10">
+                                        Luis Diaz
+                                    </h6>
+                                    <div class="jop-title">
+                                        <small class="fsz-13px color-999">Chuyên về</small>
+                                        <p class="fsz-13px text-uppercase">Chính trị, phong cách sống</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- arrows -->
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
                 </div>
+                <!-- mũi tên điều hướng -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
             </div>
         </div>
-    </section>
-    <!-- ====== end columnist ====== -->
+    </div>
+</section>
+<!-- ====== kết thúc chuyên mục tác giả ====== -->
+
 
     <!-- ====== start another-news ====== -->
     <section class="another-news pt-50 pb-50 border-1 border-top brd-gray">
@@ -1985,9 +1910,9 @@
                 <div class="row align-items-center">
                     <div class="col-lg-4">
                         <div class="info">
-                            <strong class="title">Download Newzin App</strong>
+                            <strong class="title">Tải xuống ứng dụng Newzin</strong>
                             <div class="text">
-                                Easy to update latest news, daily podcast and everything in your hand
+                                Dễ dàng cập nhật tin tức mới nhất, podcast hàng ngày và mọi thứ trong tầm tay bạn
                             </div>
                         </div>
                     </div>
@@ -2020,22 +1945,21 @@
                 aria-label="Close"></button>
         </div>
         <div class="offcanvas-body mt-4">
-            <h6 class="color-000 text-uppercase mb-15 ltspc-1"> about us <i class="la la-angle-right ms-1"></i>
+            <h6 class="color-000 text-uppercase mb-15 ltspc-1"> Giới Thiệu  <i class="la la-angle-right ms-1"></i>
             </h6>
             <div class="text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem optio tempora quia iure quae.
-                Soluta corporis quidem aperiam amet nihil.
+                24hNews là trang tin tức trực tuyến cập nhật nhanh chóng, đa lĩnh vực
             </div>
 
             <div class="sidebar-categories mt-40">
-                <h6 class="color-000 text-uppercase mb-30 ltspc-1"> categories <i
+                <h6 class="color-000 text-uppercase mb-30 ltspc-1"> Danh Mục <i
                         class="la la-angle-right ms-1"></i> </h6>
                 <a href="home-default.html#" class="cat-card">
                     <div class="img img-cover">
                         <img src="client/img/bussines/1.png" alt="">
                     </div>
                     <div class="info">
-                        <h5>bussines</h5>
+                        <h5>Kinh Doanh </h5>
                         <span class="num">12</span>
                     </div>
                 </a>
@@ -2044,7 +1968,7 @@
                         <img src="client/img/trend/3.png" alt="">
                     </div>
                     <div class="info">
-                        <h5>technology</h5>
+                        <h5>Công Nghệ</h5>
                         <span class="num">14</span>
                     </div>
                 </a>
@@ -2053,7 +1977,7 @@
                         <img src="client/img/must_read/3.png" alt="">
                     </div>
                     <div class="info">
-                        <h5>culture</h5>
+                        <h5>Gia Đình </h5>
                         <span class="num">20</span>
                     </div>
                 </a>
@@ -2068,7 +1992,7 @@
                 </a>
             </div>
             <div class="sidebar-contact-info mt-50">
-                <h6 class="color-000 text-uppercase mb-20 ltspc-1"> Contact & follow <i
+                <h6 class="color-000 text-uppercase mb-20 ltspc-1">Liên Hệ Và Theo Dõi <i
                         class="la la-angle-right ms-1"></i> </h6>
                 <ul class="m-0">
                     <li class="mb-3">
