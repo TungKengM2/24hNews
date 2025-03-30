@@ -169,24 +169,12 @@
                                 </div>
                             </div>
 
-                            {{-- <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label for="slug" class="form-label">Đường dẫn:</label>
                                 <div class="controls">
                                     <input type="text" class="form-control" id="slug" name="slug"
                                         value="{{ $article->slug }}" required>
                                 </div>
-                            </div> --}}
-
-                            <div class="col-md-6 mb-3">
-                                <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
-                                <select name="tags[]" class="form-control select2" multiple="multiple">
-                                    @foreach ($tags as $tag)
-                                        <option value="{{ $tag->tag_id }}"
-                                            @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
-                                            {{ $tag->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
                             </div>
                         </div>
 
@@ -205,6 +193,18 @@
                                                 @endif
                                             </option>
                                         @endif
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
+                                <select name="tags[]" class="form-control select2" multiple="multiple">
+                                    @foreach ($tags as $tag)
+                                        <option value="{{ $tag->tag_id }}"
+                                            @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
+                                            {{ $tag->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
