@@ -4,7 +4,7 @@
                 <div class="row justify-content-between align-items-center">
                     <div class="col-lg-4">
                         <div class="sub-info">
-                            <h5>Get the best blog stories into your inbox</h5>
+                            <h5>Nhận những câu chuyện blog hay nhất vào hộp thư đến của bạn</h5>
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -13,11 +13,11 @@
                                 <span class="icon">
                                     <i class="la la-envelope"></i>
                                 </span>
-                                <input type="text" class="form-control" placeholder="Enter your email">
-                                <button>subscribe</button>
+                                <input type="text" class="form-control" placeholder="Nhập email của bạn">
+                                <button>Đăng Ký </button>
                             </div>
-                            <p class="mt-2 color-666 fsz-13px fst-italic">By subscribing, you accepted the our <a
-                                    href="page-single-post-creative.html#" class="text-decoration-underline fst-normal color-000">Policy</a></p>
+                            <p class="mt-2 color-666 fsz-13px fst-italic">Bằng cách đăng ký, bạn đã chấp nhận <a
+                                    href="page-single-post-creative.html#" class="text-decoration-underline fst-normal color-000">Chính sách</a></p>
                         </div>
                     </div>
                 </div>
@@ -33,13 +33,13 @@
                             </div>
                             <div class="data-info">
                                 <p>
-                                    <b>Operated by : </b> ThemesCamp Company, Inc.
+                                    <b>Vận hành bởi: </b> ThemesCamp Company, Inc.
                                 </p>
                                 <p>
-                                    <b> Tax Code: </b> 0514234567
+                                    <b> Mã số thuế: </b> 0514234567
                                 </p>
                                 <p>
-                                    <b> Address: </b> 223 Thatcher Road St, Mahattan <br> NY 10632, United States
+                                    <b>Địa chỉ:</b> 223 Thatcher Road St, Mahattan <br> NY 10632, United States
                                 </p>
                                 <p>
                                     <b> Email : </b> support@Newzin.com
@@ -73,168 +73,167 @@
                     </div>
                     <div class="col-lg-2">
                         <div class="link-group">
-                            <div class="title">Business</div>
+                            <div class="title">Kinh Doanh</div>
                             <ul>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Startup</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Khởi Nghiệp</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Business Trends</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Xu Hướng Kinh Doanh</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Work Culture</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Văn Hóa Doanh Nghiệp</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Personal Finance</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Tài Chính Cá Nhân</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Leaders</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Lãnh Đạo</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Stocks Market</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Thị Trường Chứng Khoán</a>
                                 </li>
                             </ul>
                         </div>
                         <div class="link-group">
-                            <div class="title">Politics</div>
+                            <div class="title">Chính Trị</div>
                             <ul>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Capital Journal</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Nhật Ký Thủ Đô</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">National Security</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">An Ninh Quốc Gia</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Politics Video</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <div class="link-group">
-                            <div class="title">Technology</div>
-                            <ul>
-                                <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Personal Technology</a>
-                                </li>
-                                <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Product Reviews</a>
-                                </li>
-                                <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Video Games</a>
-                                </li>
-                                <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Discover</a>
-                                </li>
-                                <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Knowledge</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="link-group">
-                            <div class="title">Lifestyle</div>
-                            <ul>
-                                <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Lifestyle Trends</a>
-                                </li>
-                                <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Family</a>
-                                </li>
-                                <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Psychology</a>
-                                </li>
-                                <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Fashion</a>
-                                </li>
-                                <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Foods</a>
-                                </li>
-                                <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Culture</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Video Chính Trị</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-2">
                         <div class="link-group">
-                            <div class="title">Entertainment</div>
+                            <div class="title">Công Nghệ</div>
                             <ul>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Music & Podcasts</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Công Nghệ Cá Nhân</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Art & Design</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Đánh Giá Sản Phẩm</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Movies</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Trò Chơi Điện Tử</a>
+                                </li>
+                                <li>
+                                    <a href="page-single-post-creative.html#" class="f-link">Khám Phá</a>
+                                </li>
+                                <li>
+                                    <a href="page-single-post-creative.html#" class="f-link">Kiến Thức</a>
                                 </li>
                             </ul>
                         </div>
                         <div class="link-group">
-                            <div class="title">Sport</div>
+                            <div class="title">Đời Sống</div>
                             <ul>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Football</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Xu Hướng Đời Sống</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Tennis</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Gia Đình</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">F-1 Racing Tour</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Tâm Lý Học</a>
+                                </li>
+                                <li>
+                                    <a href="page-single-post-creative.html#" class="f-link">Thời Trang</a>
+                                </li>
+                                <li>
+                                    <a href="page-single-post-creative.html#" class="f-link">Ẩm Thực</a>
+                                </li>
+                                <li>
+                                    <a href="page-single-post-creative.html#" class="f-link">Văn Hóa</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Giải Trí</div>
+                            <ul>
+                                <li>
+                                    <a href="page-single-post-creative.html#" class="f-link">Âm Nhạc & Podcast</a>
+                                </li>
+                                <li>
+                                    <a href="page-single-post-creative.html#" class="f-link">Nghệ Thuật & Thiết Kế</a>
+                                </li>
+                                <li>
+                                    <a href="page-single-post-creative.html#" class="f-link">Phim Ảnh</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="link-group">
+                            <div class="title">Thể Thao</div>
+                            <ul>
+                                <li>
+                                    <a href="page-single-post-creative.html#" class="f-link">Bóng Đá</a>
+                                </li>
+                                <li>
+                                    <a href="page-single-post-creative.html#" class="f-link">Quần Vợt</a>
+                                </li>
+                                <li>
+                                    <a href="page-single-post-creative.html#" class="f-link">Giải Đua F-1</a>
                                 </li>
                                 <li>
                                     <a href="page-single-post-creative.html#" class="f-link">NBA</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Basketball</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Bóng Rổ</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-2">
                         <div class="link-group">
-                            <div class="title">Travel</div>
+                            <div class="title">Du Lịch</div>
                             <ul>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Discovery</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Khám Phá</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Flight Tickets & Hotel</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Vé Máy Bay & Khách Sạn</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Tour</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Tour Du Lịch</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Destination</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Điểm Đến</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Experience & Reviews</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Trải Nghiệm & Đánh Giá</a>
                                 </li>
                             </ul>
+
                         </div>
                         <div class="link-group">
-                            <div class="title">Help Center</div>
+                            <div class="title">Trung Tâm Hỗ Trợ</div>
                             <ul>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">About Us</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Về Chúng Tôi</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Contact</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Liên Hệ</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Partners Programe</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Chương Trình Đối Tác</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Privacy Policy</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Chính Sách Bảo Mật</a>
                                 </li>
                                 <li>
-                                    <a href="page-single-post-creative.html#" class="f-link">Term & Conditions</a>
+                                    <a href="page-single-post-creative.html#" class="f-link">Điều Khoản & Điều Kiện</a>
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                </div>
-            </div>
+
 
             <div class="foot text-center py-4 border-1 border-top brd-gray">
                 <p class="fsz-13px color-666">© 2023 Copyrights by <a href="page-single-post-creative.html#" class="color-000">Newzin</a>. All Rights

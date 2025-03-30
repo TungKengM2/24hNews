@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Comment extends Model
 {
-    use HasFactory;
+    protected $table = 'comments';      // Tên bảng
+    protected $primaryKey = 'comment_id'; // Khóa chính
+    public $timestamps = false;         // Nếu không có cột created_at, updated_at
 
     protected $fillable = [
         'article_id',
         'user_id',
         'content',
-        'status',
         'parent_id',
         'depth',
+        'status'
     ];
 
     public function user()

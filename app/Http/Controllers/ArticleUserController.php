@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\Category;
+use App\Models\Violation;
 use App\Models\ArticleLike;
 use App\Models\ArticleSave;
 use App\Models\ArticleView;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Services\CommentModerationService;
@@ -17,12 +21,9 @@ class ArticleUserController extends Controller
 {
     public function show($slug)
     {
-        $article = Article::where('slug', $slug)->first();
+        $article = Article::with('tags', 'author')->where('slug', $slug)->firstOrFail();
 
 
-        if (! $article) {
-            abort(404, 'Bài viết không tồn tại!');
-        }
 
         $userId = auth()->id();
         $userIp = request()->ip();
@@ -65,7 +66,7 @@ class ArticleUserController extends Controller
 
             $article->increment('views');
         }
-        
+
         //BookMark By TungKeng
         $isBookmarked = false;
         if ($userId) { // Nếu có user đăng nhập
@@ -75,14 +76,35 @@ class ArticleUserController extends Controller
         }
 
 
-        // Lấy bài viết liên quan
-        $relatedArticles = Article::where(
-            'category_id',
-            $article->category_id
-        )
+        // Lấy bài viết cùng author
+        $relatedAuthorArticles = Article::where('author_id', $article->author_id)
             ->where('article_id', '!=', $article->article_id)
-            ->limit(5)
+            ->withCount('comments')
+            ->get(); // Trả về Collection
+
+        // Chuyển thành mảng các article_id
+        $relatedAuthorArticleIds = $relatedAuthorArticles->pluck('article_id')->toArray();
+
+        // Lấy bài viết cùng danh mục nhưng không trùng với bài của tác giả trên
+        $relatedCategoryArticles = Article::where('category_id', $article->category_id)
+            ->whereNotIn('article_id', $relatedAuthorArticleIds) // Không lấy bài đã có trong danh sách tác giả
+            ->where('article_id', '!=', $article->article_id) // Loại trừ bài hiện tại
+            ->withCount('comments')
             ->get();
+
+        //khuyencao
+        $displayedArticleIds = array_merge(
+            $relatedAuthorArticleIds,
+            $relatedCategoryArticles->pluck('article_id')->toArray(),
+            [$article->article_id]
+        );
+        $khuyencao = Article::whereNotIn('article_id', $displayedArticleIds)
+            ->orderBy('views', 'desc') // Sắp xếp theo lượt xem cao nhất
+            ->get();
+
+
+
+
 
         // Lấy danh sách bình luận
         $comments = Comment::where('article_id', $article->article_id)
@@ -139,16 +161,21 @@ class ArticleUserController extends Controller
             ); // Gán danh sách replies vào từng comment
         }
 
-        $categories = Category::where('is_active', 1)->get();
+        $categories = Category::where('is_active', 1)->limit(7)->get();
+
+        $category2 = Category::where('is_active', 1)->get();
 
 
 
         return view(
             'website.articles.article',
             compact(
+                'category2',
                 'categories',
                 'article',
-                'relatedArticles',
+                'relatedAuthorArticles',
+                'relatedCategoryArticles',
+                'khuyencao',
                 'isLiked',
                 'likeCount',
                 'comments',
@@ -215,10 +242,10 @@ class ArticleUserController extends Controller
 
         $content = $request->content;
 
-    if (!$moderationService->checkComment($content)) {
-        Log::warning("🚫 Bình luận bị từ chối: " . $content);
-        return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
-    }
+        if (!$moderationService->checkComment($content)) {
+            Log::warning("🚫 Bình luận bị từ chối: " . $content);
+            return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
+        }
 
 
 
@@ -236,73 +263,134 @@ class ArticleUserController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Bạn Comment thành công!',
 
         ]);
     }
 
-    public function storeReplyComment(
-        Request $request,
-        $article_id,
-        $comment_id ,CommentModerationService $moderationService
-    ) {
-        // Kiểm tra người dùng đã đăng nhập chưa
-        if (! auth()->check()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn cần đăng nhập để trả lời bình luận!',
-            ], 403);
-        }
+    public function storeReplyComment(Request $request, CommentModerationService $moderationService)
+    {
+
+        $request->validate([
+            'article_id' => 'required|exists:articles,article_id',
+            'content' => 'required|string',
+            'parent_id' => 'required|exists:comments,comment_id',
+        ]);
 
         $content = $request->content;
 
         if (!$moderationService->checkComment($content)) {
             Log::warning("🚫 Bình luận bị từ chối: " . $content);
-            return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
+            return response()->json(['error' => 'Bình luận không được chấp gggg nhận vì chứa từ ngữ không phù hợp.'], 403);
         }
 
-        // Validate dữ liệu đầu vào
-        $request->validate([
-            'content' => 'required|string|max:500',
+        // Truy vấn `parentComment` trước để tối ưu
+        $parentComment = Comment::find($request->parent_id);
+
+        $reply = Comment::create([
+            'article_id' => $request->article_id,
+            'user_id' => auth()->id(),
+            'content' => nl2br(e($request->content)), // Escape XSS
+            'parent_id' => $request->parent_id,
+            'depth' => $parentComment ? $parentComment->depth + 1 : 0,
+            'status' => 'approved',
         ]);
 
-        // Kiểm tra xem comment cha có tồn tại không
-        $parentComment = Comment::where('comment_id', $comment_id)->first();
+        return response()->json([
+            'success' => true,
+            'message' => 'Bạn trả lời bình luận thành công!',
+        ]);
+    }
 
-        if (! $parentComment) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bình luận không tồn tại!',
-            ], 404);
-        }
+    public function reportComment(Request $request, $article_id, $comment_id)
+    {
+        // Validate dữ liệu: chỉ cần kiểm tra 'reason' nếu có (article_id và comment_id lấy từ route)
+        $request->validate([
+            'reason' => 'nullable|string'
+        ]);
 
         try {
-            // Tạo comment trả lời
-            $reply = new Comment;
-            $reply->content = $request->input('content');
-            $reply->parent_id = $parentComment->comment_id;
-            $reply->article_id = $article_id;
-            $reply->user_id = auth()->id();
-            $reply->depth = $parentComment->depth + 1;
-            $reply->status = 'approved';
-            $reply->save();
+            // Tìm bài viết dựa trên article_id
+            $article = Article::findOrFail($article_id);
+            // Tìm bình luận gốc cần repost theo comment_id
+            $originalComment = Comment::findOrFail($comment_id);
+
+            // Xác định nội dung repost: nếu có nhập 'reason' thì dùng, nếu không dùng nội dung của bình luận gốc.
+            $content = $request->input('reason') ?: $originalComment->content;
+            // Vì trường detected_word của violations có độ dài 50 ký tự, cắt gọn nếu cần.
+            $detected_word = substr($content, 0, 50);
+
+
+            // Ghi nhận thông tin repost vào bảng violations với trạng thái "pending"
+            Violation::create([
+                'type'          => 'comment',
+                'reference_id'  => $comment_id,  // ID của repost vừa tạo
+                'detected_word' => $detected_word,
+                'detected_at'   => now(),
+                'handled_by'    => null,
+                'status'        => 'pending',         // Theo migration, mặc định là 'pending'
+                'warning_sent'  => false
+            ]);
 
             return response()->json([
                 'success' => true,
-                'reply' => [
-                    'comment_id' => $reply->comment_id ?? $reply->id,
-                    // Đảm bảo tồn tại
-                    'username' => auth()->user()->username,
-                    'user_image' => auth()->user()->image ?? asset('assets/img/colums/default.png'),
-                    'content' => nl2br(e($reply->content)),
-                    'status' => $reply->status,
-                    'created_at' => $reply->created_at->format('F d, Y'),
-                ],
+                'message' => 'Repost đã gửi lên chờ xử lý.'
             ]);
         } catch (\Exception $e) {
+            Log::error("Error in repostComment", ['error' => $e->getMessage()]);
             return response()->json([
                 'success' => false,
-                'message' => 'Lỗi khi lưu bình luận: ' . $e->getMessage(),
+                'message' => 'Lỗi: ' . $e->getMessage()
             ], 500);
         }
     }
+
+    public function reportArticle(Request $request, $article_id)
+    {
+        // Validate dữ liệu: 'reason' là nullable string
+        $request->validate([
+            'reason' => 'nullable|string'
+        ]);
+
+        try {
+            // Tìm bài viết gốc cần repost
+            $originalArticle = Article::findOrFail($article_id);
+
+            // Xác định nội dung repost: nếu có nhập 'reason' thì dùng, nếu không dùng nội dung bài viết gốc
+            $content = $request->input('reason') ?: $originalArticle->content;
+            // Lấy 50 ký tự đầu làm detected_word (loại bỏ HTML)
+            $detected_word = substr(strip_tags($content), 0, 50);
+
+            DB::beginTransaction();
+
+
+
+            // Ghi nhận thông tin violation cho repost bài viết
+            Violation::create([
+                'type'          => 'article',
+                'reference_id'  => $article_id, // ID của bài repost mới tạo
+                'detected_word' => $detected_word,
+                'detected_at'   => now(),
+                'handled_by'    => null,
+                'status'        => 'pending',
+                'warning_sent'  => false
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Repost bài viết đã gửi lên chờ xử lý.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Error in repostArticle", ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    
 }

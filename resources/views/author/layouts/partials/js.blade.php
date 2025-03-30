@@ -19,14 +19,13 @@
 <script src="/admin/assets/vendor_components/select2/dist/js/select2.full.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script referrerpolicy="origin"
-        src="https://cdn.tiny.cloud/1/{{ env('TINYMCE_API_KEY') }}/tinymce/7/tinymce.min.js"></script>
 
-
+<script src="https://cdn.tiny.cloud/1/hgw2cy0h3y0bv8k1p3imfstgke1x35xaz7rrfqrhigf3tx2j/tinymce/7/tinymce.min.js"
+    referrerpolicy="origin"></script>
 <script>
     const fetchApi = import(
         'https://unpkg.com/@microsoft/fetch-event-source@2.0.1/lib/esm/index.js'
-        ).then((module) => module.fetchEventSource);
+    ).then((module) => module.fetchEventSource);
 
     // This example stores the OpenAI API key in the client side integration. This is not recommended for any purpose.
     // Instead, an alternate method for retrieving the API key should be used.
@@ -51,7 +50,7 @@
         console.log('Đã reset danh sách ảnh bị chặn');
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         resetBlockedImagesList();
 
         fetch('/tinymce/clear-blocked-images')
@@ -63,7 +62,7 @@
                 console.error('Lỗi khi gọi API xóa thông tin ảnh bị chặn:', error);
             });
 
-        document.querySelectorAll('.alert.alert-warning').forEach(function (alert) {
+        document.querySelectorAll('.alert.alert-warning').forEach(function(alert) {
             if (alert.textContent.includes('Một số hình ảnh đã bị chặn')) {
                 const closeButton = document.createElement('button');
                 closeButton.type = 'button';
@@ -74,11 +73,11 @@
 
                 alert.appendChild(closeButton);
 
-                closeButton.addEventListener('click', function () {
+                closeButton.addEventListener('click', function() {
                     alert.style.display = 'none';
                 });
 
-                setTimeout(function () {
+                setTimeout(function() {
                     alert.style.display = 'none';
                 }, 5000);
             }
@@ -96,7 +95,7 @@
 
         var removedCount = 0;
 
-        window.blockedImages.forEach(function (blockedUrl) {
+        window.blockedImages.forEach(function(blockedUrl) {
             var images = tempDiv.querySelectorAll('img');
 
             for (var i = 0; i < images.length; i++) {
@@ -147,41 +146,41 @@
             images_upload_credentials: true,
             images_upload_base_path: '/storage',
             images_reuse_filename: true,
-            images_dataimg_filter: function (img) {
+            images_dataimg_filter: function(img) {
                 return true;
             },
             convert_urls: false,
             relative_urls: false,
             images_upload_url: '/author/tinymce/upload',
-            
+
             paste_as_text: false,
             paste_remove_styles_if_webkit: false,
             paste_remove_styles: false,
             paste_filter_drop: false,
             paste_strip_class_attributes: 'none',
             paste_merge_formats: false,
-            
+
             paste_webkit_styles: 'color font-size font-family font-weight text-decoration display float width height margin padding border',
-            
+
             paste_retain_style_properties: 'all',
             paste_retain_class_attributes: 'all',
-            
+
             powerpaste_word_import: 'clean',
             powerpaste_html_import: 'merge',
             powerpaste_block_drop: false,
 
-            paste_preprocess: function (plugin, args) {
+            paste_preprocess: function(plugin, args) {
                 console.log('Bắt đầu xử lý paste_preprocess');
                 const div = document.createElement('div');
                 div.innerHTML = args.content;
-                
+
                 const allElements = div.querySelectorAll('*');
                 allElements.forEach(function(el) {
                     if (el.style) {
                         el.style.removeProperty('background');
                         el.style.removeProperty('background-color');
                         el.style.removeProperty('background-image');
-                        
+
                         if (el.tagName === 'IMG') {
                             if (!el.style.width && !el.hasAttribute('width') && el.naturalWidth) {
                                 el.setAttribute('width', el.naturalWidth);
@@ -189,45 +188,44 @@
                             if (!el.style.height && !el.hasAttribute('height') && el.naturalHeight) {
                                 el.setAttribute('height', el.naturalHeight);
                             }
-                            
+
                             if (!el.style.display) {
                                 el.style.display = 'block';
                             }
-                            
+
                             if (el.style.margin === '0px auto' || el.style.margin === 'auto') {
                                 el.style.margin = '0';
                             }
                         }
-                        
+
                         if (el.tagName === 'P' || el.tagName === 'DIV') {
                             if (el.style.clear === 'none') el.style.removeProperty('clear');
                             if (el.style.float === 'none') el.style.removeProperty('float');
                         }
                     }
-                    
+
                     if (el.hasAttribute('bgcolor')) {
                         el.removeAttribute('bgcolor');
                     }
-                    
+
                     if (el.className && (
-                        el.className.includes('bg-') || 
-                        el.className.includes('background-')
-                    )) {
+                            el.className.includes('bg-') ||
+                            el.className.includes('background-')
+                        )) {
                         const classes = el.className.split(' ');
-                        const filteredClasses = classes.filter(cls => 
-                            !cls.startsWith('bg-') && 
+                        const filteredClasses = classes.filter(cls =>
+                            !cls.startsWith('bg-') &&
                             !cls.includes('background-')
                         );
                         el.className = filteredClasses.join(' ');
                     }
                 });
-                
+
                 const brs = div.querySelectorAll('br');
                 brs.forEach(br => {
-                    if (br.parentNode && br.parentNode.tagName === 'P' && 
-                        br.parentNode.childNodes.length === 1) {
-                    } else {
-                        if (br.nextSibling && br.nextSibling.nodeType === 3 && 
+                    if (br.parentNode && br.parentNode.tagName === 'P' &&
+                        br.parentNode.childNodes.length === 1) {} else {
+                        if (br.nextSibling && br.nextSibling.nodeType === 3 &&
                             br.previousSibling && br.previousSibling.nodeType === 3) {
                             const wrapper = document.createElement('p');
                             wrapper.appendChild(br.cloneNode());
@@ -235,22 +233,24 @@
                         }
                     }
                 });
-                
+
                 const images = div.querySelectorAll('img');
 
                 if (images.length > 0) {
                     console.log('Tìm thấy ' + images.length + ' hình ảnh trong nội dung paste');
 
                     [...images].forEach(img => {
-                        if (img.src && (img.src.startsWith('http') || img.src.startsWith('data:image'))) {
+                        if (img.src && (img.src.startsWith('http') || img.src.startsWith(
+                                'data:image'))) {
                             const imgId = 'img-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
 
                             img.setAttribute('data-need-moderation', 'true');
                             img.setAttribute('data-paste-id', imgId);
 
-                            ['data-mce-src', 'data-mce-selected', 'data-mce-object', 
-                             'data-mce-placeholder', 'contenteditable', 'data-mce-resize', 
-                             'data-mce-bogus'].forEach(attr => {
+                            ['data-mce-src', 'data-mce-selected', 'data-mce-object',
+                                'data-mce-placeholder', 'contenteditable', 'data-mce-resize',
+                                'data-mce-bogus'
+                            ].forEach(attr => {
                                 if (img.hasAttribute(attr)) {
                                     img.removeAttribute(attr);
                                 }
@@ -258,8 +258,8 @@
 
                             img.setAttribute('onload', 'this.removeAttribute("data-mce-src")');
                             img.classList.add('waiting-moderation');
-                            
-                            if (img.parentNode && img.parentNode.tagName !== 'P' && 
+
+                            if (img.parentNode && img.parentNode.tagName !== 'P' &&
                                 img.parentNode.tagName !== 'DIV') {
                                 const wrapper = document.createElement('p');
                                 img.parentNode.replaceChild(wrapper, img);
@@ -268,12 +268,12 @@
                         }
                     });
                 }
-                
+
                 args.content = div.innerHTML;
                 console.log('Đã xử lý paste_preprocess, nội dung mới:', args.content);
             },
 
-            setup: function (editor) {
+            setup: function(editor) {
 
                 function needsModeration(img) {
                     if (img.hasAttribute('data-moderated') ||
@@ -298,7 +298,9 @@
                         return;
                     }
 
-                    const images = editor.getBody().querySelectorAll('img[data-need-moderation="true"]:not([data-no-remoderation]):not([data-moderated]):not([moderated])');
+                    const images = editor.getBody().querySelectorAll(
+                        'img[data-need-moderation="true"]:not([data-no-remoderation]):not([data-moderated]):not([moderated])'
+                    );
                     if (images.length === 0) {
                         return;
                     }
@@ -317,11 +319,13 @@
                     let processedImages = 0;
                     const totalImages = images.length;
 
-                    [...images].forEach(function (img) {
+                    [...images].forEach(function(img) {
                         const originalSrc = img.getAttribute('src');
 
-                        if (originalSrc && (originalSrc.includes('/storage/uploads/') || originalSrc.includes('/uploads/'))) {
-                            console.log('Ảnh đã được tải lên từ server, không cần kiểm duyệt lại:', originalSrc);
+                        if (originalSrc && (originalSrc.includes('/storage/uploads/') || originalSrc
+                                .includes('/uploads/'))) {
+                            console.log('Ảnh đã được tải lên từ server, không cần kiểm duyệt lại:',
+                                originalSrc);
                             img.removeAttribute('data-need-moderation');
                             img.setAttribute('data-moderated', 'true');
                             img.setAttribute('data-no-remoderation', 'true');
@@ -361,15 +365,20 @@
                                 .then(blob => {
                                     const formData = new FormData();
                                     const fileName = `pasted-image-${Date.now()}.png`;
-                                    const file = new File([blob], fileName, { type: blob.type });
+                                    const file = new File([blob], fileName, {
+                                        type: blob.type
+                                    });
 
                                     formData.append('file', file);
-                                    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+                                    formData.append('_token', document.querySelector(
+                                        'meta[name="csrf-token"]').getAttribute('content'));
 
                                     return fetch('/author/tinymce/upload', {
                                         method: 'POST',
                                         headers: {
-                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                            'X-CSRF-TOKEN': document.querySelector(
+                                                'meta[name="csrf-token"]').getAttribute(
+                                                'content'),
                                         },
                                         body: formData,
                                     });
@@ -377,7 +386,8 @@
                                 .then(response => response.json())
                                 .then(result => {
                                     processedImages++;
-                                    notification.progressBar.value(processedImages / totalImages * 100);
+                                    notification.progressBar.value(processedImages / totalImages *
+                                        100);
 
                                     img.classList.remove('moderating');
                                     img.style.opacity = '1';
@@ -386,12 +396,14 @@
                                     if (result.blocked === true) {
                                         console.log('Hình ảnh bị chặn:', result);
 
-                                        if (result.url && !window.blockedImages.includes(result.url)) {
+                                        if (result.url && !window.blockedImages.includes(result
+                                                .url)) {
                                             window.blockedImages.push(result.url);
                                         }
 
                                         if (document.getElementById('has_blocked_images')) {
-                                            document.getElementById('has_blocked_images').value = 'true';
+                                            document.getElementById('has_blocked_images').value =
+                                                'true';
                                         }
 
                                         if (img.parentNode) {
@@ -404,11 +416,13 @@
                                             errorMessage = result.reasons.join(', ');
                                         } else if (result.reasons) {
                                             errorMessage = typeof result.reasons === 'object' ?
-                                                JSON.stringify(result.reasons) : String(result.reasons);
+                                                JSON.stringify(result.reasons) : String(result
+                                                    .reasons);
                                         } else if (result.reason) {
                                             if (typeof result.reason === 'object') {
                                                 try {
-                                                    errorMessage = Object.values(result.reason).join(', ');
+                                                    errorMessage = Object.values(result.reason)
+                                                        .join(', ');
                                                 } catch (e) {
                                                     errorMessage = JSON.stringify(result.reason);
                                                 }
@@ -419,26 +433,30 @@
                                             errorMessage = result.message;
                                         }
 
-                                        setTimeout(function () {
-                                            var notification = tinymce.activeEditor.notificationManager.open({
-                                                text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
-                                                type: 'error',
-                                                timeout: 5000,
-                                            });
+                                        setTimeout(function() {
+                                            var notification = tinymce.activeEditor
+                                                .notificationManager.open({
+                                                    text: 'Hình ảnh không vượt qua kiểm duyệt: ' +
+                                                        errorMessage,
+                                                    type: 'error',
+                                                    timeout: 5000,
+                                                });
 
-                                            setTimeout(function () {
+                                            setTimeout(function() {
                                                 notification.close();
                                             }, 5000);
                                         }, 200);
                                     } else if (result.status === 'error' || !result.location) {
                                         console.log('Lỗi kiểm duyệt:', result);
 
-                                        if (result.url && !window.blockedImages.includes(result.url)) {
+                                        if (result.url && !window.blockedImages.includes(result
+                                                .url)) {
                                             window.blockedImages.push(result.url);
                                         }
 
                                         if (document.getElementById('has_blocked_images')) {
-                                            document.getElementById('has_blocked_images').value = 'true';
+                                            document.getElementById('has_blocked_images').value =
+                                                'true';
                                         }
 
                                         if (img.parentNode) {
@@ -448,17 +466,20 @@
                                         let errorMessage = 'Lỗi kiểm duyệt';
                                         if (result.message) {
                                             errorMessage = typeof result.message === 'object' ?
-                                                JSON.stringify(result.message) : String(result.message);
+                                                JSON.stringify(result.message) : String(result
+                                                    .message);
                                         }
 
-                                        setTimeout(function () {
-                                            var notification = tinymce.activeEditor.notificationManager.open({
-                                                text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
-                                                type: 'error',
-                                                timeout: 5000,
-                                            });
+                                        setTimeout(function() {
+                                            var notification = tinymce.activeEditor
+                                                .notificationManager.open({
+                                                    text: 'Hình ảnh không vượt qua kiểm duyệt: ' +
+                                                        errorMessage,
+                                                    type: 'error',
+                                                    timeout: 5000,
+                                                });
 
-                                            setTimeout(function () {
+                                            setTimeout(function() {
                                                 notification.close();
                                             }, 5000);
                                         }, 200);
@@ -489,7 +510,8 @@
                                 .catch(error => {
                                     console.error('Lỗi xử lý ảnh:', error);
                                     processedImages++;
-                                    notification.progressBar.value(processedImages / totalImages * 100);
+                                    notification.progressBar.value(processedImages / totalImages *
+                                        100);
 
                                     img.classList.remove('moderating');
                                     img.style.opacity = '1';
@@ -502,23 +524,28 @@
                                 });
                         } else if (originalSrc.startsWith('http')) {
                             fetch('/api/moderate/image-url', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                },
-                                body: JSON.stringify({ image_url: originalSrc }),
-                            })
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').getAttribute('content'),
+                                    },
+                                    body: JSON.stringify({
+                                        image_url: originalSrc
+                                    }),
+                                })
                                 .then(response => response.json())
                                 .then(result => {
                                     processedImages++;
-                                    notification.progressBar.value(processedImages / totalImages * 100);
+                                    notification.progressBar.value(processedImages / totalImages *
+                                        100);
 
                                     img.classList.remove('moderating');
                                     img.style.opacity = '1';
                                     img.style.border = 'none';
 
-                                    if (result.status === 'success' && result.violation_level === 'none') {
+                                    if (result.status === 'success' && result.violation_level ===
+                                        'none') {
                                         if (result.location) {
                                             img.setAttribute('src', result.location);
                                         }
@@ -542,7 +569,8 @@
                                         }
 
                                         if (document.getElementById('has_blocked_images')) {
-                                            document.getElementById('has_blocked_images').value = 'true';
+                                            document.getElementById('has_blocked_images').value =
+                                                'true';
                                         }
 
                                         if (img.parentNode) {
@@ -554,7 +582,8 @@
                                         if (result.reason) {
                                             if (typeof result.reason === 'object') {
                                                 try {
-                                                    errorMessage = Object.values(result.reason).join(', ');
+                                                    errorMessage = Object.values(result.reason)
+                                                        .join(', ');
                                                 } catch (e) {
                                                     errorMessage = JSON.stringify(result.reason);
                                                 }
@@ -563,17 +592,20 @@
                                             }
                                         } else if (result.message) {
                                             errorMessage = typeof result.message === 'object' ?
-                                                JSON.stringify(result.message) : String(result.message);
+                                                JSON.stringify(result.message) : String(result
+                                                    .message);
                                         }
 
-                                        setTimeout(function () {
-                                            var notification = tinymce.activeEditor.notificationManager.open({
-                                                text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
-                                                type: 'error',
-                                                timeout: 5000,
-                                            });
+                                        setTimeout(function() {
+                                            var notification = tinymce.activeEditor
+                                                .notificationManager.open({
+                                                    text: 'Hình ảnh không vượt qua kiểm duyệt: ' +
+                                                        errorMessage,
+                                                    type: 'error',
+                                                    timeout: 5000,
+                                                });
 
-                                            setTimeout(function () {
+                                            setTimeout(function() {
                                                 notification.close();
                                             }, 5000);
                                         }, 200);
@@ -587,7 +619,8 @@
                                 .catch(error => {
                                     console.error('Lỗi kiểm duyệt:', error);
                                     processedImages++;
-                                    notification.progressBar.value(processedImages / totalImages * 100);
+                                    notification.progressBar.value(processedImages / totalImages *
+                                        100);
 
                                     img.classList.remove('moderating');
                                     img.style.opacity = '1';
@@ -614,7 +647,7 @@
                     });
                 }
 
-                editor.on('init', function () {
+                editor.on('init', function() {
                     console.log('TinyMCE đã khởi tạo');
 
                     window.blockedImages = window.blockedImages || [];
@@ -631,11 +664,11 @@
                         }
                     }
 
-                    editor.getBody().addEventListener('paste', function (e) {
+                    editor.getBody().addEventListener('paste', function(e) {
                         console.log('Bắt được sự kiện DOM paste');
                     }, true);
 
-                    editor.getBody().addEventListener('dblclick', function (e) {
+                    editor.getBody().addEventListener('dblclick', function(e) {
                         const target = e.target;
                         if (target.nodeName === 'IMG') {
 
@@ -656,7 +689,7 @@
                         }
                     }, true);
 
-                    editor.getBody().addEventListener('mousedown', function (e) {
+                    editor.getBody().addEventListener('mousedown', function(e) {
 
                         const allImages = editor.getBody().querySelectorAll('img');
                         allImages.forEach(img => {
@@ -676,18 +709,20 @@
                     });
 
                     const originalSetAttrib = editor.dom.setAttrib;
-                    editor.dom.setAttrib = function (elm, name, value) {
-                        if ((name === 'data-moderated' || name === 'data-no-remoderation' || name === 'moderated') && value === null && elm._moderationState) {
+                    editor.dom.setAttrib = function(elm, name, value) {
+                        if ((name === 'data-moderated' || name === 'data-no-remoderation' ||
+                                name === 'moderated') && value === null && elm._moderationState) {
                             return elm;
                         }
                         return originalSetAttrib.call(this, elm, name, value);
                     };
 
-                    const observer = new MutationObserver(function (mutations) {
+                    const observer = new MutationObserver(function(mutations) {
                         let hasNewImages = false;
 
                         mutations.forEach(mutation => {
-                            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                            if (mutation.type === 'childList' && mutation.addedNodes
+                                .length > 0) {
                                 for (let i = 0; i < mutation.addedNodes.length; i++) {
                                     const node = mutation.addedNodes[i];
 
@@ -696,7 +731,8 @@
                                             continue;
                                         }
 
-                                        node.setAttribute('data-need-moderation', 'true');
+                                        node.setAttribute('data-need-moderation',
+                                            'true');
                                         hasNewImages = true;
                                     } else if (node.querySelectorAll) {
                                         const images = node.querySelectorAll('img');
@@ -706,20 +742,25 @@
                                                     return;
                                                 }
 
-                                                img.setAttribute('data-need-moderation', 'true');
+                                                img.setAttribute(
+                                                    'data-need-moderation',
+                                                    'true');
                                                 hasNewImages = true;
                                             });
                                         }
                                     }
                                 }
-                            } else if (mutation.type === 'attributes' && mutation.target.nodeName === 'IMG') {
+                            } else if (mutation.type === 'attributes' && mutation.target
+                                .nodeName === 'IMG') {
                                 const img = mutation.target;
-                                if (img._moderationState && img._moderationState.moderated) {
+                                if (img._moderationState && img._moderationState
+                                    .moderated) {
                                     if (!img.hasAttribute('data-moderated')) {
                                         img.setAttribute('data-moderated', 'true');
                                     }
                                     if (!img.hasAttribute('data-no-remoderation')) {
-                                        img.setAttribute('data-no-remoderation', 'true');
+                                        img.setAttribute('data-no-remoderation',
+                                            'true');
                                     }
                                     if (!img.hasAttribute('moderated')) {
                                         img.setAttribute('moderated', 'true');
@@ -740,24 +781,28 @@
                         attributeFilter: ['src'],
                     });
 
-                    setInterval(function () {
+                    setInterval(function() {
                         if (!window.checkingImages) {
-                            const images = editor.getBody().querySelectorAll('img:not([data-moderated]):not([data-need-moderation])');
+                            const images = editor.getBody().querySelectorAll(
+                                'img:not([data-moderated]):not([data-need-moderation])');
                             if (images.length > 0) {
                                 let needModeration = false;
 
                                 images.forEach(img => {
                                     const src = img.getAttribute('src');
-                                    if (src && (src.includes('/storage/uploads/') || src.includes('/uploads/'))) {
+                                    if (src && (src.includes('/storage/uploads/') || src
+                                            .includes('/uploads/'))) {
                                         img.setAttribute('data-moderated', 'true');
                                     } else {
-                                        img.setAttribute('data-need-moderation', 'true');
+                                        img.setAttribute('data-need-moderation',
+                                            'true');
                                         needModeration = true;
                                     }
                                 });
 
                                 if (needModeration) {
-                                    console.log('Tìm thấy ' + images.length + ' hình ảnh chưa được xử lý trong lần quét định kỳ');
+                                    console.log('Tìm thấy ' + images.length +
+                                        ' hình ảnh chưa được xử lý trong lần quét định kỳ');
                                     scanAndProcessImages();
                                 }
                             }
@@ -765,19 +810,19 @@
                     }, 2000);
                 });
 
-                editor.on('PastePreProcess', function (e) {
+                editor.on('PastePreProcess', function(e) {
                     console.log('PastePreProcess event');
                 });
 
-                editor.on('PastePostProcess', function (e) {
+                editor.on('PastePostProcess', function(e) {
                     console.log('PastePostProcess event');
                 });
 
-                editor.on('paste', function (e) {
+                editor.on('paste', function(e) {
                     console.log('Paste event đã được kích hoạt');
                 });
 
-                editor.on('BeforeSetContent', function (e) {
+                editor.on('BeforeSetContent', function(e) {
                     console.log('BeforeSetContent event');
 
                     if (e.content && e.content.indexOf('<img') >= 0) {
@@ -786,7 +831,8 @@
 
                         const images = div.querySelectorAll('img:not([data-moderated])');
                         if (images.length > 0) {
-                            console.log('Đánh dấu ' + images.length + ' hình ảnh trong BeforeSetContent');
+                            console.log('Đánh dấu ' + images.length +
+                                ' hình ảnh trong BeforeSetContent');
 
                             images.forEach(img => {
                                 img.setAttribute('data-need-moderation', 'true');
@@ -801,7 +847,8 @@
                                     img.removeAttribute('data-mce-object');
                                 }
 
-                                img.setAttribute('onload', 'this.removeAttribute("data-mce-src")');
+                                img.setAttribute('onload',
+                                    'this.removeAttribute("data-mce-src")');
                             });
 
                             e.content = div.innerHTML;
@@ -809,12 +856,12 @@
                     }
                 });
 
-                editor.on('SetContent', function (e) {
+                editor.on('SetContent', function(e) {
                     console.log('SetContent event');
                     setTimeout(scanAndProcessImages, 100);
                 });
 
-                editor.on('BeforeUpload', function (e) {
+                editor.on('BeforeUpload', function(e) {
                     console.log('BeforeUpload event', e);
 
                     if (e.target && !e.target.getAttribute('data-moderated')) {
@@ -823,13 +870,13 @@
                     }
                 });
 
-                editor.on('submit', function () {
+                editor.on('submit', function() {
                     console.log('Submit event');
                     removeBlockedImagesFromContent(editor);
                 });
             },
 
-            images_upload_handler: function (blobInfo, progress) {
+            images_upload_handler: function(blobInfo, progress) {
                 console.log('TinyMCE images_upload_handler được gọi', blobInfo);
 
                 var defaultHandling = false;
@@ -837,7 +884,10 @@
                 return new Promise((resolve, reject) => {
                     if (!blobInfo || typeof blobInfo.blob !== 'function') {
                         console.error('blobInfo không hợp lệ:', blobInfo);
-                        reject({ message: 'Dữ liệu hình ảnh không hợp lệ', remove: false });
+                        reject({
+                            message: 'Dữ liệu hình ảnh không hợp lệ',
+                            remove: false
+                        });
                         return;
                     }
 
@@ -853,14 +903,19 @@
                         var blob = blobInfo.blob();
                         var filename = blobInfo.filename();
 
-                        console.log('Bắt đầu tải lên:', filename, 'type:', blob.type, 'size:', blob.size);
+                        console.log('Bắt đầu tải lên:', filename, 'type:', blob.type, 'size:', blob
+                            .size);
 
                         formData.append('file', blob, filename);
-                        formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+                        formData.append('_token', document.querySelector('meta[name="csrf-token"]')
+                            .getAttribute('content'));
                     } catch (e) {
                         console.error('Lỗi khi xử lý blob:', e);
                         notification.close();
-                        reject({ message: 'Lỗi khi xử lý hình ảnh: ' + e.message, remove: true });
+                        reject({
+                            message: 'Lỗi khi xử lý hình ảnh: ' + e.message,
+                            remove: true
+                        });
                         return;
                     }
 
@@ -868,9 +923,10 @@
                     xhr.withCredentials = true;
                     xhr.open('POST', '/author/tinymce/upload');
 
-                    xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+                    xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector(
+                        'meta[name="csrf-token"]').getAttribute('content'));
 
-                    xhr.upload.onprogress = function (e) {
+                    xhr.upload.onprogress = function(e) {
                         if (e.lengthComputable) {
                             var percentComplete = (e.loaded / e.total) * 100;
                             notification.progressBar.value(percentComplete);
@@ -881,7 +937,7 @@
                         }
                     };
 
-                    xhr.onload = function () {
+                    xhr.onload = function() {
                         notification.close();
 
                         console.log('Phản hồi từ server:', xhr.status, xhr.responseText);
@@ -901,19 +957,24 @@
                                 }
                             }
 
-                            setTimeout(function () {
-                                var notification = tinymce.activeEditor.notificationManager.open({
-                                    text: 'Không thể tải lên hình ảnh: ' + errorMessage,
-                                    type: 'error',
-                                    timeout: 5000,
-                                });
+                            setTimeout(function() {
+                                var notification = tinymce.activeEditor.notificationManager
+                                    .open({
+                                        text: 'Không thể tải lên hình ảnh: ' +
+                                            errorMessage,
+                                        type: 'error',
+                                        timeout: 5000,
+                                    });
 
-                                setTimeout(function () {
+                                setTimeout(function() {
                                     notification.close();
                                 }, 5000);
                             }, 200);
 
-                            reject({ message: errorMessage, remove: true });
+                            reject({
+                                message: errorMessage,
+                                remove: true
+                            });
                             return;
                         }
 
@@ -953,80 +1014,109 @@
                                     errorMessage = json.message;
                                 }
 
-                                setTimeout(function () {
-                                    var notification = tinymce.activeEditor.notificationManager.open({
-                                        text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
-                                        type: 'error',
-                                        timeout: 5000,
-                                    });
+                                setTimeout(function() {
+                                    var notification = tinymce.activeEditor
+                                        .notificationManager.open({
+                                            text: 'Hình ảnh không vượt qua kiểm duyệt: ' +
+                                                errorMessage,
+                                            type: 'error',
+                                            timeout: 5000,
+                                        });
 
-                                    setTimeout(function () {
+                                    setTimeout(function() {
                                         notification.close();
                                     }, 5000);
                                 }, 200);
 
-                                reject({ message: 'Hình ảnh không vượt qua kiểm duyệt', remove: true });
+                                reject({
+                                    message: 'Hình ảnh không vượt qua kiểm duyệt',
+                                    remove: true
+                                });
                                 return;
                             }
 
                             if (!json.location) {
                                 console.error('Không tìm thấy URL hình ảnh trong phản hồi:', json);
-                                reject({ message: 'Phản hồi thiếu URL hình ảnh', remove: true });
+                                reject({
+                                    message: 'Phản hồi thiếu URL hình ảnh',
+                                    remove: true
+                                });
                                 return;
                             }
 
-                            console.log('Ảnh đã được tải lên thành công, đường dẫn: ' + json.location);
+                            console.log('Ảnh đã được tải lên thành công, đường dẫn: ' + json
+                                .location);
 
-                            setTimeout(function () {
-                                var notification = tinymce.activeEditor.notificationManager.open({
-                                    text: 'Hình ảnh đã được tải lên thành công!',
-                                    type: 'success',
-                                    timeout: 3000,
-                                });
+                            setTimeout(function() {
+                                var notification = tinymce.activeEditor.notificationManager
+                                    .open({
+                                        text: 'Hình ảnh đã được tải lên thành công!',
+                                        type: 'success',
+                                        timeout: 3000,
+                                    });
 
-                                setTimeout(function () {
+                                setTimeout(function() {
                                     notification.close();
                                 }, 3000);
                             }, 200);
 
                             resolve(json.location);
 
-                            setTimeout(function () {
+                            setTimeout(function() {
                                 try {
                                     console.log('Tìm kiếm ảnh có src=' + json.location);
-                                    const allImages = tinymce.activeEditor.getBody().querySelectorAll('img');
+                                    const allImages = tinymce.activeEditor.getBody()
+                                        .querySelectorAll('img');
 
-                                    allImages.forEach(function (img) {
+                                    allImages.forEach(function(img) {
                                         const imgSrc = img.getAttribute('src');
 
                                         if (imgSrc === json.location ||
-                                            (imgSrc && json.location && imgSrc.includes(json.location.split('/').pop()))) {
-                                            console.log('Tìm thấy và đánh dấu ảnh đã được kiểm duyệt:', imgSrc);
+                                            (imgSrc && json.location && imgSrc
+                                                .includes(json.location.split('/')
+                                                    .pop()))) {
+                                            console.log(
+                                                'Tìm thấy và đánh dấu ảnh đã được kiểm duyệt:',
+                                                imgSrc);
 
-                                            img.setAttribute('data-moderated', 'true');
-                                            img.setAttribute('data-no-remoderation', 'true');
-                                            img.setAttribute('moderated', 'true'); // Thuộc tính tùy chỉnh
+                                            img.setAttribute('data-moderated',
+                                                'true');
+                                            img.setAttribute('data-no-remoderation',
+                                                'true');
+                                            img.setAttribute('moderated',
+                                                'true'); // Thuộc tính tùy chỉnh
 
-                                            img.onmousedown = function (e) {
-                                                if (this.hasAttribute('data-moderated')) {
-                                                    this.setAttribute('data-no-remoderation', 'true');
+                                            img.onmousedown = function(e) {
+                                                if (this.hasAttribute(
+                                                        'data-moderated')) {
+                                                    this.setAttribute(
+                                                        'data-no-remoderation',
+                                                        'true');
                                                 }
                                             };
 
                                             if (img.hasAttribute('data-mce-src')) {
                                                 img.removeAttribute('data-mce-src');
                                             }
-                                            if (img.hasAttribute('data-mce-selected')) {
-                                                img.removeAttribute('data-mce-selected');
+                                            if (img.hasAttribute(
+                                                    'data-mce-selected')) {
+                                                img.removeAttribute(
+                                                    'data-mce-selected');
                                             }
-                                            if (img.hasAttribute('data-mce-object')) {
-                                                img.removeAttribute('data-mce-object');
+                                            if (img.hasAttribute(
+                                                    'data-mce-object')) {
+                                                img.removeAttribute(
+                                                    'data-mce-object');
                                             }
-                                            if (img.hasAttribute('data-mce-placeholder')) {
-                                                img.removeAttribute('data-mce-placeholder');
+                                            if (img.hasAttribute(
+                                                    'data-mce-placeholder')) {
+                                                img.removeAttribute(
+                                                    'data-mce-placeholder');
                                             }
-                                            if (img.hasAttribute('data-need-moderation')) {
-                                                img.removeAttribute('data-need-moderation');
+                                            if (img.hasAttribute(
+                                                    'data-need-moderation')) {
+                                                img.removeAttribute(
+                                                    'data-need-moderation');
                                             }
                                         }
                                     });
@@ -1037,24 +1127,36 @@
 
                         } catch (e) {
                             console.error('Lỗi parse JSON:', e, xhr.responseText);
-                            reject({ message: 'Lỗi xử lý phản hồi: ' + e.message, remove: true });
+                            reject({
+                                message: 'Lỗi xử lý phản hồi: ' + e.message,
+                                remove: true
+                            });
                         }
                     };
 
-                    xhr.onerror = function () {
+                    xhr.onerror = function() {
                         notification.close();
                         console.error('Lỗi kết nối');
-                        reject({ message: 'Lỗi kết nối mạng', remove: true });
+                        reject({
+                            message: 'Lỗi kết nối mạng',
+                            remove: true
+                        });
                     };
 
-                    xhr.onabort = function () {
+                    xhr.onabort = function() {
                         notification.close();
-                        reject({ message: 'Việc tải lên bị hủy', remove: true });
+                        reject({
+                            message: 'Việc tải lên bị hủy',
+                            remove: true
+                        });
                     };
 
-                    xhr.ontimeout = function () {
+                    xhr.ontimeout = function() {
                         notification.close();
-                        reject({ message: 'Thao tác tải lên đã hết thời gian', remove: true });
+                        reject({
+                            message: 'Thao tác tải lên đã hết thời gian',
+                            remove: true
+                        });
                     };
 
                     xhr.send(formData);
@@ -1116,8 +1218,8 @@
             images_file_types: 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp',
             file_picker_types: 'file image media',
             block_unsupported_drop: false,
-            file_picker_callback: function (cb, value, meta) {
-                return new Promise(function (resolve, reject) {
+            file_picker_callback: function(cb, value, meta) {
+                return new Promise(function(resolve, reject) {
                     var input = document.createElement('input');
                     input.setAttribute('type', 'file');
 
@@ -1129,7 +1231,7 @@
                         input.setAttribute('accept', '*/*');
                     }
 
-                    input.onchange = function () {
+                    input.onchange = function() {
                         var file = this.files[0];
 
                         if (!file) {
@@ -1157,25 +1259,27 @@
 
                         var formData = new FormData();
                         formData.append('file', file);
-                        formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+                        formData.append('_token', document.querySelector('meta[name="csrf-token"]')
+                            .getAttribute('content'));
 
                         var xhr = new XMLHttpRequest();
                         xhr.withCredentials = false;
                         xhr.open('POST', '/author/tinymce/upload');
 
-                        xhr.upload.onprogress = function (e) {
+                        xhr.upload.onprogress = function(e) {
                             if (e.lengthComputable) {
                                 notification.progressBar.value(e.loaded / e.total * 100);
                             }
                         };
 
-                        xhr.onload = function () {
+                        xhr.onload = function() {
                             if (xhr.status < 200 || xhr.status >= 300) {
                                 notification.close();
                                 console.error('Lỗi HTTP:', xhr.status, xhr.statusText);
-                                setTimeout(function () {
+                                setTimeout(function() {
                                     tinymce.activeEditor.notificationManager.open({
-                                        text: 'Lỗi khi tải lên: ' + xhr.statusText,
+                                        text: 'Lỗi khi tải lên: ' + xhr
+                                            .statusText,
                                         type: 'error',
                                         timeout: 3000,
                                     });
@@ -1191,7 +1295,7 @@
 
                                 if (!json || typeof json.location !== 'string') {
                                     console.error('Phản hồi không hợp lệ:', json);
-                                    setTimeout(function () {
+                                    setTimeout(function() {
                                         tinymce.activeEditor.notificationManager.open({
                                             text: 'Phản hồi từ server không hợp lệ',
                                             type: 'error',
@@ -1209,7 +1313,8 @@
                                     }
 
                                     if (document.getElementById('has_blocked_images')) {
-                                        document.getElementById('has_blocked_images').value = 'true';
+                                        document.getElementById('has_blocked_images').value =
+                                            'true';
                                     }
 
                                     let errorMessage = 'Vi phạm quy định nội dung';
@@ -1222,7 +1327,8 @@
                                     } else if (json.reason) {
                                         if (typeof json.reason === 'object') {
                                             try {
-                                                errorMessage = Object.values(json.reason).join(', ');
+                                                errorMessage = Object.values(json.reason).join(
+                                                    ', ');
                                             } catch (e) {
                                                 errorMessage = JSON.stringify(json.reason);
                                             }
@@ -1233,43 +1339,55 @@
                                         errorMessage = json.message;
                                     }
 
-                                    setTimeout(function () {
-                                        var notification = tinymce.activeEditor.notificationManager.open({
-                                            text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
-                                            type: 'error',
-                                            timeout: 5000,
-                                        });
+                                    setTimeout(function() {
+                                        var notification = tinymce.activeEditor
+                                            .notificationManager.open({
+                                                text: 'Hình ảnh không vượt qua kiểm duyệt: ' +
+                                                    errorMessage,
+                                                type: 'error',
+                                                timeout: 5000,
+                                            });
 
-                                            setTimeout(function () {
-                                                notification.close();
-                                            }, 5000);
+                                        setTimeout(function() {
+                                            notification.close();
+                                        }, 5000);
                                     }, 200);
                                     return;
                                 }
 
-                                console.log('Ảnh đã được tải lên thành công, đường dẫn: ' + json.location);
+                                console.log('Ảnh đã được tải lên thành công, đường dẫn: ' + json
+                                    .location);
 
-                                setTimeout(function () {
-                                    var notification = tinymce.activeEditor.notificationManager.open({
-                                        text: 'Hình ảnh đã được tải lên thành công!',
-                                        type: 'success',
-                                        timeout: 3000,
-                                    });
+                                setTimeout(function() {
+                                    var notification = tinymce.activeEditor
+                                        .notificationManager.open({
+                                            text: 'Hình ảnh đã được tải lên thành công!',
+                                            type: 'success',
+                                            timeout: 3000,
+                                        });
 
-                                    setTimeout(function () {
+                                    setTimeout(function() {
                                         notification.close();
                                     }, 3000);
                                 }, 200);
 
-                                cb(json.location, { title: file.name });
+                                cb(json.location, {
+                                    title: file.name
+                                });
                                 resolve();
 
-                                setTimeout(function () {
-                                    const newImages = tinymce.activeEditor.getBody().querySelectorAll('img[src="' + json.location + '"]:not([data-moderated])');
-                                    newImages.forEach(function (img) {
-                                        console.log('Đánh dấu ảnh đã được kiểm duyệt:', json.location);
-                                        img.setAttribute('data-moderated', 'true');
-                                        img.setAttribute('data-no-remoderation', 'true');
+                                setTimeout(function() {
+                                    const newImages = tinymce.activeEditor.getBody()
+                                        .querySelectorAll('img[src="' + json.location +
+                                            '"]:not([data-moderated])');
+                                    newImages.forEach(function(img) {
+                                        console.log(
+                                            'Đánh dấu ảnh đã được kiểm duyệt:',
+                                            json.location);
+                                        img.setAttribute('data-moderated',
+                                            'true');
+                                        img.setAttribute('data-no-remoderation',
+                                            'true');
                                         img.setAttribute('moderated', 'true');
 
                                         img._moderationState = {
@@ -1277,26 +1395,37 @@
                                             noRemoderation: true,
                                         };
 
-                                        img.onmousedown = function (e) {
-                                            if (this.hasAttribute('data-moderated')) {
-                                                this.setAttribute('data-no-remoderation', 'true');
+                                        img.onmousedown = function(e) {
+                                            if (this.hasAttribute(
+                                                    'data-moderated')) {
+                                                this.setAttribute(
+                                                    'data-no-remoderation',
+                                                    'true');
                                             }
                                         };
 
                                         if (img.hasAttribute('data-mce-src')) {
                                             img.removeAttribute('data-mce-src');
                                         }
-                                        if (img.hasAttribute('data-mce-selected')) {
-                                            img.removeAttribute('data-mce-selected');
+                                        if (img.hasAttribute(
+                                                'data-mce-selected')) {
+                                            img.removeAttribute(
+                                                'data-mce-selected');
                                         }
-                                        if (img.hasAttribute('data-mce-object')) {
-                                            img.removeAttribute('data-mce-object');
+                                        if (img.hasAttribute(
+                                                'data-mce-object')) {
+                                            img.removeAttribute(
+                                                'data-mce-object');
                                         }
-                                        if (img.hasAttribute('data-mce-placeholder')) {
-                                            img.removeAttribute('data-mce-placeholder');
+                                        if (img.hasAttribute(
+                                                'data-mce-placeholder')) {
+                                            img.removeAttribute(
+                                                'data-mce-placeholder');
                                         }
-                                        if (img.hasAttribute('data-need-moderation')) {
-                                            img.removeAttribute('data-need-moderation');
+                                        if (img.hasAttribute(
+                                                'data-need-moderation')) {
+                                            img.removeAttribute(
+                                                'data-need-moderation');
                                         }
                                     });
                                 }, 100);
@@ -1304,7 +1433,7 @@
                             } catch (e) {
                                 notification.close();
                                 console.error('Lỗi parse JSON:', e, xhr.responseText);
-                                setTimeout(function () {
+                                setTimeout(function() {
                                     tinymce.activeEditor.notificationManager.open({
                                         text: 'Lỗi xử lý phản hồi từ server',
                                         type: 'error',
@@ -1314,10 +1443,10 @@
                             }
                         };
 
-                        xhr.onerror = function () {
+                        xhr.onerror = function() {
                             notification.close();
                             console.error('Lỗi kết nối khi upload');
-                            setTimeout(function () {
+                            setTimeout(function() {
                                 tinymce.activeEditor.notificationManager.open({
                                     text: 'Lỗi kết nối khi tải lên hình ảnh',
                                     type: 'error',
@@ -1347,11 +1476,9 @@
             skin: useDarkMode ? 'oxide-dark' : 'oxide',
             content_css: useDarkMode ? 'dark' : 'default',
             autocorrect_capitalize: true,
-            mergetags_list: [
-                {
+            mergetags_list: [{
                     title: 'Client',
-                    menu: [
-                        {
+                    menu: [{
                             value: 'Client.LastCallDate',
                             title: 'Call date',
                         },
@@ -1363,12 +1490,10 @@
                 },
                 {
                     title: 'Proposal',
-                    menu: [
-                        {
-                            value: 'Proposal.SubmissionDate',
-                            title: 'Submission date',
-                        },
-                    ],
+                    menu: [{
+                        value: 'Proposal.SubmissionDate',
+                        title: 'Submission date',
+                    }, ],
                 },
                 {
                     value: 'Consultant',
@@ -1409,32 +1534,32 @@
         });
 </script>
 <script>
-    setTimeout(function () {
+    setTimeout(function() {
         let error_message = document.querySelectorAll('.error_message');
         error_message.forEach(alert => alert.style.display = 'none');
     }, 155000);
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const imageUpload = document.getElementById('avatarUpload');
         const imagePreview = document.getElementById('avatarPreview');
 
         if (document.querySelector('.avatar-edit')) {
-            document.querySelector('.avatar-edit').addEventListener('click', function () {
+            document.querySelector('.avatar-edit').addEventListener('click', function() {
                 imageUpload.click();
             });
 
-            imageUpload.addEventListener('change', function () {
+            imageUpload.addEventListener('change', function() {
                 if (this.files && this.files[0]) {
                     const formData = new FormData();
                     formData.append('image', this.files[0]);
                     formData.append('_token', "{{ csrf_token() }}");
 
                     fetch("{{ route('profile.upload-avatar') }}", {
-                        method: 'POST',
-                        body: formData,
-                    })
+                            method: 'POST',
+                            body: formData,
+                        })
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error('Error uploading the image!');
@@ -1461,10 +1586,10 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const articleForm = document.querySelector('form[action*="articles"]');
         if (articleForm) {
-            articleForm.addEventListener('submit', function (e) {
+            articleForm.addEventListener('submit', function(e) {
                 if (typeof tinyMCE !== 'undefined') {
                     tinyMCE.triggerSave();
                 }
@@ -1477,7 +1602,9 @@
 
                     e.preventDefault();
 
-                    if (confirm('Bài viết của bạn có ' + window.blockedImages.length + ' hình ảnh không vượt qua kiểm duyệt và sẽ bị xóa khỏi nội dung. Bạn có muốn tiếp tục?')) {
+                    if (confirm('Bài viết của bạn có ' + window.blockedImages.length +
+                            ' hình ảnh không vượt qua kiểm duyệt và sẽ bị xóa khỏi nội dung. Bạn có muốn tiếp tục?'
+                        )) {
                         if (typeof tinyMCE !== 'undefined') {
                             const editor = tinyMCE.get('content');
                             if (editor) {
@@ -1495,7 +1622,8 @@
                                 articleForm.appendChild(blockedImagesInput);
                             }
 
-                            document.getElementById('blocked_images_list').value = JSON.stringify(window.blockedImages);
+                            document.getElementById('blocked_images_list').value = JSON.stringify(window
+                                .blockedImages);
                         }
 
                         document.getElementById('confirmed_submit').value = 'true';

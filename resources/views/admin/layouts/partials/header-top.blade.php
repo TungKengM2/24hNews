@@ -107,13 +107,13 @@
                     class="waves-effect waves-light dropdown-toggle no-border p-5 text-dark hover-white"
                     data-bs-toggle="dropdown" title="User">
                     <img class="avatar rounded-circle"
-                        src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : '/admin/main/../images/user3-128x128.jpg' }}"
+                        src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/default-avatar.png') }}"
                         alt="User Avatar">
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
-                        {{-- <a class="dropdown-item" href="index.html#"><i class="ti-user text-muted me-2"></i>
-                            Profile</a> --}}
+                        <a class="dropdown-item" href="{{route('admin.profile')}}"><i class="ti-user text-muted me-2"></i>
+                            Profile</a>
                         {{-- <a class="dropdown-item" href="index.html#"><i class="ti-wallet text-muted me-2"></i> My
                             Wallet</a>
                         <a class="dropdown-item" href="index.html#"><i class="ti-settings text-muted me-2"></i>

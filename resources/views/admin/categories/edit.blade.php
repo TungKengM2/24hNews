@@ -10,13 +10,13 @@
             <div class="wrapper">
                 <div class="container mt-5 ">
                     <div class="card p-2">
-                        <h2 class="mb-4">Update Category</h2>
+                        <h2 class="mb-4">Cập Nhật Danh Mục</h2>
                         <form action="{{ route('categories.update', $category) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name</label>
+                                <label for="name" class="form-label">Tên danh mục</label>
                                 <input type="text" class="form-control" id="name" name="name"
                                     value="{{ $category->name }}">
                             </div>
@@ -25,11 +25,11 @@
                                     <div class="controls">
                                         <input type="checkbox" id="is_active" name="is_active" value="single"
                                             {{ $category->is_active ? 'checked' : '' }}>
-                                        <label for="is_active">IsActive</label>
+                                        <label for="is_active">Kích hoạt</label>
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">Lưu</button>
                             <a href="{{ route('categories.index') }}" class="btn btn-secondary">Hủy</a>
                         </form>
                     </div>

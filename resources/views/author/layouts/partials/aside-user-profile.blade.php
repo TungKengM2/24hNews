@@ -1,6 +1,6 @@
 <div class="user-profile">
     <div class="profile-pic">
-        <img src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : '/admin/main/../images/user3-128x128.jpg' }}"
+        <img src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/default-avatar.png') }}"
             alt="User Avatar">
         <div class="profile-info">
             <h4>

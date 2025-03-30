@@ -58,6 +58,12 @@
                         Tin Đã Xem
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('user.following') }}">
+                        <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                        Người Đã Theo Dõi
+                    </a>
+                </li>
                 {{-- </ul> --}}
                 </li>
             </ul>

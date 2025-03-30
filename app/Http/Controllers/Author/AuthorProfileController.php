@@ -18,7 +18,7 @@
         {
             $user = auth()->user();
 
-            return view('author.profile.index', compact('user'));
+            return view('admin.profile.index', compact('user'));
         }
 
         public function update(Request $request)
@@ -29,11 +29,13 @@
                 $request->validate([
                     'username' => 'required|string|max:50|unique:users,username,' . $user->user_id . ',user_id',
                     'email' => 'required|email|max:100|unique:users,email,' . $user->user_id . ',user_id',
+                    'description' => 'nullable|string|max:150',
                     'phone' => 'nullable|string|max:15',
                     'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 ]);
 
                 $user->username = $request->input('username');
+                $user->description = $request->input('description');
                 $user->email = $request->input('email');
                 $user->phone = $request->input('phone');
 
@@ -50,7 +52,7 @@
                 $user->save();
 
                 return redirect()
-                    ->route('author.profile')
+                    ->route('admin.profile')
                     ->with('success', 'Profile updated successfully!');
             } catch (Exception $e) {
                 return redirect()
