@@ -60,7 +60,7 @@
             padding: 20px;
             border-radius: 8px;
             background-color: #f9f9f9;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .form-section-title {
@@ -90,7 +90,7 @@
                 <div class="container mt-5 ">
                     <div class="card p-4">
                         <h2 class="mb-4">Tạo Bài Viết Mới</h2>
-                        
+
                         <!-- Hiển thị thông báo lỗi -->
                         @if ($errors->any())
                             <div class="alert alert-danger error_message">
@@ -103,14 +103,14 @@
                         @endif
 
                         <!-- Cảnh báo hình ảnh bị chặn -->
-                        @if(session('blocked_images'))
+                        @if (session('blocked_images'))
                             <div class="alert alert-warning error_message">
                                 <strong>Cảnh báo: Một số hình ảnh đã bị chặn</strong>
                                 <ul>
-                                    @foreach(session('blocked_images') as $image)
+                                    @foreach (session('blocked_images') as $image)
                                         <li>
                                             <strong>{{ $image['filename'] ?? 'Hình ảnh' }}</strong>:
-                                            @if(isset($image['reason']) && is_array($image['reason']))
+                                            @if (isset($image['reason']) && is_array($image['reason']))
                                                 {{ implode(', ', array_values($image['reason'])) }}
                                             @else
                                                 {{ $image['reason'] ?? 'Vi phạm quy định nội dung' }}
@@ -118,18 +118,19 @@
                                         </li>
                                     @endforeach
                                 </ul>
-                                <p>Các hình ảnh vi phạm đã bị xóa khỏi nội dung bài viết. Bạn vẫn có thể lưu bài viết dưới dạng
+                                <p>Các hình ảnh vi phạm đã bị xóa khỏi nội dung bài viết. Bạn vẫn có thể lưu bài viết dưới
+                                    dạng
                                     nháp hoặc xác nhận tiếp tục gửi.</p>
                             </div>
                         @endif
 
                         <!-- Lý do vi phạm -->
-                        @if(session('violation_reasons'))
+                        @if (session('violation_reasons'))
                             <div class="alert alert-warning error_message">
                                 <strong>Lý do vi phạm:</strong>
                                 <ul>
-                                    @if(is_array(session('violation_reasons')))
-                                        @foreach(session('violation_reasons') as $word => $reason)
+                                    @if (is_array(session('violation_reasons')))
+                                        @foreach (session('violation_reasons') as $word => $reason)
                                             <li><strong>{{ $word }}:</strong> {{ $reason }}</li>
                                         @endforeach
                                     @else
@@ -142,21 +143,33 @@
                         <form action="{{ route('author.articles.store') }}" method="POST" enctype="multipart/form-data"
                             id="articleForm">
                             @csrf
-                            
+
                             <!-- Thông tin cơ bản -->
                             <div class="form-section">
                                 <h4 class="form-section-title">Thông tin cơ bản</h4>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="title" class="form-label">Tiêu đề</label>
-                                        <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}"
-                                            required>
+                                        <input type="text" class="form-control" id="title" name="title"
+                                            value="{{ old('title') }}" required>
                                     </div>
 
-                                    <div class="col-md-6 mb-3">
+                                    {{-- <div class="col-md-6 mb-3">
                                         <label for="slug" class="form-label">Đường dẫn</label>
-                                        <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug') }}"
-                                            required>
+                                        <input type="text" class="form-control" id="slug" name="slug"
+                                            value="{{ old('slug') }}" required>
+                                    </div> --}}
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="tags">Chọn hoặc thêm thẻ:</label>
+                                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
+                                            @foreach ($tags as $tag)
+                                                <option value="{{ $tag->tag_id }}"
+                                                    {{ in_array($tag->tag_id, old('tags', [])) ? 'selected' : '' }}>
+                                                    {{ $tag->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
 
@@ -166,20 +179,9 @@
                                         <select name="category_id" class="form-control">
                                             @foreach ($categories as $category)
                                                 @if ($category->is_active)
-                                                    <option value="{{ $category->category_id }}">{{ $category->name }}</option>
+                                                    <option value="{{ $category->category_id }}">{{ $category->name }}
+                                                    </option>
                                                 @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="tags">Chọn hoặc thêm thẻ:</label>
-                                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
-                                            @foreach ($tags as $tag)
-                                                <option
-                                                    value="{{ $tag->tag_id }}" {{ in_array($tag->tag_id, old('tags', [])) ? 'selected' : '' }}>
-                                                    {{ $tag->name }}
-                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -192,32 +194,33 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="thumbnail_url" class="form-label">Chọn ảnh đại diện</label>
-                                        <input type="file" class="form-control @error('thumbnail_url') is-invalid @enderror"
+                                        <input type="file"
+                                            class="form-control @error('thumbnail_url') is-invalid @enderror"
                                             id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
 
                                         @error('thumbnail_url')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
                                         @enderror
-                                        
+
                                         @if (session('thumbnail_reasons'))
                                             <div class="alert alert-warning mt-2">
                                                 <strong>Ảnh đại diện vi phạm quy định!</strong>
                                                 <ul>
-                                                    @foreach(session('thumbnail_reasons') as $key => $reason)
+                                                    @foreach (session('thumbnail_reasons') as $key => $reason)
                                                         <li>{{ $reason }}</li>
                                                     @endforeach
                                                 </ul>
                                                 <p>Vui lòng chọn ảnh đại diện khác phù hợp với quy định.</p>
                                             </div>
                                         @endif
-                                        
+
                                         @if (old('thumbnail_url'))
                                             <p>File đã chọn trước đó: {{ old('thumbnail_url') }}</p>
                                         @endif
                                     </div>
-                                    
+
                                     <div class="col-md-6">
                                         <div id="image-preview-container" style="display: none;">
                                             <img id="image-preview" src="#" alt="Xem trước" class="img-fluid mb-2">
@@ -237,14 +240,13 @@
                                 <h4 class="form-section-title">Nội dung bài viết</h4>
                                 <div class="mb-3">
                                     <label for="content" class="form-label">Nội dung</label>
-                                    @if(session()->has('violations') && !empty(session('violations')))
+                                    @if (session()->has('violations') && !empty(session('violations')))
                                         <textarea id="full-featured" name="content"
-                                                style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                                            style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
                                         {!! highlightWords(old('content', isset($article) ? $article->content : ''), session('violations')) !!}
                                         </textarea>
                                     @else
-                                        <textarea id="full-featured" name="content"
-                                                style="height: 800px;">
+                                        <textarea id="full-featured" name="content" style="height: 800px;">
                                 {{ old('content', isset($article) ? $article->content : '') }}
                                 </textarea>
                                     @endif
@@ -265,7 +267,7 @@
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
                         <script>
-                            $(document).ready(function () {
+                            $(document).ready(function() {
                                 $('#tags').select2({
                                     tags: true,
                                     tokenSeparators: [','],
@@ -275,7 +277,7 @@
                             });
 
                             // Lưu nháp bài viết
-                            document.getElementById('saveDraft').addEventListener('click', function () {
+                            document.getElementById('saveDraft').addEventListener('click', function() {
                                 document.getElementById('articleStatus').value = 'draft';
                                 document.getElementById('articleForm').setAttribute('novalidate', 'novalidate'); // Bỏ qua required
                                 document.getElementById('articleForm').submit();
@@ -286,12 +288,12 @@
                             const formElements = document.getElementById('articleForm').elements;
 
                             for (let i = 0; i < formElements.length; i++) {
-                                formElements[i].addEventListener('change', function () {
+                                formElements[i].addEventListener('change', function() {
                                     isFormEdited = true;
                                 });
                             }
 
-                            window.addEventListener('beforeunload', function (e) {
+                            window.addEventListener('beforeunload', function(e) {
                                 if (isFormEdited) {
                                     const confirmationMessage =
                                         'Bạn có chắc chắn muốn rời khỏi trang? Những thay đổi chưa được lưu sẽ bị mất.';
@@ -301,7 +303,7 @@
                             });
 
                             // Tạo slug tự động
-                            document.getElementById('title').addEventListener('input', function () {
+                            document.getElementById('title').addEventListener('input', function() {
                                 let title = this.value.trim();
                                 let slug = title.toLowerCase()
                                     .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Loại bỏ dấu tiếng Việt
@@ -326,13 +328,13 @@
                             let isImageValid = false;
                             const submitButton = document.getElementById('submitButton');
 
-                            document.getElementById('thumbnail_url').addEventListener('change', function (e) {
+                            document.getElementById('thumbnail_url').addEventListener('change', function(e) {
                                 const file = e.target.files[0];
                                 if (file) {
                                     isImageValid = false;
 
                                     const reader = new FileReader();
-                                    reader.onload = function (e) {
+                                    reader.onload = function(e) {
                                         document.getElementById('image-preview').src = e.target.result;
                                         document.getElementById('image-preview-container').style.display = 'block';
                                     };
@@ -343,12 +345,12 @@
                                     formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
 
                                     fetch('/api/check-image-moderation', {
-                                        method: 'POST',
-                                        body: formData,
-                                        headers: {
-                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                        },
-                                    })
+                                            method: 'POST',
+                                            body: formData,
+                                            headers: {
+                                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                            },
+                                        })
                                         .then(response => {
                                             if (!response.ok) {
                                                 throw new Error('Lỗi kết nối: ' + response.status);
@@ -364,7 +366,8 @@
 
                                             if (result.status === 'error') {
                                                 errorDiv.style.display = 'block';
-                                                errorMessage.textContent = result.message || 'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
+                                                errorMessage.textContent = result.message ||
+                                                    'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
                                                 isImageValid = false;
                                                 submitButton.disabled = true;
                                             } else if (result.violation_level !== 'none') {
@@ -400,7 +403,7 @@
                             });
 
                             const form = document.getElementById('articleForm');
-                            form.addEventListener('submit', function (e) {
+                            form.addEventListener('submit', function(e) {
                                 const thumbnailInput = document.getElementById('thumbnail_url');
                                 if (document.getElementById('articleStatus').value === 'draft') {
                                     return true;
@@ -418,19 +421,19 @@
 
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
                         <script>
-                            document.getElementById('thumbnail_url').addEventListener('change', function (event) {
+                            document.getElementById('thumbnail_url').addEventListener('change', function(event) {
                                 const file = event.target.files[0];
                                 if (file) {
                                     const reader = new FileReader();
-                                    reader.onload = function (e) {
+                                    reader.onload = function(e) {
                                         const arrayBuffer = e.target.result;
                                         mammoth.extractRawText({
-                                            arrayBuffer: arrayBuffer,
-                                        })
-                                            .then(function (result) {
+                                                arrayBuffer: arrayBuffer,
+                                            })
+                                            .then(function(result) {
                                                 document.getElementById('editor').innerHTML = result.value;
                                             })
-                                            .catch(function (error) {
+                                            .catch(function(error) {
                                                 console.error('Lỗi đọc file:', error);
                                             });
                                     };

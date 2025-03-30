@@ -44,29 +44,39 @@
                     </a>
                     <ul class="dropdownMenu " style="margin-top: 0 ; margin-top: -50px;" aria-labelledby="">
                         <li><a class="dropdown-item" href="#">
-                            <i class="la la-bell fs-4"></i> Notifications
-                        </a></li>
+                                <i class="la la-bell fs-4"></i> Notifications
+                            </a></li>
                     </ul>
                 </li>
-                
+
                 <li class="nav-item dropdown">
                     <a class="icon-link">
                         <i class="la la-user fs-4"></i>
                     </a>
                     <ul class="dropdownMenu " style="margin-top: 0 ; margin-top: -50px;" aria-labelledby="">
-                        <li><a class="dropdown-item" href="{{ route('loginuser') }} " >
-                            <i class="la la-tv fs-4"></i> Dashboard
-                        </a></li>
-                        <li><a class="dropdown-item"href="" >
-                            <i class="la la-sign-out fs-4"></i> Đăng Xuất
-                        </a></li>
+                        <li><a class="dropdown-item" href="{{ route('loginuser') }} ">
+                                <i class="la la-tv fs-4"></i> Dashboard
+                            </a></li>
+                        @auth
+                            <li>
+                                <a class="dropdown-item" href="#"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="la la-sign-out fs-4"></i> Đăng Xuất
+                                </a>
+                            </li>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        @endauth
+
+
                     </ul>
                 </li>
 
-                     <a class="icon-link search-btn-style1">
-                         <i class="la la-search fs-4 sOpen-btn"></i>
-                         <i class="la la-close fs-4 sClose-btn"></i>
-                     </a>
+                <a class="icon-link search-btn-style1">
+                    <i class="la la-search fs-4 sOpen-btn"></i>
+                    <i class="la la-close fs-4 sClose-btn"></i>
+                </a>
             </div>
 
 

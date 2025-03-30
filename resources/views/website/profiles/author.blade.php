@@ -47,7 +47,7 @@
                                                 </div>
                                                 <span class="text-muted">({{ number_format($averageRating, 1) }})</span>
                                             </div>
-                                            
+
                                             <div class="description mb-4">
                                                 <p class="lead mb-3">{{ $author->description ?? 'Không có mô tả trang cá nhân' }}</p>
                                                 <div class="d-flex flex-wrap align-items-center text-muted">
@@ -62,7 +62,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="follow">
                                                 @if (auth()->check() && auth()->id() !== $author->user_id)
                                                     @if (auth()->user()->following()->where('following_id', $author->user_id)->exists())
@@ -82,7 +82,7 @@
                                                     @endif
                                                 @endif
                                             </div>
-                                            
+
                                             <div class="social-links mt-3">
                                                 <a href="#" class="btn btn-sm btn-outline-primary me-2"><i class="la la-facebook-f"></i></a>
                                                 <a href="#" class="btn btn-sm btn-outline-info me-2"><i class="la la-twitter"></i></a>
@@ -127,7 +127,7 @@
                                                     </a>
                                                 </h4>
                                                 <p class="card-text text-muted">
-                                                    {{ Str::limit(strip_tags($article->content), 120) }}
+                                                    {!! Str::limit(strip_tags($article->content), 120) !!}
                                                 </p>
                                             </div>
                                             <div class="card-footer bg-white border-0 pt-0">
@@ -146,7 +146,7 @@
                                     </div>
                                 @endforeach
                             </div>
-                            
+
                             <div class="text-center mt-4">
                                 <a href="#" class="btn btn-outline-primary">Xem thêm bài viết</a>
                             </div>

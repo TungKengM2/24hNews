@@ -21,24 +21,24 @@
             border-radius: 5px;
             font-size: 14px;
         }
-        
+
         .form-section {
             margin-bottom: 25px;
         }
-        
+
         .form-section-title {
             margin-bottom: 15px;
             font-weight: 600;
             border-bottom: 1px solid #eee;
             padding-bottom: 8px;
         }
-        
+
         .action-buttons {
             margin-top: 20px;
             display: flex;
             gap: 10px;
         }
-        
+
         .back-button {
             margin-left: auto;
         }
@@ -86,22 +86,37 @@
                             id="articleForm">
                             @csrf
                             @method('PUT')
-                            
+
                             <!-- Thông tin cơ bản -->
                             <div class="form-section">
                                 <h4 class="form-section-title">Thông tin cơ bản</h4>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="title" class="form-label">Tiêu đề</label>
-                                        <input type="text" class="form-control" id="title" name="title" value="{{ $article->title }}" required>
+                                        <input type="text" class="form-control" id="title" name="title"
+                                            value="{{ $article->title }}" required>
                                     </div>
-                                    
-                                    <div class="col-md-6 mb-3">
+
+                                    {{-- <div class="col-md-6 mb-3">
                                         <label for="slug" class="form-label">Đường dẫn</label>
-                                        <input type="text" class="form-control" id="slug" name="slug" value="{{ $article->slug }}" required>
+                                        <input type="text" class="form-control" id="slug" name="slug"
+                                            value="{{ $article->slug }}" required>
+                                    </div> --}}
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="tags">Chọn hoặc thêm thẻ:</label>
+                                        <select name="tags[]" id="tags" class="form-control select2"
+                                            multiple="multiple">
+                                            @foreach ($tags as $tag)
+                                                <option value="{{ $tag->tag_id }}"
+                                                    @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
+                                                    {{ $tag->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Danh mục</label>
@@ -120,31 +135,24 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    
-                                    <div class="col-md-6 mb-3">
-                                        <label for="tags">Chọn hoặc thêm thẻ:</label>
-                                        <select name="tags[]" id="tags" class="form-control select2" multiple="multiple">
-                                            @foreach ($tags as $tag)
-                                                <option value="{{ $tag->tag_id }}" @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
-                                                    {{ $tag->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+
+
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label for="thumbnail_url" class="form-label">Ảnh đại diện</label>
-                                    <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url" accept="image/*">
+                                    <input type="file" class="form-control" id="thumbnail_url" name="thumbnail_url"
+                                        accept="image/*">
                                     @if ($article->thumbnail_url)
                                         <div class="mt-2">
                                             <p>Ảnh hiện tại:</p>
-                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Ảnh hiện tại" width="100">
+                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Ảnh hiện tại"
+                                                width="100">
                                         </div>
                                     @endif
                                 </div>
                             </div>
-                            
+
                             <!-- Nội dung bài viết -->
                             <div class="form-section">
                                 <h4 class="form-section-title">Nội dung bài viết</h4>
@@ -158,7 +166,8 @@
 
                             <div class="action-buttons">
                                 <button type="submit" class="btn btn-primary">Cập nhật</button>
-                                <a href="{{ route('articles.index') }}" class="btn btn-default back-button">Quay Lại Danh Sách</a>
+                                <a href="{{ route('articles.index') }}" class="btn btn-default back-button">Quay Lại Danh
+                                    Sách</a>
                             </div>
                         </form>
 
