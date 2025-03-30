@@ -77,18 +77,9 @@
                                         <input type="text" class="form-control" id="title" name="title" required>
                                     </div>
 
-                                    {{-- <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <label for="slug" class="form-label">Đường dẫn</label>
                                         <input type="text" class="form-control" id="slug" name="slug" required>
-                                    </div> --}}
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="tags">Chọn hoặc thêm thẻ:</label>
-                                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
-                                            @foreach ($tags as $tag)
-                                                <option value="{{ $tag->tag_id }}">{{ $tag->name }}</option>
-                                            @endforeach
-                                        </select>
                                     </div>
                                 </div>
 
@@ -106,14 +97,14 @@
                                         </select>
                                     </div>
 
-                                    {{-- <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <label for="tags">Chọn hoặc thêm thẻ:</label>
                                         <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                                             @foreach ($tags as $tag)
                                                 <option value="{{ $tag->tag_id }}">{{ $tag->name }}</option>
                                             @endforeach
                                         </select>
-                                    </div> --}}
+                                    </div>
                                 </div>
 
                                 <div class="mb-3">
