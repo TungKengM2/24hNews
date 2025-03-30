@@ -15,6 +15,7 @@
 
     @include('admin.layouts.partials.css')
 
+
 </head>
 
 <body class="hold-transition light-skin sidebar-mini theme-primary fixed">

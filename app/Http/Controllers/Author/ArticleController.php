@@ -637,13 +637,27 @@ class ArticleController extends Controller
         );
     }
 
-    public function hide(Article $article)
+    /**
+     * Ẩn/hiện bài viết
+     */
+    public function toggleVisibility(Article $article)
     {
-        $article->status = 'draft';
-        $article->save();
-        return redirect()
-        ->route('author.articles.index')
-        ->with('success', 'Đã ẩn bài viết thành công!');
+        if ($article->author_id !== auth()->id()) {
+            return redirect()->back()->with('error', 'Bạn không có quyền thay đổi bài viết này.');
+        }
+
+        // Nếu trạng thái là published, đổi thành archived và ngược lại
+        if ($article->status === 'published') {
+            $article->update(['status' => 'archived']);
+            $message = "Bài viết đã được ẩn thành công.";
+        } elseif ($article->status === 'archived') {
+            $article->update(['status' => 'published']);
+            $message = "Bài viết đã được hiện thành công.";
+        } else {
+            return redirect()->back()->with('error', "Chỉ có thể ẩn/hiện bài viết đã xuất bản hoặc đã ẩn.");
+        }
+
+        return redirect()->route('author.articles.index')->with('success', $message);
     }
     
     public function destroy(Article $article)

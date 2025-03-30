@@ -20,7 +20,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-<script src="https://cdn.tiny.cloud/1/hgw2cy0h3y0bv8k1p3imfstgke1x35xaz7rrfqrhigf3tx2j/tinymce/7/tinymce.min.js"
+<script src="https://cdn.tiny.cloud/1/{{ env('TINYMCE_API_KEY') }}/tinymce/7/tinymce.min.js"
     referrerpolicy="origin"></script>
 <script>
     const fetchApi = import(

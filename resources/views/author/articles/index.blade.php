@@ -188,14 +188,17 @@
                                                             <i class="si-pencil si"></i>
                                                         </a>
 
-                                                        <form action="{{ route('author.articles.hide', $article) }}" method="POST" class="d-inline">
+                                                        @if (in_array($article->status, ['published', 'archived']))
+                                                        <form action="{{ route('author.articles.toggle-visibility', $article) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('PUT')
-                                                            <button class="btn btn-secondary btn-sm" title="Ẩn bài viết"
-                                                                onclick="return confirm('Bạn có chắc chắn muốn ẩn bài viết này không?')">
-                                                                <i class="fa fa-eye-slash"></i>
+                                                            <button class="btn btn-secondary btn-sm" 
+                                                                title="{{ $article->status === 'published' ? 'Ẩn bài viết' : 'Hiện bài viết' }}"
+                                                                onclick="return confirm('Bạn có chắc chắn muốn {{ $article->status === 'published' ? 'ẩn' : 'hiện' }} bài viết này không?')">
+                                                                <i class="fa {{ $article->status === 'published' ? 'fa-eye-slash' : 'fa-eye' }}"></i>
                                                             </button>
                                                         </form>
+                                                        @endif
 
                                                         <form action="{{ route('author.articles.destroy', $article) }}"
                                                             method="POST" class="d-inline">
