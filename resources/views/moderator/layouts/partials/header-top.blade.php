@@ -60,12 +60,17 @@
             </li> --}}
             <!-- Notifications -->
             <li class="dropdown notifications-menu" style="position: relative;">
-                <a href="index.html#"
+                <a href="#"
                     class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
                     data-bs-toggle="dropdown" title="Notifications" style="position: relative; display: inline-block;">
                     <i data-feather="bell"></i>
                     @php
-                        $pendingCount = \App\Models\Article::where('status', 'pending')->count();
+                        // Chỉ đếm bài viết thuộc danh mục moderator quản lý
+                        $moderator = auth()->user();
+                        $categoryIds = $moderator->categories()->pluck('category_id');
+                        $pendingCount = \App\Models\Article::where('status', 'pending')
+                                        ->whereIn('category_id', $categoryIds)
+                                        ->count();
                     @endphp
                     @if ($pendingCount > 0)
                         <span class="badge badge-danger"
@@ -89,18 +94,35 @@
                             <li>
                                 @if ($pendingCount > 0)
                                     <a href="{{ route('moderator.list-article') }}">
+                                        <i class="fas fa-file-alt text-warning"></i>
                                         {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
+                                    </a>
+                                @else
+                                    <a href="javascript:void(0)">
+                                        <i class="fas fa-check-circle text-success"></i>
+                                        Không có bài viết chờ duyệt
                                     </a>
                                 @endif
                             </li>
+                            <!-- Thêm các thông báo khác nếu cần -->
                         </ul>
                     </li>
                     <li class="footer">
-                        <a href="index.html#">View all</a>
+                        <a href="{{ route('moderator.list-article') }}">Xem danh sách bài viết</a>
                     </li>
                 </ul>
             </li>
 
+            <script>
+
+
+
+            // Gọi hàm mỗi 60 giây
+            setInterval(refreshNotificationCount, 60000);
+
+            // Gọi ngay khi trang load
+            document.addEventListener('DOMContentLoaded', refreshNotificationCount);
+            </script>
             <!-- User Account-->
             <li class="dropdown user user-menu">
                 <a href="index.html#"

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -10,6 +11,9 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Notifications\HasDatabaseNotifications;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Notifications\DatabaseNotification;
+use App\Observers\UserObserver;
+use App\Models\Category;
+
 
 class User extends Authenticatable implements CanResetPasswordContract
 {
@@ -92,5 +96,14 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function followedArticles()
     {
         return Article::whereIn('author_id', $this->following()->pluck('users.id'))->where('status', 'published')->get();
+    }
+    protected static function boot()
+    {
+        parent::boot();
+        static::observe(UserObserver::class);
+    }
+    public function categories()
+    {
+        return $this->hasMany(Category::class, 'moderator_id', 'user_id');
     }
 }

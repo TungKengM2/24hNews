@@ -198,6 +198,10 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     Route::patch('/articles/{article}/approve', [ModeratorArticleController::class, 'approve'])->name('moderator.articles.approve');
 
 
+    Route::get('/moderator/notifications', [NotificationController::class, 'index'])
+    ->middleware(['auth', 'moderator'])
+    ->name('moderator.notifications');
+
     // Sửa lại route reject (bỏ 'moderator/' trong URL)
     Route::patch('/articles/{article}/reject', [ModeratorArticleController::class, 'reject'])->name('moderator.articles.reject');
 
