@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\PendingArticleNotification;
 
 class NotificationController extends Controller
 {
@@ -13,9 +13,15 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        $notifications = Auth::user()
-            ->notifications()
-            ->where('type', 'App\Notifications\NewArticleFromFollowedAuthor')
+        $user = Auth::user();
+
+        // Lấy cả 2 loại thông báo
+        $notifications = $user->notifications()
+            ->where(function($query) {
+                $query->where('type', 'App\Notifications\NewArticleFromFollowedAuthor')
+                      ->orWhere('type', 'App\Notifications\PendingArticleNotification');
+            })
+            ->orderBy('created_at', 'desc')
             ->paginate(15);
 
         return view('notifications.index', compact('notifications'));
@@ -55,5 +61,29 @@ class NotificationController extends Controller
     {
         $count = Auth::user()->unreadNotifications->count();
         return response()->json(['count' => $count]);
+    }
+
+    /**
+     * Lấy thông báo bài viết cần duyệt (API)
+     */
+    public function pendingArticles()
+    {
+        $notifications = Auth::user()
+            ->notifications()
+            ->where('type', 'App\Notifications\PendingArticleNotification')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get()
+            ->map(function ($notification) {
+                return [
+                    'id' => $notification->id,
+                    'message' => $notification->data['message'],
+                    'link' => $notification->data['link'],
+                    'read_at' => $notification->read_at,
+                    'time' => $notification->created_at->diffForHumans()
+                ];
+            });
+
+        return response()->json($notifications);
     }
 }
