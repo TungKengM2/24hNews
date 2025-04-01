@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Author;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\ArticleView;
-use App\Models\Comment;
-use App\Models\User;
+use App\Models\Comment; // dat them
+use App\Models\User; // dat them
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB; // dat them
+use Carbon\Carbon; // dat them
+use Illuminate\Support\Facades\Schema; // dat them
 
 class AuthorDashboard extends Controller
 {
@@ -45,6 +45,7 @@ class AuthorDashboard extends Controller
                 return [$item->date => $item->views];
             });
 
+        // dat them
         // Get follower count
         $followerCount = DB::table('follows')
             ->where('following_id', $user->user_id)

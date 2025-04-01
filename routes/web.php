@@ -503,3 +503,6 @@ Route::post('/admin/tinymce/upload', [App\Http\Controllers\Admin\TinyMCEUploadCo
     ->name('admin.tinymce.upload');
 Route::get('/admin/tinymce/clear-blocked-images', [App\Http\Controllers\Admin\TinyMCEUploadController::class, 'clearBlockedImages'])
     ->name('admin.tinymce.clear-blocked-images');
+
+// Thêm route này vào phần admin routes dat thêm
+Route::get('/admin/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('admin.dashboard');
