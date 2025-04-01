@@ -47,6 +47,8 @@ class ArticleController extends Controller
                     );
                 } elseif ($filter === 'no_category') {
                     $query->whereNull('category_id');
+                } elseif ($filter === 'archived') {
+                    $query->where('status', 'archived');
                 }
             })
             ->orderBy('created_at', 'desc')
