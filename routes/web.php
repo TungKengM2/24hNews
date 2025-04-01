@@ -406,14 +406,11 @@ Route::middleware(['auth'])->group(function () {
 // 🚀 Khu vực dành riêng cho Admin (role_id = 1)
 
 Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
-    // 🏠 Admin Dashboard
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })
+    // 🏠 Admin Dashboard - Thay đổi route này để gọi đến AdminController
+    Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])
         ->name('admin.dashboard');
     
-    // Thêm route này vào phần admin routes dat thêm
-    Route::get('/admin/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('admin.dashboard');
+   
 
     Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 
