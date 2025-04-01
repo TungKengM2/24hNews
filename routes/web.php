@@ -260,6 +260,9 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::resource('articles', AuthorArticleController::class)->names('author.articles');
 
+    Route::put('/articles/{article}/toggle-visibility', [AuthorArticleController::class, 'toggleVisibility'])
+    ->name('author.articles.toggle-visibility');
+    
     Route::post('/articles/upload', [AuthorArticleController::class, 'uploadImage',])->name('author.articles.upload');
 
     Route::get('/articles/search', [AuthorArticleController::class, 'search'])->name('author.articles.search');
@@ -451,6 +454,8 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/articles/approves', [ArticleController::class, 'Approves'])->name('admin.articles.approves');
 
     Route::patch('/articles/{article}/approve', [ArticleController::class, 'approve'])->name('articles.approve');
+    
+    Route::put('/articles/{article}/toggle-visibility', [ArticleController::class, 'toggleVisibility'])->name('articles.toggle-visibility');
 
     Route::resource('articles', ArticleController::class);
 
@@ -486,6 +491,13 @@ Route::get('auth/{provider}', [SocialAuthController::class, 'redirectToProvider'
 
 Route::get('auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback']);
 
-Route::post('author/tinymce/upload', [TinyMCEUploadController::class, 'uploadImage']);
+Route::post('/author/tinymce/upload', [App\Http\Controllers\Author\TinyMCEUploadController::class, 'uploadImage'])
+    ->name('author.tinymce.upload');
+Route::get('/tinymce/clear-blocked-images', [App\Http\Controllers\Author\TinyMCEUploadController::class, 'clearBlockedImages'])
+    ->name('author.tinymce.clear-blocked-images');
 
-Route::get('tinymce/clear-blocked-images', [TinyMCEUploadController::class, 'clearBlockedImages']);
+// TinyMCE routes cho admin
+Route::post('/admin/tinymce/upload', [App\Http\Controllers\Admin\TinyMCEUploadController::class, 'uploadImage'])
+    ->name('admin.tinymce.upload');
+Route::get('/admin/tinymce/clear-blocked-images', [App\Http\Controllers\Admin\TinyMCEUploadController::class, 'clearBlockedImages'])
+    ->name('admin.tinymce.clear-blocked-images');
