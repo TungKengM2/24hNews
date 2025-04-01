@@ -411,6 +411,9 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
         return view('admin.dashboard');
     })
         ->name('admin.dashboard');
+    
+    // Thêm route này vào phần admin routes dat thêm
+    Route::get('/admin/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('admin.dashboard');
 
     Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 
@@ -504,5 +507,4 @@ Route::post('/admin/tinymce/upload', [App\Http\Controllers\Admin\TinyMCEUploadCo
 Route::get('/admin/tinymce/clear-blocked-images', [App\Http\Controllers\Admin\TinyMCEUploadController::class, 'clearBlockedImages'])
     ->name('admin.tinymce.clear-blocked-images');
 
-// Thêm route này vào phần admin routes dat thêm
-Route::get('/admin/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('admin.dashboard');
+
