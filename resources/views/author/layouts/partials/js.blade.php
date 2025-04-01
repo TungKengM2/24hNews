@@ -1663,3 +1663,69 @@
         }
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Interaction stats chart
+        const interactionData = @json($interactionData ?? []);
+        
+        const options = {
+            series: [{
+                name: 'Lượt xem',
+                data: interactionData.views ?? []
+            }, {
+                name: 'Bình luận',
+                data: interactionData.comments ?? []
+            }, {
+                name: 'Lượt thích',
+                data: interactionData.likes ?? []
+            }],
+            chart: {
+                type: 'area',
+                height: 250,
+                stacked: false,
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    opacityFrom: 0.6,
+                    opacityTo: 0.1,
+                }
+            },
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'center'
+            },
+            xaxis: {
+                categories: interactionData.dates ?? ['Không có dữ liệu'],
+                labels: {
+                    rotate: -45,
+                    rotateAlways: false
+                }
+            },
+            colors: ['#0090e7', '#00d97e', '#f7b731'],
+            tooltip: {
+                shared: true
+            }
+        };
+        
+        if (!interactionData || !interactionData.dates || interactionData.dates.length === 0) {
+            document.getElementById('interaction-stats-chart').innerHTML = 
+                '<div class="text-center p-4">Không có dữ liệu tương tác</div>';
+        } else {
+            const chart = new ApexCharts(document.querySelector("#interaction-stats-chart"), options);
+            chart.render();
+        }
+    });
+</script>
+
