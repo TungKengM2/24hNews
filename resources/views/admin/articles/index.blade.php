@@ -72,6 +72,9 @@
                                                 <option value="no_category"
                                                     {{ request('filter') == 'no_category' ? 'selected' : '' }}>Bài viết
                                                     không có danh mục</option>
+                                                <option value="archived"
+                                                    {{ request('filter') == 'archived' ? 'selected' : '' }}>Bài viết
+                                                    đã ẩn</option>
                                             </select>
                                         </div>
                                     </form>

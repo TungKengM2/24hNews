@@ -50,6 +50,9 @@ class ArticleController extends Controller
         } elseif ($filter === 'no_category') {
             // Lấy bài viết không có danh mục (category_id thực sự NULL)
             $query->whereNull('category_id');
+        } elseif ($filter === 'archived') {
+            // Lấy bài viết đã ẩn (status = 'archived')
+            $query->where('status', 'archived');
         }
 
         $articles = $query->paginate(10);
