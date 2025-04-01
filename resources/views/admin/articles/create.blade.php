@@ -1,20 +1,9 @@
 @extends('admin.layouts.master')
 
-@section('title')
-    Thêm Mới Bài Viết
-@endsection
-
 @section('head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- CKBox -->
-    <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
-    <!-- TinyMCE -->
-    <script src="https://cdn.tiny.cloud/1/{{ env('TINYMCE_API_KEY') }}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-    <!-- Mammoth (Word to HTML) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
-    <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- Custom Styles -->
+
+    <!-- Style -->
     <style>
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
             background-color: #c3bebe;
@@ -23,31 +12,6 @@
             padding: 5px 10px;
             border-radius: 5px;
             font-size: 14px;
-        }
-
-        .form-section {
-            margin-bottom: 25px;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .form-section-title {
-            margin-bottom: 15px;
-            font-weight: 600;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 8px;
-        }
-
-        .action-buttons {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .back-button {
-            margin-left: auto;
         }
 
         #image-preview-container {
@@ -90,18 +54,45 @@
         .violation-none {
             color: #28a745;
         }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-section-title {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+        }
     </style>
 @endsection
 
+@section('title')
+    Thêm Mới Bài Viết
+@endsection
+
 @section('content')
+    <!-- Main content -->
     <div class="content-wrapper">
         <div class="container-full">
             <div class="wrapper">
                 <div class="container mt-5 ">
-                    <div class="card p-2">
-                        <h2 class="mb-4">Thêm Bài Viết Mới</h2>
+                    <div class="card p-4">
+                        <h2 class="mb-4">Tạo Bài Viết Mới</h2>
+
                         @if ($errors->any())
-                            <div class="alert alert-danger">
+                            <div class="alert alert-danger error_message">
                                 <ul>
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
@@ -126,7 +117,8 @@
                                     @endforeach
                                 </ul>
                                 <p>Các hình ảnh vi phạm đã bị xóa khỏi nội dung bài viết. Bạn vẫn có thể lưu bài viết dưới
-                                    dạng nháp hoặc xác nhận tiếp tục gửi.</p>
+                                    dạng
+                                    nháp hoặc xác nhận tiếp tục gửi.</p>
                             </div>
                         @endif
 
@@ -146,21 +138,22 @@
                         @endif
 
                         <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data"
-                            id="articleForm">
+                              id="articleForm">
                             @csrf
 
-                            <!-- Thông tin cơ bản -->
                             <div class="form-section">
                                 <h4 class="form-section-title">Thông tin cơ bản</h4>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="title" class="form-label">Tiêu đề</label>
-                                        <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" required>
+                                        <input type="text" class="form-control" id="title" name="title"
+                                               value="{{ old('title') }}" required>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label for="slug" class="form-label">Đường dẫn</label>
-                                        <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug') }}" required>
+                                        <input type="text" class="form-control" id="slug" name="slug"
+                                               value="{{ old('slug') }}" required>
                                     </div>
                                 </div>
 
@@ -168,11 +161,9 @@
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Danh mục</label>
                                         <select name="category_id" class="form-control">
-                                            <option value="">-- Không có danh mục --</option>
                                             @foreach ($categories as $category)
                                                 @if ($category->is_active)
-                                                    <option value="{{ $category->category_id }}" {{ old('category_id') == $category->category_id ? 'selected' : '' }}>
-                                                        {{ $category->name }}
+                                                    <option value="{{ $category->category_id }}">{{ $category->name }}
                                                     </option>
                                                 @endif
                                             @endforeach
@@ -183,28 +174,30 @@
                                         <label for="tags">Chọn hoặc thêm thẻ:</label>
                                         <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                                             @foreach ($tags as $tag)
-                                                <option value="{{ $tag->tag_id }}" {{ in_array($tag->tag_id, old('tags', [])) ? 'selected' : '' }}>
+                                                <option value="{{ $tag->tag_id }}"
+                                                    {{ in_array($tag->tag_id, old('tags', [])) ? 'selected' : '' }}>
                                                     {{ $tag->name }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
+
                             </div>
 
-                            <!-- Ảnh đại diện -->
                             <div class="form-section">
                                 <h4 class="form-section-title">Ảnh đại diện</h4>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="thumbnail_url" class="form-label">Chọn ảnh đại diện</label>
-                                        <input type="file" class="form-control @error('thumbnail_url') is-invalid @enderror"
-                                            id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
+                                        <input type="file"
+                                               class="form-control @error('thumbnail_url') is-invalid @enderror"
+                                               id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
 
                                         @error('thumbnail_url')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
                                         @enderror
 
                                         @if (session('thumbnail_reasons'))
@@ -227,7 +220,7 @@
                                     <div class="col-md-6">
                                         <div id="image-preview-container" style="display: none;">
                                             <img id="image-preview" src="#" alt="Xem trước" class="img-fluid mb-2">
-                                </div>
+                                        </div>
 
                                         <div id="moderation-result" style="display: none;">
                                             <div id="moderation-error" class="alert alert-danger" style="display: none;">
@@ -238,76 +231,68 @@
                                 </div>
                             </div>
 
-                            <!-- Nội dung bài viết -->
                             <div class="form-section">
                                 <h4 class="form-section-title">Nội dung bài viết</h4>
-                                <div class="mb-3">
-                                    <label for="word_file" class="form-label">Nhập nội dung từ file Word</label>
-                                    <input type="file" class="form-control" id="word_file" accept=".docx">
-                                </div>
-
                                 <div class="mb-3">
                                     <label for="content" class="form-label">Nội dung</label>
                                     @if (session()->has('violations') && !empty(session('violations')))
                                         <textarea id="full-featured" name="content"
-                                            style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
-                                        {!! old('content') !!}
+                                                  style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                                        {!! highlightWords(old('content', isset($article) ? $article->content : ''), session('violations')) !!}
                                         </textarea>
                                     @else
                                         <textarea id="full-featured" name="content" style="height: 800px;">
-                                {{ old('content') }}
-                                        </textarea>
+                                {{ old('content', isset($article) ? $article->content : '') }}
+                                </textarea>
                                     @endif
                                 </div>
                             </div>
 
                             <input type="hidden" name="author_id" value="{{ auth()->id() }}">
                             <input type="hidden" name="status" id="articleStatus" value="pending">
-                            <input type="hidden" name="has_blocked_images" id="has_blocked_images" value="false">
-                            <input type="hidden" name="confirmed_submit" id="confirmed_submit" value="false">
-                            <input type="hidden" name="blocked_images_list" id="blocked_images_list" value="">
 
                             <div class="action-buttons">
-                                <button type="submit" class="btn btn-primary" id="submitButton">Gửi</button>
+                                <button type="submit" class="btn btn-primary" id="submitButton">Gửi đi</button>
                                 <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
-                                <a href="{{ route('articles.index') }}" class="btn btn-default back-button">Quay Lại Danh
-                                    Sách</a>
                             </div>
                         </form>
+
+                        <!-- Scripts -->
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
                         <script>
                             $(document).ready(function() {
                                 $('#tags').select2({
                                     tags: true,
                                     tokenSeparators: [','],
-                                    placeholder: "Chọn hoặc nhập thẻ mới",
-                                    allowClear: true
+                                    placeholder: 'Chọn hoặc nhập thẻ mới',
+                                    allowClear: true,
                                 });
                             });
 
                             document.getElementById('saveDraft').addEventListener('click', function() {
                                 document.getElementById('articleStatus').value = 'draft';
-                                document.getElementById('articleForm').setAttribute('novalidate', 'novalidate');
+                                document.getElementById('articleForm').setAttribute('novalidate', 'novalidate'); // Bỏ qua required
                                 document.getElementById('articleForm').submit();
                             });
 
-                            document.getElementById('word_file').addEventListener('change', function(event) {
-                                const file = event.target.files[0];
-                                if (file) {
-                                    const reader = new FileReader();
-                                    reader.onload = function(e) {
-                                        const arrayBuffer = e.target.result;
-                                        mammoth.convertToHtml({
-                                                arrayBuffer: arrayBuffer
-                                            })
-                                            .then(function(result) {
-                                                tinymce.get('full-featured').setContent(result.value);
-                                            })
-                                            .catch(function(error) {
-                                                console.error('Lỗi đọc file:', error);
-                                            });
-                                    };
-                                    reader.readAsArrayBuffer(file);
+                            // Cảnh báo khi người dùng rời khỏi trang nếu có thay đổi
+                            let isFormEdited = false;
+                            const formElements = document.getElementById('articleForm').elements;
+
+                            for (let i = 0; i < formElements.length; i++) {
+                                formElements[i].addEventListener('change', function() {
+                                    isFormEdited = true;
+                                });
+                            }
+
+                            window.addEventListener('beforeunload', function(e) {
+                                if (isFormEdited) {
+                                    const confirmationMessage =
+                                        'Bạn có chắc chắn muốn rời khỏi trang? Những thay đổi chưa được lưu sẽ bị mất.';
+                                    e.returnValue = confirmationMessage;
+                                    return confirmationMessage;
                                 }
                             });
 
@@ -354,12 +339,12 @@
                                     formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
 
                                     fetch('/api/check-image-moderation', {
-                                            method: 'POST',
-                                            body: formData,
-                                            headers: {
-                                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                            },
-                                        })
+                                        method: 'POST',
+                                        body: formData,
+                                        headers: {
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                        },
+                                    })
                                         .then(response => {
                                             if (!response.ok) {
                                                 throw new Error('Lỗi kết nối: ' + response.status);
@@ -426,8 +411,29 @@
                                 }
                                 return true;
                             });
+                        </script>
 
-                            const useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
+                        <script>
+                            document.getElementById('thumbnail_url').addEventListener('change', function(event) {
+                                const file = event.target.files[0];
+                                if (file) {
+                                    const reader = new FileReader();
+                                    reader.onload = function(e) {
+                                        const arrayBuffer = e.target.result;
+                                        mammoth.extractRawText({
+                                            arrayBuffer: arrayBuffer,
+                                        })
+                                            .then(function(result) {
+                                                document.getElementById('editor').innerHTML = result.value;
+                                            })
+                                            .catch(function(error) {
+                                                console.error('Lỗi đọc file:', error);
+                                            });
+                                    };
+                                    reader.readAsArrayBuffer(file);
+                                }
+                            });
                         </script>
                     </div>
                 </div>
