@@ -138,7 +138,7 @@
                         @endif
 
                         <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data"
-                              id="articleForm">
+                            id="articleForm">
                             @csrf
 
                             <div class="form-section">
