@@ -30,11 +30,6 @@
                                                             <ul>
                                                                 <li class="date"> <i class="la la-clock"></i>
                                                                     {{ $article->created_at->diffForHumans() }}</li>
-                                                                <li class="hide-article ms-3"> 
-                                                                    <a href="#" class="hide-btn" data-article-id="{{ $article->article_id }}" title="Ẩn bài viết này">
-                                                                        <i class="la la-eye-slash"></i> Ẩn
-                                                                    </a>
-                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -53,8 +48,10 @@
             </div>
         </section>
         <!-- ====== end tin tức nổi bật ====== -->
-
-        <!-- ====== start columnist ====== -->
+		
+		
+		
+		 <!-- ====== start columnist ====== -->
         <section class="tc-columnist-style1">
             <div class="container">
                 <div class="content pt-50 pb-50 border-1 border-top brd-gray">
@@ -197,11 +194,6 @@
                                                                 <a href="#"><i class="la la-eye me-2"></i>
                                                                     {{ $article->views ?? 0 }} Lượt Xem</a>
                                                             </li>
-                                                            <li class="hide-article ms-5">
-                                                                <a href="#" class="hide-btn" data-article-id="{{ $article->article_id }}" title="Ẩn bài viết này">
-                                                                    <i class="la la-eye-slash me-2"></i>Ẩn
-                                                                </a>
-                                                            </li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -279,11 +271,6 @@
                                                                     <a href="#"><i
                                                                             class="la la-eye me-2"></i>{{ $article->views }}</a>
                                                                 </li>
-                                                                <li class="hide-article ms-5">
-                                                                    <a href="#" class="hide-btn" data-article-id="{{ $article->article_id }}" title="Ẩn bài viết này">
-                                                                        <i class="la la-eye-slash me-2"></i>Ẩn
-                                                                    </a>
-                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -351,11 +338,6 @@
                                             class="btn btn-sm btn-outline-primary mt-2">
                                             Xem chi tiết <i class="la la-angle-right"></i>
                                         </a>
-                                        @auth
-                                        <a href="#" class="btn btn-sm btn-outline-secondary mt-2 hide-btn" data-article-id="{{ $data['article']->article_id }}" title="Ẩn bài viết này">
-                                            <i class="la la-eye-slash"></i> Ẩn bài viết
-                                        </a>
-                                        @endauth
                                     </div>
                                 </div>
                             </div>

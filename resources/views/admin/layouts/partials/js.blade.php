@@ -382,7 +382,7 @@
                                      formData.append('_token', document.querySelector(
                                          'meta[name="csrf-token"]').getAttribute('content'));
 
-                                     return fetch('/author/tinymce/upload', {
+                                     return fetch('/admin/tinymce/upload', {
                                          method: 'POST',
                                          headers: {
                                              'X-CSRF-TOKEN': document.querySelector(
