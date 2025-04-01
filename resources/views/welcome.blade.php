@@ -62,20 +62,26 @@
                             <div class="columnist-card d-flex align-items-center">
                                 <div
                                     class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                    <img src="{{ $authorData['author']->image ? asset('storage/'.$authorData['author']->image) : asset('/images/default-avatar.png') }}" alt="{{ $authorData['author']->username }}">
+                                    <a href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
+                                        <img src="{{ $authorData['author']->image ? asset('storage/'.$authorData['author']->image) : asset('/images/default-avatar.png') }}" alt="{{ $authorData['author']->username }}">
+                                    </a>
                                 </div>
                                 <div class="info">
                                     <h6 class="name fsz-20px mb-10">
-                                        {{ $authorData['author']->name ?? $authorData['author']->username }}
-                                        <span class="text-warning ms-2">
+                                        <a href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
+                                            {{ $authorData['author']->name ?? $authorData['author']->username }}
+                                        </a>
+                                    </h6>
+                                    <div class="rating mb-1">
+                                        <span class="text-warning">
                                             @for($i = 0; $i < floor($authorData['rating']); $i++)
-                                                <i class="fas fa-star"></i>
+                                                <i class="la la-star" style="color: #ffc107;"></i>
                                             @endfor
                                             @if($authorData['rating'] - floor($authorData['rating']) >= 0.5)
-                                                <i class="fas fa-star-half-alt"></i>
+                                                <i class="la la-star-half-alt" style="color: #ffc107;"></i>
                                             @endif
                                         </span>
-                                    </h6>
+                                    </div>
                                     <div class="jop-title">
                                         <small class="fsz-13px color-999">Chuyên đề</small>
                                         <p class="fsz-13px text-uppercase">{{ $authorData['specializes_in'] }}</p>
