@@ -68,18 +68,39 @@
                         // Chỉ đếm bài viết thuộc danh mục moderator quản lý
                         $moderator = auth()->user();
                         $categoryIds = $moderator->categories()->pluck('category_id');
+
+                        // Đếm bài viết pending
                         $pendingCount = \App\Models\Article::where('status', 'pending')
                                         ->whereIn('category_id', $categoryIds)
                                         ->count();
+
+                        // Đếm bài viết pending quá 1 tiếng
+                        $longPendingCount = \App\Models\Article::where('status', 'pending')
+                                            ->whereIn('category_id', $categoryIds)
+                                            ->where('created_at', '<', now()->subHour())
+                                            ->count();
+
+                        // Tổng số thông báo (mỗi loại tính là 1)
+                        $totalNotifications = ($pendingCount > 0 ? 1 : 0) + ($longPendingCount > 0 ? 1 : 0);
                     @endphp
-                    @if ($pendingCount > 0)
+
+                    <!-- Badge chính - tổng số thông báo -->
+                    @if ($totalNotifications > 0)
                         <span class="badge badge-danger"
                             style="position: absolute; top: 6px; right: 5px; font-size: 10px; padding: 2px 5px; border-radius: 50%; line-height: 1; background: red; color: white;">
+                            {{ $totalNotifications }}
+                        </span>
+                    @endif
+
+                    <!-- Badge phụ - số bài viết pending -->
+                    @if ($pendingCount > 0)
+                        <span class="badge badge-warning"
+                            style="position: absolute; top: -5px; right: -5px; font-size: 8px; padding: 2px 4px; border-radius: 50%; line-height: 1; background: orange; color: white;">
                             {{ $pendingCount }}
                         </span>
                     @endif
                 </a>
-                <ul class="dropdown-menu animated bounceIn">
+                <ul class="dropdown-menu animated bounceIn" >
                     <li class="header">
                         <div class="p-20">
                             <div class="flexbox">
@@ -91,20 +112,32 @@
                     </li>
                     <li>
                         <ul class="menu sm-scrol">
-                            <li>
-                                @if ($pendingCount > 0)
+                            @if ($pendingCount > 0)
+                                <li>
                                     <a href="{{ route('moderator.list-article') }}">
                                         <i class="fas fa-file-alt text-warning"></i>
                                         {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
                                     </a>
-                                @else
+                                </li>
+                            @endif
+
+                            @if ($longPendingCount > 0)
+                                <li>
+                                    <a href="{{ route('moderator.list-article') }}">
+                                        <i class="fas fa-clock text-danger"></i>
+                                        {{ "Cảnh báo: $longPendingCount bài chờ duyệt quá 1 tiếng!" }}
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if ($pendingCount == 0 && $longPendingCount == 0)
+                                <li>
                                     <a href="javascript:void(0)">
                                         <i class="fas fa-check-circle text-success"></i>
                                         Không có bài viết chờ duyệt
                                     </a>
-                                @endif
-                            </li>
-                            <!-- Thêm các thông báo khác nếu cần -->
+                                </li>
+                            @endif
                         </ul>
                     </li>
                     <li class="footer">
