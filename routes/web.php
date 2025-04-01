@@ -315,6 +315,8 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     //     return response()->json(['success' => false], 404);
     // })->middleware('auth');
 
+    Route::get('/author/followers', [AuthorDashboard::class, 'followers'])->name('author.followers');
+
 });
 
 
