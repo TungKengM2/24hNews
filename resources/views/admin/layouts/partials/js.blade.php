@@ -33,6 +33,12 @@
 
 
          <script>
+    window.blockedImages = [];
+    window.checkingImages = false;
+    window.uploadingImages = 0;
+    window.importingFromWord = false;
+    window._premoderatedImages = {};
+    
     const fetchApi = import(
         'https://unpkg.com/@microsoft/fetch-event-source@2.0.1/lib/esm/index.js'
     ).then((module) => module.fetchEventSource);
@@ -42,9 +48,6 @@
     const openai_api_key = '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';
     const useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const isSmallScreen = window.matchMedia('(max-width: 1023.5px)').matches;
-
-    window.blockedImages = [];
-    window.checkingImages = false;
 
     window.blockedImages = window.blockedImages || [];
     window.checkingImages = false;
@@ -300,6 +303,21 @@
                         img.hasAttribute('moderated')) {
                         return false;
                     }
+                    
+                    // Kiểm tra xem ảnh có trong danh sách đã kiểm duyệt trước đó không
+                    const src = img.getAttribute('src');
+                    if (src && window._premoderatedImages && window._premoderatedImages[src]) {
+                        console.log('Ảnh đã được kiểm duyệt trước đó:', src);
+                        // Đánh dấu lại để không cần kiểm duyệt nữa
+                        img.setAttribute('data-moderated', 'true');
+                        img.setAttribute('data-no-remoderation', 'true');
+                        img.setAttribute('moderated', 'true');
+                        img._moderationState = {
+                            moderated: true,
+                            noRemoderation: true,
+                        };
+                        return false;
+                    }
 
                     // Ngay cả ảnh từ storage cũng cần kiểm duyệt nếu chưa được đánh dấu
                     return true;
@@ -307,9 +325,25 @@
 
                 function scanAndProcessImages() {
                     if (window.checkingImages) {
+                        console.log('Đang trong quá trình kiểm duyệt, bỏ qua');
+                        return;
+                    }
+                    
+                    // Nếu đang import từ Word, bỏ qua việc quét
+                    if (window.importingFromWord) {
+                        console.log('Đang import từ Word, bỏ qua việc kiểm duyệt');
                         return;
                     }
 
+                    // Nếu đang có ảnh đang tải lên qua upload handler, bỏ qua việc quét
+                    if (window.uploadingImages && window.uploadingImages > 0) {
+                        console.log('Đang có ' + window.uploadingImages + ' ảnh đang tải lên, bỏ qua việc quét');
+                        return;
+                    }
+
+                    // Khởi tạo danh sách ảnh đã kiểm duyệt nếu chưa tồn tại
+                    window._premoderatedImages = window._premoderatedImages || {};
+                    
                     // Lấy tất cả ảnh chưa được kiểm duyệt (kể cả ảnh từ storage)
                     const images = editor.getBody().querySelectorAll(
                         'img:not([data-moderated]):not([moderated])'
@@ -318,21 +352,58 @@
                     if (images.length === 0) {
                         return;
                     }
+                    
+                    // Kiểm tra xem có ảnh nào đang trong quá trình tải lên không
+                    const uploading = editor.getBody().querySelectorAll('img[data-uploading="true"], img.uploading-via-handler');
+                    if (uploading.length > 0) {
+                        console.log('Có ' + uploading.length + ' ảnh đang được xử lý bởi images_upload_handler, bỏ qua việc kiểm duyệt');
+                        return;
+                    }
+                    
+                    // Lọc ảnh cần kiểm duyệt (bỏ qua những ảnh đã nằm trong danh sách)
+                    const imagesToModerate = [...images].filter(img => {
+                        const src = img.getAttribute('src');
+                        if (src && window._premoderatedImages && window._premoderatedImages[src]) {
+                            console.log('Bỏ qua ảnh đã kiểm duyệt trước đó:', src);
+                            img.setAttribute('data-moderated', 'true');
+                            img.setAttribute('data-no-remoderation', 'true');
+                            img.setAttribute('moderated', 'true');
+                            img._moderationState = {
+                                moderated: true,
+                                noRemoderation: true,
+                            };
+                            return false;
+                        }
+                        // Bỏ qua ảnh blob đang chờ xử lý bởi images_upload_handler
+                        if (src && src.startsWith('blob:') && 
+                            (img.classList.contains('waiting-upload') || 
+                             img.classList.contains('uploading-via-handler') ||
+                             img.hasAttribute('data-uploading'))) {
+                            console.log('Bỏ qua ảnh blob đang chờ xử lý:', src);
+                            return false;
+                        }
+                        return true;
+                    });
+                    
+                    if (imagesToModerate.length === 0) {
+                        console.log('Không có ảnh nào cần kiểm duyệt sau khi lọc');
+                        return;
+                    }
 
-                    console.log('Tìm thấy ' + images.length + ' hình ảnh cần kiểm duyệt trong DOM');
+                    console.log('Tìm thấy ' + imagesToModerate.length + ' hình ảnh cần kiểm duyệt trong DOM');
                     window.checkingImages = true;
 
                     const notification = editor.notificationManager.open({
-                        text: 'Đang kiểm duyệt ' + images.length + ' hình ảnh...',
+                        text: 'Đang kiểm duyệt ' + imagesToModerate.length + ' hình ảnh...',
                         type: 'info',
                         progressBar: true,
                         timeout: false,
                     });
 
                     let processedImages = 0;
-                    const totalImages = images.length;
+                    const totalImages = imagesToModerate.length;
 
-                    [...images].forEach(function(img) {
+                    imagesToModerate.forEach(function(img) {
                         const originalSrc = img.getAttribute('src');
                         
                         // Đánh dấu ảnh đang được kiểm duyệt
@@ -636,6 +707,97 @@
                     });
                 }
 
+                // Thêm xử lý sự kiện Word Import
+                editor.on('WordImported', function(e) {
+                    console.log('Word đã được import xong');
+                    
+                    // Đánh dấu tất cả ảnh từ Word như đã được tải lên
+                    setTimeout(function() {
+                        try {
+                            const wordImages = editor.getBody().querySelectorAll('img:not([data-moderated])');
+                            console.log('Tìm thấy ' + wordImages.length + ' ảnh từ Word cần đánh dấu');
+                            
+                            // Đánh dấu lại tất cả ảnh từ Word
+                            wordImages.forEach(img => {
+                                if (img.src && img.src.indexOf('blob:') !== 0) {
+                                    // Đánh dấu ảnh từ Word đã được tải lên
+                                    img.setAttribute('data-moderated', 'true');
+                                    img.setAttribute('data-no-remoderation', 'true');
+                                    img.setAttribute('moderated', 'true');
+                                    img.setAttribute('data-from-word', 'true');
+                                    img.classList.add('imported-from-word');
+                                    img.classList.remove('waiting-moderation');
+                                    
+                                    // Đánh dấu trong global để không kiểm duyệt lại
+                                    window._premoderatedImages = window._premoderatedImages || {};
+                                    window._premoderatedImages[img.src] = true;
+                                    
+                                    console.log('Đã đánh dấu ảnh từ Word:', img.src);
+                                }
+                            });
+                            
+                            // Hiển thị thông báo import thành công
+                            tinymce.activeEditor.notificationManager.open({
+                                text: 'Đã nhập nội dung từ Word thành công!',
+                                type: 'success',
+                                timeout: 3000,
+                            });
+                        } catch (e) {
+                            console.error('Lỗi khi đánh dấu ảnh từ Word:', e);
+                        }
+                        
+                        // Đánh dấu quá trình import đã kết thúc
+                        window._importingFromWord = false;
+                        window.importingFromWord = false;
+                    }, 500);
+                });
+
+                // Thêm xử lý đặc biệt cho sự kiện PastePreProcess khi paste từ Word
+                editor.on('PastePreProcess', function(e) {
+                    console.log('PastePreProcess event');
+                    
+                    // Kiểm tra nếu paste từ Word
+                    if (e.content && e.content.indexOf('urn:schemas-microsoft-com:office:') !== -1) {
+                        console.log('Phát hiện paste từ Word');
+                        window._pastingFromWord = true;
+                    }
+                });
+
+                // Xử lý sau khi paste nội dung từ Word
+                editor.on('PastePostProcess', function(e) {
+                    console.log('PastePostProcess event');
+                    
+                    if (window._pastingFromWord) {
+                        console.log('Đang xử lý nội dung paste từ Word');
+                        
+                        setTimeout(function() {
+                            try {
+                                const wordImages = editor.getBody().querySelectorAll('img:not([data-moderated])');
+                                console.log('Tìm thấy ' + wordImages.length + ' ảnh từ paste Word cần đánh dấu');
+                                
+                                wordImages.forEach(img => {
+                                    if (img.src && img.src.indexOf('blob:') !== 0) {
+                                        // Đánh dấu ảnh đã được tải lên
+                                        img.setAttribute('data-moderated', 'true');
+                                        img.setAttribute('data-no-remoderation', 'true');
+                                        img.setAttribute('moderated', 'true');
+                                        img.classList.add('pasted-from-word');
+                                        img.classList.remove('waiting-moderation');
+                                        
+                                        // Đánh dấu trong global để không kiểm duyệt lại
+                                        window._premoderatedImages = window._premoderatedImages || {};
+                                        window._premoderatedImages[img.src] = true;
+                                    }
+                                });
+                            } catch (e) {
+                                console.error('Lỗi khi đánh dấu ảnh paste từ Word:', e);
+                            }
+                            
+                            window._pastingFromWord = false;
+                        }, 300);
+                    }
+                });
+
                 editor.on('init', function() {
                     console.log('TinyMCE đã khởi tạo');
 
@@ -818,13 +980,29 @@
                         const div = document.createElement('div');
                         div.innerHTML = e.content;
 
-                        const images = div.querySelectorAll('img:not([data-moderated])');
+                        const images = div.querySelectorAll('img');
                         if (images.length > 0) {
                             console.log('Đánh dấu ' + images.length +
                                 ' hình ảnh trong BeforeSetContent');
 
                             images.forEach(img => {
-                                img.setAttribute('data-need-moderation', 'true');
+                                // Kiểm tra xem ảnh đã kiểm duyệt chưa
+                                const src = img.getAttribute('src');
+                                if (src && window._premoderatedImages && window._premoderatedImages[src]) {
+                                    console.log('Ảnh đã kiểm duyệt sẵn, đánh dấu ngay lập tức:', src);
+                                    img.setAttribute('data-moderated', 'true');
+                                    img.setAttribute('data-no-remoderation', 'true');
+                                    img.setAttribute('moderated', 'true');
+                                    if (!img.hasAttribute('_moderationState')) {
+                                        img._moderationState = {
+                                            moderated: true,
+                                            noRemoderation: true,
+                                        };
+                                    }
+                                } else {
+                                    // Chỉ đánh dấu cần kiểm duyệt nếu chưa được kiểm duyệt
+                                    img.setAttribute('data-need-moderation', 'true');
+                                }
 
                                 if (img.hasAttribute('data-mce-src')) {
                                     img.removeAttribute('data-mce-src');
@@ -847,7 +1025,80 @@
 
                 editor.on('SetContent', function(e) {
                     console.log('SetContent event');
-                    setTimeout(scanAndProcessImages, 100);
+                    
+                    // Nếu đang import từ Word, đợi dài hơn trước khi xử lý
+                    const timeoutDuration = window.importingFromWord ? 1000 : 100;
+                    
+                    // Kiểm tra và đánh dấu ảnh đã xử lý nếu đang import từ Word
+                    if (window.importingFromWord) {
+                        console.log('Đang xử lý nội dung từ Word trong SetContent');
+                        
+                        setTimeout(function() {
+                            try {
+                                // Đánh dấu tất cả ảnh từ Word như đã được kiểm duyệt
+                                const wordImages = editor.getBody().querySelectorAll('img:not([data-moderated])');
+                                if (wordImages.length > 0) {
+                                    console.log('Đánh dấu ' + wordImages.length + ' ảnh đã import từ Word');
+                                    
+                                    wordImages.forEach(img => {
+                                        if (!img.hasAttribute('moderated')) {
+                                            img.setAttribute('data-moderated', 'true');
+                                            img.setAttribute('data-no-remoderation', 'true');
+                                            img.setAttribute('moderated', 'true');
+                                            img.setAttribute('data-from-word', 'true');
+                                            img.classList.add('imported-from-word');
+                                            
+                                            // Đánh dấu trong global để không kiểm duyệt lại
+                                            const src = img.getAttribute('src');
+                                            if (src) {
+                                                window._premoderatedImages = window._premoderatedImages || {};
+                                                window._premoderatedImages[src] = true;
+                                            }
+                                        }
+                                    });
+                                }
+                                
+                                // Đánh dấu quá trình import Word đã kết thúc
+                                window.importingFromWord = false;
+                            } catch (e) {
+                                console.error('Lỗi khi xử lý ảnh từ Word trong SetContent:', e);
+                                window.importingFromWord = false;
+                            }
+                        }, 800);
+                    }
+                    
+                    // Đặt timeout ngắn để đảm bảo DOM đã được cập nhật
+                    setTimeout(function() {
+                        // Đánh dấu lại các ảnh đã kiểm duyệt
+                        if (window._premoderatedImages) {
+                            const allImages = editor.getBody().querySelectorAll('img');
+                            let markedCount = 0;
+                            
+                            allImages.forEach(img => {
+                                const src = img.getAttribute('src');
+                                if (src && window._premoderatedImages[src]) {
+                                    img.setAttribute('data-moderated', 'true');
+                                    img.setAttribute('data-no-remoderation', 'true');
+                                    img.setAttribute('moderated', 'true');
+                                    img._moderationState = {
+                                        moderated: true,
+                                        noRemoderation: true,
+                                    };
+                                    markedCount++;
+                                }
+                            });
+                            
+                            if (markedCount > 0) {
+                                console.log(`Đã đánh dấu ${markedCount} ảnh đã kiểm duyệt sẵn`);
+                            }
+                        }
+                        
+                        // Không quét ảnh nếu đang import từ Word
+                        if (!window.importingFromWord) {
+                            // Sau đó mới quét các ảnh cần kiểm duyệt
+                            scanAndProcessImages();
+                        }
+                    }, timeoutDuration);
                 });
 
                 editor.on('BeforeUpload', function(e) {
@@ -868,11 +1119,14 @@
             images_upload_handler: function(blobInfo, progress) {
                 console.log('TinyMCE images_upload_handler được gọi', blobInfo);
 
-                var defaultHandling = false;
+                // Đánh dấu là đang trong quá trình upload để tránh xử lý trùng lặp
+                window.uploadingImages = window.uploadingImages || 0;
+                window.uploadingImages++;
 
                 return new Promise((resolve, reject) => {
                     if (!blobInfo || typeof blobInfo.blob !== 'function') {
                         console.error('blobInfo không hợp lệ:', blobInfo);
+                        window.uploadingImages--;
                         reject({
                             message: 'Dữ liệu hình ảnh không hợp lệ',
                             remove: false
@@ -880,27 +1134,60 @@
                         return;
                     }
 
-                    const notification = tinymce.activeEditor.notificationManager.open({
-                        text: 'Đang tải lên và kiểm duyệt hình ảnh...',
-                        type: 'info',
-                        progressBar: true,
-                        closeButton: false,
-                    });
+                    // Tạo một hình ảnh tạm để đánh dấu là đang được xử lý
+                    try {
+                        // Tìm tất cả các ảnh blob trong editor mà có thể liên quan đến upload này
+                        const editorImages = tinymce.activeEditor.getBody().querySelectorAll('img[src^="blob:"]');
+                        editorImages.forEach(img => {
+                            // Đánh dấu các ảnh blob là đang chờ xử lý bởi upload handler
+                            img.classList.add('waiting-upload');
+                            img.classList.add('uploading-via-handler');
+                            img.setAttribute('data-uploading', 'true');
+                        });
+                    } catch (e) {
+                        console.error('Lỗi khi đánh dấu ảnh đang upload:', e);
+                    }
+
+                    // Chỉ hiển thị notification chung nếu không có uploadingNotification
+                    if (!window.uploadingNotification) {
+                        window.uploadingNotification = tinymce.activeEditor.notificationManager.open({
+                            text: 'Đang tải lên và kiểm duyệt hình ảnh...',
+                            type: 'info',
+                            progressBar: true,
+                            closeButton: false,
+                        });
+                    }
 
                     var formData = new FormData();
                     try {
                         var blob = blobInfo.blob();
                         var filename = blobInfo.filename();
 
-                        console.log('Bắt đầu tải lên:', filename, 'type:', blob.type, 'size:', blob
-                            .size);
+                        console.log('Bắt đầu tải lên:', filename, 'type:', blob.type, 'size:', blob.size);
 
                         formData.append('file', blob, filename);
                         formData.append('_token', document.querySelector('meta[name="csrf-token"]')
                             .getAttribute('content'));
                     } catch (e) {
                         console.error('Lỗi khi xử lý blob:', e);
-                        notification.close();
+                        if (window.uploadingNotification && window.uploadingImages <= 1) {
+                            window.uploadingNotification.close();
+                            window.uploadingNotification = null;
+                        }
+                        window.uploadingImages--;
+                        
+                        // Xóa lớp đánh dấu trên các ảnh
+                        try {
+                            const editorImages = tinymce.activeEditor.getBody().querySelectorAll('img.uploading-via-handler');
+                            editorImages.forEach(img => {
+                                img.classList.remove('waiting-upload');
+                                img.classList.remove('uploading-via-handler');
+                                img.removeAttribute('data-uploading');
+                            });
+                        } catch (ex) {
+                            console.error('Lỗi khi xóa đánh dấu ảnh:', ex);
+                        }
+                        
                         reject({
                             message: 'Lỗi khi xử lý hình ảnh: ' + e.message,
                             remove: true
@@ -918,7 +1205,9 @@
                     xhr.upload.onprogress = function(e) {
                         if (e.lengthComputable) {
                             var percentComplete = (e.loaded / e.total) * 100;
-                            notification.progressBar.value(percentComplete);
+                            if (window.uploadingNotification) {
+                                window.uploadingNotification.progressBar.value(percentComplete);
+                            }
 
                             if (progress) {
                                 progress(percentComplete);
@@ -927,7 +1216,26 @@
                     };
 
                     xhr.onload = function() {
-                        notification.close();
+                        window.uploadingImages--;
+                        if (window.uploadingImages <= 0) {
+                            if (window.uploadingNotification) {
+                                window.uploadingNotification.close();
+                                window.uploadingNotification = null;
+                            }
+                            window.uploadingImages = 0;
+                        }
+                        
+                        // Xóa lớp đánh dấu trên các ảnh sau khi upload xong
+                        try {
+                            const editorImages = tinymce.activeEditor.getBody().querySelectorAll('img.uploading-via-handler');
+                            editorImages.forEach(img => {
+                                img.classList.remove('waiting-upload');
+                                img.classList.remove('uploading-via-handler');
+                                img.removeAttribute('data-uploading');
+                            });
+                        } catch (ex) {
+                            console.error('Lỗi khi xóa đánh dấu ảnh:', ex);
+                        }
 
                         console.log('Phản hồi từ server:', xhr.status, xhr.responseText);
 
@@ -947,17 +1255,17 @@
                             }
 
                             setTimeout(function() {
-                                var notification = tinymce.activeEditor.notificationManager
-                                    .open({
+                                var notification = tinymce.activeEditor
+                                    .notificationManager.open({
                                         text: 'Không thể tải lên hình ảnh: ' +
                                             errorMessage,
                                         type: 'error',
                                         timeout: 5000,
                                     });
 
-                                setTimeout(function() {
-                                    notification.close();
-                                }, 5000);
+                                    setTimeout(function() {
+                                        notification.close();
+                                    }, 5000);
                             }, 200);
 
                             reject({
@@ -1040,17 +1348,30 @@
                             console.log('Ảnh đã được tải lên thành công, đường dẫn: ' + json
                                 .location);
 
+                            // Tạo một hình ảnh ẩn để thêm các thuộc tính kiểm duyệt trước khi thêm vào editor
+                            const tempImg = document.createElement('img');
+                            tempImg.src = json.location;
+                            tempImg.setAttribute('data-moderated', 'true');
+                            tempImg.setAttribute('data-no-remoderation', 'true');
+                            tempImg.setAttribute('moderated', 'true');
+
+                            // Đánh dấu trong global để đảm bảo không phải kiểm duyệt lại
+                            window._premoderatedImages = window._premoderatedImages || {};
+                            window._premoderatedImages[json.location] = true;
+
+                            console.log('Đã đánh dấu ảnh đã kiểm duyệt trước khi chèn vào editor:', json.location);
+
                             setTimeout(function() {
-                                var notification = tinymce.activeEditor.notificationManager
-                                    .open({
+                                var notification = tinymce.activeEditor
+                                    .notificationManager.open({
                                         text: 'Hình ảnh đã được tải lên thành công!',
                                         type: 'success',
                                         timeout: 3000,
                                     });
 
-                                setTimeout(function() {
-                                    notification.close();
-                                }, 3000);
+                                    setTimeout(function() {
+                                        notification.close();
+                                    }, 3000);
                             }, 200);
 
                             resolve(json.location);
@@ -1079,13 +1400,9 @@
                                             img.setAttribute('moderated',
                                                 'true'); // Thuộc tính tùy chỉnh
 
-                                            img.onmousedown = function(e) {
-                                                if (this.hasAttribute(
-                                                    'data-moderated')) {
-                                                    this.setAttribute(
-                                                        'data-no-remoderation',
-                                                        'true');
-                                                }
+                                            img._moderationState = {
+                                                moderated: true,
+                                                noRemoderation: true,
                                             };
 
                                             if (img.hasAttribute('data-mce-src')) {
@@ -1121,14 +1438,34 @@
                         } catch (e) {
                             console.error('Lỗi parse JSON:', e, xhr.responseText);
                             reject({
-                                message: 'Lỗi xử lý phản hồi: ' + e.message,
+                                message: 'Lỗi xử lý phản hồi từ server',
                                 remove: true
                             });
                         }
                     };
 
                     xhr.onerror = function() {
-                        notification.close();
+                        window.uploadingImages--;
+                        if (window.uploadingImages <= 0) {
+                            if (window.uploadingNotification) {
+                                window.uploadingNotification.close();
+                                window.uploadingNotification = null;
+                            }
+                            window.uploadingImages = 0;
+                        }
+                        
+                        // Xóa lớp đánh dấu trên các ảnh khi có lỗi
+                        try {
+                            const editorImages = tinymce.activeEditor.getBody().querySelectorAll('img.uploading-via-handler');
+                            editorImages.forEach(img => {
+                                img.classList.remove('waiting-upload');
+                                img.classList.remove('uploading-via-handler');
+                                img.removeAttribute('data-uploading');
+                            });
+                        } catch (ex) {
+                            console.error('Lỗi khi xóa đánh dấu ảnh:', ex);
+                        }
+                        
                         console.error('Lỗi kết nối');
                         reject({
                             message: 'Lỗi kết nối mạng',
@@ -1137,7 +1474,27 @@
                     };
 
                     xhr.onabort = function() {
-                        notification.close();
+                        window.uploadingImages--;
+                        if (window.uploadingImages <= 0) {
+                            if (window.uploadingNotification) {
+                                window.uploadingNotification.close();
+                                window.uploadingNotification = null;
+                            }
+                            window.uploadingImages = 0;
+                        }
+                        
+                        // Xóa lớp đánh dấu trên các ảnh khi hủy
+                        try {
+                            const editorImages = tinymce.activeEditor.getBody().querySelectorAll('img.uploading-via-handler');
+                            editorImages.forEach(img => {
+                                img.classList.remove('waiting-upload');
+                                img.classList.remove('uploading-via-handler');
+                                img.removeAttribute('data-uploading');
+                            });
+                        } catch (ex) {
+                            console.error('Lỗi khi xóa đánh dấu ảnh:', ex);
+                        }
+                        
                         reject({
                             message: 'Việc tải lên bị hủy',
                             remove: true
@@ -1145,7 +1502,27 @@
                     };
 
                     xhr.ontimeout = function() {
-                        notification.close();
+                        window.uploadingImages--;
+                        if (window.uploadingImages <= 0) {
+                            if (window.uploadingNotification) {
+                                window.uploadingNotification.close();
+                                window.uploadingNotification = null;
+                            }
+                            window.uploadingImages = 0;
+                        }
+                        
+                        // Xóa lớp đánh dấu trên các ảnh khi hết hạn
+                        try {
+                            const editorImages = tinymce.activeEditor.getBody().querySelectorAll('img.uploading-via-handler');
+                            editorImages.forEach(img => {
+                                img.classList.remove('waiting-upload');
+                                img.classList.remove('uploading-via-handler');
+                                img.removeAttribute('data-uploading');
+                            });
+                        } catch (ex) {
+                            console.error('Lỗi khi xóa đánh dấu ảnh:', ex);
+                        }
+                        
                         reject({
                             message: 'Thao tác tải lên đã hết thời gian',
                             remove: true
@@ -1309,8 +1686,7 @@
                                     } else if (json.reason) {
                                         if (typeof json.reason === 'object') {
                                             try {
-                                                errorMessage = Object.values(json.reason).join(
-                                                    ', ');
+                                                errorMessage = Object.values(json.reason).join(', ');
                                             } catch (e) {
                                                 errorMessage = JSON.stringify(json.reason);
                                             }
@@ -1330,15 +1706,28 @@
                                                 timeout: 5000,
                                             });
 
-                                        setTimeout(function() {
-                                            notification.close();
-                                        }, 5000);
+                                            setTimeout(function() {
+                                                notification.close();
+                                            }, 5000);
                                     }, 200);
                                     return;
                                 }
 
                                 console.log('Ảnh đã được tải lên thành công, đường dẫn: ' + json
                                     .location);
+
+                                // Tạo một hình ảnh ẩn để thêm các thuộc tính kiểm duyệt trước khi thêm vào editor
+                                const tempImg = document.createElement('img');
+                                tempImg.src = json.location;
+                                tempImg.setAttribute('data-moderated', 'true');
+                                tempImg.setAttribute('data-no-remoderation', 'true');
+                                tempImg.setAttribute('moderated', 'true');
+
+                                // Đánh dấu trong global để đảm bảo không phải kiểm duyệt lại
+                                window._premoderatedImages = window._premoderatedImages || {};
+                                window._premoderatedImages[json.location] = true;
+
+                                console.log('Đã đánh dấu ảnh đã kiểm duyệt trước khi chèn vào editor:', json.location);
 
                                 setTimeout(function() {
                                     var notification = tinymce.activeEditor
@@ -1370,21 +1759,17 @@
                                             'true');
                                         img.setAttribute('data-no-remoderation',
                                             'true');
-                                        img.setAttribute('moderated', 'true');
+                                        img.setAttribute('moderated',
+                                            'true');
 
                                         img._moderationState = {
                                             moderated: true,
                                             noRemoderation: true,
                                         };
-
-                                        img.onmousedown = function(e) {
-                                            if (this.hasAttribute(
-                                                'data-moderated')) {
-                                                this.setAttribute(
-                                                    'data-no-remoderation',
-                                                    'true');
-                                            }
-                                        };
+                                        
+                                        // Thêm vào danh sách ảnh đã kiểm duyệt toàn cục
+                                        window._premoderatedImages = window._premoderatedImages || {};
+                                        window._premoderatedImages[json.location] = true;
 
                                         if (img.hasAttribute('data-mce-src')) {
                                             img.removeAttribute('data-mce-src');
@@ -1496,6 +1881,27 @@
                     'styles': 'inline',
                     'resets': 'inline',
                     'defaults': 'inline',
+                },
+                'import_word_file_callback': function(file, done) {
+                    // Đánh dấu rằng đang nhập từ Word để xử lý đặc biệt
+                    window._importingFromWord = true;
+                    window.importingFromWord = true;
+                    console.log('Bắt đầu import từ Word');
+                    
+                    // Hiển thị thông báo khi bắt đầu import
+                    var importNotification = tinymce.activeEditor.notificationManager.open({
+                        text: 'Đang nhập và xử lý nội dung từ Word...',
+                        type: 'info',
+                        progressBar: true,
+                        timeout: 5000,
+                    });
+                    
+                    // Đặt timeout để đóng thông báo
+                    setTimeout(function() {
+                        importNotification.close();
+                    }, 5000);
+                    
+                    return true; // Cho phép quá trình import tiếp tục
                 },
             },
             /*
