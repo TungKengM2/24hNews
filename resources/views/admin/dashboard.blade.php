@@ -82,33 +82,62 @@
                     </div>
                 </div>
                 
-                <!-- Các biểu đồ thống kê hiện tại -->
+                <!-- Thống kê người dùng và tương tác -->
                 <div class="row">
-                    <div class="col-xl-4 col-12">
+                    <div class="col-xl-6 col-12">
                         <div class="box">
-                            <div class="box-body">
-                                <h4 class="box-title">Thống Kê Tương Tác</h4>
-                                <div id="donut-chart"></div>
+                            <div class="box-header with-border">
+                                <h4 class="box-title">Thống kê người dùng</h4>
+                            </div>
+                            <div class="box-body text-center">
+                                <div class="mb-20">
+                                    <div class="icon bg-info-light rounded-circle w-80 h-80 text-center mx-auto l-h-100">
+                                        <span class="fs-40 icon-User"><span class="path1"></span><span class="path2"></span></span>
+                                    </div>
+                                </div>
+                                <h1 class="countnm fs-50" id="total-users">0</h1>
+                                <p class="mb-0 text-fade">Tổng số người dùng</p>
+                                <a href="{{ route('admin.users.index') }}" class="btn btn-info-light mt-10">
+                                    <i class="fa fa-users"></i> Xem danh sách
+                                </a>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-xl-8">
+                    <div class="col-xl-6 col-12">
                         <div class="box">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">Thống kê lượt tương tác tổng</h4>
+                            </div>
                             <div class="box-body">
-                                <h4 class="box-title">Thống Kê Tài Khoản</h4>
-                                <ul class="list-inline text-end">
-                                    <li>
-                                        <h5><i class="fa fa-circle me-5 text-primary"></i>Người Dùng</h5>
-                                    </li>
-                                    <li>
-                                        <h5><i class="fa fa-circle me-5 text-success"></i>Tác Giả</h5>
-                                    </li>
-                                    <li>
-                                        <h5><i class="fa fa-circle me-5 text-info"></i>Kiểm Duyệt Viên</h5>
-                                    </li>
-                                </ul>
-                                <div id="area-chart"></div>
+                                <div class="row">
+                                    <div class="col-md-4 text-center">
+                                        <div class="mb-10">
+                                            <div class="icon bg-primary-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
+                                                <i class="fa fa-eye fs-30"></i>
+                                            </div>
+                                        </div>
+                                        <h3 class="fw-600">{{ $totalViews ?? 0 }}</h3>
+                                        <p class="mb-0 text-fade">Lượt xem</p>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <div class="mb-10">
+                                            <div class="icon bg-success-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
+                                                <span class="fs-30 icon-Chat"><span class="path1"></span><span class="path2"></span></span>
+                                            </div>
+                                        </div>
+                                        <h3 class="fw-600">{{ $totalComments ?? 0 }}</h3>
+                                        <p class="mb-0 text-fade">Bình luận</p>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <div class="mb-10">
+                                            <div class="icon bg-warning-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
+                                                <span class="fs-30 icon-Heart"><span class="path1"></span><span class="path2"></span></span>
+                                            </div>
+                                        </div>
+                                        <h3 class="fw-600">{{ $totalLikes ?? 0 }}</h3>
+                                        <p class="mb-0 text-fade">Lượt thích</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -117,4 +146,31 @@
             <!-- /.content -->
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        $(document).ready(function() {
+            // Lấy dữ liệu thống kê người dùng
+            $.ajax({
+                url: '{{ route("admin.userStats") }}',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // Tính tổng số người dùng từ dữ liệu trả về
+                    var totalUsers = 0;
+                    
+                    data.forEach(function(item) {
+                        var users = parseInt(item.users) || 0;
+                        var authors = parseInt(item.authors) || 0;
+                        var moderators = parseInt(item.moderators) || 0;
+                        
+                        totalUsers += users + authors + moderators;
+                    });
+                    
+                    $('#total-users').text(totalUsers);
+                }
+            });
+        });
+    </script>
+    @endpush
 @endsection

@@ -10,6 +10,9 @@ use App\Models\Comment;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Models\Article;
+use App\Models\Like;
 
 class AdminDashboardController extends Controller
 {
@@ -20,7 +23,32 @@ class AdminDashboardController extends Controller
      */
     public function index()
     {
-        return view('admin.dashboard');
+        // Thống kê bài viết
+        $articleStats = [
+            'total' => Article::count(),
+            'published' => Article::where('status', 'published')->count(),
+            'pending' => Article::where('status', 'pending')->count(),
+            'draft' => Article::where('status', 'draft')->count(),
+        ];
+
+        // Thống kê người dùng - Sử dụng DB facade trực tiếp
+        $userCount = DB::table('users')->count();
+        
+        // Log để kiểm tra
+        \Log::info('User count: ' . $userCount);
+
+        // Thống kê tương tác
+        $totalViews = Article::sum('views');
+        $totalComments = Comment::count();
+        $totalLikes = Like::count();
+
+        return view('admin.dashboard', compact(
+            'articleStats',
+            'userCount',
+            'totalViews',
+            'totalComments',
+            'totalLikes'
+        ));
     }
 
     public function getArticleStats()
