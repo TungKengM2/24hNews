@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\Author\TinyMCEUploadController;
 use App\Http\Controllers\User\ArticleViewUserController;
+use App\Http\Controllers\Moderator\ViolationsMController;
 use App\Http\Controllers\Admin\ArticleViewAdminController;
 use App\Http\Controllers\Author\ImageModerationController;
 use App\Http\Controllers\Author\ArticleViewAuthorController;
@@ -172,6 +173,15 @@ Route::middleware(['auth', 'role:3'])->get('/moderator/dashboard', function () {
 
 // 🚀 Khu vực dành riêng cho Moderator (role_id = 3)
 Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
+
+
+    //Quản lý report
+    Route::get('/violations/approves', [ViolationsMController::class, 'approves'])->name('moderator.violations.approves');
+    
+    Route::patch('violations/{violation}/resolve', [ViolationsMController::class, 'resolve'])->name('moderator.violations.resolves');
+    
+    Route::patch('violations/{violation}/reject', [ViolationsMController::class, 'reject'])->name('moderator.violations.reject');
+    
 
     Route::get('/list-article', [ModeratorArticleController::class, 'index'])
         ->name('moderator.list-article');

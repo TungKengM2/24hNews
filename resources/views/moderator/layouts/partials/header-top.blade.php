@@ -66,11 +66,14 @@
                     <i data-feather="bell"></i>
                     @php
                         $pendingCount = \App\Models\Article::where('status', 'pending')->count();
+                        $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
+                        $totalPending = $pendingCount + $pendingViolations;
                     @endphp
-                    @if ($pendingCount > 0)
+
+                    @if ($pendingCount > 0 || $pendingViolations > 0)
                         <span class="badge badge-danger"
                             style="position: absolute; top: 6px; right: 5px; font-size: 10px; padding: 2px 5px; border-radius: 50%; line-height: 1; background: red; color: white;">
-                            {{ $pendingCount }}
+                            {{ $totalPending }}
                         </span>
                     @endif
                 </a>
@@ -87,9 +90,17 @@
                     <li>
                         <ul class="menu sm-scrol">
                             <li>
-                                @if ($pendingCount > 0)
+                                @if ($pendingCount > 0 && $pendingViolations > 0)
+                                    <a href="{{ route('moderator.list-article') }}">
+                                        {{ "Có $pendingCount bài viết và $pendingViolations vi phạm đang chờ duyệt!" }}
+                                    </a>
+                                @elseif ($pendingCount > 0)
                                     <a href="{{ route('moderator.list-article') }}">
                                         {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
+                                    </a>
+                                @elseif ($pendingViolations > 0)
+                                    <a href="{{ route('moderator.violations.approves') }}">
+                                        {{ "Có $pendingViolations vi phạm đang chờ duyệt!" }}
                                     </a>
                                 @endif
                             </li>
