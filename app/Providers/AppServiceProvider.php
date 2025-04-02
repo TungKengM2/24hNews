@@ -3,10 +3,15 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Models\User;
 use App\Observers\CategoryObserver;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use App\Models\Article;
+use App\Observers\ArticleObserver;
+use App\Observers\UserObserver;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -55,9 +60,13 @@ class AppServiceProvider extends ServiceProvider
 
                 // dat them
             }
-            
+
         );
+
         Category::observe(CategoryObserver::class);
+        Article::observe(ArticleObserver::class);
+        User::observe(UserObserver::class);
+
     }
 
     /**

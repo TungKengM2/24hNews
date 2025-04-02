@@ -38,6 +38,18 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'username' => 'Kiểm Duyệt 2',
+                'phone' => '012345678',
+                'email' => 'kdv2@example.com',
+                'password' => Hash::make('password'),
+                'role_id' => 3,
+                'is_promoted' => true,
+                'violation_count' => 0,
+                'banned_until' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'username' => 'Tác Giả',
                 'phone' => '0912345678',
                 'email' => 'tacgia@example.com',
