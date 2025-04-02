@@ -52,8 +52,48 @@ class ModeratorDashboardController extends Controller
                 ->orderBy('year', 'asc')
                 ->get();
         }
+        // thông kê lượt thích theo ngày tháng năm
+        if ($type === 'daily') {
+            $likeStats = DB::table('article_likes')
+                ->select(DB::raw('DATE(liked_at) as date, COUNT(*) as count'))
+                ->groupBy('date')
+                ->orderBy('date', 'asc')
+                ->get();
+        } elseif ($type === 'monthly') {
+            $likeStats = DB::table('article_likes')
+                ->select(DB::raw('YEAR(liked_at) as year, MONTH(liked_at) as month, COUNT(*) as count'))
+                ->groupBy('year', 'month')
+                ->orderByRaw('year, month')
+                ->get();
+        } else { // yearly
+            $likeStats = DB::table('article_likes')
+                ->select(DB::raw('YEAR(liked_at) as year, COUNT(*) as count'))
+                ->groupBy('year')
+                ->orderBy('year', 'asc')
+                ->get();
+        }
+        // thống kê bình luận theo ngày tháng năm
+        if ($type === 'daily') {
+            $commentStats = DB::table('comments')
+                ->select(DB::raw('DATE(created_at) as date, COUNT(*) as count'))
+                ->groupBy('date')
+                ->orderBy('date', 'asc')
+                ->get();
+        } elseif ($type === 'monthly') {
+            $commentStats = DB::table('comments')
+                ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count'))
+                ->groupBy('year', 'month')
+                ->orderByRaw('year, month')
+                ->get();
+        } else { // yearly
+            $commentStats = DB::table('comments')
+                ->select(DB::raw('YEAR(created_at) as year, COUNT(*) as count'))
+                ->groupBy('year')
+                ->orderBy('year', 'asc')
+                ->get();
+        }
 
-        return view('moderator.dashboard', compact('articleStats', 'userStats', 'type'));
+        return view('moderator.dashboard', compact('articleStats', 'userStats', 'likeStats' ,'commentStats', 'type'));
 
     }
 }
