@@ -85,9 +85,9 @@
                                                 <option value="inactive"
                                                     {{ request('filter') == 'inactive' ? 'selected' : '' }}>Bài viết có danh
                                                     mục bị vô hiệu hóa</option>
-                                                <option value="no_category"
+                                                {{-- <option value="no_category"
                                                     {{ request('filter') == 'no_category' ? 'selected' : '' }}>Bài viết
-                                                    không có danh mục</option>
+                                                    không có danh mục</option> --}}
                                                 <option value="archived"
                                                     {{ request('filter') == 'archived' ? 'selected' : '' }}>Bài viết
                                                     đã ẩn</option>
@@ -195,7 +195,7 @@
                                                         <form action="{{ route('author.articles.toggle-visibility', $article) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('PUT')
-                                                            <button class="btn btn-secondary btn-sm" 
+                                                            <button class="btn btn-secondary btn-sm"
                                                                 title="{{ $article->status === 'published' ? 'Ẩn bài viết' : 'Hiện bài viết' }}"
                                                                 onclick="return confirm('Bạn có chắc chắn muốn {{ $article->status === 'published' ? 'ẩn' : 'hiện' }} bài viết này không?')">
                                                                 <i class="fa {{ $article->status === 'published' ? 'fa-eye-slash' : 'fa-eye' }}"></i>
