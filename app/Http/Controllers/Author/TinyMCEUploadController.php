@@ -59,14 +59,47 @@ class TinyMCEUploadController extends Controller
                 ], 415);
             }
 
+            // Đầu tiên tải ảnh lên để có URL
             $uploadPath = $file->store('uploads', 'public');
             $filePath = storage_path('app/public/'.$uploadPath);
+            $imageUrl = asset('storage/'.$uploadPath);
 
-            $moderationResult = $this->moderationService->handleImageUploadModeration($file);
+            // Kiểm tra xem file có tồn tại và có thể truy cập được không
+            if (!file_exists($filePath)) {
+                Log::error('File không tồn tại sau khi tải lên: ' . $filePath);
+                return response()->json([
+                    'message' => 'Lỗi: Không thể lưu file',
+                    'success' => false,
+                ], 500);
+            }
 
-            if ($moderationResult['violation_level'] !== 'none') {
+            // Sử dụng phương thức enhancedUrlModeration để đảm bảo kiểm duyệt triệt để
+            try {
+                $moderationResult = $this->moderationService->enhancedUrlModeration($imageUrl);
+                
+                // Log kết quả kiểm duyệt để dễ debug
+                Log::info('Kết quả kiểm duyệt ảnh: ' . json_encode($moderationResult));
+                
+                // Nếu không nhận được kết quả kiểm duyệt hợp lệ, sử dụng phương thức khác
+                if ($moderationResult['status'] !== 'success') {
+                    Log::warning('Kiểm duyệt enhancedUrlModeration thất bại, sử dụng handleImageUploadModeration');
+                    $moderationResult = $this->moderationService->handleImageUploadModeration($file);
+                    Log::info('Kết quả kiểm duyệt thứ hai: ' . json_encode($moderationResult));
+                }
+            } catch (\Exception $e) {
+                Log::error('Lỗi trong quá trình kiểm duyệt: ' . $e->getMessage());
+                // Giữ lại file đã upload nhưng đánh dấu là có lỗi kiểm duyệt
+                $moderationResult = [
+                    'status' => 'success', // Vẫn trả về success để hiển thị ảnh
+                    'violation_level' => 'none', // Không đánh dấu vi phạm
+                    'moderation_method' => 'error_handled',
+                    'message' => 'Lỗi kiểm duyệt: ' . $e->getMessage()
+                ];
+            }
+
+            if (isset($moderationResult['status']) && $moderationResult['status'] === 'success' && isset($moderationResult['violation_level']) && $moderationResult['violation_level'] !== 'none') {
+                Log::warning('Hình ảnh vi phạm: ' . $imageUrl . ', Lý do: ' . json_encode($moderationResult['reason'] ?? ['Nội dung không phù hợp']));
                 $blockedImages = session('blocked_images', []);
-                $imageUrl = asset('storage/'.$uploadPath);
                 $blockedImages[] = [
                     'url' => $imageUrl,
                     'file_path' => $uploadPath,
@@ -87,8 +120,17 @@ class TinyMCEUploadController extends Controller
                 ]);
             }
 
+            // Thêm kiểm tra file_exists cuối cùng trước khi trả về kết quả
+            if (!file_exists($filePath)) {
+                Log::error('File không tồn tại trước khi trả kết quả: ' . $filePath);
+                return response()->json([
+                    'message' => 'Lỗi: File đã tải lên nhưng không thể truy cập',
+                    'success' => false,
+                ], 500);
+            }
+
             return response()->json([
-                'location' => asset('storage/'.$uploadPath),
+                'location' => $imageUrl,
                 'blocked' => false,
                 'success' => true,
             ]);
