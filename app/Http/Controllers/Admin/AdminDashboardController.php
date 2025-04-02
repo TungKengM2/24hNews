@@ -31,24 +31,13 @@ class AdminDashboardController extends Controller
             'draft' => Article::where('status', 'draft')->count(),
         ];
 
-        // Thống kê người dùng - Sử dụng DB facade trực tiếp
-        $userCount = DB::table('users')->count();
-        
-        // Log để kiểm tra
-        \Log::info('User count: ' . $userCount);
+        // Thống kê người dùng
+        $userCount = User::where('role', '!=', 'admin')->count();
 
         // Thống kê tương tác
         $totalViews = Article::sum('views');
         $totalComments = Comment::count();
         $totalLikes = Like::count();
-
-        return view('admin.dashboard', compact(
-            'articleStats',
-            'userCount',
-            'totalViews',
-            'totalComments',
-            'totalLikes'
-        ));
     }
 
     public function getArticleStats()
