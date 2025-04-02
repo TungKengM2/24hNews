@@ -22,6 +22,7 @@
 
 <script src="https://cdn.tiny.cloud/1/{{ env('TINYMCE_API_KEY') }}/tinymce/7/tinymce.min.js"
     referrerpolicy="origin"></script>
+    
 <script>
     const fetchApi = import(
         'https://unpkg.com/@microsoft/fetch-event-source@2.0.1/lib/esm/index.js'
@@ -197,11 +198,19 @@
                             if (el.style.margin === '0px auto' || el.style.margin === 'auto') {
                                 el.style.margin = '0';
                             }
-                        }
-
-                        if (el.tagName === 'P' || el.tagName === 'DIV') {
-                            if (el.style.clear === 'none') el.style.removeProperty('clear');
-                            if (el.style.float === 'none') el.style.removeProperty('float');
+                            
+                            // Đảm bảo tất cả hình ảnh đều cần kiểm duyệt
+                            el.setAttribute('data-need-moderation', 'true');
+                            el.classList.add('waiting-moderation');
+                            
+                            // Xóa các thuộc tính TinyMCE có thể gây trở ngại
+                            ['data-mce-src', 'data-mce-selected', 'data-mce-object',
+                             'data-mce-placeholder', 'contenteditable', 'data-mce-resize',
+                             'data-mce-bogus'].forEach(attr => {
+                                if (el.hasAttribute(attr)) {
+                                    el.removeAttribute(attr);
+                                }
+                            });
                         }
                     }
 
@@ -241,8 +250,7 @@
                     console.log('Tìm thấy ' + images.length + ' hình ảnh trong nội dung paste');
 
                     [...images].forEach(img => {
-                        if (img.src && (img.src.startsWith('http') || img.src.startsWith(
-                            'data:image'))) {
+                        if (img.src) {
                             const imgId = 'img-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
 
                             img.setAttribute('data-need-moderation', 'true');
@@ -277,90 +285,96 @@
             setup: function(editor) {
 
                 function needsModeration(img) {
+                    // Luôn yêu cầu kiểm duyệt trừ khi đã được đánh dấu rõ ràng
                     if (img.hasAttribute('data-moderated') ||
                         img.hasAttribute('data-no-remoderation') ||
                         img.hasAttribute('moderated')) {
                         return false;
                     }
-
+                    
+                    // Kiểm tra xem ảnh có trong danh sách đã kiểm duyệt trước đó không
                     const src = img.getAttribute('src');
-                    if (src && (src.includes('/storage/uploads/') || src.includes('/uploads/'))) {
+                    if (src && window._premoderatedImages && window._premoderatedImages[src]) {
+                        console.log('Ảnh đã được kiểm duyệt trước đó:', src);
+                        // Đánh dấu lại để không cần kiểm duyệt nữa
                         img.setAttribute('data-moderated', 'true');
                         img.setAttribute('data-no-remoderation', 'true');
                         img.setAttribute('moderated', 'true');
+                        img._moderationState = {
+                            moderated: true,
+                            noRemoderation: true,
+                        };
                         return false;
                     }
 
+                    // Ngay cả ảnh từ storage cũng cần kiểm duyệt nếu chưa được đánh dấu
                     return true;
                 }
 
                 function scanAndProcessImages() {
                     if (window.checkingImages) {
+                        console.log('Đang trong quá trình kiểm duyệt, bỏ qua');
                         return;
                     }
 
+                    // Khởi tạo danh sách ảnh đã kiểm duyệt nếu chưa tồn tại
+                    window._premoderatedImages = window._premoderatedImages || {};
+                    
+                    // Lấy tất cả ảnh chưa được kiểm duyệt (kể cả ảnh từ storage)
                     const images = editor.getBody().querySelectorAll(
-                        'img[data-need-moderation="true"]:not([data-no-remoderation]):not([data-moderated]):not([moderated])'
+                        'img:not([data-moderated]):not([moderated])'
                     );
+                    
                     if (images.length === 0) {
                         return;
                     }
-
-                    console.log('Tìm thấy ' + images.length + ' hình ảnh cần kiểm duyệt trong DOM');
-                    window.checkingImages = true;
-
-                    const notification = editor.notificationManager.open({
-                        text: 'Đang kiểm duyệt ' + images.length + ' hình ảnh...',
-                        type: 'info',
-                        progressBar: true,
-                        timeout: false,
-                        closeButton: false,
-                    });
-
-                    let processedImages = 0;
-                    const totalImages = images.length;
-
-                    [...images].forEach(function(img) {
-                        const originalSrc = img.getAttribute('src');
-
-                        if (originalSrc && (originalSrc.includes('/storage/uploads/') || originalSrc
-                            .includes('/uploads/'))) {
-                            console.log('Ảnh đã được tải lên từ server, không cần kiểm duyệt lại:',
-                                originalSrc);
-                            img.removeAttribute('data-need-moderation');
+                    
+                    // Lọc ảnh cần kiểm duyệt (bỏ qua những ảnh đã nằm trong danh sách)
+                    const imagesToModerate = [...images].filter(img => {
+                        const src = img.getAttribute('src');
+                        if (src && window._premoderatedImages && window._premoderatedImages[src]) {
+                            console.log('Bỏ qua ảnh đã kiểm duyệt trước đó:', src);
                             img.setAttribute('data-moderated', 'true');
                             img.setAttribute('data-no-remoderation', 'true');
                             img.setAttribute('moderated', 'true');
-
                             img._moderationState = {
                                 moderated: true,
                                 noRemoderation: true,
                             };
-
-                            img.classList.remove('moderating');
-                            img.classList.remove('waiting-moderation');
-                            img.style.opacity = '1';
-                            img.style.border = 'none';
-
-                            processedImages++;
-                            notification.progressBar.value(processedImages / totalImages * 100);
-
-                            if (processedImages === totalImages) {
-                                notification.close();
-                                window.checkingImages = false;
-                            }
-
-                            return;
+                            return false;
                         }
+                        return true;
+                    });
+                    
+                    if (imagesToModerate.length === 0) {
+                        console.log('Không có ảnh nào cần kiểm duyệt sau khi lọc');
+                        return;
+                    }
 
-                        img.removeAttribute('data-need-moderation');
+                    console.log('Tìm thấy ' + imagesToModerate.length + ' hình ảnh cần kiểm duyệt trong DOM');
+                    window.checkingImages = true;
 
+                    const notification = editor.notificationManager.open({
+                        text: 'Đang kiểm duyệt ' + imagesToModerate.length + ' hình ảnh...',
+                        type: 'info',
+                        progressBar: true,
+                        timeout: false,
+                    });
+
+                    let processedImages = 0;
+                    const totalImages = imagesToModerate.length;
+
+                    imagesToModerate.forEach(function(img) {
+                        const originalSrc = img.getAttribute('src');
+                        
+                        // Đánh dấu ảnh đang được kiểm duyệt
                         img.classList.add('moderating');
                         img.classList.remove('waiting-moderation');
                         img.style.opacity = '0.5';
                         img.style.border = '2px dashed #ccc';
 
                         if (originalSrc.startsWith('data:image')) {
+                            // Xử lý ảnh dạng data URL
                             fetch(originalSrc)
                                 .then(res => res.blob())
                                 .then(blob => {
@@ -523,8 +537,14 @@
                                         window.checkingImages = false;
                                     }
                                 });
-                        } else if (originalSrc.startsWith('http')) {
-                            fetch('/api/moderate/image-url', {
+                        } else if (originalSrc.startsWith('http') || originalSrc.startsWith('/')) {
+                            // Xử lý ảnh từ URL (bao gồm cả URL tương đối)
+                            let imageUrl = originalSrc;
+                            if (originalSrc.startsWith('/')) {
+                                imageUrl = window.location.origin + originalSrc;
+                            }
+                            
+                            fetch('/api/force-enhanced-moderation', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -532,7 +552,7 @@
                                         'meta[name="csrf-token"]').getAttribute('content'),
                                 },
                                 body: JSON.stringify({
-                                    image_url: originalSrc
+                                    image_url: imageUrl
                                 }),
                             })
                                 .then(response => response.json())
@@ -830,13 +850,29 @@
                         const div = document.createElement('div');
                         div.innerHTML = e.content;
 
-                        const images = div.querySelectorAll('img:not([data-moderated])');
+                        const images = div.querySelectorAll('img');
                         if (images.length > 0) {
                             console.log('Đánh dấu ' + images.length +
                                 ' hình ảnh trong BeforeSetContent');
 
                             images.forEach(img => {
-                                img.setAttribute('data-need-moderation', 'true');
+                                // Kiểm tra xem ảnh đã kiểm duyệt chưa
+                                const src = img.getAttribute('src');
+                                if (src && window._premoderatedImages && window._premoderatedImages[src]) {
+                                    console.log('Ảnh đã kiểm duyệt sẵn, đánh dấu ngay lập tức:', src);
+                                    img.setAttribute('data-moderated', 'true');
+                                    img.setAttribute('data-no-remoderation', 'true');
+                                    img.setAttribute('moderated', 'true');
+                                    if (!img.hasAttribute('_moderationState')) {
+                                        img._moderationState = {
+                                            moderated: true,
+                                            noRemoderation: true,
+                                        };
+                                    }
+                                } else {
+                                    // Chỉ đánh dấu cần kiểm duyệt nếu chưa được kiểm duyệt
+                                    img.setAttribute('data-need-moderation', 'true');
+                                }
 
                                 if (img.hasAttribute('data-mce-src')) {
                                     img.removeAttribute('data-mce-src');
@@ -859,7 +895,35 @@
 
                 editor.on('SetContent', function(e) {
                     console.log('SetContent event');
-                    setTimeout(scanAndProcessImages, 100);
+                    // Đặt timeout ngắn để đảm bảo DOM đã được cập nhật
+                    setTimeout(function() {
+                        // Đánh dấu lại các ảnh đã kiểm duyệt
+                        if (window._premoderatedImages) {
+                            const allImages = editor.getBody().querySelectorAll('img');
+                            let markedCount = 0;
+                            
+                            allImages.forEach(img => {
+                                const src = img.getAttribute('src');
+                                if (src && window._premoderatedImages[src]) {
+                                    img.setAttribute('data-moderated', 'true');
+                                    img.setAttribute('data-no-remoderation', 'true');
+                                    img.setAttribute('moderated', 'true');
+                                    img._moderationState = {
+                                        moderated: true,
+                                        noRemoderation: true,
+                                    };
+                                    markedCount++;
+                                }
+                            });
+                            
+                            if (markedCount > 0) {
+                                console.log(`Đã đánh dấu ${markedCount} ảnh đã kiểm duyệt sẵn`);
+                            }
+                        }
+                        
+                        // Sau đó mới quét các ảnh cần kiểm duyệt
+                        scanAndProcessImages();
+                    }, 100);
                 });
 
                 editor.on('BeforeUpload', function(e) {
@@ -893,7 +957,7 @@
                     }
 
                     const notification = tinymce.activeEditor.notificationManager.open({
-                        text: 'Đang tải lên hình ảnh...',
+                        text: 'Đang tải lên và kiểm duyệt hình ảnh...',
                         type: 'info',
                         progressBar: true,
                         closeButton: false,
@@ -982,6 +1046,10 @@
                         try {
                             var json = JSON.parse(xhr.responseText);
                             console.log('Kết quả từ server trong images_upload_handler:', json);
+                            
+                            // Thêm log để kiểm tra kết quả kiểm duyệt
+                            console.log('Trạng thái kiểm duyệt:',
+                                json.blocked === true ? 'Hình ảnh bị chặn' : 'Hình ảnh được chấp nhận');
 
                             if (json.blocked === true) {
                                 console.log('Hình ảnh bị chặn từ server:', json);
@@ -1048,6 +1116,19 @@
                             console.log('Ảnh đã được tải lên thành công, đường dẫn: ' + json
                                 .location);
 
+                            // Tạo một hình ảnh ẩn để thêm các thuộc tính kiểm duyệt trước khi thêm vào editor
+                            const tempImg = document.createElement('img');
+                            tempImg.src = json.location;
+                            tempImg.setAttribute('data-moderated', 'true');
+                            tempImg.setAttribute('data-no-remoderation', 'true');
+                            tempImg.setAttribute('moderated', 'true');
+                            
+                            // Đánh dấu trong global để đảm bảo không phải kiểm duyệt lại
+                            window._premoderatedImages = window._premoderatedImages || {};
+                            window._premoderatedImages[json.location] = true;
+                            
+                            console.log('Đã đánh dấu ảnh đã kiểm duyệt trước khi chèn vào editor:', json.location);
+
                             setTimeout(function() {
                                 var notification = tinymce.activeEditor.notificationManager
                                     .open({
@@ -1087,13 +1168,9 @@
                                             img.setAttribute('moderated',
                                                 'true'); // Thuộc tính tùy chỉnh
 
-                                            img.onmousedown = function(e) {
-                                                if (this.hasAttribute(
-                                                    'data-moderated')) {
-                                                    this.setAttribute(
-                                                        'data-no-remoderation',
-                                                        'true');
-                                                }
+                                            img._moderationState = {
+                                                moderated: true,
+                                                noRemoderation: true,
                                             };
 
                                             if (img.hasAttribute('data-mce-src')) {
@@ -1384,15 +1461,10 @@
                                             moderated: true,
                                             noRemoderation: true,
                                         };
-
-                                        img.onmousedown = function(e) {
-                                            if (this.hasAttribute(
-                                                'data-moderated')) {
-                                                this.setAttribute(
-                                                    'data-no-remoderation',
-                                                    'true');
-                                            }
-                                        };
+                                        
+                                        // Thêm vào danh sách ảnh đã kiểm duyệt toàn cục
+                                        window._premoderatedImages = window._premoderatedImages || {};
+                                        window._premoderatedImages[json.location] = true;
 
                                         if (img.hasAttribute('data-mce-src')) {
                                             img.removeAttribute('data-mce-src');
