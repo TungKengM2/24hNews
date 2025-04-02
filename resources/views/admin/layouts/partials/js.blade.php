@@ -31,6 +31,33 @@
  <script src="https://cdn.tiny.cloud/1/{{ env('TINYMCE_API_KEY') }}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
 
+ {{-- thống kê người dùng --}}
+ <script>
+    $(document).ready(function() {
+        // Lấy dữ liệu thống kê người dùng
+        $.ajax({
+            url: '{{ route("admin.userStats") }}',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // Tính tổng số người dùng từ dữ liệu trả về
+                var totalUsers = 0;
+                
+                data.forEach(function(item) {
+                    var users = parseInt(item.users) || 0;
+                    var authors = parseInt(item.authors) || 0;
+                    var moderators = parseInt(item.moderators) || 0;
+                    
+                    totalUsers += users + authors + moderators;
+                });
+                
+                $('#total-users').text(totalUsers);
+            }
+        });
+    });
+</script>
+
+
  {{-- Upload ảnh cho admin --}}
  <script>
      document.addEventListener("DOMContentLoaded", function() {
