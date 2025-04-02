@@ -5,7 +5,7 @@
     <div class="content-wrapper">
         <div class="container-full">
             <!-- Main content -->
-            <section class="content">
+            {{-- <section class="content">
                 <!-- Thống kê bài viết -->
                 <div class="row">
                     <div class="col-xl-3 col-md-6 col-12">
@@ -81,7 +81,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Thống kê người dùng và tương tác -->
                 <div class="row">
                     <div class="col-xl-6 col-12">
@@ -142,8 +142,141 @@
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> --}}
             <!-- /.content -->
+            <h2>Thống kê bài viết</h2>
+            <button onclick="fetchArticleData('daily')">Thống kê theo ngày</button>
+            <button onclick="fetchArticleData('monthly')">Thống kê theo tháng</button>
+            <canvas id="articleChart"></canvas>
+
+            <h2>Thống kê người dùng</h2>
+            <canvas id="userChart"></canvas>
         </div>
     </div>
+<<<<<<< HEAD
+=======
+
+    @push('scripts')
+    {{-- <script>
+        $(document).ready(function() {
+            // Lấy dữ liệu thống kê người dùng
+            $.ajax({
+                url: '{{ route("admin.userStats") }}',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // Tính tổng số người dùng từ dữ liệu trả về
+                    var totalUsers = 0;
+
+                    data.forEach(function(item) {
+                        var users = parseInt(item.users) || 0;
+                        var authors = parseInt(item.authors) || 0;
+                        var moderators = parseInt(item.moderators) || 0;
+
+                        totalUsers += users + authors + moderators;
+                    });
+
+                    $('#total-users').text(totalUsers);
+                }
+            });
+        });
+    </script> --}}
+    <script>
+         async function fetchArticleData(type) {
+            const response = await fetch(`/articles/stats?type=${type}`);
+            const data = await response.json();
+
+            const labels = data.map(item => item.date || `${item.month}/${item.year}`);
+            const counts = data.map(item => item.count);
+
+            renderChart('articleChart', labels, counts, `Số bài viết (${type})`);
+        }
+
+        async function fetchUserData() {
+            const response = await fetch(`/users/stats`);
+            const data = await response.json();
+
+            const labels = data.map(item => item.period);
+            const users = data.map(item => item.users);
+            const authors = data.map(item => item.authors);
+            const moderators = data.map(item => item.moderators);
+
+            renderMultiChart('userChart', labels, users, authors, moderators);
+        }
+
+        function renderChart(canvasId, labels, counts, labelText) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+
+            if (window[canvasId]) {
+                window[canvasId].destroy();
+            }
+
+            window[canvasId] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: labelText,
+                        data: counts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function renderMultiChart(canvasId, labels, users, authors, moderators) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+
+            if (window[canvasId]) {
+                window[canvasId].destroy();
+            }
+
+            window[canvasId] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Người dùng',
+                            data: users,
+                            borderColor: 'blue',
+                            fill: false
+                        },
+                        {
+                            label: 'Tác giả',
+                            data: authors,
+                            borderColor: 'green',
+                            fill: false
+                        },
+                        {
+                            label: 'Moderator',
+                            data: moderators,
+                            borderColor: 'red',
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Gọi API khi trang load
+        fetchArticleData('daily');
+        fetchUserData();
+    </script>
+    @endpush
+>>>>>>> b91bd48 (upload thống kê user bài viết của kdv)
 @endsection

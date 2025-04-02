@@ -37,6 +37,7 @@ use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveContro
 use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
 use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
 use App\Http\Controllers\Profile\AuthorProfileController as ProfileAuthorProfileController;
+use App\Http\Controllers\Moderator\ModeratorDashboardController;
 
 // 🌟 Trang chủ & bài viết chi tiết
 
@@ -169,9 +170,8 @@ Route::middleware(['auth', 'role:3'])->get('/moderator/profile', function () {
 })
     ->name('moderator.profile');
 
-Route::middleware(['auth', 'role:3'])->get('/moderator/dashboard', function () {
-    return view('moderator.dashboard');
-})
+// moderator thống kê
+Route::middleware(['auth', 'role:3'])->get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])
     ->name('moderator.dashboard');
 
 
@@ -262,7 +262,7 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::put('/articles/{article}/toggle-visibility', [AuthorArticleController::class, 'toggleVisibility'])
     ->name('author.articles.toggle-visibility');
-    
+
     Route::post('/articles/upload', [AuthorArticleController::class, 'uploadImage',])->name('author.articles.upload');
 
     Route::get('/articles/search', [AuthorArticleController::class, 'search'])->name('author.articles.search');
@@ -409,8 +409,8 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     // 🏠 Admin Dashboard - Thay đổi route này để gọi đến AdminController
     Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])
         ->name('admin.dashboard');
-    
-   
+
+
 
     Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 
@@ -456,7 +456,7 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/articles/approves', [ArticleController::class, 'Approves'])->name('admin.articles.approves');
 
     Route::patch('/articles/{article}/approve', [ArticleController::class, 'approve'])->name('articles.approve');
-    
+
     Route::put('/articles/{article}/toggle-visibility', [ArticleController::class, 'toggleVisibility'])->name('articles.toggle-visibility');
 
     Route::resource('articles', ArticleController::class);
