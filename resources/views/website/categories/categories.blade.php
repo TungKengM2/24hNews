@@ -2,68 +2,110 @@
 
 @section('content')
     <main>
-        <section class="tc-breaking-news-style1">
+        <section class="tc-breaking-news-style6 pb-50 mt-4 mt-lg-0" style="padding-top: 50px">
             <div class="container">
-                @php
-                    use Illuminate\Support\Str;
-                    use Carbon\Carbon;
-                @endphp
-                <div class="content pt-50 pb-50 border-1 border-bottom brd-gray">
-                    <p class="color-000 fw-bold text-uppercase mb-30 ltspc-1">Tin mới nhất</p>
-                    <div class="tc-post-grid-default">
-                        <div class="tc-breaking-news-slider4 tc-slider-style1 slider-color-creamy1">
+                <div class="content">
+                    <div class="breaking-title">
+                        <strong> <i class="ion-flash me-2"></i> Tin mới nhất</strong>
+                    </div>
+                    <div class="breaking-body">
+                        <div class="tc-breaking-news-slider6">
                             <div class="swiper-container">
                                 <div class="swiper-wrapper">
-                                    @foreach ($articlesNews as $news)
+                                    <div class="swiper-slide">
+                                        <div class="item ">
+                                            <a href="page-single-post-creative.html" class="hover-underline">Những điểm
+                                                chính đáng chú ý nhất từ phiên điều trần đầu tiên
+                                                ngày 6 tháng 1 </a>
+                                        </div>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <div class="item ">
+                                            <a href="page-single-post-creative.html" class="hover-underline">Những điểm
+                                                chính đáng chú ý nhất từ phiên điều trần đầu tiên
+                                                ngày 6 tháng 1 </a>
+                                        </div>
+                                    </div>
+                                    <div class="swiper-slide">
                                         <div class="swiper-slide">
-                                            <div class="item border-1 border-end brd-gray ">
-                                                <div class="row gx-4 align-items-center">
-                                                    <div class="col-4">
-                                                        <a href="{{ route('articles.article', ['slug' => $news->slug]) }}"
-                                                            class="d-block">
-                                                            <div class="w-100"
-                                                                style="width: 80px; height: 80px; overflow: hidden; border-radius: 8px;">
-                                                                <img src="{{ asset('storage/' . $news->thumbnail_url) }}"
-                                                                    class="w-100 h-100 object-fit-cover"
-                                                                    alt="{{ $news->title }}">
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-8">
-                                                        <div class="content">
-                                                            <h5 class="title">
-                                                                <a href="{{ route('articles.article', ['slug' => $news->slug]) }}"
-                                                                    class="hover-underline">
-                                                                    {{ Str::limit($news->title, 100) }}
-                                                                </a>
-                                                            </h5>
-                                                            <div class="meta-bot mt-10 color-666">
-                                                                <ul>
-                                                                    <li class="date">
-                                                                        <i class="la la-clock"></i>
-                                                                        {{ Carbon::parse($news->created_at)->diffForHumans() }}
-                                                                    </li>
-                                                                </ul>
+                                            <div class="item ">
+                                                <a href="page-single-post-creative.html" class="hover-underline">Những điểm
+                                                    chính đáng chú ý nhất từ phiên điều trần đầu tiên
+                                                    ngày 6 tháng 1 </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <!-- arrows -->
+                        <div class="arrows">
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="tc-trends-news-style6">
+            <div class="container">
+                <div class="content pb-50">
+                    <strong class="color-000 text-uppercase mb-30 d-block pt-15 border-2 border-top border-dark">
+                        Bài viết thịnh hành
+                    </strong>
+                    <div class="tc-post-grid-style6">
+                        <div class="tc-trends-news-slider6 tc-slider-style1">
+                            <div class="swiper-container">
+                                <div class="swiper-wrapper">
+                                    @if ($articlesViews->count() > 0)
+                                        @foreach ($articlesViews as $index => $articleviews)
+                                            <div class="swiper-slide">
+                                                <div class="item">
+                                                    <div class="row gx-4 align-items-center">
+                                                        <div class="col-2">
+                                                            <h4 class="number">{{ $index + 1 }}</h4>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <a
+                                                                href="{{ Auth::check() ? route('articles.article', ['slug' => $articleviews->slug]) : url('/login-user') }}">
+                                                                <img src="{{ asset('storage/' . $articleviews->thumbnail_url) }}"
+                                                                    alt="{{ $articleviews->title }}">
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="content">
+                                                                <h5 class="title">
+                                                                    <a
+                                                                        href="{{ Auth::check() ? route('articles.article', ['slug' => $articleviews->slug]) : url('/login-user') }}">
+                                                                        {{ $articleviews->title }}
+                                                                    </a>
+                                                                </h5>
+                                                                <div
+                                                                    class="meta-bot mt-10 color-666 fsz-11px text-uppercase">
+                                                                    <ul>
+                                                                        <li class="date"><i class="la la-clock"></i>
+                                                                            {{ $articleviews->created_at->diffForHumans() }}
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
-
+                                        @endforeach
+                                    @else
+                                        <p class="text-center text-muted">Không có bài viết nào được hiển thị.</p>
+                                    @endif
                                 </div>
                             </div>
                             <!-- arrows -->
-                            <div class="swiper-button-next rounded-0"></div>
-                            <div class="swiper-button-prev rounded-0"></div>
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
-       
 
         <section class="pb-60 overflow-hidden">
             <div class="container">
@@ -159,11 +201,11 @@
                                         <div class="col-lg-7">
                                             <div class="content mt-20 mt-lg-0">
                                                 <div class="tags mb-10">
-                                                    <a href="home-politic.html#">Sponsored</a>
+                                                    <a href="home-politic.html#">Được tài trợ</a>
                                                 </div>
                                                 <h4 class="title fw-bold">
                                                     <a href="page-single-post-creative.html" class="hover-underline">
-                                                        LG Oled Television 4K Utral HD, Sale 10% Off on Amazon
+                                                        Tivi LG Oled 4K Ultra HD, Giảm giá 10% trên Amazon
                                                     </a>
                                                 </h4>
                                                 <a href="home-politic.html#" class="meta-bot fsz-13px color-666">
@@ -180,8 +222,8 @@
                         <div class="tc-widget-podcast-style6 mt-5 mt-lg-0">
                             <div
                                 class="d-flex justify-content-between align-items-center mb-20 pt-15 border-2 border-top border-dark">
-                                <p class="fw-bold text-uppercase fsz-14px">Featured posts</p>
-                                <a href="page-blog.html" class="fsz-13px">See more <i
+                                <p class="fw-bold text-uppercase fsz-14px">Bài viết nổi bật</p>
+                                <a href="page-blog.html" class="fsz-13px">Xem thêm <i
                                         class="la la-angle-right me-2"></i></a>
                             </div>
                             <div class="widget-card">
@@ -195,11 +237,12 @@
                                     <div class="col-lg-8">
                                         <div class="info mt-4 mt-lg-0">
                                             <a href="home-politic.html#"
-                                                class="news-cat fsz-13px text-uppercase mb-2 fw-bold color-main">Business</a>
+                                                class="news-cat fsz-13px text-uppercase mb-2 fw-bold color-main">Kinh
+                                                doanh</a>
                                             <h5 class="title">
-                                                <a href="page-single-post-creative.html" class="hover-underline">Episode
-                                                    15: Mike Pence Day at the
-                                                    January 6 Committee</a>
+                                                <a href="page-single-post-creative.html" class="hover-underline">
+                                                    Tập 15: Ngày của Mike Pence tại Ủy ban ngày 6 tháng 1
+                                                </a>
                                             </h5>
                                             <audio controls class="audio">
                                                 <source src="https://newzin-html.themescamp.com/assets/img/audio1.mp3"
@@ -211,147 +254,21 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
 
             </div>
         </section>
 
 
-        <!-- ====== start latest posts style4 ====== -->
-        <section class="tc-latest-posts-style4 pt-70 pb-70">
-            <div class="container">
-                <div class="content pt-15 border-2 border-white border-top">
-                    <div class="row">
-                        <div class="col-lg-3 col-8">
-                            <div class="d-flex justify-content-between align-items-center mb-30">
-                                <p class="fw-bold text-uppercase fsz-14px">latest news</p>
-                                <a href="page-blog.html" class="fsz-13px">See more <i
-                                        class="la la-angle-right me-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tc-post-grid-default">
-                        <div class="tc-latest-posts-slider4 tc-slider-style1">
-                            <div class="swiper-container">
-                                <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                        <div class="item">
-                                            <a href="page-single-post-creative.html" class="img img-cover th-180 d-block">
-                                                <img src="https://newzin-html.themescamp.com/assets/img/latest/32.png"
-                                                    alt="">
-                                            </a>
-                                            <div class="content pt-20">
-                                                <a href="home-politic.html#"
-                                                    class="news-cat color-main fsz-13px text-uppercase mb-10 fw-bold">Polictic</a>
-                                                <h4 class="title">
-                                                    <a href="page-single-post-creative.html">
-                                                        Biden asks Congress for to support Ukraine
-                                                    </a>
-                                                </h4>
-                                                <div class="meta-bot lh-1 mt-30">
-                                                    <a href="home-politic.html#"
-                                                        class="fsz-11px text-white text-uppercase">25 Minutes ago
-                                                        <span class="color-999">by</span> Admin</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <div class="item">
-                                            <a href="https://youtu.be/pGbIOC83-So?t=21" data-lity=""
-                                                class="img img-cover th-180 d-block">
-                                                <img src="https://newzin-html.themescamp.com/assets/img/latest/1.png"
-                                                    alt="">
-                                                <span class="video_icon icon-60">
-                                                    <i class="ion-play"></i>
-                                                </span>
-                                            </a>
-                                            <div class="content pt-20">
-                                                <a href="home-politic.html#"
-                                                    class="news-cat color-main fsz-13px text-uppercase mb-10 fw-bold">World,</a>
-                                                <a href="home-politic.html#"
-                                                    class="news-cat color-main fsz-13px text-uppercase mb-10 fw-bold">Video</a>
-                                                <h4 class="title">
-                                                    <a href="page-single-post-features.html">
-                                                        U.S. Discussing Whether to Ask Ukraine to ‘Dial Back’ War Aims:
-                                                        NBC
-                                                    </a>
-                                                </h4>
-                                                <div class="meta-bot lh-1 mt-30">
-                                                    <a href="home-politic.html#"
-                                                        class="fsz-11px text-white text-uppercase">1 day ago
-                                                        <span class="color-999">by</span> conor bradley</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <div class="item">
-                                            <a href="page-single-post-creative.html" class="img img-cover th-180 d-block">
-                                                <img src="https://newzin-html.themescamp.com/assets/img/latest/60.png"
-                                                    alt="">
-                                            </a>
-                                            <div class="content pt-20">
-                                                <a href="home-politic.html#"
-                                                    class="news-cat color-main fsz-13px text-uppercase mb-10 fw-bold">Polictic</a>
-                                                <h4 class="title">
-                                                    <a href="page-single-post-creative.html">
-                                                        DeSantis draws huge cash haul from Trump donors
-                                                    </a>
-                                                </h4>
-                                                <div class="meta-bot lh-1 mt-30">
-                                                    <a href="home-politic.html#"
-                                                        class="fsz-11px text-white text-uppercase">4 Hours ago
-                                                        <span class="color-999">by</span> Luis diaz</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <div class="item">
-                                            <a href="page-single-post-creative.html" class="img img-cover th-180 d-block">
-                                                <img src="https://newzin-html.themescamp.com/assets/img/latest/61.png"
-                                                    alt="">
-                                            </a>
-                                            <div class="content pt-20">
-                                                <a href="home-politic.html#"
-                                                    class="news-cat color-main fsz-13px text-uppercase mb-10 fw-bold">Business,</a>
-                                                <a href="home-politic.html#"
-                                                    class="news-cat color-main fsz-13px text-uppercase mb-10 fw-bold">White
-                                                    House</a>
-                                                <h4 class="title">
-                                                    <a href="page-single-post-creative.html">
-                                                        Texas lawmaker salutes the power of Juneteenth
-                                                    </a>
-                                                </h4>
-                                                <div class="meta-bot lh-1 mt-30">
-                                                    <a href="home-politic.html#"
-                                                        class="fsz-11px text-white text-uppercase">15 Hours ago
-                                                        <span class="color-999">by</span> Luis diaz</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- pagination -->
-                            <div class="swiper-pagination"></div>
-                            <!-- arrows -->
-                            <div class="swiper-button-next"></div>
-                            <div class="swiper-button-prev"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- ====== end latest posts style4 ====== -->
+
 
         <!-- ====== start columnist ====== -->
         <section class="tc-columnist-style1 pt-60 pb-60">
             <div class="container">
                 <div class="content">
-                    <p class="fw-bold text-uppercase fsz-14px mb-30 pt-15 border-2 border-top border-dark">Featured writers
-                    </p>
+                    <p class="fw-bold text-uppercase fsz-14px mb-30 pt-15 border-2 border-top border-dark">Các tác giả nổi
+                        bật nhất </p>
                     <div class="content">
                         <div class="row">
                             <div class="col-lg-4">
@@ -366,8 +283,8 @@
                                             Conor Bradley
                                         </h6>
                                         <div class="jop-title">
-                                            <small class="fsz-13px color-999">Specialize in</small>
-                                            <p class="fsz-13px text-uppercase">Business, technology</p>
+                                            <small class="fsz-13px color-999">Danh Mục Chuyên Môn</small>
+                                            <p class="fsz-13px text-uppercase">Giải Trí , Thể Thao , Kinh Doanh </p>
                                         </div>
                                     </div>
                                 </a>
@@ -385,8 +302,8 @@
                                             Luis Diaz
                                         </h6>
                                         <div class="jop-title">
-                                            <small class="fsz-13px color-999">Specialize in</small>
-                                            <p class="fsz-13px text-uppercase">Politic, lifestyle</p>
+                                            <small class="fsz-13px color-999">Danh Mục Chuyên Môn</small>
+                                            <p class="fsz-13px text-uppercase">Giải Trí , Thể Thao  </p>
                                         </div>
                                     </div>
                                 </a>
@@ -404,8 +321,8 @@
                                             Alberto Moreno
                                         </h6>
                                         <div class="jop-title">
-                                            <small class="fsz-13px color-999">Specialize in</small>
-                                            <p class="fsz-13px text-uppercase">Entertaiment, culture, wolrd </p>
+                                            <small class="fsz-13px color-999">Danh Mục Chuyên Môn</small>
+                                            <p class="fsz-13px text-uppercase">Giải Trí , Thể Thao , Kinh Doanh  </p>
                                         </div>
                                     </div>
                                 </a>
@@ -425,7 +342,7 @@
                         <div class="col-lg-9">
                             <div class="tc-must-read-style6 p-30 bg-gray2">
                                 <div class="box-content border-2 border-top border-dark py-3">
-                                    <p class="fw-bold text-uppercase fsz-14px mb-30"> Must read </p>
+                                    <p class="fw-bold text-uppercase fsz-14px mb-30"> Phải Đọc</p>
                                     <div class="tc-post-grid-default">
                                         <div class="item pb-30">
                                             <div class="row">
@@ -439,25 +356,24 @@
                                                 <div class="col-lg-7">
                                                     <div class="content mt-4 mt-lg-0">
                                                         <a href="home-politic.html#"
-                                                            class="news-cat color-main fsz-13px text-uppercase mb-15 fw-bold">White
-                                                            House</a>
+                                                            class="news-cat color-main fsz-13px text-uppercase mb-15 fw-bold">Nhà Trắng</a>
                                                         <h2 class="title mb-20">
                                                             <a href="page-single-post-creative.html">
-                                                                Manoah dominates, closes in on Blue Jays history
+                                                                Manoah áp đảo, tiến gần đến lịch sử của Blue Jays
                                                             </a>
                                                         </h2>
                                                         <div class="text color-666">
-                                                            The social-media company is in discussions to sell itself to
-                                                            Elon, a
-                                                            dramatic turn of events just 11 days after the [...]
+                                                            Công ty truyền thông xã hội đang trong quá trình đàm phán để bán lại cho
+                                                            Elon, một bước ngoặt đầy kịch tính chỉ sau 11 ngày kể từ khi [...]
                                                         </div>
                                                         <div class="meta-bot lh-1 mt-40">
                                                             <a href="home-politic.html#"
-                                                                class="fsz-11px color-000 text-uppercase"> 2 Days ago <span
-                                                                    class="color-999">by</span> Moreno </a>
+                                                                class="fsz-11px color-000 text-uppercase"> 2 ngày trước <span
+                                                                    class="color-999">bởi</span> Moreno </a>
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             </div>
                                         </div>
                                         <div class="sub-content pt-30 border-1 border-top brd-gray">
@@ -471,11 +387,11 @@
                                                         </a>
                                                         <div class="content pt-20">
                                                             <a href="home-politic.html#"
-                                                                class="news-cat color-main fsz-13px text-capitalize mb-10 fw-bold">Legal</a>
+                                                                class="news-cat color-main fsz-13px text-capitalize mb-10 fw-bold">Pháp luật</a>
                                                             <h4 class="title ltspc--1">
                                                                 <a href="page-single-post-creative.html"
                                                                     class="hover-underline">
-                                                                    Sponsored Content Post with Double line
+                                                                    Bài viết tài trợ với tiêu đề hai dòng
                                                                 </a>
                                                             </h4>
                                                         </div>
@@ -490,12 +406,11 @@
                                                         </a>
                                                         <div class="content pt-20">
                                                             <a href="home-politic.html#"
-                                                                class="news-cat color-main fsz-13px text-capitalize mb-10 fw-bold">Congress</a>
+                                                                class="news-cat color-main fsz-13px text-capitalize mb-10 fw-bold">Quốc hội</a>
                                                             <h4 class="title ltspc--1">
                                                                 <a href="page-single-post-creative.html"
                                                                     class="hover-underline">
-                                                                    France’s Jupiter may be about to discover a culture of
-                                                                    compromise
+                                                                    "Jupiter của Pháp" có thể sắp khám phá văn hóa thỏa hiệp
                                                                 </a>
                                                             </h4>
                                                         </div>
@@ -510,11 +425,11 @@
                                                         </a>
                                                         <div class="content pt-20">
                                                             <a href="home-politic.html#"
-                                                                class="news-cat color-main fsz-13px text-capitalize mb-10 fw-bold">Elections</a>
+                                                                class="news-cat color-main fsz-13px text-capitalize mb-10 fw-bold">Bầu cử</a>
                                                             <h4 class="title ltspc--1">
                                                                 <a href="page-single-post-creative.html"
                                                                     class="hover-underline">
-                                                                    “A World without Risk’
+                                                                    "Một thế giới không có rủi ro"
                                                                 </a>
                                                             </h4>
                                                         </div>
@@ -522,12 +437,14 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
                             <div class="tc-single-tag-post mt-60">
                                 <p class="fw-bold text-uppercase fsz-14px mb-30 pt-15 border-2 border-top border-dark">
-                                    legal </p>
+                                    pháp luật
+                                </p>
                                 <div class="pb-30 border-1 border-bottom brd-gray">
                                     <div class="row">
                                         <div class="col-lg-8 border-1 border-end brd-gray">
@@ -536,18 +453,15 @@
                                                     <img src="https://newzin-html.themescamp.com/assets/img/latest/64.png"
                                                         alt="">
                                                     <div class="tags">
-                                                        <a href="home-politic.html#"
-                                                            class="text-capitalize color-main fw-bold">legal</a>
+                                                        <a href="home-politic.html#" class="text-capitalize color-main fw-bold">pháp luật</a>
                                                     </div>
                                                 </div>
                                                 <div class="content p-40">
                                                     <h3 class="title mb-30">
-                                                        <a href="page-single-post-creative.html">What a Roberts compromise
-                                                            on abortion could look like</a>
+                                                        <a href="page-single-post-creative.html">Thỏa thuận về phá thai của Roberts có thể trông như thế nào</a>
                                                     </h3>
                                                     <div class="meta-bot lh-1">
-                                                        <a href="home-politic.html#">25 Minutes ago <span
-                                                                class="color-999">by</span> cornor bradley</a>
+                                                        <a href="home-politic.html#">25 phút trước <span class="color-999">bởi</span> Cornor Bradley</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -558,48 +472,40 @@
                                                     <div class="item pb-20">
                                                         <div class="content">
                                                             <h5 class="title">
-                                                                <a href="page-single-post-creative.html">Global financial
-                                                                    markets after covid 2022</a>
+                                                                <a href="page-single-post-creative.html">Thị trường tài chính toàn cầu sau COVID 2022</a>
                                                             </h5>
                                                             <div class="meta-bot lh-1 fsz-11px color-000 mt-15">
-                                                                <a href="home-politic.html#">15 hours ago <span
-                                                                        class="color-999">by</span> luis diaz</a>
+                                                                <a href="home-politic.html#">15 giờ trước <span class="color-999">bởi</span> Luis Diaz</a>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="item pb-20">
                                                         <div class="content">
                                                             <h5 class="title">
-                                                                <a href="page-single-post-creative.html">U.S Stocks Market
-                                                                    today</a>
+                                                                <a href="page-single-post-creative.html">Thị trường chứng khoán Mỹ hôm nay</a>
                                                             </h5>
                                                             <div class="meta-bot lh-1 fsz-11px color-000 mt-15">
-                                                                <a href="home-politic.html#">1 day ago <span
-                                                                        class="color-999">by</span> Admin</a>
+                                                                <a href="home-politic.html#">1 ngày trước <span class="color-999">bởi</span> Admin</a>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="item pb-20">
                                                         <div class="content">
                                                             <h5 class="title">
-                                                                <a href="page-single-post-creative.html">World swimming
-                                                                    bans transgender athletes from women’s events</a>
+                                                                <a href="page-single-post-creative.html">Bơi lội thế giới cấm vận động viên chuyển giới tham gia nội dung nữ</a>
                                                             </h5>
                                                             <div class="meta-bot lh-1 fsz-11px color-000 mt-15">
-                                                                <a href="home-politic.html#">15 hours ago <span
-                                                                        class="color-999">by</span> luis diaz</a>
+                                                                <a href="home-politic.html#">15 giờ trước <span class="color-999">bởi</span> Luis Diaz</a>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="item pb-20 border-0">
                                                         <div class="content">
                                                             <h5 class="title">
-                                                                <a href="page-single-post-creative.html">Success Stories of
-                                                                    Starbuck</a>
+                                                                <a href="page-single-post-creative.html">Những câu chuyện thành công của Starbucks</a>
                                                             </h5>
                                                             <div class="meta-bot lh-1 fsz-11px color-000 mt-15">
-                                                                <a href="home-politic.html#">2 days ago <span
-                                                                        class="color-999">by</span> Cornor bradley</a>
+                                                                <a href="home-politic.html#">2 ngày trước <span class="color-999">bởi</span> Cornor Bradley</a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -623,12 +529,10 @@
                                                         <div class="col-8">
                                                             <div class="content">
                                                                 <h5 class="title">
-                                                                    <a href="page-single-post-creative.html">Horseback
-                                                                        Riding, <br> A business-class hobby</a>
+                                                                    <a href="page-single-post-creative.html">Cưỡi ngựa, <br> Một sở thích đẳng cấp doanh nhân</a>
                                                                 </h5>
                                                                 <div class="meta-bot lh-1 fsz-11px color-000 mt-15">
-                                                                    <a href="home-politic.html#">1 day ago <span
-                                                                            class="color-999">by</span> Admin</a>
+                                                                    <a href="home-politic.html#">1 ngày trước <span class="color-999">bởi</span> Admin</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -647,12 +551,10 @@
                                                         <div class="col-8">
                                                             <div class="content">
                                                                 <h5 class="title">
-                                                                    <a href="page-single-post-creative.html">The Financial
-                                                                        statements of ABC Bank are questionable</a>
+                                                                    <a href="page-single-post-creative.html">Báo cáo tài chính của Ngân hàng ABC có dấu hiệu đáng ngờ</a>
                                                                 </h5>
                                                                 <div class="meta-bot lh-1 fsz-11px color-000 mt-15">
-                                                                    <a href="home-politic.html#">15 hours ago <span
-                                                                            class="color-999">by</span> luis diaz </a>
+                                                                    <a href="home-politic.html#">15 giờ trước <span class="color-999">bởi</span> Luis Diaz</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -663,6 +565,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <!-- ====== start banner14 ====== -->
                             <section class="banner14 pt-60 pb-60">
                                 <div class="container">
@@ -679,7 +582,8 @@
                             <!-- ====== end banner14 ====== -->
                             <div class="tc-single-tag-post">
                                 <p class="fw-bold text-uppercase fsz-14px mb-30 pt-15 border-2 border-top border-dark">
-                                    legal </p>
+                                    pháp luật
+                                </p>
                                 <div class="tc-post-grid-default pb-30 border-2 border-bottom brd-gray">
                                     <div class="row gx-5">
                                         <div class="col-lg-6 border-1 border-end brd-gray">
@@ -692,17 +596,16 @@
                                                 <div class="content pt-30">
                                                     <h3 class="title ltspc--1 mb-20">
                                                         <a href="page-single-post-creative.html">
-                                                            DeSantis draws huge cash haul from Trump donors
+                                                            DeSantis thu hút khoản tiền khổng lồ từ các nhà tài trợ của Trump
                                                         </a>
                                                     </h3>
                                                     <div class="text color-666">
-                                                        The social-media company is in discussions to sell itself to Elon, a
-                                                        dramatic turn of events just 11 days after the [...]
+                                                        Công ty mạng xã hội đang thảo luận về việc bán mình cho Elon, một bước ngoặt đầy kịch tính chỉ sau 11 ngày [...]
                                                     </div>
                                                     <div class="meta-bot lh-1 mt-40">
-                                                        <a href="home-politic.html#"
-                                                            class="fsz-11px color-000 text-uppercase">2 Days ago
-                                                            <span class="color-999">by</span> Moreno</a>
+                                                        <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">
+                                                            2 ngày trước <span class="color-999">bởi</span> Moreno
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -717,17 +620,16 @@
                                                 <div class="content pt-30">
                                                     <h3 class="title ltspc--1 mb-20">
                                                         <a href="page-single-post-creative.html">
-                                                            Deese says Biden's Saudi trip not out of desperation
+                                                            Deese nói rằng chuyến đi của Biden đến Ả Rập Xê Út không phải vì tuyệt vọng
                                                         </a>
                                                     </h3>
                                                     <div class="text color-666">
-                                                        The social-media company is in discussions to sell itself to Elon, a
-                                                        dramatic turn of events just 11 days after the [...]
+                                                        Công ty mạng xã hội đang thảo luận về việc bán mình cho Elon, một bước ngoặt đầy kịch tính chỉ sau 11 ngày [...]
                                                     </div>
                                                     <div class="meta-bot lh-1 mt-40">
-                                                        <a href="home-politic.html#"
-                                                            class="fsz-11px color-000 text-uppercase">2 Days ago
-                                                            <span class="color-999">by</span> admin</a>
+                                                        <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">
+                                                            2 ngày trước <span class="color-999">bởi</span> Admin
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -747,18 +649,13 @@
                                                 <div class="col-lg-8">
                                                     <div class="content mt-4 mt-lg-0">
                                                         <h4 class="title">
-                                                            <a href="page-single-post-creative.html">FBI, Police
-                                                                Investigating ‘Disturbing’ Letters Found at Tennessee
-                                                                Churches</a>
+                                                            <a href="page-single-post-creative.html">FBI, Cảnh sát điều tra những bức thư ‘đáng lo ngại’ tại các nhà thờ ở Tennessee</a>
                                                         </h4>
                                                         <div class="text color-666 mt-20">
-                                                            Do No Harm’s report concludes that UCSD’s ‘increasing
-                                                            integration of racial politics into its medical school and
-                                                            related programs is one case [...]
+                                                            Báo cáo của "Do No Harm" kết luận rằng sự hội nhập ngày càng tăng của chính trị sắc tộc vào trường y UCSD là một trường hợp [...]
                                                         </div>
                                                         <div class="meta-bot lh-1 fsz-11px color-000 mt-15">
-                                                            <a href="home-politic.html#">1 day ago <span
-                                                                    class="color-999">by</span> thiago</a>
+                                                            <a href="home-politic.html#">1 ngày trước <span class="color-999">bởi</span> Thiago</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -775,17 +672,13 @@
                                                 <div class="col-lg-8">
                                                     <div class="content mt-4 mt-lg-0">
                                                         <h4 class="title">
-                                                            <a href="page-single-post-creative.html">African Union chief
-                                                                urges EU to help with food payments to Russia</a>
+                                                            <a href="page-single-post-creative.html">Chủ tịch Liên minh Châu Phi kêu gọi EU hỗ trợ thanh toán thực phẩm cho Nga</a>
                                                         </h4>
                                                         <div class="text color-666 mt-20">
-                                                            Do No Harm’s report concludes that UCSD’s ‘increasing
-                                                            integration of racial politics into its medical school and
-                                                            related programs is one case [...]
+                                                            Báo cáo của "Do No Harm" kết luận rằng sự hội nhập ngày càng tăng của chính trị sắc tộc vào trường y UCSD là một trường hợp [...]
                                                         </div>
                                                         <div class="meta-bot lh-1 fsz-11px color-000 mt-15">
-                                                            <a href="home-politic.html#">1 day ago <span
-                                                                    class="color-999">by</span> thiago</a>
+                                                            <a href="home-politic.html#">1 ngày trước <span class="color-999">bởi</span> Thiago</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -794,48 +687,52 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                         <div class="col-lg-3">
                             <div class="widgets">
                                 <!-- widget-tags -->
                                 <div class="tc-widget-tags-style6 pb-50 mt-5 mt-lg-0">
                                     <p class="fw-bold text-uppercase fsz-14px mb-30 border-2 border-top border-dark pt-20">
-                                        popular tags </p>
+                                        thẻ phổ biến
+                                    </p>
                                     <div class="tags-content">
                                         <a href="home-politic.html#">Covid-19</a>
                                         <a href="home-politic.html#">Bitcoin</a>
-                                        <a href="home-politic.html#">Wordpress</a>
+                                        <a href="home-politic.html#">WordPress</a>
                                         <a href="home-politic.html#">Elon Musk</a>
                                         <a href="home-politic.html#">Google Cloud</a>
                                         <a href="home-politic.html#">Figma</a>
-                                        <a href="home-politic.html#">Crypto</a>
-                                        <a href="home-politic.html#">Marketplace</a>
+                                        <a href="home-politic.html#">Tiền điện tử</a>
+                                        <a href="home-politic.html#">Chợ trực tuyến</a>
                                         <a href="home-politic.html#">Graphicriver</a>
-                                        <a href="home-politic.html#">Game Consoles</a>
-                                        <a href="home-politic.html#">Robotics</a>
+                                        <a href="home-politic.html#">Máy chơi game</a>
+                                        <a href="home-politic.html#">Robot</a>
                                         <a href="home-politic.html#">Psd</a>
-                                        <a href="home-politic.html#">Hackers</a>
-                                        <a href="home-politic.html#">Foody</a>
-                                        <a href="home-politic.html#">Breakfast</a>
-                                        <a href="home-politic.html#">Dessert</a>
-                                        <a href="home-politic.html#">Soup</a>
-                                        <a href="home-politic.html#">Cuisine</a>
-                                        <a href="home-politic.html#">Vegan</a>
-                                        <a href="home-politic.html#">Restaurant</a>
-                                        <a href="home-politic.html#">Beef</a>
+                                        <a href="home-politic.html#">Hacker</a>
+                                        <a href="home-politic.html#">Ẩm thực</a>
+                                        <a href="home-politic.html#">Bữa sáng</a>
+                                        <a href="home-politic.html#">Tráng miệng</a>
+                                        <a href="home-politic.html#">Súp</a>
+                                        <a href="home-politic.html#">Nấu ăn</a>
+                                        <a href="home-politic.html#">Ăn chay</a>
+                                        <a href="home-politic.html#">Nhà hàng</a>
+                                        <a href="home-politic.html#">Thịt bò</a>
                                     </div>
                                 </div>
+
                                 <!-- widget-videos -->
                                 <div class="tc-widget-videos-style6">
                                     <p class="fw-bold text-uppercase fsz-14px mb-30 border-2 border-top border-dark pt-15">
-                                        featured videos </p>
+                                        video nổi bật
+                                    </p>
                                     <div class="videos-content">
                                         <div class="main-card">
                                             <div class="img th-300 img-cover">
                                                 <img src="https://newzin-html.themescamp.com/assets/img/latest/68.png"
                                                     alt="">
                                                 <div class="tags">
-                                                    <a href="home-politic.html#">Politic</a>
+                                                    <a href="home-politic.html#">Chính trị</a>
                                                 </div>
                                             </div>
                                             <div class="info">
@@ -845,12 +742,13 @@
                                                 </a>
                                                 <h5 class="title mb-15">
                                                     <a href="page-single-post-features.html">
-                                                        Big Title for featured post with double
+                                                        Tiêu đề lớn cho bài viết nổi bật với tiêu đề kép
                                                     </a>
                                                 </h5>
                                                 <div class="meta-bot">
-                                                    <a href="home-politic.html#" class="fsz-11px text-uppercase"> 2 Days
-                                                        ago <span class="color-999">by</span> Moreno </a>
+                                                    <a href="home-politic.html#" class="fsz-11px text-uppercase">
+                                                        2 ngày trước <span class="color-999">bởi</span> Moreno
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -862,7 +760,7 @@
                                                 </div>
                                                 <div class="info">
                                                     <h6 class="title">
-                                                        The Taboo lifts on discussing Biden’s Age
+                                                        Điều cấm kỵ về tuổi tác của Biden được gỡ bỏ
                                                     </h6>
                                                 </div>
                                             </a>
@@ -873,7 +771,7 @@
                                                 </div>
                                                 <div class="info">
                                                     <h6 class="title">
-                                                        This Year, Florida’s not a Swing State
+                                                        Năm nay, Florida không còn là bang dao động
                                                     </h6>
                                                 </div>
                                             </a>
@@ -884,17 +782,18 @@
                                                 </div>
                                                 <div class="info">
                                                     <h6 class="title">
-                                                        Why do central banks raise interest rates?
+                                                        Tại sao ngân hàng trung ương lại tăng lãi suất?
                                                     </h6>
                                                 </div>
                                             </a>
                                             <a href="page-blog.html" class="fsz-13px mt-15">
-                                                <span>See more</span>
+                                                <span>Xem thêm</span>
                                                 <i class="las la-angle-right"></i>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
+
                                 <!-- ====== start banner15 ====== -->
                                 <div class="banner15 pt-60 pb-60 text-center">
                                     <a href="home-politic.html#" class="img">
@@ -906,17 +805,18 @@
                                 <!-- widget-categories -->
                                 <div class="tc-widget-categories-style6">
                                     <p class="fw-bold text-uppercase fsz-14px mb-15 border-2 border-top border-dark pt-20">
-                                        top categories </p>
+                                        danh mục hàng đầu
+                                    </p>
                                     <div class="categories-content">
                                         <a href="page-blog.html" class="item">
                                             <div class="icon-title">
                                                 <span class="icon">
                                                     <i class="la la-fist-raised"></i>
                                                 </span>
-                                                <strong class="title">Politics</strong>
+                                                <strong class="title">Chính trị</strong>
                                             </div>
                                             <div class="numbs">
-                                                <small class="fsz-13px color-666">24 Posts</small>
+                                                <small class="fsz-13px color-666">24 bài viết</small>
                                             </div>
                                         </a>
                                         <a href="page-blog.html" class="item">
@@ -924,10 +824,10 @@
                                                 <span class="icon">
                                                     <i class="la la-landmark"></i>
                                                 </span>
-                                                <strong class="title">White House</strong>
+                                                <strong class="title">Nhà Trắng</strong>
                                             </div>
                                             <div class="numbs">
-                                                <small class="fsz-13px color-666">15 Posts</small>
+                                                <small class="fsz-13px color-666">15 bài viết</small>
                                             </div>
                                         </a>
                                         <a href="page-blog.html" class="item">
@@ -935,10 +835,10 @@
                                                 <span class="icon">
                                                     <i class="la la-balance-scale"></i>
                                                 </span>
-                                                <strong class="title">Legal</strong>
+                                                <strong class="title">Pháp lý</strong>
                                             </div>
                                             <div class="numbs">
-                                                <small class="fsz-13px color-666">17 Posts</small>
+                                                <small class="fsz-13px color-666">17 bài viết</small>
                                             </div>
                                         </a>
                                         <a href="page-blog.html" class="item">
@@ -946,10 +846,10 @@
                                                 <span class="icon">
                                                     <i class="la la-globe"></i>
                                                 </span>
-                                                <strong class="title">World</strong>
+                                                <strong class="title">Thế giới</strong>
                                             </div>
                                             <div class="numbs">
-                                                <small class="fsz-13px color-666">9 Posts</small>
+                                                <small class="fsz-13px color-666">9 bài viết</small>
                                             </div>
                                         </a>
                                         <a href="page-blog.html" class="item">
@@ -957,10 +857,10 @@
                                                 <span class="icon">
                                                     <i class="la la-suitcase"></i>
                                                 </span>
-                                                <strong class="title">Business</strong>
+                                                <strong class="title">Kinh doanh</strong>
                                             </div>
                                             <div class="numbs">
-                                                <small class="fsz-13px color-666">16 Posts</small>
+                                                <small class="fsz-13px color-666">16 bài viết</small>
                                             </div>
                                         </a>
                                         <a href="page-blog.html" class="item">
@@ -968,86 +868,83 @@
                                                 <span class="icon">
                                                     <i class="la la-chart-pie"></i>
                                                 </span>
-                                                <strong class="title">Economy</strong>
+                                                <strong class="title">Kinh tế</strong>
                                             </div>
                                             <div class="numbs">
-                                                <small class="fsz-13px color-666">2 Posts</small>
+                                                <small class="fsz-13px color-666">2 bài viết</small>
                                             </div>
                                         </a>
                                     </div>
                                     <a href="page-blog.html" class="fsz-13px mt-15">
-                                        <span>See more</span>
+                                        <span>Xem thêm</span>
                                         <i class="las la-angle-right"></i>
                                     </a>
                                 </div>
-                                <!-- widget-survey -->
-                                <div class="tc-widget-survey-style6 mt-60">
-                                    <p class="text-uppercase ltspc-1 mb-20">quick survey</p>
-                                    <div class="title fsz-16px fw-bold mb-15">
-                                        How was your experience on newzin?
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="survey" id="survey1">
-                                        <label class="form-check-label fsz-13px color-666 lh-5" for="survey1">
-                                            Awesome, I’m satisfied!
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="survey" id="survey2">
-                                        <label class="form-check-label fsz-13px color-666 lh-5" for="survey2">
-                                            Normal
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="survey" id="survey3">
-                                        <label class="form-check-label fsz-13px color-666 lh-5" for="survey3">
-                                            Bad! Need improve more
-                                        </label>
-                                    </div>
-                                    <div class="btns">
-                                        <button class="butn btn_color"> Submit </button>
-                                        <button class="butn"> Result </button>
-                                    </div>
-                                    <p class="fsz-12px color-666"> <span class="fw-bold color-000">24,562</span> Peoples
-                                        joined</p>
-                                </div>
-                                <!-- widget-survey -->
-                                <div class="tc-widget-webStories-style5 mt-60">
-                                    <p class="fw-bold text-uppercase fsz-14px mb-15 border-2 border-top border-dark pt-15">
-                                        google web stories </p>
-                                    <div class="web-content">
-                                        <a href="https://youtu.be/pGbIOC83-So?t=21" class="story-card pt-0"
-                                            data-fancybox="">
-                                            <div class="img img-cover">
-                                                <img src="https://newzin-html.themescamp.com/assets/img/google-stories/1.png"
-                                                    alt="">
-                                            </div>
-                                            <div class="cont">
-                                                <h6>Kayak stories</h6>
-                                            </div>
-                                        </a>
-                                        <a href="https://youtu.be/pGbIOC83-So?t=21" class="story-card seen"
-                                            data-fancybox="">
-                                            <div class="img img-cover">
-                                                <img src="https://newzin-html.themescamp.com/assets/img/google-stories/2.png"
-                                                    alt="">
-                                            </div>
-                                            <div class="cont">
-                                                <h6>6 Tips Successful for Developers</h6>
-                                            </div>
-                                        </a>
-                                        <a href="https://youtu.be/pGbIOC83-So?t=21" class="story-card pb-0 border-0"
-                                            data-fancybox="">
-                                            <div class="img img-cover">
-                                                <img src="https://newzin-html.themescamp.com/assets/img/google-stories/3.png"
-                                                    alt="">
-                                            </div>
-                                            <div class="cont">
-                                                <h6>PS Controller</h6>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
+
+                              <!-- widget-survey -->
+<div class="tc-widget-survey-style6 mt-60">
+    <p class="text-uppercase ltspc-1 mb-20">Khảo sát nhanh</p>
+    <div class="title fsz-16px fw-bold mb-15">
+        Trải nghiệm của bạn trên Newzin thế nào?
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="survey" id="survey1">
+        <label class="form-check-label fsz-13px color-666 lh-5" for="survey1">
+            Tuyệt vời, tôi rất hài lòng!
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="survey" id="survey2">
+        <label class="form-check-label fsz-13px color-666 lh-5" for="survey2">
+            Bình thường
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="survey" id="survey3">
+        <label class="form-check-label fsz-13px color-666 lh-5" for="survey3">
+            Tệ! Cần cải thiện thêm
+        </label>
+    </div>
+    <div class="btns">
+        <button class="butn btn_color"> Gửi </button>
+        <button class="butn"> Kết quả </button>
+    </div>
+    <p class="fsz-12px color-666"> <span class="fw-bold color-000">24,562</span> người đã tham gia</p>
+</div>
+
+<!-- widget-survey -->
+<div class="tc-widget-webStories-style5 mt-60">
+    <p class="fw-bold text-uppercase fsz-14px mb-15 border-2 border-top border-dark pt-15">
+        Câu chuyện trên Google Web
+    </p>
+    <div class="web-content">
+        <a href="https://youtu.be/pGbIOC83-So?t=21" class="story-card pt-0" data-fancybox="">
+            <div class="img img-cover">
+                <img src="https://newzin-html.themescamp.com/assets/img/google-stories/1.png" alt="">
+            </div>
+            <div class="cont">
+                <h6>Câu chuyện về Kayak</h6>
+            </div>
+        </a>
+        <a href="https://youtu.be/pGbIOC83-So?t=21" class="story-card seen" data-fancybox="">
+            <div class="img img-cover">
+                <img src="https://newzin-html.themescamp.com/assets/img/google-stories/2.png" alt="">
+            </div>
+            <div class="cont">
+                <h6>6 mẹo thành công cho lập trình viên</h6>
+            </div>
+        </a>
+        <a href="https://youtu.be/pGbIOC83-So?t=21" class="story-card pb-0 border-0" data-fancybox="">
+            <div class="img img-cover">
+                <img src="https://newzin-html.themescamp.com/assets/img/google-stories/3.png" alt="">
+            </div>
+            <div class="cont">
+                <h6>Tay cầm PS</h6>
+            </div>
+        </a>
+    </div>
+</div>
+
                             </div>
                         </div>
                     </div>
@@ -1062,23 +959,27 @@
                         <div class="row gx-5">
                             <div class="col-lg-4">
                                 <p class="fw-bold text-uppercase fsz-14px mb-30 border-2 border-top border-dark pt-15">
-                                    Congress </p>
+                                    Quốc hội
+                                </p>
                             </div>
                             <div class="col-lg-4">
                                 <p class="fw-bold text-uppercase fsz-14px mb-30 border-2 border-top border-dark pt-15">
-                                    elections </p>
+                                    Bầu cử
+                                </p>
                             </div>
                             <div class="col-lg-4">
                                 <p class="fw-bold text-uppercase fsz-14px mb-30 border-2 border-top border-dark pt-15">
-                                    Business </p>
+                                    Kinh doanh
+                                </p>
                             </div>
+
                         </div>
                     </div>
                     <div class="row gx-5">
                         <div class="col-lg-4 border-1 border-end brd-gray">
-                            <p
-                                class="fw-bold text-uppercase fsz-14px mb-30 border-2 border-top border-dark pt-15 d-block d-lg-none">
-                                Congress </p>
+                            <p class="fw-bold text-uppercase fsz-14px mb-30 border-2 border-top border-dark pt-15 d-block d-lg-none">
+                                Quốc hội
+                            </p>
                             <div class="tc-post-grid-default">
                                 <div class="item border-1 border-bottom brd-gray pb-30">
                                     <a href="page-single-post-creative.html" class="img img-cover th-250 d-block">
@@ -1088,16 +989,16 @@
                                     <div class="content pt-30">
                                         <h3 class="title ltspc--1 mb-10 fs-4">
                                             <a href="page-single-post-creative.html">
-                                                Mitch Daniels weighing return to politics
+                                                Mitch Daniels cân nhắc trở lại chính trị
                                             </a>
                                         </h3>
                                         <div class="text color-666">
-                                            The social-media company is in discussions to sell Elon, a dramatic turn of
-                                            events just 11 days [...]
+                                            Công ty truyền thông xã hội đang thảo luận về việc bán cho Elon, một bước ngoặt đáng chú ý chỉ sau 11 ngày [...]
                                         </div>
                                         <div class="meta-bot lh-1 mt-30">
-                                            <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">2 Days
-                                                ago <span class="color-999">by</span> Moreno</a>
+                                            <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">
+                                                2 ngày trước <span class="color-999">bởi</span> Moreno
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -1116,13 +1017,12 @@
                                             <div class="col-8">
                                                 <div class="content">
                                                     <h6 class="title fsz-18px mb-10 ltspc--1 lh-3">
-                                                        <a href="page-single-post-creative.html">Senators tack $45B onto
-                                                            Biden's defense budget</a>
+                                                        <a href="page-single-post-creative.html">Thượng nghị sĩ bổ sung 45 tỷ USD vào ngân sách quốc phòng của Biden</a>
                                                     </h6>
                                                     <div class="meta-bot lh-1">
-                                                        <a href="home-politic.html#"
-                                                            class="fsz-11px color-000 text-uppercase">2 Days ago <span
-                                                                class="color-999">by</span> Moreno</a>
+                                                        <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">
+                                                            2 ngày trước <span class="color-999">bởi</span> Moreno
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1140,13 +1040,12 @@
                                             <div class="col-8">
                                                 <div class="content">
                                                     <h6 class="title fsz-18px mb-10 ltspc--1 lh-3">
-                                                        <a href="page-single-post-creative.html">Senate advances bill on
-                                                            veterans' burn pit care</a>
+                                                        <a href="page-single-post-creative.html">Thượng viện thông qua dự luật chăm sóc cựu chiến binh bị ảnh hưởng bởi hố đốt chất độc</a>
                                                     </h6>
                                                     <div class="meta-bot lh-1">
-                                                        <a href="home-politic.html#"
-                                                            class="fsz-11px color-000 text-uppercase">1 Days ago <span
-                                                                class="color-999">by</span> Admin</a>
+                                                        <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">
+                                                            1 ngày trước <span class="color-999">bởi</span> Admin
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1155,10 +1054,11 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-lg-4 border-1 border-end brd-gray mt-5 mt-lg-0">
-                            <p
-                                class="fw-bold text-uppercase fsz-14px mb-30 border-2 border-top border-dark pt-15 d-block d-lg-none">
-                                elections </p>
+                            <p class="fw-bold text-uppercase fsz-14px mb-30 border-2 border-top border-dark pt-15 d-block d-lg-none">
+                                Bầu cử
+                            </p>
                             <div class="tc-post-grid-default">
                                 <div class="item border-1 border-bottom brd-gray pb-30">
                                     <a href="page-single-post-creative.html" class="img img-cover th-250 d-block">
@@ -1168,16 +1068,16 @@
                                     <div class="content pt-30">
                                         <h3 class="title ltspc--1 mb-10 fs-4">
                                             <a href="page-single-post-creative.html">
-                                                Dem redistricting group lays out broad 2022 election targets
+                                                Nhóm tái phân chia khu vực của Đảng Dân chủ đặt mục tiêu rộng lớn cho cuộc bầu cử 2022
                                             </a>
                                         </h3>
                                         <div class="text color-666">
-                                            The social-media company is in discussions to sell Elon, a dramatic turn of
-                                            events just 11 days [...]
+                                            Công ty truyền thông xã hội đang thảo luận về việc bán cho Elon, một bước ngoặt đáng chú ý chỉ sau 11 ngày [...]
                                         </div>
                                         <div class="meta-bot lh-1 mt-30">
-                                            <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">2 Days
-                                                ago <span class="color-999">by</span> Moreno</a>
+                                            <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">
+                                                2 ngày trước <span class="color-999">bởi</span> Moreno
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -1196,13 +1096,12 @@
                                             <div class="col-8">
                                                 <div class="content">
                                                     <h6 class="title fsz-18px mb-10 ltspc--1 lh-3">
-                                                        <a href="page-single-post-creative.html">Jan. 6 panel calls Ginni
-                                                            Thomas to testify</a>
+                                                        <a href="page-single-post-creative.html">Ủy ban ngày 6/1 triệu tập Ginni Thomas ra làm chứng</a>
                                                     </h6>
                                                     <div class="meta-bot lh-1">
-                                                        <a href="home-politic.html#"
-                                                            class="fsz-11px color-000 text-uppercase">2 Days ago <span
-                                                                class="color-999">by</span> Moreno</a>
+                                                        <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">
+                                                            2 ngày trước <span class="color-999">bởi</span> Moreno
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1220,12 +1119,12 @@
                                             <div class="col-8">
                                                 <div class="content h-auto">
                                                     <h6 class="title fsz-18px mb-10 ltspc--1 lh-3">
-                                                        <a href="page-single-post-creative.html">Connell's gun safety</a>
+                                                        <a href="page-single-post-creative.html">Chính sách an toàn súng của Connell</a>
                                                     </h6>
                                                     <div class="meta-bot lh-1">
-                                                        <a href="home-politic.html#"
-                                                            class="fsz-11px color-000 text-uppercase">1 Days ago <span
-                                                                class="color-999">by</span> Admin</a>
+                                                        <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">
+                                                            1 ngày trước <span class="color-999">bởi</span> Admin
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1234,10 +1133,11 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-lg-4 mt-5 mt-lg-0">
-                            <p
-                                class="fw-bold text-uppercase fsz-14px mb-30 border-2 border-top border-dark pt-15 d-block d-lg-none">
-                                Business </p>
+                            <p class="fw-bold text-uppercase fsz-14px mb-30 border-2 border-top border-dark pt-15 d-block d-lg-none">
+                                Kinh doanh
+                            </p>
                             <div class="tc-post-grid-default">
                                 <div class="item border-1 border-bottom brd-gray pb-30">
                                     <a href="page-single-post-creative.html" class="img img-cover th-250 d-block">
@@ -1247,16 +1147,16 @@
                                     <div class="content pt-30">
                                         <h3 class="title ltspc--1 mb-10 fs-4">
                                             <a href="page-single-post-creative.html">
-                                                FEMA flood program could violate civil rights law
+                                                Chương trình lũ lụt của FEMA có thể vi phạm luật dân quyền
                                             </a>
                                         </h3>
                                         <div class="text color-666">
-                                            The social-media company is in discussions to sell Elon, a dramatic turn of
-                                            events just 11 days [...]
+                                            Công ty truyền thông xã hội đang thảo luận về việc bán cho Elon, một bước ngoặt đáng chú ý chỉ sau 11 ngày [...]
                                         </div>
                                         <div class="meta-bot lh-1 mt-30">
-                                            <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">1 Days
-                                                ago <span class="color-999">by</span> admin</a>
+                                            <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">
+                                                1 ngày trước <span class="color-999">bởi</span> admin
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -1275,13 +1175,12 @@
                                             <div class="col-8">
                                                 <div class="content pb-20">
                                                     <h6 class="title fsz-18px mb-10 ltspc--1 lh-3">
-                                                        <a href="page-single-post-creative.html">Here Comes Fiscal
-                                                            Arberto</a>
+                                                        <a href="page-single-post-creative.html">Sự xuất hiện của Fiscal Arberto</a>
                                                     </h6>
                                                     <div class="meta-bot lh-1">
-                                                        <a href="home-politic.html#"
-                                                            class="fsz-11px color-000 text-uppercase">2 Days ago <span
-                                                                class="color-999">by</span> Moreno</a>
+                                                        <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">
+                                                            2 ngày trước <span class="color-999">bởi</span> Moreno
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1299,13 +1198,12 @@
                                             <div class="col-8">
                                                 <div class="content">
                                                     <h6 class="title fsz-18px mb-10 ltspc--1 lh-3">
-                                                        <a href="page-single-post-creative.html">Geoff Dyer: How to grow
-                                                            old in America</a>
+                                                        <a href="page-single-post-creative.html">Geoff Dyer: Cách để già đi ở Mỹ</a>
                                                     </h6>
                                                     <div class="meta-bot lh-1">
-                                                        <a href="home-politic.html#"
-                                                            class="fsz-11px color-000 text-uppercase">1 Days ago <span
-                                                                class="color-999">by</span> Admin</a>
+                                                        <a href="home-politic.html#" class="fsz-11px color-000 text-uppercase">
+                                                            1 ngày trước <span class="color-999">bởi</span> Admin
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1314,10 +1212,67 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </section>
+
+
+
+                    @foreach ($category2 as $category)
+                        <a href="{{ route('client.category.show', $category->slug) }}" class="cat-card">
+                            <div class="img img-cover ">
+
+                                <div class="info">
+                                    <h5 href="{{ route('client.category.show', $category->slug) }}">
+                                        {{ $category->name }}
+                                    </h5>
+                                    <span class="num">{{ $loop->iteration }}</span> <!-- Số thứ tự danh mục -->
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+
+
+                </div>
+                <div class="sidebar-contact-info mt-50">
+                    <h6 class="color-000 text-uppercase mb-20 ltspc-1"> Contact & follow <i
+                            class="la la-angle-right ms-1"></i></h6>
+                    <ul class="m-0">
+                        <li class="mb-3">
+                            <i class="las la-map-marker me-2 color-main fs-5"></i>
+                            <a href="home-default.html#">streat name 12, hollywood City, USA</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="las la-envelope me-2 color-main fs-5"></i>
+                            <a href="home-default.html#">Newzin@gmail.com</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="las la-phone-volume me-2 color-main fs-5"></i>
+                            <a href="home-default.html#">+12 123 456 789</a>
+                        </li>
+                    </ul>
+                    <div class="social-links">
+                        <a href="home-default.html#">
+                            <i class="la la-twitter"></i>
+                        </a>
+                        <a href="home-default.html#">
+                            <i class="la la-facebook-f"></i>
+                        </a>
+                        <a href="home-default.html#">
+                            <i class="la la-instagram"></i>
+                        </a>
+                        <a href="home-default.html#">
+                            <i class="la la-youtube"></i>
+                        </a>
+                        <a href="home-default.html#">
+                            <i class="la la-spotify"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 

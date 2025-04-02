@@ -32,10 +32,10 @@
                                         <tr>
                                             <th>STT</th>
                                             <th>Ảnh Đại Diện</th>
-                                            <th>Title</th>
-                                            <th>Content</th>
-                                            <th>Time</th>
-                                            <th>Actions</th>
+                                            <th>Tiêu Đề</th>
+                                            <th>Nội Dung</th>
+                                            <th>Thời Gian</th>
+                                            <th>Hành Động</th>
                                         </tr>
                                     </thead>
                                     @foreach ($savedArticles as $index => $savedArticle)
@@ -53,7 +53,7 @@
                                                 <h5 class="card-title">{{ $savedArticle->article->title }}</h5>
                                             </td>
                                             <td>
-                                                <p class="card-text">{!! Str::limit($savedArticle->article->content, 100) !!}</p>
+                                                {!! Str::limit(strip_tags($savedArticle->article->content), 100, '...') !!}
                                             </td>
                                             <td>
                                                 <h5 class="card-title">{{ $savedArticle->created_at->diffForHumans() }}

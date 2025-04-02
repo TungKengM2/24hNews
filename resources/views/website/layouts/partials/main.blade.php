@@ -737,8 +737,9 @@
     <section class="tc-latest-news-style1">
         <div class="container">
             <div class="section-content pt-50 pb-50 border-bottom border-1 brd-gray">
-                <p class="color-000 text-uppercase mb-30 ltspc-1"><a href="page-blog.html"> latest news </a> <i
-                        class="la la-angle-right ms-1"></i>
+                <p class="color-000 text-uppercase mb-30 ltspc-1">
+                    <a href="page-blog.html"> Tin tức mới nhất </a>
+                    <i class="la la-angle-right ms-1"></i>
                 </p>
                 <div class="row">
                     <div class="col-lg-5 border-end brd-gray border-1">
@@ -746,35 +747,28 @@
                             <div class="item">
                                 <div class="img img-cover th-330">
                                     <img src="client/assets/img/latest/1.png" alt="">
-                                    <a href="https://youtu.be/pGbIOC83-So?t=21" data-lity
-                                       class="video_icon icon-70">
+                                    <a href="https://youtu.be/pGbIOC83-So?t=21" data-lity class="video_icon icon-70">
                                         <i class="ion-play"></i>
                                     </a>
                                 </div>
                                 <div class="content pt-30">
-                                    <a href="page-blog.html"
-                                       class="news-cat color-999 fsz-13px text-uppercase mb-10">politics</a>
+                                    <a href="page-blog.html" class="news-cat color-999 fsz-13px text-uppercase mb-10">chính trị</a>
                                     <h2 class="title mb-20">
-                                        <a href="page-single-post-features.html">Biden asks Congress for $33 billion
-                                            to support Ukraine</a>
+                                        <a href="page-single-post-features.html">Biden yêu cầu Quốc hội cấp 33 tỷ USD để hỗ trợ Ukraine</a>
                                     </h2>
                                     <div class="text color-666">
-                                        The social-media company is in discussions to sell itself to Elon, a
-                                        dramatic turn of events just 11 days after the [...]
+                                        Công ty mạng xã hội đang thảo luận về việc bán mình cho Elon, một diễn biến đầy kịch tính chỉ 11 ngày sau khi [...]
                                     </div>
                                     <div class="meta-bot lh-1 mt-40">
                                         <ul class="d-flex">
                                             <li class="date me-5">
-                                                <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14,
-                                                    2022</a>
+                                                <a href="home-default.html#"><i class="la la-calendar me-2"></i> 14 Tháng 12, 2022</a>
                                             </li>
                                             <li class="author me-5">
-                                                <a href="home-default.html#"><i class="la la-user me-2"></i> by Admin
-                                                </a>
+                                                <a href="home-default.html#"><i class="la la-user me-2"></i> bởi Quản trị viên</a>
                                             </li>
                                             <li class="comment">
-                                                <a href="home-default.html#"><i class="la la-comment me-2"></i> 55
-                                                    Comments</a>
+                                                <a href="home-default.html#"><i class="la la-comment me-2"></i> 55 bình luận</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -782,6 +776,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-4 border-end brd-gray border-1">
                         <div class="tc-post-list-style2">
                             <div class="items">
@@ -795,17 +790,18 @@
                                         <div class="col-8">
                                             <div class="content">
                                                 <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
-                                                    politics
+                                                    chính trị
                                                 </div>
                                                 <h5 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html"
-                                                       class="hover-underline">Disputes in the South China
-                                                        Sea show no sign of ending</a>
+                                                    <a href="page-single-post-creative.html" class="hover-underline">
+                                                        Tranh chấp ở Biển Đông vẫn chưa có dấu hiệu chấm dứt
+                                                    </a>
                                                 </h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="item">
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
@@ -815,19 +811,22 @@
                                         </div>
                                         <div class="col-8">
                                             <div class="content">
-                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">sport
-                                                    <b class="text-danger"> <i
-                                                            class="icon-6 rounded-circle bg-danger ms-2 me-1 d-inline-block"></i>
-                                                        live</b></div>
+                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">thể thao
+                                                    <b class="text-danger">
+                                                        <i class="icon-6 rounded-circle bg-danger ms-2 me-1 d-inline-block"></i>
+                                                        trực tiếp
+                                                    </b>
+                                                </div>
                                                 <h5 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html"
-                                                       class="hover-underline">Live of MLB Baseball 2022:
-                                                        NY Yankees Vs NY Mets</a>
+                                                    <a href="page-single-post-creative.html" class="hover-underline">
+                                                        Trực tiếp MLB Baseball 2022: NY Yankees đấu với NY Mets
+                                                    </a>
                                                 </h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="item">
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
@@ -838,16 +837,18 @@
                                         <div class="col-8">
                                             <div class="content">
                                                 <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
-                                                    lifestyle
+                                                    phong cách sống
                                                 </div>
                                                 <h5 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html"
-                                                       class="hover-underline">Paddling in Miami Beach</a>
+                                                    <a href="page-single-post-creative.html" class="hover-underline">
+                                                        Chèo thuyền tại bãi biển Miami
+                                                    </a>
                                                 </h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="item">
                                     <div class="row gx-3 align-items-center">
                                         <div class="col-4">
@@ -858,62 +859,22 @@
                                         <div class="col-8">
                                             <div class="content">
                                                 <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
-                                                    business
+                                                    kinh doanh
                                                 </div>
                                                 <h5 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html"
-                                                       class="hover-underline">Stock market in last week:
-                                                        "The strength of bulls"</a>
+                                                    <a href="page-single-post-creative.html" class="hover-underline">
+                                                        Thị trường chứng khoán tuần qua: "Sức mạnh của phe bò"
+                                                    </a>
                                                 </h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="item">
-                                    <div class="row gx-3 align-items-center">
-                                        <div class="col-4">
-                                            <div class="img th-70 img-cover">
-                                                <img src="client/assets/img/latest/7.png" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-8">
-                                            <div class="content">
-                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
-                                                    lifestyle
-                                                </div>
-                                                <h5 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html"
-                                                       class="hover-underline">Stock market in last week:
-                                                        "The strength of bulls"</a>
-                                                </h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item border-0">
-                                    <div class="row gx-3 align-items-center">
-                                        <div class="col-4">
-                                            <div class="img th-70 img-cover">
-                                                <img src="client/assets/img/latest/8.png" alt="">
-                                            </div>
-                                        </div>
-                                        <div class="col-8">
-                                            <div class="content">
-                                                <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
-                                                    lifestyle
-                                                </div>
-                                                <h5 class="title ltspc--1">
-                                                    <a href="page-single-post-creative.html"
-                                                       class="hover-underline">Helm Extract Infuse cream,
-                                                        1000mg Full spectrum</a>
-                                                </h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-3">
                         <div class="tc-post-grid-default border-1 border-bottom brd-gray pb-10">
                             <div class="item">
@@ -921,51 +882,43 @@
                                     <img src="client/assets/img/latest/2.png" alt="">
                                 </div>
                                 <div class="content pt-20">
-                                    <a href="home-default.html#"
-                                       class="news-cat color-999 fsz-13px text-uppercase mb-10">travel</a>
-                                    <h5 class="title ltspc--1 mb-10"><a href="page-single-post-creative.html">Fact
-                                            of Camel in Dubai</a></h5>
+                                    <a href="home-default.html#" class="news-cat color-999 fsz-13px text-uppercase mb-10">du lịch</a>
+                                    <h5 class="title ltspc--1 mb-10">
+                                        <a href="page-single-post-creative.html">Sự thật về lạc đà ở Dubai</a>
+                                    </h5>
                                     <div class="text color-666">
-                                        Crime rates on trains and buses are up in some of the nation’s biggest [...]
+                                        Tỉ lệ tội phạm trên tàu và xe buýt đang tăng tại một số thành phố lớn [...]
                                     </div>
                                     <div class="meta-bot lh-1 mt-20">
                                         <ul class="d-flex">
                                             <li class="date me-5">
-                                                <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 25,
-                                                    2022</a>
+                                                <a href="home-default.html#"><i class="la la-calendar me-2"></i> 25 Tháng 12, 2022</a>
                                             </li>
                                             <li class="comment">
-                                                <a href="home-default.html#"><i class="la la-comment me-2"></i> 8 </a>
+                                                <a href="home-default.html#"><i class="la la-comment me-2"></i> 8 bình luận</a>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="pt-15">
-                            <span class="fsz-12px color-999 text-capitalize fst-italic">Related Post</span>
+                            <span class="fsz-12px color-999 text-capitalize fst-italic">Bài viết liên quan</span>
                             <a href="page-single-post-creative.html" class="d-flex my-3">
-                                <span class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
-                                <h6 class="fsz-16px">
-                                    Top 10 Destinations not to be missed this summer
-                                </h6>
+                                <h6 class="fsz-16px">Top 10 điểm đến không thể bỏ lỡ hè này</h6>
                             </a>
                             <a href="page-single-post-creative.html" class="d-flex my-3">
-                                <span class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
-                                <h6 class="fsz-16px">
-                                    Travel experience Switzerland self-sufficient in 4D3N
-                                </h6>
+                                <h6 class="fsz-16px">Trải nghiệm du lịch tự túc Thụy Sĩ 4N3Đ</h6>
                             </a>
                             <a href="page-single-post-creative.html" class="d-flex my-3">
-                                <span class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
-                                <h6 class="fsz-16px">
-                                    Discovery Devon island, Canada
-                                </h6>
+                                <h6 class="fsz-16px">Khám phá đảo Devon, Canada</h6>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
     <!-- ====== end Latest news ====== -->

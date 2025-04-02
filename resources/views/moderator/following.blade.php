@@ -1,4 +1,4 @@
-@extends('user.layouts.master')
+@extends('moderator.layouts.master')
 
 @section('title')
     Hoạt Động Bình Luận

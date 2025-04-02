@@ -25,8 +25,8 @@
                                 </div>
                                 <div class="weather-form position-absolute bg-white p-3 rounded shadow" style="display: none; top: 100%; left: 0; z-index: 1000; min-width: 250px;">
                                     <div class="form-group">
-                                        <input type="text" id="cityInput" class="form-control mb-2" placeholder="Enter city name">
-                                        <button class="btn btn-primary btn-sm w-100" onclick="updateWeather()">Update Weather</button>
+                                        <input type="text" id="cityInput" class="form-control mb-2" placeholder="Nhập Tên Thành Phố ">
+                                        <button class="btn btn-primary btn-sm w-100" onclick="updateWeather()">Cập Nhật Thành Phố </button>
                                     </div>
                                 </div>
                             </div>
@@ -46,7 +46,7 @@
                             <a href="home-default.html#0"
                                class="text-uppercase fs-6 border-bottom border-1 border-dark subs">
                                 <i class="la la-envelope fs-5 me-1"></i>
-                                Subscribe
+                             Đăng Ký
                             </a>
                         </div>
                         <div class="col-6">
@@ -61,18 +61,18 @@
                         </div>
                     </div>
                     <div class="nav-subs-card">
-                        <p class="fsz-16px text-uppercase mb-20"> Newsletter </p>
+                        <p class="fsz-16px text-uppercase mb-20"> Bản tin </p>
                         <div class="sub-form">
                             <div class="form-group">
                                 <span class="icon">
                                     <i class="la la-envelope"></i>
                                 </span>
-                                <input type="text" class="form-control" placeholder="your email">
-                                <button>subscribe</button>
+                                <input type="text" class="form-control" placeholder="Nhập email của bạn">
+                                <button>đăng ký </button>
                             </div>
-                            <p class="mt-3 color-666 fsz-12px fst-italic">By subscribing, you accepted the
-                                our <a href="home-default.html#0"
-                                       class="color-777 text-decoration-underline fst-normal">Policy</a></p>
+                            <p class="mt-3 color-666 fsz-12px fst-italic">Bằng cách đăng ký, bạn đã chấp nhận
+                                của chúng tôi <a href="home-default.html#0"
+                                       class="color-777 text-decoration-underline fst-normal">Chính sách</a></p>
                         </div>
                         <span class="cls"> <i class="la la-times"></i> </span>
                     </div>

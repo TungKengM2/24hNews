@@ -390,4 +390,6 @@ class ArticleUserController extends Controller
             ], 500);
         }
     }
+
+    
 }
