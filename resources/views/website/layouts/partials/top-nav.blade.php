@@ -104,7 +104,7 @@ aria-labelledby="offcanvasExampleLabel">
                       <h5 href="{{ route('client.category.show', $category->slug) }}">
                           {{ $category->name }}
                       </h5>
-                      <span class="num">{{ optional($category->articles)->count() }}</span>
+                      <span class="num">{{ $loop->iteration }}</span>  {{-- hiển thị số thứ tự của danh mục --}}
                   </div>
                 </div>
             </a>
