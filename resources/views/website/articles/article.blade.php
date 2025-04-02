@@ -69,9 +69,11 @@
                 <div class="tc-main-post-content color-000">
                     <div class="row">
                         <div class="col-lg-1">
-                            <div class="sharing d-flex flex-column align-items-center gap-4 sticky-top" style="top: 100px; padding-top: 20px;">
+                            <div class="sharing d-flex flex-column align-items-center gap-4 sticky-top"
+                                style="top: 100px; padding-top: 20px;">
                                 <!-- Nút Like -->
-                                <button id="likeButton" class="d-flex flex-column align-items-center gap-1 border-0 bg-transparent mb-3"
+                                <button id="likeButton"
+                                    class="d-flex flex-column align-items-center gap-1 border-0 bg-transparent mb-3"
                                     data-article-id="{{ $article->article_id }}"
                                     data-liked="{{ $isLiked ? 'true' : 'false' }}"
                                     style="outline: none; box-shadow: none; cursor: pointer;">
@@ -85,7 +87,7 @@
                                 </button>
 
                                 <!-- Nút Bookmark -->
-                                <a href="#" id="bookmarkButton"
+                                <a href="" id="bookmarkButton"
                                     class="d-flex flex-column align-items-center gap-1 text-decoration-none mb-3"
                                     data-article-id="{{ $article->article_id }}"
                                     onclick="toggleBookmark(this, {{ $article->article_id }}); return false;">
@@ -225,7 +227,8 @@
                                                 <div class="inf w-100">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <h6 class="fw-bold">
-                                                           <a href="{{ route('website.profileAuth', ['id' => $comment->user->user_id]) }}"><?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?></a>
+                                                            <a
+                                                                href="{{ route('website.profileAuth', ['id' => $comment->user->user_id]) }}"><?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?></a>
                                                         </h6>
                                                         <span class="fs-12px text-muted">
                                                             <i class="fas fa-clock"></i>
@@ -391,7 +394,7 @@
                                         <div class="d-flex justify-content-center mt-4">
                                             {{ $comments->links() }}
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -696,9 +699,9 @@
 
 
 
-            <!-- ====== start modals ====== -->
+        <!-- ====== start modals ====== -->
 
-            <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
+        <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
             aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
                 <div class="logo">
@@ -708,7 +711,8 @@
                     aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mt-4">
-                <h6 class="color-000 text-uppercase mb-15 ltspc-1 fw-bold"> Giới Thiệu News24h <i class="la la-angle-right ms-1"></i>
+                <h6 class="color-000 text-uppercase mb-15 ltspc-1 fw-bold"> Giới Thiệu News24h <i
+                        class="la la-angle-right ms-1"></i>
                 </h6>
                 <div class="text mb-4">
                     News24h là nền tảng tin tức hàng đầu Việt Nam, cung cấp thông tin chính xác, đa dạng và cập nhật 24/7.
@@ -749,7 +753,8 @@
                     <ul class="m-0">
                         <li class="mb-3">
                             <i class="las la-map-marker me-2 color-main fs-5"></i>
-                            <a href="#">Tòa nhà FPT Polytechnic., Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội</a>
+                            <a href="#">Tòa nhà FPT Polytechnic., Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ
+                                Liêm, Hà Nội</a>
                         </li>
                         <li class="mb-3">
                             <i class="las la-envelope me-2 color-main fs-5"></i>
@@ -779,93 +784,6 @@
         </div>
         <!-- ====== end modals ====== -->
 
-
-
-
-
-
-
-
-
-
-
-        <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
-            aria-labelledby="offcanvasExampleLabel">
-            <div class="offcanvas-header">
-                <div class="logo">
-                    <img src="client/assets/img/logo_home1.png" alt="" class="dark-none">
-                    <img src="client/assets/img/logo_home1_lt.png" alt="" class="light-none">
-                </div>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                    aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body mt-4">
-                <h6 class="color-000 text-uppercase mb-15 ltspc-1"> about us <i class="la la-angle-right ms-1"></i>
-                </h6>
-                <div class="text">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem optio tempora quia iure quae.
-                    Soluta corporis quidem aperiam amet nihil.
-                </div>
-
-                <div class="sidebar-categories mt-40">
-                    <h6 class="color-000 text-uppercase mb-30 ltspc-1"> categories <i class="la la-angle-right ms-1"></i>
-                    </h6>
-
-                    @foreach ($category2 as $category)
-                        <a href="{{ route('client.category.show', $category->slug) }}" class="cat-card">
-                            <div class="img img-cover ">
-
-                                <div class="info">
-                                    <h5 href="{{ route('client.category.show', $category->slug) }}">
-                                        {{ $category->name }}
-                                    </h5>
-                                    <span class="num">{{ $loop->iteration }}</span> <!-- Số thứ tự danh mục -->
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
-
-
-                </div>
-                <div class="sidebar-contact-info mt-50">
-                    <h6 class="color-000 text-uppercase mb-20 ltspc-1"> Contact & follow <i
-                            class="la la-angle-right ms-1"></i></h6>
-                    <ul class="m-0">
-                        <li class="mb-3">
-                            <i class="las la-map-marker me-2 color-main fs-5"></i>
-                            <a href="home-default.html#">streat name 12, hollywood City, USA</a>
-                        </li>
-                        <li class="mb-3">
-                            <i class="las la-envelope me-2 color-main fs-5"></i>
-                            <a href="home-default.html#">Newzin@gmail.com</a>
-                        </li>
-                        <li class="mb-3">
-                            <i class="las la-phone-volume me-2 color-main fs-5"></i>
-                            <a href="home-default.html#">+12 123 456 789</a>
-                        </li>
-                    </ul>
-                    <div class="social-links">
-                        <a href="home-default.html#">
-                            <i class="la la-twitter"></i>
-                        </a>
-                        <a href="home-default.html#">
-                            <i class="la la-facebook-f"></i>
-                        </a>
-                        <a href="home-default.html#">
-                            <i class="la la-instagram"></i>
-                        </a>
-                        <a href="home-default.html#">
-                            <i class="la la-youtube"></i>
-                        </a>
-                        <a href="home-default.html#">
-                            <i class="la la-spotify"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
         <!-- Modal báo cáo bài viết -->
         <div id="reportArticleModal" class="modal fade" tabindex="-1" aria-labelledby="reportArticleLabel"
             aria-hidden="true">
@@ -879,7 +797,18 @@
                         <input type="hidden" id="report-article-id">
                         <div class="mb-3">
                             <label for="report-article-reason" class="form-label">Lý do báo cáo:</label>
-                            <textarea id="report-article-reason" class="form-control" rows="4"></textarea>
+
+                            <!-- Gợi ý (Cách đều với textarea) -->
+                            <div class="mt-2 mb-2 d-flex flex-wrap gap-2">
+                                <span class="badge bg-secondary suggestion">Nội dung không phù hợp</span>
+                                <span class="badge bg-secondary suggestion">Spam hoặc lừa đảo</span>
+                                <span class="badge bg-secondary suggestion">Thông tin sai lệch</span>
+                                <span class="badge bg-secondary suggestion">Ngôn từ kích động</span>
+                            </div>
+
+                            <!-- Textarea nhập lý do -->
+                            <textarea id="report-article-reason" class="form-control" rows="4"
+                                placeholder="Nhập lý do hoặc chọn từ danh sách gợi ý..."></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -890,35 +819,83 @@
             </div>
         </div>
 
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                document.querySelectorAll(".suggestion").forEach(item => {
+                    item.addEventListener("click", function() {
+                        let textarea = document.getElementById("report-article-reason");
+                        let reason = this.textContent;
+
+                        // Nếu textarea chưa có nội dung, đặt giá trị mới
+                        if (!textarea.value) {
+                            textarea.value = reason;
+                        } else {
+                            // Nếu đã có nội dung, thêm xuống dòng để không ghi đè
+                            textarea.value += "\n" + reason;
+                        }
+                    });
+                });
+            });
+        </script>
+
+
         <!-- Modal nhập lý do RepostComment -->
         <div id="repostModal" class="modal fade" tabindex="-1" aria-labelledby="repostModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content shadow-lg border-0">
                     <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="repostModalLabel"><i class="fas fa-retweet me-2"></i> Repost - Nhập
-                            lý do</h5>
+                        <h5 class="modal-title" id="repostModalLabel">
+                            <i class="fas fa-retweet me-2"></i> Repost bình luận
+                        </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="repost-comment-id">
                         <div class="mb-3">
-                            <label for="repost-reason" class="form-label fw-bold">Lý do repost (có thể chỉnh sửa):</label>
+                            <label for="repost-reason" class="form-label fw-bold">Lý do repost :</label>
+                            <div class="mt-2 mb-2 d-flex flex-wrap gap-2">
+                                <span class="badge bg-secondary suggestion">Bình luận vi phạm</span>
+                                <span class="badge bg-secondary suggestion">Ngôn từ xúc phạm</span>
+                                <span class="badge bg-secondary suggestion">Spam hoặc quảng cáo</span>
+                                <span class="badge bg-secondary suggestion">Thông tin sai lệch</span>
+                            </div>
+
+                            <!-- Textarea nhập lý do -->
                             <textarea id="repost-reason" class="form-control border-primary shadow-sm" rows="4"
                                 placeholder="Nhập nội dung repost ..."></textarea>
+
+                            <!-- Gợi ý ngay bên dưới textarea -->
+                            
                         </div>
                     </div>
                     <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            Hủy
-                        </button>
-                        <button type="button" class="btn btn-primary" id="confirmRepost">
-                            Xác nhận
-                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="confirmRepost">Xác nhận</button>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                document.querySelectorAll(".suggestion").forEach(item => {
+                    item.addEventListener("click", function() {
+                        let textarea = document.getElementById("repost-reason");
+                        let reason = this.textContent;
+
+                        // Nếu textarea chưa có nội dung, đặt giá trị mới
+                        if (!textarea.value) {
+                            textarea.value = reason;
+                        } else {
+                            // Nếu đã có nội dung, thêm xuống dòng để không ghi đè
+                            textarea.value += "\n" + reason;
+                        }
+                    });
+                });
+            });
+        </script>
+
 
         <!-- ====== end Related products ====== -->
     </main>
@@ -955,7 +932,7 @@
                             } else {
                                 likeIcon.classList.remove("fa-solid");
                                 likeIcon.classList.add("fa-regular");
-                                likeIcon.style.color = "white";
+                                likeIcon.style.color = "black";
                             }
                         }
                     })
