@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Tag;
 use App\Models\User;
 use App\Notifications\ArticleStatusUpdated;
+use App\Notifications\PendingArticleNotification;
 use App\Services\ModerationService;
 use DOMDocument;
 use Exception;
@@ -70,7 +71,7 @@ class ArticleController extends Controller
 
         $rules = [
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:articles,slug,'.$article->article_id.',article_id',
+            'slug' => 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id',
             'category_id' => 'required|exists:categories,category_id',
             'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'status' => 'required|in:draft,pending,published,archived,rejected',
@@ -109,7 +110,8 @@ class ArticleController extends Controller
 
         if (($request->has_blocked_images === 'true' || session()->has('blocked_images'))
             && $request->confirmed_submit !== 'true'
-            && $request->status !== 'draft') {
+            && $request->status !== 'draft'
+        ) {
             $blockedImages = session('blocked_images', []);
 
             $errorMessage = 'Bài viết chứa hình ảnh không vượt qua kiểm duyệt. Vui lòng kiểm tra lại nội dung trước khi gửi.';
@@ -128,23 +130,30 @@ class ArticleController extends Controller
 
             if ($request->blocked_images_list) {
                 try {
-                    $clientBlockedImages = json_decode($request->blocked_images_list,
-                        true);
+                    $clientBlockedImages = json_decode(
+                        $request->blocked_images_list,
+                        true
+                    );
                     if (is_array($clientBlockedImages)) {
                         foreach ($clientBlockedImages as $url) {
                             $blockedUrls[] = $url;
                         }
                     }
                 } catch (Exception $e) {
-                    Log::error('Lỗi giải mã danh sách ảnh bị chặn: '.$e->getMessage());
+                    Log::error('Lỗi giải mã danh sách ảnh bị chặn: ' . $e->getMessage());
                 }
             }
 
             if (! empty($blockedUrls) || ! empty($blockedImages)) {
                 $dom = new DOMDocument;
-                @$dom->loadHTML(mb_convert_encoding($content,
-                    'HTML-ENTITIES', 'UTF-8'),
-                    LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+                @$dom->loadHTML(
+                    mb_convert_encoding(
+                        $content,
+                        'HTML-ENTITIES',
+                        'UTF-8'
+                    ),
+                    LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+                );
 
                 $images = $dom->getElementsByTagName('img');
 
@@ -174,7 +183,7 @@ class ArticleController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->withErrors(['content' => 'Lỗi kiểm duyệt nội dung: '.$moderationResult['message']]);
+                ->withErrors(['content' => 'Lỗi kiểm duyệt nội dung: ' . $moderationResult['message']]);
         }
 
         if ($moderationResult['violation_level'] === 'high') {
@@ -182,7 +191,7 @@ class ArticleController extends Controller
                 ->back()
                 ->withInput()
                 ->withErrors([
-                    'content' => 'Nội dung vi phạm nghiêm trọng: '.implode(
+                    'content' => 'Nội dung vi phạm nghiêm trọng: ' . implode(
                         ', ',
                         $moderationResult['violations']
                     ),
@@ -205,7 +214,7 @@ class ArticleController extends Controller
                 return redirect()
                     ->back()
                     ->withInput()
-                    ->withErrors(['thumbnail_url' => 'Lỗi kiểm duyệt ảnh đại diện: '.$thumbnailModerationResult['message']]);
+                    ->withErrors(['thumbnail_url' => 'Lỗi kiểm duyệt ảnh đại diện: ' . $thumbnailModerationResult['message']]);
             }
 
             if ($thumbnailModerationResult['violation_level'] === 'high') {
@@ -213,7 +222,7 @@ class ArticleController extends Controller
                     ->back()
                     ->withInput()
                     ->withErrors([
-                        'thumbnail_url' => 'Ảnh đại diện vi phạm quy định: '.implode(
+                        'thumbnail_url' => 'Ảnh đại diện vi phạm quy định: ' . implode(
                             ', ',
                             $thumbnailModerationResult['violations']
                         ),
@@ -223,8 +232,10 @@ class ArticleController extends Controller
         }
 
         $finalViolationLevel = $moderationResult['violation_level'];
-        if (in_array($thumbnailModerationResult['violation_level'], ['medium', 'high']) &&
-            ($thumbnailModerationResult['violation_level'] === 'high' || $finalViolationLevel !== 'high')) {
+        if (
+            in_array($thumbnailModerationResult['violation_level'], ['medium', 'high']) &&
+            ($thumbnailModerationResult['violation_level'] === 'high' || $finalViolationLevel !== 'high')
+        ) {
             $finalViolationLevel = $thumbnailModerationResult['violation_level'];
         }
 
@@ -241,7 +252,7 @@ class ArticleController extends Controller
 
         if (! empty($thumbnailModerationResult['reason'])) {
             foreach ($thumbnailModerationResult['reason'] as $key => $reason) {
-                $allReasons['thumbnail_'.$key] = 'Ảnh đại diện: '.$reason;
+                $allReasons['thumbnail_' . $key] = 'Ảnh đại diện: ' . $reason;
             }
         }
 
@@ -267,9 +278,9 @@ class ArticleController extends Controller
             'user_id' => auth()->id(),
             'status' => 'pending', 
             'remarks' => $finalViolationLevel === 'high'
-                ? 'Nội dung vi phạm nghiêm trọng: '.implode(', ', $allViolations)
+                ? 'Nội dung vi phạm nghiêm trọng: ' . implode(', ', $allViolations)
                 : ($finalViolationLevel === 'medium'
-                    ? 'Nội dung cần kiểm duyệt: '.implode(', ', $allViolations)
+                    ? 'Nội dung cần kiểm duyệt: ' . implode(', ', $allViolations)
                     : 'Đã cập nhật, chờ kiểm duyệt lại'),
             'approved_by' => null, 
             'violation_level' => $finalViolationLevel,
@@ -299,18 +310,24 @@ class ArticleController extends Controller
                 ->back()
                 ->withInput()
                 ->withErrors([
-                    'content' => 'Nội dung vi phạm nghiêm trọng: '.implode(
+                    'content' => 'Nội dung vi phạm nghiêm trọng: ' . implode(
                         ', ',
                         $allViolations
                     ),
                 ])
                 ->with('violation_reasons', $allReasons)
                 ->with('violations', $allViolations);
-        }
 
-        return redirect()
-            ->route('author.articles.index')
-            ->with('success', 'Bài viết đã được cập nhật thành công và đang chờ phê duyệt!');
+            // Gửi thông báo cho moderator quản lý danh mục này
+            $moderator = $article->category->moderator;
+            if ($moderator) {
+                $moderator->notify(new PendingArticleNotification($article));
+            }
+
+            return redirect()
+                ->route('author.articles.index')
+                ->with('success', 'Bài viết đã được tạo thành công và đang chờ phê duyệt!');
+        }
     }
 
     public function store(Request $request)
@@ -351,7 +368,8 @@ class ArticleController extends Controller
 
         if (($request->has_blocked_images === 'true' || session()->has('blocked_images'))
             && $request->confirmed_submit !== 'true'
-            && $request->status !== 'draft') {
+            && $request->status !== 'draft'
+        ) {
             $blockedImages = session('blocked_images', []);
 
             $errorMessage = 'Bài viết chứa hình ảnh không vượt qua kiểm duyệt. Vui lòng kiểm tra lại nội dung trước khi gửi.';
@@ -376,23 +394,30 @@ class ArticleController extends Controller
 
             if ($request->blocked_images_list) {
                 try {
-                    $clientBlockedImages = json_decode($request->blocked_images_list,
-                        true);
+                    $clientBlockedImages = json_decode(
+                        $request->blocked_images_list,
+                        true
+                    );
                     if (is_array($clientBlockedImages)) {
                         foreach ($clientBlockedImages as $url) {
                             $blockedUrls[] = $url;
                         }
                     }
                 } catch (Exception $e) {
-                    Log::error('Lỗi giải mã danh sách ảnh bị chặn: '.$e->getMessage());
+                    Log::error('Lỗi giải mã danh sách ảnh bị chặn: ' . $e->getMessage());
                 }
             }
 
             if (! empty($blockedUrls)) {
                 $dom = new DOMDocument;
-                @$dom->loadHTML(mb_convert_encoding($content,
-                    'HTML-ENTITIES', 'UTF-8'),
-                    LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+                @$dom->loadHTML(
+                    mb_convert_encoding(
+                        $content,
+                        'HTML-ENTITIES',
+                        'UTF-8'
+                    ),
+                    LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+                );
 
                 $images = $dom->getElementsByTagName('img');
                 $nodesToRemove = [];
@@ -422,7 +447,7 @@ class ArticleController extends Controller
                 return redirect()
                     ->back()
                     ->withInput()
-                    ->withErrors(['content' => 'Lỗi kiểm duyệt nội dung: '.$moderationResult['message']]);
+                    ->withErrors(['content' => 'Lỗi kiểm duyệt nội dung: ' . $moderationResult['message']]);
             }
 
             if ($moderationResult['violation_level'] === 'high') {
@@ -430,7 +455,7 @@ class ArticleController extends Controller
                     ->back()
                     ->withInput()
                     ->withErrors([
-                        'content' => 'Nội dung vi phạm nghiêm trọng: '.implode(
+                        'content' => 'Nội dung vi phạm nghiêm trọng: ' . implode(
                             ', ',
                             $moderationResult['violations']
                         ),
@@ -453,7 +478,7 @@ class ArticleController extends Controller
                     return redirect()
                         ->back()
                         ->withInput()
-                        ->withErrors(['thumbnail_url' => 'Lỗi kiểm duyệt ảnh đại diện: '.$thumbnailModerationResult['message']]);
+                        ->withErrors(['thumbnail_url' => 'Lỗi kiểm duyệt ảnh đại diện: ' . $thumbnailModerationResult['message']]);
                 }
 
                 if ($thumbnailModerationResult['violation_level'] === 'high') {
@@ -461,7 +486,7 @@ class ArticleController extends Controller
                         ->back()
                         ->withInput()
                         ->withErrors([
-                            'thumbnail_url' => 'Ảnh đại diện vi phạm quy định: '.implode(
+                            'thumbnail_url' => 'Ảnh đại diện vi phạm quy định: ' . implode(
                                 ', ',
                                 $thumbnailModerationResult['violations']
                             ),
@@ -471,8 +496,10 @@ class ArticleController extends Controller
             }
 
             $finalViolationLevel = $moderationResult['violation_level'];
-            if (in_array($thumbnailModerationResult['violation_level'], ['medium', 'high']) &&
-                ($thumbnailModerationResult['violation_level'] === 'high' || $finalViolationLevel !== 'high')) {
+            if (
+                in_array($thumbnailModerationResult['violation_level'], ['medium', 'high']) &&
+                ($thumbnailModerationResult['violation_level'] === 'high' || $finalViolationLevel !== 'high')
+            ) {
                 $finalViolationLevel = $thumbnailModerationResult['violation_level'];
             }
 
@@ -489,7 +516,7 @@ class ArticleController extends Controller
 
             if (! empty($thumbnailModerationResult['reason'])) {
                 foreach ($thumbnailModerationResult['reason'] as $key => $reason) {
-                    $allReasons['thumbnail_'.$key] = 'Ảnh đại diện: '.$reason;
+                    $allReasons['thumbnail_' . $key] = 'Ảnh đại diện: ' . $reason;
                 }
             }
 
@@ -517,9 +544,9 @@ class ArticleController extends Controller
                 'user_id' => auth()->id(),
                 'status' => 'pending',
                 'remarks' => $finalViolationLevel === 'high'
-                    ? 'Nội dung vi phạm nghiêm trọng: '.implode(', ', $allViolations)
+                    ? 'Nội dung vi phạm nghiêm trọng: ' . implode(', ', $allViolations)
                     : ($finalViolationLevel === 'medium'
-                        ? 'Nội dung cần kiểm duyệt: '.implode(', ', $allViolations)
+                        ? 'Nội dung cần kiểm duyệt: ' . implode(', ', $allViolations)
                         : 'Bài viết mới, chờ kiểm duyệt'),
                 'approved_by' => null,
                 'violation_level' => $finalViolationLevel,
@@ -544,6 +571,16 @@ class ArticleController extends Controller
                 ->withInput()
                 ->withErrors($e->errors());
         } catch (Exception $e) {
+
+            // Gửi thông báo cho moderator quản lý danh mục này
+            $moderator = $article->category->moderator;
+            if ($moderator) {
+                $moderator->notify(new PendingArticleNotification($article));
+            }
+
+            return redirect()
+                ->route('author.articles.index')
+                ->with('success', 'Bài viết đã được cập nhật thành công và đang chờ phê duyệt!');
             return redirect()
                 ->route('author.articles.index')
                 ->with(
@@ -735,7 +772,7 @@ class ArticleController extends Controller
         }
 
         $message = "Bài viết '{$article->title}' của bạn đã được " .
-                   ($article->status === 'published' ? 'duyệt.' : 'từ chối.');
+            ($article->status === 'published' ? 'duyệt.' : 'từ chối.');
 
         try {
             $article->author->notify(new ArticleStatusUpdated($article, $message));

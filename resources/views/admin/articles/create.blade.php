@@ -138,7 +138,7 @@
                         @endif
 
                         <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data"
-                              id="articleForm">
+                            id="articleForm">
                             @csrf
 
                             <div class="form-section">
@@ -147,13 +147,13 @@
                                     <div class="col-md-6 mb-3">
                                         <label for="title" class="form-label">Tiêu đề</label>
                                         <input type="text" class="form-control" id="title" name="title"
-                                               value="{{ old('title') }}" required>
+                                            value="{{ old('title') }}" required>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label for="slug" class="form-label">Đường dẫn</label>
                                         <input type="text" class="form-control" id="slug" name="slug"
-                                               value="{{ old('slug') }}" required>
+                                            value="{{ old('slug') }}" required>
                                     </div>
                                 </div>
 
@@ -191,13 +191,13 @@
                                     <div class="col-md-6">
                                         <label for="thumbnail_url" class="form-label">Chọn ảnh đại diện</label>
                                         <input type="file"
-                                               class="form-control @error('thumbnail_url') is-invalid @enderror"
-                                               id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
+                                            class="form-control @error('thumbnail_url') is-invalid @enderror"
+                                            id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
 
                                         @error('thumbnail_url')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
                                         @enderror
 
                                         @if (session('thumbnail_reasons'))
@@ -237,7 +237,7 @@
                                     <label for="content" class="form-label">Nội dung</label>
                                     @if (session()->has('violations') && !empty(session('violations')))
                                         <textarea id="full-featured" name="content"
-                                                  style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                                            style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
                                         {!! highlightWords(old('content', isset($article) ? $article->content : ''), session('violations')) !!}
                                         </textarea>
                                     @else
@@ -339,12 +339,12 @@
                                     formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
 
                                     fetch('/api/check-image-moderation', {
-                                        method: 'POST',
-                                        body: formData,
-                                        headers: {
-                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                        },
-                                    })
+                                            method: 'POST',
+                                            body: formData,
+                                            headers: {
+                                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                            },
+                                        })
                                         .then(response => {
                                             if (!response.ok) {
                                                 throw new Error('Lỗi kết nối: ' + response.status);
@@ -422,8 +422,8 @@
                                     reader.onload = function(e) {
                                         const arrayBuffer = e.target.result;
                                         mammoth.extractRawText({
-                                            arrayBuffer: arrayBuffer,
-                                        })
+                                                arrayBuffer: arrayBuffer,
+                                            })
                                             .then(function(result) {
                                                 document.getElementById('editor').innerHTML = result.value;
                                             })
