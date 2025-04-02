@@ -9,6 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="/admin/main/../images/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <title>@yield('title')</title>
 
