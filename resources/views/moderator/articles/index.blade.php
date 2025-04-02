@@ -23,7 +23,6 @@
                             </nav>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -31,181 +30,165 @@
             <div class="container-full">
                 <div class="col-12">
                     <div class="box">
-                        <div class="box-header">
+                        <div class="box-header with-border d-flex justify-content-between align-items-center">
+                            <div>
+                                <a href="{{ route('moderator.dashboard') }}" class="btn btn-default">
+                                    <i class="fa fa-arrow-left me-1"></i> Quay Lại Trang Chủ
+                                </a>
+                            </div>
 
-
-                            <button type="button" class="waves-effect waves-light btn btn-default mb-5"><a
-                                    href="{{ route('moderator.dashboard') }}">
-                                    Back to Dashboard
-                                </a></button>
-                            {{-- <button type="button" class="waves-effect waves-light btn btn-primary mb-5"> <a
-                                    href="{{ route('articles.create') }}">
-                                    <i class="si-plus si"></i>
-                                </a></button> --}}
-
-                            {{-- <form method="GET" action="{{ route('articles.index') }}">
-                                <div class="d-flex align-items-center mb-3">
-                                    <label for="filter" class="me-2">Lọc bài viết:</label>
-                                    <select name="filter" class="form-control w-auto" onchange="this.form.submit()">
-                                        <option value="all" {{ request('filter') == 'all' ? 'selected' : '' }}>Tất cả bài
-                                            viết</option>
-                                        <option value="active" {{ request('filter') == 'active' ? 'selected' : '' }}>Bài
-                                            viết có danh mục hoạt động</option>
-                                        <option value="inactive" {{ request('filter') == 'inactive' ? 'selected' : '' }}>Bài
-                                            viết có danh mục bị vô hiệu hóa</option>
-                                        <option value="no_category"
-                                            {{ request('filter') == 'no_category' ? 'selected' : '' }}>Bài viết không có
-                                            danh mục</option>
-                                    </select>
-                                </div>
-                            </form> --}}
-
-
+                            <div class="d-flex">
+                                <form method="GET" action="{{ route('moderator.articles.index') }}" class="me-2">
+                                    <div class="input-group">
+                                        <input type="text" name="search" class="form-control"
+                                            placeholder="Tìm kiếm bài viết..." value="{{ request('search') }}">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
 
                         <div class="box-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6 text-end">
+                                    <span class="badge bg-info">Tổng số: {{ $articles->total() }} bài viết</span>
+                                </div>
+                            </div>
+
                             <div class="table-responsive">
-                                <table class="table table-bordered table-dark mb-0" style="width:100%">
-                                    <thead>
+                                <table class="table table-bordered table-hover mb-0" style="width:100%">
+                                    <thead class="bg-primary text-white">
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Title</th>
-                                            <th>Slug</th>
-                                            <th>Contains Sensitive Content</th>
-                                            <th>Author</th>
-                                            <th>Category</th>
-                                            <th>Thumbnail</th>
-                                            <th>Status</th>
-                                            <th>Views</th>
-                                            <th>Tags</th>
-                                            <th>Approved By</th>
-                                            <th>Actions</th>
+                                            <th class="text-center" width="5%">ID</th>
+                                            <th class="text-center" width="15%">Tiêu Đề</th>
+                                            <th class="text-center" width="10%">Hình Ảnh</th>
+                                            <th class="text-center" width="10%">Danh Mục</th>
+                                            <th class="text-center" width="10%">Trạng Thái</th>
+                                            <th class="text-center" width="10%">Tác Giả</th>
+                                            <th class="text-center" width="10%">Lượt Xem</th>
+                                            {{-- <th width="10%">Nội Dung Nhạy Cảm</th> --}}
+                                            <th class="text-center" width="10%">Tags</th>
+                                            <th class="text-center" width="20%">Thao Tác</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($articles as $article)
+                                        @forelse ($articles as $article)
                                             <tr>
-                                                <td>{{ $article->article_id }}</td>
-                                                <td>{{ $article->title }}</td>
-                                                <td>{{ $article->slug }}</td>
+                                                <td class="text-center">{{ $article->article_id }}</td>
                                                 <td class="text-center">
-                                                    @if ($article->contains_sensitive_content)
-                                                        <span class="badge bg-danger">Yes</span>
-                                                    @else
-                                                        <span class="badge bg-success">No</span>
-                                                    @endif
+                                                    <strong>{{ $article->title }}</strong>
+                                                    <div class="small text-muted">{{ Str::limit($article->slug, 30) }}</div>
                                                 </td>
-                                                <td>{{ $article->author->username ?? 'Unknown' }}</td>
-                                                <td>
+                                                <td class="text-center">
+                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                                        alt="Hình ảnh" class="img-thumbnail" width="80" height="80">
+                                                </td>
+                                                <td class="text-center">
                                                     @if ($article->category)
                                                         @if (!$article->category->is_active)
-                                                            <span class="text-warning">{{$article->category->name}} (Không Hoạt Động)</span>
+                                                            <span class="text-warning">{{ $article->category->name }} <i
+                                                                    class="fa fa-exclamation-triangle"></i></span>
                                                         @else
-                                                            {{ $article->category->name }}
+                                                            <span
+                                                                class="badge bg-info">{{ $article->category->name }}</span>
                                                         @endif
                                                     @else
                                                         <span class="text-danger">Không có danh mục</span>
                                                     @endif
                                                 </td>
-
-                                                <td>
-                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                        alt="Thumbnail" width="100" height="150">
-
-                                                </td>
-                                                <td>
+                                                <td class="text-center">
                                                     @switch($article->status)
                                                         @case('draft')
-                                                            <span class="badge bg-secondary">Draft</span>
+                                                            <span class="badge bg-secondary">Bản Nháp</span>
                                                         @break
 
                                                         @case('pending')
-                                                            <span class="badge bg-warning">Pending</span>
+                                                            <span class="badge bg-warning">Chờ Duyệt</span>
                                                         @break
 
                                                         @case('published')
-                                                            <span class="badge bg-success">Published</span>
+                                                            <span class="badge bg-success">Đã Đăng</span>
                                                         @break
 
                                                         @case('archived')
-                                                            <span class="badge bg-danger">Archived</span>
+                                                            <span class="badge bg-danger">Đã Lưu Trữ</span>
                                                         @break
                                                     @endswitch
                                                 </td>
-                                                <td>{{ $article->views }}</td>
-                                                <td>
-                                                    @if ($article->tags->isNotEmpty())
-                                                        @foreach ($article->tags as $tag)
-                                                            <span class="badge bg-primary">{{ $tag->name }}</span>
-                                                        @endforeach
+                                                <td>{{ $article->author->username ?? 'Chưa xác định' }}</td>
+                                                <td class="text-center">{{ number_format($article->views) }}</td>
+                                                {{-- <td class="text-center">
+                                                    @if ($article->contains_sensitive_content)
+                                                        <span class="badge bg-danger">Có</span>
                                                     @else
-                                                        <span class="text-muted">Không có tag</span>
+                                                        <span class="badge bg-success">Không</span>
                                                     @endif
+                                                </td> --}}
+                                                <td class="text-center">
+                                                    <div>
+                                                        @if ($article->tags->isNotEmpty())
+                                                            @foreach ($article->tags as $tag)
+                                                                <span class="badge bg-primary">{{ $tag->name }}</span>
+                                                            @endforeach
+                                                        @else
+                                                            <small class="text-muted">Không có thẻ</small>
+                                                        @endif
+                                                    </div>
                                                 </td>
-                                                <td>{{ $article->approved_by ? $article->approver->username : 'Not Approved' }}
+                                                <td class="text-center">
+                                                    <div class="d-flex flex-wrap gap-1 mb-2">
+                                                        <a href="{{ route('moderator.articles.show', $article) }}"
+                                                            class="btn btn-info btn-sm" title="Xem chi tiết">
+                                                            <i class="si-eye si"></i>
+                                                        </a>
+
+                                                        @if ($article->status === 'pending')
+                                                            <form
+                                                                action="{{ route('moderator.articles.approve', $article) }}"
+                                                                method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="btn btn-success btn-sm"
+                                                                    title="Duyệt bài viết"
+                                                                    onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
+                                                                    <i class="fa fa-check"></i>
+                                                                </button>
+                                                            </form>
+
+                                                            <form
+                                                                action="{{ route('moderator.articles.reject', $article) }}"
+                                                                method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                                    title="Từ chối bài viết"
+                                                                    onclick="return confirm('Bạn có chắc chắn muốn từ chối bài viết này không?')">
+                                                                    <i class="fa fa-times"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                    </div>
+
+
                                                 </td>
-                                                <td>
-                                                    <a href="{{ route('moderator.articles.show', $article) }}" class="btn btn-info btn-sm">
-                                                        <i class="si-eye si"></i>
-                                                    </a>
-
-                                                    @if ($article->status === 'pending')
-                                                        <form action="{{ route('moderator.articles.approve', $article) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit" class="btn btn-success btn-sm"
-                                                                onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
-                                                                Approve
-                                                            </button>
-                                                        </form>
-
-                                                        <form action="{{ route('moderator.articles.reject', $article) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit" class="btn btn-danger btn-sm"
-                                                                onclick="return confirm('Bạn có chắc chắn muốn từ chối bài viết này không?')">
-                                                                Reject
-                                                            </button>
-                                                        </form>
-                                                    @endif
-                                                </td>
-
-
-
-                                                    {{-- <form action="{{ route('articles.destroy', $article) }}" method="POST"
-                                                        class="d-inline">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button class="btn btn-danger btn-sm"
-                                                            onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
-                                                            <i class="si-trash si"></i>
-                                                        </button>
-                                                    </form> --}}
-
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                <div id="pagination-wrapper" class="d-flex justify-content-end mt-5">
-                                    <nav>
-                                        <ul class="pagination pagination-sm">
-                                            {{ $articles->links('pagination::bootstrap-5') }}
-                                        </ul>
-                                    </nav>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="9" class="text-center">Không có bài viết nào</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                    <div class="d-flex justify-content-end mt-4">
+                                        {{ $articles->links('pagination::bootstrap-5') }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <script>
-                    function filterArticles() {
-                        let filter = document.getElementById("filter").value;
-                        window.location.href = "?filter=" + filter;
-                    }
-                </script>
             </div>
-            <!-- /.content-wrapper -->
         </div>
-    </div>
-@endsection
+    @endsection

@@ -44,7 +44,7 @@
                                     <div class="col-6">
                                         <a href="page-single-post-creative.html#" class="text-uppercase fs-6 border-bottom border-1 border-dark">
                                             <i class="la la-envelope fs-5 me-1"></i>
-                                            Subscribe
+                                            Đăng Ký
                                         </a>
                                     </div>
                                     <div class="col-6">
@@ -88,22 +88,22 @@
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item dropdown">
                                 <a class="nav-link active dropdown-toggle" href="page-single-post-creative.html#" id="navbarDropdown1" role="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    homes
-                                </a>
-                                <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
-                                    <li><a class="dropdown-item" href="home-default.html">home default</a></li>
-                                    <li><a class="dropdown-item" href="home-technology.html">home techonology</a></li>
-                                    <li><a class="dropdown-item" href="home-gaming.html">home gaming</a></li>
-                                    <li><a class="dropdown-item" href="home-food.html">home food</a></li>
-                                    <li><a class="dropdown-item" href="home-bussiness.html">home bussiness</a></li>
-                                    <li><a class="dropdown-item" href="home-politic.html">home politic</a></li>
-                                    <li><a class="dropdown-item" href="home-nft.html">home NFT</a></li>
-                                    <li><a class="dropdown-item" href="home-sport.html">home sport</a></li>
-                                    <li><a class="dropdown-item" href="home-cars.html">home cars</a></li>
-                                    <li><a class="dropdown-item" href="home-10.html">original</a></li>
-                                    <li><a class="dropdown-item" href="rtl-home-sport.html">home sport RTL</a></li>
-                                </ul>
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Trang chủ
+                            </a>
+                            <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
+                                <li><a class="dropdown-item" href="home-default.html">Trang chủ mặc định</a></li>
+                                <li><a class="dropdown-item" href="home-technology.html">Trang chủ công nghệ</a></li>
+                                <li><a class="dropdown-item" href="home-gaming.html">Trang chủ trò chơi</a></li>
+                                <li><a class="dropdown-item" href="home-food.html">Trang chủ ẩm thực</a></li>
+                                <li><a class="dropdown-item" href="home-bussiness.html">Trang chủ kinh doanh</a></li>
+                                <li><a class="dropdown-item" href="home-politic.html">Trang chủ chính trị</a></li>
+                                <li><a class="dropdown-item" href="home-nft.html">Trang chủ NFT</a></li>
+                                <li><a class="dropdown-item" href="home-sport.html">Trang chủ thể thao</a></li>
+                                <li><a class="dropdown-item" href="home-cars.html">Trang chủ ô tô</a></li>
+                                <li><a class="dropdown-item" href="home-10.html">Bản gốc</a></li>
+                                <li><a class="dropdown-item" href="rtl-home-sport.html">Trang chủ thể thao RTL</a></li>
+                            </ul>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="page-single-post-creative.html#" id="navbarDropdown1" role="button"
@@ -112,50 +112,47 @@
                                 </a>
                                 <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
                                     <li><a class="dropdown-item" href="page-blog.html">Blog</a></li>
-                                    <li><a class="dropdown-item" href="page-author.html">authors</a></li>
-                                    <li><a class="dropdown-item" href="page-author-details.html">author details</a></li>
+                                    <li><a class="dropdown-item" href="page-author.html">Tác giả</a></li>
+                                    <li><a class="dropdown-item" href="page-author-details.html">Chi tiết tác giả</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="page-single-post-creative.html#" id="navbarDropdown1" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    Single posts
+                                    Bài viết đơn
                                 </a>
                                 <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
-                                    <li><a class="dropdown-item" href="page-single-post-creative.html">single post
-                                            creative</a></li>
-                                    <li><a class="dropdown-item" href="page-single-post-creative.html">single post
-                                            features</a></li>
-                                    <li><a class="dropdown-item" href="rtl-page-single-post-creative.html">single post
-                                            creative RTL</a></li>
-                                    <li><a class="dropdown-item" href="rtl-page-single-post-features.html">single post
-                                            features RTL</a></li>
+                                    <li><a class="dropdown-item" href="page-single-post-creative.html">Bài viết đơn sáng tạo</a></li>
+                                    <li><a class="dropdown-item" href="page-single-post-creative.html">Bài viết đơn nổi bật</a></li>
+                                    <li><a class="dropdown-item" href="rtl-page-single-post-creative.html">Bài viết đơn sáng tạo RTL</a></li>
+                                    <li><a class="dropdown-item" href="rtl-page-single-post-features.html">Bài viết đơn nổi bật RTL</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="page-single-post-creative.html#" id="navbarDropdown1" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    Pages
+                                    Trang
                                 </a>
                                 <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
-                                    <li><a class="dropdown-item" href="page-about.html">About</a></li>
-                                    <li><a class="dropdown-item" href="page-team.html">Team</a></li>
-                                    <li><a class="dropdown-item" href="page-product.html">Product</a></li>
-                                    <li><a class="dropdown-item" href="page-404.html">404 page</a></li>
+                                    <li><a class="dropdown-item" href="page-about.html">Giới thiệu</a></li>
+                                    <li><a class="dropdown-item" href="page-team.html">Đội ngũ</a></li>
+                                    <li><a class="dropdown-item" href="page-product.html">Sản phẩm</a></li>
+                                    <li><a class="dropdown-item" href="page-404.html">Trang 404</a></li>
                                 </ul>
-                            </li>
 
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="page-contact.html">
-                                    contact
+                                    Liên hệ
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="page-shop.html">
-                                    shop
-                                    <small class="hot">hot</small>
+                                    Cửa hàng
+                                    <small class="hot">mới</small>
                                 </a>
                             </li>
+
                         </ul>
                         <div class="nav-side">
                             <a href="page-single-post-creative.html#" class="icon-link">
@@ -179,22 +176,24 @@
                 <div class="row justify-content-center align-items-center gx-lg-5">
                     <div class="col-lg-4">
                         <div class="info">
-                            <h5> you can search by category <br> or news title </h5>
+                            <h5> Bạn có thể tìm kiếm theo danh mục <br> hoặc tiêu đề tin tức </h5>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <form class="form">
-                            <span class="color-777 fst-italic text-capitalize mb-2 fsz-13px">Enter Keyword</span>
+                            <span class="color-777 fst-italic text-capitalize mb-2 fsz-13px">Nhập từ khóa</span>
                             <div class="form-group">
                                 <span class="icon">
                                     <i class="la la-search"></i>
                                 </span>
                                 <input type="text" class="form-control" placeholder="Elon Musk ... ">
-                                <button type="submit">search</button>
+                                <button type="submit">Tìm kiếm</button>
                             </div>
                         </form>
                     </div>
                 </div>
+            </div>
+
             </div>
             <!-- ====== end nav-search ====== -->
         </div>

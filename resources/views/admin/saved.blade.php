@@ -1,4 +1,4 @@
-@extends('author.layouts.master')
+@extends('admin.layouts.master')
 
 @section('title')
     Bài Viết Đã Lưu
@@ -32,10 +32,10 @@
                                         <tr>
                                             <th>STT</th>
                                             <th>Ảnh Đại Diện</th>
-                                            <th>Tiêu Đề</th>
-                                            <th>Nội Dung</th>
-                                            <th>Thời Gian</th>
-                                            <th>Hành Động</th>
+                                            <th>Title</th>
+                                            <th>Content</th>
+                                            <th>Time</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     @foreach ($savedArticles as $index => $savedArticle)
@@ -60,10 +60,10 @@
                                                 </h5>
                                             </td>
                                             <td>
-                                                <a href="{{ route('author.article.detail', ['slug' => $savedArticle->article->slug]) }}"
+                                                <a href="{{ route('admin.article.detail', ['slug' => $savedArticle->article->slug]) }}"
                                                     class="btn btn-primary btn-sm"><i class="si-eye si"></i>
                                                 </a>
-                                                <form action="{{ route('author.remove.saved', $savedArticle->id) }}"
+                                                <form action="{{ route('admin.remove.saved', $savedArticle->id) }}"
                                                     method="POST" class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
