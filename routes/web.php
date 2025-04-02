@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\User\ArticleTagController;
+use App\Http\Controllers\Admin\ViolationsController;
 use App\Http\Controllers\User\ArticleSaveController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Moderator\ModeratorController;
@@ -438,7 +439,9 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::delete('/admin/reject/{id}', [UserController::class, 'reject'])->name('admin.reject.user');
 
 
-
+    //Quản lý report
+    Route::get('/violations/approves', [ViolationsController::class, 'approves'])->name('admin.violations.approves');
+   
     // Quản lý bài viết
     Route::get('/articles/approves', [ArticleController::class, 'Approves'])->name('admin.articles.approves');
 

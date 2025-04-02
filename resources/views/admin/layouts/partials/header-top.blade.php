@@ -66,13 +66,17 @@
                     <i data-feather="bell"></i>
                     @php
                         $pendingCount = \App\Models\Article::where('status', 'pending')->count();
+                        $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
+                        $totalPending = $pendingCount + $pendingViolations;
                     @endphp
-                    @if ($pendingCount > 0)
+
+                    @if ($pendingCount > 0 || $pendingViolations > 0)
                         <span class="badge badge-danger"
                             style="position: absolute; top: 6px; right: 5px; font-size: 10px; padding: 2px 5px; border-radius: 50%; line-height: 1; background: red; color: white;">
-                            {{ $pendingCount }}
+                            {{ $totalPending }}
                         </span>
                     @endif
+
                 </a>
                 <ul class="dropdown-menu animated bounceIn">
                     <li class="header">
@@ -87,9 +91,17 @@
                     <li>
                         <ul class="menu sm-scrol">
                             <li>
-                                @if ($pendingCount > 0)
+                                @if ($pendingCount > 0 && $pendingViolations > 0)
+                                    <a href="{{ route('admin.articles.approves') }}">
+                                        {{ "Có $pendingCount bài viết và $pendingViolations vi phạm đang chờ duyệt!" }}
+                                    </a>
+                                @elseif ($pendingCount > 0)
                                     <a href="{{ route('admin.articles.approves') }}">
                                         {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
+                                    </a>
+                                @elseif ($pendingViolations > 0)
+                                    <a href="{{ route('admin.violations.approves') }}">
+                                        {{ "Có $pendingViolations vi phạm đang chờ duyệt!" }}
                                     </a>
                                 @endif
                             </li>
@@ -112,7 +124,8 @@
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
-                        <a class="dropdown-item" href="{{route('admin.profile')}}"><i class="ti-user text-muted me-2"></i>
+                        <a class="dropdown-item" href="{{ route('admin.profile') }}"><i
+                                class="ti-user text-muted me-2"></i>
                             Profile</a>
                         {{-- <a class="dropdown-item" href="index.html#"><i class="ti-wallet text-muted me-2"></i> My
                             Wallet</a>
