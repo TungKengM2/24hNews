@@ -45,36 +45,36 @@ class AuthorDashboard extends Controller
                 return [$item->date => $item->views];
             });
 
-        // dat them
-        // Get follower count
+        // thêm vào
+        // Lấy số lượng người theo dõi
         $followerCount = DB::table('follows')
             ->where('following_id', $user->user_id)
             ->count();
             
-        // Get recent articles
+        // Lấy bài viết gần đây
         $recentArticles = Article::where('author_id', $user->user_id)
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
             
-        // Get article IDs by this author
+        // Lấy ID bài viết của tác giả này
         $articleIds = Article::where('author_id', $user->user_id)->pluck('article_id');
         
-        // Get total views
+        // Lấy tổng số lượt xem
         $totalViews = 0;
         if (Schema::hasTable('article_views')) {
             $totalViews = DB::table('article_views')
                 ->whereIn('article_id', $articleIds)
                 ->count();
         } else {
-            // Fallback to sum of views in articles table
+            // Nếu không có, tính tổng lượt xem trong bảng bài viết
             $totalViews = Article::where('author_id', $user->user_id)->sum('views');
         }
         
-        // Get total comments
+        // Lấy tổng số bình luận
         $totalComments = Comment::whereIn('article_id', $articleIds)->count();
         
-        // Get total likes
+        // Lấy tổng số lượt thích
         $totalLikes = 0;
         if (Schema::hasTable('article_likes')) {
             $totalLikes = DB::table('article_likes')
@@ -94,13 +94,13 @@ class AuthorDashboard extends Controller
     }
     
     /**
-     * Display the list of followers for the authenticated author
+     * Hiển thị danh sách người theo dõi của tác giả đã xác thực
      */
     public function followers()
     {
         $user = Auth::user();
         
-        // Get followers with pagination
+        // Lấy người theo dõi với phân trang
         $followers = DB::table('follows')
             ->join('users', 'follows.follower_id', '=', 'users.user_id')
             ->where('follows.following_id', $user->user_id)
