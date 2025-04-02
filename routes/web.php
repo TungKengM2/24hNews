@@ -441,7 +441,13 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 
     //Quản lý report
     Route::get('/violations/approves', [ViolationsController::class, 'approves'])->name('admin.violations.approves');
-   
+    
+    Route::patch('violations/{violation}/resolve', [ViolationsController::class, 'resolve'])->name('violations.resolve');
+    
+    Route::patch('violations/{violation}/reject', [ViolationsController::class, 'reject'])->name('violations.reject');
+    
+    Route::get('/admin/violations/{violation}/details', [ViolationsController::class, 'showDetails'])->name('violations.showDetails');
+
     // Quản lý bài viết
     Route::get('/articles/approves', [ArticleController::class, 'Approves'])->name('admin.articles.approves');
 
