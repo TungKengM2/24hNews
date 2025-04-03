@@ -81,6 +81,53 @@
                     </div>
                 </div>
                 
+                <!-- Time-based statistics section -->
+                <div class="row">
+                    <div class="col-12 col-xl-6">
+                        <div class="box">
+                            <div class="box-header with-border d-flex align-items-center justify-content-between">
+                                <h4 class="box-title">Thống kê bài viết</h4>
+                                <form method="GET" action="{{ route('author.dashboard') }}" class="d-flex align-items-center">
+                                    <label for="article_type" class="me-2">Hiển thị:</label>
+                                    <select class="form-select w-auto" id="article_type" name="article_type" onchange="this.form.submit()">
+                                        <option value="daily" {{ ($type ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                        <option value="monthly" {{ ($type ?? 'daily') === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                        <option value="yearly" {{ ($type ?? 'daily') === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                    </select>
+                                </form>
+                            </div>
+                            <div class="box-body">
+                                <canvas id="articleStatsChart" width="400" height="200"></canvas>
+                                <div id="noArticleDataMessage" class="text-center p-4" style="display: none;">
+                                    <p>Không có dữ liệu để hiển thị</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-xl-6">
+                        <div class="box">
+                            <div class="box-header with-border d-flex align-items-center justify-content-between">
+                                <h4 class="box-title">Thống kê tương tác</h4>
+                                <form method="GET" action="{{ route('author.dashboard') }}" class="d-flex align-items-center">
+                                    <label for="interaction_type" class="me-2">Hiển thị:</label>
+                                    <select class="form-select w-auto" id="interaction_type" name="interaction_type" onchange="this.form.submit()">
+                                        <option value="daily" {{ ($interactionType ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                        <option value="monthly" {{ ($interactionType ?? 'daily') === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                        <option value="yearly" {{ ($interactionType ?? 'daily') === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                    </select>
+                                </form>
+                            </div>
+                            <div class="box-body">
+                                <canvas id="interactionStatsChart" width="400" height="200"></canvas>
+                                <div id="noInteractionDataMessage" class="text-center p-4" style="display: none;">
+                                    <p>Không có dữ liệu để hiển thị</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="row">
                     <div class="col-xl-6 col-12">
                         <div class="box">
@@ -209,5 +256,7 @@
             <!-- /.content -->
         </div>
     </div>
+
+   
 @endsection
 
