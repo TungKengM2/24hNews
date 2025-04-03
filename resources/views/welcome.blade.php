@@ -29,11 +29,7 @@
                                                         <div class="meta-bot mt-10">
                                                             <ul>
                                                                 <li class="date"> <i class="la la-clock"></i>
-                                                                    {{ $article->created_at->diffForHumans() }}</li>
-                                                                <li class="hide-article ms-3">
-                                                                    <a href="#" class="hide-btn" data-article-id="{{ $article->article_id }}" title="Ẩn bài viết này">
-                                                                        <i class="la la-eye-slash"></i> Ẩn
-                                                                    </a>
+                                                                    {{ $article->created_at->diffForHumans() }}
                                                                 </li>
                                                             </ul>
                                                         </div>
