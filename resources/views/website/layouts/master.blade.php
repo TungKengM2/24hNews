@@ -46,7 +46,6 @@
     <footer class="footer-style1">
         <div class="container">
             {{-- footer email --}}
-            @include('website.layouts.partials.footer-email')
             {{-- footer main --}}
             @include('website.layouts.partials.footer-main')
             {{-- footer end --}}
