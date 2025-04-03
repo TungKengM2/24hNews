@@ -92,6 +92,14 @@ class Article extends Model
         return $this->belongsTo(User::class, 'approved_by');
     }
 
+    /**
+     * Get the likes for the article
+     */
+    public function likes()
+    {
+        return $this->hasMany(ArticleLike::class, 'article_id', 'article_id');
+    }
+
     public function notifyAdmins(): void
     {
         $admins = User::where('role_id', 1)->get(); // Lấy danh sách admin
