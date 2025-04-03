@@ -53,18 +53,20 @@ class AdminDashboardController extends Controller
 
 
     public function getUserStats()
-    {
-        $users = User::join('roles', 'users.role_id', '=', 'roles.role_id')
-            ->selectRaw("DATE_FORMAT(users.created_at, '%Y-%m') as period,
-                COUNT(CASE WHEN roles.name = 'user' THEN 1 END) as users,
-                COUNT(CASE WHEN roles.name = 'author' THEN 1 END) as authors,
-                COUNT(CASE WHEN roles.name = 'moderator' THEN 1 END) as moderators")
-            ->groupBy('period')
-            ->orderBy('period', 'asc')
-            ->get();
+{
+    $users = User::join('roles', 'users.role_id', '=', 'roles.role_id')
+        ->selectRaw("DATE_FORMAT(users.created_at, '%Y-%m') as period,
+            COUNT(CASE WHEN roles.name = 'user' THEN 1 END) as users,
+            COUNT(CASE WHEN roles.name = 'author' THEN 1 END) as authors,
+            COUNT(CASE WHEN roles.name = 'moderator' THEN 1 END) as moderators,
+            COUNT(CASE WHEN roles.name = 'admin' THEN 1 END) as admins")
+        ->groupBy('period')
+        ->orderBy('period', 'asc')
+        ->get();
 
-        return response()->json($users);
-    }
+    return response()->json($users);
+}
+
 
 
 

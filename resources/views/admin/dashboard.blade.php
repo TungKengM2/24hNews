@@ -80,6 +80,24 @@
                                 </div>
                                 <h1 class="countnm fs-50" id="total-users">0</h1>
                                 <p class="mb-0 text-fade">Tổng số người dùng</p>
+                                <div class="row mt-3">
+                                    <div class="col-3">
+                                        <h4 class="mb-0" id="total-regular-users">0</h4>
+                                        <p class="mb-0 text-fade fs-12">Người dùng</p>
+                                    </div>
+                                    <div class="col-3">
+                                        <h4 class="mb-0" id="total-authors">0</h4>
+                                        <p class="mb-0 text-fade fs-12">Tác giả</p>
+                                    </div>
+                                    <div class="col-3">
+                                        <h4 class="mb-0" id="total-moderators">0</h4>
+                                        <p class="mb-0 text-fade fs-12">Kiểm duyệt</p>
+                                    </div>
+                                    <div class="col-3">
+                                        <h4 class="mb-0" id="total-admins">0</h4>
+                                        <p class="mb-0 text-fade fs-12">Quản trị</p>
+                                    </div>
+                                </div>
                                 <a href="{{ route('admin.users.index') }}" class="btn btn-info-light mt-10">
                                     <i class="fa fa-users"></i> Xem danh sách
                                 </a>
@@ -164,15 +182,28 @@
                 success: function(data) {
                     // Tính tổng số người dùng từ dữ liệu trả về
                     var totalUsers = 0;
+                    var totalRegularUsers = 0;
+                    var totalAuthors = 0;
+                    var totalModerators = 0;
+                    var totalAdmins = 0;
 
                     data.forEach(function(item) {
                         var users = parseInt(item.users) || 0;
                         var authors = parseInt(item.authors) || 0;
                         var moderators = parseInt(item.moderators) || 0;
+                        var admins = parseInt(item.admins) || 0;
 
-                        totalUsers += users + authors + moderators;
+                        totalRegularUsers += users;
+                        totalAuthors += authors;
+                        totalModerators += moderators;
+                        totalAdmins += admins;
+                        totalUsers += users + authors + moderators + admins;
                     });
 
+                    $('#total-regular-users').text(totalRegularUsers);
+                    $('#total-authors').text(totalAuthors);
+                    $('#total-moderators').text(totalModerators);
+                    $('#total-admins').text(totalAdmins);
                     $('#total-users').text(totalUsers);
                 }
             });
@@ -226,7 +257,10 @@
             const type = "{{ $type }}";
 
             const labels = [];
-            const data = [];
+            const regularUsers = [];
+            const authors = [];
+            const moderators = [];
+            const admins = [];
 
             if (type === 'daily') {
                 labels.push(...userStatsChart.map(stat => stat.date));
@@ -236,21 +270,47 @@
                 labels.push(...userStatsChart.map(stat => stat.year));
             }
 
-            const roundedData = userStatsChart.map(stat => Math.floor(stat.count));
+            userStatsChart.forEach(stat => {
+                regularUsers.push(stat.users || 0);
+                authors.push(stat.authors || 0);
+                moderators.push(stat.moderators || 0);
+                admins.push(stat.admins || 0);
+            });
 
             const ctx = document.getElementById('userStatsChart').getContext('2d');
-            const statsChart = new Chart(ctx, {
+            new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'Số bài viết',
-                        data: roundedData,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
+                    datasets: [
+                        {
+                            label: 'Người dùng',
+                            data: regularUsers,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Tác giả',
+                            data: authors,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Kiểm duyệt',
+                            data: moderators,
+                            borderColor: 'rgba(255, 206, 86, 1)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Quản trị',
+                            data: admins,
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 2
+                        }
+                    ]
                 },
                 options: {
+                    responsive: true,
                     scales: {
                         y: {
                             beginAtZero: true,
