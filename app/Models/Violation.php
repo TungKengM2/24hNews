@@ -41,8 +41,10 @@ class Violation extends Model
     }
     public function comments()
 {
-    return $this->hasMany(Comment::class, 'article_id', 'reference_id');
+    // 'reference_id' trong bảng 'violations' trỏ đến 'comment_id' trong bảng 'comments'
+    return $this->belongsTo(Comment::class, 'reference_id', 'comment_id');
 }
+
 
 
     

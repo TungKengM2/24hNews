@@ -1220,59 +1220,6 @@
 
 
 
-                    @foreach ($category2 as $category)
-                        <a href="{{ route('client.category.show', $category->slug) }}" class="cat-card">
-                            <div class="img img-cover ">
-
-                                <div class="info">
-                                    <h5 href="{{ route('client.category.show', $category->slug) }}">
-                                        {{ $category->name }}
-                                    </h5>
-                                    <span class="num">{{ $loop->iteration }}</span> <!-- Số thứ tự danh mục -->
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
-
-
-                </div>
-                <div class="sidebar-contact-info mt-50">
-                    <h6 class="color-000 text-uppercase mb-20 ltspc-1"> Contact & follow <i
-                            class="la la-angle-right ms-1"></i></h6>
-                    <ul class="m-0">
-                        <li class="mb-3">
-                            <i class="las la-map-marker me-2 color-main fs-5"></i>
-                            <a href="home-default.html#">streat name 12, hollywood City, USA</a>
-                        </li>
-                        <li class="mb-3">
-                            <i class="las la-envelope me-2 color-main fs-5"></i>
-                            <a href="home-default.html#">Newzin@gmail.com</a>
-                        </li>
-                        <li class="mb-3">
-                            <i class="las la-phone-volume me-2 color-main fs-5"></i>
-                            <a href="home-default.html#">+12 123 456 789</a>
-                        </li>
-                    </ul>
-                    <div class="social-links">
-                        <a href="home-default.html#">
-                            <i class="la la-twitter"></i>
-                        </a>
-                        <a href="home-default.html#">
-                            <i class="la la-facebook-f"></i>
-                        </a>
-                        <a href="home-default.html#">
-                            <i class="la la-instagram"></i>
-                        </a>
-                        <a href="home-default.html#">
-                            <i class="la la-youtube"></i>
-                        </a>
-                        <a href="home-default.html#">
-                            <i class="la la-spotify"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
 

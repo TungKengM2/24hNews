@@ -293,7 +293,7 @@
                                                                         </button>
                                                                         <button
                                                                             class="btn repost-btn butn border border-1 py-2 px-3"
-                                                                            data-comment-id="<?= $comment->comment_id ?>"
+                                                                            data-comment-id="<?= $reply->comment_id ?>"
                                                                             data-content="<?= htmlspecialchars($comment->content) ?>">
                                                                             <span class="fw-bold">Repost</span>
                                                                         </button>
@@ -350,23 +350,42 @@
                                                                 <div class="w-100">
                                                                     <!-- Ô nhập nội dung trả lời -->
                                                                     <textarea class="form-control form-control-sm reply-content" name="content" rows="2" required
-                                                                        placeholder="Trả lời: {{ '@' . ($comment->user->username ?? 'Người dùng ẩn danh') }}"
-                                                                        onclick="addUsernameToReply(this, '{{ $comment->user->username ?? 'Người dùng ẩn danh' }}')">
+                                                                        placeholder="Trả lời: ..." onclick="addUsernameToReply(this, '{{ $comment->comment_id }}')">
                                                                     </textarea>
 
                                                                     <script>
-                                                                        function addUsernameToReply(textarea, username) {
-                                                                            username = '@' + username.trim();
-                                                                            let currentValue = textarea.value.trim();
+                                                                        function addUsernameToReply(textarea, commentId) {
+                                                                            // Log to ensure the function is being triggered
+                                                                            console.log("Textarea clicked for comment ID: " + commentId);
 
-                                                                            // Nếu chưa có @username ở đầu, mới thêm vào
-                                                                            if (!currentValue.startsWith(username)) {
-                                                                                textarea.value = username + ' ' + currentValue;
-                                                                            }
+                                                                            // Fetch the username based on the commentId
+                                                                            fetch(`/get-username-by-comment-id/${commentId}`)
+                                                                                .then(response => response.json())
+                                                                                .then(data => {
+                                                                                    let username = data.username ?? 'Người dùng ẩn danh'; // Default if username not found
+                                                                                    username = '@' + username.trim();
+                                                                                    let currentValue = textarea.value.trim();
 
-                                                                            textarea.focus();
+                                                                                    // Log to check the username being fetched and current value
+                                                                                    console.log("Fetched username: " + username);
+                                                                                    console.log("Current textarea value: " + currentValue);
+
+                                                                                    // Ensure only one space after @username and avoid duplication
+                                                                                    if (currentValue === "" || !currentValue.startsWith(username)) {
+                                                                                        // Set the value with username and one space
+                                                                                        textarea.value = username + ' ' + currentValue.trim();
+                                                                                    }
+
+                                                                                    // Focus back on the textarea
+                                                                                    textarea.focus();
+                                                                                })
+                                                                                .catch(error => {
+                                                                                    console.error('Error fetching username:', error);
+                                                                                });
                                                                         }
                                                                     </script>
+
+
 
                                                                     <!-- Nút hành động -->
                                                                     <div class="d-flex justify-content-end gap-2 mt-2">
@@ -867,7 +886,7 @@
                                 placeholder="Nhập nội dung repost ..."></textarea>
 
                             <!-- Gợi ý ngay bên dưới textarea -->
-                            
+
                         </div>
                     </div>
                     <div class="modal-footer bg-light">
