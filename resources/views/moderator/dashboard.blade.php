@@ -208,43 +208,51 @@
 
         // bình luận
         document.addEventListener('DOMContentLoaded', function() {
-            const commentStats = @json($commentStats);
-            const type = "{{ $type }}";
-            let labels = [];
-            let data = [];
+    const commentStats = @json($commentStats);
+    const type = "{{ $type }}";
+    let labels = [];
+    let data = [];
 
-            if (type === 'daily') {
-                labels = commentStats.map(stat => stat.date);
-                data = commentStats.map(stat => stat.count);
-            } else if (type === 'monthly') {
-                labels = commentStats.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`);
-                data = commentStats.map(stat => stat.count);
-            } else { // yearly
-                labels = commentStats.map(stat => stat.year);
-                data = commentStats.map(stat => stat.count);
-            }
+    if (type === 'daily') {
+        labels = commentStats.map(stat => stat.date);
+        data = commentStats.map(stat => Math.floor(stat.count));
+    } else if (type === 'monthly') {
+        labels = commentStats.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`);
+        data = commentStats.map(stat => Math.floor(stat.count));
+    } else { // yearly
+        labels = commentStats.map(stat => stat.year);
+        data = commentStats.map(stat => Math.floor(stat.count));
+    }
 
-            const ctx = document.getElementById('commentStats').getContext('2d');
-            const statsChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Số bình luận',
-                        data: data,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        fill: false
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
+    const ctx = document.getElementById('commentStats').getContext('2d');
+    const statsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Số bình luận',
+                data: data,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 1,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        callback: function(value) {
+                            return Number.isInteger(value) ? value : null;
                         }
                     }
                 }
-            });
-        })
+            }
+        }
+    });
+});
     </script>
 @endsection
