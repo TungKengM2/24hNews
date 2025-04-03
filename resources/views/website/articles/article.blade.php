@@ -351,32 +351,32 @@
                                                                     <!-- Ô nhập nội dung trả lời -->
                                                                     <textarea class="form-control form-control-sm reply-content" name="content" rows="2" required
                                                                         placeholder="Trả lời: ..." onclick="addUsernameToReply(this, '{{ $comment->comment_id }}')">
-                                                                    </textarea>
+</textarea>
 
                                                                     <script>
                                                                         function addUsernameToReply(textarea, commentId) {
-                                                                            // Log to ensure the function is being triggered
+                                                                            // Log để đảm bảo hàm được gọi
                                                                             console.log("Textarea clicked for comment ID: " + commentId);
 
-                                                                            // Fetch the username based on the commentId
+                                                                            // Fetch username dựa trên commentId
                                                                             fetch(`/get-username-by-comment-id/${commentId}`)
                                                                                 .then(response => response.json())
                                                                                 .then(data => {
-                                                                                    let username = data.username ?? 'Người dùng ẩn danh'; // Default if username not found
-                                                                                    username = '@' + username.trim();
-                                                                                    let currentValue = textarea.value.trim();
+                                                                                    let username = data.username ?? 'Người dùng ẩn danh'; // Default nếu không tìm thấy username
+                                                                                    username = '@' + username.trim(); // Đảm bảo username có dạng @username
+                                                                                    let currentValue = textarea.value.trim(); // Lấy giá trị hiện tại của textarea
 
-                                                                                    // Log to check the username being fetched and current value
+                                                                                    // Log để kiểm tra username đã lấy và giá trị textarea hiện tại
                                                                                     console.log("Fetched username: " + username);
                                                                                     console.log("Current textarea value: " + currentValue);
 
-                                                                                    // Ensure only one space after @username and avoid duplication
+                                                                                    // Kiểm tra xem textarea có đang bắt đầu với @username không
                                                                                     if (currentValue === "" || !currentValue.startsWith(username)) {
-                                                                                        // Set the value with username and one space
+                                                                                        // Nếu không, thêm @username vào đầu, đảm bảo có 1 khoảng trắng sau @username
                                                                                         textarea.value = username + ' ' + currentValue.trim();
                                                                                     }
 
-                                                                                    // Focus back on the textarea
+                                                                                    // Focus lại vào textarea để người dùng có thể tiếp tục nhập
                                                                                     textarea.focus();
                                                                                 })
                                                                                 .catch(error => {
@@ -384,6 +384,7 @@
                                                                                 });
                                                                         }
                                                                     </script>
+
 
 
 
