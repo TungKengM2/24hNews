@@ -108,11 +108,11 @@
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h3 class="fw-bold">Bài viết của {{ $author->username }}</h3>
                         </div>
-
+        
                         @if ($author->articles->count() > 0)
-                            <div class="row">
-                                @foreach ($author->articles as $article)
-                                    <div class="col-md-6 mb-4">
+                            <div class="row" id="article-container">
+                                @foreach ($author->articles as $index => $article)
+                                    <div class="col-md-6 mb-4 article-item" style="{{ $index >= 4 ? 'display: none;' : '' }}">
                                         <div class="card h-100 border-0 shadow-sm">
                                             <div class="position-relative">
                                                 <img src="{{ asset('storage/' . $article->thumbnail_url) }}" class="card-img-top" alt="{{ $article->title }}" style="height: 240px; object-fit: cover;">
@@ -146,9 +146,9 @@
                                     </div>
                                 @endforeach
                             </div>
-
+        
                             <div class="text-center mt-4">
-                                <a href="#" class="btn btn-outline-primary">Xem thêm bài viết</a>
+                                <button id="load-more-btn" class="btn btn-outline-primary">Xem thêm bài viết</button>
                             </div>
                         @else
                             <div class="alert alert-info text-center">
