@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Notifications\NewArticleSubmitted;
 use App\Notifications\ArticleStatusUpdated;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\ArticleStatusChangedNotification;
 
 class ViolationsMController extends Controller
 {
@@ -105,6 +106,10 @@ class ViolationsMController extends Controller
 
         // Xóa vi phạm khỏi bảng violations
         $violation->delete();
+
+        if ($article->wasChanged('status')) {
+            $article->notify(new ArticleStatusChangedNotification($article));
+        }
 
         return back()->with('success', 'Vi phạm đã được giải quyết, bài viết đã chuyển sang trạng thái nháp.');
     }

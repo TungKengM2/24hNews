@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Article;
 use App\Models\Category;
+use App\Observers\ArticleObserver;
 use App\Observers\CategoryObserver;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Article::observe(ArticleObserver::class);
 
         Paginator::useBootstrap();
 
