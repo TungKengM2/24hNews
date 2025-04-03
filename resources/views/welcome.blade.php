@@ -343,15 +343,12 @@
                                             {{ $data['category']->name }}
                                         </h6>
                                         <h5 class="title mb-3">{{ $data['article']->title }}</h5>
-                                        <a href="{{ Auth::check() ? route('articles.article', $data['article']->slug) : url('/login-user') }}"
-                                            class="btn btn-sm btn-outline-primary mt-2">
-                                            Xem chi tiết <i class="la la-angle-right"></i>
-                                        </a>
-                                        @auth
-                                        <a href="#" class="btn btn-sm btn-outline-secondary mt-2 hide-btn" data-article-id="{{ $data['article']->article_id }}" title="Ẩn bài viết này">
-                                            <i class="la la-eye-slash"></i> Ẩn bài viết
-                                        </a>
-                                        @endauth
+                                        <div class="d-flex justify-content-center mt-2">
+                                            <a href="{{ Auth::check() ? route('articles.article', $data['article']->slug) : url('/login-user') }}"
+                                                class="btn btn-sm btn-outline-primary">
+                                                Xem chi tiết <i class="la la-angle-right"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
