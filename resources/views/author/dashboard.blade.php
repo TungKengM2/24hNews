@@ -87,12 +87,17 @@
                         <div class="box">
                             <div class="box-header with-border d-flex align-items-center justify-content-between">
                                 <h4 class="box-title">Thống kê bài viết</h4>
-                                <form method="GET" action="{{ route('author.dashboard') }}" class="d-flex align-items-center">
+                                <form method="GET" action="{{ route('author.dashboard') }}"
+                                    class="d-flex align-items-center">
                                     <label for="article_type" class="me-2">Hiển thị:</label>
-                                    <select class="form-select w-auto" id="article_type" name="article_type" onchange="this.form.submit()">
-                                        <option value="daily" {{ ($type ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo ngày</option>
-                                        <option value="monthly" {{ ($type ?? 'daily') === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
-                                        <option value="yearly" {{ ($type ?? 'daily') === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                    <select class="form-select w-auto" id="article_type" name="article_type"
+                                        onchange="this.form.submit()">
+                                        <option value="daily" {{ ($type ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo
+                                            ngày</option>
+                                        <option value="monthly" {{ ($type ?? 'daily') === 'monthly' ? 'selected' : '' }}>
+                                            Theo tháng</option>
+                                        <option value="yearly" {{ ($type ?? 'daily') === 'yearly' ? 'selected' : '' }}>Theo
+                                            năm</option>
                                     </select>
                                 </form>
                             </div>
@@ -109,12 +114,20 @@
                         <div class="box">
                             <div class="box-header with-border d-flex align-items-center justify-content-between">
                                 <h4 class="box-title">Thống kê tương tác</h4>
-                                <form method="GET" action="{{ route('author.dashboard') }}" class="d-flex align-items-center">
+                                <form method="GET" action="{{ route('author.dashboard') }}"
+                                    class="d-flex align-items-center">
                                     <label for="interaction_type" class="me-2">Hiển thị:</label>
-                                    <select class="form-select w-auto" id="interaction_type" name="interaction_type" onchange="this.form.submit()">
-                                        <option value="daily" {{ ($interactionType ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo ngày</option>
-                                        <option value="monthly" {{ ($interactionType ?? 'daily') === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
-                                        <option value="yearly" {{ ($interactionType ?? 'daily') === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                    <select class="form-select w-auto" id="interaction_type" name="interaction_type"
+                                        onchange="this.form.submit()">
+                                        <option value="daily"
+                                            {{ ($interactionType ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo ngày
+                                        </option>
+                                        <option value="monthly"
+                                            {{ ($interactionType ?? 'daily') === 'monthly' ? 'selected' : '' }}>Theo tháng
+                                        </option>
+                                        <option value="yearly"
+                                            {{ ($interactionType ?? 'daily') === 'yearly' ? 'selected' : '' }}>Theo năm
+                                        </option>
                                     </select>
                                 </form>
                             </div>
@@ -137,7 +150,8 @@
                             <div class="box-body text-center">
                                 <div class="mb-20">
                                     <div class="icon bg-info-light rounded-circle w-80 h-80 text-center mx-auto l-h-100">
-                                        <span class="fs-40 icon-User"><span class="path1"></span><span class="path2"></span></span>
+                                        <span class="fs-40 icon-User"><span class="path1"></span><span
+                                                class="path2"></span></span>
                                     </div>
                                 </div>
                                 <h1 class="countnm fs-50">{{ $followerCount }}</h1>
@@ -157,8 +171,10 @@
                                 <div class="row">
                                     <div class="col-md-4 text-center">
                                         <div class="mb-10">
-                                            <div class="icon bg-primary-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
-                                                <span class="icon bg-primary-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
+                                            <div
+                                                class="icon bg-primary-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
+                                                <span
+                                                    class="icon bg-primary-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
                                                     <i class="fa fa-eye fs-30"></i>
                                                 </span>
                                             </div>
@@ -168,8 +184,10 @@
                                     </div>
                                     <div class="col-md-4 text-center">
                                         <div class="mb-10">
-                                            <div class="icon bg-success-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
-                                                <span class="fs-30 icon-Chat"><span class="path1"></span><span class="path2"></span></span>
+                                            <div
+                                                class="icon bg-success-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
+                                                <span class="fs-30 icon-Chat"><span class="path1"></span><span
+                                                        class="path2"></span></span>
                                             </div>
                                         </div>
                                         <h3 class="fw-600">{{ $totalComments }}</h3>
@@ -177,8 +195,10 @@
                                     </div>
                                     <div class="col-md-4 text-center">
                                         <div class="mb-10">
-                                            <div class="icon bg-warning-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
-                                                <span class="fs-30 icon-Heart"><span class="path1"></span><span class="path2"></span></span>
+                                            <div
+                                                class="icon bg-warning-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
+                                                <span class="fs-30 icon-Heart"><span class="path1"></span><span
+                                                        class="path2"></span></span>
                                             </div>
                                         </div>
                                         <h3 class="fw-600">{{ $totalLikes }}</h3>
@@ -212,17 +232,21 @@
                                             @forelse($recentArticles as $article)
                                                 <tr>
                                                     <td>
-                                                        <a href="{{ route('author.articles.edit', $article->article_id) }}">
+                                                        <a
+                                                            href="{{ route('author.articles.edit', $article->article_id) }}">
                                                             {{ Str::limit($article->title, 50) }}
                                                         </a>
                                                     </td>
                                                     <td>
-                                                        @if($article->status == 'published')
-                                                            <span class="badge badge-success"><i class="fa fa-check-circle"></i> Đã xuất bản</span>
+                                                        @if ($article->status == 'published')
+                                                            <span class="badge badge-success"><i
+                                                                    class="fa fa-check-circle"></i> Đã xuất bản</span>
                                                         @elseif($article->status == 'pending')
-                                                            <span class="badge badge-warning"><i class="fa fa-hourglass-half"></i> Chờ duyệt</span>
+                                                            <span class="badge badge-warning"><i
+                                                                    class="fa fa-hourglass-half"></i> Chờ duyệt</span>
                                                         @elseif($article->status == 'draft')
-                                                            <span class="badge badge-secondary"><i class="fa fa-pencil-square-o"></i> Bản nháp</span>
+                                                            <span class="badge badge-secondary"><i
+                                                                    class="fa fa-pencil-square-o"></i> Bản nháp</span>
                                                         @else
                                                             <span class="badge badge-info">{{ $article->status }}</span>
                                                         @endif
@@ -230,12 +254,14 @@
                                                     <td>{{ $article->created_at->format('d/m/Y') }}</td>
                                                     <td>{{ $article->views ?? 0 }}</td>
                                                     <td>
-                                                        <a href="{{ route('author.articles.edit', $article->article_id) }}" class="btn btn-sm btn-primary">
+                                                        <a href="{{ route('author.articles.edit', $article->article_id) }}"
+                                                            class="btn btn-sm btn-primary">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
-                                                        @if($article->status == 'published')
-                                                            <a href="{{ route('articles.article', $article->slug) }}" target="_blank" class="btn btn-sm btn-info">
-                                                                <i class="fa fa-eye"></i>
+                                                        @if ($article->status == 'published')
+                                                            <a href="{{ route('author.articles.show', $article) }}"
+                                                                class="btn btn-info btn-sm" title="Xem chi tiết">
+                                                                <i class="si-eye si"></i>
                                                             </a>
                                                         @endif
                                                     </td>
@@ -256,7 +282,4 @@
             <!-- /.content -->
         </div>
     </div>
-
-
 @endsection
-
