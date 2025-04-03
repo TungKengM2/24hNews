@@ -32,7 +32,7 @@
                                 </select>
                             </form>
 
-                            <canvas id="userStats" width="400" height="200"></canvas>
+                            <canvas id="userAuthorStats" width="400" height="200"></canvas>
                         </div>
                     </div>
                     <div class="col-6">
@@ -98,7 +98,9 @@
                         label: 'Số bài viết',
                         data: roundedData,
                         borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 1,
+                        fill: true
                     }]
                 },
                 options: {
@@ -114,41 +116,61 @@
             });
         });
 
-        // user
+        // người dùng
         document.addEventListener('DOMContentLoaded', function() {
             const userStats = @json($userStats);
+            const authorStats = @json($authorStats);
             const type = "{{ $type }}";
+
             let labels = [];
-            let data = [];
+            let userData = [];
+            let authorData = [];
 
             if (type === 'daily') {
                 labels = userStats.map(stat => stat.date);
-                data = userStats.map(stat => stat.count);
+                userData = userStats.map(stat => Math.floor(stat.count));
+                authorData = authorStats.map(stat => Math.floor(stat.count));
             } else if (type === 'monthly') {
                 labels = userStats.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`);
-                data = userStats.map(stat => stat.count);
+                userData = userStats.map(stat => Math.floor(stat.count));
+                authorData = authorStats.map(stat => Math.floor(stat.count));
             } else { // yearly
                 labels = userStats.map(stat => stat.year);
-                data = userStats.map(stat => stat.count);
+                userData = userStats.map(stat => Math.floor(stat.count));
+                authorData = authorStats.map(stat => Math.floor(stat.count));
             }
 
-            const ctx = document.getElementById('userStats').getContext('2d');
-            const statsChart = new Chart(ctx, {
+            const ctx = document.getElementById('userAuthorStats').getContext('2d');
+            const userAuthorChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'Số lượng bài viết',
-                        data: data,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        fill: false
-                    }]
+                    datasets: [
+                        {
+                            label: 'Số lượng người dùng',
+                            data: userData,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 1,
+                            fill: true
+                        },
+                        {
+                            label: 'Số lượng tác giả',
+                            data: authorData,
+                            borderColor: 'rgba(192, 75, 75, 1)',
+                            backgroundColor: 'rgba(192, 75, 75, 0.2)',
+                            borderWidth: 1,
+                            fill: true
+                        }
+                    ]
                 },
                 options: {
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
                         }
                     }
                 }
@@ -158,19 +180,19 @@
         document.addEventListener('DOMContentLoaded', function() {
             const likeStats = @json($likeStats);
             const type = "{{ $type }}";
-            let labels = [];
-            let data = [];
+
+            const labels = [];
+            const data = [];
 
             if (type === 'daily') {
-                labels = likeStats.map(stat => stat.date);
-                data = likeStats.map(stat => stat.count);
+                labels.push(...likeStats.map(stat => stat.date));
             } else if (type === 'monthly') {
-                labels = likeStats.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`);
-                data = likeStats.map(stat => stat.count);
-            } else { // yearly
-                labels = likeStats.map(stat => stat.year);
-                data = likeStats.map(stat => stat.count);
+                labels.push(...likeStats.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`));
+            } else {
+                labels.push(...likeStats.map(stat => stat.year));
             }
+
+            const roundedData = likeStats.map(stat => Math.floor(stat.count));
 
             const ctx = document.getElementById('likeStats').getContext('2d');
             const statsChart = new Chart(ctx, {
@@ -179,21 +201,26 @@
                     labels: labels,
                     datasets: [{
                         label: 'Số lượt thích',
-                        data: data,
+                        data: roundedData,
                         borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         borderWidth: 1,
-                        fill: false
+                        fill: true
                     }]
                 },
                 options: {
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
                         }
                     }
                 }
             });
         });
+
         // bình luận
         document.addEventListener('DOMContentLoaded', function() {
             const commentStats = @json($commentStats);

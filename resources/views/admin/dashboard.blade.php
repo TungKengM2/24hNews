@@ -5,6 +5,69 @@
     <div class="content-wrapper">
         <div class="container-full">
             <!-- Main content -->
+            {{-- biểu đồ thống kê --}}
+            <section class="content mt-" >
+                <h1>Biểu Đồ Thống Kê</h1>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="box">
+                            <form method="GET" action="{{ route('admin.dashboard') }}">
+                                <label for="type">Thống Kê Bài Viết :</label>
+                                <select class="form-select w-auto" id="type" name="type"
+                                    onchange="this.form.submit()">
+                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                </select>
+                            </form>
+                            <canvas id="statsChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="box">
+                            <form method="GET" action="{{ route('admin.dashboard') }}">
+                                <label for="type">Thống Kê Người Dùng :</label>
+                                <select class="form-select w-auto" id="type" name="type"
+                                    onchange="this.form.submit()">
+                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                </select>
+                            </form>
+                            <canvas id="userAuthorStats" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="box">
+                            <form method="GET" action="{{ route('admin.dashboard') }}">
+                                <label for="type">Thống Kê Lượt Thích :</label>
+                                <select class="form-select w-auto" id="type" name="type"
+                                    onchange="this.form.submit()">
+                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                </select>
+                            </form>
+                            <canvas id="likeStatsChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="box">
+                            <form method="GET" action="{{ route('admin.dashboard') }}">
+                                <label for="type">Thống Kê Bình Luận :</label>
+                                <select class="form-select w-auto" id="type" name="type"
+                                    onchange="this.form.submit()">
+                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                </select>
+                            </form>
+                            <canvas id="commentStatsChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            {{-- tổng quan thống kê  --}}
             <section class="content">
                 <!-- Thống kê bài viết -->
                 <h1>Tổng Quan</h1>
@@ -107,67 +170,7 @@
                 </div>
             </section>
             <!-- /.content -->
-            <section class="content mt-" >
-                <h1>Biểu Đồ Thống Kê</h1>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="box">
-                            <form method="GET" action="{{ route('admin.dashboard') }}">
-                                <label for="type">Thống Kê Bài Viết :</label>
-                                <select class="form-select w-auto" id="type" name="type"
-                                    onchange="this.form.submit()">
-                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
-                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
-                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
-                                </select>
-                            </form>
-                            <canvas id="statsChart" width="400" height="200"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="box">
-                            <form method="GET" action="{{ route('admin.dashboard') }}">
-                                <label for="type">Thống Kê Người Dùng :</label>
-                                <select class="form-select w-auto" id="type" name="type"
-                                    onchange="this.form.submit()">
-                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
-                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
-                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
-                                </select>
-                            </form>
-                            <canvas id="userStatsChart" width="400" height="200"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="box">
-                            <form method="GET" action="{{ route('admin.dashboard') }}">
-                                <label for="type">Thống Kê Lượt Thích :</label>
-                                <select class="form-select w-auto" id="type" name="type"
-                                    onchange="this.form.submit()">
-                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
-                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
-                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
-                                </select>
-                            </form>
-                            <canvas id="likeStatsChart" width="400" height="200"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="box">
-                            <form method="GET" action="{{ route('admin.dashboard') }}">
-                                <label for="type">Thống Kê Bình Luận :</label>
-                                <select class="form-select w-auto" id="type" name="type"
-                                    onchange="this.form.submit()">
-                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
-                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
-                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
-                                </select>
-                            </form>
-                            <canvas id="commentStatsChart" width="400" height="200"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
+
         </div>
     </div>
 
@@ -236,7 +239,9 @@
                         label: 'Số bài viết',
                         data: roundedData,
                         borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
+                        borderWidth: 1,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true
                     }]
                 },
                 options: {
@@ -253,64 +258,66 @@
         });
         // thống kê người dùng
         document.addEventListener('DOMContentLoaded', function() {
-            const userStatsChart = @json($userStatsChart);
+            const userStats = @json($userStats);
+            const authorStats = @json($authorStats);
+            const moderatorStats = @json($moderatorStats);
             const type = "{{ $type }}";
 
-            const labels = [];
-            const regularUsers = [];
-            const authors = [];
-            const moderators = [];
-            const admins = [];
+            let labels = [];
+            let userData = [];
+            let authorData = [];
+            let moderatorData = [];
 
             if (type === 'daily') {
-                labels.push(...userStatsChart.map(stat => stat.date));
+                labels = userStats.map(stat => stat.date);
+                userData = userStats.map(stat => Math.floor(stat.count));
+                authorData = authorStats.map(stat => Math.floor(stat.count));
+                moderatorData = moderatorStats.map(stat => Math.floor(stat.count));
             } else if (type === 'monthly') {
-                labels.push(...userStatsChart.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`));
-            } else {
-                labels.push(...userStatsChart.map(stat => stat.year));
+                labels = userStats.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`);
+                userData = userStats.map(stat => Math.floor(stat.count));
+                authorData = authorStats.map(stat => Math.floor(stat.count));
+                moderatorData = moderatorStats.map(stat => Math.floor(stat.count));
+            } else { // yearly
+                labels = userStats.map(stat => stat.year);
+                userData = userStats.map(stat => Math.floor(stat.count));
+                authorData = authorStats.map(stat => Math.floor(stat.count));
+                moderatorData = moderatorStats.map(stat => Math.floor(stat.count));
             }
 
-            userStatsChart.forEach(stat => {
-                regularUsers.push(stat.users || 0);
-                authors.push(stat.authors || 0);
-                moderators.push(stat.moderators || 0);
-                admins.push(stat.admins || 0);
-            });
-
-            const ctx = document.getElementById('userStatsChart').getContext('2d');
-            new Chart(ctx, {
+            const ctx = document.getElementById('userAuthorStats').getContext('2d');
+            const userAuthorChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [
                         {
-                            label: 'Người dùng',
-                            data: regularUsers,
+                            label: 'Số lượng người dùng',
+                            data: userData,
                             borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 2
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 1,
+                            fill: true
                         },
                         {
-                            label: 'Tác giả',
-                            data: authors,
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 2
+                            label: 'Số lượng tác giả',
+                            data: authorData,
+                            borderColor: 'rgba(255, 229, 0, 1)',
+                            backgroundColor: 'rgba(255, 229, 0, 0.2)',
+                            borderWidth: 1,
+                            fill: true
                         },
                         {
-                            label: 'Kiểm duyệt',
-                            data: moderators,
-                            borderColor: 'rgba(255, 206, 86, 1)',
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Quản trị',
-                            data: admins,
-                            borderColor: 'rgba(153, 102, 255, 1)',
-                            borderWidth: 2
+                            label: 'Số lượng kiểm duyệt viên',
+                            data: moderatorData,
+                            borderColor: 'rgba(255, 0, 0, 1)',
+                            backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                            borderWidth: 1,
+                            fill: true
                         }
                     ]
                 },
                 options: {
-                    responsive: true,
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -346,10 +353,12 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Số bài viết',
+                        label: 'Số lượt thích ',
                         data: roundedData,
                         borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
+                        borderWidth: 1,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true
                     }]
                 },
                 options: {
@@ -388,7 +397,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Số bài viết',
+                        label: 'Số Bình Luận ',
                         data: roundedData,
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1

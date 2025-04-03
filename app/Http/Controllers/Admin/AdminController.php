@@ -76,20 +76,65 @@ class AdminController extends Controller
         }
         // Thống kê người dùng
         if ($type === 'daily') {
-            $userStatsChart = DB::table('users')
+            $userStats = DB::table('users')
                 ->select(DB::raw('DATE(created_at) as date, COUNT(*) as count'))
+                ->where('role_id', 4)
+                ->groupBy('date')
+                ->orderBy('date', 'asc')
+                ->get();
+
+            $authorStats = DB::table('users')
+                ->select(DB::raw('DATE(created_at) as date, COUNT(*) as count'))
+                ->where('role_id', 2)
+                ->groupBy('date')
+                ->orderBy('date', 'asc')
+                ->get();
+
+            $moderatorStats = DB::table('users')
+                ->select(DB::raw('DATE(created_at) as date, COUNT(*) as count'))
+                ->where('role_id', 3)
                 ->groupBy('date')
                 ->orderBy('date', 'asc')
                 ->get();
         } elseif ($type === 'monthly') {
-            $userStatsChart = DB::table('users')
+            $userStats = DB::table('users')
                 ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count'))
+                ->where('role_id', 4)
+                ->groupBy('year', 'month')
+                ->orderByRaw('year, month')
+                ->get();
+
+            $authorStats = DB::table('users')
+                ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count'))
+                ->where('role_id', 2)
+                ->groupBy('year', 'month')
+                ->orderByRaw('year, month')
+                ->get();
+
+            $moderatorStats = DB::table('users')
+                ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count'))
+                ->where('role_id', 3)
                 ->groupBy('year', 'month')
                 ->orderByRaw('year, month')
                 ->get();
         } else { // yearly
-            $userStatsChart = DB::table('users')
+            $userStats = DB::table('users')
                 ->select(DB::raw('YEAR(created_at) as year, COUNT(*) as count'))
+                ->where('role_id', 4)
+                ->groupBy('year')
+                ->orderBy('year', 'asc')
+                ->get();
+
+            $authorStats = DB::table('users')
+                ->select(DB::raw('YEAR(created_at) as year, COUNT(*) as count'))
+                ->where('role_id', 2)
+                ->groupBy('year')
+                ->orderBy('year', 'asc')
+                ->get();
+
+            $moderatorStats = DB::table('users')
+                ->select(DB::raw('YEAR(created_at) as year, COUNT(*) as count'))
+                ->where('role_id', 3)
                 ->groupBy('year')
                 ->orderBy('year', 'asc')
                 ->get();
@@ -138,7 +183,7 @@ class AdminController extends Controller
 
         return view('admin.dashboard', compact(
             'articleStats',
-            'recentArticles', 'articleStatsChart' ,'userStatsChart', 'likeStatsChart','commentStatsChart','type',
+            'recentArticles', 'articleStatsChart' ,'userStats','authorStats','moderatorStats', 'likeStatsChart','commentStatsChart','type',
             // ... các biến khác bạn đã có ...
         ));
     }
