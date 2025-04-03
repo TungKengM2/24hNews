@@ -120,8 +120,10 @@ class ArticleController extends Controller
 
         if ($request->hasFile('thumbnail_url')) {
             $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+            if ($path) { // Add check to ensure path is not empty
                 $article->update(['thumbnail_url' => $path]);
             }
+        }
 
             $tagIds = $this->processTags($request->input('tags', []));
             $article->tags()->sync($tagIds);
@@ -288,7 +290,9 @@ class ArticleController extends Controller
 
             if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
                 $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
-                $article->update(['thumbnail_url' => $path]);
+                if ($path) { // Add check to ensure path is not empty
+                    $article->update(['thumbnail_url' => $path]);
+                }
             }
 
             $tagIds = $this->processTags($request->input('tags', []));
