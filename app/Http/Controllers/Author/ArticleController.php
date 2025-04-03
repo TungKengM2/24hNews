@@ -593,15 +593,17 @@ class ArticleController extends Controller
                 ->back()
                 ->with('error', 'Bạn không có quyền xem bài viết này.');
         }
+        
+        // Get preview content
         $content = strip_tags($article->content);
         preg_match('/^[^.!?]*[.!?]/', $content, $matches);
         $preview_content = $matches[0] ?? '';
 
-        //            dd($preview_content);
-        return view(
-            'author.articles.show',
-            compact('article', 'preview_content')
-        );
+        // Add like count and check if user liked
+        $likeCount = $article->likes()->count();
+        $isLiked = auth()->check() ? $article->likes()->where('user_id', auth()->id())->exists() : false;
+
+        return view('author.articles.show', compact('article', 'preview_content', 'isLiked', 'likeCount'));
     }
 
     public function edit(Article $article)

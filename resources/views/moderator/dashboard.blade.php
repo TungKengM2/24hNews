@@ -23,21 +23,6 @@
                     <div class="col-6">
                         <div class="box">
                             <form method="GET" action="{{ route('moderator.dashboard') }}">
-                                <label for="type">Thống Kê Người Dùng</label>
-                                <select class="form-select w-auto" id="type" name="type"
-                                    onchange="this.form.submit()">
-                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
-                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
-                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
-                                </select>
-                            </form>
-
-                            <canvas id="userAuthorStats" width="400" height="200"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="box">
-                            <form method="GET" action="{{ route('moderator.dashboard') }}">
                                 <label for="type">Thống Kê Lượt Thích </label>
                                 <select class="form-select w-auto" id="type" name="type"
                                     onchange="this.form.submit()">

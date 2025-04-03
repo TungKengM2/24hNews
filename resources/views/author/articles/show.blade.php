@@ -147,6 +147,35 @@
                                     </ul>
                                 </div>
                             </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Tương tác</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <!-- Like Counter -->
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>
+                                                <i class="mdi mdi-thumb-up"></i> Lượt thích:
+                                            </span>
+                                            <span class="badge bg-info rounded-pill" id="likeCount" class="{{ $isLiked ? 'text-danger' : 'text-dark' }} fw-bold">
+                                                {{ $likeCount }}
+                                            </span>
+                                        </li>
+
+                                        <!-- Comment Counter -->
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>
+                                                <i class="mdi mdi-comment"></i> Bình luận:
+                                            </span>
+                                            <span class="badge bg-info rounded-pill">
+                                                {{ $article->comments ? $article->comments->count() : 0 }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
