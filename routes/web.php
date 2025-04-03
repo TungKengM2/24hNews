@@ -499,9 +499,7 @@ Route::get('/tinymce/clear-blocked-images', [App\Http\Controllers\Author\TinyMCE
     ->name('author.tinymce.clear-blocked-images');
 
 // TinyMCE routes cho admin
-Route::post('/admin/tinymce/upload', [App\Http\Controllers\Admin\TinyMCEUploadController::class, 'uploadImage'])
-    ->name('admin.tinymce.upload');
-Route::get('/admin/tinymce/clear-blocked-images', [App\Http\Controllers\Admin\TinyMCEUploadController::class, 'clearBlockedImages'])
-    ->name('admin.tinymce.clear-blocked-images');
+Route::post('/admin/tinymce/upload', [TinyMCEUploadController::class, 'uploadImage'])->name('admin.tinymce.upload');
 
+Route::get('/admin/tinymce/clear-blocked-images', [TinyMCEUploadController::class, 'clearBlockedImages'])->name('admin.tinymce.clear-blocked-images');
 
