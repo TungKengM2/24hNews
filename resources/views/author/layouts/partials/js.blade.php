@@ -28,7 +28,7 @@
         // Article statistics chart
         const articleStats = @json($timeBasedArticleStats ?? []);
         const type = "{{ $type ?? 'daily' }}";
-        
+
         let articleLabels = [];
         let articleData = [];
 
@@ -45,43 +45,49 @@
 
         // Check if we have data to display
         if (articleLabels.length > 0) {
-            document.getElementById('noArticleDataMessage').style.display = 'none';
-            const articleCtx = document.getElementById('articleStatsChart').getContext('2d');
-            new Chart(articleCtx, {
-                type: 'line',
-                data: {
-                    labels: articleLabels,
-                    datasets: [{
-                        label: 'Số bài viết',
-                        data: articleData,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderWidth: 2,
-                        tension: 0.3,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
+    document.getElementById('noArticleDataMessage').style.display = 'none';
+    const articleCtx = document.getElementById('articleStatsChart').getContext('2d');
+    new Chart(articleCtx, {
+        type: 'line',
+        data: {
+            labels: articleLabels,
+            datasets: [{
+                label: 'Số bài viết',
+                data: articleData,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        callback: function(value) {
+                            return Number.isInteger(value) ? value : null;
                         }
                     }
                 }
-            });
-        } else {
-            document.getElementById('articleStatsChart').style.display = 'none';
-            document.getElementById('noArticleDataMessage').style.display = 'block';
+            }
         }
+    });
+} else {
+    document.getElementById('articleStatsChart').style.display = 'none';
+    document.getElementById('noArticleDataMessage').style.display = 'block';
+}
 
         // Interaction statistics chart
         const interactionStats = @json($timeBasedInteractionStats ?? []);
         const interactionType = "{{ $interactionType ?? 'daily' }}";
-        
+
         // Debug: Log the raw interaction stats to console
         console.log('Raw interaction stats:', interactionStats);
-        
+
         let interactionLabels = [];
         let viewsData = [];
         let likesData = [];
@@ -103,7 +109,7 @@
             likesData = interactionStats.map(stat => stat.likes || 0);
             commentsData = interactionStats.map(stat => stat.comments || 0);
         }
-        
+
         // Debug: Log the processed data
         console.log('Processed chart data:', {
             labels: interactionLabels,
@@ -114,84 +120,96 @@
 
         // Check if we have data to display
         if (interactionLabels.length > 0) {
-            document.getElementById('noInteractionDataMessage').style.display = 'none';
-            const interactionCtx = document.getElementById('interactionStatsChart').getContext('2d');
-            
-            // Create the chart with all three datasets
-            new Chart(interactionCtx, {
-                type: 'line',
-                data: {
-                    labels: interactionLabels,
-                    datasets: [
-                        {
-                            label: 'Lượt xem',
-                            data: viewsData,
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Lượt thích',
-                            data: likesData,
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true,
-                            yAxisID: 'y1'
-                        },
-                        {
-                            label: 'Bình luận',
-                            data: commentsData,
-                            borderColor: 'rgba(255, 206, 86, 1)',
-                            backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                            borderWidth: 3, // Make the line thicker
-                            tension: 0.3,
-                            fill: true,
-                            yAxisID: 'y1'
-                        }
-                    ]
+    document.getElementById('noInteractionDataMessage').style.display = 'none';
+    const interactionCtx = document.getElementById('interactionStatsChart').getContext('2d');
+
+    // Create the chart with all three datasets
+    new Chart(interactionCtx, {
+        type: 'line',
+        data: {
+            labels: interactionLabels,
+            datasets: [
+                {
+                    label: 'Lượt xem',
+                    data: viewsData,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true,
+                    yAxisID: 'y'
                 },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            position: 'left',
-                            title: {
-                                display: true,
-                                text: 'Lượt xem'
-                            }
-                        },
-                        y1: {
-                            beginAtZero: true,
-                            position: 'right',
-                            grid: {
-                                drawOnChartArea: false
-                            },
-                            title: {
-                                display: true,
-                                text: 'Lượt thích & Bình luận'
-                            }
+                {
+                    label: 'Lượt thích',
+                    data: likesData,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true,
+                    yAxisID: 'y1'
+                },
+                {
+                    label: 'Bình luận',
+                    data: commentsData,
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    borderWidth: 3, // Make the line thicker
+                    tension: 0.3,
+                    fill: true,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Lượt xem'
+                    },
+                    ticks: {
+                        stepSize: 1,
+                        callback: function(value) {
+                            return Number.isInteger(value) ? value : null;
+                        }
+                    }
+                },
+                y1: {
+                    beginAtZero: true,
+                    position: 'right',
+                    grid: {
+                        drawOnChartArea: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Lượt thích & Bình luận'
+                    },
+                    ticks: {
+                        stepSize: 1,
+                        callback: function(value) {
+                            return Number.isInteger(value) ? value : null;
                         }
                     }
                 }
-            });
-        } else {
-            document.getElementById('interactionStatsChart').style.display = 'none';
-            document.getElementById('noInteractionDataMessage').style.display = 'block';
+            }
         }
-        
-        // Store the data in global variables for the debug function
-        window.chartData = {
-            labels: interactionLabels,
-            views: viewsData,
-            likes: likesData,
-            comments: commentsData
-        };
+    });
+} else {
+    document.getElementById('interactionStatsChart').style.display = 'none';
+    document.getElementById('noInteractionDataMessage').style.display = 'block';
+}
+
+// Store the data in global variables for the debug function
+window.chartData = {
+    labels: interactionLabels,
+    views: viewsData,
+    likes: likesData,
+    comments: commentsData
+};
     });
 </script>
 
