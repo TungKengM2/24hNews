@@ -21,7 +21,15 @@ class ArticleUserController extends Controller
 {
     public function show($slug)
     {
-        $article = Article::with('tags', 'author')->where('slug', $slug)->firstOrFail();
+        $article = Article::with('tags', 'author', 'category') // Dùng 'category' thay vì 'categories'
+            ->where('slug', $slug)
+            ->where('status', 'published') // Lọc bài viết đã xuất bản
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+            })
+            ->firstOrFail();
+
+
 
         $userId = auth()->id();
         $userIp = request()->ip();
@@ -74,11 +82,15 @@ class ArticleUserController extends Controller
         }
 
 
-        // Lấy bài viết cùng author
+        // Lấy bài viết cùng author (đã xuất bản, danh mục đang hoạt động)
         $relatedAuthorArticles = Article::where('author_id', $article->author_id)
             ->where('article_id', '!=', $article->article_id)
+            ->where('status', 'published') // Chỉ lấy bài viết đã xuất bản
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+            })
             ->withCount('comments')
-            ->get(); // Trả về Collection
+            ->get();
 
         // Chuyển thành mảng các article_id
         $relatedAuthorArticleIds = $relatedAuthorArticles->pluck('article_id')->toArray();
@@ -87,18 +99,29 @@ class ArticleUserController extends Controller
         $relatedCategoryArticles = Article::where('category_id', $article->category_id)
             ->whereNotIn('article_id', $relatedAuthorArticleIds) // Không lấy bài đã có trong danh sách tác giả
             ->where('article_id', '!=', $article->article_id) // Loại trừ bài hiện tại
+            ->where('status', 'published') // Chỉ lấy bài viết đã xuất bản
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+            })
             ->withCount('comments')
             ->get();
 
-        //khuyencao
+        // Danh sách ID đã hiển thị
         $displayedArticleIds = array_merge(
             $relatedAuthorArticleIds,
             $relatedCategoryArticles->pluck('article_id')->toArray(),
             [$article->article_id]
         );
+
+        // Lấy bài viết khuyến cáo (tránh bài đã hiển thị, sắp xếp theo lượt xem cao nhất)
         $khuyencao = Article::whereNotIn('article_id', $displayedArticleIds)
-            ->orderBy('views', 'desc') // Sắp xếp theo lượt xem cao nhất
+            ->where('status', 'published') // Chỉ lấy bài viết đã xuất bản
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+            })
+            ->orderBy('views', 'desc')
             ->get();
+
 
         // Lấy danh sách bình luận
         $comments = Comment::where('article_id', $article->article_id)
@@ -256,7 +279,7 @@ class ArticleUserController extends Controller
             'created_at' => now(), // Thời gian tạo comment
             'updated_at' => now(), // Thời gian cập nhật comment
         ]);
-        
+
 
         return response()->json([
             'success' => true,
@@ -307,42 +330,48 @@ class ArticleUserController extends Controller
         $request->validate([
             'reason' => 'nullable|string'
         ]);
-
+    
         try {
             // Tìm bài viết dựa trên article_id
             $article = Article::findOrFail($article_id);
-            // Tìm bình luận gốc cần repost theo comment_id
-            $originalComment = Comment::findOrFail($comment_id);
-
-            // Xác định nội dung repost: nếu có nhập 'reason' thì dùng, nếu không dùng nội dung của bình luận gốc.
-            $content = $request->input('reason') ?: $originalComment->content;
-            // Vì trường detected_word của violations có độ dài 50 ký tự, cắt gọn nếu cần.
+            
+           // Tìm chính xác bình luận bị báo cáo
+        $comment = Comment::where('article_id', $article_id)
+        ->where('comment_id', $comment_id) // Chắc chắn lấy đúng comment cần báo cáo
+        ->firstOrFail();
+    
+            // Xác định nội dung báo cáo: nếu có nhập 'reason' thì dùng, nếu không dùng nội dung của bình luận
+            $content = $request->input('reason') ?: $comment->content;  // Sử dụng nội dung bình luận hoặc lý do người dùng nhập
+            // Cắt nội dung nếu cần để đảm bảo độ dài trường 'detected_word' không vượt quá 50 ký tự
             $detected_word = substr($content, 0, 50);
-
-
-            // Ghi nhận thông tin repost vào bảng violations với trạng thái "pending"
+    
+            // Ghi nhận thông tin vào bảng violations với trạng thái "pending"
             Violation::create([
                 'type'          => 'comment',
-                'reference_id'  => $comment_id,  // ID của repost vừa tạo
+                'reference_id'  => $comment->comment_id, // Sử dụng comment_id của bình luận báo cáo
                 'detected_word' => $detected_word,
                 'detected_at'   => now(),
                 'handled_by'    => null,
-                'status'        => 'pending',         // Theo migration, mặc định là 'pending'
+                'status'        => 'pending',  // Mặc định là 'pending'
                 'warning_sent'  => false
             ]);
-
+    
+            // Trả về phản hồi thành công
             return response()->json([
                 'success' => true,
-                'message' => 'Repost đã gửi lên chờ xử lý.'
+                'message' => 'Bình luận đã được báo cáo và chờ xử lý.'
             ]);
         } catch (\Exception $e) {
-            Log::error("Error in repostComment", ['error' => $e->getMessage()]);
+            // Ghi log lỗi
+            Log::error("Error in reportComment", ['error' => $e->getMessage()]);
+            // Trả về phản hồi lỗi
             return response()->json([
                 'success' => false,
                 'message' => 'Lỗi: ' . $e->getMessage()
             ], 500);
         }
     }
+    
 
     public function reportArticle(Request $request, $article_id)
     {
@@ -390,6 +419,4 @@ class ArticleUserController extends Controller
             ], 500);
         }
     }
-
-    
 }

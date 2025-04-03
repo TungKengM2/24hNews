@@ -7,7 +7,7 @@
 @section('content')
     <div class="content-wrapper">
         <div class="container-full">
-           
+
             <!-- Main content -->
             <div class="container-full">
                 <div class="col-12">
@@ -39,7 +39,8 @@
                         @endif
 
                         @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <div class="alert alert-success alert-dismissible fade show" role="alert"
+                                style="background-color: #4CAF50; color: white;">
                                 {{ session('success') }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
@@ -121,28 +122,60 @@
                                                 <div class="d-flex flex-wrap gap-1 mb-2">
 
                                                     @if ($violation->status === 'pending')
-                                                        <form action="{{ route('moderator.violations.resolves', $violation) }}"
-                                                            method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit" class="btn btn-success btn-sm"
-                                                                title="Giải quyết vi phạm"
-                                                                onclick="return confirm('Bạn có chắc chắn muốn giải quyết vi phạm này không?')">
-                                                                <i class="fa fa-check"></i>
-                                                            </button>
-                                                        </form>
+                                                        @if ($violation->type === 'comment')
+                                                            <!-- Form giải quyết vi phạm cho comment -->
+                                                            <form
+                                                                action="{{ route('moderator.violations.resolve', $violation) }}"
+                                                                method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="btn btn-success btn-sm"
+                                                                    title="Giải quyết vi phạm"
+                                                                    onclick="return confirm('Bạn có chắc chắn muốn giải quyết vi phạm này không?')">
+                                                                    <i class="fa fa-check"></i> Giải quyết
+                                                                </button>
+                                                            </form>
 
-                                                        <form action="{{ route('moderator.violations.reject', $violation) }}"
-                                                            method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit" class="btn btn-danger btn-sm"
-                                                                title="Từ chối vi phạm"
-                                                                onclick="return confirm('Bạn có chắc chắn muốn từ chối vi phạm này không?')">
-                                                                <i class="fa fa-times"></i>
-                                                            </button>
-                                                        </form>
+                                                            <form
+                                                                action="{{ route('moderator.violations.reject', $violation) }}"
+                                                                method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                                    title="Từ chối vi phạm"
+                                                                    onclick="return confirm('Bạn có chắc chắn muốn từ chối vi phạm này không?')">
+                                                                    <i class="fa fa-times"></i> Từ chối
+                                                                </button>
+                                                            </form>
+                                                        @elseif ($violation->type === 'article')
+                                                            <!-- Form giải quyết vi phạm cho article -->
+                                                            <form
+                                                                action="{{ route('moderator.violations.resolves', $violation) }}"
+                                                                method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="btn btn-primary btn-sm"
+                                                                    title="Giải quyết vi phạm bài viết"
+                                                                    onclick="return confirm('Bạn có chắc chắn muốn giải quyết vi phạm bài viết này không?')">
+                                                                    <i class="fa fa-check"></i> Giải quyết Bài Viết
+                                                                </button>
+                                                            </form>
+
+                                                            <form
+                                                                action="{{ route('moderator.violations.reject', $violation) }}"
+                                                                method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="btn btn-warning btn-sm"
+                                                                    title="Từ chối vi phạm bài viết"
+                                                                    onclick="return confirm('Bạn có chắc chắn muốn từ chối vi phạm bài viết này không?')">
+                                                                    <i class="fa fa-times"></i> Từ chối Bài Viết
+                                                                </button>
+                                                            </form>
+                                                        @endif
                                                     @endif
+
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -168,92 +201,69 @@
             </div>
         </div>
         @foreach ($violations as $violation)
-            <!-- Modal for violation details -->
-            <div class="modal fade" id="violationDetailsModal{{ $violation->violation_id }}" tabindex="-1"
-                aria-labelledby="violationDetailsModalLabel{{ $violation->violation_id }}" aria-hidden="true">
+            <div class="modal fade" id="violationDetailsModal{{ $violation['violation_id'] }}" tabindex="-1"
+                aria-labelledby="violationDetailsModalLabel{{ $violation['violation_id'] }}" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="violationDetailsModalLabel{{ $violation->violation_id }}">
-                                Chi tiết vi phạm - {{ $violation->violation_id }}
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
                         <div class="modal-body">
-                            <h6>Loại Vi Phạm: <strong>{{ $violation->type }}</strong></h6>
-                            <p><strong>Lý Do Vi Phạm:</strong> {{ $violation->detected_word }}</p>
-                            <p><strong>Thời Gian Phát Hiện:</strong> {{ $violation->detected_at }}</p>
+                            @php
+                                $reference_id = null;
+                                $comment = null;
+                            @endphp
 
-                            <p><strong>Trạng Thái:</strong>
-                                @switch($violation->status)
-                                    @case('pending')
-                                        <span class="badge bg-warning">Chờ Xử Lý</span>
-                                    @break
-
-                                    @case('resolved')
-                                        <span class="badge bg-success">Đã Xử Lý</span>
-                                    @break
-
-                                    @case('archived')
-                                        <span class="badge bg-danger">Đã Lưu Trữ</span>
-                                    @break
-
-                                    @default
-                                        <span class="badge bg-secondary">Chưa Xử Lý</span>
-                                @endswitch
-                            </p>
-
-                            <h6>Bài Viết:</h6>
-                            @if ($violation->article)
+                            {{-- Nếu là bài viết --}}
+                            @if ($violation['type'] === 'article' && !empty($violation['article']))
+                                @php $reference_id = $violation['article']['id']; @endphp
+                                <h6>Bài Viết:</h6>
                                 <p>
-                                    <a href="{{ route('violations.resolve', $violation->article->slug) }}" target="_blank">
-                                        {{ $violation->article->title }}
+                                    <a href="{{ route('violations.resolve', $violation['article']['slug']) }}"
+                                        target="_blank">
+                                        {{ $violation['article']['title'] }}
                                     </a>
                                 </p>
-                                <p><strong></strong> {!! $violation->article->content !!}</p>
-                            @else
-                                <p>Không có bài viết liên quan</p>
-                            @endif
 
+                                {{-- Nếu là bình luận --}}
+                            @elseif ($violation['type'] === 'comment' && !empty($violation['comments']))
+                                @php
+                                    // Lấy bình luận trùng với reference_id
+                                    $comment = $violation->comments->firstWhere(
+                                        'comment_id',
+                                        $violation['reference_id'],
+                                    );
+                                    $reference_id = $comment ? $comment->comment_id : null;
+                                @endphp
 
+                                @if ($comment)
+                                    <div class="card mt-3">
+                                        <div class="card-header bg-primary text-white">
+                                            <strong>Bình luận liên quan</strong>
+                                        </div>
+                                        <div class="card-body d-flex align-items-start">
+                                            {{-- Avatar --}}
+                                            <div style="width: 50px; height: 50px;"
+                                                class="img img-cover icon-85 rounded-circle overflow-hidden flex-shrink-0 me-30">
+                                                <img src="{{ asset('storage/' . ($comment->user->avatar ?? 'default-avatar.jpg')) }}"
+                                                    alt="{{ $comment->user->username ?? 'Ẩn danh' }}"
+                                                    onerror="this.onerror=null;this.src='default-avatar.jpg';">
+                                            </div>
 
-                            @if ($violation->comments && $violation->comments->count() > 0)
-                                <div class="card mt-3">
-                                    <div class="card-header bg-primary text-white">
-                                        <strong>Bình luận liên quan</strong>
+                                            <div>
+                                                {{-- Tên người dùng --}}
+                                                <p class="mb-1">
+                                                    <strong>{{ $comment->user->username ?? 'Ẩn danh' }}</strong>
+                                                </p>
+
+                                                {{-- Nội dung bình luận --}}
+                                                <p class="mb-0">{{ $comment->content }}</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="card-body">
-                                        <ul class="list-group list-group-flush">
-                                            @foreach ($violation->comments as $comment)
-                                            <li class="list-group-item d-flex align-items-start">
-                                                {{-- Avatar --}}
-                                                <div style="width: 50px; height: 50px;" class="img img-cover icon-85 rounded-circle overflow-hidden flex-shrink-0 me-30">
-                                                    <img src="{{ asset('storage/' . ($comment->user->avatar ?? 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg')) }}" 
-                                                         alt="{{ $comment->user->username }}" 
-                                                         onerror="this.onerror=null;this.src='https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg';">
-                                                </div>
-                                                
-                                                
-                                        
-                                                <div>
-                                                    {{-- Tên người dùng --}}
-                                                    <p class="mb-1">
-                                                        <strong>{{ $comment->user->username ?? 'Ẩn danh' }}</strong>
-                                                    </p>
-                                        
-                                                    {{-- Nội dung bình luận --}}
-                                                    <p class="mb-0">{{ $comment->content }}</p>
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                        
-                                        </ul>
-                                    </div>
-                                </div>
+                                @else
+                                    <div class="alert alert-warning mt-3">Không tìm thấy bình luận liên quan</div>
+                                @endif
                             @else
-                                <div class="alert alert-warning mt-3">Không có bình luận liên quan</div>
+                                <div class="alert alert-warning mt-3">Không có dữ liệu liên quan</div>
                             @endif
-
 
 
                         </div>

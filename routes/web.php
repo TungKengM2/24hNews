@@ -178,7 +178,9 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     //Quản lý report
     Route::get('/violations/approves', [ViolationsMController::class, 'approves'])->name('moderator.violations.approves');
     
-    Route::patch('violations/{violation}/resolve', [ViolationsMController::class, 'resolve'])->name('moderator.violations.resolves');
+    Route::patch('violations/{violation}/resolve', [ViolationsMController::class, 'resolve'])->name('moderator.violations.resolve');
+    
+    Route::patch('violations/{violation}/resolves', [ViolationsMController::class, 'resolves'])->name('moderator.violations.resolves');
     
     Route::patch('violations/{violation}/reject', [ViolationsMController::class, 'reject'])->name('moderator.violations.reject');
     
@@ -454,9 +456,11 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     
     Route::patch('violations/{violation}/resolve', [ViolationsController::class, 'resolve'])->name('violations.resolve');
     
+    Route::patch('violations/{violation}/resolves', [ViolationsController::class, 'resolves'])->name('violations.resolves');
+
     Route::patch('violations/{violation}/reject', [ViolationsController::class, 'reject'])->name('violations.reject');
     
-    Route::get('/admin/violations/{violation}/details', [ViolationsController::class, 'showDetails'])->name('violations.showDetails');
+    
 
     // Quản lý bài viết
     Route::get('/articles/approves', [ArticleController::class, 'Approves'])->name('admin.articles.approves');
