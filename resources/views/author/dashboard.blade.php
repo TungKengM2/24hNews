@@ -80,7 +80,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Time-based statistics section -->
                 <div class="row">
                     <div class="col-12 col-xl-6">
@@ -104,7 +104,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-12 col-xl-6">
                         <div class="box">
                             <div class="box-header with-border d-flex align-items-center justify-content-between">
@@ -127,7 +127,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-xl-6 col-12">
                         <div class="box">
@@ -189,7 +189,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-12">
                         <div class="box">
@@ -257,6 +257,6 @@
         </div>
     </div>
 
-   
+
 @endsection
 
