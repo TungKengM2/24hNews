@@ -9,7 +9,8 @@
                         <div class="box">
                             <form method="GET" action="{{ route('moderator.dashboard') }}">
                                 <label for="type">Thống Kê Bài Viết :</label>
-                                <select class="form-select w-auto" id="type" name="type" onchange="this.form.submit()">
+                                <select class="form-select w-auto" id="type" name="type"
+                                    onchange="this.form.submit()">
                                     <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
                                     <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
                                     <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
@@ -23,7 +24,8 @@
                         <div class="box">
                             <form method="GET" action="{{ route('moderator.dashboard') }}">
                                 <label for="type">Thống Kê Người Dùng</label>
-                                <select class="form-select w-auto" id="type" name="type" onchange="this.form.submit()">
+                                <select class="form-select w-auto" id="type" name="type"
+                                    onchange="this.form.submit()">
                                     <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
                                     <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
                                     <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
@@ -37,7 +39,8 @@
                         <div class="box">
                             <form method="GET" action="{{ route('moderator.dashboard') }}">
                                 <label for="type">Thống Kê Lượt Thích </label>
-                                <select class="form-select w-auto" id="type" name="type" onchange="this.form.submit()">
+                                <select class="form-select w-auto" id="type" name="type"
+                                    onchange="this.form.submit()">
                                     <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
                                     <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
                                     <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
@@ -50,8 +53,9 @@
                     <div class="col-6">
                         <div class="box">
                             <form method="GET" action="{{ route('moderator.dashboard') }}">
-                                <label for="type">Thống Kê Bình Luận  </label>
-                                <select class="form-select w-auto" id="type" name="type" onchange="this.form.submit()">
+                                <label for="type">Thống Kê Bình Luận </label>
+                                <select class="form-select w-auto" id="type" name="type"
+                                    onchange="this.form.submit()">
                                     <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
                                     <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
                                     <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
@@ -67,10 +71,9 @@
     </div>
 
     <script>
-        // article
-        document.addEventListener('DOMContentLoaded', function () {
+        // bài viết
+        document.addEventListener('DOMContentLoaded', function() {
             const articleStats = @json($articleStats);
-            const userStats = @json($userStats);
             const type = "{{ $type }}";
 
             const labels = [];
@@ -78,14 +81,13 @@
 
             if (type === 'daily') {
                 labels.push(...articleStats.map(stat => stat.date));
-                data.push(...articleStats.map(stat => stat.count));
             } else if (type === 'monthly') {
                 labels.push(...articleStats.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`));
-                data.push(...articleStats.map(stat => stat.count));
             } else {
                 labels.push(...articleStats.map(stat => stat.year));
-                data.push(...articleStats.map(stat => stat.count));
             }
+
+            const roundedData = articleStats.map(stat => Math.floor(stat.count));
 
             const ctx = document.getElementById('statsChart').getContext('2d');
             const statsChart = new Chart(ctx, {
@@ -94,7 +96,7 @@
                     labels: labels,
                     datasets: [{
                         label: 'Số bài viết',
-                        data: data,
+                        data: roundedData,
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
                     }]
@@ -102,7 +104,10 @@
                 options: {
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
                         }
                     }
                 }
@@ -110,7 +115,7 @@
         });
 
         // user
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const userStats = @json($userStats);
             const type = "{{ $type }}";
             let labels = [];
@@ -150,7 +155,7 @@
             });
         });
         // lượt thích
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const likeStats = @json($likeStats);
             const type = "{{ $type }}";
             let labels = [];
@@ -190,7 +195,7 @@
             });
         });
         // bình luận
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const commentStats = @json($commentStats);
             const type = "{{ $type }}";
             let labels = [];
