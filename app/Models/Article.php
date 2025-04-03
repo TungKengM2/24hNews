@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use App\Notifications\NewArticleSubmitted;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -117,5 +118,13 @@ class Article extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class, 'article_id', 'article_id');
+    }
+
+    use Notifiable;
+
+    // Nếu muốn, bạn có thể định nghĩa lại quan hệ notifications() ở đây
+    public function notifications()
+    {
+        return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable');
     }
 }
