@@ -258,8 +258,8 @@
                                             <div style="width: 50px; height: 50px;"
                                                 class="img img-cover icon-85 rounded-circle overflow-hidden flex-shrink-0 me-30">
                                                 <img src="{{ asset('storage/' . ($comment->user->image ?? 'default-avatar.jpg')) }}"
-     alt="{{ $comment->user->username ?? 'Ẩn danh' }}"
-     onerror="this.onerror=null;this.src='https://th.bing.com/th/id/OIP.xyVi_Y3F3YwEIKzQm_j_jQHaHa?w=181&h=181&c=7&r=0&o=5&dpr=1.3&pid=1.7';">
+                                                    alt="{{ $comment->user->username ?? 'Ẩn danh' }}"
+                                                    onerror="this.onerror=null;this.src='https://th.bing.com/th/id/OIP.xyVi_Y3F3YwEIKzQm_j_jQHaHa?w=181&h=181&c=7&r=0&o=5&dpr=1.3&pid=1.7';">
 
 
                                             </div>
