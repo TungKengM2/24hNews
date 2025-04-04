@@ -118,8 +118,9 @@ class ArticleController extends Controller
                 'author_id' => $request->author_id ?? auth()->id(),
             ]);
 
-            if ($request->hasFile('thumbnail_url')) {
-                $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+        if ($request->hasFile('thumbnail_url')) {
+            $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+            if ($path) { // Add check to ensure path is not empty
                 $article->update(['thumbnail_url' => $path]);
             }
         }
