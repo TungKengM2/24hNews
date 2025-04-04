@@ -36,6 +36,12 @@ Route::post('/check-image-moderation',
         'checkImageModeration',
     ]);
 
+Route::post('/force-enhanced-moderation',
+    [
+        App\Http\Controllers\Author\ImageModerationController::class,
+        'forceEnhancedModeration',
+    ]);
+
 Route::post('/tinymce/upload-image',
     [
         App\Http\Controllers\Author\TinyMCEUploadController::class,
