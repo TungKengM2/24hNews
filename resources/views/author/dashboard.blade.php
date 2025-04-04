@@ -252,31 +252,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Thêm biểu đồ thống kê tổng quan -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="box">
-                            <div class="box-header with-border d-flex align-items-center justify-content-between">
-                                <h4 class="box-title">Thống kê tổng quan hệ thống</h4>
-                                <form method="GET" action="{{ route('author.dashboard') }}" class="d-flex align-items-center">
-                                    <label for="global_stats_type" class="me-2">Hiển thị:</label>
-                                    <select class="form-select w-auto" id="global_stats_type" name="global_stats_type" onchange="this.form.submit()">
-                                        <option value="daily" {{ ($globalStatsType ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo ngày</option>
-                                        <option value="monthly" {{ ($globalStatsType ?? 'daily') === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
-                                        <option value="yearly" {{ ($globalStatsType ?? 'daily') === 'yearly' ? 'selected' : '' }}>Theo năm</option>
-                                    </select>
-                                </form>
-                            </div>
-                            <div class="box-body">
-                                <canvas id="globalStatsChart" width="400" height="200"></canvas>
-                                <div id="noGlobalDataMessage" class="text-center p-4" style="display: none;">
-                                    <p>Không có dữ liệu để hiển thị</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </section>
             <!-- /.content -->
         </div>
@@ -442,98 +417,6 @@
             } else {
                 document.getElementById('interactionStatsChart').style.display = 'none';
                 document.getElementById('noInteractionDataMessage').style.display = 'block';
-            }
-            
-            // Global statistics chart (không phụ thuộc vào ID author)
-            const globalStats = @json($globalStats ?? []);
-            const globalStatsType = "{{ $globalStatsType ?? 'daily' }}";
-            
-            let globalLabels = [];
-            let articlesData = [];
-            let usersData = [];
-            let categoriesData = [];
-    
-            if (globalStats && globalStats.length > 0) {
-                if (globalStatsType === 'daily') {
-                    globalLabels = globalStats.map(stat => stat.date || '');
-                } else if (globalStatsType === 'monthly') {
-                    globalLabels = globalStats.map(stat => `${stat.year || ''}-${String(stat.month || '').padStart(2, '0')}`);
-                } else { // yearly
-                    globalLabels = globalStats.map(stat => stat.year || '');
-                }
-                
-                articlesData = globalStats.map(stat => stat.articles || 0);
-                usersData = globalStats.map(stat => stat.users || 0);
-                categoriesData = globalStats.map(stat => stat.categories || 0);
-                
-                document.getElementById('noGlobalDataMessage').style.display = 'none';
-                const globalCtx = document.getElementById('globalStatsChart').getContext('2d');
-                
-                new Chart(globalCtx, {
-                    type: 'line',
-                    data: {
-                        labels: globalLabels,
-                        datasets: [
-                            {
-                                label: 'Bài viết',
-                                data: articlesData,
-                                borderColor: 'rgba(54, 162, 235, 1)',
-                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                borderWidth: 2,
-                                tension: 0.3,
-                                fill: true,
-                                yAxisID: 'y'
-                            },
-                            {
-                                label: 'Người dùng',
-                                data: usersData,
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                borderWidth: 2,
-                                tension: 0.3,
-                                fill: true,
-                                yAxisID: 'y1'
-                            },
-                            {
-                                label: 'Danh mục',
-                                data: categoriesData,
-                                borderColor: 'rgba(255, 206, 86, 1)',
-                                backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                                borderWidth: 2,
-                                tension: 0.3,
-                                fill: true,
-                                yAxisID: 'y1'
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                position: 'left',
-                                title: {
-                                    display: true,
-                                    text: 'Bài viết'
-                                }
-                            },
-                            y1: {
-                                beginAtZero: true,
-                                position: 'right',
-                                grid: {
-                                    drawOnChartArea: false
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Người dùng & Danh mục'
-                                }
-                            }
-                        }
-                    }
-                });
-            } else {
-                document.getElementById('globalStatsChart').style.display = 'none';
-                document.getElementById('noGlobalDataMessage').style.display = 'block';
             }
             
             // Store the data in global variables for the debug function
