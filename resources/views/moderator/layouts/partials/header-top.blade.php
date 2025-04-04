@@ -98,7 +98,7 @@
                             <!-- Thông báo bài viết chờ duyệt -->
                             @if ($pendingCount > 0)
                                 <li>
-                                    <a href="{{ route('moderator.articles.approves') }}">
+                                    <a href="{{ route('moderator.articles.index') }}">
                                         {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
                                     </a>
                                 </li>
@@ -116,7 +116,7 @@
                             <!-- Thông báo bài viết chờ lâu hơn 30 phút -->
                             @if ($longPendingArticles > 0)
                                 <li>
-                                    <a href="{{ route('moderator.articles.approves') }}">
+                                    <a href="{{ route('moderator.articles.index') }}">
                                         {{ "Cảnh báo: $longPendingArticles bài chờ duyệt quá 30 phút!" }}
                                     </a>
                                 </li>
