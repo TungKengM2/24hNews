@@ -48,9 +48,9 @@
             </div>
         </section>
         <!-- ====== end tin tức nổi bật ====== -->
-		
-		
-		
+
+
+
 		 <!-- ====== start columnist ====== -->
         <section class="tc-columnist-style1">
             <div class="container">
@@ -149,7 +149,7 @@
         <!-- ====== end columnist ====== -->
 
         <!-- ====== Bài viết tác giả bạn quan tâm ====== -->
-        <section class="tc-technology-style1 pt-50 pb-50 bg-light">
+        <section class="tc-columnist-style1">
             <div class="container">
                 <h5 class="color-000 text-uppercase mb-30 ltspc-1 fw-bold">
                     Bài Viết Từ Tác Giả Bạn Quan Tâm <i class="la la-angle-right ms-1"></i>
