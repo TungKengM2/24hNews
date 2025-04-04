@@ -1,9 +1,73 @@
 @extends('admin.layouts.master')
 
 @section('content')
+
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <div class="container-full">
+              {{-- tổng quan thống kê  --}}
+              <section class="content">
+                <!-- Thống kê bài viết -->
+                <h1>Tổng Quan</h1>
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="ms-15">
+                                        <h5 class="mb-0">Tổng bài viết</h5>
+                                        <p class="mb-0 text-fade fs-12">Tất cả bài viết</p>
+                                    </div>
+                                </div>
+                                <div class="mt-20 d-flex justify-content-between align-items-center">
+                                    <h3 class="fw-600">{{ $articleStats['total'] ?? 0 }}</h3>
+                                    <div class="text-primary">
+                                        <i class="fa fa-file-text fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="ms-15">
+                                        <h5 class="mb-0">Đã xuất bản</h5>
+                                        <p class="mb-0 text-fade fs-12">Bài viết đã xuất bản</p>
+                                    </div>
+                                </div>
+                                <div class="mt-20 d-flex justify-content-between align-items-center">
+                                    <h3 class="fw-600">{{ $articleStats['published'] ?? 0 }}</h3>
+                                    <div class="text-success">
+                                        <i class="fa fa-check-circle fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="ms-15">
+                                        <h5 class="mb-0">Chờ duyệt</h5>
+                                        <p class="mb-0 text-fade fs-12">Bài viết đang chờ duyệt</p>
+                                    </div>
+                                </div>
+                                <div class="mt-20 d-flex justify-content-between align-items-center">
+                                    <h3 class="fw-600">{{ $articleStats['pending'] ?? 0 }}</h3>
+                                    <div class="text-warning">
+                                        <i class="fa fa-hourglass-half fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
             <!-- Main content -->
             {{-- biểu đồ thống kê --}}
             <section class="content mt-" >
@@ -67,108 +131,7 @@
                     </div>
                 </div>
             </section>
-            {{-- tổng quan thống kê  --}}
-            <section class="content">
-                <!-- Thống kê bài viết -->
-                <h1>Tổng Quan</h1>
-                <div class="row">
-                    <div class="col-xl-3 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Tổng bài viết</h5>
-                                        <p class="mb-0 text-fade fs-12">Tất cả bài viết</p>
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['total'] ?? 0 }}</h3>
-                                    <div class="text-primary">
-                                        <i class="fa fa-file-text fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Đã xuất bản</h5>
-                                        <p class="mb-0 text-fade fs-12">Bài viết đã xuất bản</p>
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['published'] ?? 0 }}</h3>
-                                    <div class="text-success">
-                                        <i class="fa fa-check-circle fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Chờ duyệt</h5>
-                                        <p class="mb-0 text-fade fs-12">Bài viết đang chờ duyệt</p>
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['pending'] ?? 0 }}</h3>
-                                    <div class="text-warning">
-                                        <i class="fa fa-hourglass-half fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Thống kê người dùng và tương tác -->
-                <div class="row">
-                    <div class="col-xl-6 col-12">
-                        <div class="box">
-                            <div class="box-header with-border">
-                                <h4 class="box-title">Thống kê người dùng</h4>
-                            </div>
-                            <div class="box-body text-center">
-                                <div class="mb-20">
-                                    <div class="icon bg-info-light rounded-circle w-80 h-80 text-center mx-auto l-h-100">
-                                        <span class="fs-40 icon-User"><span class="path1"></span><span class="path2"></span></span>
-                                    </div>
-                                </div>
-                                <h1 class="countnm fs-50" id="total-users">0</h1>
-                                <p class="mb-0 text-fade">Tổng số người dùng</p>
-                                <div class="row mt-3">
-                                    <div class="col-3">
-                                        <h4 class="mb-0" id="total-regular-users">0</h4>
-                                        <p class="mb-0 text-fade fs-12">Người dùng</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <h4 class="mb-0" id="total-authors">0</h4>
-                                        <p class="mb-0 text-fade fs-12">Tác giả</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <h4 class="mb-0" id="total-moderators">0</h4>
-                                        <p class="mb-0 text-fade fs-12">Kiểm duyệt</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <h4 class="mb-0" id="total-admins">0</h4>
-                                        <p class="mb-0 text-fade fs-12">Quản trị</p>
-                                    </div>
-                                </div>
-                                <a href="{{ route('admin.users.index') }}" class="btn btn-info-light mt-10">
-                                    <i class="fa fa-users"></i> Xem danh sách
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+          
             <!-- /.content -->
 
         </div>
