@@ -65,30 +65,17 @@
                     data-bs-toggle="dropdown" title="Notifications" style="position: relative; display: inline-block;">
                     <i data-feather="bell"></i>
                     @php
-
-                        $pendingCount = \App\Models\Article::where('status', 'pending')->count();
-                        $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
-                        $totalPending = $pendingCount + $pendingViolations;
-
-                        // Chỉ đếm bài viết thuộc danh mục moderator quản lý
-                        $moderator = auth()->user();
-                        $categoryIds = $moderator->categories()->pluck('category_id');
-
-                        // Đếm bài viết pending
-                        $pendingCount = \App\Models\Article::where('status', 'pending')
-                                        ->whereIn('category_id', $categoryIds)
-                                        ->count();
-
-                        // Đếm bài viết pending quá 1 tiếng
-                        $longPendingCount = \App\Models\Article::where('status', 'pending')
-                                            ->whereIn('category_id', $categoryIds)
-                                            ->where('created_at', '<', now()->subMinutes(30))
-                                            ->count();
-
-                        // Tổng số thông báo (mỗi loại tính là 1)
-                        $totalNotifications = ($pendingCount > 0 ? 1 : 0) + ($longPendingCount > 0 ? 1 : 0);
+                    $pendingCount = \App\Models\Article::where('status', 'pending')->count();
+                    $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
+                    $totalPending = $pendingCount + $pendingViolations;
+            
+                    $longPendingArticles = \App\Models\Article::where('status', 'pending')
+                    ->where('created_at', '<', now()->subMinutes(30))
+                        ->count();
+                    $totalNotifications = $pendingCount > 0 ? 1 : 0; // 1 thông báo nếu có bài pending
+                    $totalNotifications += $longPendingArticles > 0 ? 1 : 0; // +1 nếu có bài chờ lâu
                     @endphp
-
+            
                     @if ($pendingCount > 0 || $pendingViolations > 0)
                         <span class="badge badge-danger"
                             style="position: absolute; top: 6px; right: 5px; font-size: 10px; padding: 2px 5px; border-radius: 50%; line-height: 1; background: red; color: white;">
@@ -96,7 +83,7 @@
                         </span>
                     @endif
                 </a>
-                <ul class="dropdown-menu animated bounceIn" >
+                <ul class="dropdown-menu animated bounceIn">
                     <li class="header">
                         <div class="p-20">
                             <div class="flexbox">
@@ -108,25 +95,32 @@
                     </li>
                     <li>
                         <ul class="menu sm-scrol">
-                            <li>
-                                @if ($pendingCount > 0)
-                                    <a href="{{ route('admin.articles.approves') }}">
+                            <!-- Thông báo bài viết chờ duyệt -->
+                            @if ($pendingCount > 0)
+                                <li>
+                                    <a href="{{ route('moderator.articles.approves') }}">
                                         {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
                                     </a>
-                                @endif
-
-
-                                @if ($pendingViolations > 0)
-                                    <a href="{{ route('admin.violations.approves') }}">
-                                        {{ "Có $pendingViolations vi phạm đang chờ duyệt!" }}
-
-                            @if ($longPendingCount > 0)
+                                </li>
+                            @endif
+            
+                            <!-- Thông báo vi phạm chờ duyệt -->
+                            @if ($pendingViolations > 0)
                                 <li>
-                                    <a href="{{ route('moderator.list-article') }}">
-                                        <i class="fas fa-clock text-danger"></i>
+                                    <a href="{{ route('moderator.violations.approves') }}">
+                                        {{ "Có $pendingViolations vi phạm đang chờ duyệt!" }}
                                     </a>
-                                @endif
-                            </li>
+                                </li>
+                            @endif
+            
+                            <!-- Thông báo bài viết chờ lâu hơn 30 phút -->
+                            @if ($longPendingArticles > 0)
+                                <li>
+                                    <a href="{{ route('moderator.articles.approves') }}">
+                                        {{ "Cảnh báo: $longPendingArticles bài chờ duyệt quá 30 phút!" }}
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                     <li class="footer">
@@ -134,16 +128,14 @@
                     </li>
                 </ul>
             </li>
+            
 
             <script>
+                // Gọi hàm mỗi 60 giây
+                setInterval(refreshNotificationCount, 60000);
 
-
-
-            // Gọi hàm mỗi 60 giây
-            setInterval(refreshNotificationCount, 60000);
-
-            // Gọi ngay khi trang load
-            document.addEventListener('DOMContentLoaded', refreshNotificationCount);
+                // Gọi ngay khi trang load
+                document.addEventListener('DOMContentLoaded', refreshNotificationCount);
             </script>
             <!-- User Account-->
             <li class="dropdown user user-menu">
