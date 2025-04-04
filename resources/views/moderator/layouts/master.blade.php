@@ -15,6 +15,13 @@
 
     @include('moderator.layouts.partials.css')
 
+    <style>
+        /* Add this CSS rule to control the loader speed */
+        #loader {
+            transition: opacity 0.3s ease; /* Adjusts the opacity transition duration */
+        }
+    </style>
+
 </head>
 
 <body class="hold-transition light-skin sidebar-mini theme-primary fixed">
