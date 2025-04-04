@@ -77,7 +77,7 @@
                         // Đếm bài viết pending quá 1 tiếng
                         $longPendingCount = \App\Models\Article::where('status', 'pending')
                                             ->whereIn('category_id', $categoryIds)
-                                            ->where('created_at', '<', now()->subHour())
+                                            ->where('created_at', '<', now()->subMinutes(30))
                                             ->count();
 
                         // Tổng số thông báo (mỗi loại tính là 1)
@@ -125,7 +125,7 @@
                                 <li>
                                     <a href="{{ route('moderator.list-article') }}">
                                         <i class="fas fa-clock text-danger"></i>
-                                        {{ "Cảnh báo: $longPendingCount bài chờ duyệt quá 1 tiếng!" }}
+                                        {{ "Cảnh báo: $longPendingCount bài chờ duyệt quá 30 phút!" }}
                                     </a>
                                 </li>
                             @endif
