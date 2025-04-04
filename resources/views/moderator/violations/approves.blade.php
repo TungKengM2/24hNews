@@ -216,7 +216,7 @@
                                     <a href="{{ route('articles.article', $violation['article']['slug']) }}" target="_blank">
                                         {{ $violation['article']['title'] }}
                                     </a>
-                                    
+
                                 </p>
 
                                 {{-- Nếu là bình luận --}}
@@ -233,7 +233,7 @@
                                 @if ($comment)
                                     <div class="card mt-3">
                                         <div class="card-header bg-primary text-white">
-                                            <strong>Bình luận liên quan</strong>
+                                            <strong>Bình luận vi phạm</strong>
                                         </div>
                                         <div class="card-body d-flex align-items-start">
                                             {{-- Avatar --}}
@@ -252,6 +252,14 @@
 
                                                 {{-- Nội dung bình luận --}}
                                                 <p class="mb-0">{{ $comment->content }}</p>
+
+                                                {{-- Liên kết đến bài viết --}}
+                                                <p class="mt-2">
+                                                    <a href="{{ route('articles.article', $comment->article->slug) }}"
+                                                        target="_blank">
+                                                        Xem bài viết
+                                                    </a>
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
