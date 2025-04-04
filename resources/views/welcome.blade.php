@@ -340,19 +340,10 @@
                                             {{ $data['category']->name }}
                                         </h6>
                                         <h5 class="title mb-3">{{ $data['article']->title }}</h5>
-<<<<<<< HEAD
-                                        <div class="d-flex justify-content-center mt-2">
-                                            <a href="{{ Auth::check() ? route('articles.article', $data['article']->slug) : url('/login-user') }}"
-                                                class="btn btn-sm btn-outline-primary">
-                                                Xem chi tiết <i class="la la-angle-right"></i>
-                                            </a>
-                                        </div>
-=======
                                         <a href="{{ Auth::check() ? route('articles.article', $data['article']->slug) : url('/login-user') }}"
                                             class="btn btn-sm btn-outline-primary mt-2">
                                             Xem chi tiết <i class="la la-angle-right"></i>
                                         </a>
->>>>>>> c0a92d7d9ee172f891b21767272ffc991e72372b
                                     </div>
                                 </div>
                             </div>
