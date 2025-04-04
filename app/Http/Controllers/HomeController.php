@@ -64,7 +64,7 @@ class HomeController extends Controller
                 $query->where('is_active', 1); // Danh mục phải đang hoạt động
             })->get();
 
-        $categories = Category::where('is_active', 1)->limit(7)->get();
+        $categories = Category::where('is_active', 1)->limit(5)->get();
         $newsData = [];
 
         foreach ($categories as $category) {
@@ -84,7 +84,7 @@ class HomeController extends Controller
             }
         }
 
-        $category2 = Category::where('is_active', 1)->get();
+        $category2 = Category::withCount('articles')->where('is_active', 1)->get();
 
         //TungKeng làm hiển thị bài viết của author mà user đã fl
         $user = auth()->user();

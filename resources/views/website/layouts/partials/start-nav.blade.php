@@ -26,14 +26,16 @@
 
                 {{-- dat them --}}
                 @foreach ($categories as $category)
-                    @if ($category->is_active == 1)
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
-                                {{ $category->name }}
-                            </a>
-                        </li>
+                    @if ($loop->iteration > 6)
+                        @break
                     @endif
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
+                            {{ $category->name }}
+                        </a>
+                    </li>
                 @endforeach
+
                 {{-- dat them --}}
             </ul>
 
