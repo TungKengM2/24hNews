@@ -110,6 +110,6 @@ class ViolationsController extends Controller
         // Xóa vi phạm khỏi bảng violations
         $violation->delete();
 
-        return back()->with('success', 'Vi phạm đã được giải quyết, bài viết đã chuyển sang trạng thái nháp.');
+        return back()->with('success', 'Vi phạm đã được giải quyết.');
     }
 }
