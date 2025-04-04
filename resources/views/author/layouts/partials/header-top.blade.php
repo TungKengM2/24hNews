@@ -40,7 +40,7 @@
                             @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
                             <li class="notification-item p-3" id="notification-{{ $notification->id }}">
                                 <a href="#"
-                                  
+                                   onclick="openNotification('{{ $notification->id }}', '{{ addslashes($notification->data['message']) }}'); return false;"
                                    style="font-size: 16px; display: block; padding: 10px;">
                                     @if(isset($notification->data['type']) && $notification->data['type'] === 'article_reported')
                                         {{ Str::limit('Bài viết của bạn đã bị report', 40, '...') }}
