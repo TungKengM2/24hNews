@@ -59,34 +59,9 @@ class ImageModerationController extends Controller
 
                 return response()->json($cachedResult);
             }
-            $domain = $this->extractDomain($imageUrl);
-            $result = null;
-            $needDownloadDomains = [
-                'vnexpress.net',
-                'tuoitre.vn',
-                'thanhnien.vn',
-                'dantri.com.vn',
-                'vietnamnet.vn',
-                'facebook.com',
-                'fb.com',
-            ];
-            $shouldDownloadFirst = false;
-            foreach ($needDownloadDomains as $restrictedDomain) {
-                if (strpos($domain, $restrictedDomain) !== false) {
-                    $shouldDownloadFirst = true;
-                    break;
-                }
-            }
-
-            if ($shouldDownloadFirst) {
-                $result = $this->moderationService->enhancedUrlModeration($imageUrl);
-            } else {
-                $result = $this->moderationService->fastUrlModeration($imageUrl);
-
-                if ($result['status'] === 'error') {
-                    $result = $this->moderationService->enhancedUrlModeration($imageUrl);
-                }
-            }
+            
+            // Sử dụng phương thức enhancedUrlModeration cho tất cả URL hình ảnh, không phân biệt nguồn gốc
+            $result = $this->moderationService->enhancedUrlModeration($imageUrl);
 
             $endTime = microtime(true);
             $executionTime = ($endTime - $startTime) * 1000;
@@ -306,46 +281,8 @@ class ImageModerationController extends Controller
                 ]);
             }
 
-            $parsedUrl = parse_url($imageUrl);
-            $domain = isset($parsedUrl['host']) ? $parsedUrl['host'] : '';
-
-            $restrictedDomains = [
-                'vnexpress.net',
-                'baomoi.com',
-                'dantri.com.vn',
-                'vietnamnet.vn',
-                'tuoitre.vn',
-                'thanhnien.vn',
-                'afamily.vn',
-                'cafef.vn',
-                'kenh14.vn',
-                'giaoducthoidai.vn',
-                'vtv.vn',
-                'suckhoedoisong.vn',
-                'zing.vn',
-                'zingnews.vn',
-                'genk.vn',
-            ];
-
-            $isRestrictedDomain = false;
-            foreach ($restrictedDomains as $restrictedDomain) {
-                if (stripos($domain, $restrictedDomain) !== false) {
-                    $isRestrictedDomain = true;
-                    break;
-                }
-            }
-
-            $moderationResult = null;
-
-            if ($isRestrictedDomain) {
-                $moderationResult = $this->moderationService->enhancedUrlModeration($imageUrl);
-            } else {
-                $moderationResult = $this->moderationService->fastUrlModeration($imageUrl);
-
-                if (isset($moderationResult['status']) && $moderationResult['status'] === 'error') {
-                    $moderationResult = $this->moderationService->enhancedUrlModeration($imageUrl);
-                }
-            }
+            // Luôn sử dụng phương thức enhancedUrlModeration cho tất cả hình ảnh
+            $moderationResult = $this->moderationService->enhancedUrlModeration($imageUrl);
 
             $violation = false;
             $reasons = [];
@@ -425,6 +362,95 @@ class ImageModerationController extends Controller
                 'blocked' => false,
                 'execution_time' => $executionTime,
                 'message' => 'Lỗi kiểm duyệt hình ảnh: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Phương thức kiểm duyệt hình ảnh tăng cường
+     * Luôn sử dụng phương thức enhancedUrlModeration và ghi lại chi tiết
+     */
+    public function forceEnhancedModeration(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image_url' => 'required|url',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'URL không hợp lệ',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            $startTime = microtime(true);
+            $imageUrl = $request->input('image_url');
+            
+            // Ghi log chi tiết để debug
+            Log::info('Đang kiểm duyệt URL hình ảnh tăng cường: ' . $imageUrl);
+
+            // Kiểm tra nếu hình ảnh đã bị chặn trước đó
+            $blockedImageHash = $this->checkBlockedImageUrl($imageUrl);
+            if ($blockedImageHash) {
+                Log::info('Hình ảnh đã từng bị chặn: ' . json_encode($blockedImageHash));
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Hình ảnh đã từng bị chặn do vi phạm: ' . ($blockedImageHash['reason'] ?? 'Vi phạm quy định nội dung'),
+                    'violation_level' => 'high',
+                    'blocked_previously' => true,
+                    'hash' => $blockedImageHash['hash'],
+                ]);
+            }
+
+            // Kiểm tra cache
+            $cacheKey = 'moderation_url_' . md5($imageUrl);
+            $cachedResult = \Illuminate\Support\Facades\Cache::get($cacheKey);
+
+            if ($cachedResult) {
+                $endTime = microtime(true);
+                $executionTime = ($endTime - $startTime) * 1000;
+                Log::info('Kết quả kiểm duyệt từ cache: ' . json_encode($cachedResult));
+                
+                if ($cachedResult['status'] === 'success' && $cachedResult['violation_level'] === 'none') {
+                    $this->addLocationToResult($cachedResult, $imageUrl);
+                }
+
+                return response()->json($cachedResult);
+            }
+
+            // Luôn sử dụng phương thức kiểm duyệt tăng cường
+            $result = $this->moderationService->enhancedUrlModeration($imageUrl);
+            Log::info('Kết quả kiểm duyệt tăng cường: ' . json_encode($result));
+
+            $endTime = microtime(true);
+            $executionTime = ($endTime - $startTime) * 1000;
+            
+            // Lưu kết quả nếu vi phạm
+            if ($result['status'] === 'success' && $result['violation_level'] !== 'none') {
+                $this->saveBlockedImageUrl($imageUrl, $result);
+                Log::warning('Hình ảnh bị chặn do vi phạm: ' . $imageUrl);
+            }
+            
+            // Thêm vị trí ảnh nếu an toàn
+            if ($result['status'] === 'success' && $result['violation_level'] === 'none') {
+                $this->addLocationToResult($result, $imageUrl);
+            }
+
+            // Lưu vào cache để sử dụng lại
+            if ($result['status'] === 'success') {
+                \Illuminate\Support\Facades\Cache::put($cacheKey, $result, 60 * 24 * 7);
+            }
+
+            return response()->json($result);
+            
+        } catch (Exception $e) {
+            Log::error('Lỗi kiểm duyệt hình ảnh tăng cường: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Đã xảy ra lỗi khi kiểm duyệt hình ảnh: ' . $e->getMessage(),
             ], 500);
         }
     }
