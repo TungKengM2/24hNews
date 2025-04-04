@@ -501,6 +501,7 @@ Route::post('/upload/image', [UploadController::class, 'store'])
 // 🔐 Đăng xuất
 Route::post('/logout', [AuthUserController::class, 'logout'])
     ->name('logout');
+    
 
 
 
