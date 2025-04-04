@@ -91,7 +91,6 @@
                     <div class="card p-4">
                         <h2 class="mb-4">Tạo Bài Viết Mới</h2>
 
-                        <!-- Hiển thị thông báo lỗi -->
                         @if ($errors->any())
                             <div class="alert alert-danger error_message">
                                 <ul>
@@ -102,7 +101,6 @@
                             </div>
                         @endif
 
-                        <!-- Cảnh báo hình ảnh bị chặn -->
                         @if (session('blocked_images'))
                             <div class="alert alert-warning error_message">
                                 <strong>Cảnh báo: Một số hình ảnh đã bị chặn</strong>
@@ -124,7 +122,6 @@
                             </div>
                         @endif
 
-                        <!-- Lý do vi phạm -->
                         @if (session('violation_reasons'))
                             <div class="alert alert-warning error_message">
                                 <strong>Lý do vi phạm:</strong>
@@ -144,7 +141,6 @@
                             id="articleForm">
                             @csrf
 
-                            <!-- Thông tin cơ bản -->
                             <div class="form-section">
                                 <h4 class="form-section-title">Thông tin cơ bản</h4>
                                 <div class="row">
@@ -154,22 +150,10 @@
                                             value="{{ old('title') }}" required>
                                     </div>
 
-                                    {{-- <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <label for="slug" class="form-label">Đường dẫn</label>
                                         <input type="text" class="form-control" id="slug" name="slug"
                                             value="{{ old('slug') }}" required>
-                                    </div> --}}
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="tags">Chọn hoặc thêm thẻ:</label>
-                                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
-                                            @foreach ($tags as $tag)
-                                                <option value="{{ $tag->tag_id }}"
-                                                    {{ in_array($tag->tag_id, old('tags', [])) ? 'selected' : '' }}>
-                                                    {{ $tag->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
                                     </div>
                                 </div>
 
@@ -185,10 +169,22 @@
                                             @endforeach
                                         </select>
                                     </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="tags">Chọn hoặc thêm thẻ:</label>
+                                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
+                                            @foreach ($tags as $tag)
+                                                <option value="{{ $tag->tag_id }}"
+                                                    {{ in_array($tag->tag_id, old('tags', [])) ? 'selected' : '' }}>
+                                                    {{ $tag->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
+
                             </div>
 
-                            <!-- Ảnh đại diện -->
                             <div class="form-section">
                                 <h4 class="form-section-title">Ảnh đại diện</h4>
                                 <div class="row">
@@ -235,7 +231,6 @@
                                 </div>
                             </div>
 
-                            <!-- Nội dung bài viết -->
                             <div class="form-section">
                                 <h4 class="form-section-title">Nội dung bài viết</h4>
                                 <div class="mb-3">
@@ -276,7 +271,6 @@
                                 });
                             });
 
-                            // Lưu nháp bài viết
                             document.getElementById('saveDraft').addEventListener('click', function() {
                                 document.getElementById('articleStatus').value = 'draft';
                                 document.getElementById('articleForm').setAttribute('novalidate', 'novalidate'); // Bỏ qua required

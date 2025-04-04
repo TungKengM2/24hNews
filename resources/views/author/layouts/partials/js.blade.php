@@ -20,7 +20,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-<script src="https://cdn.tiny.cloud/1/hgw2cy0h3y0bv8k1p3imfstgke1x35xaz7rrfqrhigf3tx2j/tinymce/7/tinymce.min.js"
+<script src="https://cdn.tiny.cloud/1/{{ env('TINYMCE_API_KEY') }}/tinymce/7/tinymce.min.js"
     referrerpolicy="origin"></script>
 <script>
     const fetchApi = import(
@@ -121,8 +121,9 @@
 
     tinymce
         .init({
+            menubar: 'file edit view insert format tools table tc help',
             selector: 'textarea#full-featured',
-            plugins: 'preview searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media table charmap pagebreak anchor insertdatetime advlist lists wordcount help formatpainter permanentpen charmap emoticons',
+            plugins: 'importword exportword exportpdf preview searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media table charmap pagebreak anchor insertdatetime advlist lists wordcount help formatpainter permanentpen charmap emoticons',
             toolbar: 'undo redo | styles | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen preview save print | image media link anchor',
             autosave_ask_before_unload: true,
             autosave_interval: '30s',
@@ -190,7 +191,7 @@
                             }
 
                             if (!el.style.display) {
-                                el.style.display = 'block';
+                                el.style.display = 'inline';
                             }
 
                             if (el.style.margin === '0px auto' || el.style.margin === 'auto') {
@@ -209,9 +210,9 @@
                     }
 
                     if (el.className && (
-                            el.className.includes('bg-') ||
-                            el.className.includes('background-')
-                        )) {
+                        el.className.includes('bg-') ||
+                        el.className.includes('background-')
+                    )) {
                         const classes = el.className.split(' ');
                         const filteredClasses = classes.filter(cls =>
                             !cls.startsWith('bg-') &&
@@ -241,7 +242,7 @@
 
                     [...images].forEach(img => {
                         if (img.src && (img.src.startsWith('http') || img.src.startsWith(
-                                'data:image'))) {
+                            'data:image'))) {
                             const imgId = 'img-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
 
                             img.setAttribute('data-need-moderation', 'true');
@@ -323,7 +324,7 @@
                         const originalSrc = img.getAttribute('src');
 
                         if (originalSrc && (originalSrc.includes('/storage/uploads/') || originalSrc
-                                .includes('/uploads/'))) {
+                            .includes('/uploads/'))) {
                             console.log('Ảnh đã được tải lên từ server, không cần kiểm duyệt lại:',
                                 originalSrc);
                             img.removeAttribute('data-need-moderation');
@@ -397,7 +398,7 @@
                                         console.log('Hình ảnh bị chặn:', result);
 
                                         if (result.url && !window.blockedImages.includes(result
-                                                .url)) {
+                                            .url)) {
                                             window.blockedImages.push(result.url);
                                         }
 
@@ -450,7 +451,7 @@
                                         console.log('Lỗi kiểm duyệt:', result);
 
                                         if (result.url && !window.blockedImages.includes(result
-                                                .url)) {
+                                            .url)) {
                                             window.blockedImages.push(result.url);
                                         }
 
@@ -524,16 +525,16 @@
                                 });
                         } else if (originalSrc.startsWith('http')) {
                             fetch('/api/moderate/image-url', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector(
-                                            'meta[name="csrf-token"]').getAttribute('content'),
-                                    },
-                                    body: JSON.stringify({
-                                        image_url: originalSrc
-                                    }),
-                                })
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').getAttribute('content'),
+                                },
+                                body: JSON.stringify({
+                                    image_url: originalSrc
+                                }),
+                            })
                                 .then(response => response.json())
                                 .then(result => {
                                     processedImages++;
@@ -711,7 +712,7 @@
                     const originalSetAttrib = editor.dom.setAttrib;
                     editor.dom.setAttrib = function(elm, name, value) {
                         if ((name === 'data-moderated' || name === 'data-no-remoderation' ||
-                                name === 'moderated') && value === null && elm._moderationState) {
+                            name === 'moderated') && value === null && elm._moderationState) {
                             return elm;
                         }
                         return originalSetAttrib.call(this, elm, name, value);
@@ -791,7 +792,7 @@
                                 images.forEach(img => {
                                     const src = img.getAttribute('src');
                                     if (src && (src.includes('/storage/uploads/') || src
-                                            .includes('/uploads/'))) {
+                                        .includes('/uploads/'))) {
                                         img.setAttribute('data-moderated', 'true');
                                     } else {
                                         img.setAttribute('data-need-moderation',
@@ -1088,7 +1089,7 @@
 
                                             img.onmousedown = function(e) {
                                                 if (this.hasAttribute(
-                                                        'data-moderated')) {
+                                                    'data-moderated')) {
                                                     this.setAttribute(
                                                         'data-no-remoderation',
                                                         'true');
@@ -1099,22 +1100,22 @@
                                                 img.removeAttribute('data-mce-src');
                                             }
                                             if (img.hasAttribute(
-                                                    'data-mce-selected')) {
+                                                'data-mce-selected')) {
                                                 img.removeAttribute(
                                                     'data-mce-selected');
                                             }
                                             if (img.hasAttribute(
-                                                    'data-mce-object')) {
+                                                'data-mce-object')) {
                                                 img.removeAttribute(
                                                     'data-mce-object');
                                             }
                                             if (img.hasAttribute(
-                                                    'data-mce-placeholder')) {
+                                                'data-mce-placeholder')) {
                                                 img.removeAttribute(
                                                     'data-mce-placeholder');
                                             }
                                             if (img.hasAttribute(
-                                                    'data-need-moderation')) {
+                                                'data-need-moderation')) {
                                                 img.removeAttribute(
                                                     'data-need-moderation');
                                             }
@@ -1162,9 +1163,6 @@
                     xhr.send(formData);
                 });
             },
-
-            automatic_uploads: true,
-            images_upload_credentials: false,
             // tinydrive_token_provider: 'ae65bcdf52b2b51143d84279e4393ca0129cad1971389dce9efe133d92adeb88',
 
             mobile: {
@@ -1176,14 +1174,6 @@
                     items: 'addcomment showcomments deleteallconversations',
                 },
             },
-            menubar: 'file edit view insert format tools table tc help',
-            toolbar: 'undo redo | importword exportword exportpdf  | blocks fontsizeinput | bold italic | align numlist bullist | link image | table math media pageembed | lineheight  outdent indent | strikethrough forecolor backcolor formatpainter removeformat | charmap emoticons checklist | code fullscreen preview | save print | pagebreak anchor codesample footnotes mergetags | addtemplate inserttemplate | addcomment showcomments | ltr rtl casechange | spellcheckdialog a11ycheck', // Note: if a toolbar item requires a plugin, the item will not present in the toolbar if the plugin is not also loaded.
-            autosave_ask_before_unload: true,
-            autosave_interval: '30s',
-            autosave_prefix: '{path}{query}-{id}-',
-            autosave_restore_when_empty: false,
-            autosave_retention: '2m',
-            image_advtab: true,
             typography_rules: [
                 'common/punctuation/quote',
                 'en-US/dash/main',
@@ -1397,7 +1387,7 @@
 
                                         img.onmousedown = function(e) {
                                             if (this.hasAttribute(
-                                                    'data-moderated')) {
+                                                'data-moderated')) {
                                                 this.setAttribute(
                                                     'data-no-remoderation',
                                                     'true');
@@ -1408,22 +1398,22 @@
                                             img.removeAttribute('data-mce-src');
                                         }
                                         if (img.hasAttribute(
-                                                'data-mce-selected')) {
+                                            'data-mce-selected')) {
                                             img.removeAttribute(
                                                 'data-mce-selected');
                                         }
                                         if (img.hasAttribute(
-                                                'data-mce-object')) {
+                                            'data-mce-object')) {
                                             img.removeAttribute(
                                                 'data-mce-object');
                                         }
                                         if (img.hasAttribute(
-                                                'data-mce-placeholder')) {
+                                            'data-mce-placeholder')) {
                                             img.removeAttribute(
                                                 'data-mce-placeholder');
                                         }
                                         if (img.hasAttribute(
-                                                'data-need-moderation')) {
+                                            'data-need-moderation')) {
                                             img.removeAttribute(
                                                 'data-need-moderation');
                                         }
@@ -1463,31 +1453,22 @@
             },
 
             importcss_append: true,
-            height: 600,
-            image_caption: true,
-            quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-            noneditable_class: 'mceNonEditable',
-            toolbar_mode: 'sliding',
             spellchecker_ignore_list: ['Ephox', 'Moxiecode', 'tinymce', 'TinyMCE'],
             tinycomments_mode: 'embedded',
-            content_style: '.mymention{ color: gray; } .moderation-blocked { color: red; border: 1px solid red; padding: 5px; display: inline-block; } .moderation-error { color: orange; border: 1px solid orange; padding: 5px; display: inline-block; }',
-            contextmenu: 'link image editimage table configurepermanentpen',
             a11y_advanced_options: true,
-            skin: useDarkMode ? 'oxide-dark' : 'oxide',
-            content_css: useDarkMode ? 'dark' : 'default',
             autocorrect_capitalize: true,
             mergetags_list: [{
-                    title: 'Client',
-                    menu: [{
-                            value: 'Client.LastCallDate',
-                            title: 'Call date',
-                        },
-                        {
-                            value: 'Client.Name',
-                            title: 'Client name',
-                        },
-                    ],
+                title: 'Client',
+                menu: [{
+                    value: 'Client.LastCallDate',
+                    title: 'Call date',
                 },
+                    {
+                        value: 'Client.Name',
+                        title: 'Client name',
+                    },
+                ],
+            },
                 {
                     title: 'Proposal',
                     menu: [{

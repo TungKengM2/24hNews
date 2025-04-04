@@ -48,6 +48,8 @@ class ArticleController extends Controller
                     );
                 } elseif ($filter === 'no_category') {
                     $query->whereNull('category_id');
+                } elseif ($filter === 'archived') {
+                    $query->where('status', 'archived');
                 }
             })
             ->orderBy('created_at', 'desc')
@@ -71,7 +73,7 @@ class ArticleController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id',
             'category_id' => 'required|exists:categories,category_id',
-            'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'status' => 'required|in:draft,pending,published,archived,rejected',
             'content' => 'nullable',
         ];
@@ -175,7 +177,6 @@ class ArticleController extends Controller
             }
         }
 
-        // Kiểm duyệt nội dung văn bản
         $moderationResult = $this->moderationService->moderateContent($content);
 
         if ($moderationResult['status'] === 'error') {
@@ -199,7 +200,6 @@ class ArticleController extends Controller
                 ->with('violations', $moderationResult['violations']);
         }
 
-        // Kiểm duyệt hình ảnh đại diện nếu có
         $thumbnailModerationResult = [
             'status' => 'success',
             'violation_level' => 'none',
@@ -231,7 +231,6 @@ class ArticleController extends Controller
             }
         }
 
-        // Xác định mức độ vi phạm chung (lấy mức cao nhất giữa nội dung và ảnh đại diện)
         $finalViolationLevel = $moderationResult['violation_level'];
         if (
             in_array($thumbnailModerationResult['violation_level'], ['medium', 'high']) &&
@@ -240,7 +239,6 @@ class ArticleController extends Controller
             $finalViolationLevel = $thumbnailModerationResult['violation_level'];
         }
 
-        // Các vi phạm tổng hợp
         $allViolations = $moderationResult['violations'];
         $allReasons = $moderationResult['reason'];
 
@@ -258,21 +256,17 @@ class ArticleController extends Controller
             }
         }
 
-        // Cập nhật trạng thái bài viết - luôn chuyển sang pending khi update
         $article->update([
             'title' => $request->title,
             'slug' => $request->slug,
             'content' => $content,
             'category_id' => $request->category_id,
-            'status' => 'pending', // Luôn chuyển thành pending khi update
+            'status' => 'pending', 
         ]);
 
-        // Lưu ảnh đại diện nếu có và đã vượt qua kiểm duyệt
         if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
-            $file = $request->file('thumbnail_url');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move('D:\laragon\www\24hNews\storage\app\public\thumbnails', $filename);
-            $article->update(['thumbnail_url' => 'thumbnails/' . $filename]);
+            $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+            $article->update(['thumbnail_url' => $path]);
         }
 
         $tagIds = $this->processTags($request->input('tags', []));
@@ -282,13 +276,13 @@ class ArticleController extends Controller
         $approvalData = [
             'type' => 'article',
             'user_id' => auth()->id(),
-            'status' => 'pending', // Luôn chuyển approval thành pending
+            'status' => 'pending', 
             'remarks' => $finalViolationLevel === 'high'
                 ? 'Nội dung vi phạm nghiêm trọng: ' . implode(', ', $allViolations)
                 : ($finalViolationLevel === 'medium'
                     ? 'Nội dung cần kiểm duyệt: ' . implode(', ', $allViolations)
                     : 'Đã cập nhật, chờ kiểm duyệt lại'),
-            'approved_by' => null, // Khi update, cần admin duyệt lại
+            'approved_by' => null, 
             'violation_level' => $finalViolationLevel,
             'violations' => ! empty($allViolations)
                 ? json_encode($allViolations, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
@@ -342,7 +336,7 @@ class ArticleController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:articles,slug',
             'content' => 'required',
-            'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'status' => 'required|in:draft,pending,published,rejected,archived',
         ];
 
@@ -447,7 +441,6 @@ class ArticleController extends Controller
         }
 
         try {
-            // Kiểm duyệt nội dung văn bản
             $moderationResult = $this->moderationService->moderateContent($content);
 
             if ($moderationResult['status'] === 'error') {
@@ -471,7 +464,6 @@ class ArticleController extends Controller
                     ->with('violations', $moderationResult['violations']);
             }
 
-            // Kiểm duyệt hình ảnh đại diện nếu có
             $thumbnailModerationResult = [
                 'status' => 'success',
                 'violation_level' => 'none',
@@ -503,7 +495,6 @@ class ArticleController extends Controller
                 }
             }
 
-            // Xác định mức độ vi phạm chung (lấy mức cao nhất giữa nội dung và ảnh đại diện)
             $finalViolationLevel = $moderationResult['violation_level'];
             if (
                 in_array($thumbnailModerationResult['violation_level'], ['medium', 'high']) &&
@@ -512,7 +503,6 @@ class ArticleController extends Controller
                 $finalViolationLevel = $thumbnailModerationResult['violation_level'];
             }
 
-            // Các vi phạm tổng hợp
             $allViolations = $moderationResult['violations'];
             $allReasons = $moderationResult['reason'];
 
@@ -536,15 +526,12 @@ class ArticleController extends Controller
                 'content' => $content,
                 'author_id' => auth()->id(),
                 'category_id' => $request->category_id,
-                'status' => 'pending', // Luôn đặt là pending
+                'status' => 'pending', 
             ]);
 
-            // Lưu ảnh đại diện nếu có và đã vượt qua kiểm duyệt
             if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
-                $file = $request->file('thumbnail_url');
-                $filename = time() . '_' . $file->getClientOriginalName();
-                $file->move('D:\laragon\www\24hNews\storage\app\public\thumbnails', $filename);
-                $article->update(['thumbnail_url' => 'thumbnails/' . $filename]);
+                $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+                $article->update(['thumbnail_url' => $path]);
             }
 
             $tagIds = $this->processTags($request->input('tags', []));
@@ -561,7 +548,7 @@ class ArticleController extends Controller
                     : ($finalViolationLevel === 'medium'
                         ? 'Nội dung cần kiểm duyệt: ' . implode(', ', $allViolations)
                         : 'Bài viết mới, chờ kiểm duyệt'),
-                'approved_by' => null, // Cần admin duyệt
+                'approved_by' => null,
                 'violation_level' => $finalViolationLevel,
                 'violations' => ! empty($allViolations)
                     ? json_encode($allViolations, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
@@ -689,6 +676,29 @@ class ArticleController extends Controller
         );
     }
 
+    /**
+     * Ẩn/hiện bài viết
+     */
+    public function toggleVisibility(Article $article)
+    {
+        if ($article->author_id !== auth()->id()) {
+            return redirect()->back()->with('error', 'Bạn không có quyền thay đổi bài viết này.');
+        }
+
+        // Nếu trạng thái là published, đổi thành archived và ngược lại
+        if ($article->status === 'published') {
+            $article->update(['status' => 'archived']);
+            $message = "Bài viết đã được ẩn thành công.";
+        } elseif ($article->status === 'archived') {
+            $article->update(['status' => 'published']);
+            $message = "Bài viết đã được hiện thành công.";
+        } else {
+            return redirect()->back()->with('error', "Chỉ có thể ẩn/hiện bài viết đã xuất bản hoặc đã ẩn.");
+        }
+
+        return redirect()->route('author.articles.index')->with('success', $message);
+    }
+    
     public function destroy(Article $article)
     {
         if ($article->thumbnail_url) {
@@ -753,21 +763,17 @@ class ArticleController extends Controller
             return response()->json(['message' => 'Bài viết không tồn tại'], 404);
         }
 
-        // Cập nhật trạng thái bài viết
         $article->status = $request->status;
         $article->save();
 
-        // Kiểm tra tác giả bài viết có tồn tại không
         if (!$article->author) {
             Log::error("Không tìm thấy tác giả của bài viết ID: {$article->id}");
             return response()->json(['message' => 'Không tìm thấy tác giả'], 500);
         }
 
-        // Nội dung thông báo
         $message = "Bài viết '{$article->title}' của bạn đã được " .
             ($article->status === 'published' ? 'duyệt.' : 'từ chối.');
 
-        // Gửi thông báo
         try {
             $article->author->notify(new ArticleStatusUpdated($article, $message));
         } catch (\Exception $e) {
