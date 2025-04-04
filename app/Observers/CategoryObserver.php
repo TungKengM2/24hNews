@@ -72,7 +72,8 @@ class CategoryObserver
      */
     public function deleted(Category $category): void
     {
-        //
+        Category::assignModerators();
+
     }
 
     /**

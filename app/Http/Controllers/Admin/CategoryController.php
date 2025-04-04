@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -34,15 +35,26 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|unique:categories|max:100'
         ]);
-
-        Category::create([
+    
+        // Kiểm tra xem có kiểm duyệt viên nào không
+        $moderators = User::where('role_id', 3)->get();
+        if ($moderators->isEmpty()) {
+            return redirect()->route('categories.index')->with('error', 'Không có kiểm duyệt viên nào để gán danh mục!');
+        }
+    
+        // Tạo danh mục mới
+        $category = Category::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'is_active' => $request->has('is_active'),
         ]);
-
+    
+        // Gán kiểm duyệt viên cho danh mục
+        Category::assignModerators();
+    
         return redirect()->route('categories.index')->with('success', 'Danh mục đã được tạo mới thành công!');
     }
+    
 
     /**
      * Display the specified resource.

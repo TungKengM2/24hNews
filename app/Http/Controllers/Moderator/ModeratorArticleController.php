@@ -7,17 +7,26 @@ use App\Models\Article;
 use Illuminate\Http\Request;
 
 
+
 class ModeratorArticleController extends Controller
 {
     public function index(Request $request)
     {
+        $moderator = auth()->user(); // Lấy kiểm duyệt viên đang đăng nhập
+    
+        // Lấy danh sách danh mục mà kiểm duyệt viên này quản lý
+        $categoryIds = $moderator->categories()->pluck('category_id');
+    
+        // Lọc bài viết thuộc danh mục kiểm duyệt viên quản lý
         $articles = Article::with(['author', 'category', 'approver', 'tags'])
-            ->where('status', 'pending') // Chỉ lấy bài viết có trạng thái pending
+            ->where('status', 'pending')
+            ->whereIn('category_id', $categoryIds) // Chỉ lấy bài viết thuộc danh mục của KDV
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-
+    
         return view('moderator.articles.index', compact('articles'));
     }
+    
 
     public function approve(Article $article)
     {
