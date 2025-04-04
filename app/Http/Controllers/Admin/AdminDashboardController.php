@@ -10,6 +10,9 @@ use App\Models\Comment;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Models\Article;
+use App\Models\Like;
 
 class AdminDashboardController extends Controller
 {
@@ -20,7 +23,21 @@ class AdminDashboardController extends Controller
      */
     public function index()
     {
-        return view('admin.dashboard');
+        // Thống kê bài viết
+        $articleStats = [
+            'total' => Article::count(),
+            'published' => Article::where('status', 'published')->count(),
+            'pending' => Article::where('status', 'pending')->count(),
+            'draft' => Article::where('status', 'draft')->count(),
+        ];
+
+        // Thống kê người dùng
+        $userCount = User::where('role', '!=', 'admin')->count();
+
+        // Thống kê tương tác
+        $totalViews = Article::sum('views');
+        $totalComments = Comment::count();
+        $totalLikes = Like::count();
     }
 
     public function getArticleStats()
@@ -36,18 +53,20 @@ class AdminDashboardController extends Controller
 
 
     public function getUserStats()
-    {
-        $users = User::join('roles', 'users.role_id', '=', 'roles.role_id')
-            ->selectRaw("DATE_FORMAT(users.created_at, '%Y-%m') as period,
-                COUNT(CASE WHEN roles.name = 'user' THEN 1 END) as users,
-                COUNT(CASE WHEN roles.name = 'author' THEN 1 END) as authors,
-                COUNT(CASE WHEN roles.name = 'moderator' THEN 1 END) as moderators")
-            ->groupBy('period')
-            ->orderBy('period', 'asc')
-            ->get();
+{
+    $users = User::join('roles', 'users.role_id', '=', 'roles.role_id')
+        ->selectRaw("DATE_FORMAT(users.created_at, '%Y-%m') as period,
+            COUNT(CASE WHEN roles.name = 'user' THEN 1 END) as users,
+            COUNT(CASE WHEN roles.name = 'author' THEN 1 END) as authors,
+            COUNT(CASE WHEN roles.name = 'moderator' THEN 1 END) as moderators,
+            COUNT(CASE WHEN roles.name = 'admin' THEN 1 END) as admins")
+        ->groupBy('period')
+        ->orderBy('period', 'asc')
+        ->get();
 
-        return response()->json($users);
-    }
+    return response()->json($users);
+}
+
 
 
 

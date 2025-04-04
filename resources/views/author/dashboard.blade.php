@@ -7,280 +7,256 @@
             <!-- Main content -->
             <section class="content">
                 <div class="row">
-                    <div class="col-xl-6 col-12">
+                    <div class="col-xl-3 col-md-6 col-12">
                         <div class="box">
-                            <div class="box-header no-border">
-                                <h4 class="box-title">
-                                    Overview
-                                </h4>
-                            </div>
-                            <div class="box-body pt-0">
-                                <div id="yearly-comparison"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-6 col-12">
-                                <div class="box">
-                                    <div class="box-header">
-                                        <h4 class="box-title fw-600 text-uppercase">Email Campaign</h4>
-                                    </div>
-                                    <div class="box-body">
-                                        <div class="">
-                                            <div id="email-campaign"></div>
-                                        </div>
+                            <div class="box-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="ms-15">
+                                        <h5 class="mb-0">Tổng bài viết</h5>
+                                        <p class="mb-0 text-fade fs-12">Tất cả bài viết</p>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-xl-6 col-12">
-                                <div class="box">
-                                    <div class="box-body">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h1 class="my-0">20k </h1>
-                                                <p class="text-fade mb-0">Montly Income</p>
-                                            </div>
-                                            <div class="bg-info px-30 py-10 text-center rounded"><i
-                                                    class="ti-arrow-down text-white"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="box bg-danger">
-                                    <div class="box-body">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="text-center">
-                                                <h2 class="fw-600">21k</h2>
-                                                <p>Total visitors</p>
-                                            </div>
-                                            <div id="visitors-char"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="box">
-                                    <div class="box-body">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h1 class="my-0">205k</h1>
-                                                <p class="text-fade mb-0">Today Income</p>
-                                            </div>
-                                            <div class="bg-success px-30 py-5 text-center rounded"><i
-                                                    class="ti-arrow-up text-white"></i></div>
-                                        </div>
-                                    </div>
-                                    <div class="progress progress-sm rounded-0 mt-0 mb-0">
-                                        <div class="progress-bar bg-success rounded-0" role="progressbar"
-                                            style="width: 72%;" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="box">
-                            <div class="box-body p-0">
-                                <div class="row no-gutters">
-                                    <div class="col-md-6 col-12">
-                                        <div class="box no-shadow mb-0 rounded-0">
-                                            <div class="box-header no-border">
-                                                <h4 class="box-title mb-0 text-uppercase">
-                                                    Last Posts
-                                                </h4>
-                                            </div>
-                                            <div class="box-body p-0">
-                                                <div class="media-list media-list-hover">
-                                                    <a class="media media-single" href="index.html#">
-                                                        <div class="media-body">
-                                                            <h5>Meet Craftwork.</h5>
-                                                        </div>
-                                                    </a>
-                                                    <a class="media media-single" href="index.html#">
-                                                        <div class="media-body">
-                                                            <h5>Cook Design Right!</h5>
-                                                        </div>
-                                                    </a>
-                                                    <a class="media media-single" href="index.html#">
-                                                        <div class="media-body">
-                                                            <h5>Start Own Bussines</h5>
-                                                        </div>
-                                                    </a>
-                                                    <a class="media media-single" href="index.html#">
-                                                        <div class="media-body">
-                                                            <h5>How to Make Interface</h5>
-                                                        </div>
-                                                    </a>
-                                                    <a class="media media-single" href="index.html#">
-                                                        <div class="media-body">
-                                                            <h5>Show Me Your Design</h5>
-                                                        </div>
-                                                    </a>
-                                                    <a class="media media-single" href="index.html#">
-                                                        <div class="media-body">
-                                                            <h5>Meet Craftwork.</h5>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="box no-shadow mb-0 bg-img rounded-0" data-overlay="5"
-                                            style="background-image: url(../images/gallery/landscape7.jpg)">
-                                            <div class="box-header no-border">
-                                                <h4 class="box-title mb-0">
-                                                    <span class="avatar avatar-lg bg-success">DK</span>
-                                                </h4>
-                                                <ul class="box-controls">
-                                                    <li><a href="javascript:void(0)"><i
-                                                                class="ti-reload text-white"></i></a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="box-body">
-                                                <div class="text-end mt-100 pt-25">
-                                                    <h3 class="text-white"><small class="me-10"><i
-                                                                class="fa fa-commenting"></i></small> 3</h3>
-                                                    <h2 class="text-white"><small class="me-10"><i
-                                                                class="fa fa-heart"></i></small> 23</h2>
-                                                    <h1 class="text-white"><small class="me-10"><i
-                                                                class="fa fa-eye"></i></small> 189</h1>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="mt-20 d-flex justify-content-between align-items-center">
+                                    <h3 class="fw-600">{{ $articleStats['total'] }}</h3>
+                                    <div class="text-primary">
+                                        <i class="fa fa-file-text fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-6 col-12">
+                    <div class="col-xl-3 col-md-6 col-12">
                         <div class="box">
-                            <div class="box-header">
-                                <h4 class="box-title">Revenue</h4>
-                                <div class="box-controls pull-right">
-                                    <span class="badge badge-pill badge-light px-10">Year</span>
-                                    <span class="badge badge-pill badge-light px-10 mx-10">Day</span>
-                                    <span class="badge badge-pill badge-primary px-10">Month</span>
-                                </div>
-                            </div>
                             <div class="box-body">
-                                <div class="chart">
-                                    <div id="myChart"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="box bg-warning">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <h6 class="mb-0 fw-600 text-dark text-uppercase">Quick note</h6>
-                                    </div>
-                                    <div>
-                                        <a href="javascript:void(0)">
-                                            <i class="ti-reload"></i>
-                                        </a>
+                                <div class="d-flex align-items-center">
+                                    <div class="ms-15">
+                                        <h5 class="mb-0">Đã xuất bản</h5>
+                                        <p class="mb-0 text-fade fs-12">Bài viết đã xuất bản</p>
                                     </div>
                                 </div>
-                                <h2 class="fw-300 text-dark">What’s on your mind?</h2>
-                                <button type="button"
-                                    class="waves-effect waves-light btn btn-outline btn-rounded btn-dark float-end">SAVE</button>
-                            </div>
-                        </div>
-                        <div class="box">
-                            <div class="box-header with-border">
-                                <h4 class="box-title">Company Revenue</h4>
-                            </div>
-                            <div class="box-body">
-                                <div id="chart-line"></div>
-                            </div>
-                        </div>
-                        <div class="box bg-primary">
-                            <div class="box-body">
-                                <h4 class="text-white mb-20">Revenue Overview </h4>
-                                <div class="d-flex justify-content-between align-items-end">
-                                    <div class="d-flex">
-                                        <div class="icon">
-                                            <i class="fa fa-trophy"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="fw-600 text-white mb-0 mt-0">34040</h3>
-                                            <p class="text-white-50">Revenue</p>
-                                            <h5 class="text-white">+34040 <span class="ms-40"><i
-                                                        class="fa fa-angle-down me-10"></i><span
-                                                        class="text-white-50">0.036%</span></span> </h5>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div id="apexChart2" class="mx-50"></div>
+                                <div class="mt-20 d-flex justify-content-between align-items-center">
+                                    <h3 class="fw-600">{{ $articleStats['published'] }}</h3>
+                                    <div class="text-success">
+                                        <i class="fa fa-check-circle fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-xl-3 col-md-6 col-12">
                         <div class="box">
-                            <div class="box-header">
-                                <h4 class="box-title">Report</h4>
-                                <ul class="box-controls pull-right">
-                                    <li><a class="box-btn-close" href="index.html#"></a></li>
-                                    <li><a class="box-btn-slide" href="index.html#"></a></li>
-                                    <li><a class="box-btn-fullscreen" href="index.html#"></a></li>
-                                </ul>
-                            </div>
-                            <div class="box-body bg-primary p-0">
-                                <div class="row">
-                                    <div class="col-lg-4 col-12">
-                                        <div class="p-15">
-                                            <div class="lookup lookup-lg lookup-right d-none d-lg-block">
-                                                <input type="text" name="s" placeholder="Search"
-                                                    class="w-p100">
-                                            </div>
-                                            <div class="mt-30">
-                                                <h4>Status: Live</h4>
-                                                <p class="mb-0 fw-700"><i class="ti-location-pin text-danger fs-16"></i>
-                                                    <span class="fs-12">12 Osborne Drive Suite 845</span>
-                                                </p>
-                                                <div class="mt-40">
-                                                    <p class="mb-0 fw-700">Miami</p>
-                                                    <div class="progress">
-                                                        <div class="progress-bar progress-bar-danger progress-bar-striped progress-bar-animated"
-                                                            role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                                                            aria-valuemax="100" style="width: 60%">
-                                                            <span class="sr-only">60% Complete (warning)</span>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                                <div class="mt-40">
-                                                    <p class="mb-0 fw-700">New York</p>
-                                                    <div class="progress">
-                                                        <div class="progress-bar progress-bar-warning progress-bar-striped progress-bar-animated"
-                                                            role="progressbar" aria-valuenow="40" aria-valuemin="0"
-                                                            aria-valuemax="100" style="width: 40%">
-                                                            <span class="sr-only">60% Complete (warning)</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="mt-40">
-                                                    <p class="mb-0 fw-700">Tampa</p>
-                                                    <div class="progress">
-                                                        <div class="progress-bar progress-bar-info progress-bar-striped progress-bar-animated"
-                                                            role="progressbar" aria-valuenow="20" aria-valuemin="0"
-                                                            aria-valuemax="100" style="width: 20%">
-                                                            <span class="sr-only">60% Complete (warning)</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                            <div class="box-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="ms-15">
+                                        <h5 class="mb-0">Chờ duyệt</h5>
+                                        <p class="mb-0 text-fade fs-12">Bài viết đang chờ duyệt</p>
                                     </div>
-                                    <div class="col-lg-8 col-12 bg-white">
-                                        <div id="reports" style="height: 400px"
-                                            class="overflow-hidden position-relative"></div>
+                                </div>
+                                <div class="mt-20 d-flex justify-content-between align-items-center">
+                                    <h3 class="fw-600">{{ $articleStats['pending'] }}</h3>
+                                    <div class="text-warning">
+                                        <i class="fa fa-hourglass-half fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="ms-15">
+                                        <h5 class="mb-0">Bản nháp</h5>
+                                        <p class="mb-0 text-fade fs-12">Bài viết đang lưu nháp</p>
+                                    </div>
+                                </div>
+                                <div class="mt-20 d-flex justify-content-between align-items-center">
+                                    <h3 class="fw-600">{{ $articleStats['draft'] }}</h3>
+                                    <div class="text-secondary">
+                                        <i class="fa fa-pencil-square-o fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- /.row -->
+
+                <!-- Time-based statistics section -->
+                <div class="row">
+                    <div class="col-12 col-xl-6">
+                        <div class="box">
+                            <div class="box-header with-border d-flex align-items-center justify-content-between">
+                                <h4 class="box-title">Thống kê bài viết</h4>
+                                <form method="GET" action="{{ route('author.dashboard') }}" class="d-flex align-items-center">
+                                    <label for="article_type" class="me-2">Hiển thị:</label>
+                                    <select class="form-select w-auto" id="article_type" name="article_type" onchange="this.form.submit()">
+                                        <option value="daily" {{ ($type ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                        <option value="monthly" {{ ($type ?? 'daily') === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                        <option value="yearly" {{ ($type ?? 'daily') === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                    </select>
+                                </form>
+                            </div>
+                            <div class="box-body">
+                                <canvas id="articleStatsChart" width="400" height="200"></canvas>
+                                <div id="noArticleDataMessage" class="text-center p-4" style="display: none;">
+                                    <p>Không có dữ liệu để hiển thị</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-xl-6">
+                        <div class="box">
+                            <div class="box-header with-border d-flex align-items-center justify-content-between">
+                                <h4 class="box-title">Thống kê tương tác</h4>
+                                <form method="GET" action="{{ route('author.dashboard') }}" class="d-flex align-items-center">
+                                    <label for="interaction_type" class="me-2">Hiển thị:</label>
+                                    <select class="form-select w-auto" id="interaction_type" name="interaction_type" onchange="this.form.submit()">
+                                        <option value="daily" {{ ($interactionType ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                        <option value="monthly" {{ ($interactionType ?? 'daily') === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                        <option value="yearly" {{ ($interactionType ?? 'daily') === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                    </select>
+                                </form>
+                            </div>
+                            <div class="box-body">
+                                <canvas id="interactionStatsChart" width="400" height="200"></canvas>
+                                <div id="noInteractionDataMessage" class="text-center p-4" style="display: none;">
+                                    <p>Không có dữ liệu để hiển thị</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-6 col-12">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">Người theo dõi</h4>
+                            </div>
+                            <div class="box-body text-center">
+                                <div class="mb-20">
+                                    <div class="icon bg-info-light rounded-circle w-80 h-80 text-center mx-auto l-h-100">
+                                        <span class="fs-40 icon-User"><span class="path1"></span><span class="path2"></span></span>
+                                    </div>
+                                </div>
+                                <h1 class="countnm fs-50">{{ $followerCount }}</h1>
+                                <p class="mb-0 text-fade">Người theo dõi</p>
+                                <a href="{{ route('author.followers') }}" class="btn btn-info-light mt-10">
+                                    <i class="fa fa-users"></i> Xem danh sách
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-12">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">Thống kê lượt tương tác tổng</h4>
+                            </div>
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-4 text-center">
+                                        <div class="mb-10">
+                                            <div class="icon bg-primary-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
+                                                <span class="icon bg-primary-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
+                                                    <i class="fa fa-eye fs-30"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <h3 class="fw-600">{{ $totalViews }}</h3>
+                                        <p class="mb-0 text-fade">Lượt xem</p>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <div class="mb-10">
+                                            <div class="icon bg-success-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
+                                                <span class="fs-30 icon-Chat"><span class="path1"></span><span class="path2"></span></span>
+                                            </div>
+                                        </div>
+                                        <h3 class="fw-600">{{ $totalComments }}</h3>
+                                        <p class="mb-0 text-fade">Bình luận</p>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <div class="mb-10">
+                                            <div class="icon bg-warning-light rounded-circle w-60 h-60 text-center mx-auto l-h-80">
+                                                <span class="fs-30 icon-Heart"><span class="path1"></span><span class="path2"></span></span>
+                                            </div>
+                                        </div>
+                                        <h3 class="fw-600">{{ $totalLikes }}</h3>
+                                        <p class="mb-0 text-fade">Lượt thích</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">Bài viết gần đây</h4>
+                            </div>
+                            <div class="box-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Tiêu đề</th>
+                                                <th>Trạng thái</th>
+                                                <th>Ngày tạo</th>
+                                                <th>Lượt xem</th>
+                                                <th>Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($recentArticles as $article)
+                                                <tr>
+                                                    <td>
+                                                        <a href="{{ route('author.articles.edit', $article->article_id) }}">
+                                                            {{ Str::limit($article->title, 50) }}
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        @if($article->status == 'published')
+                                                            <span class="badge badge-success"><i class="fa fa-check-circle"></i> Đã xuất bản</span>
+                                                        @elseif($article->status == 'pending')
+                                                            <span class="badge badge-warning"><i class="fa fa-hourglass-half"></i> Chờ duyệt</span>
+                                                        @elseif($article->status == 'draft')
+                                                            <span class="badge badge-secondary"><i class="fa fa-pencil-square-o"></i> Bản nháp</span>
+                                                        @else
+                                                            <span class="badge badge-info">{{ $article->status }}</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $article->created_at->format('d/m/Y') }}</td>
+                                                    <td>{{ $article->views ?? 0 }}</td>
+                                                    <td>
+                                                        <a href="{{ route('author.articles.edit', $article->article_id) }}" class="btn btn-sm btn-primary">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                        @if($article->status == 'published')
+                                                            <a href="{{ route('articles.article', $article->slug) }}" target="_blank" class="btn btn-sm btn-info">
+                                                                <i class="fa fa-eye"></i>
+                                                            </a>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="5" class="text-center">Không có bài viết nào</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
             <!-- /.content -->
         </div>
     </div>
+
+
 @endsection
+

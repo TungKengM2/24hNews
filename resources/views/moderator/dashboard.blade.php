@@ -1,286 +1,238 @@
 @extends('moderator.layouts.master')
 
 @section('content')
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <div class="container-full">
-            <!-- Main content -->
             <section class="content">
                 <div class="row">
-                    <div class="col-xl-6 col-12">
+                    <div class="col-6">
                         <div class="box">
-                            <div class="box-header no-border">
-                                <h4 class="box-title">
-                                    Overview
-                                </h4>
-                            </div>
-                            <div class="box-body pt-0">
-                                <div id="yearly-comparison"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-6 col-12">
-                                <div class="box">
-                                    <div class="box-header">
-                                        <h4 class="box-title fw-600 text-uppercase">Email Campaign</h4>
-                                    </div>
-                                    <div class="box-body">
-                                        <div class="">
-                                            <div id="email-campaign"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-12">
-                                <div class="box">
-                                    <div class="box-body">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h1 class="my-0">20k </h1>
-                                                <p class="text-fade mb-0">Montly Income</p>
-                                            </div>
-                                            <div class="bg-info px-30 py-10 text-center rounded"><i
-                                                    class="ti-arrow-down text-white"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="box bg-danger">
-                                    <div class="box-body">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="text-center">
-                                                <h2 class="fw-600">21k</h2>
-                                                <p>Total visitors</p>
-                                            </div>
-                                            <div id="visitors-char"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="box">
-                                    <div class="box-body">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h1 class="my-0">205k</h1>
-                                                <p class="text-fade mb-0">Today Income</p>
-                                            </div>
-                                            <div class="bg-success px-30 py-5 text-center rounded"><i
-                                                    class="ti-arrow-up text-white"></i></div>
-                                        </div>
-                                    </div>
-                                    <div class="progress progress-sm rounded-0 mt-0 mb-0">
-                                        <div class="progress-bar bg-success rounded-0" role="progressbar"
-                                            style="width: 72%;" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="box">
-                            <div class="box-body p-0">
-                                <div class="row no-gutters">
-                                    <div class="col-md-6 col-12">
-                                        <div class="box no-shadow mb-0 rounded-0">
-                                            <div class="box-header no-border">
-                                                <h4 class="box-title mb-0 text-uppercase">
-                                                    Last Posts
-                                                </h4>
-                                            </div>
-                                            <div class="box-body p-0">
-                                                <div class="media-list media-list-hover">
-                                                    <a class="media media-single" href="index.html#">
-                                                        <div class="media-body">
-                                                            <h5>Meet Craftwork.</h5>
-                                                        </div>
-                                                    </a>
-                                                    <a class="media media-single" href="index.html#">
-                                                        <div class="media-body">
-                                                            <h5>Cook Design Right!</h5>
-                                                        </div>
-                                                    </a>
-                                                    <a class="media media-single" href="index.html#">
-                                                        <div class="media-body">
-                                                            <h5>Start Own Bussines</h5>
-                                                        </div>
-                                                    </a>
-                                                    <a class="media media-single" href="index.html#">
-                                                        <div class="media-body">
-                                                            <h5>How to Make Interface</h5>
-                                                        </div>
-                                                    </a>
-                                                    <a class="media media-single" href="index.html#">
-                                                        <div class="media-body">
-                                                            <h5>Show Me Your Design</h5>
-                                                        </div>
-                                                    </a>
-                                                    <a class="media media-single" href="index.html#">
-                                                        <div class="media-body">
-                                                            <h5>Meet Craftwork.</h5>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="box no-shadow mb-0 bg-img rounded-0" data-overlay="5"
-                                            style="background-image: url(../images/gallery/landscape7.jpg)">
-                                            <div class="box-header no-border">
-                                                <h4 class="box-title mb-0">
-                                                    <span class="avatar avatar-lg bg-success">DK</span>
-                                                </h4>
-                                                <ul class="box-controls">
-                                                    <li><a href="javascript:void(0)"><i
-                                                                class="ti-reload text-white"></i></a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="box-body">
-                                                <div class="text-end mt-100 pt-25">
-                                                    <h3 class="text-white"><small class="me-10"><i
-                                                                class="fa fa-commenting"></i></small> 3</h3>
-                                                    <h2 class="text-white"><small class="me-10"><i
-                                                                class="fa fa-heart"></i></small> 23</h2>
-                                                    <h1 class="text-white"><small class="me-10"><i
-                                                                class="fa fa-eye"></i></small> 189</h1>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-12">
-                        <div class="box">
-                            <div class="box-header">
-                                <h4 class="box-title">Revenue</h4>
-                                <div class="box-controls pull-right">
-                                    <span class="badge badge-pill badge-light px-10">Year</span>
-                                    <span class="badge badge-pill badge-light px-10 mx-10">Day</span>
-                                    <span class="badge badge-pill badge-primary px-10">Month</span>
-                                </div>
-                            </div>
-                            <div class="box-body">
-                                <div class="chart">
-                                    <div id="myChart"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="box bg-warning">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <h6 class="mb-0 fw-600 text-dark text-uppercase">Quick note</h6>
-                                    </div>
-                                    <div>
-                                        <a href="javascript:void(0)">
-                                            <i class="ti-reload"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <h2 class="fw-300 text-dark">What’s on your mind?</h2>
-                                <button type="button"
-                                    class="waves-effect waves-light btn btn-outline btn-rounded btn-dark float-end">SAVE</button>
-                            </div>
-                        </div>
-                        <div class="box">
-                            <div class="box-header with-border">
-                                <h4 class="box-title">Company Revenue</h4>
-                            </div>
-                            <div class="box-body">
-                                <div id="chart-line"></div>
-                            </div>
-                        </div>
-                        <div class="box bg-primary">
-                            <div class="box-body">
-                                <h4 class="text-white mb-20">Revenue Overview </h4>
-                                <div class="d-flex justify-content-between align-items-end">
-                                    <div class="d-flex">
-                                        <div class="icon">
-                                            <i class="fa fa-trophy"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="fw-600 text-white mb-0 mt-0">34040</h3>
-                                            <p class="text-white-50">Revenue</p>
-                                            <h5 class="text-white">+34040 <span class="ms-40"><i
-                                                        class="fa fa-angle-down me-10"></i><span
-                                                        class="text-white-50">0.036%</span></span> </h5>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div id="apexChart2" class="mx-50"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="box">
-                            <div class="box-header">
-                                <h4 class="box-title">Report</h4>
-                                <ul class="box-controls pull-right">
-                                    <li><a class="box-btn-close" href="index.html#"></a></li>
-                                    <li><a class="box-btn-slide" href="index.html#"></a></li>
-                                    <li><a class="box-btn-fullscreen" href="index.html#"></a></li>
-                                </ul>
-                            </div>
-                            <div class="box-body bg-primary p-0">
-                                <div class="row">
-                                    <div class="col-lg-4 col-12">
-                                        <div class="p-15">
-                                            <div class="lookup lookup-lg lookup-right d-none d-lg-block">
-                                                <input type="text" name="s" placeholder="Search"
-                                                    class="w-p100">
-                                            </div>
-                                            <div class="mt-30">
-                                                <h4>Status: Live</h4>
-                                                <p class="mb-0 fw-700"><i class="ti-location-pin text-danger fs-16"></i>
-                                                    <span class="fs-12">12 Osborne Drive Suite 845</span>
-                                                </p>
-                                                <div class="mt-40">
-                                                    <p class="mb-0 fw-700">Miami</p>
-                                                    <div class="progress">
-                                                        <div class="progress-bar progress-bar-danger progress-bar-striped progress-bar-animated"
-                                                            role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                                                            aria-valuemax="100" style="width: 60%">
-                                                            <span class="sr-only">60% Complete (warning)</span>
-                                                        </div>
+                            <form method="GET" action="{{ route('moderator.dashboard') }}">
+                                <label for="type">Thống Kê Bài Viết :</label>
+                                <select class="form-select w-auto" id="type" name="type"
+                                    onchange="this.form.submit()">
+                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                </select>
+                            </form>
 
-                                                    </div>
-                                                </div>
-                                                <div class="mt-40">
-                                                    <p class="mb-0 fw-700">New York</p>
-                                                    <div class="progress">
-                                                        <div class="progress-bar progress-bar-warning progress-bar-striped progress-bar-animated"
-                                                            role="progressbar" aria-valuenow="40" aria-valuemin="0"
-                                                            aria-valuemax="100" style="width: 40%">
-                                                            <span class="sr-only">60% Complete (warning)</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="mt-40">
-                                                    <p class="mb-0 fw-700">Tampa</p>
-                                                    <div class="progress">
-                                                        <div class="progress-bar progress-bar-info progress-bar-striped progress-bar-animated"
-                                                            role="progressbar" aria-valuenow="20" aria-valuemin="0"
-                                                            aria-valuemax="100" style="width: 20%">
-                                                            <span class="sr-only">60% Complete (warning)</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-8 col-12 bg-white">
-                                        <div id="reports" style="height: 400px"
-                                            class="overflow-hidden position-relative"></div>
-                                    </div>
-                                </div>
-                            </div>
+                            <canvas id="statsChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="box">
+                            <form method="GET" action="{{ route('moderator.dashboard') }}">
+                                <label for="type">Thống Kê Người Dùng</label>
+                                <select class="form-select w-auto" id="type" name="type"
+                                    onchange="this.form.submit()">
+                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                </select>
+                            </form>
+
+                            <canvas id="userStats" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="box">
+                            <form method="GET" action="{{ route('moderator.dashboard') }}">
+                                <label for="type">Thống Kê Lượt Thích </label>
+                                <select class="form-select w-auto" id="type" name="type"
+                                    onchange="this.form.submit()">
+                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                </select>
+                            </form>
+
+                            <canvas id="likeStats" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="box">
+                            <form method="GET" action="{{ route('moderator.dashboard') }}">
+                                <label for="type">Thống Kê Bình Luận </label>
+                                <select class="form-select w-auto" id="type" name="type"
+                                    onchange="this.form.submit()">
+                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                </select>
+                            </form>
+
+                            <canvas id="commentStats" width="400" height="200"></canvas>
                         </div>
                     </div>
                 </div>
-                <!-- /.row -->
             </section>
-            <!-- /.content -->
         </div>
     </div>
+
+    <script>
+        // bài viết
+        document.addEventListener('DOMContentLoaded', function() {
+            const articleStats = @json($articleStats);
+            const type = "{{ $type }}";
+
+            const labels = [];
+            const data = [];
+
+            if (type === 'daily') {
+                labels.push(...articleStats.map(stat => stat.date));
+            } else if (type === 'monthly') {
+                labels.push(...articleStats.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`));
+            } else {
+                labels.push(...articleStats.map(stat => stat.year));
+            }
+
+            const roundedData = articleStats.map(stat => Math.floor(stat.count));
+
+            const ctx = document.getElementById('statsChart').getContext('2d');
+            const statsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Số bài viết',
+                        data: roundedData,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // user
+        document.addEventListener('DOMContentLoaded', function() {
+            const userStats = @json($userStats);
+            const type = "{{ $type }}";
+            let labels = [];
+            let data = [];
+
+            if (type === 'daily') {
+                labels = userStats.map(stat => stat.date);
+                data = userStats.map(stat => stat.count);
+            } else if (type === 'monthly') {
+                labels = userStats.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`);
+                data = userStats.map(stat => stat.count);
+            } else { // yearly
+                labels = userStats.map(stat => stat.year);
+                data = userStats.map(stat => stat.count);
+            }
+
+            const ctx = document.getElementById('userStats').getContext('2d');
+            const statsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Số lượng bài viết',
+                        data: data,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+        // lượt thích
+        document.addEventListener('DOMContentLoaded', function() {
+            const likeStats = @json($likeStats);
+            const type = "{{ $type }}";
+            let labels = [];
+            let data = [];
+
+            if (type === 'daily') {
+                labels = likeStats.map(stat => stat.date);
+                data = likeStats.map(stat => stat.count);
+            } else if (type === 'monthly') {
+                labels = likeStats.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`);
+                data = likeStats.map(stat => stat.count);
+            } else { // yearly
+                labels = likeStats.map(stat => stat.year);
+                data = likeStats.map(stat => stat.count);
+            }
+
+            const ctx = document.getElementById('likeStats').getContext('2d');
+            const statsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Số lượt thích',
+                        data: data,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+        // bình luận
+        document.addEventListener('DOMContentLoaded', function() {
+            const commentStats = @json($commentStats);
+            const type = "{{ $type }}";
+            let labels = [];
+            let data = [];
+
+            if (type === 'daily') {
+                labels = commentStats.map(stat => stat.date);
+                data = commentStats.map(stat => stat.count);
+            } else if (type === 'monthly') {
+                labels = commentStats.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`);
+                data = commentStats.map(stat => stat.count);
+            } else { // yearly
+                labels = commentStats.map(stat => stat.year);
+                data = commentStats.map(stat => stat.count);
+            }
+
+            const ctx = document.getElementById('commentStats').getContext('2d');
+            const statsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Số bình luận',
+                        data: data,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })
+    </script>
 @endsection

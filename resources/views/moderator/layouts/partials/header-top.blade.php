@@ -65,9 +65,28 @@
                     data-bs-toggle="dropdown" title="Notifications" style="position: relative; display: inline-block;">
                     <i data-feather="bell"></i>
                     @php
+
                         $pendingCount = \App\Models\Article::where('status', 'pending')->count();
                         $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
                         $totalPending = $pendingCount + $pendingViolations;
+
+                        // Chỉ đếm bài viết thuộc danh mục moderator quản lý
+                        $moderator = auth()->user();
+                        $categoryIds = $moderator->categories()->pluck('category_id');
+
+                        // Đếm bài viết pending
+                        $pendingCount = \App\Models\Article::where('status', 'pending')
+                                        ->whereIn('category_id', $categoryIds)
+                                        ->count();
+
+                        // Đếm bài viết pending quá 1 tiếng
+                        $longPendingCount = \App\Models\Article::where('status', 'pending')
+                                            ->whereIn('category_id', $categoryIds)
+                                            ->where('created_at', '<', now()->subMinutes(30))
+                                            ->count();
+
+                        // Tổng số thông báo (mỗi loại tính là 1)
+                        $totalNotifications = ($pendingCount > 0 ? 1 : 0) + ($longPendingCount > 0 ? 1 : 0);
                     @endphp
 
                     @if ($pendingCount > 0 || $pendingViolations > 0)
@@ -96,9 +115,15 @@
                                     </a>
                                 @endif
 
+
                                 @if ($pendingViolations > 0)
                                     <a href="{{ route('admin.violations.approves') }}">
                                         {{ "Có $pendingViolations vi phạm đang chờ duyệt!" }}
+
+                            @if ($longPendingCount > 0)
+                                <li>
+                                    <a href="{{ route('moderator.list-article') }}">
+                                        <i class="fas fa-clock text-danger"></i>
                                     </a>
                                 @endif
                             </li>

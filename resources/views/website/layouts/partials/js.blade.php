@@ -115,3 +115,24 @@
             });
         });
     </script>
+
+    {{-- profie --}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            const articles = document.querySelectorAll('.article-item');
+            let visibleCount = 4;
+    
+            loadMoreBtn.addEventListener('click', function () {
+                let hiddenArticles = Array.from(articles).filter(article => article.style.display === 'none');
+                hiddenArticles.slice(0, 4).forEach(article => article.style.display = 'block');
+    
+                visibleCount += 4;
+                if (visibleCount >= articles.length) {
+                    loadMoreBtn.style.display = 'none';
+                }
+            });
+        });
+    </script>
+

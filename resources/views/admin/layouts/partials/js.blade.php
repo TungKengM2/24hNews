@@ -48,68 +48,6 @@
                      moderator: item.moderators
                  }));
 
-                 // Xóa chart cũ trước khi vẽ mới
-                 $('#area-chart').empty();
-
-                 new Morris.Line({
-                     element: 'area-chart',
-                     data: formattedData,
-                     xkey: 'period',
-                     ykeys: ['user', 'author', 'moderator'],
-                     labels: ['Người Dùng', 'Tác Giả', 'Kiểm Duyệt Viên'],
-                     pointSize: 3,
-                     lineWidth: 3,
-                     hideHover: 'auto',
-                     lineColors: ['#3e8ef7', '#17b3a3',
-                         '#0bb2d4'
-                     ], // Màu tương ứng với 3 role
-                     resize: true,
-                     xLabels: "month", // Hiển thị theo tháng
-                     parseTime: false // Tránh lỗi thời gian
-                 });
-             },
-             error: function(xhr, status, error) {
-                 console.error("Lỗi khi tải dữ liệu: ", error);
-             }
-         });
-     });
- </script>
-
-
- {{-- Thống Kê Tương Tác --}}
-
- <script>
-     $(document).ready(function() {
-         $.ajax({
-             url: "{{ route('admin.articleStats') }}", // API lấy dữ liệu
-             type: "GET",
-             dataType: "json",
-             success: function(response) {
-                 new Morris.Donut({
-                     element: 'donut-chart',
-                     data: [{
-                             label: "Lượt Thích",
-                             value: response.likes
-                         },
-                         {
-                             label: "Bình Luận",
-                             value: response.comments
-                         },
-                         {
-                             label: "Lượt Xem",
-                             value: response.views
-                         }
-                     ],
-                     colors: ['#3e8ef7', '#17b3a3', '#0bb2d4'], // Màu sắc từng phần
-                     resize: true
-                 });
-             },
-             error: function(xhr, status, error) {
-                 console.error("Lỗi khi tải dữ liệu: ", error);
-             }
-         });
-     });
- </script>
 
  {{-- Upload ảnh cho admin --}}
  <script>
