@@ -14,7 +14,7 @@ class AuthorProfileController extends Controller
     public function showAuth($user_id)
     {
         // Xóa kiểm tra user đăng nhập vì người dùng đang cần xem profile tác giả mà không cần đăng nhập
-        
+
         // Tìm người dùng theo ID và đếm số lượng bài viết đã xuất bản
         $author = User::withCount(['articles' => function ($query) {
             $query->where('status', 'published');
@@ -40,7 +40,7 @@ class AuthorProfileController extends Controller
         $commentsCount = Comment::whereIn('article_id', $articleIds)->count();
         $totalViews = $articles->sum('views');
 
-        $maxScore = 100;
+        $maxScore = 10;
         $totalStars = 0;
 
         foreach ($articles as $article) {
@@ -55,7 +55,7 @@ class AuthorProfileController extends Controller
         // Tính trung bình rating sao của tất cả bài viết, đảm bảo không chia cho 0
         $totalArticles = max($articles->count(), 1);
         $averageRating = number_format($totalStars / $totalArticles, 1);
-        
+
         return view('website.profiles.author', compact('author', 'articles', 'averageRating', 'followerCount'));
     }
 
