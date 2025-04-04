@@ -180,7 +180,7 @@ class ArticleUserController extends Controller
 
         $categories = Category::where('is_active', 1)->limit(7)->get();
 
-        $category2 = Category::where('is_active', 1)->get();
+        $category2 = Category::withCount('articles')->where('is_active', 1)->get();
 
 
 
