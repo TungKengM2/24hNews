@@ -151,63 +151,63 @@
 
             <!-- Main content -->
             <div class="card p-4">
-                <form action="{{ route('articles.update', $article) }}" method="POST" enctype="multipart/form-data"
-                      id="articleForm">
-                    @csrf
-                    @method('PUT')
+                        <form action="{{ route('articles.update', $article) }}" method="POST" enctype="multipart/form-data"
+                            id="articleForm">
+                            @csrf
+                            @method('PUT')
 
                     <!-- Basic Information Section -->
-                    <div class="form-section">
+                            <div class="form-section">
                         <h5 class="form-section-title">Thông Tin Cơ Bản</h5>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
                                 <label for="title" class="form-label">Tiêu đề:</label>
                                 <div class="controls">
-                                    <input type="text" class="form-control" id="title" name="title"
-                                           value="{{ $article->title }}" required>
+                                        <input type="text" class="form-control" id="title" name="title"
+                                            value="{{ $article->title }}" required>
                                 </div>
-                            </div>
+                                    </div>
 
-                            <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-3">
                                 <label for="slug" class="form-label">Đường dẫn:</label>
                                 <div class="controls">
-                                    <input type="text" class="form-control" id="slug" name="slug"
-                                           value="{{ $article->slug }}" required>
+                                        <input type="text" class="form-control" id="slug" name="slug"
+                                            value="{{ $article->slug }}" required>
                                 </div>
                             </div>
-                        </div>
+                                </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
                                 <label for="category_id" class="form-label">Danh Mục</label>
-                                <select name="category_id" class="form-control">
-                                    <option value="">-- Không có danh mục --</option>
-                                    @foreach ($categories as $category)
-                                        @if ($category->is_active || $article->category_id == $category->category_id)
-                                            <option value="{{ $category->category_id }}"
-                                                {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
-                                                {{ $category->name }}
-                                                @if (!$category->is_active)
-                                                    (Đã vô hiệu hóa)
+                                        <select name="category_id" class="form-control">
+                                            <option value="">-- Không có danh mục --</option>
+                                            @foreach ($categories as $category)
+                                                @if ($category->is_active || $article->category_id == $category->category_id)
+                                                    <option value="{{ $category->category_id }}"
+                                                        {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
+                                                        {{ $category->name }}
+                                                        @if (!$category->is_active)
+                                                            (Đã vô hiệu hóa)
+                                                        @endif
+                                                    </option>
                                                 @endif
-                                            </option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                            <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-3">
                                 <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
                                 <select name="tags[]" class="form-control select2" multiple="multiple">
-                                    @foreach ($tags as $tag)
-                                        <option value="{{ $tag->tag_id }}"
-                                                @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
-                                            {{ $tag->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                                            @foreach ($tags as $tag)
+                                                <option value="{{ $tag->tag_id }}"
+                                                    @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
+                                                    {{ $tag->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                         </div>
                     </div>
 
@@ -237,7 +237,7 @@
                                         <p>Vui lòng chọn ảnh đại diện khác phù hợp với quy định.</p>
                                     </div>
                                 @endif
-                            </div>
+                                </div>
 
                             <div class="col-md-6">
                                 <div class="mt-2" id="current-image-container">
@@ -253,7 +253,7 @@
                                 <div id="image-preview-container" style="display: none;">
                                     <p class="mt-2"><strong>Ảnh xem trước:</strong></p>
                                     <img id="image-preview" src="#" alt="Xem trước" class="img-fluid mb-2">
-                                </div>
+                            </div>
 
                                 <div id="moderation-result" style="display: none;">
                                     <div id="moderation-loading" class="moderation-loading" style="display: none;">
@@ -287,32 +287,32 @@
                         {!! $content !!}
                         </textarea>
                         @endif
-                    </div>
+                            </div>
 
                     <!-- Hidden fields and buttons -->
                     <input type="hidden" name="status" id="articleStatus" value="pending">
-                    <input type="hidden" name="author_id" value="{{ $article->author_id }}">
+                            <input type="hidden" name="author_id" value="{{ $article->author_id }}">
 
-                    <div class="action-buttons">
+                            <div class="action-buttons">
                         <button type="submit" class="btn btn-primary" id="submitButton">Cập nhật</button>
                         <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
-                    </div>
-                </form>
+                            </div>
+                        </form>
             </div>
 
-            <script>
-                $(document).ready(function() {
-                    $('.select2').select2({
-                        tags: true,
-                        tokenSeparators: [','],
+                        <script>
+                            $(document).ready(function() {
+                                $('.select2').select2({
+                                    tags: true,
+                                    tokenSeparators: [','],
                         placeholder: 'Chọn hoặc nhập thẻ mới',
                         allowClear: true,
-                    });
-                });
+                                });
+                            });
 
                 document.getElementById('title').addEventListener('input', function() {
-                    let title = this.value.trim();
-                    let slug = title.toLowerCase()
+                                let title = this.value.trim();
+                                let slug = title.toLowerCase()
                         .normalize('NFD').replace(/[̀-ͯ]/g, '')
                         .replace(/đ/g, 'd').replace(/Đ/g, 'D')
                         .replace(/\s+/g, '-')
@@ -460,8 +460,8 @@
                             }
                         }
                     });
-                });
-            </script>
+                            });
+                        </script>
 
 @endsection
 
