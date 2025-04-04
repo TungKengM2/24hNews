@@ -107,51 +107,65 @@
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-account"></i> Tác giả:</span>
-                                            <span
-                                                class="badge bg-primary rounded-pill">{{ $article->author->username ?? 'Không có' }}</span>
+                                            <span class="badge bg-primary rounded-pill">{{ $article->author->username ?? 'Không có' }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-folder"></i> Danh mục:</span>
-                                            <span
-                                                class="badge bg-info rounded-pill">{{ $article->category->name ?? 'Không có' }}</span>
+                                            <span class="badge bg-info rounded-pill">{{ $article->category->name ?? 'Không có' }}</span>
                                         </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-check-circle"></i> Trạng thái:</span>
+                                            <span class="badge bg-{{ $article->status == 'published' ? 'success' : 'warning' }} rounded-pill">
+                                                {{ ucfirst($article->status) }}
+                                            </span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-alert-circle"></i> Nội dung nhạy cảm:</span>
+                                            <span class="badge bg-{{ $article->contains_sensitive_content ? 'danger' : 'success' }} rounded-pill">
+                                                {{ $article->contains_sensitive_content ? 'Có' : 'Không' }}
+                                            </span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-account-check"></i> Được duyệt bởi:</span>
+                                            <span class="badge bg-dark rounded-pill">{{ $article->approver->username ?? 'Chưa được duyệt' }}</span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span><i class="mdi mdi-tag-multiple"></i> Thẻ:</span>
+                                            <div class="mt-2">
+                                                @if ($article->tags->isNotEmpty())
+                                                    @foreach ($article->tags as $tag)
+                                                        <span class="badge bg-primary m-1">{{ $tag->name }}</span>
+                                                    @endforeach
+                                                @else
+                                                    <span class="text-muted">Không có thẻ</span>
+                                                @endif
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Tương Tác</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-eye"></i> Lượt xem:</span>
                                             <span class="badge bg-secondary rounded-pill">{{ $article->views }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-check-circle"></i> Trạng thái:</span>
-                                            <span
-                                                class="badge bg-{{ $article->status == 'published' ? 'success' : 'warning' }} rounded-pill">
-                                                {{ ucfirst($article->status) }}
-                                            </span>
-                                        </li>
-                                        {{-- <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-alert-circle"></i> Nội dung nhạy cảm:</span>
-                                            <span
-                                                class="badge bg-{{ $article->contains_sensitive_content ? 'danger' : 'success' }} rounded-pill">
-                                                {{ $article->contains_sensitive_content ? 'Có' : 'Không' }}
-                                            </span>
-                                        </li> --}}
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-alert-circle"></i> Tags:</span>
-                                            <span class="badge bg-{{ $article->tags }} rounded-pill">
-                                                @if ($article->tags->isNotEmpty())
-                                                    @foreach ($article->tags as $tag)
-                                                        <span class="badge bg-primary">{{ $tag->name }}</span>
-                                                    @endforeach
-                                                @else
-                                                    <small class="text-muted">Không có thẻ</small>
-                                                @endif
-                                            </span>
+                                            <span><i class="mdi mdi-thumb-up"></i> Lượt thích:</span>
+                                            <span class="badge bg-success rounded-pill">{{ $article->likes->count() }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-account-check"></i> Được duyệt bởi:</span>
-                                            <span
-                                                class="badge bg-dark rounded-pill">{{ $article->approver->username ?? 'Chưa được duyệt' }}</span>
+                                            <span><i class="mdi mdi-comment"></i> Bình luận:</span>
+                                            <span class="badge bg-warning rounded-pill">{{ $article->comments->count() }}</span>
                                         </li>
                                     </ul>
                                 </div>
+
                             </div>
                         </div>
                     </div>

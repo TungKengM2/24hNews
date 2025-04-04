@@ -30,11 +30,6 @@
                                                             <ul>
                                                                 <li class="date"> <i class="la la-clock"></i>
                                                                     {{ $article->created_at->diffForHumans() }}</li>
-                                                                <li class="hide-article ms-3">
-                                                                    <a href="#" class="hide-btn" data-article-id="{{ $article->article_id }}" title="Ẩn bài viết này">
-                                                                        <i class="la la-eye-slash"></i> Ẩn
-                                                                    </a>
-                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -54,7 +49,9 @@
         </section>
         <!-- ====== end tin tức nổi bật ====== -->
 
-        <!-- ====== start columnist ====== -->
+
+
+		 <!-- ====== start columnist ====== -->
         <section class="tc-columnist-style1">
             <div class="container">
                 <div class="content pt-50 pb-50 border-1 border-top brd-gray">
@@ -65,20 +62,26 @@
                             <div class="columnist-card d-flex align-items-center">
                                 <div
                                     class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                    <img src="{{ $authorData['author']->image ? asset('storage/'.$authorData['author']->image) : asset('/images/default-avatar.png') }}" alt="{{ $authorData['author']->username }}">
+                                    <a href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
+                                        <img src="{{ $authorData['author']->image ? asset('storage/'.$authorData['author']->image) : asset('/images/default-avatar.png') }}" alt="{{ $authorData['author']->username }}">
+                                    </a>
                                 </div>
                                 <div class="info">
                                     <h6 class="name fsz-20px mb-10">
-                                        {{ $authorData['author']->name ?? $authorData['author']->username }}
-                                        <span class="text-warning ms-2">
+                                        <a href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
+                                            {{ $authorData['author']->name ?? $authorData['author']->username }}
+                                        </a>
+                                    </h6>
+                                    <div class="rating mb-1">
+                                        <span class="text-warning">
                                             @for($i = 0; $i < floor($authorData['rating']); $i++)
-                                                <i class="fas fa-star"></i>
+                                                <i class="la la-star" style="color: #ffc107;"></i>
                                             @endfor
                                             @if($authorData['rating'] - floor($authorData['rating']) >= 0.5)
-                                                <i class="fas fa-star-half-alt"></i>
+                                                <i class="la la-star-half-alt" style="color: #ffc107;"></i>
                                             @endif
                                         </span>
-                                    </h6>
+                                    </div>
                                     <div class="jop-title">
                                         <small class="fsz-13px color-999">Chuyên đề</small>
                                         <p class="fsz-13px text-uppercase">{{ $authorData['specializes_in'] }}</p>
@@ -146,7 +149,7 @@
         <!-- ====== end columnist ====== -->
 
         <!-- ====== Bài viết tác giả bạn quan tâm ====== -->
-        <section class="tc-technology-style1 pt-50 pb-50 bg-light">
+        <section class="tc-columnist-style1">
             <div class="container">
                 <h5 class="color-000 text-uppercase mb-30 ltspc-1 fw-bold">
                     Bài Viết Từ Tác Giả Bạn Quan Tâm <i class="la la-angle-right ms-1"></i>
@@ -196,11 +199,6 @@
                                                             <li class="views">
                                                                 <a href="#"><i class="la la-eye me-2"></i>
                                                                     {{ $article->views ?? 0 }} Lượt Xem</a>
-                                                            </li>
-                                                            <li class="hide-article ms-5">
-                                                                <a href="#" class="hide-btn" data-article-id="{{ $article->article_id }}" title="Ẩn bài viết này">
-                                                                    <i class="la la-eye-slash me-2"></i>Ẩn
-                                                                </a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -279,11 +277,6 @@
                                                                     <a href="#"><i
                                                                             class="la la-eye me-2"></i>{{ $article->views }}</a>
                                                                 </li>
-                                                                <li class="hide-article ms-5">
-                                                                    <a href="#" class="hide-btn" data-article-id="{{ $article->article_id }}" title="Ẩn bài viết này">
-                                                                        <i class="la la-eye-slash me-2"></i>Ẩn
-                                                                    </a>
-                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -351,11 +344,6 @@
                                             class="btn btn-sm btn-outline-primary mt-2">
                                             Xem chi tiết <i class="la la-angle-right"></i>
                                         </a>
-                                        @auth
-                                        <a href="#" class="btn btn-sm btn-outline-secondary mt-2 hide-btn" data-article-id="{{ $data['article']->article_id }}" title="Ẩn bài viết này">
-                                            <i class="la la-eye-slash"></i> Ẩn bài viết
-                                        </a>
-                                        @endauth
                                     </div>
                                 </div>
                             </div>

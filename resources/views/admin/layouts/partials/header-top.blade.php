@@ -66,10 +66,25 @@
                     <i data-feather="bell"></i>
                     @php
                         $pendingCount = \App\Models\Article::where('status', 'pending')->count();
+                        $longPendingArticles = \App\Models\Article::where('status', 'pending')
+                        ->where('created_at', '<', now()->subMinutes(30))
+                            ->count();
+                        $totalNotifications = $pendingCount > 0 ? 1 : 0; // 1 thông báo nếu có bài pending
+                        $totalNotifications += $longPendingArticles > 0 ? 1 : 0; // +1 nếu có bài chờ lâu
                     @endphp
-                    @if ($pendingCount > 0)
+
+                    <!-- Badge chính - tổng số thông báo -->
+                    @if ($totalNotifications > 0)
                         <span class="badge badge-danger"
                             style="position: absolute; top: 6px; right: 5px; font-size: 10px; padding: 2px 5px; border-radius: 50%; line-height: 1; background: red; color: white;">
+                            {{ $totalNotifications }}
+                        </span>
+                    @endif
+
+                    <!-- Badge phụ - số bài viết pending -->
+                    @if ($pendingCount > 0)
+                        <span class="badge badge-warning"
+                            style="position: absolute; top: -5px; right: -5px; font-size: 8px; padding: 2px 4px; border-radius: 50%; line-height: 1; background: orange; color: white;">
                             {{ $pendingCount }}
                         </span>
                     @endif
@@ -86,13 +101,20 @@
                     </li>
                     <li>
                         <ul class="menu sm-scrol">
-                            <li>
-                                @if ($pendingCount > 0)
+                            @if ($pendingCount > 0)
+                                <li>
                                     <a href="{{ route('admin.articles.approves') }}">
                                         {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
                                     </a>
-                                @endif
-                            </li>
+                                </li>
+                            @endif
+                            @if ($longPendingArticles > 0)
+                                <li>
+                                    <a href="{{ route('admin.articles.approves') }}">
+                                        {{ "Cảnh báo: $longPendingArticles bài chờ duyệt quá 30 phút!" }}
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                     <li class="footer">
