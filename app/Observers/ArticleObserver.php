@@ -11,14 +11,7 @@ class ArticleObserver
 {
     public function updatedd(Article $article)
     {
-        // Kiểm tra nếu cột status đã thay đổi
-        if ($article->wasChanged('draft')) {
-            // Giả sử bạn muốn thông báo cho tác giả bài viết
-            $article->author->notify(new ArticleStatusChangedNotification($article));
-
-            // Nếu cần gửi cho nhiều người dùng:
-            // Notification::send($users, new ArticleStatusChangedNotification($article));
-        }
+        
     }
 
     /**
@@ -34,6 +27,14 @@ class ArticleObserver
      */
     public function updated(Article $article)
     {
+        // Kiểm tra nếu cột status đã thay đổi
+        if ($article->wasChanged('draft')) {
+            // Giả sử bạn muốn thông báo cho tác giả bài viết
+            $article->author->notify(new ArticleStatusChangedNotification($article));
+
+            // Nếu cần gửi cho nhiều người dùng:
+            // Notification::send($users, new ArticleStatusChangedNotification($article));
+        }
         // Gửi thông báo khi bài viết chuyển sang trạng thái published
         if ($article->status === 'published' && $article->wasChanged('status')) {
             $author = $article->author;
