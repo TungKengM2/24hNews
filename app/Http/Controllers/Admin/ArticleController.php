@@ -31,34 +31,32 @@ class ArticleController extends Controller
      *
      */
     public function index(Request $request)
-    {
-        $filter = $request->input('filter', 'all'); // Mặc định hiển thị tất cả bài viết
+{
+    $filter = $request->input('filter', 'all'); // Mặc định hiển thị tất cả bài viết
 
-        $query = Article::with(['author', 'category', 'approver', 'tags'])
-            ->orderBy('created_at', 'desc');
+    $query = Article::with(['author', 'category', 'approver', 'tags'])
+        ->where('status', 'published') // Chỉ lấy bài viết đã xuất bản
+        ->orderBy('created_at', 'desc');
 
-        if ($filter === 'inactive') {
-            // Lấy bài viết có danh mục không hoạt động (KHÔNG BỊ NULL)
-            $query->whereHas('category', function ($q) {
-                $q->where('is_active', false);
-            });
-        } elseif ($filter === 'active') {
-            // Lấy bài viết có danh mục hoạt động
-            $query->whereHas('category', function ($q) {
-                $q->where('is_active', true);
-            });
-        } elseif ($filter === 'no_category') {
-            // Lấy bài viết không có danh mục (category_id thực sự NULL)
-            $query->whereNull('category_id');
-        } elseif ($filter === 'archived') {
-            // Lấy bài viết đã ẩn (status = 'archived')
-            $query->where('status', 'archived');
-        }
-
-        $articles = $query->paginate(10);
-
-        return view('admin.articles.index', compact('articles', 'filter'));
+    if ($filter === 'inactive') {
+        $query->whereHas('category', function ($q) {
+            $q->where('is_active', false);
+        });
+    } elseif ($filter === 'active') {
+        $query->whereHas('category', function ($q) {
+            $q->where('is_active', true);
+        });
+    } elseif ($filter === 'no_category') {
+        $query->whereNull('category_id');
+    } elseif ($filter === 'archived') {
+        $query->where('status', 'archived');
     }
+
+    $articles = $query->paginate(10);
+
+    return view('admin.articles.index', compact('articles', 'filter'));
+}
+
 
 
     /**

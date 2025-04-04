@@ -165,54 +165,38 @@
                                                         @endif
                                                     </div>
                                                 </td>
-                                                <td class="text-center">
-                                                    <div class="d-flex flex-wrap gap-1 mb-2">
-                                                        <a href="{{ route('articles.show', $article) }}"
-                                                            class="btn btn-info btn-sm" title="Xem chi tiết">
-                                                            <i class="si-eye si"></i>
-                                                        </a>
-
-                                                        <a href="{{ route('articles.edit', $article) }}"
-                                                            class="btn btn-warning btn-sm" title="Chỉnh sửa">
-                                                            <i class="si-pencil si"></i>
-                                                        </a>
-
+                                                <td >
+                                                        <a href="{{ route('articles.show', $article) }}" class="btn btn-info btn-sm" title="Xem chi tiết"><i class="si-eye si"></i></a>
+                                                        @if ($article->author_id == auth()->id())
+                                                            <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm" title="Chỉnh sửa"><i class="si-pencil si"></i></a>
+                                                        @endif
                                                         @if ($article->status === 'pending')
-                                                            <form action="{{ route('articles.approve', $article) }}"
-                                                                method="POST" class="d-inline">
+                                                            <form action="{{ route('articles.approve', $article) }}" method="POST" class="d-inline">
                                                                 @csrf
                                                                 @method('PATCH')
-                                                                <button type="submit" class="btn btn-success btn-sm"
-                                                                    title="Duyệt bài viết"
-                                                                    onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
+                                                                <button type="submit" class="btn btn-success btn-sm" title="Duyệt bài viết" onclick="return confirm('Xác nhận duyệt?')">
                                                                     <i class="fa fa-check"></i>
                                                                 </button>
                                                             </form>
                                                         @endif
-
                                                         @if (in_array($article->status, ['published', 'archived']))
-                                                            <form action="{{ route('articles.toggle-visibility', $article) }}" method="POST" class="d-inline">
-                                                                @csrf
-                                                                @method('PUT')
-                                                                <button class="btn btn-secondary btn-sm"
-                                                                    title="{{ $article->status === 'published' ? 'Ẩn bài viết' : 'Hiện bài viết' }}"
-                                                                    onclick="return confirm('Bạn có chắc chắn muốn {{ $article->status === 'published' ? 'ẩn' : 'hiện' }} bài viết này không?')">
-                                                                    <i class="fa {{ $article->status === 'published' ? 'fa-eye-slash' : 'fa-eye' }}"></i>
-                                                                </button>
-                                                            </form>
-                                                        @endif
-
-                                                        <form action="{{ route('articles.destroy', $article) }}"
-                                                            method="POST" class="d-inline">
+                                                        <form action="{{ route('articles.toggle-visibility', $article) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button class="btn btn-secondary btn-sm"
+                                                                title="{{ $article->status === 'published' ? 'Ẩn bài viết' : 'Hiện bài viết' }}"
+                                                                onclick="return confirm('Bạn có chắc chắn muốn {{ $article->status === 'published' ? 'ẩn' : 'hiện' }} bài viết này không?')">
+                                                                <i class="fa {{ $article->status === 'published' ? 'fa-eye-slash' : 'fa-eye' }}"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                        <form action="{{ route('articles.destroy', $article) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button class="btn btn-danger btn-sm" title="Xóa bài viết"
-                                                                onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?')">
+                                                            <button class="btn btn-danger btn-sm" title="Xóa" onclick="return confirm('Xác nhận xóa?')">
                                                                 <i class="si-trash si"></i>
                                                             </button>
                                                         </form>
-                                                    </div>
-
 
                                                 </td>
                                             </tr>
