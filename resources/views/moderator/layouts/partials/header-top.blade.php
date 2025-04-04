@@ -60,7 +60,7 @@
             </li> --}}
             <!-- Notifications -->
             <li class="dropdown notifications-menu" style="position: relative;">
-                <a href="index.html#"
+                <a href="#"
                     class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
                     data-bs-toggle="dropdown" title="Notifications" style="position: relative; display: inline-block;">
                     <i data-feather="bell"></i>
@@ -77,7 +77,7 @@
                         </span>
                     @endif
                 </a>
-                <ul class="dropdown-menu animated bounceIn">
+                <ul class="dropdown-menu animated bounceIn" >
                     <li class="header">
                         <div class="p-20">
                             <div class="flexbox">
@@ -96,6 +96,7 @@
                                     </a>
                                 @elseif ($pendingCount > 0)
                                     <a href="{{ route('moderator.list-article') }}">
+                                        <i class="fas fa-file-alt text-warning"></i>
                                         {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
                                     </a>
                                 @elseif ($pendingViolations > 0)
@@ -107,11 +108,21 @@
                         </ul>
                     </li>
                     <li class="footer">
-                        <a href="index.html#">View all</a>
+                        <a href="{{ route('moderator.list-article') }}">Xem danh sách bài viết</a>
                     </li>
                 </ul>
             </li>
 
+            <script>
+
+
+
+            // Gọi hàm mỗi 60 giây
+            setInterval(refreshNotificationCount, 60000);
+
+            // Gọi ngay khi trang load
+            document.addEventListener('DOMContentLoaded', refreshNotificationCount);
+            </script>
             <!-- User Account-->
             <li class="dropdown user user-menu">
                 <a href="index.html#"

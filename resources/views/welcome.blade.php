@@ -49,8 +49,107 @@
         </section>
         <!-- ====== end tin tức nổi bật ====== -->
 
+
+
+		 <!-- ====== start columnist ====== -->
+        <section class="tc-columnist-style1">
+            <div class="container">
+                <div class="content pt-50 pb-50 border-1 border-top brd-gray">
+                    <p class="color-000 text-uppercase mb-40 ltspc-1 lh-1">Tác giả nổi bật  </p>
+                    <div class="row">
+                        @forelse($topAuthors as $authorData)
+                        <div class="col-lg-4 col-md-4 mb-4">
+                            <div class="columnist-card d-flex align-items-center">
+                                <div
+                                    class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                    <a href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
+                                        <img src="{{ $authorData['author']->image ? asset('storage/'.$authorData['author']->image) : asset('/images/default-avatar.png') }}" alt="{{ $authorData['author']->username }}">
+                                    </a>
+                                </div>
+                                <div class="info">
+                                    <h6 class="name fsz-20px mb-10">
+                                        <a href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
+                                            {{ $authorData['author']->name ?? $authorData['author']->username }}
+                                        </a>
+                                    </h6>
+                                    <div class="rating mb-1">
+                                        <span class="text-warning">
+                                            @for($i = 0; $i < floor($authorData['rating']); $i++)
+                                                <i class="la la-star" style="color: #ffc107;"></i>
+                                            @endfor
+                                            @if($authorData['rating'] - floor($authorData['rating']) >= 0.5)
+                                                <i class="la la-star-half-alt" style="color: #ffc107;"></i>
+                                            @endif
+                                        </span>
+                                    </div>
+                                    <div class="jop-title">
+                                        <small class="fsz-13px color-999">Chuyên đề</small>
+                                        <p class="fsz-13px text-uppercase">{{ $authorData['specializes_in'] }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @empty
+                        <div class="col-lg-4 col-md-4 mb-4">
+                            <div class="columnist-card d-flex align-items-center">
+                                <div
+                                    class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                    <img src="assets/img/colums/1.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="name fsz-20px mb-10">
+                                        Conor Bradley
+                                    </h6>
+                                    <div class="jop-title">
+                                        <small class="fsz-13px color-999">Specialize in</small>
+                                        <p class="fsz-13px text-uppercase">Business, technology</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 mb-4">
+                            <div class="columnist-card d-flex align-items-center">
+                                <div
+                                    class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                    <img src="assets/img/colums/2.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="name fsz-20px mb-10">
+                                        Luis Diaz
+                                    </h6>
+                                    <div class="jop-title">
+                                        <small class="fsz-13px color-999">Specialize in</small>
+                                        <p class="fsz-13px text-uppercase">Politic, lifestyle</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 mb-4">
+                            <div class="columnist-card d-flex align-items-center">
+                                <div
+                                    class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                    <img src="assets/img/colums/3.png" alt="">
+                                </div>
+                                <div class="info">
+                                    <h6 class="name fsz-20px mb-10">
+                                        Alberto Moreno
+                                    </h6>
+                                    <div class="jop-title">
+                                        <small class="fsz-13px color-999">Specialize in</small>
+                                        <p class="fsz-13px text-uppercase">Entertaiment, culture, wolrd </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end columnist ====== -->
+
         <!-- ====== Bài viết tác giả bạn quan tâm ====== -->
-        <section class="tc-technology-style1 pt-50 pb-50 bg-light">
+        <section class="tc-columnist-style1">
             <div class="container">
                 <h5 class="color-000 text-uppercase mb-30 ltspc-1 fw-bold">
                     Bài Viết Từ Tác Giả Bạn Quan Tâm <i class="la la-angle-right ms-1"></i>

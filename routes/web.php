@@ -14,6 +14,7 @@ use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\CategoryUserController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Author\AuthorController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -40,7 +41,6 @@ use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveContro
 use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
 use App\Http\Controllers\Profile\AuthorProfileController as ProfileAuthorProfileController;
 use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
-
 // 🌟 Trang chủ & bài viết chi tiết
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -202,6 +202,10 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     Route::patch('/articles/{article}/approve', [ModeratorArticleController::class, 'approve'])->name('moderator.articles.approve');
 
 
+    Route::get('/moderator/notifications', [NotificationController::class, 'index'])
+    ->middleware(['auth', 'moderator'])
+    ->name('moderator.notifications');
+
     // Sửa lại route reject (bỏ 'moderator/' trong URL)
     Route::patch('/articles/{article}/reject', [ModeratorArticleController::class, 'reject'])->name('moderator.articles.reject');
 
@@ -228,7 +232,18 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     Route::get('/{user_id}/comments', [ModeratorController::class, 'getUserComments'])->name('moderator.comments');
 });
 
+// Đặt trong nhóm auth middleware
+Route::middleware(['auth'])->group(function () {
+    // ... các route khác ...
 
+    // Notification Routes
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
+        Route::get('/unread-count', [NotificationController::class, 'countUnread'])->name('notifications.unreadCount');
+    });
+});
 
 // Route::prefix('moderator')->name('moderator.')->group(function () {
 //     Route::get('/articles', [ModeratorArticleController::class, 'index'])
@@ -264,6 +279,9 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     Route::get('/following', [ProfileController::class, 'followingOfAuthorList'])->name('author.following');
 
     Route::resource('articles', AuthorArticleController::class)->names('author.articles');
+
+    Route::put('/articles/{article}/toggle-visibility', [AuthorArticleController::class, 'toggleVisibility'])
+    ->name('author.articles.toggle-visibility');
 
     Route::post('/articles/upload', [AuthorArticleController::class, 'uploadImage',])->name('author.articles.upload');
 
@@ -467,6 +485,8 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 
     Route::patch('/articles/{article}/approve', [ArticleController::class, 'approve'])->name('articles.approve');
 
+    Route::put('/articles/{article}/toggle-visibility', [ArticleController::class, 'toggleVisibility'])->name('articles.toggle-visibility');
+
     Route::resource('articles', ArticleController::class);
 
     Route::patch('/articles/{article}/reject', [ArticleController::class, 'reject'])->name('articles.reject');
@@ -501,6 +521,12 @@ Route::get('auth/{provider}', [SocialAuthController::class, 'redirectToProvider'
 
 Route::get('auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback']);
 
-Route::post('author/tinymce/upload', [TinyMCEUploadController::class, 'uploadImage']);
+Route::post('/author/tinymce/upload', [TinyMCEUploadController::class, 'uploadImage'])->name('author.tinymce.upload');
 
-Route::get('tinymce/clear-blocked-images', [TinyMCEUploadController::class, 'clearBlockedImages']);
+Route::get('/tinymce/clear-blocked-images', [TinyMCEUploadController::class, 'clearBlockedImages'])->name('author.tinymce.clear-blocked-images');
+
+
+// TinyMCE routes cho admin
+Route::post('/admin/tinymce/upload', [TinyMCEUploadController::class, 'uploadImage'])->name('admin.tinymce.upload');
+
+Route::get('/admin/tinymce/clear-blocked-images', [TinyMCEUploadController::class, 'clearBlockedImages'])->name('admin.tinymce.clear-blocked-images');
