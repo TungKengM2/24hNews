@@ -17,11 +17,11 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class, // Sau đó mới chạy UserSeeder
         ]);
 
-        \App\Models\User::factory(10)->create();
+        // \App\Models\User::factory(10)->create();
 
-        \App\Models\User::factory()->create([
-            'username' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // \App\Models\User::factory()->create([
+        //     'username' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
     }
 }
