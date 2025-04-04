@@ -2,18 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ArticleLike extends Model
 {
-    use HasFactory;
-
-    protected $table = 'article_likes'; // Đảm bảo đúng tên bảng
-
-    protected $primaryKey = 'like_id'; // Đặt khóa chính đúng với database
-
-    public $timestamps = false; // Vì bạn đã có `liked_at`, không cần timestamps mặc định
+    protected $table = 'article_likes';
+    protected $primaryKey = 'like_id';
+    public $timestamps = false;
 
     protected $fillable = ['article_id', 'user_id', 'liked_at'];
 
@@ -21,11 +16,5 @@ class ArticleLike extends Model
     public function article()
     {
         return $this->belongsTo(Article::class, 'article_id');
-    }
-
-    // Quan hệ với người dùng
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
     }
 }
