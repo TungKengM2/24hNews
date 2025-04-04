@@ -480,6 +480,7 @@
                                     document.getElementById('moderation-result').style.display = 'none';
                                     isImageValid = true;
                                     submitButton.disabled = false;
+                                    
                                 }
                             });
 
