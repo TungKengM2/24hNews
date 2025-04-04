@@ -357,7 +357,7 @@
 
         <!-- ====== start modals ====== -->
 
-        {{-- <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
+        <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
             aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
                 <div class="logo">
@@ -437,7 +437,7 @@
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div>
         <!-- ====== end modals ====== -->
     </main>
 @endsection
