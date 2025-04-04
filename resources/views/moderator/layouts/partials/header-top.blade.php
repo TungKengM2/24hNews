@@ -90,17 +90,14 @@
                     <li>
                         <ul class="menu sm-scrol">
                             <li>
-                                @if ($pendingCount > 0 && $pendingViolations > 0)
-                                    <a href="{{ route('moderator.list-article') }}">
-                                        {{ "Có $pendingCount bài viết và $pendingViolations vi phạm đang chờ duyệt!" }}
-                                    </a>
-                                @elseif ($pendingCount > 0)
-                                    <a href="{{ route('moderator.list-article') }}">
-                                        <i class="fas fa-file-alt text-warning"></i>
+                                @if ($pendingCount > 0)
+                                    <a href="{{ route('admin.articles.approves') }}">
                                         {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
                                     </a>
-                                @elseif ($pendingViolations > 0)
-                                    <a href="{{ route('moderator.violations.approves') }}">
+                                @endif
+
+                                @if ($pendingViolations > 0)
+                                    <a href="{{ route('admin.violations.approves') }}">
                                         {{ "Có $pendingViolations vi phạm đang chờ duyệt!" }}
                                     </a>
                                 @endif

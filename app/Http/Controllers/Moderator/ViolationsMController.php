@@ -111,6 +111,6 @@ class ViolationsMController extends Controller
             $article->notify(new ArticleStatusChangedNotification($article));
         }
 
-        return back()->with('success', 'Vi phạm đã được giải quyết, bài viết đã chuyển sang trạng thái nháp.');
+        return back()->with('success', 'Vi phạm đã được giải quyết.');
     }
 }

@@ -1109,7 +1109,10 @@
                         console.error("Không tìm thấy article id!");
                         return;
                     }
+                    
                     document.getElementById("report-article-id").value = articleId;
+                    
+                    document.getElementById("report-article-reason").value = ""; 
                     new bootstrap.Modal(document.getElementById("reportArticleModal")).show();
                 });
             });
@@ -1157,8 +1160,9 @@
                     let content = this.getAttribute("data-content");
 
                     document.getElementById("repost-comment-id").value = commentId;
-                    // Pre-fill textarea với nội dung gốc (người dùng có thể chỉnh sửa)
-                    document.getElementById("repost-reason").value = content;
+                    // ✅ Xóa nội dung lý do báo cáo cũ nếu có
+                    document.getElementById("repost-reason").value = "";
+                    
 
                     let modal = new bootstrap.Modal(document.getElementById("repostModal"));
                     modal.show();

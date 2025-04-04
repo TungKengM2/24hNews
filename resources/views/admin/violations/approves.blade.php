@@ -103,9 +103,6 @@
                                             <td>{{ $violation->violation_id }}</td>
                                             <td>
                                                 <strong>{{ $violation->type }}</strong>
-                                                <div class="small text-muted">
-                                                    {{ Str::limit($violation->reference_id, 30) }}
-                                                </div>
                                             </td>
                                             <td class="text-center">
                                                 <button class="btn btn-info btn-sm" data-bs-toggle="modal"
@@ -234,10 +231,10 @@
                                 @php $reference_id = $violation['article']['id']; @endphp
                                 <h6>Bài Viết:</h6>
                                 <p>
-                                    <a href="{{ route('violations.resolve', $violation['article']['slug']) }}"
-                                        target="_blank">
+                                    <a href="{{ route('articles.article', $violation['article']['slug']) }}" target="_blank">
                                         {{ $violation['article']['title'] }}
                                     </a>
+                                    
                                 </p>
 
                                 {{-- Nếu là bình luận --}}
