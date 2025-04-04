@@ -83,10 +83,10 @@ class CategoryUserController extends Controller
 
         $categories = Category::withCount('articles')
             ->where('is_active', 1)
-            ->limit(7)
+            ->limit(6)
             ->get();
 
-        $category2 = Category::where('is_active', 1)->get(); // Lấy danh sách danh mục
+        $category2 = Category::withCount('articles')->where('is_active', 1)->get(); // Lấy danh sách danh mục
 
 
 
