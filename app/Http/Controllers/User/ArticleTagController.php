@@ -21,6 +21,9 @@ class ArticleTagController extends Controller
         })
             ->where('status', 'published')
             ->orderBy('created_at', 'desc')
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+            })
             ->limit(5)
             ->get();
 
@@ -33,6 +36,9 @@ class ArticleTagController extends Controller
             ->where('status', 'published')
             ->orderBy('views', 'desc')
             ->orderBy('created_at', 'desc')
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+            })
             ->paginate(4);
 
         // Lấy danh sách bài viết có tag này
@@ -42,25 +48,21 @@ class ArticleTagController extends Controller
             ->where('status', 'published')
             ->orderBy('created_at', 'desc')
             ->get();
+            $articleIds = $articlesViews->pluck('article_id'); // Thay vì 'id', dùng 'article_id'
 
-        // Lấy bài viết nổi bật nhất (nhiều view nhất) trong tag
-        $featuredArticle = Article::with('tags') // Load cả tag
-            ->whereHas('tags', function ($query) use ($tag) {
+            $otherArticles = Article::whereHas('tags', function ($query) use ($tag) {
                 $query->where('tags.tag_id', $tag->tag_id);
             })
             ->where('status', 'published')
+            ->whereNotIn('article_id', $articleIds) // Thay vì 'id', dùng 'article_id'
             ->orderBy('views', 'desc')
-            ->first();
+            ->orderBy('created_at', 'desc')
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1);
+            })
+            ->paginate(8);
 
-        // Lấy 5 bài viết liên quan (không trùng bài nổi bật)
-        $relatedArticles = Article::whereHas('tags', function ($query) use ($tag) {
-            $query->where('tags.tag_id', $tag->tag_id);
-        })
-            ->where('status', 'published')
-            ->where('article_id', '!=', optional($featuredArticle)->article_id)
-            ->orderBy('views', 'desc')
-            ->limit(5)
-            ->get();
+       
 
         // Lấy tất cả tags
         $tags = Tag::all();
@@ -75,8 +77,7 @@ class ArticleTagController extends Controller
             'tags',
             'articlesNews',
             'articlesViews',
-            'featuredArticle',
-            'relatedArticles',
+            'otherArticles',
             'tags'
         ));
     }

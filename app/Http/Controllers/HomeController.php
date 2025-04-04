@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\News;
 use App\Models\User;
 use App\Models\Article;
-use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,20 +18,33 @@ class HomeController extends Controller
         $featuredArticles = Article::where('status', 'published')
             ->orderByDesc('created_at') // Sắp xếp theo thời gian mới nhất
             ->take(7)
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+            })
             ->get();
 
         // top 2 bài viết nhiều lượt xem
         $D1Articles = Article::where('status', 'published')
             ->orderByDesc('views') // Sắp xếp bài viết nhiều views nhất
             ->take(2) // Lấy top 2 bài viết nhiều lượt xem
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+            })
             ->get();
 
         // Lấy danh sách bài viết mới nhất
-        $articles = Article::where('status', 'published')->latest()->get();
+        $articles = Article::where('status', 'published')
+        ->whereHas('category', function ($query) {
+            $query->where('is_active', 1); // Danh mục phải đang hoạt động
+        })->latest()->get();
 
         $trendingPosts = Article::withCount('comments')
             ->orderByDesc('comments_count')
-            ->limit(5)
+            ->where('status', 'published')
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+            })
+            ->limit(4)
             ->get();
 
         $journalists = User::where('role_id', 3)
@@ -39,7 +52,11 @@ class HomeController extends Controller
 
         $sportsArticles = Article::whereHas('category', function ($query) {
             $query->where('name', 'Thể Thao'); // Hoặc sử dụng category_id cụ thể
-        })->inRandomOrder()->distinct()->get();
+        })->inRandomOrder()->distinct()
+        ->where('status', 'published')
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+            })->get();
 
         $categories = Category::where('is_active', 1)->limit(7)->get();
         $newsData = [];
@@ -47,6 +64,9 @@ class HomeController extends Controller
         foreach ($categories as $category) {
             $article = Article::where('category_id', $category->category_id)
                 ->where('status', 'published')
+                ->whereHas('category', function ($query) {
+                    $query->where('is_active', 1); // Danh mục phải đang hoạt động
+                })
                 ->orderBy('created_at', 'desc')
                 ->first();
 

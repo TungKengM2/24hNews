@@ -2,6 +2,25 @@
 
 @section('content')
     <main>
+        <section class="tc-category-header py-4 bg-light border-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h4 class="mb-2">Các bài viết tag :  {{ $tag->name }}</h4>
+                        <p class="text-muted mb-0">{{ $tag->description ?? 'Khám phá các bài viết trong tag này' }}</p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-lg-end mb-0">
+                                <li class="breadcrumb-item"><a href="{{ route('home') }}">Trang chủ</a></li>
+                                <li class="breadcrumb-item"><a href="#">Tag</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">{{ $tag->name }}</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </section>
         <!-- ====== start  ====== -->
         <section class="tc-breaking-news-style1">
             <div class="container">
@@ -161,7 +180,7 @@
                         </div>
                         <div class="col-lg-3">
                             <div class="tc-widget-tags-style3">
-                                <p class="color-000 text-uppercase mb-20 ltspc-1 fw-bold">Thẻ nóng</p>
+                                <p class="color-000 text-uppercase mb-20 ltspc-1 fw-bold">Thẻ phổ biến</p>
                                 <div class="content">
                                     @foreach ($tags as $tag)
                                         <a href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}"
@@ -184,211 +203,60 @@
         <section class="tc-posts-tabs-style4 pt-60 pb-60">
             <div class="container">
                 <div class="tc-tabs-head">
-                    <a href="#" class="active" data-filter="all">All</a>
-                    <a href="#" data-filter="latest">latest</a>
-                    <a href="#" data-filter="breakfast">breakfast</a>
-                    <a href="#" data-filter="dessert">dessert</a>
-                    <a href="#" data-filter="fastfood">fast food</a>
-                    <a href="#" data-filter="vegan">vegan</a>
-                    <a href="#" data-filter="soup">soup</a>
-                    <a href="#" data-filter="drink">drink</a>
-                    <a href="#" data-filter="asia">asia</a>
-                    <a href="#" data-filter="europe">europe</a>
-                    <a href="#" data-filter="usa">usa</a>
-                    <a href="#" data-filter="videos">videos</a>
-                    <a href="#" data-filter="guide">guide</a>
+                    <a href="#" class="active" data-filter="all">Tất Cả</a>
                 </div>
                 <div class="tc-tabs-body tc-post-grid-style4 mt-50">
                     <div class="row gx-0">
-                        <!-- Cột 1 -->
-                        <div class="col-lg-3 border-1 border-end brd-gray">
-                            <!-- Item 1 -->
-                            <div class="item mix latest soup asia">
-                                <a href="#" class="img img-cover" data-fancybox="tabs">
-                                    <img src="https://newzin-html.themescamp.com/assets/img/tabs/12.png" alt="">
-                                </a>
-                                <div class="info">
-                                    <h4 class="title">
-                                        <a href="#">Pumpkin soup for a warm winter</a>
-                                    </h4>
-                                    <div class="tags">
-                                        <a href="#">lateaduuuust,</a>
-                                        <a href="#">soup,</a>
-                                        <a href="#">asia</a>
+                        @foreach ($otherArticles as $post)
+                            <div class="col-lg-3 border-1 border-end brd-gray">
+                                <div class="item mix {{ $post->tags->pluck('name')->implode(' ') }}">
+                                    <!-- Hiển thị ảnh với đường dẫn chính xác và đảm bảo ảnh không bị vỡ -->
+                                    <a href="{{ route('articles.article', $post->slug) }}" class="img img-cover"
+                                        data-fancybox="tabs">
+                                        <img src="{{ asset('storage/' . $post->thumbnail_url) }}" alt="{{ $post->title }}"
+                                            class="img-fluid">
+                                    </a>
+                                    <div class="info">
+                                        <h4 class="title">
+                                            <a href="{{ route('articles.article', $post->slug) }}">{{ $post->title }}</a>
+                                        </h4>
+                                        <div class="tags">
+                                            <!-- Lặp qua các tag của bài viết -->
+                                            @foreach ($post->tags as $tag)
+                                                <a
+                                                    href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}">{{ $tag->name }}</a>
+                                            @endforeach
+                                        </div>
+                                        <div class="text">
+                                            <!-- Cắt nội dung bài viết để hiển thị một đoạn văn bản ngắn -->
+                                            {{ Str::limit(strip_tags(html_entity_decode($post->content)), 100) }}
+
+                                        </div>
+                                        <a href="{{ route('articles.article', $post->slug) }}" class="more">Xem tiếp</a>
                                     </div>
-                                    <div class="text">
-                                        As a rule of thumb, all spices and dried herbs should be stored in any cool, dark place [...]
-                                    </div>
-                                    <a href="#" class="more">Continue</a>
                                 </div>
                             </div>
-                            <!-- Item 2 -->
-                            <div class="item mix dessert vegan">
-                                <a href="#" class="img img-cover" data-fancybox="tabs">
-                                    <img src="https://newzin-html.themescamp.com/assets/img/tabs/13.png" alt="">
-                                </a>
-                                <div class="info">
-                                    <h4 class="title">
-                                        <a href="#">Delicious dessert from coconut</a>
-                                    </h4>
-                                    <div class="tags">
-                                        <a href="#">dessert,</a>
-                                        <a href="#">vegan</a>
-                                    </div>
-                                    <div class="text">
-                                        Discover how coconut can transform your dessert into something extraordinary [...]
-                                    </div>
-                                    <a href="#" class="more">Continue</a>
-                                </div>
-                            </div>
-                        </div>
-        
-                        <!-- Cột 2 -->
-                        <div class="col-lg-3 border-1 border-end brd-gray">
-                            <!-- Item 1 -->
-                            <div class="item mix latest europe">
-                                <a href="#" class="img img-cover" data-fancybox="tabs">
-                                    <img src="https://newzin-html.themescamp.com/assets/img/tabs/16.png" alt="">
-                                </a>
-                                <div class="info">
-                                    <h4 class="title">
-                                        <a href="#">25 Cafe Bars in Boston</a>
-                                    </h4>
-                                    <div class="tags">
-                                        <a href="#">latest,</a>
-                                        <a href="#">europe</a>
-                                    </div>
-                                    <div class="text">
-                                        Check out these trendy cafe bars with an amazing street view in Boston [...]
-                                    </div>
-                                    <a href="#" class="more">Continue</a>
-                                </div>
-                            </div>
-                            <!-- Item 2 -->
-                            <div class="item mix breakfast europe">
-                                <a href="#" class="img img-cover" data-fancybox="tabs">
-                                    <img src="https://newzin-html.themescamp.com/assets/img/tabs/17.png" alt="">
-                                </a>
-                                <div class="info">
-                                    <h4 class="title">
-                                        <a href="#">5 Benefits from Eggs</a>
-                                    </h4>
-                                    <div class="tags">
-                                        <a href="#">Europe,</a>
-                                        <a href="#">breakfast</a>
-                                    </div>
-                                    <div class="text">
-                                        Eggs are not only nutritious but also versatile in many breakfast recipes [...]
-                                    </div>
-                                    <a href="#" class="more">Continue</a>
-                                </div>
-                            </div>
-                        </div>
-        
-                        <!-- Cột 3 -->
-                        <div class="col-lg-3 border-1 border-end brd-gray">
-                            <!-- Item 1 -->
-                            <div class="item mix dessert asia">
-                                <a href="#" class="img img-cover" data-fancybox="tabs">
-                                    <img src="https://newzin-html.themescamp.com/assets/img/tabs/18.png" alt="">
-                                </a>
-                                <div class="info">
-                                    <h4 class="title">
-                                        <a href="#">Cheese Ice Cream with Strawberries</a>
-                                    </h4>
-                                    <div class="tags">
-                                        <a href="#">dessert,</a>
-                                        <a href="#">asia</a>
-                                    </div>
-                                    <div class="text">
-                                        A creative twist on ice cream that combines rich cheese flavors with fresh strawberries [...]
-                                    </div>
-                                    <a href="#" class="more">Continue</a>
-                                </div>
-                            </div>
-                            <!-- Item 2 -->
-                            <div class="item mix europe videos guide">
-                                <a href="#" class="img img-cover" data-fancybox="tabs">
-                                    <img src="https://newzin-html.themescamp.com/assets/img/tabs/19.png" alt="">
-                                </a>
-                                <div class="info">
-                                    <h4 class="title">
-                                        <a href="#">Sapo Cake Tutorial</a>
-                                    </h4>
-                                    <div class="tags">
-                                        <a href="#">europe,</a>
-                                        <a href="#">videos,</a>
-                                        <a href="#">guide</a>
-                                    </div>
-                                    <div class="text">
-                                        Learn how to create a stunning Sapo Cake with this easy-to-follow tutorial [...]
-                                    </div>
-                                    <a href="#" class="more">Continue</a>
-                                </div>
-                            </div>
-                        </div>
-        
-                        <!-- Cột 4 -->
-                        <div class="col-lg-3">
-                            <!-- Item 1 -->
-                            <div class="item mix fastfood drink">
-                                <a href="#" class="img img-cover" data-fancybox="tabs">
-                                    <img src="https://newzin-html.themescamp.com/assets/img/tabs/21.png" alt="">
-                                </a>
-                                <div class="info">
-                                    <h4 class="title">
-                                        <a href="#">Fastfood Party!</a>
-                                    </h4>
-                                    <div class="tags">
-                                        <a href="#">fastfood,</a>
-                                        <a href="#">drink</a>
-                                    </div>
-                                    <div class="text">
-                                        Get ready for a party with these fastfood favorites and refreshing drinks [...]
-                                    </div>
-                                    <a href="#" class="more">Continue</a>
-                                </div>
-                            </div>
-                            <!-- Item 2 -->
-                            <div class="item mix asia">
-                                <a href="#" class="img img-cover" data-fancybox="tabs">
-                                    <img src="https://newzin-html.themescamp.com/assets/img/tabs/25.png" alt="">
-                                </a>
-                                <div class="info">
-                                    <h4 class="title">
-                                        <a href="#">Unusual Durian Benefits</a>
-                                    </h4>
-                                    <div class="tags">
-                                        <a href="#">asia</a>
-                                    </div>
-                                    <div class="text">
-                                        Discover the unexpected benefits of durian, a fruit known for its unique aroma [...]
-                                    </div>
-                                    <a href="#" class="more">Continue</a>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
+                    
                     </div>
                 </div>
-        
-                <div class="more mt-60">
-                    <a href="page-blog.html">Load more</a>
-                </div>
+
+
             </div>
         </section>
-        
+
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            $(document).ready(function(){
-                $('.tc-tabs-head a').on('click', function(e){
+            $(document).ready(function() {
+                $('.tc-tabs-head a').on('click', function(e) {
                     e.preventDefault();
                     var filter = $(this).data('filter');
-        
+
                     // Cập nhật active cho các tab
                     $('.tc-tabs-head a').removeClass('active');
                     $(this).addClass('active');
-        
+
                     // Lọc các item dựa trên filter
                     if (filter === 'all') {
                         $('.tc-tabs-body .item').show();
@@ -398,7 +266,7 @@
                 });
             });
         </script>
-        
+
 
         <!-- ====== end tabs ====== -->
 

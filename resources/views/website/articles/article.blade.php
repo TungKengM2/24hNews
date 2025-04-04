@@ -157,9 +157,7 @@
                                                 {{ $tag->name }}
                                             </a>
                                         @endforeach
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>

@@ -132,7 +132,7 @@
                                                                 <button type="submit" class="btn btn-success btn-sm"
                                                                     title="Giải quyết vi phạm"
                                                                     onclick="return confirm('Bạn có chắc chắn muốn giải quyết vi phạm này không?')">
-                                                                    <i class="fa fa-check"></i> Giải quyết
+                                                                    <i class="fa fa-check"></i> Giải quyết vi phạm
                                                                 </button>
                                                             </form>
 
@@ -144,7 +144,7 @@
                                                                 <button type="submit" class="btn btn-danger btn-sm"
                                                                     title="Từ chối vi phạm"
                                                                     onclick="return confirm('Bạn có chắc chắn muốn từ chối vi phạm này không?')">
-                                                                    <i class="fa fa-times"></i> Từ chối
+                                                                    <i class="fa fa-times"></i> Từ chối vi phạm
                                                                 </button>
                                                             </form>
                                                         @elseif ($violation->type === 'article')
@@ -155,9 +155,9 @@
                                                                 @csrf
                                                                 @method('PATCH')
                                                                 <button type="submit" class="btn btn-primary btn-sm"
-                                                                    title="Giải quyết vi phạm bài viết"
+                                                                    title="Giải quyết vi phạm "
                                                                     onclick="return confirm('Bạn có chắc chắn muốn giải quyết vi phạm bài viết này không?')">
-                                                                    <i class="fa fa-check"></i> Giải quyết Bài Viết
+                                                                    <i class="fa fa-check"></i> Giải quyết vi phạm
                                                                 </button>
                                                             </form>
 
@@ -167,9 +167,9 @@
                                                                 @csrf
                                                                 @method('PATCH')
                                                                 <button type="submit" class="btn btn-warning btn-sm"
-                                                                    title="Từ chối vi phạm bài viết"
+                                                                    title="Từ chối vi phạm vi phạm"
                                                                     onclick="return confirm('Bạn có chắc chắn muốn từ chối vi phạm bài viết này không?')">
-                                                                    <i class="fa fa-times"></i> Từ chối Bài Viết
+                                                                    <i class="fa fa-times"></i> Từ chối vi phạm
                                                                 </button>
                                                             </form>
                                                         @endif
