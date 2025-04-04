@@ -472,6 +472,7 @@
                                             errorMessage.textContent = 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
                                             isImageValid = false;
                                             submitButton.disabled = true;
+                                            
                                         });
                                 } else {
                                     // Nếu không chọn ảnh mới, hiện lại ảnh cũ
