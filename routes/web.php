@@ -35,12 +35,14 @@ use App\Http\Controllers\Author\ImageModerationController;
 use App\Http\Controllers\Author\ArticleViewAuthorController;
 use App\Http\Controllers\Moderator\ModeratorArticleController;
 use App\Http\Controllers\User\UserController as UserUserController;
+use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 use App\Http\Controllers\Admin\ArticleSaveController as AdminArticleSaveController;
 use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveController;
 use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
 use App\Http\Controllers\Profile\AuthorProfileController as ProfileAuthorProfileController;
 use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
+
 // 🌟 Trang chủ & bài viết chi tiết
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -163,9 +165,8 @@ Route::middleware(['auth', 'role:3'])->get('/moderator/profile', function () {
 })
     ->name('moderator.profile');
 
-Route::middleware(['auth', 'role:3'])->get('/moderator/dashboard', function () {
-    return view('moderator.dashboard');
-})
+// moderator thống kê
+Route::middleware(['auth', 'role:3'])->get('/moderator/dashboard', [ModeratorDashboardController::class, 'index'])
     ->name('moderator.dashboard');
 
 
@@ -335,6 +336,8 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     //     return response()->json(['success' => false], 404);
     // })->middleware('auth');
 
+    Route::get('/author/followers', [AuthorDashboard::class, 'followers'])->name('author.followers');
+
 });
 
 
@@ -424,11 +427,11 @@ Route::middleware(['auth'])->group(function () {
 // 🚀 Khu vực dành riêng cho Admin (role_id = 1)
 
 Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
-    // 🏠 Admin Dashboard
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })
+    // 🏠 Admin Dashboard - Thay đổi route này để gọi đến AdminController
+    Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])
         ->name('admin.dashboard');
+
+
 
     Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 
@@ -513,6 +516,7 @@ Route::post('/upload/image', [UploadController::class, 'store'])
 // 🔐 Đăng xuất
 Route::post('/logout', [AuthUserController::class, 'logout'])
     ->name('logout');
+    
 
 
 

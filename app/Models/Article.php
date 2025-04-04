@@ -119,12 +119,8 @@ class Article extends Model
     {
         return $this->hasMany(Comment::class, 'article_id', 'article_id');
     }
-
-    use Notifiable;
-
-    // Nếu muốn, bạn có thể định nghĩa lại quan hệ notifications() ở đây
-    public function notifications()
+    public function likes()
     {
-        return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable');
+        return $this->hasMany(ArticleLike::class, 'article_id', 'article_id');
     }
 }

@@ -12,9 +12,16 @@
     <link rel="icon" href="/admin/main/../images/favicon.ico">
 
     <title>@yield('title')</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     @include('admin.layouts.partials.css')
 
+    <style>
+        /* Add this CSS rule to control the loader speed */
+        #loader {
+            transition: opacity 0.3s ease; /* Adjusts the opacity transition duration */
+        }
+    </style>
 
 </head>
 

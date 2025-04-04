@@ -13,48 +13,61 @@ class AuthorProfileController extends Controller
 {
     public function showAuth($user_id)
     {
-        // Xóa kiểm tra user đăng nhập vì người dùng đang cần xem profile tác giả mà không cần đăng nhập
-
-        // Tìm người dùng theo ID và đếm số lượng bài viết đã xuất bản
+        // Lấy thông tin tác giả và số lượng bài viết đã xuất bản
         $author = User::withCount(['articles' => function ($query) {
             $query->where('status', 'published');
         }])->findOrFail($user_id);
 
-        // Bỏ kiểm tra quyền truy cập để mọi người đều có thể xem profile tác giả
-        // if ($user->role !== 'admin' && $user->id !== $author->id) {
-        //     abort(403, 'Bạn không có quyền truy cập trang này!');
-        // }
-
         // Số người theo dõi
         $followerCount = $author->followers()->count();
 
-        // Lấy tất cả bài viết
+        // Lấy danh sách bài viết đã xuất bản của tác giả
         $articles = Article::where('author_id', $user_id)
             ->where('status', 'published')
             ->get();
 
-        $articleIds = $articles->pluck('id'); // Sửa từ article_id thành id vì đây là collection các Article
+        $articleIds = $articles->pluck('id');
 
-        // Tính tổng tương tác trước để tránh N+1 Query
-        $likesCount = ArticleLike::whereIn('article_id', $articleIds)->count();
-        $commentsCount = Comment::whereIn('article_id', $articleIds)->count();
-        $totalViews = $articles->sum('views');
+        // Lấy tổng số lượt thích và bình luận của tất cả bài viết
+        $likesCounts = ArticleLike::whereIn('article_id', $articleIds)
+            ->selectRaw('article_id, COUNT(*) as total_likes')
+            ->groupBy('article_id')
+            ->pluck('total_likes', 'article_id');
 
-        $maxScore = 10;
+        $commentsCounts = Comment::whereIn('article_id', $articleIds)
+            ->selectRaw('article_id, COUNT(*) as total_comments')
+            ->groupBy('article_id')
+            ->pluck('total_comments', 'article_id');
+
+        // Tính tổng điểm sao
         $totalStars = 0;
+        $maxInteractions = 0;
 
+        // Tính tổng tương tác lớn nhất của một bài viết để chuẩn hóa điểm sao
         foreach ($articles as $article) {
             $articleInteractions = ($article->views ?? 0) +
-                ArticleLike::where('article_id', $article->id)->count() +
-                Comment::where('article_id', $article->id)->count();
+                ($likesCounts[$article->id] ?? 0) +
+                ($commentsCounts[$article->id] ?? 0);
 
-            $articleStars = min(5, max(1, ($articleInteractions / $maxScore) * 5));
+            $maxInteractions = max($maxInteractions, $articleInteractions);
+        }
+
+        // Tính điểm sao cho từng bài viết dựa trên mức độ phổ biến nhất
+        foreach ($articles as $article) {
+            $articleInteractions = ($article->views ?? 0) +
+                ($likesCounts[$article->id] ?? 0) +
+                ($commentsCounts[$article->id] ?? 0);
+
+            // Công thức tối ưu
+            $articleStars = $maxInteractions > 0
+                ? min(5, 1 + 4 * ($articleInteractions / $maxInteractions))
+                : 1; // Nếu không có tương tác, mặc định 1 sao
+
             $totalStars += $articleStars;
         }
 
-        // Tính trung bình rating sao của tất cả bài viết, đảm bảo không chia cho 0
-        $totalArticles = max($articles->count(), 1);
-        $averageRating = number_format($totalStars / $totalArticles, 1);
+        // Tính trung bình điểm sao
+        $averageRating = number_format($totalStars / max($articles->count(), 1), 1);
 
         return view('website.profiles.author', compact('author', 'articles', 'averageRating', 'followerCount'));
     }
