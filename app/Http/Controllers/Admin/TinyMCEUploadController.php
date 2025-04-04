@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Author;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\TinyMCEUploadService;
@@ -16,14 +16,14 @@ class TinyMCEUploadController extends Controller
     }
 
     /**
-     * Xử lý upload hình ảnh từ TinyMCE (Author)
+     * Xử lý upload hình ảnh từ TinyMCE (Admin)
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function uploadImage(Request $request)
     {
-        return $this->uploadService->handleImageUpload($request, 'author');
+        return $this->uploadService->handleImageUpload($request, 'admin');
     }
 
     /**
@@ -35,4 +35,4 @@ class TinyMCEUploadController extends Controller
     {
         return $this->uploadService->clearBlockedImages();
     }
-}
+} 

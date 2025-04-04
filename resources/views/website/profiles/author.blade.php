@@ -58,7 +58,11 @@
                                                         <i class="la la-user me-1"></i> {{ $followerCount }} người theo dõi
                                                     </div>
                                                     <div class="mb-2">
-                                                        <i class="la la-calendar me-1"></i> Tham gia từ {{ $author->created_at->format('d/m/Y') }}
+                                                        <i class="la la-calendar me-1"></i>  @if($author->created_at)
+                                                            {{ $author->created_at->format('d/m/Y') }}
+                                                        @else
+                                                            Không rõ
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>

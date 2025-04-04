@@ -20,7 +20,7 @@
                             <canvas id="statsChart" width="400" height="200"></canvas>
                         </div>
                     </div>
-                    <div class="col-6">
+                    {{-- <div class="col-6">
                         <div class="box">
                             <form method="GET" action="{{ route('moderator.dashboard') }}">
                                 <label for="type">Thống Kê Người Dùng</label>
@@ -34,7 +34,7 @@
 
                             <canvas id="userAuthorStats" width="400" height="200"></canvas>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-6">
                         <div class="box">
                             <form method="GET" action="{{ route('moderator.dashboard') }}">
