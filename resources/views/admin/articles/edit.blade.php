@@ -481,6 +481,7 @@
                                     isImageValid = true;
                                     submitButton.disabled = false;
                                     
+                                    
                                 }
                             });
 
