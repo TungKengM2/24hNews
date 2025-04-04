@@ -81,12 +81,21 @@ class CategoryUserController extends Controller
 
         $tags = Tag::all();
 
-        $categories = Category::withCount('articles')
-            ->where('is_active', 1)
-            ->limit(6)
-            ->get();
+        $categories = Category::withCount(['articles' => function ($query) {
+            $query->where('status', 'published'); // Đếm bài viết có trạng thái 'published'
+        }])
+        ->where('is_active', 1)
+        ->orderByDesc('articles_count')  // Sắp xếp theo số lượng bài viết giảm dần
+        ->take(6)  // Giới hạn 6 danh mục
+        ->get();
+        
+        
 
-        $category2 = Category::withCount('articles')->where('is_active', 1)->get(); // Lấy danh sách danh mục
+            $category2 = Category::withCount(['articles' => function ($query) {
+                $query->where('status', 'published'); // Điều kiện bài viết có trạng thái 'published'
+            }])->where('is_active', 1)->get();
+            
+            
 
 
 
