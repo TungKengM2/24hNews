@@ -28,15 +28,13 @@ class ArticleObserver
     public function updated(Article $article)
     {
         // Kiểm tra nếu cột status đã thay đổi
-        if ($article->wasChanged('draft')) {
+        if ($article->status === 'draft') {
             // Giả sử bạn muốn thông báo cho tác giả bài viết
             $article->author->notify(new ArticleStatusChangedNotification($article));
 
             // Nếu cần gửi cho nhiều người dùng:
             // Notification::send($users, new ArticleStatusChangedNotification($article));
-        }
-        // Gửi thông báo khi bài viết chuyển sang trạng thái published
-        if ($article->status === 'published' && $article->wasChanged('status')) {
+        }elseif ($article->status === 'published' && $article->wasChanged('status')) {
             $author = $article->author;
             $author->followers()->chunk(200, function ($followers) use ($article, $author) {
                 foreach ($followers as $follower) {
@@ -44,6 +42,7 @@ class ArticleObserver
                 }
             });
         }
+        
     }
 
     
