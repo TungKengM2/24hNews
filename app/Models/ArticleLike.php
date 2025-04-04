@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ArticleLike extends Model
 {
     use HasFactory;
+    
 
     protected $table = 'article_likes'; // Đảm bảo đúng tên bảng
 

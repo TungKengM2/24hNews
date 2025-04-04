@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Models\Category;
 use App\Observers\CategoryObserver;
+use App\Services\ModerationService;
+use App\Services\TinyMCEUploadService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +17,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Đăng ký ModerationService vào container
+        $this->app->singleton(ModerationService::class, function ($app) {
+            return new ModerationService();
+        });
+
+        // Đăng ký TinyMCEUploadService vào container
+        $this->app->singleton(TinyMCEUploadService::class, function ($app) {
+            return new TinyMCEUploadService($app->make(ModerationService::class));
+        });
     }
 
     /**
