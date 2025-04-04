@@ -84,7 +84,11 @@ class HomeController extends Controller
             }
         }
 
-        $category2 = Category::withCount('articles')->where('is_active', 1)->get();
+        $category2 = Category::withCount(['articles' => function ($query) {
+            $query->where('status', 'published'); // Điều kiện bài viết có trạng thái 'published'
+        }])->where('is_active', 1)->get();
+        
+        
 
         //TungKeng làm hiển thị bài viết của author mà user đã fl
         $user = auth()->user();

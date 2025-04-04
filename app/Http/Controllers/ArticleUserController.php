@@ -180,7 +180,11 @@ class ArticleUserController extends Controller
 
         $categories = Category::where('is_active', 1)->limit(7)->get();
 
-        $category2 = Category::withCount('articles')->where('is_active', 1)->get();
+        $category2 = Category::withCount(['articles' => function ($query) {
+            $query->where('status', 'published'); // Điều kiện bài viết có trạng thái 'published'
+        }])->where('is_active', 1)->get();
+        
+        
 
 
 
