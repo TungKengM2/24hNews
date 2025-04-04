@@ -41,3 +41,7 @@ Route::post('/tinymce/upload-image',
         App\Http\Controllers\Author\TinyMCEUploadController::class,
         'uploadImage',
     ]);
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    // ... existing code ...
+});
