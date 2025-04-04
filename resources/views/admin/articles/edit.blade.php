@@ -171,134 +171,95 @@
                             @csrf
                             @method('PUT')
 
-                            <!-- Thông tin cơ bản -->
+            <!-- Main content -->
+            <div class="card p-4">
+                        <form action="{{ route('articles.update', $article) }}" method="POST" enctype="multipart/form-data"
+                            id="articleForm">
+                            @csrf
+                            @method('PUT')
+
+                    <!-- Basic Information Section -->
                             <div class="form-section">
-                                <h4 class="form-section-title">Thông tin cơ bản</h4>
+                        <h5 class="form-section-title">Thông Tin Cơ Bản</h5>
+
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label for="title" class="form-label">Tiêu đề</label>
+                                <label for="title" class="form-label">Tiêu đề:</label>
+                                <div class="controls">
                                         <input type="text" class="form-control" id="title" name="title"
-                                            value="{{ old('title', $article->title) }}" required>
+                                            value="{{ $article->title }}" required>
+                                </div>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label for="slug" class="form-label">Đường dẫn</label>
+                                <label for="slug" class="form-label">Đường dẫn:</label>
+                                <div class="controls">
                                         <input type="text" class="form-control" id="slug" name="slug"
-                                            value="{{ old('slug', $article->slug) }}" required>
-                                    </div>
+                                            value="{{ $article->slug }}" required>
+                                </div>
+                            </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Tác giả</label>
-                                        <select name="author_id" class="form-control" required>
-                                            @foreach ($authors as $author)
-                                                <option value="{{ $author->user_id }}"
-                                                    {{ (old('author_id', $article->author_id) == $author->user_id) ? 'selected' : '' }}>
-                                                    {{ $author->username }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Danh mục</label>
+                                <label for="category_id" class="form-label">Danh Mục</label>
                                         <select name="category_id" class="form-control">
                                             <option value="">-- Không có danh mục --</option>
                                             @foreach ($categories as $category)
-                                                @if ($category->is_active)
+                                                @if ($category->is_active || $article->category_id == $category->category_id)
                                                     <option value="{{ $category->category_id }}"
-                                                        {{ (old('category_id', $article->category_id) == $category->category_id) ? 'selected' : '' }}>
-                                                        {{ $category->name }}</option>
+                                                        {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
+                                                        {{ $category->name }}
+                                                        @if (!$category->is_active)
+                                                            (Đã vô hiệu hóa)
+                                                        @endif
+                                                    </option>
                                                 @endif
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Trạng thái</label>
-                                        <select name="status" class="form-control" required>
-                                            <option value="draft"
-                                                {{ (old('status', $article->status) == 'draft') ? 'selected' : '' }}>Bản nháp
-                                            </option>
-                                            <option value="pending"
-                                                {{ (old('status', $article->status) == 'pending') ? 'selected' : '' }}>Chờ
-                                                duyệt
-                                            </option>
-                                            <option value="published"
-                                                {{ (old('status', $article->status) == 'published') ? 'selected' : '' }}>Đã
-                                                xuất bản
-                                            </option>
-                                            <option value="rejected"
-                                                {{ (old('status', $article->status) == 'rejected') ? 'selected' : '' }}>Đã từ
-                                                chối
-                                            </option>
-                                        </select>
-                                    </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label for="tags">Chọn hoặc thêm thẻ:</label>
-                                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
+                                <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
+                                <select name="tags[]" class="form-control select2" multiple="multiple">
                                             @foreach ($tags as $tag)
                                                 <option value="{{ $tag->tag_id }}"
-                                                    {{ in_array($tag->tag_id, $selectedTags) ? 'selected' : '' }}>
-                                                    {{ $tag->name }}</option>
+                                                    @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
+                                                    {{ $tag->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
+                        </div>
+                    </div>
+
+                    <!-- Thumbnail Section - Moved up -->
+                    <div class="form-section">
+                        <h5 class="form-section-title">Ảnh Đại Diện</h5>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="file" class="form-control @error('thumbnail_url') is-invalid @enderror"
+                                       id="thumbnail_url" name="thumbnail_url" accept="image/*">
+
+                                @error('thumbnail_url')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
                                 </div>
+                                @enderror
 
-                                <!-- Ảnh đại diện -->
-                                <div class="form-section">
-                                    <h4 class="form-section-title">Ảnh đại diện</h4>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label for="thumbnail_url" class="form-label">Chọn ảnh đại diện mới (không bắt buộc)</label>
-                                            <input type="file" class="form-control @error('thumbnail_url') is-invalid @enderror" 
-                                                id="thumbnail_url" name="thumbnail_url" accept="image/*">
-                                            <div class="form-text">Bỏ trống nếu muốn giữ ảnh hiện tại</div>
-
-                                            @error('thumbnail_url')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-
-                                            @if (session('thumbnail_reasons'))
-                                                <div class="alert alert-warning mt-2">
-                                                    <strong>Ảnh đại diện vi phạm quy định!</strong>
-                                                    <ul>
-                                                        @foreach (session('thumbnail_reasons') as $key => $reason)
-                                                            <li>{{ $reason }}</li>
-                                                        @endforeach
-                                                    </ul>
-                                                    <p>Vui lòng chọn ảnh đại diện khác phù hợp với quy định.</p>
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div id="current-image" class="text-center">
-                                            <p>Ảnh hiện tại:</p>
-                                                <img src="{{ $article->thumbnail_url ? asset('storage/' . $article->thumbnail_url) : asset('images/default-thumbnail.png') }}" 
-                                                    alt="Ảnh đại diện" class="img-fluid mb-2" style="max-height: 150px;">
-                                            </div>
-
-                                            <div id="image-preview-container" style="display: none;">
-                                                <p>Ảnh mới:</p>
-                                                <img id="image-preview" src="#" alt="Xem trước" class="img-fluid mb-2">
-                                            </div>
-
-                                            <div id="moderation-result" style="display: none;">
-                                                <div id="moderation-error" class="alert alert-danger" style="display: none;">
-                                                    <strong>Lỗi!</strong> <span id="error-message"></span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                @if (session('thumbnail_reasons'))
+                                    <div class="alert alert-warning mt-2">
+                                        <strong>Ảnh đại diện vi phạm quy định!</strong>
+                                        <ul>
+                                            @foreach (session('thumbnail_reasons') as $key => $reason)
+                                                <li>{{ $reason }}</li>
+                                            @endforeach
+                                        </ul>
+                                        <p>Vui lòng chọn ảnh đại diện khác phù hợp với quy định.</p>
                                     </div>
+                                @endif
                                 </div>
-                            </div>
 
                             <!-- Nội dung bài viết -->
                             <div class="form-section">
@@ -321,6 +282,23 @@
                                         </textarea>
                                     @endif
                                 </div>
+
+                                <div id="image-preview-container" style="display: none;">
+                                    <p class="mt-2"><strong>Ảnh xem trước:</strong></p>
+                                    <img id="image-preview" src="#" alt="Xem trước" class="img-fluid mb-2">
+                            </div>
+
+                                <div id="moderation-result" style="display: none;">
+                                    <div id="moderation-loading" class="moderation-loading" style="display: none;">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Đang kiểm duyệt...</span>
+                                        </div>
+                                        <p>Đang kiểm duyệt ảnh...</p>
+                                    </div>
+                                    <div id="moderation-error" class="alert alert-danger" style="display: none;">
+                                        <strong>Lỗi!</strong> <span id="error-message"></span>
+                                    </div>
+                                </div>
                             </div>
 
                             <input type="hidden" name="author_id" value="{{ $article->author_id }}">
@@ -329,49 +307,96 @@
                             <input type="hidden" name="confirmed_submit" id="confirmed_submit" value="false">
                             <input type="hidden" name="blocked_images_list" id="blocked_images_list" value="">
 
+                    <div class="form-group">
+                        <label for="content" class="form-label" style="color: white">Nội dung</label>
+                        @if (session('violations'))
+                            <textarea id="full-featured" name="content"
+                                      style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                            {!! highlightWords(old('content'), session('violations')) !!}
+                        </textarea>
+                        @else
+                            <textarea id="full-featured" name="content" style="height: 800px;">
+                        {!! $content !!}
+                        </textarea>
+                        @endif
+                            </div>
+
+                    <!-- Hidden fields and buttons -->
+                    <input type="hidden" name="status" id="articleStatus" value="pending">
+                            <input type="hidden" name="author_id" value="{{ $article->author_id }}">
+
                             <div class="action-buttons">
-                                <button type="submit" class="btn btn-primary" id="submitButton">Cập nhật</button>
-                                <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
-                                <a href="{{ route('articles.index') }}" class="btn btn-default back-button">Quay Lại Danh
-                                    Sách</a>
-                                <a href="{{ route('articles.show', $article) }}" class="btn btn-info">Xem Chi Tiết</a>
+                        <button type="submit" class="btn btn-primary" id="submitButton">Cập nhật</button>
+                        <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
                             </div>
                         </form>
+            </div>
 
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
                         <script>
                             $(document).ready(function() {
-                                $('#tags').select2({
+                                $('.select2').select2({
                                     tags: true,
                                     tokenSeparators: [','],
-                                    placeholder: "Chọn hoặc nhập thẻ mới",
-                                    allowClear: true
+                        placeholder: 'Chọn hoặc nhập thẻ mới',
+                        allowClear: true,
                                 });
                             });
 
-                            document.getElementById('saveDraft').addEventListener('click', function() {
-                                document.getElementById('articleStatus').value = 'draft';
-                                document.getElementById('articleForm').setAttribute('novalidate', 'novalidate');
-                                document.getElementById('articleForm').submit();
-                            });
+                document.getElementById('title').addEventListener('input', function() {
+                                let title = this.value.trim();
+                                let slug = title.toLowerCase()
+                        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+                        .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+                        .replace(/\s+/g, '-')
+                        .replace(/[^\w-]/g, '')
+                        .replace(/--+/g, '-')
+                        .replace(/^-+|-+$/g, '');
 
-                            document.getElementById('word_file').addEventListener('change', function(event) {
-                                const file = event.target.files[0];
-                                if (file) {
-                                    const reader = new FileReader();
-                                    reader.onload = function(e) {
-                                        const arrayBuffer = e.target.result;
-                                        mammoth.convertToHtml({
-                                                arrayBuffer: arrayBuffer
-                                            })
-                                            .then(function(result) {
-                                                tinymce.get('full-featured').setContent(result.value);
-                                            })
-                                            .catch(function(error) {
-                                                console.error('Lỗi đọc file:', error);
-                                            });
-                                    };
-                                    reader.readAsArrayBuffer(file);
+                    document.getElementById('slug').value = slug;
+                });
+            </script>
+            <script>
+                // Lưu nháp
+                document.getElementById('saveDraft').addEventListener('click', function() {
+                    document.getElementById('articleStatus').value = 'draft';
+                    document.getElementById('articleForm').submit();
+                });
+
+                document.getElementById('articleForm').addEventListener('submit', function(e) {
+                    if (document.activeElement.id !== 'saveDraft') {
+                        document.getElementById('articleStatus').value = 'pending';
+
+                        const errorDiv = document.getElementById('moderation-error');
+                        if (errorDiv && errorDiv.style.display !== 'none') {
+                            e.preventDefault();
+                            alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
+                            return false;
+                        }
+                    }
+                });
+            </script>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const imageUpload = document.getElementById('thumbnail_url');
+                    const imagePreview = document.getElementById('image-preview');
+                    const previewContainer = document.getElementById('image-preview-container');
+                    const currentImageContainer = document.getElementById('current-image-container');
+                    const moderationResult = document.getElementById('moderation-result');
+                    const moderationLoading = document.getElementById('moderation-loading');
+                    const errorDiv = document.getElementById('moderation-error');
+                    const errorMessage = document.getElementById('error-message');
+                    const submitButton = document.getElementById('submitButton');
+                    let isImageValid = true;
+
+                    if (imageUpload) {
+                        imageUpload.addEventListener('change', function(e) {
+                            const file = e.target.files[0];
+                            if (file) {
+                                isImageValid = false;
+
+                                if (currentImageContainer) {
+                                    currentImageContainer.style.display = 'none';
                                 }
                             });
 
@@ -492,14 +517,19 @@
                                     return true;
                                 }
 
-                                if (thumbnailInput.files && thumbnailInput.files[0] && !isImageValid) {
-                                    e.preventDefault();
-                                    alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
-                                    thumbnailInput.focus();
-                                    return false;
-                                }
-                                return true;
+                    document.getElementById('articleForm').addEventListener('submit', function(e) {
+                        if (document.activeElement.id !== 'saveDraft') {
+                            document.getElementById('articleStatus').value = 'pending';
+
+                            if (imageUpload.files && imageUpload.files[0] && !isImageValid) {
+                                e.preventDefault();
+                                alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
+                                return false;
+                            }
+                        }
+                    });
                             });
+                        </script>
 
                             const useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
                         </script>
