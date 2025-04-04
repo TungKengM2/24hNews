@@ -64,14 +64,14 @@
                                             <p class="text-muted"><i class="mdi mdi-link-variant"></i> {{ $article->slug }}</p>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="row mb-4">
                                         <div class="col-md-12">
                                             <h5>Nội dung tóm tắt:</h5>
                                             <p>{{ $article->preview_content }}</p>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h5>Nội dung chi tiết:</h5>
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Thông tin bổ sung -->
                         <div class="col-md-4">
                             @if ($article->thumbnail_url)
@@ -97,7 +97,7 @@
                                     </div>
                                 </div>
                             @endif
-                            
+
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">Thông tin khác</h5>
@@ -111,10 +111,6 @@
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-folder"></i> Danh mục:</span>
                                             <span class="badge bg-info rounded-pill">{{ $article->category->name ?? 'Không có' }}</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-eye"></i> Lượt xem:</span>
-                                            <span class="badge bg-secondary rounded-pill">{{ $article->views }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-check-circle"></i> Trạng thái:</span>
@@ -146,6 +142,29 @@
                                         </li>
                                     </ul>
                                 </div>
+
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Tương Tác</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-eye"></i> Lượt xem:</span>
+                                            <span class="badge bg-secondary rounded-pill">{{ $article->views }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-thumb-up"></i> Lượt thích:</span>
+                                            <span class="badge bg-success rounded-pill">{{ $article->likes->count() }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-comment"></i> Bình luận:</span>
+                                            <span class="badge bg-warning rounded-pill">{{ $article->comments->count() }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
                             </div>
                         </div>
                     </div>

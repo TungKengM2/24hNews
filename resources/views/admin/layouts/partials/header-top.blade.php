@@ -67,7 +67,7 @@
                     @php
                         $pendingCount = \App\Models\Article::where('status', 'pending')->count();
                         $longPendingArticles = \App\Models\Article::where('status', 'pending')
-                            ->where('created_at', '<', now()->subHour())
+                        ->where('created_at', '<', now()->subMinutes(30))
                             ->count();
                         $totalNotifications = $pendingCount > 0 ? 1 : 0; // 1 thông báo nếu có bài pending
                         $totalNotifications += $longPendingArticles > 0 ? 1 : 0; // +1 nếu có bài chờ lâu
@@ -111,7 +111,7 @@
                             @if ($longPendingArticles > 0)
                                 <li>
                                     <a href="{{ route('admin.articles.approves') }}">
-                                        {{ "Cảnh báo: $longPendingArticles bài chờ duyệt quá 1 tiếng!" }}
+                                        {{ "Cảnh báo: $longPendingArticles bài chờ duyệt quá 30 phút!" }}
                                     </a>
                                 </li>
                             @endif
