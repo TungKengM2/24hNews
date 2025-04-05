@@ -31,7 +31,7 @@
                 <div class="box-header with-border">
                     <h4 class="box-title">Chi Tiết Bài Viết</h4>
                     <div class="box-tools">
-                        @if (auth()->id() === $article->user_id)
+                        @if (auth()->id() === $article->author_id)
                         <div class="btn-group">
                             <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm m-5">
                                 <i class="si-pencil si"></i> Chỉnh sửa
