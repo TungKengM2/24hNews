@@ -40,6 +40,20 @@
                                 </a>
                             </div>
 
+                            @if (session('success'))
+                                <div id="success-alert" class="alert alert-success alert-dismissible fade show custom-alert m-0">
+                                    <div class="d-flex align-items-center">
+                                        <div class="alert-icon me-2">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                        <div class="alert-message">
+                                            <p class="mb-0"><strong>Thành công!</strong> {{ session('success') }}</p>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            @endif
+
                             <div class="d-flex">
                                 <form method="GET" action="{{ route('author.articles.index') }}" class="me-2">
                                     <div class="input-group">
@@ -53,23 +67,60 @@
                             </div>
                         </div>
 
-                        <div class="box-body">
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible fade show">
-                                    {{ session('success') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                                <script>
-                                    setTimeout(function() {
-                                        document.querySelector('.alert-success').classList.remove('show');
-                                        setTimeout(function() {
-                                            document.querySelector('.alert-success').style.display = 'none';
-                                        }, 150);
-                                    }, 3000);
-                                </script>
-                            @endif
+                        <style>
+                            .custom-alert {
+                                position: relative;
+                                border-left: 4px solid #28a745;
+                                background-color: #fff;
+                                color: #333;
+                                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                                padding: 8px 15px;
+                                border-radius: 5px;
+                                max-width: 400px;
+                                animation: fadeInAlert 0.3s forwards;
+                                z-index: 100;
+                            }
 
+                            .alert-icon {
+                                color: #28a745;
+                            }
+
+                            @keyframes fadeInAlert {
+                                0% { opacity: 0; }
+                                100% { opacity: 1; }
+                            }
+
+                            @media (max-width: 992px) {
+                                .box-header {
+                                    flex-direction: column;
+                                    gap: 10px;
+                                }
+                                
+                                .custom-alert {
+                                    max-width: 100%;
+                                    width: 100%;
+                                    order: 3;
+                                }
+                            }
+                        </style>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                console.log('Hiển thị thông báo thành công: {{ session("success") }}');
+                                setTimeout(function() {
+                                    var alertElement = document.getElementById('success-alert');
+                                    if (alertElement) {
+                                        alertElement.style.opacity = '0';
+                                        alertElement.style.transition = 'opacity 0.5s';
+                                        setTimeout(function() {
+                                            alertElement.style.display = 'none';
+                                        }, 500);
+                                    }
+                                }, 5000);
+                            });
+                        </script>
+
+                        <div class="box-body">
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <form method="GET" action="{{ route('author.articles.index') }}" id="filter-form">

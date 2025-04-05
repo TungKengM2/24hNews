@@ -330,6 +330,9 @@
                     Log::error('Lỗi gửi thông báo: ' . $e->getMessage());
                 }
 
+                // Log xác nhận session success đã được thiết lập
+                Log::info('Session success đã được thiết lập sau khi cập nhật: Bài viết đã được cập nhật thành công và đang chờ phê duyệt!');
+
                 return redirect()
                     ->route('author.articles.index')
                     ->with('success', 'Bài viết đã được cập nhật thành công và đang chờ phê duyệt!');
@@ -573,6 +576,9 @@
                 Approval::create($approvalData);
 
                 session()->forget('blocked_images');
+
+                // Log xác nhận session success đã được thiết lập
+                Log::info('Session success đã được thiết lập: Bài viết đã được tạo thành công và đang chờ phê duyệt!');
 
                 return redirect()
                     ->route('author.articles.index')
