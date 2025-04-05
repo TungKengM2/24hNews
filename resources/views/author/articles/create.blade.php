@@ -296,145 +296,158 @@
                                 }
                             });
 
-                            // Tạo slug tự động
-                            document.getElementById('title').addEventListener('input', function() {
-                                let title = this.value.trim();
-                                let slug = title.toLowerCase()
-                                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Loại bỏ dấu tiếng Việt
-                                    .replace(/đ/g, 'd').replace(/Đ/g, 'D')
-                                    .replace(/\s+/g, '-') // Thay dấu cách bằng "-"
-                                    .replace(/[^\w-]/g, '') // Xóa ký tự đặc biệt
-                                    .replace(/--+/g, '-') // Loại bỏ nhiều dấu "-" liên tiếp
-                                    .replace(/^-+|-+$/g, ''); // Xóa "-" ở đầu và cuối
+                            document.addEventListener('DOMContentLoaded', function() {
+                                // Ẩn các thành phần moderation khi trang mới tải
+                                const moderationResult = document.getElementById('moderation-result');
+                                const errorDiv = document.getElementById('moderation-error');
+                                if (moderationResult) moderationResult.style.display = 'none';
+                                if (errorDiv) errorDiv.style.display = 'none';
+                                
+                                // Xử lý sinh slug tự động từ tiêu đề
+                                document.getElementById('title').addEventListener('input', function() {
+                                    let title = this.value.trim();
+                                    let slug = title.toLowerCase()
+                                        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Loại bỏ dấu tiếng Việt
+                                        .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+                                        .replace(/\s+/g, '-') // Thay dấu cách bằng "-"
+                                        .replace(/[^\w-]/g, '') // Xóa ký tự đặc biệt
+                                        .replace(/--+/g, '-') // Loại bỏ nhiều dấu "-" liên tiếp
+                                        .replace(/^-+|-+$/g, ''); // Xóa "-" ở đầu và cuối
 
-                                document.getElementById('slug').value = slug;
-                            });
+                                    document.getElementById('slug').value = slug;
+                                });
 
-                            const violationDescriptions = {
-                                'nudity': 'Hình ảnh chứa nội dung nhạy cảm, khỏa thân hoặc gợi dục',
-                                'violence': 'Hình ảnh chứa cảnh bạo lực, đánh đập hoặc gây tổn thương',
-                                'text_violation': 'Hình ảnh chứa văn bản vi phạm quy định (ngôn từ thô tục, kích động)',
-                                'gore': 'Hình ảnh chứa cảnh máu me, tổn thương cơ thể',
-                                'self_harm': 'Hình ảnh liên quan đến tự gây thương tích hoặc tự tử',
-                                'gambling': 'Hình ảnh liên quan đến cờ bạc, đánh bạc',
-                            };
+                                const violationDescriptions = {
+                                    'nudity': 'Hình ảnh chứa nội dung nhạy cảm, khỏa thân hoặc gợi dục',
+                                    'violence': 'Hình ảnh chứa cảnh bạo lực, đánh đập hoặc gây tổn thương',
+                                    'text_violation': 'Hình ảnh chứa văn bản vi phạm quy định (ngôn từ thô tục, kích động)',
+                                    'gore': 'Hình ảnh chứa cảnh máu me, tổn thương cơ thể',
+                                    'self_harm': 'Hình ảnh liên quan đến tự gây thương tích hoặc tự tử',
+                                    'gambling': 'Hình ảnh liên quan đến cờ bạc, đánh bạc',
+                                };
 
-                            let isImageValid = false;
-                            const submitButton = document.getElementById('submitButton');
-
-                            document.getElementById('thumbnail_url').addEventListener('change', function(e) {
-                                const file = e.target.files[0];
-                                if (file) {
-                                    isImageValid = false;
-
-                                    const reader = new FileReader();
-                                    reader.onload = function(e) {
-                                        document.getElementById('image-preview').src = e.target.result;
-                                        document.getElementById('image-preview-container').style.display = 'block';
-                                    };
-                                    reader.readAsDataURL(file);
-
-                                    const formData = new FormData();
-                                    formData.append('image', file);
-                                    formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-
-                                    fetch('/api/check-image-moderation', {
-                                            method: 'POST',
-                                            body: formData,
-                                            headers: {
-                                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                            },
-                                        })
-                                        .then(response => {
-                                            if (!response.ok) {
-                                                throw new Error('Lỗi kết nối: ' + response.status);
-                                            }
-                                            return response.json();
-                                        })
-                                        .then(result => {
-                                            const moderationResult = document.getElementById('moderation-result');
-                                            const errorDiv = document.getElementById('moderation-error');
-                                            const errorMessage = document.getElementById('error-message');
-
-                                            moderationResult.style.display = 'block';
-
-                                            if (result.status === 'error') {
-                                                errorDiv.style.display = 'block';
-                                                errorMessage.textContent = result.message ||
-                                                    'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
-                                                isImageValid = false;
-                                                submitButton.disabled = true;
-                                            } else if (result.violation_level !== 'none') {
-                                                errorDiv.style.display = 'block';
-                                                let violationMessages = [];
-
-                                                for (let violation in result.reason) {
-                                                    violationMessages.push(result.reason[violation]);
-                                                }
-
-                                                errorMessage.innerHTML = `Vi phạm: ${violationMessages.join(', ')}`;
-                                                isImageValid = false;
-                                                submitButton.disabled = true;
-                                            } else {
-                                                errorDiv.style.display = 'none';
-                                                isImageValid = true;
-                                                submitButton.disabled = false;
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Lỗi kiểm duyệt:', error);
-                                            const moderationResult = document.getElementById('moderation-result');
-                                            const errorDiv = document.getElementById('moderation-error');
-                                            const errorMessage = document.getElementById('error-message');
-
-                                            moderationResult.style.display = 'block';
-                                            errorDiv.style.display = 'block';
-                                            errorMessage.textContent = 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
-                                            isImageValid = false;
-                                            submitButton.disabled = true;
-                                        });
-                                }
-                            });
-
-                            const form = document.getElementById('articleForm');
-                            form.addEventListener('submit', function(e) {
+                                let isImageValid = false;
+                                const submitButton = document.getElementById('submitButton');
+                                
+                                // Chỉ có một sự kiện lắng nghe cho phần tử thumbnail_url
                                 const thumbnailInput = document.getElementById('thumbnail_url');
-                                if (document.getElementById('articleStatus').value === 'draft') {
-                                    return true;
+                                if (thumbnailInput) {
+                                    thumbnailInput.addEventListener('change', function(e) {
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            isImageValid = false;
+
+                                            // Xử lý preview ảnh
+                                            const reader = new FileReader();
+                                            reader.onload = function(e) {
+                                                document.getElementById('image-preview').src = e.target.result;
+                                                document.getElementById('image-preview-container').style.display = 'block';
+                                            };
+                                            reader.readAsDataURL(file);
+                                            
+                                            // Kiểm duyệt hình ảnh
+                                            const formData = new FormData();
+                                            formData.append('image', file);
+                                            formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+
+                                            fetch('/api/check-image-moderation', {
+                                                    method: 'POST',
+                                                    body: formData,
+                                                    headers: {
+                                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                                    },
+                                                })
+                                                .then(response => {
+                                                    if (!response.ok) {
+                                                        throw new Error('Lỗi kết nối: ' + response.status);
+                                                    }
+                                                    return response.json();
+                                                })
+                                                .then(result => {
+                                                    const moderationResult = document.getElementById('moderation-result');
+                                                    const errorDiv = document.getElementById('moderation-error');
+                                                    const errorMessage = document.getElementById('error-message');
+
+                                                    moderationResult.style.display = 'block';
+
+                                                    if (result.status === 'error') {
+                                                        errorDiv.style.display = 'block';
+                                                        errorMessage.textContent = result.message ||
+                                                            'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
+                                                        isImageValid = false;
+                                                        submitButton.disabled = true;
+                                                    } else if (result.violation_level !== 'none') {
+                                                        errorDiv.style.display = 'block';
+                                                        let violationMessages = [];
+
+                                                        for (let violation in result.reason) {
+                                                            violationMessages.push(result.reason[violation]);
+                                                        }
+
+                                                        errorMessage.innerHTML = `Vi phạm: ${violationMessages.join(', ')}`;
+                                                        isImageValid = false;
+                                                        submitButton.disabled = true;
+                                                    } else {
+                                                        errorDiv.style.display = 'none';
+                                                        isImageValid = true;
+                                                        submitButton.disabled = false;
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Lỗi kiểm duyệt:', error);
+                                                    const moderationResult = document.getElementById('moderation-result');
+                                                    const errorDiv = document.getElementById('moderation-error');
+                                                    const errorMessage = document.getElementById('error-message');
+
+                                                    moderationResult.style.display = 'block';
+                                                    errorDiv.style.display = 'block';
+                                                    errorMessage.textContent = 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
+                                                    isImageValid = false;
+                                                    submitButton.disabled = true;
+                                                });
+                                                
+                                            // Nếu cần xử lý mammoth (chuyển đổi .docx)
+                                            if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                                                const docReader = new FileReader();
+                                                docReader.onload = function(e) {
+                                                    const arrayBuffer = e.target.result;
+                                                    mammoth.extractRawText({
+                                                            arrayBuffer: arrayBuffer,
+                                                        })
+                                                        .then(function(result) {
+                                                            document.getElementById('editor').innerHTML = result.value;
+                                                        })
+                                                        .catch(function(error) {
+                                                            console.error('Lỗi đọc file:', error);
+                                                        });
+                                                };
+                                                docReader.readAsArrayBuffer(file);
+                                            }
+                                        }
+                                    });
                                 }
 
-                                if (thumbnailInput.files && thumbnailInput.files[0] && !isImageValid) {
-                                    e.preventDefault();
-                                    alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
-                                    thumbnailInput.focus();
-                                    return false;
+                                // Kiểm tra trước khi submit form
+                                const form = document.getElementById('articleForm');
+                                if (form) {
+                                    form.addEventListener('submit', function(e) {
+                                        if (document.getElementById('articleStatus').value === 'draft') {
+                                            return true;
+                                        }
+
+                                        if (thumbnailInput && thumbnailInput.files && thumbnailInput.files[0] && !isImageValid) {
+                                            e.preventDefault();
+                                            alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
+                                            thumbnailInput.focus();
+                                            return false;
+                                        }
+                                        return true;
+                                    });
                                 }
-                                return true;
                             });
                         </script>
 
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
-                        <script>
-                            document.getElementById('thumbnail_url').addEventListener('change', function(event) {
-                                const file = event.target.files[0];
-                                if (file) {
-                                    const reader = new FileReader();
-                                    reader.onload = function(e) {
-                                        const arrayBuffer = e.target.result;
-                                        mammoth.extractRawText({
-                                                arrayBuffer: arrayBuffer,
-                                            })
-                                            .then(function(result) {
-                                                document.getElementById('editor').innerHTML = result.value;
-                                            })
-                                            .catch(function(error) {
-                                                console.error('Lỗi đọc file:', error);
-                                            });
-                                    };
-                                    reader.readAsArrayBuffer(file);
-                                }
-                            });
-                        </script>
                     </div>
                 </div>
             </div>
