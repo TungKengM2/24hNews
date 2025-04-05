@@ -261,7 +261,7 @@ class ArticleController extends Controller
             'slug' => $request->slug,
             'content' => $content,
             'category_id' => $request->category_id,
-            'status' => 'pending', 
+            'status' => 'pending',
         ]);
 
         if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
@@ -276,13 +276,13 @@ class ArticleController extends Controller
         $approvalData = [
             'type' => 'article',
             'user_id' => auth()->id(),
-            'status' => 'pending', 
+            'status' => 'pending',
             'remarks' => $finalViolationLevel === 'high'
                 ? 'Nội dung vi phạm nghiêm trọng: ' . implode(', ', $allViolations)
                 : ($finalViolationLevel === 'medium'
                     ? 'Nội dung cần kiểm duyệt: ' . implode(', ', $allViolations)
                     : 'Đã cập nhật, chờ kiểm duyệt lại'),
-            'approved_by' => null, 
+            'approved_by' => null,
             'violation_level' => $finalViolationLevel,
             'violations' => ! empty($allViolations)
                 ? json_encode($allViolations, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
@@ -526,7 +526,7 @@ class ArticleController extends Controller
                 'content' => $content,
                 'author_id' => auth()->id(),
                 'category_id' => $request->category_id,
-                'status' => 'pending', 
+                'status' => 'pending',
             ]);
 
             if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
@@ -581,12 +581,7 @@ class ArticleController extends Controller
             return redirect()
                 ->route('author.articles.index')
                 ->with('success', 'Bài viết đã được cập nhật thành công và đang chờ phê duyệt!');
-            return redirect()
-                ->route('author.articles.index')
-                ->with(
-                    'success',
-                    'Bài viết của bạn đang được xét duyệt, vui lòng chờ trong giây lát.'
-                );
+
         }
     }
 
@@ -698,7 +693,7 @@ class ArticleController extends Controller
 
         return redirect()->route('author.articles.index')->with('success', $message);
     }
-    
+
     public function destroy(Article $article)
     {
         if ($article->thumbnail_url) {

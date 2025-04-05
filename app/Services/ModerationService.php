@@ -11,6 +11,48 @@ use Illuminate\Support\Facades\Storage;
 
 class ModerationService
 {
+    // Thêm hàm static để theo dõi và quản lý thời gian giữa các request
+    private static $last_request_time = 0;
+    private static $request_count = 0;
+
+    /**
+     * Thực hiện kiểm soát delay giữa các request để tránh bị hạn chế kết nối
+     *
+     * @param int $min_delay Thời gian tối thiểu giữa các request (milliseconds)
+     * @return void
+     */
+    private function throttleRequest($min_delay = null)
+    {
+        // Nếu không có tham số, lấy từ biến môi trường hoặc mặc định 1000ms
+        if ($min_delay === null) {
+            $min_delay = (int) env('SIGHTENGINE_REQUEST_DELAY', 1000);
+        }
+
+        self::$request_count++;
+
+        // Reset counter sau mỗi 10 request để không tích lũy quá nhiều
+        if (self::$request_count > 10) {
+            self::$request_count = 1;
+            self::$last_request_time = 0;
+        }
+
+        $current_time = microtime(true) * 1000; // convert to milliseconds
+        $time_since_last = $current_time - self::$last_request_time;
+
+        // Tăng delay khi có nhiều request liên tiếp
+        $adaptive_delay = $min_delay * (1 + (self::$request_count / 5));
+
+        if ($time_since_last < $adaptive_delay && self::$last_request_time > 0) {
+            $sleep_time = ceil(($adaptive_delay - $time_since_last) / 1000); // convert to seconds
+            if ($sleep_time > 0) {
+                Log::debug("Throttling API request, sleeping {$sleep_time}s (request #" . self::$request_count . ")");
+                sleep($sleep_time);
+            }
+        }
+
+        self::$last_request_time = microtime(true) * 1000;
+    }
+
     public function moderateContent($inputText): array
     {
         $inputText = str_replace(['<br>', '<br />', '<br/>', '</p><p>'], "\n", $inputText);
@@ -89,7 +131,7 @@ EOD;
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL,
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro-exp-02-05:generateContent?key={$API_KEY}");
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro-exp-03-25:generateContent?key={$API_KEY}");
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER,
             ['Content-Type: application/json']);
@@ -203,36 +245,67 @@ EOD;
             'api_secret' => $apiSecret,
         ];
 
-        $apiUrl = 'https://api.sightengine.com/1.0/check.json?'.http_build_query($params);
+        // Kiểm soát tốc độ request
+        $this->throttleRequest();
 
-        $ch = curl_init($apiUrl);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 5,
-            CURLOPT_CONNECTTIMEOUT => 3,
-            CURLOPT_HTTPHEADER => [
-                'User-Agent: Mozilla/5.0 (compatible; 24hNews/1.0)',
-                'Accept: application/json',
-            ],
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => 0,
-        ]);
+        // Sử dụng tên miền chính thức thay vì IP
+        $apiUrl = 'https://api.sightengine.com/1.0/check.json?' . http_build_query($params);
 
-        $response = curl_exec($ch);
-        $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        // Thực hiện với retry logic
+        $maxRetries = 3;
+        $attempt = 0;
+        $backoff = 2; // Bắt đầu với 2 giây
 
-        if ($response === false) {
+        while ($attempt < $maxRetries) {
+            $ch = curl_init($apiUrl);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 15, // Tăng timeout
+                CURLOPT_CONNECTTIMEOUT => 10, // Tăng connect timeout
+                CURLOPT_HTTPHEADER => [
+                    'User-Agent: Mozilla/5.0 (compatible; 24hNews/1.0)',
+                    'Accept: application/json',
+                    'Connection: keep-alive', // Giúp tái sử dụng kết nối
+                    'Cache-Control: no-cache'
+                ],
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => 0,
+            ]);
+
+            $response = curl_exec($ch);
             $error = curl_error($ch);
+            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
+            // Nếu thành công hoặc lỗi không phải về kết nối, thoát loop
+            if ($response !== false ||
+                (strpos($error, 'Could not resolve host') === false &&
+                 strpos($error, 'Failed to connect') === false)) {
+                break;
+            }
+
+            // Nếu là lỗi kết nối, thực hiện retry
+            $attempt++;
+            if ($attempt >= $maxRetries) {
+                break;
+            }
+
+            Log::warning("Lỗi kết nối đến Sightengine, thử lại lần $attempt: $error");
+            sleep($backoff);
+            $backoff *= 3; // Tăng thời gian chờ theo cấp số nhân lớn hơn
+
+            // Sau mỗi lần retry, reset counter throttle để tránh việc đợi quá lâu
+            self::$request_count = 0;
+            self::$last_request_time = 0;
+        }
+
+        if ($response === false) {
             return [
                 'status' => 'error',
                 'message' => 'Lỗi kết nối API: '.$error,
                 'violation_level' => 'none',
             ];
         }
-
-        curl_close($ch);
 
         $output = json_decode($response, true);
         if ($output === null) {
@@ -378,6 +451,9 @@ EOD;
         Log::debug('Tăng cường kiểm duyệt URL ảnh: '.$imageUrl);
 
         try {
+            // Áp dụng throttle request nhẹ để tránh quá tải khi tải nhiều ảnh
+            $this->throttleRequest(100); // Delay nhỏ hơn (100ms) vì đây chỉ là tải ảnh
+
             $context = stream_context_create([
                 'http' => [
                     'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36\r\n".
@@ -505,50 +581,80 @@ EOD;
             'api_secret' => $apiSecret,
         ];
 
+        // Kiểm soát tốc độ request
+        $this->throttleRequest();
+
+        // Sử dụng tên miền chính thức thay vì IP
         $ch = curl_init('https://api.sightengine.com/1.0/check.json');
-        curl_setopt_array($ch, [
-            CURLOPT_POST => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 5,
-            CURLOPT_CONNECTTIMEOUT => 3,
-            CURLOPT_TCP_NODELAY => true,
-            CURLOPT_HTTPHEADER => [
-                'User-Agent: Mozilla/5.0 (compatible; 24hNews/1.0)',
-                'Accept: application/json',
-            ],
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => 0,
-        ]);
 
-        $cfile = new CURLFile(
-            $filePath,
-            $mimeType,
-            $fileName
-        );
+        // Thực hiện với retry logic
+        $maxRetries = 3;
+        $attempt = 0;
+        $backoff = 2; // Bắt đầu với 2 giây
+        $response = false;
+        $error = '';
 
-        $postData = $params;
-        $postData['media'] = $cfile;
+        while ($attempt < $maxRetries) {
+            curl_setopt_array($ch, [
+                CURLOPT_POST => true,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 15, // Tăng timeout
+                CURLOPT_CONNECTTIMEOUT => 10, // Tăng connect timeout
+                CURLOPT_TCP_NODELAY => true,
+                CURLOPT_HTTPHEADER => [
+                    'User-Agent: Mozilla/5.0 (compatible; 24hNews/1.0)',
+                    'Accept: application/json',
+                    'Connection: keep-alive', // Giúp tái sử dụng kết nối
+                    'Cache-Control: no-cache'
+                ],
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => 0,
+            ]);
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+            $cfile = new CURLFile(
+                $filePath,
+                $mimeType,
+                $fileName
+            );
 
-        $startApiCall = microtime(true);
+            $postData = $params;
+            $postData['media'] = $cfile;
 
-        $response = curl_exec($ch);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
 
-        $endApiCall = microtime(true);
-        $apiCallTime = ($endApiCall - $startApiCall) * 1000;
+            $startApiCall = microtime(true);
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+
+            // Nếu thành công hoặc lỗi không phải về kết nối, thoát loop
+            if ($response !== false ||
+                (strpos($error, 'Could not resolve host') === false &&
+                 strpos($error, 'Failed to connect') === false)) {
+                break;
+            }
+
+            // Nếu là lỗi kết nối, thực hiện retry
+            $attempt++;
+            if ($attempt >= $maxRetries) {
+                break;
+            }
+
+            Log::warning("Lỗi kết nối đến Sightengine trong direct file moderation, thử lại lần $attempt: $error");
+            sleep($backoff);
+            $backoff *= 3; // Tăng thời gian chờ theo cấp số nhân lớn hơn
+
+            // Sau mỗi lần retry, reset counter throttle để tránh việc đợi quá lâu
+            self::$request_count = 0;
+            self::$last_request_time = 0;
+        }
 
         if ($response === false) {
-            $error = curl_error($ch);
-            curl_close($ch);
-
             return [
                 'status' => 'error',
                 'message' => 'Lỗi kết nối API: '.$error,
                 'violation_level' => 'none',
             ];
         }
-        curl_close($ch);
 
         $output = json_decode($response, true);
         if ($output === null) {
