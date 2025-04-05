@@ -11,24 +11,67 @@ use Illuminate\Support\Facades\Storage;
 
 class ModerationService
 {
+    // Thêm hàm static để theo dõi và quản lý thời gian giữa các request
+    private static $last_request_time = 0;
+    private static $request_count = 0;
+
+    /**
+     * Thực hiện kiểm soát delay giữa các request để tránh bị hạn chế kết nối
+     *
+     * @param int $min_delay Thời gian tối thiểu giữa các request (milliseconds)
+     * @return void
+     */
+    private function throttleRequest($min_delay = null)
+    {
+        // Nếu không có tham số, lấy từ biến môi trường hoặc mặc định 1000ms
+        if ($min_delay === null) {
+            $min_delay = (int) env('SIGHTENGINE_REQUEST_DELAY', 1000);
+        }
+
+        self::$request_count++;
+
+        // Reset counter sau mỗi 10 request để không tích lũy quá nhiều
+        if (self::$request_count > 10) {
+            self::$request_count = 1;
+            self::$last_request_time = 0;
+        }
+
+        $current_time = microtime(true) * 1000; // convert to milliseconds
+        $time_since_last = $current_time - self::$last_request_time;
+
+        // Tăng delay khi có nhiều request liên tiếp
+        $adaptive_delay = $min_delay * (1 + (self::$request_count / 5));
+
+        if ($time_since_last < $adaptive_delay && self::$last_request_time > 0) {
+            $sleep_time = ceil(($adaptive_delay - $time_since_last) / 1000); // convert to seconds
+            if ($sleep_time > 0) {
+                Log::debug("Throttling API request, sleeping {$sleep_time}s (request #" . self::$request_count . ")");
+                sleep($sleep_time);
+            }
+        }
+
+        self::$last_request_time = microtime(true) * 1000;
+    }
+
     public function moderateContent($inputText): array
     {
-        $inputText = str_replace(['<br>', '<br />', '<br/>', '</p><p>'], "\n", $inputText);
+        try {
+            $inputText = str_replace(['<br>', '<br />', '<br/>', '</p><p>'], "\n", $inputText);
 
-        $inputText = preg_replace('/<blockquote[^>]*>(.*?)<\/blockquote>/is', "\n> $1\n", $inputText);
+            $inputText = preg_replace('/<blockquote[^>]*>(.*?)<\/blockquote>/is', "\n> $1\n", $inputText);
 
-        $inputText = preg_replace('/<li[^>]*>(.*?)<\/li>/is', "- $1\n", $inputText);
+            $inputText = preg_replace('/<li[^>]*>(.*?)<\/li>/is', "- $1\n", $inputText);
 
-        $plainText = strip_tags($inputText);
+            $plainText = strip_tags($inputText);
 
-        $plainText = html_entity_decode($plainText);
+            $plainText = html_entity_decode($plainText);
 
-        $plainText = preg_replace('/\s+/', ' ', $plainText);
-        $plainText = trim($plainText);
+            $plainText = preg_replace('/\s+/', ' ', $plainText);
+            $plainText = trim($plainText);
 
-        $API_KEY = env('GOOGLE_API_KEY');
+            $API_KEY = env('GOOGLE_API_KEY');
 
-        $prompt = <<<EOD
+            $prompt = <<<EOD
 Bạn là hệ thống kiểm duyệt nội dung của VnExpress. Hãy phân tích đoạn văn bản sau dựa trên các tiêu chí sau và trả về JSON theo cấu trúc:
 {
   "severity": {
@@ -69,81 +112,117 @@ Bạn là hệ thống kiểm duyệt nội dung của VnExpress. Hãy phân tí
 $plainText
 EOD;
 
-        $data = [
-            'contents' => [
-                [
-                    'role' => 'user',
-                    'parts' => [
-                        ['text' => $prompt],
+            $data = [
+                'contents' => [
+                    [
+                        'role' => 'user',
+                        'parts' => [
+                            ['text' => $prompt],
+                        ],
                     ],
                 ],
-            ],
-            'generationConfig' => [
-                'temperature' => 0,
-                'topK' => 40,
-                'topP' => 0.9,
-                'maxOutputTokens' => 8192,
-                'responseMimeType' => 'text/plain',
-            ],
-        ];
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro-exp-02-05:generateContent?key={$API_KEY}");
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER,
-            ['Content-Type: application/json']);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-        $result = json_decode($response, true);
-        if (
-            ! isset($result['candidates']) ||
-            ! is_array($result['candidates']) ||
-            empty($result['candidates']) ||
-            ! isset($result['candidates'][0]['content']['parts'][0]['text'])
-        ) {
-            return [
-                'status' => 'error',
-                'message' => 'Không nhận được kết quả kiểm duyệt hợp lệ từ API.',
+                'generationConfig' => [
+                    'temperature' => 0,
+                    'topK' => 40,
+                    'topP' => 0.9,
+                    'maxOutputTokens' => 8192,
+                    'responseMimeType' => 'text/plain',
+                ],
             ];
-        }
 
-        $apiResponseText = $result['candidates'][0]['content']['parts'][0]['text'];
-        $apiResponseText = trim(preg_replace('/^```json\s*|\s*```$/', '',
-            $apiResponseText));
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL,
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro-exp-03-25:generateContent?key={$API_KEY}");
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER,
+                ['Content-Type: application/json']);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            // Tăng timeout cho request API
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30); // timeout sau 30 giây
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // timeout kết nối sau 10 giây
 
-        $apiResponse = json_decode($apiResponseText, true);
-        if (json_last_error() !== JSON_ERROR_NONE || ! is_array($apiResponse)) {
-            return [
-                'status' => 'error',
-                'message' => 'Kết quả kiểm duyệt không đúng định dạng JSON.',
-            ];
-        }
+            $response = curl_exec($ch);
+            
+            // Kiểm tra lỗi cURL
+            if ($response === false) {
+                $error = curl_error($ch);
+                curl_close($ch);
+                Log::error('Lỗi gọi Gemini API: ' . $error);
+                return [
+                    'status' => 'error',
+                    'message' => 'Không thể kết nối đến API kiểm duyệt: ' . $error,
+                    'violation_level' => 'none',
+                    'violations' => [],
+                    'reason' => [],
+                ];
+            }
+            
+            curl_close($ch);
+            
+            $result = json_decode($response, true);
+            if (
+                ! isset($result['candidates']) ||
+                ! is_array($result['candidates']) ||
+                empty($result['candidates']) ||
+                ! isset($result['candidates'][0]['content']['parts'][0]['text'])
+            ) {
+                Log::error('Lỗi phản hồi API không hợp lệ: ' . json_encode($result));
+                return [
+                    'status' => 'error',
+                    'message' => 'Không nhận được kết quả kiểm duyệt hợp lệ từ API.',
+                    'violation_level' => 'none',
+                    'violations' => [],
+                    'reason' => [],
+                ];
+            }
 
-        $violationTerms = [];
-        $violationReasons = [];
+            $apiResponseText = $result['candidates'][0]['content']['parts'][0]['text'];
+            $apiResponseText = trim(preg_replace('/^```json\s*|\s*```$/', '',
+                $apiResponseText));
 
-        if (! empty($apiResponse['violations'])) {
-            foreach ($apiResponse['violations'] as $violation) {
-                if (isset($violation['term']) && ! empty($violation['term'])) {
-                    $violationTerms[] = $violation['term'];
-                    $violationReasons[$violation['term']] = $violation['reason'] ?? 'Vi phạm quy định';
+            $apiResponse = json_decode($apiResponseText, true);
+            if (json_last_error() !== JSON_ERROR_NONE || ! is_array($apiResponse)) {
+                Log::error('Lỗi JSON không hợp lệ từ API: ' . $apiResponseText);
+                return [
+                    'status' => 'error',
+                    'message' => 'Kết quả kiểm duyệt không đúng định dạng JSON.',
+                    'violation_level' => 'none',
+                    'violations' => [],
+                    'reason' => [],
+                ];
+            }
+
+            $violationTerms = [];
+            $violationReasons = [];
+
+            if (! empty($apiResponse['violations'])) {
+                foreach ($apiResponse['violations'] as $violation) {
+                    if (isset($violation['term']) && ! empty($violation['term'])) {
+                        $violationTerms[] = $violation['term'];
+                        $violationReasons[$violation['term']] = $violation['reason'] ?? 'Vi phạm quy định';
+                    }
                 }
             }
-        }
 
-        return [
-            'status' => 'success',
-            'violation_level' => $apiResponse['severity']['level'] ?? 'none',
-            'reason' => $apiResponse['severity']['reason'] ?? 'Không có lý do',
-            'violations' => $violationTerms,
-            'reason' => $violationReasons,
-        ];
+            return [
+                'status' => 'success',
+                'violation_level' => $apiResponse['severity']['level'] ?? 'none',
+                'violations' => $violationTerms,
+                'reason' => $violationReasons,
+            ];
+        } catch (Exception $e) {
+            Log::error('Lỗi trong quá trình kiểm duyệt nội dung: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            return [
+                'status' => 'error',
+                'message' => 'Đã xảy ra lỗi trong quá trình kiểm duyệt nội dung: ' . $e->getMessage(),
+                'violation_level' => 'none',
+                'violations' => [],
+                'reason' => [],
+            ];
+        }
     }
 
     public function handleImageUrlModeration($imageUrl)
@@ -203,36 +282,67 @@ EOD;
             'api_secret' => $apiSecret,
         ];
 
-        $apiUrl = 'https://api.sightengine.com/1.0/check.json?'.http_build_query($params);
+        // Kiểm soát tốc độ request
+        $this->throttleRequest();
 
-        $ch = curl_init($apiUrl);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 5,
-            CURLOPT_CONNECTTIMEOUT => 3,
-            CURLOPT_HTTPHEADER => [
-                'User-Agent: Mozilla/5.0 (compatible; 24hNews/1.0)',
-                'Accept: application/json',
-            ],
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => 0,
-        ]);
+        // Sử dụng tên miền chính thức thay vì IP
+        $apiUrl = 'https://api.sightengine.com/1.0/check.json?' . http_build_query($params);
 
-        $response = curl_exec($ch);
-        $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        // Thực hiện với retry logic
+        $maxRetries = 3;
+        $attempt = 0;
+        $backoff = 2; // Bắt đầu với 2 giây
 
-        if ($response === false) {
+        while ($attempt < $maxRetries) {
+            $ch = curl_init($apiUrl);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 15, // Tăng timeout
+                CURLOPT_CONNECTTIMEOUT => 10, // Tăng connect timeout
+                CURLOPT_HTTPHEADER => [
+                    'User-Agent: Mozilla/5.0 (compatible; 24hNews/1.0)',
+                    'Accept: application/json',
+                    'Connection: keep-alive', // Giúp tái sử dụng kết nối
+                    'Cache-Control: no-cache'
+                ],
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => 0,
+            ]);
+
+            $response = curl_exec($ch);
             $error = curl_error($ch);
+            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
+            // Nếu thành công hoặc lỗi không phải về kết nối, thoát loop
+            if ($response !== false ||
+                (strpos($error, 'Could not resolve host') === false &&
+                 strpos($error, 'Failed to connect') === false)) {
+                break;
+            }
+
+            // Nếu là lỗi kết nối, thực hiện retry
+            $attempt++;
+            if ($attempt >= $maxRetries) {
+                break;
+            }
+
+            Log::warning("Lỗi kết nối đến Sightengine, thử lại lần $attempt: $error");
+            sleep($backoff);
+            $backoff *= 3; // Tăng thời gian chờ theo cấp số nhân lớn hơn
+
+            // Sau mỗi lần retry, reset counter throttle để tránh việc đợi quá lâu
+            self::$request_count = 0;
+            self::$last_request_time = 0;
+        }
+
+        if ($response === false) {
             return [
                 'status' => 'error',
                 'message' => 'Lỗi kết nối API: '.$error,
                 'violation_level' => 'none',
             ];
         }
-
-        curl_close($ch);
 
         $output = json_decode($response, true);
         if ($output === null) {
@@ -378,6 +488,9 @@ EOD;
         Log::debug('Tăng cường kiểm duyệt URL ảnh: '.$imageUrl);
 
         try {
+            // Áp dụng throttle request nhẹ để tránh quá tải khi tải nhiều ảnh
+            $this->throttleRequest(100); // Delay nhỏ hơn (100ms) vì đây chỉ là tải ảnh
+
             $context = stream_context_create([
                 'http' => [
                     'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36\r\n".
@@ -505,50 +618,80 @@ EOD;
             'api_secret' => $apiSecret,
         ];
 
+        // Kiểm soát tốc độ request
+        $this->throttleRequest();
+
+        // Sử dụng tên miền chính thức thay vì IP
         $ch = curl_init('https://api.sightengine.com/1.0/check.json');
-        curl_setopt_array($ch, [
-            CURLOPT_POST => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 5,
-            CURLOPT_CONNECTTIMEOUT => 3,
-            CURLOPT_TCP_NODELAY => true,
-            CURLOPT_HTTPHEADER => [
-                'User-Agent: Mozilla/5.0 (compatible; 24hNews/1.0)',
-                'Accept: application/json',
-            ],
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => 0,
-        ]);
 
-        $cfile = new CURLFile(
-            $filePath,
-            $mimeType,
-            $fileName
-        );
+        // Thực hiện với retry logic
+        $maxRetries = 3;
+        $attempt = 0;
+        $backoff = 2; // Bắt đầu với 2 giây
+        $response = false;
+        $error = '';
 
-        $postData = $params;
-        $postData['media'] = $cfile;
+        while ($attempt < $maxRetries) {
+            curl_setopt_array($ch, [
+                CURLOPT_POST => true,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 15, // Tăng timeout
+                CURLOPT_CONNECTTIMEOUT => 10, // Tăng connect timeout
+                CURLOPT_TCP_NODELAY => true,
+                CURLOPT_HTTPHEADER => [
+                    'User-Agent: Mozilla/5.0 (compatible; 24hNews/1.0)',
+                    'Accept: application/json',
+                    'Connection: keep-alive', // Giúp tái sử dụng kết nối
+                    'Cache-Control: no-cache'
+                ],
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => 0,
+            ]);
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+            $cfile = new CURLFile(
+                $filePath,
+                $mimeType,
+                $fileName
+            );
 
-        $startApiCall = microtime(true);
+            $postData = $params;
+            $postData['media'] = $cfile;
 
-        $response = curl_exec($ch);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
 
-        $endApiCall = microtime(true);
-        $apiCallTime = ($endApiCall - $startApiCall) * 1000;
+            $startApiCall = microtime(true);
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+
+            // Nếu thành công hoặc lỗi không phải về kết nối, thoát loop
+            if ($response !== false ||
+                (strpos($error, 'Could not resolve host') === false &&
+                 strpos($error, 'Failed to connect') === false)) {
+                break;
+            }
+
+            // Nếu là lỗi kết nối, thực hiện retry
+            $attempt++;
+            if ($attempt >= $maxRetries) {
+                break;
+            }
+
+            Log::warning("Lỗi kết nối đến Sightengine trong direct file moderation, thử lại lần $attempt: $error");
+            sleep($backoff);
+            $backoff *= 3; // Tăng thời gian chờ theo cấp số nhân lớn hơn
+
+            // Sau mỗi lần retry, reset counter throttle để tránh việc đợi quá lâu
+            self::$request_count = 0;
+            self::$last_request_time = 0;
+        }
 
         if ($response === false) {
-            $error = curl_error($ch);
-            curl_close($ch);
-
             return [
                 'status' => 'error',
                 'message' => 'Lỗi kết nối API: '.$error,
                 'violation_level' => 'none',
             ];
         }
-        curl_close($ch);
 
         $output = json_decode($response, true);
         if ($output === null) {
