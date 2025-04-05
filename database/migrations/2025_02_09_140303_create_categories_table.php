@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -16,10 +16,6 @@ return new class extends Migration
             $table->string('name', 100)->unique();
             $table->string('slug', 255)->unique();
             $table->boolean('is_active')->default(true);
-
-            $table->unsignedBigInteger('moderator_id')->nullable(); // Thêm cột kiểm duyệt viên
-            $table->foreign('moderator_id')->references('user_id')->on('users')->onDelete('SET NULL');
-
             $table->timestamps();
         });
     }
