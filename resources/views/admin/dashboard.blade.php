@@ -1,14 +1,9 @@
 @extends('admin.layouts.master')
 
 @section('content')
-
-
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <div class="container-full">
-              {{-- tổng quan thống kê  --}}
-              <section class="content">
-                <!-- Thống kê bài viết -->
+            {{-- <section class="content">
                 <h1>Tổng Quan</h1>
                 <div class="row">
                     <div class="col-xl-3 col-md-6 col-12">
@@ -66,145 +61,88 @@
                         </div>
                     </div>
                 </div>
+            </section> --}}
 
-            </section>
-            <!-- Main content -->
-            {{-- biểu đồ thống kê --}}
-            <section class="content mt-" >
+            <section class="content mt-4">
                 <h1>Biểu Đồ Thống Kê</h1>
                 <div class="row">
                     <div class="col-6">
                         <div class="box">
                             <form method="GET" action="{{ route('admin.dashboard') }}">
-                                <label for="type">Thống Kê Bài Viết :</label>
-                                <select class="form-select w-auto" id="type" name="type"
-                                    onchange="this.form.submit()">
+                                <label for="article_type">Thống Kê Bài Viết :</label>
+                                <select class="form-select w-auto" id="article_type" name="type" onchange="this.form.submit()">
                                     <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
                                     <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
                                     <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
                                 </select>
                             </form>
-                            <canvas id="statsChart" width="400" height="200"></canvas>
+                            <canvas id="articleStatsChart" width="400" height="200"></canvas>
                         </div>
                     </div>
+
                     <div class="col-6">
                         <div class="box">
                             <form method="GET" action="{{ route('admin.dashboard') }}">
-                                <label for="type">Thống Kê Người Dùng :</label>
-                                <select class="form-select w-auto" id="type" name="type"
-                                    onchange="this.form.submit()">
+                                <label for="user_type">Thống Kê Người Dùng :</label>
+                                <select class="form-select w-auto" id="user_type" name="type" onchange="this.form.submit()">
                                     <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
                                     <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
                                     <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
                                 </select>
                             </form>
-                            <canvas id="userAuthorStats" width="400" height="200"></canvas>
+                            <canvas id="userStatsChart" width="400" height="200"></canvas>
                         </div>
                     </div>
+
                     <div class="col-6">
                         <div class="box">
-                            <form method="GET" action="{{ route('admin.dashboard') }}">
-                                <label for="type">Thống Kê Lượt Thích :</label>
-                                <select class="form-select w-auto" id="type" name="type"
-                                    onchange="this.form.submit()">
+                            <form method="GET" action="{{ route('admin.dashboard') }}" class="form-inline">
+                                <label for="interaction_type">Thống Kê Tương Tác :</label>
+                                <select class="form-select w-auto" id="interaction_type" name="type" onchange="this.form.submit()">
                                     <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
                                     <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
                                     <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
                                 </select>
                             </form>
-                            <canvas id="likeStatsChart" width="400" height="200"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="box">
-                            <form method="GET" action="{{ route('admin.dashboard') }}">
-                                <label for="type">Thống Kê Bình Luận :</label>
-                                <select class="form-select w-auto" id="type" name="type"
-                                    onchange="this.form.submit()">
-                                    <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Theo ngày</option>
-                                    <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
-                                    <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Theo năm</option>
-                                </select>
-                            </form>
-                            <canvas id="commentStatsChart" width="400" height="200"></canvas>
+                            <canvas id="interactionStatsChart" width="400" height="200"></canvas>
                         </div>
                     </div>
                 </div>
             </section>
-          
-            <!-- /.content -->
-
         </div>
     </div>
 
-    @push('scripts')
     <script>
-        $(document).ready(function() {
-            // Lấy dữ liệu thống kê người dùng
-            $.ajax({
-                url: '{{ route("admin.userStats") }}',
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    // Tính tổng số người dùng từ dữ liệu trả về
-                    var totalUsers = 0;
-                    var totalRegularUsers = 0;
-                    var totalAuthors = 0;
-                    var totalModerators = 0;
-                    var totalAdmins = 0;
-
-                    data.forEach(function(item) {
-                        var users = parseInt(item.users) || 0;
-                        var authors = parseInt(item.authors) || 0;
-                        var moderators = parseInt(item.moderators) || 0;
-                        var admins = parseInt(item.admins) || 0;
-
-                        totalRegularUsers += users;
-                        totalAuthors += authors;
-                        totalModerators += moderators;
-                        totalAdmins += admins;
-                        totalUsers += users + authors + moderators + admins;
-                    });
-
-                    $('#total-regular-users').text(totalRegularUsers);
-                    $('#total-authors').text(totalAuthors);
-                    $('#total-moderators').text(totalModerators);
-                    $('#total-admins').text(totalAdmins);
-                    $('#total-users').text(totalUsers);
-                }
-            });
-        });
-        // thông kê biểu đồ bài viết
-           // bài viết
-           document.addEventListener('DOMContentLoaded', function() {
+        // tổng quan
+        document.addEventListener('DOMContentLoaded', function() {
+            // Biểu đồ thống kê bài viết
             const articleStatsChart = @json($articleStatsChart);
-            const type = "{{ $type }}";
+            const articleType = "{{ $type }}";
+            const articleLabels = [];
+            const articleData = [];
 
-            const labels = [];
-            const data = [];
-
-            if (type === 'daily') {
-                labels.push(...articleStatsChart.map(stat => stat.date));
-            } else if (type === 'monthly') {
-                labels.push(...articleStatsChart.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`));
+            if (articleType === 'daily') {
+                articleLabels.push(...articleStatsChart.map(stat => stat.date));
+            } else if (articleType === 'monthly') {
+                articleLabels.push(...articleStatsChart.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`));
             } else {
-                labels.push(...articleStatsChart.map(stat => stat.year));
+                articleLabels.push(...articleStatsChart.map(stat => stat.year));
             }
 
-            const roundedData = articleStatsChart.map(stat => Math.floor(stat.count));
+            articleData.push(...articleStatsChart.map(stat => Math.floor(stat.count)));
 
-            const ctx = document.getElementById('statsChart').getContext('2d');
-            const statsChart = new Chart(ctx, {
+            const articleCtx = document.getElementById('articleStatsChart').getContext('2d');
+            new Chart(articleCtx, {
                 type: 'line',
                 data: {
-                    labels: labels,
+                    labels: articleLabels,
                     datasets: [{
                         label: 'Số bài viết',
-                        data: roundedData,
+                        data: articleData,
                         borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        fill: true
+                        fill: true,
+                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -218,41 +156,54 @@
                     }
                 }
             });
-        });
-        // thống kê người dùng
-        document.addEventListener('DOMContentLoaded', function() {
+
+            // Biểu đồ thống kê người dùng
             const userStats = @json($userStats);
             const authorStats = @json($authorStats);
             const moderatorStats = @json($moderatorStats);
-            const type = "{{ $type }}";
+            const userType = "{{ $type }}";
 
-            let labels = [];
-            let userData = [];
-            let authorData = [];
-            let moderatorData = [];
+            const userLabels = new Set();
+            const userData = [];
+            const authorData = [];
+            const moderatorData = [];
 
-            if (type === 'daily') {
-                labels = userStats.map(stat => stat.date);
-                userData = userStats.map(stat => Math.floor(stat.count));
-                authorData = authorStats.map(stat => Math.floor(stat.count));
-                moderatorData = moderatorStats.map(stat => Math.floor(stat.count));
-            } else if (type === 'monthly') {
-                labels = userStats.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`);
-                userData = userStats.map(stat => Math.floor(stat.count));
-                authorData = authorStats.map(stat => Math.floor(stat.count));
-                moderatorData = moderatorStats.map(stat => Math.floor(stat.count));
-            } else { // yearly
-                labels = userStats.map(stat => stat.year);
-                userData = userStats.map(stat => Math.floor(stat.count));
-                authorData = authorStats.map(stat => Math.floor(stat.count));
-                moderatorData = moderatorStats.map(stat => Math.floor(stat.count));
+            if (userType === 'daily') {
+                userStats.forEach(stat => userLabels.add(stat.date));
+                authorStats.forEach(stat => userLabels.add(stat.date));
+                moderatorStats.forEach(stat => userLabels.add(stat.date));
+            } else if (userType === 'monthly') {
+                userStats.forEach(stat => userLabels.add(`${stat.year}-${String(stat.month).padStart(2, '0')}`));
+                authorStats.forEach(stat => userLabels.add(`${stat.year}-${String(stat.month).padStart(2, '0')}`));
+                moderatorStats.forEach(stat => userLabels.add(`${stat.year}-${String(stat.month).padStart(2, '0')}`));
+            } else {
+                userStats.forEach(stat => userLabels.add(stat.year));
+                authorStats.forEach(stat => userLabels.add(stat.year));
+                moderatorStats.forEach(stat => userLabels.add(stat.year));
             }
 
-            const ctx = document.getElementById('userAuthorStats').getContext('2d');
-            const userAuthorChart = new Chart(ctx, {
+            const sortedUserLabels = Array.from(userLabels).sort();
+
+            userData.push(...sortedUserLabels.map(label => {
+                const found = userStats.find(stat => (userType === 'daily' ? stat.date : (userType === 'monthly' ? `${stat.year}-${String(stat.month).padStart(2, '0')}` : stat.year)) === label);
+                return found ? Math.floor(found.count) : 0;
+            }));
+
+            authorData.push(...sortedUserLabels.map(label => {
+                const found = authorStats.find(stat => (userType === 'daily' ? stat.date : (userType === 'monthly' ? `${stat.year}-${String(stat.month).padStart(2, '0')}` : stat.year)) === label);
+                return found ? Math.floor(found.count) : 0;
+            }));
+
+            moderatorData.push(...sortedUserLabels.map(label => {
+                const found = moderatorStats.find(stat => (userType === 'daily' ? stat.date : (userType === 'monthly' ? `${stat.year}-${String(stat.month).padStart(2, '0')}` : stat.year)) === label);
+                return found ? Math.floor(found.count) : 0;
+            }));
+
+            const userCtx = document.getElementById('userStatsChart').getContext('2d');
+            new Chart(userCtx, {
                 type: 'line',
                 data: {
-                    labels: labels,
+                    labels: sortedUserLabels,
                     datasets: [
                         {
                             label: 'Số lượng người dùng',
@@ -291,80 +242,77 @@
                     }
                 }
             });
-        });
-        // thống kê lượt thích
-        document.addEventListener('DOMContentLoaded', function() {
-            const likeStatsChart = @json($likeStatsChart);
-            const type = "{{ $type }}";
 
-            const labels = [];
-            const data = [];
+            // Biểu đồ thống kê tương tác
+            const likeStats = @json($likeStats);
+            const commentStats = @json($commentStats);
+            const viewsStats = @json($viewsStats);
+            const interactionType = "{{ $type }}";
 
-            if (type === 'daily') {
-                labels.push(...likeStatsChart.map(stat => stat.date));
-            } else if (type === 'monthly') {
-                labels.push(...likeStatsChart.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`));
+            const interactionLabels = new Set();
+
+            if (interactionType === 'daily') {
+                likeStats.forEach(stat => interactionLabels.add(stat.date));
+                commentStats.forEach(stat => interactionLabels.add(stat.date));
+                viewsStats.forEach(stat => interactionLabels.add(stat.date));
+            } else if (interactionType === 'monthly') {
+                likeStats.forEach(stat => interactionLabels.add(`${stat.year}-${String(stat.month).padStart(2, '0')}`));
+                commentStats.forEach(stat => interactionLabels.add(`${stat.year}-${String(stat.month).padStart(2, '0')}`));
+                viewsStats.forEach(stat => interactionLabels.add(`${stat.year}-${String(stat.month).padStart(2, '0')}`));
             } else {
-                labels.push(...likeStatsChart.map(stat => stat.year));
+                likeStats.forEach(stat => interactionLabels.add(stat.year));
+                commentStats.forEach(stat => interactionLabels.add(stat.year));
+                viewsStats.forEach(stat => interactionLabels.add(stat.year));
             }
 
-            const roundedData = likeStatsChart.map(stat => Math.floor(stat.count));
+            const sortedInteractionLabels = Array.from(interactionLabels).sort();
 
-            const ctx = document.getElementById('likeStatsChart').getContext('2d');
-            const statsChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Số lượt thích ',
-                        data: roundedData,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        fill: true
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            }
-                        }
-                    }
-                }
+            const roundedLikeData = sortedInteractionLabels.map(label => {
+                const found = likeStats.find(stat => (interactionType === 'daily' ? stat.date : (interactionType === 'monthly' ? `${stat.year}-${String(stat.month).padStart(2, '0')}` : stat.year)) === label);
+                return found ? Math.floor(found.count) : 0;
             });
-        });
-        // thống kê bình luận
-        document.addEventListener('DOMContentLoaded', function() {
-            const commentStatsChart = @json($commentStatsChart);
-            const type = "{{ $type }}";
 
-            const labels = [];
-            const data = [];
+            const roundedCommentData = sortedInteractionLabels.map(label => {
+                const found = commentStats.find(stat => (interactionType === 'daily' ? stat.date : (interactionType === 'monthly' ? `${stat.year}-${String(stat.month).padStart(2, '0')}` : stat.year)) === label);
+                return found ? Math.floor(found.count) : 0;
+            });
 
-            if (type === 'daily') {
-                labels.push(...commentStatsChart.map(stat => stat.date));
-            } else if (type === 'monthly') {
-                labels.push(...commentStatsChart.map(stat => `${stat.year}-${String(stat.month).padStart(2, '0')}`));
-            } else {
-                labels.push(...commentStatsChart.map(stat => stat.year));
-            }
+            const roundedViewsData = sortedInteractionLabels.map(label => {
+                const found = viewsStats.find(stat => (interactionType === 'daily' ? stat.date : (interactionType === 'monthly' ? `${stat.year}-${String(stat.month).padStart(2, '0')}` : stat.year)) === label);
+                return found ? Math.floor(found.count) : 0;
+            });
 
-            const roundedData = commentStatsChart.map(stat => Math.floor(stat.count));
-
-            const ctx = document.getElementById('commentStatsChart').getContext('2d');
-            const statsChart = new Chart(ctx, {
+            const interactionCtx = document.getElementById('interactionStatsChart').getContext('2d');
+            new Chart(interactionCtx, {
                 type: 'line',
                 data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Số Bình Luận ',
-                        data: roundedData,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
+                    labels: sortedInteractionLabels,
+                    datasets: [
+                        {
+                            label: 'Số lượt thích',
+                            data: roundedLikeData,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            fill: true,
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Số bình luận',
+                            data: roundedCommentData,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            fill: true,
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Số lượt xem',
+                            data: roundedViewsData,
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            fill: true,
+                            borderWidth: 1
+                        }
+                    ]
                 },
                 options: {
                     scales: {
@@ -379,5 +327,4 @@
             });
         });
     </script>
-    @endpush
 @endsection
