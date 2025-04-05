@@ -703,7 +703,13 @@ class ArticleController extends Controller
             return redirect()->back()->with('error', "Chỉ có thể ẩn/hiện bài viết đã xuất bản hoặc đã ẩn.");
         }
 
-        return redirect()->route('author.articles.index')->with('success', $message);
+        // Kiểm tra xem request có phải là ajax không
+        if (request()->ajax()) {
+            return response()->json(['success' => true, 'message' => $message]);
+        }
+
+        // Sử dụng redirect()->back() để đảm bảo tất cả tham số truy vấn được giữ lại
+        return redirect()->back()->with('success', $message);
     }
 
     public function destroy(Article $article)
