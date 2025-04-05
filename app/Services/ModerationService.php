@@ -55,22 +55,23 @@ class ModerationService
 
     public function moderateContent($inputText): array
     {
-        $inputText = str_replace(['<br>', '<br />', '<br/>', '</p><p>'], "\n", $inputText);
+        try {
+            $inputText = str_replace(['<br>', '<br />', '<br/>', '</p><p>'], "\n", $inputText);
 
-        $inputText = preg_replace('/<blockquote[^>]*>(.*?)<\/blockquote>/is', "\n> $1\n", $inputText);
+            $inputText = preg_replace('/<blockquote[^>]*>(.*?)<\/blockquote>/is', "\n> $1\n", $inputText);
 
-        $inputText = preg_replace('/<li[^>]*>(.*?)<\/li>/is', "- $1\n", $inputText);
+            $inputText = preg_replace('/<li[^>]*>(.*?)<\/li>/is', "- $1\n", $inputText);
 
-        $plainText = strip_tags($inputText);
+            $plainText = strip_tags($inputText);
 
-        $plainText = html_entity_decode($plainText);
+            $plainText = html_entity_decode($plainText);
 
-        $plainText = preg_replace('/\s+/', ' ', $plainText);
-        $plainText = trim($plainText);
+            $plainText = preg_replace('/\s+/', ' ', $plainText);
+            $plainText = trim($plainText);
 
-        $API_KEY = env('GOOGLE_API_KEY');
+            $API_KEY = env('GOOGLE_API_KEY');
 
-        $prompt = <<<EOD
+            $prompt = <<<EOD
 Bạn là hệ thống kiểm duyệt nội dung của VnExpress. Hãy phân tích đoạn văn bản sau dựa trên các tiêu chí sau và trả về JSON theo cấu trúc:
 {
   "severity": {
@@ -111,81 +112,117 @@ Bạn là hệ thống kiểm duyệt nội dung của VnExpress. Hãy phân tí
 $plainText
 EOD;
 
-        $data = [
-            'contents' => [
-                [
-                    'role' => 'user',
-                    'parts' => [
-                        ['text' => $prompt],
+            $data = [
+                'contents' => [
+                    [
+                        'role' => 'user',
+                        'parts' => [
+                            ['text' => $prompt],
+                        ],
                     ],
                 ],
-            ],
-            'generationConfig' => [
-                'temperature' => 0,
-                'topK' => 40,
-                'topP' => 0.9,
-                'maxOutputTokens' => 8192,
-                'responseMimeType' => 'text/plain',
-            ],
-        ];
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro-exp-03-25:generateContent?key={$API_KEY}");
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER,
-            ['Content-Type: application/json']);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-        $result = json_decode($response, true);
-        if (
-            ! isset($result['candidates']) ||
-            ! is_array($result['candidates']) ||
-            empty($result['candidates']) ||
-            ! isset($result['candidates'][0]['content']['parts'][0]['text'])
-        ) {
-            return [
-                'status' => 'error',
-                'message' => 'Không nhận được kết quả kiểm duyệt hợp lệ từ API.',
+                'generationConfig' => [
+                    'temperature' => 0,
+                    'topK' => 40,
+                    'topP' => 0.9,
+                    'maxOutputTokens' => 8192,
+                    'responseMimeType' => 'text/plain',
+                ],
             ];
-        }
 
-        $apiResponseText = $result['candidates'][0]['content']['parts'][0]['text'];
-        $apiResponseText = trim(preg_replace('/^```json\s*|\s*```$/', '',
-            $apiResponseText));
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL,
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro-exp-03-25:generateContent?key={$API_KEY}");
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER,
+                ['Content-Type: application/json']);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            // Tăng timeout cho request API
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30); // timeout sau 30 giây
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // timeout kết nối sau 10 giây
 
-        $apiResponse = json_decode($apiResponseText, true);
-        if (json_last_error() !== JSON_ERROR_NONE || ! is_array($apiResponse)) {
-            return [
-                'status' => 'error',
-                'message' => 'Kết quả kiểm duyệt không đúng định dạng JSON.',
-            ];
-        }
+            $response = curl_exec($ch);
+            
+            // Kiểm tra lỗi cURL
+            if ($response === false) {
+                $error = curl_error($ch);
+                curl_close($ch);
+                Log::error('Lỗi gọi Gemini API: ' . $error);
+                return [
+                    'status' => 'error',
+                    'message' => 'Không thể kết nối đến API kiểm duyệt: ' . $error,
+                    'violation_level' => 'none',
+                    'violations' => [],
+                    'reason' => [],
+                ];
+            }
+            
+            curl_close($ch);
+            
+            $result = json_decode($response, true);
+            if (
+                ! isset($result['candidates']) ||
+                ! is_array($result['candidates']) ||
+                empty($result['candidates']) ||
+                ! isset($result['candidates'][0]['content']['parts'][0]['text'])
+            ) {
+                Log::error('Lỗi phản hồi API không hợp lệ: ' . json_encode($result));
+                return [
+                    'status' => 'error',
+                    'message' => 'Không nhận được kết quả kiểm duyệt hợp lệ từ API.',
+                    'violation_level' => 'none',
+                    'violations' => [],
+                    'reason' => [],
+                ];
+            }
 
-        $violationTerms = [];
-        $violationReasons = [];
+            $apiResponseText = $result['candidates'][0]['content']['parts'][0]['text'];
+            $apiResponseText = trim(preg_replace('/^```json\s*|\s*```$/', '',
+                $apiResponseText));
 
-        if (! empty($apiResponse['violations'])) {
-            foreach ($apiResponse['violations'] as $violation) {
-                if (isset($violation['term']) && ! empty($violation['term'])) {
-                    $violationTerms[] = $violation['term'];
-                    $violationReasons[$violation['term']] = $violation['reason'] ?? 'Vi phạm quy định';
+            $apiResponse = json_decode($apiResponseText, true);
+            if (json_last_error() !== JSON_ERROR_NONE || ! is_array($apiResponse)) {
+                Log::error('Lỗi JSON không hợp lệ từ API: ' . $apiResponseText);
+                return [
+                    'status' => 'error',
+                    'message' => 'Kết quả kiểm duyệt không đúng định dạng JSON.',
+                    'violation_level' => 'none',
+                    'violations' => [],
+                    'reason' => [],
+                ];
+            }
+
+            $violationTerms = [];
+            $violationReasons = [];
+
+            if (! empty($apiResponse['violations'])) {
+                foreach ($apiResponse['violations'] as $violation) {
+                    if (isset($violation['term']) && ! empty($violation['term'])) {
+                        $violationTerms[] = $violation['term'];
+                        $violationReasons[$violation['term']] = $violation['reason'] ?? 'Vi phạm quy định';
+                    }
                 }
             }
-        }
 
-        return [
-            'status' => 'success',
-            'violation_level' => $apiResponse['severity']['level'] ?? 'none',
-            'reason' => $apiResponse['severity']['reason'] ?? 'Không có lý do',
-            'violations' => $violationTerms,
-            'reason' => $violationReasons,
-        ];
+            return [
+                'status' => 'success',
+                'violation_level' => $apiResponse['severity']['level'] ?? 'none',
+                'violations' => $violationTerms,
+                'reason' => $violationReasons,
+            ];
+        } catch (Exception $e) {
+            Log::error('Lỗi trong quá trình kiểm duyệt nội dung: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            return [
+                'status' => 'error',
+                'message' => 'Đã xảy ra lỗi trong quá trình kiểm duyệt nội dung: ' . $e->getMessage(),
+                'violation_level' => 'none',
+                'violations' => [],
+                'reason' => [],
+            ];
+        }
     }
 
     public function handleImageUrlModeration($imageUrl)
