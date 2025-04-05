@@ -195,6 +195,15 @@
                                                         <form action="{{ route('author.articles.toggle-visibility', $article) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('PUT')
+                                                            @if(request()->has('page'))
+                                                                <input type="hidden" name="page" value="{{ request('page') }}">
+                                                            @endif
+                                                            @if(request()->has('filter'))
+                                                                <input type="hidden" name="filter" value="{{ request('filter') }}">
+                                                            @endif
+                                                            @if(request()->has('search'))
+                                                                <input type="hidden" name="search" value="{{ request('search') }}">
+                                                            @endif
                                                             <button class="btn btn-secondary btn-sm"
                                                                 title="{{ $article->status === 'published' ? 'Ẩn bài viết' : 'Hiện bài viết' }}"
                                                                 onclick="return confirm('Bạn có chắc chắn muốn {{ $article->status === 'published' ? 'ẩn' : 'hiện' }} bài viết này không?')">
@@ -223,7 +232,7 @@
                                         </tbody>
                                     </table>
                                     <div class="d-flex justify-content-end mt-4">
-                                        {{ $articles->links('pagination::bootstrap-5') }}
+                                        {{ $articles->appends(request()->query())->links('pagination::bootstrap-5') }}
                                     </div>
                                 </div>
                             </div>

@@ -63,18 +63,14 @@
                                                 onchange="document.getElementById('filter-form').submit()">
                                                 <option value="all" {{ request('filter') == 'all' ? 'selected' : '' }}>
                                                     Tất cả bài viết</option>
-                                                <option value="active"
-                                                    {{ request('filter') == 'active' ? 'selected' : '' }}>Bài viết có danh
-                                                    mục hoạt động</option>
-                                                <option value="inactive"
-                                                    {{ request('filter') == 'inactive' ? 'selected' : '' }}>Bài viết có danh
-                                                    mục bị vô hiệu hóa</option>
-                                                {{-- <option value="no_category"
-                                                    {{ request('filter') == 'no_category' ? 'selected' : '' }}>Bài viết
-                                                    không có danh mục</option> --}}
-                                                <option value="archived"
-                                                    {{ request('filter') == 'archived' ? 'selected' : '' }}>Bài viết
-                                                    đã ẩn</option>
+                                                <option value="active" {{ request('filter') == 'active' ? 'selected' : '' }}>
+                                                    Bài viết có danh mục hoạt động</option>
+                                                <option value="inactive" {{ request('filter') == 'inactive' ? 'selected' : '' }}>
+                                                    Bài viết có danh mục bị vô hiệu hóa</option>
+                                                <option value="no_category" {{ request('filter') == 'no_category' ? 'selected' : '' }}>
+                                                    Bài viết không có danh mục</option>
+                                                <option value="archived" {{ request('filter') == 'archived' ? 'selected' : '' }}>
+                                                    Bài viết đã ẩn</option>
                                             </select>
                                         </div>
                                     </form>
@@ -183,6 +179,9 @@
                                                         <form action="{{ route('articles.toggle-visibility', $article) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('PUT')
+                                                            <input type="hidden" name="page" value="{{ request('page') }}">
+                                                            <input type="hidden" name="filter" value="{{ request('filter') }}">
+                                                            <input type="hidden" name="search" value="{{ request('search') }}">
                                                             <button class="btn btn-secondary btn-sm"
                                                                 title="{{ $article->status === 'published' ? 'Ẩn bài viết' : 'Hiện bài viết' }}"
                                                                 onclick="return confirm('Bạn có chắc chắn muốn {{ $article->status === 'published' ? 'ẩn' : 'hiện' }} bài viết này không?')">
@@ -208,7 +207,7 @@
                                         </tbody>
                                     </table>
                                     <div class="d-flex justify-content-end mt-4">
-                                        {{ $articles->links('pagination::bootstrap-5') }}
+                                        {{ $articles->appends(request()->query())->links('pagination::bootstrap-5') }}
                                     </div>
                                 </div>
                             </div>
@@ -218,3 +217,7 @@
             </div>
         </div>
     @endsection
+
+@push('scripts')
+<!-- Không cần script AJAX nữa vì đã dùng form trực tiếp -->
+@endpush
