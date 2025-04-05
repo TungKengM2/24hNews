@@ -39,18 +39,6 @@
                                     <i class="si-plus si me-1"></i> Thêm Bài Viết Mới
                                 </a>
                             </div>
-
-                            <div class="d-flex">
-                                <form method="GET" action="{{ route('author.articles.index') }}" class="me-2">
-                                    <div class="input-group">
-                                        <input type="text" name="search" class="form-control"
-                                            placeholder="Tìm kiếm bài viết..." value="{{ request('search') }}">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
                         </div>
 
                         <div class="box-body">
