@@ -65,6 +65,7 @@
                                     </div>
                                 </form>
                             </div>
+
                         </div>
 
                         <style>
@@ -95,7 +96,7 @@
                                     flex-direction: column;
                                     gap: 10px;
                                 }
-                                
+
                                 .custom-alert {
                                     max-width: 100%;
                                     width: 100%;
