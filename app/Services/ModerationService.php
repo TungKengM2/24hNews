@@ -89,7 +89,7 @@ EOD;
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL,
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro-exp-02-05:generateContent?key={$API_KEY}");
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro-exp-03-25:generateContent?key={$API_KEY}");
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER,
             ['Content-Type: application/json']);
