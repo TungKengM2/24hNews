@@ -19,7 +19,6 @@ class AdminController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
 
-
         $comments = Comment::where('user_id', $userId)
             ->whereNotNull('article_id')
             ->with('article')
@@ -29,32 +28,11 @@ class AdminController extends Controller
         return view('admin.comments', compact('user', 'comments'));
     }
 
-    // dat them
-    public function dashboard( Request $request)
-
+    public function dashboard(Request $request)
     {
+        $type = $request->query('type', 'daily');
+        // tổng quan bài viết
         // Thống kê bài viết
-        $articleStats = [
-            'total' => Article::count(),
-            'published' => Article::where('status', 'published')->count(),
-            'pending' => Article::where('status', 'pending')->count(),
-            'draft' => Article::where('status', 'draft')->count(),
-        ];
-
-        // Lấy các bài viết gần đây
-        $recentArticles = Article::with('author')
-            ->orderBy('created_at', 'desc')
-            ->take(10)
-            ->get();
-
-        // Các dữ liệu khác cho biểu đồ thống kê
-        // ... code hiện tại của bạn ...
-
-        // thống kê bài viết theo ngày tháng năm dạng biểu đồ
-         // Kiểm tra kiểu thống kê: theo ngày, theo tháng hoặc theo năm
-     $type = $request->query('type', 'daily'); // Mặc định theo ngày
-
-     // Thống kê bài viết
         if ($type === 'daily') {
             $articleStatsChart = DB::table('articles')
                 ->select(DB::raw('DATE(created_at) as date, CAST(COUNT(*) as UNSIGNED) as count'))
@@ -64,16 +42,17 @@ class AdminController extends Controller
         } elseif ($type === 'monthly') {
             $articleStatsChart = DB::table('articles')
                 ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, CAST(COUNT(*) as UNSIGNED) as count'))
-                ->groupBy('year', 'month')
-                ->orderByRaw('year, month')
+                ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
+                ->orderByRaw('YEAR(created_at), MONTH(created_at)')
                 ->get();
-        } else { // yearly
+        } else {
             $articleStatsChart = DB::table('articles')
                 ->select(DB::raw('YEAR(created_at) as year, CAST(COUNT(*) as UNSIGNED) as count'))
                 ->groupBy('year')
                 ->orderBy('year', 'asc')
                 ->get();
         }
+
         // Thống kê người dùng
         if ($type === 'daily') {
             $userStats = DB::table('users')
@@ -100,24 +79,24 @@ class AdminController extends Controller
             $userStats = DB::table('users')
                 ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count'))
                 ->where('role_id', 4)
-                ->groupBy('year', 'month')
-                ->orderByRaw('year, month')
+                ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
+                ->orderByRaw('YEAR(created_at), MONTH(created_at)')
                 ->get();
 
             $authorStats = DB::table('users')
                 ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count'))
                 ->where('role_id', 2)
-                ->groupBy('year', 'month')
-                ->orderByRaw('year, month')
+                ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
+                ->orderByRaw('YEAR(created_at), MONTH(created_at)')
                 ->get();
 
             $moderatorStats = DB::table('users')
                 ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count'))
                 ->where('role_id', 3)
-                ->groupBy('year', 'month')
-                ->orderByRaw('year, month')
+                ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
+                ->orderByRaw('YEAR(created_at), MONTH(created_at)')
                 ->get();
-        } else { // yearly
+        } else {
             $userStats = DB::table('users')
                 ->select(DB::raw('YEAR(created_at) as year, COUNT(*) as count'))
                 ->where('role_id', 4)
@@ -139,52 +118,73 @@ class AdminController extends Controller
                 ->orderBy('year', 'asc')
                 ->get();
         }
-        // Thống kê lượt thích theo ngày tháng năm
+
+        // Thống kê lượt thích
         if ($type === 'daily') {
-            $likeStatsChart = DB::table('article_likes')
+            $likeStats = DB::table('article_likes')
                 ->select(DB::raw('DATE(liked_at) as date, COUNT(*) as count'))
                 ->groupBy('date')
                 ->orderBy('date', 'asc')
                 ->get();
         } elseif ($type === 'monthly') {
-            $likeStatsChart = DB::table('article_likes')
+            $likeStats = DB::table('article_likes')
                 ->select(DB::raw('YEAR(liked_at) as year, MONTH(liked_at) as month, COUNT(*) as count'))
-                ->groupBy('year', 'month')
-                ->orderByRaw('year, month')
+                ->groupBy(DB::raw('YEAR(liked_at)'), DB::raw('MONTH(liked_at)'))
+                ->orderByRaw('YEAR(liked_at), MONTH(liked_at)')
                 ->get();
-        } else { // yearly
-            $likeStatsChart = DB::table('article_likes')
+        } else {
+            $likeStats = DB::table('article_likes')
                 ->select(DB::raw('YEAR(liked_at) as year, COUNT(*) as count'))
                 ->groupBy('year')
                 ->orderBy('year', 'asc')
                 ->get();
         }
-        // Thống Kê Bình Luận
+
+        // Thống kê bình luận
         if ($type === 'daily') {
-            $commentStatsChart = DB::table('comments')
+            $commentStats = DB::table('comments')
                 ->select(DB::raw('DATE(created_at) as date, COUNT(*) as count'))
                 ->groupBy('date')
                 ->orderBy('date', 'asc')
                 ->get();
         } elseif ($type === 'monthly') {
-            $commentStatsChart = DB::table('comments')
+            $commentStats = DB::table('comments')
                 ->select(DB::raw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count'))
-                ->groupBy('year', 'month')
-                ->orderByRaw('year, month')
+                ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
+                ->orderByRaw('YEAR(created_at), MONTH(created_at)')
                 ->get();
-        } else { // yearly
-            $commentStatsChart = DB::table('comments')
+        } else {
+            $commentStats = DB::table('comments')
                 ->select(DB::raw('YEAR(created_at) as year, COUNT(*) as count'))
                 ->groupBy('year')
                 ->orderBy('year', 'asc')
                 ->get();
         }
 
+        // Thống kê lượt xem
+        if ($type === 'daily') {
+            $viewsStats = DB::table('article_views')
+                ->select(DB::raw('DATE(viewed_at) as date, COUNT(*) as count'))
+                ->groupBy('date')
+                ->orderBy('date', 'asc')
+                ->get();
+        } elseif ($type === 'monthly') {
+            $viewsStats = DB::table('article_views')
+                ->select(DB::raw('YEAR(viewed_at) as year, MONTH(viewed_at) as month, COUNT(*) as count'))
+                ->groupBy(DB::raw('YEAR(viewed_at)'), DB::raw('MONTH(viewed_at)'))
+                ->orderByRaw('YEAR(viewed_at), MONTH(viewed_at)')
+                ->get();
+        } else {
+            $viewsStats = DB::table('article_views')
+                ->select(DB::raw('YEAR(viewed_at) as year, COUNT(*) as count'))
+                ->groupBy('year')
+                ->orderBy('year', 'asc')
+                ->get();
+        }
 
         return view('admin.dashboard', compact(
-            'articleStats',
-            'recentArticles', 'articleStatsChart' ,'userStats','authorStats','moderatorStats', 'likeStatsChart','commentStatsChart','type',
-            // ... các biến khác bạn đã có ...
+             'likeStats', 'commentStats', 'viewsStats',
+            'articleStatsChart', 'userStats', 'authorStats', 'moderatorStats', 'type'
         ));
     }
 }
