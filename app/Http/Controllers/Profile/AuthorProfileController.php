@@ -26,7 +26,8 @@ class AuthorProfileController extends Controller
             ->where('status', 'published')
             ->get();
 
-        $articleIds = $articles->pluck('id');
+        // dd($articles);
+        $articleIds = $articles->pluck('article_id');
 
         // Lấy tổng số lượt thích và bình luận của tất cả bài viết
         $likesCounts = ArticleLike::whereIn('article_id', $articleIds)

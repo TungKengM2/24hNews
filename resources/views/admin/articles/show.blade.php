@@ -28,25 +28,31 @@
 
             <!-- Main content -->
             <div class="box">
+
                 <div class="box-header with-border">
                     <h4 class="box-title">Chi Tiết Bài Viết</h4>
                     <div class="box-tools">
-                        <div class="btn-group">
-                            <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm m-5">
-                                <i class="si-pencil si"></i> Chỉnh sửa
-                            </a>
-                            <form action="{{ route('articles.destroy', $article) }}" method="POST" class="d-inline m-5">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
-                                    <i class="si-trash si"></i> Xóa
-                                </button>
-                            </form>
-                            <a href="{{ route('articles.index') }}" class="btn btn-default btn-sm m-5">
-                                <i class="mdi mdi-arrow-left"></i> Quay lại
-                            </a>
-                        </div>
+                        @if (auth()->id() === $article->author_id)
+                            <div class="btn-group">
+                                <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm m-5">
+                                    <i class="si-pencil si"></i> Chỉnh sửa
+                                </a>
+                                <form action="{{ route('articles.destroy', $article) }}" method="POST"
+                                    class="d-inline m-5">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
+                                        <i class="si-trash si"></i> Xóa
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+
+                        <a href="{{ route('articles.index') }}" class="btn btn-default btn-sm m-5">
+                            <i class="mdi mdi-arrow-left"></i> Quay lại
+                        </a>
+
                     </div>
                 </div>
                 <div class="box-body">
@@ -107,27 +113,32 @@
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-account"></i> Tác giả:</span>
-                                            <span class="badge bg-primary rounded-pill">{{ $article->author->username ?? 'Không có' }}</span>
+                                            <span
+                                                class="badge bg-primary rounded-pill">{{ $article->author->username ?? 'Không có' }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-folder"></i> Danh mục:</span>
-                                            <span class="badge bg-info rounded-pill">{{ $article->category->name ?? 'Không có' }}</span>
+                                            <span
+                                                class="badge bg-info rounded-pill">{{ $article->category->name ?? 'Không có' }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-check-circle"></i> Trạng thái:</span>
-                                            <span class="badge bg-{{ $article->status == 'published' ? 'success' : 'warning' }} rounded-pill">
+                                            <span
+                                                class="badge bg-{{ $article->status == 'published' ? 'success' : 'warning' }} rounded-pill">
                                                 {{ ucfirst($article->status) }}
                                             </span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-alert-circle"></i> Nội dung nhạy cảm:</span>
-                                            <span class="badge bg-{{ $article->contains_sensitive_content ? 'danger' : 'success' }} rounded-pill">
+                                            <span
+                                                class="badge bg-{{ $article->contains_sensitive_content ? 'danger' : 'success' }} rounded-pill">
                                                 {{ $article->contains_sensitive_content ? 'Có' : 'Không' }}
                                             </span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-account-check"></i> Được duyệt bởi:</span>
-                                            <span class="badge bg-dark rounded-pill">{{ $article->approver->username ?? 'Chưa được duyệt' }}</span>
+                                            <span
+                                                class="badge bg-dark rounded-pill">{{ $article->approver->username ?? 'Chưa được duyệt' }}</span>
                                         </li>
                                         <li class="list-group-item">
                                             <span><i class="mdi mdi-tag-multiple"></i> Thẻ:</span>
@@ -157,11 +168,13 @@
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-thumb-up"></i> Lượt thích:</span>
-                                            <span class="badge bg-success rounded-pill">{{ $article->likes->count() }}</span>
+                                            <span
+                                                class="badge bg-success rounded-pill">{{ $article->likes->count() }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-comment"></i> Bình luận:</span>
-                                            <span class="badge bg-warning rounded-pill">{{ $article->comments->count() }}</span>
+                                            <span
+                                                class="badge bg-warning rounded-pill">{{ $article->comments->count() }}</span>
                                         </li>
                                     </ul>
                                 </div>
