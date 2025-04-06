@@ -55,18 +55,55 @@
                                         aria-label="Close"></button>
                                 </div>
                             @endif
-
                             <div class="d-flex">
                                 <form method="GET" action="{{ route('articles.index') }}" class="me-2">
                                     <div class="input-group">
-                                        <input type="text" name="search" class="form-control"
-                                            placeholder="Tìm kiếm bài viết..." value="{{ request('search') }}">
+                                        <input type="text" 
+                                               name="search" 
+                                               class="form-control" 
+                                               placeholder="Tìm kiếm bài viết (ít nhất 2 từ khóa)..."
+                                               value="{{ request('search') }}"
+                                               id="searchInput">
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fa fa-search"></i>
                                         </button>
                                     </div>
+                                    <div id="searchError" class="invalid-feedback" style="display: none;">
+                                        Vui lòng nhập ít nhất 2 từ khóa để tìm kiếm
+                                    </div>
                                 </form>
                             </div>
+
+                            <!-- Add JavaScript for search -->
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const searchInput = document.getElementById('searchInput');
+                                    const searchError = document.getElementById('searchError');
+                                    const form = searchInput.closest('form');
+
+                                    form.addEventListener('submit', function(e) {
+                                        e.preventDefault();
+                                        const searchTerm = searchInput.value.trim();
+                                        const wordCount = searchTerm.split(/\s+/).filter(word => word.length > 0).length;
+                                        
+                                        if (wordCount >= 2) {
+                                            searchInput.classList.remove('is-invalid');
+                                            searchError.style.display = 'none';
+                                            // Add wildcard to improve search results
+                                            searchInput.value = `${searchTerm}`;
+                                            this.submit();
+                                        } else {
+                                            searchInput.classList.add('is-invalid');
+                                            searchError.style.display = 'block';
+                                        }
+                                    });
+
+                                    // Reset search value display after form submission
+                                    if (searchInput.value.startsWith('%') && searchInput.value.endsWith('%')) {
+                                        searchInput.value = searchInput.value.slice(1, -1);
+                                    }
+                                });
+                            </script>
                         </div>
 
                         <style>
