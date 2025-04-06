@@ -34,7 +34,7 @@
 
             <!-- ====== start nav-search ====== -->
             @include('website.layouts.partials.nav-search')
-            
+
             <!-- ====== end nav-search ====== -->
         </div>
     </div>
