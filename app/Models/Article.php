@@ -18,6 +18,7 @@ class Article extends Model
 
     protected $fillable = [
         'title',
+        'code',
         'slug',
         'content',
         'preview_content',
@@ -39,6 +40,11 @@ class Article extends Model
     public static function published()
     {
         return self::where('status', 'published')->get();
+    }
+
+    public function versions()
+    {
+        return $this->hasMany(ArticleVersion::class, 'article_id');
     }
 
     /**
@@ -96,8 +102,10 @@ class Article extends Model
     public function notifyAdmins(): void
     {
         $admins = User::where('role_id', 1)->get(); // Lấy danh sách admin
-        Notification::send($admins,
-            new NewArticleSubmitted($this)); // Gửi thông báo
+        Notification::send(
+            $admins,
+            new NewArticleSubmitted($this)
+        ); // Gửi thông báo
     }
 
     /**
