@@ -17,6 +17,8 @@ use App\Notifications\NewArticleSubmitted;
 use Illuminate\Support\Facades\Log;
 use DOMDocument;
 use Exception;
+use Illuminate\Support\Str;
+// use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
@@ -308,10 +310,40 @@ class ArticleController extends Controller
                     'status' => $status,
                 ]);
 
-                if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
-                    $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
-                    $article->update(['thumbnail_url' => $path]);
-                }
+//                 if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
+// //                    dd($request->file('thumbnail_url'));
+//                     $file = $request->file('thumbnail_url');
+//                     $filename = time() . '_' . $file->getClientOriginalName();
+//                     $path = $file->store('thumbnails', 'public');
+//                     $article->update(['thumbnail_url' => $path]);
+//                 }
+                    if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
+                        $file = $request->file('thumbnail_url');
+                        if ($file && $file->isValid()) {
+                            // Lấy thông tin file
+                            $originalName = $file->getClientOriginalName();
+                            $extension = $file->getClientOriginalExtension();
+                            $mimeType = $file->getMimeType();
+                            
+                            // Di chuyển file tạm thời đến thư mục storage
+                            $filename = time() . '_' . uniqid() . '.' . $extension;
+                            $result = $file->move(storage_path('app/public/thumbnails'), $filename);
+                            
+                            if ($result) {
+                                $path = 'thumbnails/' . $filename;
+                                $article->update(['thumbnail_url' => $path]);
+                            } else {
+                                Log::error('Failed to move thumbnail file', [
+                                    'original_name' => $originalName,
+                                    'mime_type' => $mimeType
+                                ]);
+                            }
+                        } else {
+                            Log::error('Invalid thumbnail file in request');
+                        }
+                        
+}
+
 
                 $tagIds = $this->processTags($request->input('tags', []));
                 $article->tags()->sync($tagIds);
