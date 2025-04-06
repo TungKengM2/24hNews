@@ -77,7 +77,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
     Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
     Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
-    
+    Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
+
 });
 // Client Category
 Route::get('/category/{category_id}',[CategoryUserController::class, 'index'])->name('client.category.show');
