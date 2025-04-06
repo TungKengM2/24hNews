@@ -183,8 +183,8 @@ class ArticleUserController extends Controller
         $category2 = Category::withCount(['articles' => function ($query) {
             $query->where('status', 'published'); // Điều kiện bài viết có trạng thái 'published'
         }])->where('is_active', 1)->get();
-        
-        
+
+
 
 
 
@@ -295,6 +295,7 @@ class ArticleUserController extends Controller
     public function storeReplyComment(Request $request, CommentModerationService $moderationService)
     {
 
+
         $request->validate([
             'article_id' => 'required|exists:articles,article_id',
             'content' => 'required|string',
@@ -320,6 +321,7 @@ class ArticleUserController extends Controller
             'status' => 'approved',
             'created_at' => now(), // Thời gian tạo comment
             'updated_at' => now(),
+
         ]);
 
         return response()->json([
@@ -334,21 +336,21 @@ class ArticleUserController extends Controller
         $request->validate([
             'reason' => 'nullable|string'
         ]);
-    
+
         try {
             // Tìm bài viết dựa trên article_id
             $article = Article::findOrFail($article_id);
-            
-           // Tìm chính xác bình luận bị báo cáo
-        $comment = Comment::where('article_id', $article_id)
-        ->where('comment_id', $comment_id) // Chắc chắn lấy đúng comment cần báo cáo
-        ->firstOrFail();
-    
+
+            // Tìm chính xác bình luận bị báo cáo
+            $comment = Comment::where('article_id', $article_id)
+                ->where('comment_id', $comment_id) // Chắc chắn lấy đúng comment cần báo cáo
+                ->firstOrFail();
+
             // Xác định nội dung báo cáo: nếu có nhập 'reason' thì dùng, nếu không dùng nội dung của bình luận
             $content = $request->input('reason') ?: $comment->content;  // Sử dụng nội dung bình luận hoặc lý do người dùng nhập
             // Cắt nội dung nếu cần để đảm bảo độ dài trường 'detected_word' không vượt quá 50 ký tự
             $detected_word = substr($content, 0, 50);
-    
+
             // Ghi nhận thông tin vào bảng violations với trạng thái "pending"
             Violation::create([
                 'type'          => 'comment',
@@ -359,7 +361,7 @@ class ArticleUserController extends Controller
                 'status'        => 'pending',  // Mặc định là 'pending'
                 'warning_sent'  => false
             ]);
-    
+
             // Trả về phản hồi thành công
             return response()->json([
                 'success' => true,
@@ -375,7 +377,7 @@ class ArticleUserController extends Controller
             ], 500);
         }
     }
-    
+
 
     public function reportArticle(Request $request, $article_id)
     {
@@ -422,5 +424,26 @@ class ArticleUserController extends Controller
                 'message' => 'Lỗi: ' . $e->getMessage()
             ], 500);
         }
+    }
+    public function destroy($comment_id)
+    {
+        // Find the comment by its comment_id
+        $comment = Comment::findOrFail($comment_id);
+        if (auth()->id() === $comment->user_id) {
+            $comment->delete();
+        }
+
+
+        // Check if the authenticated user is the owner of the comment
+        if (auth()->id() === $comment->user_id) {
+            // Delete the comment
+            $comment->delete();
+
+            // Flash success message and return back
+            return back()->with('success', 'Đã xóa bình luận');
+        }
+
+        // If the user is not the owner, abort with a 403 error
+        abort(403);
     }
 }

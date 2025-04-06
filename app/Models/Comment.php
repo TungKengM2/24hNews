@@ -54,7 +54,8 @@ class Comment extends Model
             'comment_id'
         );
     }
-    
+
+
 
     public function article()
     {
