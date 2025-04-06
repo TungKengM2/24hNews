@@ -10,88 +10,20 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
-        /* Tags styling */
-        .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: #c3bebe;
-            color: white;
-            border: 1px solid #c2c2c2;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 14px;
+        /* Màu cho các số lượng */
+        .criteria-item.passed #current-title-length,
+        .criteria-item.passed #current-tag-count,
+        .criteria-item.passed #current-word-count {
+            color: #28a745 !important;
         }
 
-        /* Image preview styling */
-        #image-preview-container {
-            margin-top: 10px;
-            text-align: center;
-            max-width: 300px;
-        }
-
-        #image-preview {
-            max-height: 150px;
-            max-width: 100%;
-            width: auto;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Moderation result styling */
-        #moderation-result {
-            margin-top: 10px;
-        }
-
-        .moderation-loading {
-            text-align: center;
-            padding: 10px;
-        }
-
-        /* Violation levels */
-        .violation-high {
-            color: #dc3545;
-            font-weight: bold;
-        }
-
-        .violation-medium {
-            color: #fd7e14;
-            font-weight: bold;
-        }
-
-        .violation-low {
-            color: #ffc107;
-        }
-
-        .violation-none {
-            color: #28a745;
-        }
-
-        /* Form section styling */
-        .form-section {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .form-section-title {
-            border-bottom: 1px solid #dee2e6;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        /* Button styling */
-        .action-buttons {
-            margin-top: 30px;
-        }
-
-        .action-buttons .btn {
-            padding: 8px 20px;
-            margin-right: 10px;
+        .criteria-item.failed #current-title-length,
+        .criteria-item.failed #current-tag-count,
+        .criteria-item.failed #current-word-count {
+            color: #dc3545 !important;
         }
     </style>
+
 @endsection
 
 @section('title')
@@ -150,9 +82,12 @@
             </div>
 
             <!-- Main content -->
-            <div class="card p-4">
-                <form action="{{ route('author.articles.update', $article) }}" method="POST" enctype="multipart/form-data"
-                      id="articleForm">
+            <div class="container-fluid mt-5">
+                <div class="row no-gutters align-items-start">
+                    <div class="col-md-9">
+                        <div class="card p-4">
+                            <form action="{{ route('author.articles.update', $article) }}" method="POST" enctype="multipart/form-data"
+                                  id="articleForm">
                     @csrf
                     @method('PUT')
 
@@ -297,7 +232,57 @@
                         <button type="submit" class="btn btn-primary" id="submitButton">Cập nhật</button>
                         <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
                     </div>
-                </form>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="verification-criteria">
+                            <h4 class="verification-criteria-title">Tiêu chí xuất bản</h4>
+                            <div class="criteria-content">
+                                <ul class="criteria-list" id="criteria-list">
+                                    <li class="criteria-item failed" id="criteria-title" data-target="title">
+                                        <div class="criteria-icon failed">✗</div>
+                                        <div class="criteria-text criteria-tooltip">
+                                            Tiêu đề từ 50-60 ký tự <span id="current-title-length">(0 ký tự)</span>
+                                            <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy đủ trên Google và tối ưu cho SEO</span>
+                                        </div>
+                                    </li>
+                                    <li class="criteria-item failed" id="criteria-tags" data-target="tags">
+                                        <div class="criteria-icon failed">✗</div>
+                                        <div class="criteria-text criteria-tooltip">
+                                            Chọn 2-5 thẻ tag liên quan <span id="current-tag-count">(0 thẻ)</span>
+                                            <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và tăng khả năng xuất hiện trong tìm kiếm</span>
+                                        </div>
+                                    </li>
+                                    <li class="criteria-item failed" id="criteria-thumbnail" data-target="thumbnail_url">
+                                        <div class="criteria-icon failed">✗</div>
+                                        <div class="criteria-text criteria-tooltip">
+                                            Ảnh đại diện chất lượng cao
+                                            <span class="tooltip-text">Ảnh đại diện tối thiểu 1200x630px, rõ nét và vượt qua kiểm duyệt</span>
+                                        </div>
+                                    </li>
+                                    <li class="criteria-item failed" id="criteria-content" data-target="content">
+                                        <div class="criteria-icon failed">✗</div>
+                                        <div class="criteria-text criteria-tooltip">
+                                            Nội dung từ 800-1500 từ <span id="current-word-count">(0 từ)</span>
+                                            <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn trong kết quả tìm kiếm và tối ưu cho người đọc</span>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <div class="progress-container">
+                                    <div class="criteria-progress">
+                                        <div class="criteria-progress-bar" id="criteria-progress-bar"></div>
+                                    </div>
+                                    <div class="text-center mt-2">
+                                        <small id="criteria-count">0/4 tiêu chí đạt</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <script>
@@ -308,6 +293,197 @@
                         placeholder: 'Chọn hoặc nhập thẻ mới',
                         allowClear: true,
                     });
+
+                    // Khởi tạo biến toàn cục
+                    window.isImageValid = true; // Mặc định ảnh hiện tại là hợp lệ
+                    window.isImageChanged = false; // Theo dõi xem người dùng đã thay đổi ảnh chưa
+
+                    // Hàm cập nhật tiêu chí
+                    function updateCriteria() {
+                        // Kiểm tra tiêu đề
+                        const title = document.getElementById('title').value;
+                        const titleLength = title.length;
+                        const titleCriteria = document.getElementById('criteria-title');
+                        const titleLengthSpan = document.getElementById('current-title-length');
+
+                        if (titleLengthSpan) {
+                            titleLengthSpan.textContent = `(${titleLength} ký tự)`;
+
+                            // Thay đổi màu của số lượng ký tự
+                            if (titleLength >= 50 && titleLength <= 60) {
+                                titleLengthSpan.style.color = '#28a745'; // Màu xanh khi đạt yêu cầu
+                            } else {
+                                titleLengthSpan.style.color = '#dc3545'; // Màu đỏ khi không đạt yêu cầu
+                            }
+                        }
+
+                        if (titleCriteria) {
+                            if (titleLength >= 50 && titleLength <= 60) {
+                                titleCriteria.classList.remove('failed');
+                                titleCriteria.classList.add('passed');
+                                titleCriteria.querySelector('.criteria-icon').textContent = '✓';
+                                titleCriteria.querySelector('.criteria-icon').classList.remove('failed');
+                                titleCriteria.querySelector('.criteria-icon').classList.add('passed');
+                            } else {
+                                titleCriteria.classList.remove('passed');
+                                titleCriteria.classList.add('failed');
+                                titleCriteria.querySelector('.criteria-icon').textContent = '✗';
+                                titleCriteria.querySelector('.criteria-icon').classList.remove('passed');
+                                titleCriteria.querySelector('.criteria-icon').classList.add('failed');
+                            }
+                        }
+
+                        // Kiểm tra tags
+                        const tagCriteria = document.getElementById('criteria-tags');
+                        const tagCountSpan = document.getElementById('current-tag-count');
+
+                        // Đếm số lượng tag đã chọn
+                        let selectedTags = 0;
+                        try {
+                            // Cách 1: Sử dụng Select2 API
+                            if ($('.select2').data('select2')) {
+                                selectedTags = $('.select2').select2('data').length;
+                            }
+                            // Cách 2: Đếm trực tiếp các option đã chọn
+                            else {
+                                selectedTags = $('select[name="tags[]"] option:selected').length;
+                            }
+                        } catch (e) {
+                            console.error('Lỗi khi đếm tags:', e);
+                            // Cách 3: Đếm trực tiếp các option đã chọn
+                            selectedTags = $('select[name="tags[]"] option:selected').length;
+                        }
+
+                        console.log('Số lượng tag đã chọn:', selectedTags);
+
+                        if (tagCountSpan) {
+                            tagCountSpan.textContent = `(${selectedTags} thẻ)`;
+
+                            // Thay đổi màu của số lượng thẻ tag
+                            if (selectedTags >= 2 && selectedTags <= 5) {
+                                tagCountSpan.style.color = '#28a745'; // Màu xanh khi đạt yêu cầu
+                            } else {
+                                tagCountSpan.style.color = '#dc3545'; // Màu đỏ khi không đạt yêu cầu
+                            }
+                        }
+
+                        if (tagCriteria) {
+                            if (selectedTags >= 2 && selectedTags <= 5) {
+                                tagCriteria.classList.remove('failed');
+                                tagCriteria.classList.add('passed');
+                                tagCriteria.querySelector('.criteria-icon').textContent = '✓';
+                                tagCriteria.querySelector('.criteria-icon').classList.remove('failed');
+                                tagCriteria.querySelector('.criteria-icon').classList.add('passed');
+                            } else {
+                                tagCriteria.classList.remove('passed');
+                                tagCriteria.classList.add('failed');
+                                tagCriteria.querySelector('.criteria-icon').textContent = '✗';
+                                tagCriteria.querySelector('.criteria-icon').classList.remove('passed');
+                                tagCriteria.querySelector('.criteria-icon').classList.add('failed');
+                            }
+                        }
+
+                        // Kiểm tra ảnh đại diện
+                        const thumbnailCriteria = document.getElementById('criteria-thumbnail');
+
+                        if (thumbnailCriteria) {
+                            // Nếu không có ảnh mới được chọn hoặc ảnh mới hợp lệ
+                            if (!window.isImageChanged || window.isImageValid) {
+                                // Ảnh hiện tại luôn được coi là hợp lệ nếu không có ảnh mới
+                                thumbnailCriteria.classList.remove('failed');
+                                thumbnailCriteria.classList.add('passed');
+                                thumbnailCriteria.querySelector('.criteria-icon').textContent = '✓';
+                                thumbnailCriteria.querySelector('.criteria-icon').classList.remove('failed');
+                                thumbnailCriteria.querySelector('.criteria-icon').classList.add('passed');
+                            } else {
+                                // Chỉ khi người dùng đã chọn ảnh mới và ảnh đó không hợp lệ
+                                thumbnailCriteria.classList.remove('passed');
+                                thumbnailCriteria.classList.add('failed');
+                                thumbnailCriteria.querySelector('.criteria-icon').textContent = '✗';
+                                thumbnailCriteria.querySelector('.criteria-icon').classList.remove('passed');
+                                thumbnailCriteria.querySelector('.criteria-icon').classList.add('failed');
+                            }
+                        }
+
+                        // Kiểm tra nội dung
+                        let wordCount = 0;
+                        const contentCriteria = document.getElementById('criteria-content');
+                        const wordCountSpan = document.getElementById('current-word-count');
+
+                        // Kiểm tra nếu TinyMCE đã được khởi tạo
+                        if (typeof tinymce !== 'undefined' && tinymce.get('full-featured')) {
+                            const editor = tinymce.get('full-featured');
+                            const content = editor.getContent({format: 'text'});
+                            wordCount = content.trim().split(/\s+/).length;
+                        } else {
+                            // Nếu TinyMCE chưa sẵn sàng, lấy nội dung từ textarea
+                            const textarea = document.getElementById('full-featured');
+                            if (textarea) {
+                                wordCount = textarea.value.trim().split(/\s+/).length;
+                            }
+                        }
+
+                        if (wordCountSpan) {
+                            wordCountSpan.textContent = `(${wordCount} từ)`;
+
+                            // Thay đổi màu của số lượng từ
+                            if (wordCount >= 800 && wordCount <= 1500) {
+                                wordCountSpan.style.color = '#28a745'; // Màu xanh khi đạt yêu cầu
+                            } else {
+                                wordCountSpan.style.color = '#dc3545'; // Màu đỏ khi không đạt yêu cầu
+                            }
+                        }
+
+                        if (contentCriteria) {
+                            if (wordCount >= 800 && wordCount <= 1500) {
+                                contentCriteria.classList.remove('failed');
+                                contentCriteria.classList.add('passed');
+                                contentCriteria.querySelector('.criteria-icon').textContent = '✓';
+                                contentCriteria.querySelector('.criteria-icon').classList.remove('failed');
+                                contentCriteria.querySelector('.criteria-icon').classList.add('passed');
+                            } else {
+                                contentCriteria.classList.remove('passed');
+                                contentCriteria.classList.add('failed');
+                                contentCriteria.querySelector('.criteria-icon').textContent = '✗';
+                                contentCriteria.querySelector('.criteria-icon').classList.remove('passed');
+                                contentCriteria.querySelector('.criteria-icon').classList.add('failed');
+                            }
+                        }
+
+                        // Cập nhật thanh tiến trình
+                        const criteriaItems = document.querySelectorAll('.criteria-item.passed');
+                        const criteriaCount = criteriaItems.length;
+                        const progressBar = document.getElementById('criteria-progress-bar');
+                        const criteriaCountSpan = document.getElementById('criteria-count');
+
+                        if (progressBar) {
+                            progressBar.style.width = `${criteriaCount * 25}%`;
+                        }
+
+                        if (criteriaCountSpan) {
+                            criteriaCountSpan.textContent = `${criteriaCount}/4 tiêu chí đạt`;
+                        }
+                    }
+
+                    // Đặt hàm cập nhật tiêu chí vào biến toàn cục để có thể gọi từ nơi khác
+                    window.updateCriteria = updateCriteria;
+
+                    // Gọi hàm cập nhật tiêu chí khi trang tải xong
+                    // Đợi lâu hơn để đảm bảo Select2 và các phần tử khác đã được khởi tạo hoàn toàn
+                    setTimeout(updateCriteria, 1000);
+
+                    // Thêm sự kiện lắng nghe cho các trường dữ liệu
+                    $('#title').on('input', updateCriteria);
+                    $('.select2').on('change', updateCriteria);
+
+                    // Kiểm tra nội dung khi editor thay đổi
+                    if (typeof tinymce !== 'undefined') {
+                        tinymce.on('AddEditor', function(e) {
+                            e.editor.on('input change', function() {
+                                updateCriteria();
+                            });
+                        });
+                    }
                 });
 
                 document.getElementById('title').addEventListener('input', function() {
@@ -336,18 +512,18 @@
                     const errorDiv = document.getElementById('moderation-error');
                     const errorMessage = document.getElementById('error-message');
                     const submitButton = document.getElementById('submitButton');
-                    
+
                     // Đảm bảo mặc định nút submit được bật và không có kiểm duyệt ảnh hiển thị
                     submitButton.disabled = false;
-                    let isImageChanged = false; // Theo dõi xem người dùng đã thay đổi ảnh chưa
-                    let isImageValid = true; // Mặc định ảnh hiện tại là hợp lệ
-                    
+                    window.isImageChanged = false; // Theo dõi xem người dùng đã thay đổi ảnh chưa
+                    window.isImageValid = true; // Mặc định ảnh hiện tại là hợp lệ
+
                     // Ẩn tất cả các phần tử kiểm duyệt ảnh khi trang mới tải
                     if (previewContainer) previewContainer.style.display = 'none';
                     if (moderationResult) moderationResult.style.display = 'none';
                     if (moderationLoading) moderationLoading.style.display = 'none';
                     if (errorDiv) errorDiv.style.display = 'none';
-                    
+
                     // Lưu nháp
                     document.getElementById('saveDraft').addEventListener('click', function() {
                         document.getElementById('articleStatus').value = 'draft';
@@ -358,11 +534,11 @@
                     if (imageUpload) {
                         imageUpload.addEventListener('change', function(e) {
                             const file = e.target.files[0];
-                            
+
                             // Chỉ xử lý khi có file được chọn
                             if (file) {
-                                isImageChanged = true; // Người dùng đã thay đổi ảnh
-                                isImageValid = false; // Đặt lại trạng thái khi có ảnh mới
+                                window.isImageChanged = true; // Người dùng đã thay đổi ảnh
+                                window.isImageValid = false; // Đặt lại trạng thái khi có ảnh mới
 
                                 // Ẩn ảnh hiện tại, hiển thị xem trước
                                 if (currentImageContainer) {
@@ -380,7 +556,7 @@
                                 moderationResult.style.display = 'block';
                                 moderationLoading.style.display = 'block';
                                 errorDiv.style.display = 'none';
-                                
+
                                 // Tạm thời vô hiệu hóa nút submit cho đến khi kiểm duyệt hoàn tất
                                 submitButton.disabled = true;
 
@@ -424,11 +600,17 @@
                                                 errorMessage.innerHTML =
                                                     `Vi phạm: ${violationMessages.join(', ')}`;
                                                 submitButton.disabled = true;
-                                                isImageValid = false;
+                                                window.isImageValid = false;
+                                                if (typeof window.updateCriteria === 'function') {
+                                                    window.updateCriteria();
+                                                }
                                             } else {
                                                 errorDiv.style.display = 'none';
                                                 submitButton.disabled = false;
-                                                isImageValid = true;
+                                                window.isImageValid = true;
+                                                if (typeof window.updateCriteria === 'function') {
+                                                    window.updateCriteria();
+                                                }
                                             }
                                         })
                                         .catch(error => {
@@ -438,12 +620,15 @@
                                             errorMessage.textContent =
                                                 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
                                             submitButton.disabled = true;
-                                            isImageValid = false;
+                                            window.isImageValid = false;
+                                            if (typeof window.updateCriteria === 'function') {
+                                                window.updateCriteria();
+                                            }
                                         });
                                 }
                             } else {
                                 // Nếu người dùng hủy chọn ảnh
-                                isImageChanged = false;
+                                window.isImageChanged = false;
                                 if (currentImageContainer) {
                                     currentImageContainer.style.display = 'block';
                                 }
@@ -451,23 +636,73 @@
                                 moderationResult.style.display = 'none';
                                 errorDiv.style.display = 'none';
                                 submitButton.disabled = false;
-                                isImageValid = true;
+                                window.isImageValid = true;
+                                if (typeof window.updateCriteria === 'function') {
+                                    window.updateCriteria();
+                                }
                             }
                         });
                     }
 
                     // Kiểm tra trước khi submit form
                     document.getElementById('articleForm').addEventListener('submit', function(e) {
-                        if (document.activeElement.id !== 'saveDraft') {
-                            document.getElementById('articleStatus').value = 'pending';
-
-                            // Chỉ kiểm tra khi người dùng đã thay đổi ảnh và ảnh không hợp lệ
-                            if (isImageChanged && imageUpload && imageUpload.files && imageUpload.files[0] && !isImageValid) {
-                                e.preventDefault();
-                                alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
-                                return false;
-                            }
+                        // Nếu là lưu nháp, cho phép submit mà không cần kiểm tra
+                        if (document.activeElement.id === 'saveDraft') {
+                            document.getElementById('articleStatus').value = 'draft';
+                            return true;
                         }
+
+                        // Nếu không phải lưu nháp, đặt trạng thái là pending
+                        document.getElementById('articleStatus').value = 'pending';
+
+                        // Kiểm tra ảnh có vi phạm không
+                        if (window.isImageChanged && imageUpload && imageUpload.files && imageUpload.files[0] && !window.isImageValid) {
+                            e.preventDefault();
+                            alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
+                            return false;
+                        }
+
+                        // Kiểm tra các tiêu chí khác
+                        const criteriaItems = document.querySelectorAll('.criteria-item.passed');
+                        const criteriaCount = criteriaItems.length;
+
+                        if (criteriaCount < 4) {
+                            // Sử dụng SweetAlert2 thay vì confirm mặc định
+                            e.preventDefault(); // Ngăn chặn submit form trước
+
+                            // Tạo danh sách các tiêu chí chưa đạt
+                            const failedCriteria = [];
+                            document.querySelectorAll('.criteria-item.failed').forEach(item => {
+                                const criteriaText = item.querySelector('.criteria-text').textContent.split('(')[0].trim();
+                                failedCriteria.push(`<li>${criteriaText}</li>`);
+                            });
+
+                            Swal.fire({
+                                title: 'Bài viết chưa đạt tất cả tiêu chí',
+                                html: `
+                                    <div class="text-left">
+                                        <p>Bài viết của bạn chưa đạt các tiêu chí sau:</p>
+                                        <ul class="text-danger">${failedCriteria.join('')}</ul>
+                                        <p>Bạn vẫn muốn cập nhật bài viết?</p>
+                                    </div>
+                                `,
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Vẫn cập nhật',
+                                cancelButtonText: 'Chỉnh sửa thêm'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Nếu người dùng xác nhận, submit form
+                                    document.getElementById('articleForm').submit();
+                                }
+                            });
+
+                            return false;
+                        }
+
+                        return true;
                     });
                 });
             </script>
