@@ -56,52 +56,46 @@
                                 </div>
                             @endif
                             <div class="d-flex">
-                                <form method="GET" action="{{ route('articles.index') }}" class="me-2">
-                                    <div class="input-group">
-                                        <input type="text" 
-                                               name="search" 
-                                               class="form-control" 
-                                               placeholder="Tìm kiếm bài viết (ít nhất 2 từ khóa)..."
-                                               value="{{ request('search') }}"
-                                               id="searchInput">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </div>
-                                    <div id="searchError" class="invalid-feedback" style="display: none;">
-                                        Vui lòng nhập ít nhất 2 từ khóa để tìm kiếm
-                                    </div>
-                                </form>
+                                <div class="input-group me-2">
+                                    <input type="text" id="searchInput" class="form-control"
+                                        placeholder="Tìm kiếm bài viết..." value="{{ request('search') }}">
+                                    <button type="button" class="btn btn-primary" id="searchButton">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
                             </div>
 
-                            <!-- Add JavaScript for search -->
                             <script>
                                 document.addEventListener('DOMContentLoaded', function() {
                                     const searchInput = document.getElementById('searchInput');
-                                    const searchError = document.getElementById('searchError');
-                                    const form = searchInput.closest('form');
+                                    const searchButton = document.getElementById('searchButton');
+                                    const articleRows = document.querySelectorAll('tbody tr');
 
-                                    form.addEventListener('submit', function(e) {
-                                        e.preventDefault();
-                                        const searchTerm = searchInput.value.trim();
-                                        const wordCount = searchTerm.split(/\s+/).filter(word => word.length > 0).length;
+                                    function performSearch() {
+                                        const searchTerm = searchInput.value.toLowerCase().trim();
                                         
-                                        if (wordCount >= 2) {
-                                            searchInput.classList.remove('is-invalid');
-                                            searchError.style.display = 'none';
-                                            // Add wildcard to improve search results
-                                            searchInput.value = `${searchTerm}`;
-                                            this.submit();
-                                        } else {
-                                            searchInput.classList.add('is-invalid');
-                                            searchError.style.display = 'block';
+                                        articleRows.forEach(row => {
+                                            const title = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                                            if (title.includes(searchTerm)) {
+                                                row.style.display = '';
+                                            } else {
+                                                row.style.display = 'none';
+                                            }
+                                        });
+                                    }
+
+                                    // Search on button click
+                                    searchButton.addEventListener('click', performSearch);
+
+                                    // Search on Enter key press
+                                    searchInput.addEventListener('keyup', function(event) {
+                                        if (event.key === 'Enter') {
+                                            performSearch();
                                         }
                                     });
 
-                                    // Reset search value display after form submission
-                                    if (searchInput.value.startsWith('%') && searchInput.value.endsWith('%')) {
-                                        searchInput.value = searchInput.value.slice(1, -1);
-                                    }
+                                    // Real-time search as user types
+                                    searchInput.addEventListener('input', performSearch);
                                 });
                             </script>
                         </div>
