@@ -18,6 +18,7 @@
 
     <!-- ====== start loading page ====== -->
     @include('website.layouts.partials.loadingpage')
+    
     <!-- ====== end loading page ====== -->
 
     <!-- ====== start navbar-container ====== -->
