@@ -69,9 +69,11 @@
                 <div class="tc-main-post-content color-000">
                     <div class="row">
                         <div class="col-lg-1">
-                            <div class="sharing d-flex flex-column align-items-center gap-4 sticky-top" style="top: 100px; padding-top: 20px;">
+                            <div class="sharing d-flex flex-column align-items-center gap-4 sticky-top"
+                                style="top: 100px; padding-top: 20px;">
                                 <!-- Nút Like -->
-                                <button id="likeButton" class="d-flex flex-column align-items-center gap-1 border-0 bg-transparent mb-3"
+                                <button id="likeButton"
+                                    class="d-flex flex-column align-items-center gap-1 border-0 bg-transparent mb-3"
                                     data-article-id="{{ $article->article_id }}"
                                     data-liked="{{ $isLiked ? 'true' : 'false' }}"
                                     style="outline: none; box-shadow: none; cursor: pointer;">
@@ -85,7 +87,7 @@
                                 </button>
 
                                 <!-- Nút Bookmark -->
-                                <a href="#" id="bookmarkButton"
+                                <a href="" id="bookmarkButton"
                                     class="d-flex flex-column align-items-center gap-1 text-decoration-none mb-3"
                                     data-article-id="{{ $article->article_id }}"
                                     onclick="toggleBookmark(this, {{ $article->article_id }}); return false;">
@@ -150,12 +152,12 @@
                                 <div class="col-lg-12">
                                     <div class="btm-tags d-flex flex-wrap justify-content-center gap-2">
                                         @foreach ($article->tags as $tag)
-                                            <a href=""
-                                                class="btn border border-1 mt-20 py-2 px-3">{{ $tag->name }}</a>
+                                            <a href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}"
+                                                class="btn border border-1 mt-20 py-2 px-3">
+                                                {{ $tag->name }}
+                                            </a>
                                         @endforeach
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -223,7 +225,8 @@
                                                 <div class="inf w-100">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <h6 class="fw-bold">
-                                                           <a href="{{ route('website.profileAuth', ['id' => $comment->user->user_id]) }}"><?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?></a>
+                                                            <a
+                                                                href="{{ route('website.profileAuth', ['id' => $comment->user->user_id]) }}"><?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?></a>
                                                         </h6>
                                                         <span class="fs-12px text-muted">
                                                             <i class="fas fa-clock"></i>
@@ -288,7 +291,7 @@
                                                                         </button>
                                                                         <button
                                                                             class="btn repost-btn butn border border-1 py-2 px-3"
-                                                                            data-comment-id="<?= $comment->comment_id ?>"
+                                                                            data-comment-id="<?= $reply->comment_id ?>"
                                                                             data-content="<?= htmlspecialchars($comment->content) ?>">
                                                                             <span class="fw-bold">Repost</span>
                                                                         </button>
@@ -345,23 +348,43 @@
                                                                 <div class="w-100">
                                                                     <!-- Ô nhập nội dung trả lời -->
                                                                     <textarea class="form-control form-control-sm reply-content" name="content" rows="2" required
-                                                                        placeholder="Trả lời: {{ '@' . ($comment->user->username ?? 'Người dùng ẩn danh') }}"
-                                                                        onclick="addUsernameToReply(this, '{{ $comment->user->username ?? 'Người dùng ẩn danh' }}')">
-                                                                    </textarea>
+                                                                        placeholder="Trả lời: ..." onclick="addUsernameToReply(this, '{{ $comment->comment_id }}')">
+</textarea>
 
                                                                     <script>
-                                                                        function addUsernameToReply(textarea, username) {
-                                                                            username = '@' + username.trim();
-                                                                            let currentValue = textarea.value.trim();
+                                                                        function addUsernameToReply(textarea, commentId) {
+                                                                            // Log để đảm bảo hàm được gọi
+                                                                            console.log("Textarea clicked for comment ID: " + commentId);
 
-                                                                            // Nếu chưa có @username ở đầu, mới thêm vào
-                                                                            if (!currentValue.startsWith(username)) {
-                                                                                textarea.value = username + ' ' + currentValue;
-                                                                            }
+                                                                            // Fetch username dựa trên commentId
+                                                                            fetch(`/get-username-by-comment-id/${commentId}`)
+                                                                                .then(response => response.json())
+                                                                                .then(data => {
+                                                                                    let username = data.username ?? 'Người dùng ẩn danh'; // Default nếu không tìm thấy username
+                                                                                    username = '@' + username.trim(); // Đảm bảo username có dạng @username
+                                                                                    let currentValue = textarea.value.trim(); // Lấy giá trị hiện tại của textarea
 
-                                                                            textarea.focus();
+                                                                                    // Log để kiểm tra username đã lấy và giá trị textarea hiện tại
+                                                                                    console.log("Fetched username: " + username);
+                                                                                    console.log("Current textarea value: " + currentValue);
+
+                                                                                    // Kiểm tra xem textarea có đang bắt đầu với @username không
+                                                                                    if (currentValue === "" || !currentValue.startsWith(username)) {
+                                                                                        // Nếu không, thêm @username vào đầu, đảm bảo có 1 khoảng trắng sau @username
+                                                                                        textarea.value = username + ' ' + currentValue.trim();
+                                                                                    }
+
+                                                                                    // Focus lại vào textarea để người dùng có thể tiếp tục nhập
+                                                                                    textarea.focus();
+                                                                                })
+                                                                                .catch(error => {
+                                                                                    console.error('Error fetching username:', error);
+                                                                                });
                                                                         }
                                                                     </script>
+
+
+
 
                                                                     <!-- Nút hành động -->
                                                                     <div class="d-flex justify-content-end gap-2 mt-2">
@@ -389,6 +412,7 @@
                                         <div class="d-flex justify-content-center mt-4">
                                             {{ $comments->links() }}
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -477,7 +501,7 @@
                                         {{-- Các bài còn lại --}}
                                         <div class="tc-post-list-style2">
                                             <div class="items">
-                                                @foreach ($relatedAuthorArticles as $article)
+                                                @foreach ($relatedAuthorArticles->skip(1)->take(2) as $article)
                                                     <a href="{{ Auth::check() ? route('articles.article', $article->slug) : url('/login-user') }}"
                                                         class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15">
                                                         <div class="row gx-3 align-items-center">
@@ -650,7 +674,7 @@
                                         {{-- Hiển thị các bài còn lại ở dạng danh sách --}}
                                         <div class="tc-post-list-style2">
                                             <div class="items">
-                                                @foreach ($khuyencao as $article)
+                                                @foreach ($khuyencao->skip(1)->take(2) as $article)
                                                     <a href="{{ route('articles.article', $article->slug) }}"
                                                         class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15">
                                                         <div class="row gx-3 align-items-center">
@@ -693,9 +717,9 @@
 
 
 
-            <!-- ====== start modals ====== -->
+        <!-- ====== start modals ====== -->
 
-            <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
+        <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
             aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
                 <div class="logo">
@@ -705,7 +729,8 @@
                     aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mt-4">
-                <h6 class="color-000 text-uppercase mb-15 ltspc-1 fw-bold"> Giới Thiệu News24h <i class="la la-angle-right ms-1"></i>
+                <h6 class="color-000 text-uppercase mb-15 ltspc-1 fw-bold"> Giới Thiệu News24h <i
+                        class="la la-angle-right ms-1"></i>
                 </h6>
                 <div class="text mb-4">
                     News24h là nền tảng tin tức hàng đầu Việt Nam, cung cấp thông tin chính xác, đa dạng và cập nhật 24/7.
@@ -746,7 +771,8 @@
                     <ul class="m-0">
                         <li class="mb-3">
                             <i class="las la-map-marker me-2 color-main fs-5"></i>
-                            <a href="#">Tòa nhà FPT Polytechnic., Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội</a>
+                            <a href="#">Tòa nhà FPT Polytechnic., Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ
+                                Liêm, Hà Nội</a>
                         </li>
                         <li class="mb-3">
                             <i class="las la-envelope me-2 color-main fs-5"></i>
@@ -776,7 +802,6 @@
         </div>
         <!-- ====== end modals ====== -->
 
-
         <!-- Modal báo cáo bài viết -->
         <div id="reportArticleModal" class="modal fade" tabindex="-1" aria-labelledby="reportArticleLabel"
             aria-hidden="true">
@@ -790,7 +815,18 @@
                         <input type="hidden" id="report-article-id">
                         <div class="mb-3">
                             <label for="report-article-reason" class="form-label">Lý do báo cáo:</label>
-                            <textarea id="report-article-reason" class="form-control" rows="4"></textarea>
+
+                            <!-- Gợi ý (Cách đều với textarea) -->
+                            <div class="mt-2 mb-2 d-flex flex-wrap gap-2">
+                                <span class="badge bg-secondary suggestion">Nội dung không phù hợp</span>
+                                <span class="badge bg-secondary suggestion">Spam hoặc lừa đảo</span>
+                                <span class="badge bg-secondary suggestion">Thông tin sai lệch</span>
+                                <span class="badge bg-secondary suggestion">Ngôn từ kích động</span>
+                            </div>
+
+                            <!-- Textarea nhập lý do -->
+                            <textarea id="report-article-reason" class="form-control" rows="4"
+                                placeholder="Nhập lý do hoặc chọn từ danh sách gợi ý..."></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -801,35 +837,83 @@
             </div>
         </div>
 
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                document.querySelectorAll(".suggestion").forEach(item => {
+                    item.addEventListener("click", function() {
+                        let textarea = document.getElementById("report-article-reason");
+                        let reason = this.textContent;
+
+                        // Nếu textarea chưa có nội dung, đặt giá trị mới
+                        if (!textarea.value) {
+                            textarea.value = reason;
+                        } else {
+                            // Nếu đã có nội dung, thêm xuống dòng để không ghi đè
+                            textarea.value += "\n" + reason;
+                        }
+                    });
+                });
+            });
+        </script>
+
+
         <!-- Modal nhập lý do RepostComment -->
         <div id="repostModal" class="modal fade" tabindex="-1" aria-labelledby="repostModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content shadow-lg border-0">
                     <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="repostModalLabel"><i class="fas fa-retweet me-2"></i> Repost - Nhập
-                            lý do</h5>
+                        <h5 class="modal-title" id="repostModalLabel">
+                            <i class="fas fa-retweet me-2"></i> Repost bình luận
+                        </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="repost-comment-id">
                         <div class="mb-3">
-                            <label for="repost-reason" class="form-label fw-bold">Lý do repost (có thể chỉnh sửa):</label>
+                            <label for="repost-reason" class="form-label fw-bold">Lý do repost :</label>
+                            <div class="mt-2 mb-2 d-flex flex-wrap gap-2">
+                                <span class="badge bg-secondary suggestion">Bình luận vi phạm</span>
+                                <span class="badge bg-secondary suggestion">Ngôn từ xúc phạm</span>
+                                <span class="badge bg-secondary suggestion">Spam hoặc quảng cáo</span>
+                                <span class="badge bg-secondary suggestion">Thông tin sai lệch</span>
+                            </div>
+
+                            <!-- Textarea nhập lý do -->
                             <textarea id="repost-reason" class="form-control border-primary shadow-sm" rows="4"
                                 placeholder="Nhập nội dung repost ..."></textarea>
+
+                            <!-- Gợi ý ngay bên dưới textarea -->
+
                         </div>
                     </div>
                     <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            Hủy
-                        </button>
-                        <button type="button" class="btn btn-primary" id="confirmRepost">
-                            Xác nhận
-                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="confirmRepost">Xác nhận</button>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                document.querySelectorAll(".suggestion").forEach(item => {
+                    item.addEventListener("click", function() {
+                        let textarea = document.getElementById("repost-reason");
+                        let reason = this.textContent;
+
+                        // Nếu textarea chưa có nội dung, đặt giá trị mới
+                        if (!textarea.value) {
+                            textarea.value = reason;
+                        } else {
+                            // Nếu đã có nội dung, thêm xuống dòng để không ghi đè
+                            textarea.value += "\n" + reason;
+                        }
+                    });
+                });
+            });
+        </script>
+
 
         <!-- ====== end Related products ====== -->
     </main>
@@ -866,7 +950,7 @@
                             } else {
                                 likeIcon.classList.remove("fa-solid");
                                 likeIcon.classList.add("fa-regular");
-                                likeIcon.style.color = "white";
+                                likeIcon.style.color = "black";
                             }
                         }
                     })
@@ -1025,7 +1109,10 @@
                         console.error("Không tìm thấy article id!");
                         return;
                     }
+                    
                     document.getElementById("report-article-id").value = articleId;
+                    
+                    document.getElementById("report-article-reason").value = ""; 
                     new bootstrap.Modal(document.getElementById("reportArticleModal")).show();
                 });
             });
@@ -1073,8 +1160,9 @@
                     let content = this.getAttribute("data-content");
 
                     document.getElementById("repost-comment-id").value = commentId;
-                    // Pre-fill textarea với nội dung gốc (người dùng có thể chỉnh sửa)
-                    document.getElementById("repost-reason").value = content;
+                    // ✅ Xóa nội dung lý do báo cáo cũ nếu có
+                    document.getElementById("repost-reason").value = "";
+                    
 
                     let modal = new bootstrap.Modal(document.getElementById("repostModal"));
                     modal.show();
