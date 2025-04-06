@@ -40,10 +40,12 @@
                                                     <div class="item d-block">
                                                         <div class="row gx-4 align-items-center">
                                                             <div class="col-6">
-                                                                <a href="{{ Auth::check() ? route('articles.article', ['slug' => $articleviews->slug]) : url('/login-user') }}" 
-                                                                   class="img th-200 img-cover rounded overflow-hidden">
-                                                                    <img src="{{ asset('storage/' . $articleviews->thumbnail_url) }}"
-                                                                        alt="{{ $articleviews->title }}" class="w-100 h-100 object-fit-cover">
+                                                                <a href="{{ Auth::check() ? route('articles.article', ['slug' => $articleviews->slug]) : url('/login-user') }}"
+                                                                   class="img img-cover rounded overflow-hidden">
+                                                                   <img src="{{ asset('storage/' . $articleviews->thumbnail_url) }}"
+                                                                   alt="{{ $articleviews->title }}"
+                                                                   class="w-100"
+                                                                   style="height: calc(50vh - 80px); object-fit: cover;">
                                                                 </a>
                                                             </div>
                                                             <div class="col-6">
@@ -98,8 +100,8 @@
                                     <div class="card border-0 shadow-sm overflow-hidden">
                                         <div class="position-relative">
                                             <a href="{{ route('articles.article', ['slug' => $featuredArticle->slug]) }}">
-                                                <img src="{{ asset('storage/' . $featuredArticle->thumbnail_url) }}" 
-                                                     alt="{{ $featuredArticle->title }}" 
+                                                <img src="{{ asset('storage/' . $featuredArticle->thumbnail_url) }}"
+                                                     alt="{{ $featuredArticle->title }}"
                                                      class="card-img-top" style="height: 400px; object-fit: cover;">
                                             </a>
                                             <div class="position-absolute top-0 start-0 m-3">
@@ -108,19 +110,19 @@
                                         </div>
                                         <div class="card-body p-4">
                                             <h3 class="card-title mb-3">
-                                                <a href="{{ route('articles.article', ['slug' => $featuredArticle->slug]) }}" 
+                                                <a href="{{ route('articles.article', ['slug' => $featuredArticle->slug]) }}"
                                                    class="text-decoration-none text-dark hover-primary">
                                                     {{ $featuredArticle->title }}
                                                 </a>
                                             </h3>
                                             <p class="card-text text-muted mb-3">
                                                 {{ Str::limit(trim(strip_tags(html_entity_decode($featuredArticle->content))), 300, '...') }}
-                                                
+
                                             </p>
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="d-flex align-items-center">
-                                                    <img src="{{ $featuredArticle->author->image ? asset('storage/' . $featuredArticle->author->image) : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' }}" 
-                                                         alt="{{ $featuredArticle->author->username }}" 
+                                                    <img src="{{ $featuredArticle->author->image ? asset('storage/' . $featuredArticle->author->image) : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' }}"
+                                                         alt="{{ $featuredArticle->author->username }}"
                                                          class="rounded-circle me-2" width="40" height="40">
                                                     <div>
                                                         <h6 class="mb-0">{{ $featuredArticle->author->username }}</h6>
@@ -138,7 +140,7 @@
                                     </div>
                                 </div>
                             @endif
-                            
+
                             <!-- Related articles -->
                             <div class="related-articles">
                                 <div class="row">
@@ -148,8 +150,8 @@
                                                 <div class="card h-100 border-0 shadow-sm">
                                                     <div class="position-relative">
                                                         <a href="{{ route('articles.article', ['slug' => $article->slug]) }}">
-                                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" 
-                                                                 alt="{{ $article->title }}" 
+                                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                                                 alt="{{ $article->title }}"
                                                                  class="card-img-top" style="height: 200px; object-fit: cover;">
                                                         </a>
                                                         <div class="position-absolute top-0 start-0 m-2">
@@ -158,7 +160,7 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <h5 class="card-title mb-3">
-                                                            <a href="{{ route('articles.article', ['slug' => $article->slug]) }}" 
+                                                            <a href="{{ route('articles.article', ['slug' => $article->slug]) }}"
                                                                class="text-decoration-none text-dark hover-primary">
                                                                 {{ $article->title }}
                                                             </a>
@@ -166,7 +168,7 @@
                                                         <p class="card-text text-muted">
                                                             {{ Str::limit(trim(strip_tags(html_entity_decode($article->content))), 200, '...') }}
                                                         </p>
-                                                        
+
                                                     </div>
                                                     <div class="card-footer bg-white border-0">
                                                         <div class="d-flex justify-content-between align-items-center text-muted small">
@@ -186,7 +188,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Sidebar -->
                     <div class="col-lg-4">
                         <div class="sidebar">
@@ -197,16 +199,16 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="d-flex flex-wrap gap-2">
-                                      
+
                                         @foreach ($tags as $tag)
                                         <a href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}" class="btn btn-sm btn-outline-secondary">{{ $tag->name }}</a>
-                                        
+
                                     @endforeach
-                                       
+
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Categories list -->
                             <div class="card border-0 shadow-sm mb-4">
                                 <div class="card-header bg-white border-bottom border-primary border-3">
@@ -215,7 +217,7 @@
                                 <div class="list-group list-group-flush">
                                     @if(isset($categories) && $categories->count() > 0)
                                         @foreach($categories as $cat)
-                                            <a href="{{ route('client.category.show', $cat->slug) }}" 
+                                            <a href="{{ route('client.category.show', $cat->slug) }}"
                                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                                 <div>
                                                     <i class="la la-folder me-2 text-primary"></i>
@@ -231,7 +233,7 @@
                                     @endif
                                 </div>
                             </div>
-                            
+
                             <!-- Recent articles -->
                             <div class="card border-0 shadow-sm">
                                 <div class="card-header bg-white border-bottom border-primary border-3">
@@ -240,7 +242,7 @@
                                 <div class="list-group list-group-flush">
                                     @if(isset($recentArticles) && $recentArticles->count() > 0)
                                         @foreach($recentArticles as $recentArticle)
-                                            <a href="{{ route('articles.article', $recentArticle->slug) }}" 
+                                            <a href="{{ route('articles.article', $recentArticle->slug) }}"
                                                class="list-group-item list-group-item-action d-flex align-items-center p-3">
                                                 <div>
                                                     <h6 class="mb-1">{{ Str::limit($recentArticle->title, 100) }}</h6>
