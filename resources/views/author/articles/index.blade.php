@@ -58,6 +58,12 @@
                                 <div class="input-group me-2">
                                     <input type="text" id="searchInput" class="form-control"
                                         placeholder="Tìm kiếm bài viết..." value="{{ request('search') }}">
+                                    <select id="categoryFilter" class="form-select" style="max-width: 200px;">
+                                        <option value="">Tất cả danh mục</option>
+                                        @foreach(\App\Models\Category::where('is_active', true)->get() as $category)
+                                            <option value="{{ $category->name }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
                                     <button type="button" class="btn btn-primary" id="searchButton">
                                         <i class="fa fa-search"></i>
                                     </button>
@@ -67,15 +73,22 @@
                             <script>
                                 document.addEventListener('DOMContentLoaded', function() {
                                     const searchInput = document.getElementById('searchInput');
+                                    const categoryFilter = document.getElementById('categoryFilter');
                                     const searchButton = document.getElementById('searchButton');
                                     const articleRows = document.querySelectorAll('tbody tr');
 
                                     function performSearch() {
                                         const searchTerm = searchInput.value.toLowerCase().trim();
+                                        const selectedCategory = categoryFilter.value.toLowerCase();
                                         
                                         articleRows.forEach(row => {
                                             const title = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                                            if (title.includes(searchTerm)) {
+                                            const category = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+                                            
+                                            const matchesTitle = title.includes(searchTerm);
+                                            const matchesCategory = !selectedCategory || category.includes(selectedCategory);
+
+                                            if (matchesTitle && matchesCategory) {
                                                 row.style.display = '';
                                             } else {
                                                 row.style.display = 'none';
@@ -95,6 +108,9 @@
 
                                     // Real-time search as user types
                                     searchInput.addEventListener('input', performSearch);
+
+                                    // Filter when category changes
+                                    categoryFilter.addEventListener('change', performSearch);
                                 });
                             </script>
 
