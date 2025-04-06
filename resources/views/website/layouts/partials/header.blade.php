@@ -120,10 +120,11 @@
                         <span></span>
                         <span></span>
                     </button>
-                    <a href="home-default.html#" class="logo-brand d-block d-lg-none w-50 my-4">
-                        <img src="{{ asset('client/img/logo_home1.png') }}" alt="" class="dark-none">
-                        <img src="{{ asset('client/img/logo_home1_lt.png') }}" alt="" class="light-none">
-                    </a>
+                    <div class="col-lg-4">
+                        <a href="{{ url('/') }}" class="logo-brand d-none d-lg-block">
+                            <h1>News24h</h1>
+                        </a>
+                    </div>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
