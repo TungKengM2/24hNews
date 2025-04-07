@@ -77,7 +77,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
     Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
     Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
-    
+
 });
 // Client Category
 Route::get('/category/{category_id}',[CategoryUserController::class, 'index'])->name('client.category.show');
@@ -181,13 +181,13 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
 
     //Quản lý report
     Route::get('/violations/approves', [ViolationsMController::class, 'approves'])->name('moderator.violations.approves');
-    
+
     Route::patch('violations/{violation}/resolve', [ViolationsMController::class, 'resolve'])->name('moderator.violations.resolve');
-    
+
     Route::patch('violations/{violation}/resolves', [ViolationsMController::class, 'resolves'])->name('moderator.violations.resolves');
-    
+
     Route::patch('violations/{violation}/reject', [ViolationsMController::class, 'reject'])->name('moderator.violations.reject');
-    
+
 
     Route::get('/list-article', [ModeratorArticleController::class, 'index'])
         ->name('moderator.list-article');
@@ -282,14 +282,30 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::get('/following', [ProfileController::class, 'followingOfAuthorList'])->name('author.following');
 
-    Route::resource('articles', AuthorArticleController::class)->names('author.articles');
-
-    Route::put('/articles/{article}/toggle-visibility', [AuthorArticleController::class, 'toggleVisibility'])
-    ->name('author.articles.toggle-visibility');
-
+    // Route resource articles - chỉ index và show không cần kiểm tra vi phạm
+    Route::get('/articles', [AuthorArticleController::class, 'index'])->name('author.articles.index');
+    Route::get('/articles/search', [AuthorArticleController::class, 'search'])->name('author.articles.search');
     Route::post('/articles/upload', [AuthorArticleController::class, 'uploadImage',])->name('author.articles.upload');
 
-    Route::get('/articles/search', [AuthorArticleController::class, 'search'])->name('author.articles.search');
+
+    Route::middleware(['check.violations'])->group(function () {
+        // Tạo và chỉnh sửa bài viết
+        Route::get('/articles/create', [AuthorArticleController::class, 'create'])->name('author.articles.create');
+        Route::post('/articles', [AuthorArticleController::class, 'store'])->name('author.articles.store');
+        Route::get('/articles/{article}/edit', [AuthorArticleController::class, 'edit'])->name('author.articles.edit');
+        Route::put('/articles/{article}', [AuthorArticleController::class, 'update'])->name('author.articles.update');
+        Route::delete('/articles/{article}', [AuthorArticleController::class, 'destroy'])->name('author.articles.destroy');
+
+
+        Route::put('/articles/{article}/toggle-visibility', [AuthorArticleController::class, 'toggleVisibility'])
+            ->name('author.articles.toggle-visibility');
+
+        Route::put('/articles/{article}/request-review', [AuthorArticleController::class, 'requestReview'])
+            ->name('author.articles.request-review');
+    });
+
+
+    Route::get('/articles/{article}', [AuthorArticleController::class, 'show'])->name('author.articles.show');
 
     Route::get('/profile', [ProfileController::class, 'profileAuthor'])->name('author.profile');
 
@@ -477,14 +493,14 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 
     //Quản lý report
     Route::get('/violations/approves', [ViolationsController::class, 'approves'])->name('admin.violations.approves');
-    
+
     Route::patch('violations/{violation}/resolve', [ViolationsController::class, 'resolve'])->name('violations.resolve');
-    
+
     Route::patch('violations/{violation}/resolves', [ViolationsController::class, 'resolves'])->name('violations.resolves');
 
     Route::patch('violations/{violation}/reject', [ViolationsController::class, 'reject'])->name('violations.reject');
-    
-    
+
+
 
     // Quản lý bài viết
     Route::get('/articles/approves', [ArticleController::class, 'Approves'])->name('admin.articles.approves');

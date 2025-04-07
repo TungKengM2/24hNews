@@ -798,7 +798,55 @@
             } catch (\Exception $e) {
                 Log::error("Lỗi khi gửi thông báo: " . $e->getMessage());
             }
+        }
 
-            return response()->json(['message' => 'Trạng thái bài viết đã được cập nhật.']);
+        public function requestReview(Article $article)
+        {
+            // Kiểm tra quyền sở hữu bài viết
+            if ($article->author_id !== auth()->id()) {
+                return redirect()
+                    ->back()
+                    ->with('error', 'Bạn không có quyền thực hiện hành động này.');
+            }
+
+            // Kiểm tra trạng thái bài viết
+            if ($article->status !== 'rejected') {
+                return redirect()
+                    ->back()
+                    ->with('error', 'Chỉ có thể xin duyệt lại các bài viết đã bị từ chối.');
+            }
+
+            // Cập nhật trạng thái bài viết thành 'pending'
+            $article->update([
+                'status' => 'pending'
+            ]);
+
+
+            $approvalData = [
+                'type' => 'article',
+                'user_id' => auth()->id(),
+                'status' => 'pending',
+                'remarks' => 'Bài viết đã được gửi lại để xin duyệt',
+                'approved_by' => null,
+            ];
+
+            $approval = Approval::where('article_id', $article->article_id)->first();
+            if ($approval) {
+                $approval->update($approvalData);
+            } else {
+                Approval::create(array_merge(
+                    ['article_id' => $article->article_id],
+                    $approvalData
+                ));
+            }
+
+            // Gửi thông báo cho moderator quản lý danh mục này nếu có
+            if ($article->category && $article->category->moderator) {
+                $article->category->moderator->notify(new PendingArticleNotification($article));
+            }
+
+            return redirect()
+                ->route('author.articles.index')
+                ->with('success', 'Bài viết đã được gửi lại để xin duyệt!');
         }
     }
