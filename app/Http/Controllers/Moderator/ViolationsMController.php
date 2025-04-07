@@ -9,6 +9,7 @@ use App\Models\Comment;
 use App\Models\Category;
 use App\Models\Violation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,7 @@ use App\Notifications\NewArticleSubmitted;
 use App\Notifications\ArticleStatusUpdated;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\ArticleStatusChangedNotification;
+
 
 class ViolationsMController extends Controller
 {
@@ -89,6 +91,7 @@ class ViolationsMController extends Controller
         return back()->with('success', 'Vi phạm đã được giải quyết, bình luận và tất cả phản hồi đã bị xóa.');
     }
 
+
     public function resolves(Violation $violation)
     {
         // Kiểm tra xem vi phạm có trạng thái 'pending' hay không
@@ -96,21 +99,29 @@ class ViolationsMController extends Controller
             return back()->with('error', 'Vi phạm không còn trong trạng thái chờ duyệt!');
         }
 
+        
         // Lấy bài viết bị vi phạm dựa trên reference_id
         $article = Article::where('article_id', $violation->reference_id)->first();
-        if ($article) {
-            // Cập nhật trạng thái thành "draft"
-            $article->status = 'draft';
-            $article->save();
+
+        if (!$article) {
+            return back()->with('error', 'Không tìm thấy bài viết!');
         }
 
-        // Xóa vi phạm khỏi bảng violations
+        // Cập nhật trạng thái thành "draft"
+        $article->status = 'draft';
+        $article->save();
+
+        // Lấy thông tin vi phạm
+        $detectedWord = $violation->detected_word;
+        $author = $article->author;
+
+        // Gửi thông báo
+        $author->notify(new ArticleStatusChangedNotification($article, $detectedWord));
+
+        // Xóa vi phạm
         $violation->delete();
-
-        if ($article->wasChanged('status')) {
-            $article->notify(new ArticleStatusChangedNotification($article));
-        }
 
         return back()->with('success', 'Vi phạm đã được giải quyết.');
     }
+    
 }

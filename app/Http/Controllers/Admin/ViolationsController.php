@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Notifications\NewArticleSubmitted;
 use App\Notifications\ArticleStatusUpdated;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\ArticleStatusChangedNotification;
 
 class ViolationsController extends Controller
 {
@@ -56,38 +57,38 @@ class ViolationsController extends Controller
 
 
     public function resolve(Violation $violation)
-{
-    // Kiểm tra trạng thái của vi phạm, chỉ xử lý nếu trạng thái là "pending"
-    if ($violation->status !== 'pending') {
-        return back()->with('error', 'Vi phạm không còn trong trạng thái chờ duyệt!');
-    }
-
-    // Lấy bình luận bị vi phạm dựa trên reference_id
-    $comment = Comment::where('comment_id', $violation->reference_id)->first();
-
-    if (!$comment) {
-        return back()->with('error', 'Bình luận vi phạm không tồn tại hoặc đã bị xóa trước đó.');
-    }
-
-    // Lấy danh sách tất cả bình luận con của bình luận bị vi phạm
-    $childComments = Comment::where('parent_id', $comment->comment_id)->get();
-
-    // Kiểm tra nếu có bình luận con
-    if ($childComments->isNotEmpty()) {
-        foreach ($childComments as $child) {
-            // Xóa bình luận con
-            $child->delete();
+    {
+        // Kiểm tra trạng thái của vi phạm, chỉ xử lý nếu trạng thái là "pending"
+        if ($violation->status !== 'pending') {
+            return back()->with('error', 'Vi phạm không còn trong trạng thái chờ duyệt!');
         }
+
+        // Lấy bình luận bị vi phạm dựa trên reference_id
+        $comment = Comment::where('comment_id', $violation->reference_id)->first();
+
+        if (!$comment) {
+            return back()->with('error', 'Bình luận vi phạm không tồn tại hoặc đã bị xóa trước đó.');
+        }
+
+        // Lấy danh sách tất cả bình luận con của bình luận bị vi phạm
+        $childComments = Comment::where('parent_id', $comment->comment_id)->get();
+
+        // Kiểm tra nếu có bình luận con
+        if ($childComments->isNotEmpty()) {
+            foreach ($childComments as $child) {
+                // Xóa bình luận con
+                $child->delete();
+            }
+        }
+
+        // Xóa bình luận cha sau khi đã xóa các bình luận con
+        $comment->delete();
+
+        // Xóa vi phạm khỏi bảng violations
+        $violation->delete();
+
+        return back()->with('success', 'Vi phạm đã được giải quyết, bình luận và tất cả phản hồi đã bị xóa.');
     }
-
-    // Xóa bình luận cha sau khi đã xóa các bình luận con
-    $comment->delete();
-
-    // Xóa vi phạm khỏi bảng violations
-    $violation->delete();
-
-    return back()->with('success', 'Vi phạm đã được giải quyết, bình luận và tất cả phản hồi đã bị xóa.');
-}
 
 
 
@@ -99,15 +100,26 @@ class ViolationsController extends Controller
             return back()->with('error', 'Vi phạm không còn trong trạng thái chờ duyệt!');
         }
 
+        
         // Lấy bài viết bị vi phạm dựa trên reference_id
         $article = Article::where('article_id', $violation->reference_id)->first();
-        if ($article) {
-            // Cập nhật trạng thái thành "draft"
-            $article->status = 'draft';
-            $article->save();
+
+        if (!$article) {
+            return back()->with('error', 'Không tìm thấy bài viết!');
         }
 
-        // Xóa vi phạm khỏi bảng violations
+        // Cập nhật trạng thái thành "draft"
+        $article->status = 'draft';
+        $article->save();
+
+        // Lấy thông tin vi phạm
+        $detectedWord = $violation->detected_word;
+        $author = $article->author;
+
+        // Gửi thông báo
+        $author->notify(new ArticleStatusChangedNotification($article, $detectedWord));
+
+        // Xóa vi phạm
         $violation->delete();
 
         return back()->with('success', 'Vi phạm đã được giải quyết.');
