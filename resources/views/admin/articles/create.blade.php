@@ -75,6 +75,27 @@
             display: flex;
             gap: 10px;
         }
+        
+        /* Thêm CSS cho hiệu ứng loading */
+        .image-upload-loading {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #007bff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 @endsection
 
@@ -218,6 +239,12 @@
                                         @if (old('thumbnail_url'))
                                             <p>File đã chọn trước đó: {{ old('thumbnail_url') }}</p>
                                         @endif
+                                        
+                                        <!-- Thêm phần loading -->
+                                        <div class="image-upload-loading" id="image-upload-loading">
+                                            <div class="spinner"></div>
+                                            <p class="mt-2">Đang tải lên và kiểm duyệt hình ảnh...</p>
+                                        </div>
                                     </div>
 
                                     <div class="col-md-6">
@@ -339,6 +366,9 @@
                                         const file = e.target.files[0];
                                         if (file) {
                                             isImageValid = false;
+                                            
+                                            // Hiển thị loading
+                                            document.getElementById('image-upload-loading').style.display = 'block';
 
                                             // Xử lý preview ảnh
                                             const reader = new FileReader();
@@ -369,6 +399,9 @@
                                                     return response.json();
                                                 })
                                                 .then(result => {
+                                                    // Ẩn loading
+                                                    document.getElementById('image-upload-loading').style.display = 'none';
+                                                    
                                                     const moderationResult = document.getElementById('moderation-result');
                                                     const errorDiv = document.getElementById('moderation-error');
                                                     const errorMessage = document.getElementById('error-message');
@@ -399,6 +432,9 @@
                                                     }
                                                 })
                                                 .catch(error => {
+                                                    // Ẩn loading khi có lỗi
+                                                    document.getElementById('image-upload-loading').style.display = 'none';
+                                                    
                                                     console.error('Lỗi kiểm duyệt:', error);
                                                     const moderationResult = document.getElementById('moderation-result');
                                                     const errorDiv = document.getElementById('moderation-error');
