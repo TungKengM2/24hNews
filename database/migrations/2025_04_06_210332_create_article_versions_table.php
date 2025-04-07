@@ -18,10 +18,14 @@ return new class extends Migration
             $table->text('title');
             $table->longText('content');
             $table->string('slug');
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->string('featured_image')->nullable();
+            $table->json('tags')->nullable();
             $table->text('change_reason')->nullable();
             $table->timestamps();
             $table->foreign('article_id')->references('article_id')->on('articles')->onDelete('cascade');
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
+            $table->foreign('category_id')->references('category_id')->on('categories')->onDelete('set null');
         });
     }
 

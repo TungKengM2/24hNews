@@ -172,14 +172,15 @@
 
                                     <div class="col-md-6 mb-3">
                                         <label for="tags">Chọn hoặc thêm thẻ:</label>
-                                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
+                                        <select name="tags[]" id="tags" class="form-control select2-tags" multiple="multiple" data-placeholder="Chọn hoặc nhập thẻ mới">
                                             @foreach ($tags as $tag)
-                                                <option value="{{ $tag->tag_id }}"
-                                                    {{ in_array($tag->tag_id, old('tags', [])) ? 'selected' : '' }}>
+                                                <option value="{{ $tag->name }}"
+                                                    {{ in_array($tag->name, old('tags', [])) ? 'selected' : '' }}>
                                                     {{ $tag->name }}
                                                 </option>
                                             @endforeach
                                         </select>
+                                        <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới (chấp nhận cả chữ và số).</small>
                                     </div>
                                 </div>
 
@@ -263,9 +264,10 @@
 
                         <script>
                             $(document).ready(function() {
-                                $('#tags').select2({
+                                // Khởi tạo Select2 với tính năng tags
+                                $('.select2-tags').select2({
                                     tags: true,
-                                    tokenSeparators: [','],
+                                    tokenSeparators: [',', ' '],
                                     placeholder: 'Chọn hoặc nhập thẻ mới',
                                     allowClear: true,
                                 });
@@ -302,7 +304,7 @@
                                 const errorDiv = document.getElementById('moderation-error');
                                 if (moderationResult) moderationResult.style.display = 'none';
                                 if (errorDiv) errorDiv.style.display = 'none';
-                                
+
                                 // Xử lý sinh slug tự động từ tiêu đề
                                 document.getElementById('title').addEventListener('input', function() {
                                     let title = this.value.trim();
@@ -328,7 +330,7 @@
 
                                 let isImageValid = false;
                                 const submitButton = document.getElementById('submitButton');
-                                
+
                                 // Chỉ có một sự kiện lắng nghe cho phần tử thumbnail_url
                                 const thumbnailInput = document.getElementById('thumbnail_url');
                                 if (thumbnailInput) {
@@ -344,17 +346,19 @@
                                                 document.getElementById('image-preview-container').style.display = 'block';
                                             };
                                             reader.readAsDataURL(file);
-                                            
+
                                             // Kiểm duyệt hình ảnh
                                             const formData = new FormData();
                                             formData.append('image', file);
-                                            formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+                                            formData.append('_token', document.querySelector('meta[name="csrf-token"]')
+                                            .content);
 
                                             fetch('/api/check-image-moderation', {
                                                     method: 'POST',
                                                     body: formData,
                                                     headers: {
-                                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                                            .content,
                                                     },
                                                 })
                                                 .then(response => {
@@ -401,13 +405,15 @@
 
                                                     moderationResult.style.display = 'block';
                                                     errorDiv.style.display = 'block';
-                                                    errorMessage.textContent = 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
+                                                    errorMessage.textContent = 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' +
+                                                        error.message;
                                                     isImageValid = false;
                                                     submitButton.disabled = true;
                                                 });
-                                                
+
                                             // Nếu cần xử lý mammoth (chuyển đổi .docx)
-                                            if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                                            if (file.type ===
+                                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
                                                 const docReader = new FileReader();
                                                 docReader.onload = function(e) {
                                                     const arrayBuffer = e.target.result;
@@ -435,7 +441,8 @@
                                             return true;
                                         }
 
-                                        if (thumbnailInput && thumbnailInput.files && thumbnailInput.files[0] && !isImageValid) {
+                                        if (thumbnailInput && thumbnailInput.files && thumbnailInput.files[0] && !
+                                            isImageValid) {
                                             e.preventDefault();
                                             alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
                                             thumbnailInput.focus();

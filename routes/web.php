@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthUserController;
+use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
@@ -194,8 +195,7 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     Route::get('/list-article', [ModeratorArticleController::class, 'index'])
         ->name('moderator.list-article');
 
-    Route::get('/profile', [ProfileController::class, 'profileModerator'])
-        ->name('moderator.profile');
+    Route::get('/profile', [ProfileController::class, 'profileModerator'])->name('moderator.profile');
 
     Route::get('/following', [ProfileController::class, 'followingOfModeratorList'])->name('moderator.following');
 
@@ -209,8 +209,8 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
 
 
     Route::get('/moderator/notifications', [NotificationController::class, 'index'])
-    ->middleware(['auth', 'moderator'])
-    ->name('moderator.notifications');
+        ->middleware(['auth', 'moderator'])
+        ->name('moderator.notifications');
 
     // Sửa lại route reject (bỏ 'moderator/' trong URL)
     Route::patch('/articles/{article}/reject', [ModeratorArticleController::class, 'reject'])->name('moderator.articles.reject');
@@ -287,7 +287,7 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     Route::resource('articles', AuthorArticleController::class)->names('author.articles');
 
     Route::put('/articles/{article}/toggle-visibility', [AuthorArticleController::class, 'toggleVisibility'])
-    ->name('author.articles.toggle-visibility');
+        ->name('author.articles.toggle-visibility');
 
     Route::post('/articles/upload', [AuthorArticleController::class, 'uploadImage',])->name('author.articles.upload');
 
@@ -344,6 +344,7 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     Route::get('/author/followers', [AuthorDashboard::class, 'followers'])->name('author.followers');
 
     Route::get('/articles/{article}/versions', [AuthorArticleController::class, 'versions'])->name('author.articles.versions');
+
     Route::get('/articles/{article}/versions/{versionId}', [AuthorArticleController::class, 'showVersion'])->name('author.articles.version');
 });
 
@@ -438,8 +439,6 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])
         ->name('admin.dashboard');
 
-
-
     Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 
     Route::get('/following', [ProfileController::class, 'followingOfAdminList'])->name('admin.following');
@@ -507,6 +506,9 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::resource('categories', CategoryController::class);
 
 
+    //Danh sách tag
+    Route::resource('tags', TagController::class);
+
 
     // Quản lý người dùng
     Route::resource('users', UserController::class)->names(['index' => 'admin.users.index',]);
@@ -515,14 +517,11 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 
 
 // 📤 Upload hình ảnh
-Route::post('/upload/image', [UploadController::class, 'store'])
-    ->name('upload.image');
-
+Route::post('/upload/image', [UploadController::class, 'store'])->name('upload.image');
 
 
 // 🔐 Đăng xuất
-Route::post('/logout', [AuthUserController::class, 'logout'])
-    ->name('logout');
+Route::post('/logout', [AuthUserController::class, 'logout'])->name('logout');
 
 
 

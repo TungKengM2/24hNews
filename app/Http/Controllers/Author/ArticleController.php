@@ -279,6 +279,9 @@ class ArticleController extends Controller
                 'title' => $request->title,
                 'slug' => $request->slug,
                 'content' => $content,
+                'category_id' => $request->category_id,
+                'featured_image' => $request->hasFile('thumbnail_url') ? $request->file('thumbnail_url')->store('thumbnails', 'public') : $article->thumbnail_url,
+                'tags' => $request->input('tags', []),
                 'change_reason' => 'Cập nhật bài viết'
             ]);
 
@@ -572,6 +575,9 @@ class ArticleController extends Controller
                 'title' => $request->title,
                 'slug' => $request->slug,
                 'content' => $content,
+                'category_id' => $request->category_id,
+                'featured_image' => $request->hasFile('thumbnail_url') ? $request->file('thumbnail_url')->store('thumbnails', 'public') : null,
+                'tags' => $request->input('tags', []),
                 'change_reason' => 'Tạo bài viết mới'
             ]);
 
@@ -653,15 +659,11 @@ class ArticleController extends Controller
         $tagIds = [];
         foreach ($tags as $tag) {
             $tag = trim($tag);
-            if (is_numeric($tag)) {
-                if (Tag::where('tag_id', $tag)->exists()) {
-                    $tagIds[] = (int) $tag;
-                }
-            } else {
-                if (! empty($tag)) {
-                    $tagModel = Tag::firstOrCreate(['name' => $tag]);
-                    $tagIds[] = $tagModel->tag_id;
-                }
+
+            // Chỉ xử lý các tag không rỗng
+            if (!empty($tag)) {
+                $tagModel = Tag::firstOrCreate(['name' => $tag]);
+                $tagIds[] = $tagModel->tag_id;
             }
         }
 
@@ -704,7 +706,8 @@ class ArticleController extends Controller
 
         $tags = Tag::select('tag_id', 'name')->get();
 
-        $selectedTags = $article->tags->pluck('tag_id')->toArray();
+        // Lấy danh sách tên tag đã chọn của bài viết
+        $selectedTags = $article->tags->pluck('name')->toArray();
 
         return view(
             'author.articles.edit',
