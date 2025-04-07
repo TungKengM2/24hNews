@@ -36,9 +36,9 @@ class Violation extends Model
     }
     // Violation.php
     public function article()
-    {
-        return $this->belongsTo(Article::class, 'reference_id', 'article_id');
-    }
+{
+    return $this->belongsTo(Article::class, 'reference_id', 'article_id');
+}
     public function comments()
 {
     // 'reference_id' trong bảng 'violations' trỏ đến 'comment_id' trong bảng 'comments'

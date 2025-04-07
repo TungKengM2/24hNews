@@ -275,9 +275,12 @@
                                                     <div class="mt-2">
                                                         <button
                                                             class="btn reply-btn butn border border-1 py-2 px-3 d-inline-block"
-                                                            data-comment-id="<?= $comment->comment_id ?>"
-                                                            data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
-                                                            <span class="fw-bold">Trả lời</span>
+                                                            data-comment-id="{{ $comment->comment_id }}"
+                                                            data-username="{{ '@' . ($comment->user->username ?? 'Anonymous') }}"
+                                                            data-article-id="<?= $comment->article_id ?>"
+                                                            onclick="openReplyModal(this)">
+                                                            <span class="fw-bold">Trả lời
+                                                            </span>
                                                         </button>
 
 
@@ -298,14 +301,12 @@
                                                             </form>
                                                         </div>
                                                     @endif
-
                                                     @if (session('success'))
                                                         <script>
                                                             alert("{{ session('success') }}");
                                                             window.location.reload();
                                                         </script>
                                                     @endif
-
                                                     <script>
                                                         function toggleDeleteOptions(commentId) {
                                                             const options = document.getElementById('delete-options-' + commentId);
@@ -313,15 +314,12 @@
                                                         }
                                                     </script>
 
-
                                                     <!-- Danh sách replies -->
                                                     <div class="replies ms-5 mt-3"
                                                         data-reply-count="<?= count($comment->replies) ?>">
-                                                        <?php
-                                                        $replyCount = count($comment->replies);
-                                                        $visibleReplies = 3; // Initial number of replies to show
-                                                        $index = 0;
-                                                        ?>
+                                                        <?php $replyCount = count($comment->replies);
+                                                        $visibleReplies = 3;
+                                                        $index = 0; ?>
                                                         <?php foreach ($comment->replies as $reply): ?>
                                                         <div
                                                             class="comment-reply-cont bg-white py-2 px-3 mb-2 rounded shadow-sm reply-item <?= $index >= $visibleReplies ? 'd-none' : '' ?>">
@@ -343,28 +341,22 @@
                                                                                 <?= date('F d, Y', strtotime($reply->created_at)) ?>
                                                                             </span>
                                                                             @if (auth()->check() && auth()->id() === $reply->user_id)
-                                                                                <!-- Kiểm tra ID người dùng với bình luận con -->
                                                                                 <button
                                                                                     class="btn trash-can-btn butn border border-1 py-2 px-3 ms-2"
-                                                                                    onclick="confirmDelete(event, {{ $reply->comment_id }})">
-                                                                                    <!-- Sử dụng comment_id của reply -->
+                                                                                    onclick="confirmDelete(event, <?= $reply->comment_id ?>)">
                                                                                     <i class="fas fa-trash-alt"></i>
-                                                                                    <!-- Trash can icon -->
                                                                                 </button>
                                                                             @endif
                                                                             @if (auth()->check() && auth()->id() !== $reply->user_id)
-                                                                                <!-- Nếu không phải là chủ bình luận -->
                                                                                 <button
                                                                                     class="btn repost-btn butn border border-1 py-2 px-3 ms-2"
                                                                                     data-comment-id="{{ $reply->comment_id }}"
-                                                                                    data-content="{{ htmlspecialchars($comment->content, ENT_QUOTES, 'UTF-8') }}">
+                                                                                    data-content="<?= htmlspecialchars($comment->content, ENT_QUOTES, 'UTF-8') ?>">
                                                                                     <i class="la la-exclamation-triangle"
                                                                                         style=" color: #fa0000;"></i>
                                                                                     <span class="fw-bold"></span>
                                                                                 </button>
                                                                             @endif
-
-
                                                                         </div>
                                                                     </div>
                                                                     <div id="comment-<?= $reply->comment_id ?>"
@@ -375,12 +367,11 @@
                                                                         <button
                                                                             class="btn reply-btn butn border border-1 py-2 px-3 d-inline-block"
                                                                             data-comment-id="<?= $reply->comment_id ?>"
-                                                                            data-username="<?= htmlspecialchars($reply->user->username ?? 'Anonymous') ?>">
+                                                                            data-username="@<?= htmlspecialchars($reply->user->username ?? 'Anonymous') ?>"
+                                                                            data-article-id="<?= $reply->article_id ?>"
+                                                                            onclick="openReplyModal(this)">
                                                                             <span class="fw-bold">Trả lời</span>
                                                                         </button>
-
-
-                                                                        <!-- Delete options (hidden initially) -->
                                                                         @if (auth()->check() && auth()->id() === $comment->user_id)
                                                                             <div id="delete-options-{{ $reply->comment_id }}"
                                                                                 class="delete-options"
@@ -400,20 +391,94 @@
                                                                         @endif
                                                                         <script>
                                                                             function confirmDelete(event, commentId) {
-                                                                                event.preventDefault(); // Prevent the default form submission behavior
-
-                                                                                // Ask for confirmation
+                                                                                event.preventDefault();
                                                                                 if (confirm("Bạn có chắc chắn muốn xóa bình luận này không?")) {
-                                                                                    // If confirmed, submit the form
                                                                                     var form = document.querySelector(`#delete-options-${commentId} form`);
                                                                                     if (form) {
-                                                                                        form.submit(); // Submit the form to delete the comment
+                                                                                        form.submit();
                                                                                     }
                                                                                 }
                                                                             }
                                                                         </script>
-
                                                                     </div>
+
+                                                                    <!-- Thêm subReplies cho mỗi reply -->
+                                                                    <div class="sub-replies mt-3 ms-5">
+                                                                        <?php if (count($reply->subReplies)): ?>
+                                                                        <?php foreach ($reply->subReplies as $subReply): ?>
+                                                                        <div class="reply-item mb-3">
+                                                                            <div class="d-flex">
+                                                                                <div class="avatar me-2">
+                                                                                    <img src="<?= $subReply->user->image ? asset('storage/' . $subReply->user->image) : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>"
+                                                                                        class="rounded-circle"
+                                                                                        width="40" height="40">
+                                                                                </div>
+                                                                                <div
+                                                                                    class="content flex-grow-1 p-3 rounded bg-white shadow-sm">
+                                                                                    <div
+                                                                                        class="d-flex justify-content-between align-items-start">
+                                                                                        <div>
+                                                                                            <strong><?= htmlspecialchars($subReply->user->username ?? 'Anonymous') ?></strong>
+                                                                                            <div class="text-muted small">
+                                                                                                <i
+                                                                                                    class="fas fa-clock"></i>
+                                                                                                <?= date('F d, Y', strtotime($subReply->created_at)) ?>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="d-flex align-items-center">
+                                                                                            <?php if (auth()->check() && auth()->id() === $subReply->user_id): ?>
+                                                                                            <button
+                                                                                                class="btn trash-can-btn butn border border-1 py-2 px-3 ms-2"
+                                                                                                onclick="confirmDelete(event, <?= $subReply->comment_id ?>)">
+                                                                                                <i
+                                                                                                    class="fas fa-trash-alt"></i>
+                                                                                            </button>
+                                                                                            <?php elseif (auth()->check()): ?>
+                                                                                            <button
+                                                                                                class="btn repost-btn butn border border-1 py-2 px-3 ms-2"
+                                                                                                data-comment-id="<?= $subReply->comment_id ?>"
+                                                                                                data-content="<?= htmlspecialchars($subReply->content, ENT_QUOTES, 'UTF-8') ?>">
+                                                                                                <i class="la la-exclamation-triangle"
+                                                                                                    style="color: #fa0000;"></i>
+                                                                                            </button>
+                                                                                            <?php endif; ?>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="mt-2">
+                                                                                        <?= nl2br(htmlspecialchars($subReply->content)) ?>
+                                                                                    </div>
+                                                                                    <div class="mt-3">
+                                                                                        <button
+                                                                                            class="btn reply-btn butn border border-1 py-2 px-3 d-inline-block"
+                                                                                            data-comment-id="<?= $subReply->comment_id ?>"
+                                                                                            data-username="@<?= htmlspecialchars($subReply->user->username ?? 'Anonymous') ?>"
+                                                                                            data-article-id="<?= $subReply->article_id ?>"
+                                                                                            onclick="openReplyModal(this)">
+                                                                                            <span class="fw-bold">Trả
+                                                                                                lời</span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <!-- Nếu subReply này có con (nested subReplies), đệ quy hiển thị chúng -->
+                                                                            <?php if (isset($subReply->subReplies) && count($subReply->subReplies)): ?>
+                                                                            <?php
+                                                                            // Gọi lại chính file view (hoặc include đoạn mã này) để hiển thị các subReplies của subReply
+                                                                            // Lưu ý: Đường dẫn include dưới đây cần đúng với vị trí file hiện tại.
+                                                                            include __FILE__;
+                                                                            ?>
+                                                                            <?php endif; ?>
+                                                                        </div>
+                                                                        <?php endforeach; ?>
+                                                                        <?php else: ?>
+                                                                        <p class="text-muted ms-2">Chưa có phản hồi nào.
+                                                                        </p>
+                                                                        <?php endif; ?>
+                                                                    </div>
+
+
+                                                                    <!-- End sub-replies -->
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -425,95 +490,7 @@
                                                             thêm</button>
                                                         <?php endif; ?>
                                                     </div>
-
-
-                                                    <!-- JavaScript để hiển thị form khi nhấn nút Reply -->
-                                                    <script>
-                                                        document.addEventListener("DOMContentLoaded", function() {
-                                                            document.querySelectorAll(".replies").forEach(replyContainer => {
-                                                                const showMoreBtn = replyContainer.querySelector(".show-more-replies");
-                                                                const hiddenReplies = replyContainer.querySelectorAll(".reply-item.d-none");
-
-                                                                if (showMoreBtn) {
-                                                                    showMoreBtn.addEventListener("click", function() {
-                                                                        hiddenReplies.forEach(reply => reply.classList.remove("d-none"));
-                                                                        showMoreBtn.style.display = "none"; // Ẩn nút sau khi mở rộng
-                                                                    });
-                                                                }
-                                                            });
-                                                        });
-                                                    </script>
-                                                    <!-- Form Reply -->
-                                                    <div class="reply-form-container mt-2 d-none"
-                                                        id="reply-form-{{ $comment->comment_id }}">
-                                                        <form class="reply-form">
-                                                            @csrf
-                                                            <input type="hidden" name="comment_id"
-                                                                value="{{ $comment->comment_id }}">
-                                                            <input type="hidden" name="article_id"
-                                                                value="{{ $comment->article_id }}">
-
-                                                            <div
-                                                                class="d-flex align-items-start bg-white p-3 rounded shadow-sm border">
-                                                                <!-- Ảnh đại diện -->
-                                                                <div
-                                                                    class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
-                                                                    <img src="{{ $currentUser->image ?? asset('https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg') }}"
-                                                                        alt="Your Avatar">
-                                                                </div>
-
-                                                                <div class="w-100">
-                                                                    <!-- Ô nhập nội dung trả lời -->
-                                                                    <textarea 
-                                                                    class="form-control form-control-sm reply-content" 
-                                                                    name="content" 
-                                                                    rows="2" 
-                                                                    required
-                                                                    data-username="@{{ $comment->user->username ?? 'Anonymous' }}"
-                                                                    placeholder="Trả lời: ..." 
-                                                                    onclick="addUsernameToReply(this)">
-                                                                </textarea>
-                                                                
-
-                                                                    <script>
-                                                                        function addUsernameToReply(textarea, commentId) {
-                                                                            console.log("Textarea clicked for comment ID: " + commentId);
-
-                                                                            fetch(`/get-username-by-comment-id/${commentId}`)
-                                                                                .then(response => response.json())
-                                                                                .then(data => {
-                                                                                    let username = data.username ?? 'Người dùng ẩn danh';
-                                                                                    username = '@' + username.trim();
-
-                                                                                    // Luôn đặt lại nội dung với @username ở đầu
-                                                                                    let currentText = textarea.value.trim();
-                                                                                    textarea.value = username + ' ' + currentText;
-
-                                                                                    console.log("Inserted username:", username);
-                                                                                    textarea.focus();
-                                                                                })
-                                                                                .catch(error => {
-                                                                                    console.error('Error fetching username:', error);
-                                                                                });
-                                                                        }
-                                                                    </script>
-
-                                                                    <!-- Nút hành động -->
-                                                                    <div class="d-flex justify-content-end gap-2 mt-2">
-                                                                        <button type="button"
-                                                                            class="btn butn border border-1 mt-20 py-2 px-3 cancel-reply">Hủy</button>
-                                                                        <button type="button"
-                                                                            class="btn butn border border-1 mt-20 py-2 px-3 send-reply"
-                                                                            data-comment-id="{{ $comment->comment_id }}"
-                                                                            data-article-id="{{ $comment->article_id }}">
-                                                                            Trả lời
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-
+                                                    <!-- End danh sách replies -->
                                                 </div>
                                             </div>
                                         </div>
@@ -557,6 +534,142 @@
             </div>
         </section>
         <!-- ====== end comments ====== -->
+
+        <!-- Modal dùng chung cho Reply -->
+        <div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content rounded-4 shadow-sm">
+                    <!-- Form bao bọc toàn bộ modal -->
+                    <form id="replyForm">
+                        @csrf
+                        <!-- Các trường ẩn để lưu comment_id và article_id -->
+                        <input type="hidden" name="comment_id" value="">
+                        <input type="hidden" name="article_id" value="">
+                        <!-- Modal Header -->
+                        <div class="modal-header border-bottom-0">
+                            <h5 class="modal-title" id="replyModalLabel">Trả lời</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                        </div>
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <div class="d-flex align-items-start bg-light p-3 rounded shadow-sm mb-3">
+                                <!-- Ảnh đại diện của user hiện tại -->
+                                <div class="icon-40 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
+                                    <img src="{{ $currentUser->image ?? asset('https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg') }}"
+                                        alt="Your Avatar" class="w-100 h-100">
+                                </div>
+                                <!-- Nội dung reply -->
+                                <div class="w-100">
+                                    <textarea id="replyTextarea" class="form-control border-0 shadow-none p-2" name="content" rows="4" required
+                                        placeholder="Nhập nội dung trả lời..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal Footer -->
+                        <div class="modal-footer border-top-0">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <!-- Nút gửi sẽ không có data-bs-dismiss, modal sẽ được đóng sau khi gửi thành công -->
+                            <button type="button" class="btn btn-primary send-reply">Gửi trả lời</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- JavaScript: Hàm mở modal và cập nhật dữ liệu từ button -->
+        <script>
+            // Hàm mở modal và cập nhật dữ liệu từ button "Trả lời"
+            function openReplyModal(button) {
+                // Lấy các giá trị từ thuộc tính data của button
+                const username = button.getAttribute('data-username');
+                const commentId = button.getAttribute('data-comment-id');
+                const articleId = button.getAttribute('data-article-id') || '';
+
+                // Cập nhật tiêu đề modal (vd: "Trả lời @username")
+                document.getElementById('replyModalLabel').innerText = "Trả lời " + username;
+
+                // Reset nội dung textarea với @username và focus
+                const textarea = document.getElementById('replyTextarea');
+                if (textarea) {
+                    textarea.value = username + ' ';
+                    textarea.focus();
+                }
+
+                // Cập nhật giá trị các input ẩn trong form
+                const replyForm = document.getElementById('replyForm');
+                replyForm.querySelector("input[name='comment_id']").value = commentId;
+                replyForm.querySelector("input[name='article_id']").value = articleId;
+
+                // Hiển thị modal sử dụng Bootstrap
+                const replyModalEl = document.getElementById('replyModal');
+                const replyModal = new bootstrap.Modal(replyModalEl);
+                replyModal.show();
+            }
+
+            // Xử lý gửi bình luận qua AJAX khi nhấn nút "Gửi trả lời" trong modal
+            document.addEventListener("DOMContentLoaded", function() {
+                console.log("Script loaded!");
+                let sendReplyBtn = document.querySelector("#replyModal .send-reply");
+                console.log("Found send-reply button", sendReplyBtn);
+
+                if (sendReplyBtn) {
+                    sendReplyBtn.addEventListener("click", function() {
+                        console.log("Clicked send-reply button!");
+                        let replyForm = document.getElementById("replyForm");
+                        let commentId = replyForm.querySelector("input[name='comment_id']").value;
+                        let articleId = replyForm.querySelector("input[name='article_id']").value;
+                        let content = replyForm.querySelector("textarea[name='content']").value.trim();
+
+                        console.log("articleId =", articleId, "commentId =", commentId);
+                        console.log("content =", content);
+
+                        // Lấy CSRF token từ meta
+                        let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute(
+                            "content");
+
+                        if (content === "") {
+                            alert("Vui lòng nhập nội dung bình luận!");
+                            return;
+                        }
+
+                        // Gửi dữ liệu qua fetch
+                        fetch(`/articles/${articleId}/comments/${commentId}/reply`, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": csrfToken
+                                },
+                                body: JSON.stringify({
+                                    content: content,
+                                    article_id: articleId,
+                                    parent_id: commentId
+                                })
+                            })
+                            .then(response => {
+                                console.log("Response status:", response.status);
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log("Server data:", data);
+                                if (data.success) {
+                                    // Nếu gửi thành công, đóng modal và reload trang
+                                    const replyModalEl = document.getElementById('replyModal');
+                                    const modalInstance = bootstrap.Modal.getInstance(replyModalEl);
+                                    modalInstance.hide();
+                                    location.reload();
+                                } else {
+                                    alert(data.message || "Có lỗi xảy ra, vui lòng thử lại!");
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Lỗi khi gửi bình luận:", error);
+                                alert("Lỗi khi gửi bình luận!");
+                            });
+                    });
+                }
+            });
+        </script>
+
 
 
 
