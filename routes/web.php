@@ -78,9 +78,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
     Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
 
+    Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
+
 });
 // Client Category
-Route::get('/category/{category_id}',[CategoryUserController::class, 'index'])->name('client.category.show');
+Route::get('/category/{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
 Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.show');
 
 
@@ -357,6 +359,8 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::get('/author/followers', [AuthorDashboard::class, 'followers'])->name('author.followers');
 
+    Route::get('/articles/{article}/versions', [AuthorArticleController::class, 'versions'])->name('author.articles.versions');
+    Route::get('/articles/{article}/versions/{versionId}', [AuthorArticleController::class, 'showVersion'])->name('author.articles.version');
 });
 
 
