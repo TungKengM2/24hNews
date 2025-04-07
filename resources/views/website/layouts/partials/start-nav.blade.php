@@ -117,9 +117,10 @@
                             @endphp
 
                             {{-- Kiểm tra vai trò và hiển thị các liên kết tương ứng --}}
-                            @if ($user->role_id == 1)
+
+                            @if ($user->role_id == 1) {{-- admin  --}}
                                 <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">
-                                        <i class="la la-tv fs-4"></i>  Dashboard
+                                        <i class="la la-tv fs-4"></i> Dashboard
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('admin.viewed.articles') }}">
                                         <i class="la la-eye fs-4"></i> Tin đã xem
@@ -127,9 +128,20 @@
                                 <li><a class="dropdown-item" href="{{ route('admin.saved') }}">
                                         <i class="la la-bookmark fs-4"></i> Tin đã lưu
                                     </a></li>
-                            @elseif ($user->role_id == 2)
+
+                                <li><a class="dropdown-item" href="{{ route('admin.following') }}">
+                                        <i class="la la-users fs-4"></i> Người đã theo dõi
+                                    </a></li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('admin.comments', ['user_id' => auth()->id()]) }}">
+                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
+                                    </a>
+                                </li>
+
+                            @elseif ($user->role_id == 2)  {{-- tác giả  --}}
                                 <li><a class="dropdown-item" href="{{ route('author.dashboard') }}">
-                                        <i class="la la-tv fs-4"></i>  Dashboard
+                                        <i class="la la-tv fs-4"></i> Dashboard
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('author.viewed.articles') }}">
                                         <i class="la la-eye fs-4"></i> Tin đã xem
@@ -137,9 +149,20 @@
                                 <li><a class="dropdown-item" href="{{ route('author.saved') }}">
                                         <i class="la la-bookmark fs-4"></i> Tin đã lưu
                                     </a></li>
-                            @elseif ($user->role_id == 3)
+
+                                <li><a class="dropdown-item" href="{{ route('author.following') }}">
+                                        <i class="la la-users fs-4"></i> Người đã theo dõi
+                                    </a></li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('author.comments', ['user_id' => auth()->id()]) }}">
+                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
+                                    </a>
+                                </li>
+
+                            @elseif ($user->role_id == 3) {{-- kiểm duyệt viên  --}}
                                 <li><a class="dropdown-item" href="{{ route('moderator.dashboard') }}">
-                                        <i class="la la-tv fs-4"></i>  Dashboard
+                                        <i class="la la-tv fs-4"></i> Dashboard
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('moderator.viewed.articles') }}">
                                         <i class="la la-eye fs-4"></i> Tin đã xem
@@ -147,9 +170,20 @@
                                 <li><a class="dropdown-item" href="{{ route('moderator.saved') }}">
                                         <i class="la la-bookmark fs-4"></i> Tin đã lưu
                                     </a></li>
-                            @elseif ($user->role_id == 4)
+
+                                <li><a class="dropdown-item" href="{{ route('moderator.following') }}">
+                                        <i class="la la-users fs-4"></i> Người đã theo dõi
+                                    </a></li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('moderator.comments', ['user_id' => auth()->id()]) }}">
+                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
+                                    </a>
+                                </li>
+
+                            @elseif ($user->role_id == 4){{-- user  --}}
                                 <li><a class="dropdown-item" href="{{ route('user.dashboard') }}">
-                                        <i class="la la-tv fs-4"></i> Dashboard
+                                        <i class="la la-tv fs-4"></i> Thông Tin Tài Khoản
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('viewed.articles') }}">
                                         <i class="la la-eye fs-4"></i> Tin đã xem
@@ -157,6 +191,16 @@
                                 <li><a class="dropdown-item" href="{{ route('user.saved') }}">
                                         <i class="la la-bookmark fs-4"></i> Tin đã lưu
                                     </a></li>
+
+                                <li><a class="dropdown-item" href="{{ route('user.following') }}">
+                                        <i class="la la-users fs-4"></i> Người đã theo dõi
+                                    </a></li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('user.comments', ['user_id' => auth()->id()]) }}">
+                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
+                                    </a>
+                                </li>
                             @endif
 
                             {{-- Đăng Xuất --}}
@@ -167,7 +211,8 @@
                                 </a>
                             </li>
 
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                style="display: none;">
                                 @csrf
                             </form>
                         @else
