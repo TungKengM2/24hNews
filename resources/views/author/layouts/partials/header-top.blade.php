@@ -52,7 +52,7 @@
                         @empty
                             <li class="text-muted dropdown-item p-3">Không có thông báo mới.</li>
                         @endforelse
-                        
+
                         </ul>
                     </li>
 
