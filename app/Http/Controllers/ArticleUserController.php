@@ -142,87 +142,85 @@ class ArticleUserController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(4); // Phân trang bình luận gốc (5 bình luận mỗi trang)
 
-        // ✅ Lấy tất cả các replies của các bình luận đã phân trang
-        $commentIds = $comments->pluck('comment_id'); // Lấy danh sách ID của bình luận gốc
+       // Lấy danh sách ID của bình luận gốc
+$commentIds = $comments->pluck('comment_id');
 
-        $replies = Comment::whereIn(
-            'parent_id',
-            $commentIds
-        ) // Chỉ lấy replies của bình luận gốc
-            ->where('status', 'approved')
-            ->with([
-                'user:user_id,username,image',
-                'reactions',
-            ])
-            ->withCount([
-                'reactions as like_count' => function ($query) {
-                    $query->where('is_like', true);
-                },
-                'reactions as dislike_count' => function ($query) {
-                    $query->where('is_like', false);
-                },
-            ])
-            ->orderBy(
-                'created_at',
-                'asc'
-            ) // Hiển thị replies theo thứ tự cũ -> mới
-            ->get();
+// Lấy replies trực tiếp của các bình luận gốc
+$replies = Comment::whereIn('parent_id', $commentIds)
+    ->where('status', 'approved')
+    ->with([
+        'user:user_id,username,image',
+        'reactions',
+    ])
+    ->withCount([
+        'reactions as like_count' => function ($query) {
+            $query->where('is_like', true);
+        },
+        'reactions as dislike_count' => function ($query) {
+            $query->where('is_like', false);
+        },
+    ])
+    ->orderBy('created_at', 'asc')
+    ->get();
 
+// Lấy danh sách ID của các reply vừa lấy
+$replyIds = $replies->pluck('comment_id');
 
-        // Lấy các reply của các reply (parent_id = comment_id của các reply)
-        $replyIds = $replies->pluck('comment_id'); // Lấy danh sách ID của các reply
+// Hàm đệ quy lấy tất cả các cấp sub-replies
+function getAllSubReplies($parentIds)
+{
+    $subReplies = Comment::whereIn('parent_id', $parentIds)
+        ->where('status', 'approved')
+        ->with([
+            'user:user_id,username,image',
+            'reactions',
+        ])
+        ->withCount([
+            'reactions as like_count' => function ($query) {
+                $query->where('is_like', true);
+            },
+            'reactions as dislike_count' => function ($query) {
+                $query->where('is_like', false);
+            },
+        ])
+        ->orderBy('created_at', 'asc')
+        ->get();
 
-        // ------------------ PHẦN THAY ĐỔI: Lấy tất cả các cấp sub-replies đệ quy ------------------
-        // Hàm đệ quy để lấy tất cả các sub-replies từ danh sách parent IDs
-        function getAllSubReplies($parentIds)
-        {
-            $subReplies = Comment::whereIn('parent_id', $parentIds)
-                ->where('status', 'approved')
-                ->with([
-                    'user:user_id,username,image',
-                    'reactions',
-                ])
-                ->withCount([
-                    'reactions as like_count' => function ($query) {
-                        $query->where('is_like', true);
-                    },
-                    'reactions as dislike_count' => function ($query) {
-                        $query->where('is_like', false);
-                    },
-                ])
-                ->orderBy('created_at', 'asc')
-                ->get();
+    if ($subReplies->isEmpty()) {
+        return collect();
+    }
 
-            if ($subReplies->isEmpty()) {
-                return collect();
-            }
+    $childParentIds = $subReplies->pluck('comment_id');
+    $childReplies = getAllSubReplies($childParentIds);
 
-            // Lấy đệ quy các cấp con của subReplies hiện tại
-            $childParentIds = $subReplies->pluck('comment_id');
-            $childReplies   = getAllSubReplies($childParentIds);
+    return $subReplies->merge($childReplies);
+}
 
-            // Hợp nhất kết quả của cấp hiện tại và cấp đệ quy
-            return $subReplies->merge($childReplies);
+// Lấy tất cả các cấp sub-replies của các replies
+$allSubReplies = getAllSubReplies($replyIds);
+
+// Gom replies và sub-replies theo parent_id
+$groupedReplies = $replies->groupBy('parent_id');
+$groupedSubReplies = $allSubReplies->groupBy('parent_id');
+
+// Hàm đệ quy để gán subReplies vào từng reply
+function attachSubReplies(&$replies, $groupedSubReplies)
+{
+    foreach ($replies as $reply) {
+        $reply->subReplies = $groupedSubReplies->get($reply->comment_id, collect());
+
+        if ($reply->subReplies->isNotEmpty()) {
+            attachSubReplies($reply->subReplies, $groupedSubReplies);
         }
+    }
+}
 
-        $allSubReplies = getAllSubReplies($replyIds);
+// Gán replies vào từng comment gốc và gán luôn sub-replies đệ quy
+foreach ($comments as $comment) {
+    $comment->replies = $groupedReplies->get($comment->comment_id, collect());
+    attachSubReplies($comment->replies, $groupedSubReplies);
+}
 
-        // -----------------------------------------------------------------------------------------
-
-        // Kết hợp các replies của replies (sub-replies)
-        $groupedReplies    = $replies->groupBy('parent_id');
-        $groupedSubReplies = $allSubReplies->groupBy('parent_id');
-
-        // Gán replies vào từng comment gốc
-        foreach ($comments as $comment) {
-            // Gán các replies vào comment gốc
-            $comment->replies = $groupedReplies->get($comment->comment_id, collect());
-
-            // Gán sub-replies (tất cả các cấp con) vào từng reply của comment gốc
-            foreach ($comment->replies as $reply) {
-                $reply->subReplies = $groupedSubReplies->get($reply->comment_id, collect());
-            }
-        }
 
 
         $categories = Category::where('is_active', 1)->limit(7)->get();

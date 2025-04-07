@@ -461,14 +461,90 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <!-- Nếu subReply này có con (nested subReplies), đệ quy hiển thị chúng -->
-                                                                            <?php if (isset($subReply->subReplies) && count($subReply->subReplies)): ?>
+
+                                                                            <!-- Đệ quy hiển thị tiếp các cấp con của subReply -->
                                                                             <?php
-                                                                            // Gọi lại chính file view (hoặc include đoạn mã này) để hiển thị các subReplies của subReply
-                                                                            // Lưu ý: Đường dẫn include dưới đây cần đúng với vị trí file hiện tại.
-                                                                            include __FILE__;
-                                                                            ?>
-                                                                            <?php endif; ?>
+// Hàm đệ quy viết sẵn tại đầu view
+function renderSubReplies($subReplies)
+{
+    foreach ($subReplies as $subReply): ?>
+                                                                            <div class="reply-item mb-3">
+                                                                                <div class="d-flex">
+                                                                                    <div class="avatar me-2">
+                                                                                        <img src="<?= $subReply->user->image ? asset('storage/' . $subReply->user->image) : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>"
+                                                                                            class="rounded-circle"
+                                                                                            width="40" height="40">
+                                                                                    </div>
+                                                                                    <div
+                                                                                        class="content flex-grow-1 p-3 rounded bg-white shadow-sm">
+                                                                                        <div
+                                                                                            class="d-flex justify-content-between align-items-start">
+                                                                                            <div>
+                                                                                                <strong><?= htmlspecialchars($subReply->user->username ?? 'Anonymous') ?></strong>
+                                                                                                <div
+                                                                                                    class="text-muted small">
+                                                                                                    <i
+                                                                                                        class="fas fa-clock"></i>
+                                                                                                    <?= date('F d, Y', strtotime($subReply->created_at)) ?>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div
+                                                                                                class="d-flex align-items-center">
+                                                                                                <?php if (auth()->check() && auth()->id() === $subReply->user_id): ?>
+                                                                                                <button
+                                                                                                    class="btn trash-can-btn butn border border-1 py-2 px-3 ms-2"
+                                                                                                    onclick="confirmDelete(event, <?= $subReply->comment_id ?>)">
+                                                                                                    <i
+                                                                                                        class="fas fa-trash-alt"></i>
+                                                                                                </button>
+                                                                                                <?php elseif (auth()->check()): ?>
+                                                                                                <button
+                                                                                                    class="btn repost-btn butn border border-1 py-2 px-3 ms-2"
+                                                                                                    data-comment-id="<?= $subReply->comment_id ?>"
+                                                                                                    data-content="<?= htmlspecialchars($subReply->content, ENT_QUOTES, 'UTF-8') ?>">
+                                                                                                    <i class="la la-exclamation-triangle"
+                                                                                                        style="color: #fa0000;"></i>
+                                                                                                </button>
+                                                                                                <?php endif; ?>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="mt-2">
+                                                                                            <?= nl2br(htmlspecialchars($subReply->content)) ?>
+                                                                                        </div>
+                                                                                        <div class="mt-3">
+                                                                                            <button
+                                                                                                class="btn reply-btn butn border border-1 py-2 px-3 d-inline-block"
+                                                                                                data-comment-id="<?= $subReply->comment_id ?>"
+                                                                                                data-username="@<?= htmlspecialchars($subReply->user->username ?? 'Anonymous') ?>"
+                                                                                                data-article-id="<?= $subReply->article_id ?>"
+                                                                                                onclick="openReplyModal(this)">
+                                                                                                <span class="fw-bold">Trả
+                                                                                                    lời</span>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <?php if (isset($subReply->subReplies) && count($subReply->subReplies)): ?>
+                                                                                <div class="sub-replies mt-3 ms-5">
+                                                                                    <?php renderSubReplies($subReply->subReplies); ?>
+                                                                                </div>
+                                                                                <?php endif; ?>
+                                                                            </div>
+                                                                            <?php endforeach;
+}
+?>
+
+                                                                            <!-- Trong phần hiển thị reply đầu tiên -->
+                                                                            <div class="sub-replies mt-3 ms-5">
+                                                                                <?php if (count($reply->subReplies)): ?>
+                                                                                <?php renderSubReplies($reply->subReplies); ?>
+                                                                                <?php else: ?>
+                                                                                <p class="text-muted ms-2">Chưa có phản hồi
+                                                                                    nào.</p>
+                                                                                <?php endif; ?>
+                                                                            </div>
+
                                                                         </div>
                                                                         <?php endforeach; ?>
                                                                         <?php else: ?>
@@ -476,6 +552,7 @@
                                                                         </p>
                                                                         <?php endif; ?>
                                                                     </div>
+
 
 
                                                                     <!-- End sub-replies -->

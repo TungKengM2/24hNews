@@ -99,7 +99,7 @@ class ViolationsMController extends Controller
             return back()->with('error', 'Vi phạm không còn trong trạng thái chờ duyệt!');
         }
 
-        
+
         // Lấy bài viết bị vi phạm dựa trên reference_id
         $article = Article::where('article_id', $violation->reference_id)->first();
 
@@ -111,17 +111,21 @@ class ViolationsMController extends Controller
         $article->status = 'draft';
         $article->save();
 
-        // Lấy thông tin vi phạm
         $detectedWord = $violation->detected_word;
+        $article = $violation->article;
         $author = $article->author;
 
-        // Gửi thông báo
-        $author->notify(new ArticleStatusChangedNotification($article, $detectedWord));
+        if ($article && !empty($detectedWord)) {
+            $author->notify(new ArticleStatusChangedNotification($article, $detectedWord));
+        } else {
+            return back()->with('error', 'Không thể gửi thông báo vì thiếu thông tin bài viết hoặc lý do vi phạm.');
+        }
+
+
 
         // Xóa vi phạm
         $violation->delete();
 
         return back()->with('success', 'Vi phạm đã được giải quyết.');
     }
-    
 }
