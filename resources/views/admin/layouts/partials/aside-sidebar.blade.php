@@ -2,8 +2,10 @@
     // Đếm số bài viết đang chờ duyệt
     $pendingArticlesCount = \App\Models\Article::where('status', 'pending')->count();
 
-    // Đếm số report chưa được xử lý
-    $pendingViolationsCount = \App\Models\Violation::where('status', 'pending')->count();
+    // Đếm số report chưa được xử lý từ bảng approvals
+    $pendingViolationsCount = \App\Models\Approval::where('type', 'violation')
+        ->where('status', 'pending')
+        ->count();
 
     // Đếm số yêu cầu nâng cấp tài khoản chưa được xử lý
     $pendingRoleRequestsCount = \App\Models\Approval::where('type', 'role_upgrade')

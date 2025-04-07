@@ -41,7 +41,8 @@
                             </div>
 
                             @if (session('success'))
-                                <div id="success-alert" class="alert alert-success alert-dismissible fade show custom-alert m-0">
+                                <div id="success-alert"
+                                    class="alert alert-success alert-dismissible fade show custom-alert m-0">
                                     <div class="d-flex align-items-center">
                                         <div class="alert-icon me-2">
                                             <i class="fas fa-check-circle"></i>
@@ -50,7 +51,8 @@
                                             <p class="mb-0"><strong>Thành công!</strong> {{ session('success') }}</p>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
                                 </div>
                             @endif
 
@@ -86,8 +88,13 @@
                             }
 
                             @keyframes fadeInAlert {
-                                0% { opacity: 0; }
-                                100% { opacity: 1; }
+                                0% {
+                                    opacity: 0;
+                                }
+
+                                100% {
+                                    opacity: 1;
+                                }
                             }
 
                             @media (max-width: 992px) {
@@ -106,7 +113,7 @@
 
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
-                                console.log('Hiển thị thông báo thành công: {{ session("success") }}');
+                                console.log('Hiển thị thông báo thành công: {{ session('success') }}');
                                 setTimeout(function() {
                                     var alertElement = document.getElementById('success-alert');
                                     if (alertElement) {
@@ -134,7 +141,8 @@
                                                     {{ request('filter') == 'active' ? 'selected' : '' }}>Bài viết có danh
                                                     mục hoạt động</option>
                                                 <option value="inactive"
-                                                    {{ request('filter') == 'inactive' ? 'selected' : '' }}>Bài viết có danh
+                                                    {{ request('filter') == 'inactive' ? 'selected' : '' }}>Bài viết có
+                                                    danh
                                                     mục bị vô hiệu hóa</option>
 
 
@@ -211,7 +219,8 @@
                                                         @break
                                                     @endswitch
                                                 </td>
-                                                <td class="text-center">{{ $article->author->username ?? 'Chưa xác định' }}</td>
+                                                <td class="text-center">
+                                                    {{ $article->author->username ?? 'Chưa xác định' }}</td>
                                                 <td class="text-center">{{ number_format($article->views) }}</td>
                                                 {{-- <td class="text-center">
                                                     @if ($article->contains_sensitive_content)
@@ -246,17 +255,20 @@
                                                             <button class="btn btn-secondary btn-sm"
                                                                 title="{{ $article->status === 'published' ? 'Ẩn bài viết' : 'Hiện bài viết' }}"
                                                                 onclick="return confirm('Bạn có chắc chắn muốn {{ $article->status === 'published' ? 'ẩn' : 'hiện' }} bài viết này không?')">
-                                                                <i class="fa {{ $article->status === 'published' ? 'fa-eye-slash' : 'fa-eye' }}"></i>
+                                                                <i
+                                                                    class="fa {{ $article->status === 'published' ? 'fa-eye-slash' : 'fa-eye' }}"></i>
                                                             </button>
                                                         </form>
                                                     @endif
-                                                        <form action="{{ route('articles.destroy', $article) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="btn btn-danger btn-sm" title="Xóa" onclick="return confirm('Xác nhận xóa?')">
-                                                                <i class="si-trash si"></i>
-                                                            </button>
-                                                        </form>
+                                                    <form action="{{ route('articles.destroy', $article) }}"
+                                                        method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="btn btn-danger btn-sm" title="Xóa"
+                                                            onclick="return confirm('Xác nhận xóa?')">
+                                                            <i class="si-trash si"></i>
+                                                        </button>
+                                                    </form>
 
                                                 </td>
                                             </tr>
@@ -279,5 +291,5 @@
         </div>
     @endsection
 
-@section('scripts')
-@endsection
+    @section('scripts')
+    @endsection

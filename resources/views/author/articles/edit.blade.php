@@ -106,40 +106,10 @@
                 <div class="d-flex align-items-center">
                     <div class="me-auto">
                         <h4 class="page-title">Cập Nhật Bài Viết</h4>
-
-                        <!-- Error messages -->
-                        @if ($errors->any())
-                            <div class="alert alert-danger error_message">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
-                        <!-- Violation reasons -->
-                        @if (session('violation_reasons'))
-                            <div class="alert alert-warning error_message">
-                                <strong>Lý do vi phạm:</strong>
-                                <ul>
-                                    @if (is_array(session('violation_reasons')))
-                                        @foreach (session('violation_reasons') as $word => $reason)
-                                            <li><strong>{{ $word }}:</strong> {{ $reason }}</li>
-                                        @endforeach
-                                    @else
-                                        <li>{{ session('violation_reasons') }}</li>
-                                    @endif
-                                </ul>
-                            </div>
-                        @endif
-
-                        <!-- Breadcrumb -->
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#"><i class="mdi mdi-home-outline"></i></a>
-                                    </li>
+                                    <li class="breadcrumb-item"><a href="{{ route('author.articles.index') }}"><i class="mdi mdi-home-outline"></i></a></li>
                                     <li class="breadcrumb-item" aria-current="page">Danh Sách Bài Viết</li>
                                     <li class="breadcrumb-item active" aria-current="page">Cập Nhật</li>
                                 </ol>
@@ -217,270 +187,372 @@
                                     @endforeach
                                 </select>
                             </div>
+            <div class="box">
+                <div class="box-header with-border">
+                    <h4 class="box-title">Chỉnh sửa bài viết</h4>
+                    <div class="box-tools">
+                        <div class="btn-group">
+                            <a href="{{ route('author.articles.versions', $article) }}" class="btn btn-info btn-sm me-2">
+                                <i class="si-history si"></i> Lịch sử phiên bản
+                            </a>
+                            <a href="{{ route('author.articles.index') }}" class="btn btn-default btn-sm">
+                                <i class="mdi mdi-arrow-left"></i> Quay lại
+                            </a>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Thumbnail Section - Moved up -->
-                    <div class="form-section">
-                        <h5 class="form-section-title">Ảnh Đại Diện</h5>
+                <div class="box-body">
+                    <!-- Error messages -->
+                    @if ($errors->any())
+                        <div class="alert alert-danger error_message">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="file" class="form-control @error('thumbnail_url') is-invalid @enderror"
-                                       id="thumbnail_url" name="thumbnail_url" accept="image/*">
-
-                                @error('thumbnail_url')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-
-                                @if (session('thumbnail_reasons'))
-                                    <div class="alert alert-warning mt-2">
-                                        <strong>Ảnh đại diện vi phạm quy định!</strong>
-                                        <ul>
-                                            @foreach (session('thumbnail_reasons') as $key => $reason)
-                                                <li>{{ $reason }}</li>
-                                            @endforeach
-                                        </ul>
-                                        <p>Vui lòng chọn ảnh đại diện khác phù hợp với quy định.</p>
-                                    </div>
+                    <!-- Violation reasons -->
+                    @if (session('violation_reasons'))
+                        <div class="alert alert-warning error_message">
+                            <strong>Lý do vi phạm:</strong>
+                            <ul>
+                                @if (is_array(session('violation_reasons')))
+                                    @foreach (session('violation_reasons') as $word => $reason)
+                                        <li><strong>{{ $word }}:</strong> {{ $reason }}</li>
+                                    @endforeach
+                                @else
+                                    <li>{{ session('violation_reasons') }}</li>
                                 @endif
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('author.articles.update', $article) }}" method="POST" enctype="multipart/form-data"
+                          id="articleForm">
+                        @csrf
+                        @method('PUT')
+
+                        <!-- Basic Information Section -->
+                        <div class="form-section">
+                            <h5 class="form-section-title">Thông Tin Cơ Bản</h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="title" class="form-label">Tiêu đề:</label>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" id="title" name="title"
+                                               value="{{ $article->title }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="slug" class="form-label">Đường dẫn:</label>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" id="slug" name="slug"
+                                               value="{{ $article->slug }}" required>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="mt-2" id="current-image-container">
-                                    @if ($article->thumbnail_url)
-                                        <div>
-                                            <p><strong>Ảnh đại diện hiện tại:</strong></p>
-                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Ảnh đại diện"
-                                                 class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="category_id" class="form-label">Danh Mục</label>
+                                    <select name="category_id" class="form-control">
+                                        <option value="">-- Không có danh mục --</option>
+                                        @foreach ($categories as $category)
+                                            @if ($category->is_active || $article->category_id == $category->category_id)
+                                                <option value="{{ $category->category_id }}"
+                                                    {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                    @if (!$category->is_active)
+                                                        (Đã vô hiệu hóa)
+                                                    @endif
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
+                                    <select name="tags[]" class="form-control select2" multiple="multiple">
+                                        @foreach ($tags as $tag)
+                                            <option value="{{ $tag->tag_id }}"
+                                                    @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
+                                                {{ $tag->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thumbnail Section -->
+                        <div class="form-section">
+                            <h5 class="form-section-title">Ảnh Đại Diện</h5>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="file" class="form-control @error('thumbnail_url') is-invalid @enderror"
+                                           id="thumbnail_url" name="thumbnail_url" accept="image/*">
+
+                                    @error('thumbnail_url')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+
+                                    @if (session('thumbnail_reasons'))
+                                        <div class="alert alert-warning mt-2">
+                                            <strong>Ảnh đại diện vi phạm quy định!</strong>
+                                            <ul>
+                                                @foreach (session('thumbnail_reasons') as $key => $reason)
+                                                    <li>{{ $reason }}</li>
+                                                @endforeach
+                                            </ul>
+                                            <p>Vui lòng chọn ảnh đại diện khác phù hợp với quy định.</p>
                                         </div>
                                     @endif
                                 </div>
 
-                                <div id="image-preview-container" style="display: none;">
-                                    <p class="mt-2"><strong>Ảnh xem trước:</strong></p>
-                                    <img id="image-preview" src="#" alt="Xem trước" class="img-fluid mb-2">
-                                </div>
-
-                                <div id="moderation-result" style="display: none;">
-                                    <div id="moderation-loading" class="moderation-loading" style="display: none;">
-                                        <div class="spinner-border text-primary" role="status">
-                                            <span class="visually-hidden">Đang kiểm duyệt...</span>
-                                        </div>
-                                        <p>Đang kiểm duyệt ảnh...</p>
+                                <div class="col-md-6">
+                                    <div class="mt-2" id="current-image-container">
+                                        @if ($article->thumbnail_url)
+                                            <div>
+                                                <p><strong>Ảnh đại diện hiện tại:</strong></p>
+                                                <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Ảnh đại diện"
+                                                     class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+                                            </div>
+                                        @endif
                                     </div>
-                                    <div id="moderation-error" class="alert alert-danger" style="display: none;">
-                                        <strong>Lỗi!</strong> <span id="error-message"></span>
+
+                                    <div id="image-preview-container" style="display: none;">
+                                        <p class="mt-2"><strong>Ảnh xem trước:</strong></p>
+                                        <img id="image-preview" src="#" alt="Xem trước" class="img-fluid mb-2">
+                                    </div>
+
+                                    <div id="moderation-result" style="display: none;">
+                                        <div id="moderation-loading" class="moderation-loading" style="display: none;">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Đang kiểm duyệt...</span>
+                                            </div>
+                                            <p>Đang kiểm duyệt ảnh...</p>
+                                        </div>
+                                        <div id="moderation-error" class="alert alert-danger" style="display: none;">
+                                            <strong>Lỗi!</strong> <span id="error-message"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Content Section -->
-                    @php
-                        $content = str_replace('src="../../storage', 'src="/storage', $article->content);
-                    @endphp
+                        <!-- Content Section -->
+                        @php
+                            $content = str_replace('src="../../storage', 'src="/storage', $article->content);
+                        @endphp
 
-                    <div class="form-group">
-                        <label for="content" class="form-label" style="color: white">Nội dung</label>
-                        @if (session('violations'))
-                            <textarea id="full-featured" name="content"
-                                      style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
-                            {!! highlightWords(old('content'), session('violations')) !!}
-                        </textarea>
-                        @else
-                            <textarea id="full-featured" name="content" style="height: 800px;">
-                        {!! $content !!}
-                        </textarea>
-                        @endif
-                    </div>
+                        <div class="form-group">
+                            <label for="content" class="form-label">Nội dung</label>
+                            @if (session('violations'))
+                                <textarea id="full-featured" name="content"
+                                          style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                                {!! highlightWords(old('content'), session('violations')) !!}
+                            </textarea>
+                            @else
+                                <textarea id="full-featured" name="content" style="height: 800px;">
+                            {!! $content !!}
+                            </textarea>
+                            @endif
+                        </div>
 
-                    <!-- Hidden fields and buttons -->
-                    <input type="hidden" name="status" id="articleStatus" value="pending">
-                    <input type="hidden" name="author_id" value="{{ $article->author_id }}">
+                        <!-- Hidden fields and buttons -->
+                        <input type="hidden" name="status" id="articleStatus" value="pending">
+                        <input type="hidden" name="author_id" value="{{ $article->author_id }}">
 
-                    <div class="action-buttons">
-                        <button type="submit" class="btn btn-primary" id="submitButton">Cập nhật</button>
-                        <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
-                    </div>
-                </form>
+                        <div class="action-buttons">
+                            <button type="submit" class="btn btn-primary" id="submitButton">Cập nhật</button>
+                            <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
+                        </div>
+                    </form>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <script>
-                $(document).ready(function() {
-                    $('.select2').select2({
-                        tags: true,
-                        tokenSeparators: [','],
-                        placeholder: 'Chọn hoặc nhập thẻ mới',
-                        allowClear: true,
-                    });
-                });
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                tags: true,
+                tokenSeparators: [','],
+                placeholder: 'Chọn hoặc nhập thẻ mới',
+                allowClear: true,
+            });
+        });
 
-                document.getElementById('title').addEventListener('input', function() {
-                    let title = this.value.trim();
-                    let slug = title.toLowerCase()
-                        .normalize('NFD').replace(/[̀-ͯ]/g, '')
-                        .replace(/đ/g, 'd').replace(/Đ/g, 'D')
-                        .replace(/\s+/g, '-')
-                        .replace(/[^\w-]/g, '')
-                        .replace(/--+/g, '-')
-                        .replace(/^-+|-+$/g, '');
+        document.getElementById('title').addEventListener('input', function() {
+            let title = this.value.trim();
+            let slug = title.toLowerCase()
+                .normalize('NFD').replace(/[̀-ͯ]/g, '')
+                .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+                .replace(/\s+/g, '-')
+                .replace(/[^\w-]/g, '')
+                .replace(/--+/g, '-')
+                .replace(/^-+|-+$/g, '');
 
-                    document.getElementById('slug').value = slug;
-                });
-            </script>
+            document.getElementById('slug').value = slug;
+        });
+    </script>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Khởi tạo các phần tử DOM
-                    const imageUpload = document.getElementById('thumbnail_url');
-                    const imagePreview = document.getElementById('image-preview');
-                    const previewContainer = document.getElementById('image-preview-container');
-                    const currentImageContainer = document.getElementById('current-image-container');
-                    const moderationResult = document.getElementById('moderation-result');
-                    const moderationLoading = document.getElementById('moderation-loading');
-                    const errorDiv = document.getElementById('moderation-error');
-                    const errorMessage = document.getElementById('error-message');
-                    const submitButton = document.getElementById('submitButton');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Khởi tạo các phần tử DOM
+            const imageUpload = document.getElementById('thumbnail_url');
+            const imagePreview = document.getElementById('image-preview');
+            const previewContainer = document.getElementById('image-preview-container');
+            const currentImageContainer = document.getElementById('current-image-container');
+            const moderationResult = document.getElementById('moderation-result');
+            const moderationLoading = document.getElementById('moderation-loading');
+            const errorDiv = document.getElementById('moderation-error');
+            const errorMessage = document.getElementById('error-message');
+            const submitButton = document.getElementById('submitButton');
 
-                    // Đảm bảo mặc định nút submit được bật và không có kiểm duyệt ảnh hiển thị
-                    submitButton.disabled = false;
-                    let isImageChanged = false; // Theo dõi xem người dùng đã thay đổi ảnh chưa
-                    let isImageValid = true; // Mặc định ảnh hiện tại là hợp lệ
+            // Đảm bảo mặc định nút submit được bật và không có kiểm duyệt ảnh hiển thị
+            submitButton.disabled = false;
+            let isImageChanged = false; // Theo dõi xem người dùng đã thay đổi ảnh chưa
+            let isImageValid = true; // Mặc định ảnh hiện tại là hợp lệ
 
-                    // Ẩn tất cả các phần tử kiểm duyệt ảnh khi trang mới tải
-                    if (previewContainer) previewContainer.style.display = 'none';
-                    if (moderationResult) moderationResult.style.display = 'none';
-                    if (moderationLoading) moderationLoading.style.display = 'none';
-                    if (errorDiv) errorDiv.style.display = 'none';
+            // Ẩn tất cả các phần tử kiểm duyệt ảnh khi trang mới tải
+            if (previewContainer) previewContainer.style.display = 'none';
+            if (moderationResult) moderationResult.style.display = 'none';
+            if (moderationLoading) moderationLoading.style.display = 'none';
+            if (errorDiv) errorDiv.style.display = 'none';
 
-                    // Lưu nháp
-                    document.getElementById('saveDraft').addEventListener('click', function() {
-                        document.getElementById('articleStatus').value = 'draft';
-                        document.getElementById('articleForm').submit();
-                    });
+            // Lưu nháp
+            document.getElementById('saveDraft').addEventListener('click', function() {
+                document.getElementById('articleStatus').value = 'draft';
+                document.getElementById('articleForm').submit();
+            });
 
-                    // Chỉ xử lý sự kiện khi người dùng chọn ảnh mới
-                    if (imageUpload) {
-                        imageUpload.addEventListener('change', function(e) {
-                            const file = e.target.files[0];
+            // Chỉ xử lý sự kiện khi người dùng chọn ảnh mới
+            if (imageUpload) {
+                imageUpload.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
 
-                            // Chỉ xử lý khi có file được chọn
-                            if (file) {
-                                isImageChanged = true; // Người dùng đã thay đổi ảnh
-                                isImageValid = false; // Đặt lại trạng thái khi có ảnh mới
+                    // Chỉ xử lý khi có file được chọn
+                    if (file) {
+                        isImageChanged = true; // Người dùng đã thay đổi ảnh
+                        isImageValid = false; // Đặt lại trạng thái khi có ảnh mới
 
-                                // Ẩn ảnh hiện tại, hiển thị xem trước
-                                if (currentImageContainer) {
-                                    currentImageContainer.style.display = 'none';
-                                }
-
-                                const reader = new FileReader();
-                                reader.onload = function(e) {
-                                    imagePreview.src = e.target.result;
-                                    previewContainer.style.display = 'block';
-                                };
-                                reader.readAsDataURL(file);
-
-                                // Hiển thị trạng thái kiểm duyệt
-                                moderationResult.style.display = 'block';
-                                moderationLoading.style.display = 'block';
-                                errorDiv.style.display = 'none';
-
-                                // Tạm thời vô hiệu hóa nút submit cho đến khi kiểm duyệt hoàn tất
-                                submitButton.disabled = true;
-
-                                // Gửi request kiểm duyệt ảnh
-                                if (document.querySelector('meta[name="csrf-token"]')) {
-                                    const formData = new FormData();
-                                    formData.append('image', file);
-                                    formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-
-                                    // Gửi API kiểm duyệt
-                                    fetch('/api/check-image-moderation', {
-                                            method: 'POST',
-                                            body: formData,
-                                            headers: {
-                                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                            },
-                                        })
-                                        .then(response => {
-                                            if (!response.ok) {
-                                                throw new Error('Lỗi kết nối: ' + response.status);
-                                            }
-                                            return response.json();
-                                        })
-                                        .then(result => {
-                                            moderationLoading.style.display = 'none';
-
-                                            if (result.status === 'error') {
-                                                errorDiv.style.display = 'block';
-                                                errorMessage.textContent = result.message ||
-                                                    'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
-                                                submitButton.disabled = true;
-                                                isImageValid = false;
-                                            } else if (result.violation_level !== 'none') {
-                                                errorDiv.style.display = 'block';
-                                                let violationMessages = [];
-
-                                                for (let violation in result.reason) {
-                                                    violationMessages.push(result.reason[violation]);
-                                                }
-
-                                                errorMessage.innerHTML =
-                                                    `Vi phạm: ${violationMessages.join(', ')}`;
-                                                submitButton.disabled = true;
-                                                isImageValid = false;
-                                            } else {
-                                                errorDiv.style.display = 'none';
-                                                submitButton.disabled = false;
-                                                isImageValid = true;
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Lỗi kiểm duyệt:', error);
-                                            moderationLoading.style.display = 'none';
-                                            errorDiv.style.display = 'block';
-                                            errorMessage.textContent =
-                                                'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
-                                            submitButton.disabled = true;
-                                            isImageValid = false;
-                                        });
-                                }
-                            } else {
-                                // Nếu người dùng hủy chọn ảnh
-                                isImageChanged = false;
-                                if (currentImageContainer) {
-                                    currentImageContainer.style.display = 'block';
-                                }
-                                previewContainer.style.display = 'none';
-                                moderationResult.style.display = 'none';
-                                errorDiv.style.display = 'none';
-                                submitButton.disabled = false;
-                                isImageValid = true;
-                            }
-                        });
-                    }
-
-                    // Kiểm tra trước khi submit form
-                    document.getElementById('articleForm').addEventListener('submit', function(e) {
-                        if (document.activeElement.id !== 'saveDraft') {
-                            document.getElementById('articleStatus').value = 'pending';
-
-                            // Chỉ kiểm tra khi người dùng đã thay đổi ảnh và ảnh không hợp lệ
-                            if (isImageChanged && imageUpload && imageUpload.files && imageUpload.files[0] && !isImageValid) {
-                                e.preventDefault();
-                                alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
-                                return false;
-                            }
+                        // Ẩn ảnh hiện tại, hiển thị xem trước
+                        if (currentImageContainer) {
+                            currentImageContainer.style.display = 'none';
                         }
-                    });
-                });
-            </script>
 
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            imagePreview.src = e.target.result;
+                            previewContainer.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+
+                        // Hiển thị trạng thái kiểm duyệt
+                        moderationResult.style.display = 'block';
+                        moderationLoading.style.display = 'block';
+                        errorDiv.style.display = 'none';
+
+                        // Tạm thời vô hiệu hóa nút submit cho đến khi kiểm duyệt hoàn tất
+                        submitButton.disabled = true;
+
+                        // Gửi request kiểm duyệt ảnh
+                        if (document.querySelector('meta[name="csrf-token"]')) {
+                            const formData = new FormData();
+                            formData.append('image', file);
+                            formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+
+                            // Gửi API kiểm duyệt
+                            fetch('/api/check-image-moderation', {
+                                    method: 'POST',
+                                    body: formData,
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                    },
+                                })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Lỗi kết nối: ' + response.status);
+                                    }
+                                    return response.json();
+                                })
+                                .then(result => {
+                                    moderationLoading.style.display = 'none';
+
+                                    if (result.status === 'error') {
+                                        errorDiv.style.display = 'block';
+                                        errorMessage.textContent = result.message ||
+                                            'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
+                                        submitButton.disabled = true;
+                                        isImageValid = false;
+                                    } else if (result.violation_level !== 'none') {
+                                        errorDiv.style.display = 'block';
+                                        let violationMessages = [];
+
+                                        for (let violation in result.reason) {
+                                            violationMessages.push(result.reason[violation]);
+                                        }
+
+                                        errorMessage.innerHTML =
+                                            `Vi phạm: ${violationMessages.join(', ')}`;
+                                        submitButton.disabled = true;
+                                        isImageValid = false;
+                                    } else {
+                                        errorDiv.style.display = 'none';
+                                        submitButton.disabled = false;
+                                        isImageValid = true;
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Lỗi kiểm duyệt:', error);
+                                    moderationLoading.style.display = 'none';
+                                    errorDiv.style.display = 'block';
+                                    errorMessage.textContent =
+                                        'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
+                                    submitButton.disabled = true;
+                                    isImageValid = false;
+                                });
+                        }
+                    } else {
+                        // Nếu người dùng hủy chọn ảnh
+                        isImageChanged = false;
+                        if (currentImageContainer) {
+                            currentImageContainer.style.display = 'block';
+                        }
+                        previewContainer.style.display = 'none';
+                        moderationResult.style.display = 'none';
+                        errorDiv.style.display = 'none';
+                        submitButton.disabled = false;
+                        isImageValid = true;
+                    }
+                });
+            }
+
+            // Kiểm tra trước khi submit form
+            document.getElementById('articleForm').addEventListener('submit', function(e) {
+                if (document.activeElement.id !== 'saveDraft') {
+                    document.getElementById('articleStatus').value = 'pending';
+
+                    // Chỉ kiểm tra khi người dùng đã thay đổi ảnh và ảnh không hợp lệ
+                    if (isImageChanged && imageUpload && imageUpload.files && imageUpload.files[0] && !isImageValid) {
+                        e.preventDefault();
+                        alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
+                        return false;
+                    }
+                }
+            });
+        });
+    </script>
 @endsection
 
 @section('scripts')
