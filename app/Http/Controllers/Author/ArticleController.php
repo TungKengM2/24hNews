@@ -279,6 +279,9 @@ class ArticleController extends Controller
                 'title' => $request->title,
                 'slug' => $request->slug,
                 'content' => $content,
+                'category_id' => $request->category_id,
+                'featured_image' => $request->hasFile('thumbnail_url') ? $request->file('thumbnail_url')->store('thumbnails', 'public') : $article->thumbnail_url,
+                'tags' => $request->input('tags', []),
                 'change_reason' => 'Cập nhật bài viết'
             ]);
 
@@ -572,6 +575,9 @@ class ArticleController extends Controller
                 'title' => $request->title,
                 'slug' => $request->slug,
                 'content' => $content,
+                'category_id' => $request->category_id,
+                'featured_image' => $request->hasFile('thumbnail_url') ? $request->file('thumbnail_url')->store('thumbnails', 'public') : null,
+                'tags' => $request->input('tags', []),
                 'change_reason' => 'Tạo bài viết mới'
             ]);
 
