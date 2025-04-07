@@ -112,21 +112,66 @@
                     </a>
                     <ul class="dropdownMenu" style="margin-top: 0; margin-top: -50px;" aria-labelledby="">
                         @if (Auth::check())
-                            <li><a class="dropdown-item" href="{{ route('loginuser') }}">
-                                    <i class="la la-tv fs-4"></i> Dashboard
-                                </a></li>
+                            @php
+                                $user = Auth::user();
+                            @endphp
 
+                            {{-- Kiểm tra vai trò và hiển thị các liên kết tương ứng --}}
+                            @if ($user->role_id == 1)
+                                <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                                        <i class="la la-tv fs-4"></i>  Dashboard
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('admin.viewed.articles') }}">
+                                        <i class="la la-eye fs-4"></i> Tin đã xem
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('admin.saved') }}">
+                                        <i class="la la-bookmark fs-4"></i> Tin đã lưu
+                                    </a></li>
+                            @elseif ($user->role_id == 2)
+                                <li><a class="dropdown-item" href="{{ route('author.dashboard') }}">
+                                        <i class="la la-tv fs-4"></i>  Dashboard
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('author.viewed.articles') }}">
+                                        <i class="la la-eye fs-4"></i> Tin đã xem
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('author.saved') }}">
+                                        <i class="la la-bookmark fs-4"></i> Tin đã lưu
+                                    </a></li>
+                            @elseif ($user->role_id == 3)
+                                <li><a class="dropdown-item" href="{{ route('moderator.dashboard') }}">
+                                        <i class="la la-tv fs-4"></i>  Dashboard
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('moderator.viewed.articles') }}">
+                                        <i class="la la-eye fs-4"></i> Tin đã xem
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('moderator.saved') }}">
+                                        <i class="la la-bookmark fs-4"></i> Tin đã lưu
+                                    </a></li>
+                            @elseif ($user->role_id == 4)
+                                <li><a class="dropdown-item" href="{{ route('user.dashboard') }}">
+                                        <i class="la la-tv fs-4"></i> Dashboard
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('viewed.articles') }}">
+                                        <i class="la la-eye fs-4"></i> Tin đã xem
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('user.saved') }}">
+                                        <i class="la la-bookmark fs-4"></i> Tin đã lưu
+                                    </a></li>
+                            @endif
+
+                            {{-- Đăng Xuất --}}
                             <li>
                                 <a class="dropdown-item" href="#"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <i class="la la-sign-out fs-4"></i> Đăng Xuất
                                 </a>
                             </li>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                style="display: none;">
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
                             </form>
                         @else
+                            {{-- Liên kết Đăng nhập --}}
                             <li><a class="dropdown-item" href="{{ route('loginuser') }}">
                                     <i class="la la-unlock fs-4"></i> Login
                                 </a></li>

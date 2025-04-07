@@ -1,5 +1,5 @@
 /*
-Template Name: CrmX Admin - Responsive Admin Template 
+Template Name: CrmX Admin - Responsive Admin Template
 Author: Multipurpose Themes
 File: scss
 */
@@ -1069,7 +1069,7 @@ small, .small {
   font-weight: 400; }
 
 /*******************
-Padding property 
+Padding property
 *******************/
 .p-0 {
   padding: 0px !important; }
@@ -7673,7 +7673,7 @@ Padding property
     padding-top: 200px !important;
     padding-bottom: 200px !important; } }
 /*******************
-Margin property 
+Margin property
 *******************/
 .m-0 {
   margin: 0px !important; }
@@ -14277,7 +14277,7 @@ Margin property
     margin-top: 200px !important;
     margin-bottom: 200px !important; } }
 /*******************
-Width property 
+Width property
 *******************/
 .w-0 {
   width: 0px !important; }
@@ -17196,7 +17196,7 @@ Width property
   .max-w-lg-auto {
     max-width: auto; } }
 /*******************
-Height property 
+Height property
 *******************/
 .h-0 {
   height: 0px !important; }
@@ -31636,7 +31636,7 @@ button.btn.dropdown-toggle:after {
     box-sizing: border-box;
     display: inline-block;
     min-width: 50px;
-    padding: 1rem;
+    /* padding: 1rem; */
     margin: 0 3px;
     text-decoration: none;
     cursor: pointer;
