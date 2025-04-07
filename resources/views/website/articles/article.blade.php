@@ -224,19 +224,54 @@
                                                 </div>
                                                 <div class="inf w-100">
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                        <h6 class="fw-bold">
+                                                        <h6 class="fw-bold mb-0">
                                                             <a
-                                                                href="{{ route('website.profileAuth', ['id' => $comment->user->user_id]) }}"><?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?></a>
+                                                                href="{{ route('website.profileAuth', ['id' => $comment->user->user_id]) }}">
+                                                                <?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>
+                                                            </a>
                                                         </h6>
-                                                        <span class="fs-12px text-muted">
-                                                            <i class="fas fa-clock"></i>
-                                                            <?= date('F d, Y', strtotime($comment->created_at)) ?>
-                                                        </span>
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <span class="fs-12px text-muted">
+                                                                <i class="fas fa-clock me-1"></i>
+                                                                <?= date('F d, Y', strtotime($comment->created_at)) ?>
+                                                            </span>
+
+                                                            @if (auth()->check() && auth()->id() === $comment->user_id)
+                                                                <!-- Trash can icon button -->
+                                                                <form method="POST"
+                                                                    action="{{ route('comments.destroy', $comment->comment_id) }}"
+                                                                    onsubmit="return confirm('Bạn có chắc muốn xóa bình luận này?');">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit"
+                                                                        class="btn trash-can-btn butn border border-1 py-2 px-3 ms-2"
+                                                                        title="Xóa bình luận">
+                                                                        <i class="fas fa-trash-alt"></i>
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+                                                            <?php if ($comment->user_id !== auth()->id()): ?>
+                                                            <!-- Repost button -->
+                                                            <button
+                                                                class="btn repost-btn butn border border-1 py-2 px-3 ms-2"
+                                                                data-comment-id="{{ $comment->comment_id }}"
+                                                                data-content="{{ htmlspecialchars($comment->content, ENT_QUOTES, 'UTF-8') }}"
+                                                                title="Repost bình luận này">
+                                                                <i class="la la-exclamation-triangle"
+                                                                    style=" color: red;"></i>
+
+                                                                <!-- Icon repost dạng tam giác -->
+                                                            </button>
+                                                            <?php endif; ?>
+
+                                                        </div>
                                                     </div>
+
                                                     <div id="comment-<?= $comment->comment_id ?>"
                                                         class="text color-000 fs-14px mt-2">
                                                         <?= nl2br(htmlspecialchars($comment->content)) ?>
                                                     </div>
+
                                                     <div class="mt-2">
                                                         <button
                                                             class="btn reply-btn butn border border-1 py-2 px-3 d-inline-block"
@@ -244,18 +279,47 @@
                                                             data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
                                                             <span class="fw-bold">Trả lời</span>
                                                         </button>
-                                                        <button class="btn repost-btn butn border border-1 py-2 px-3"
-                                                            data-comment-id="<?= $comment->comment_id ?>"
-                                                            data-content="<?= htmlspecialchars($comment->content) ?>">
-                                                            <span class="fw-bold">Repost</span>
-                                                        </button>
+
+
                                                     </div>
+
+                                                    <!-- Delete form (ẩn/hiện khi bấm vào icon thùng rác) -->
+                                                    @if (auth()->check() && auth()->id() === $comment->user_id)
+                                                        <div id="delete-options-{{ $comment->comment_id }}"
+                                                            class="mt-2" style="display: none;">
+                                                            <form method="POST"
+                                                                action="{{ route('comments.destroy', $comment->comment_id) }}"
+                                                                class="d-inline-block">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                                    <i class="fas fa-trash-alt me-1"></i> Xóa
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    @endif
+
+                                                    @if (session('success'))
+                                                        <script>
+                                                            alert("{{ session('success') }}");
+                                                            window.location.reload();
+                                                        </script>
+                                                    @endif
+
+                                                    <script>
+                                                        function toggleDeleteOptions(commentId) {
+                                                            const options = document.getElementById('delete-options-' + commentId);
+                                                            options.style.display = (options.style.display === 'none') ? 'block' : 'none';
+                                                        }
+                                                    </script>
+
+
                                                     <!-- Danh sách replies -->
                                                     <div class="replies ms-5 mt-3"
                                                         data-reply-count="<?= count($comment->replies) ?>">
                                                         <?php
                                                         $replyCount = count($comment->replies);
-                                                        $visibleReplies = 3; // Số phản hồi hiển thị ban đầu
+                                                        $visibleReplies = 3; // Initial number of replies to show
                                                         $index = 0;
                                                         ?>
                                                         <?php foreach ($comment->replies as $reply): ?>
@@ -273,10 +337,35 @@
                                                                         <h6 class="fw-bold">
                                                                             <?= htmlspecialchars($reply->user->username ?? 'Anonymous') ?>
                                                                         </h6>
-                                                                        <span class="fs-12px text-muted">
-                                                                            <i class="fas fa-clock"></i>
-                                                                            <?= date('F d, Y', strtotime($reply->created_at)) ?>
-                                                                        </span>
+                                                                        <div class="d-flex align-items-center">
+                                                                            <span class="fs-12px text-muted">
+                                                                                <i class="fas fa-clock"></i>
+                                                                                <?= date('F d, Y', strtotime($reply->created_at)) ?>
+                                                                            </span>
+                                                                            @if (auth()->check() && auth()->id() === $reply->user_id)
+                                                                                <!-- Kiểm tra ID người dùng với bình luận con -->
+                                                                                <button
+                                                                                    class="btn trash-can-btn butn border border-1 py-2 px-3 ms-2"
+                                                                                    onclick="confirmDelete(event, {{ $reply->comment_id }})">
+                                                                                    <!-- Sử dụng comment_id của reply -->
+                                                                                    <i class="fas fa-trash-alt"></i>
+                                                                                    <!-- Trash can icon -->
+                                                                                </button>
+                                                                            @endif
+                                                                            @if (auth()->check() && auth()->id() !== $reply->user_id)
+                                                                                <!-- Nếu không phải là chủ bình luận -->
+                                                                                <button
+                                                                                    class="btn repost-btn butn border border-1 py-2 px-3 ms-2"
+                                                                                    data-comment-id="{{ $reply->comment_id }}"
+                                                                                    data-content="{{ htmlspecialchars($comment->content, ENT_QUOTES, 'UTF-8') }}">
+                                                                                    <i class="la la-exclamation-triangle"
+                                                                                        style=" color: #fa0000;"></i>
+                                                                                    <span class="fw-bold"></span>
+                                                                                </button>
+                                                                            @endif
+
+
+                                                                        </div>
                                                                     </div>
                                                                     <div id="comment-<?= $reply->comment_id ?>"
                                                                         class="text color-000 fs-14px mt-1">
@@ -285,19 +374,46 @@
                                                                     <div class="mt-2">
                                                                         <button
                                                                             class="btn reply-btn butn border border-1 py-2 px-3 d-inline-block"
-                                                                            data-comment-id="<?= $comment->comment_id ?>"
-                                                                            data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
+                                                                            data-comment-id="<?= $reply->comment_id ?>"
+                                                                            data-username="<?= htmlspecialchars($reply->user->username ?? 'Anonymous') ?>">
                                                                             <span class="fw-bold">Trả lời</span>
                                                                         </button>
-                                                                        <button
-                                                                            class="btn repost-btn butn border border-1 py-2 px-3"
-                                                                            data-comment-id="<?= $reply->comment_id ?>"
-                                                                            data-content="<?= htmlspecialchars($comment->content) ?>">
-                                                                            <span class="fw-bold">Repost</span>
-                                                                        </button>
+
+
+                                                                        <!-- Delete options (hidden initially) -->
+                                                                        @if (auth()->check() && auth()->id() === $comment->user_id)
+                                                                            <div id="delete-options-{{ $reply->comment_id }}"
+                                                                                class="delete-options"
+                                                                                style="display: none;">
+                                                                                <form method="POST"
+                                                                                    action="{{ route('comments.destroy', $reply->comment_id) }}"
+                                                                                    class="d-inline-block">
+                                                                                    @csrf
+                                                                                    @method('DELETE')
+                                                                                    <button type="submit"
+                                                                                        class="btn btn-danger btn-sm">
+                                                                                        <i class="fas fa-trash-alt"></i>
+                                                                                        Xóa
+                                                                                    </button>
+                                                                                </form>
+                                                                            </div>
+                                                                        @endif
+                                                                        <script>
+                                                                            function confirmDelete(event, commentId) {
+                                                                                event.preventDefault(); // Prevent the default form submission behavior
+
+                                                                                // Ask for confirmation
+                                                                                if (confirm("Bạn có chắc chắn muốn xóa bình luận này không?")) {
+                                                                                    // If confirmed, submit the form
+                                                                                    var form = document.querySelector(`#delete-options-${commentId} form`);
+                                                                                    if (form) {
+                                                                                        form.submit(); // Submit the form to delete the comment
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        </script>
 
                                                                     </div>
-
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -306,10 +422,11 @@
                                                         <?php if ($replyCount > $visibleReplies): ?>
                                                         <button
                                                             class="btn btn-link text-primary px-0 show-more-replies text-decoration-none">Xem
-                                                            thêm
-                                                        </button>
+                                                            thêm</button>
                                                         <?php endif; ?>
                                                     </div>
+
+
                                                     <!-- JavaScript để hiển thị form khi nhấn nút Reply -->
                                                     <script>
                                                         document.addEventListener("DOMContentLoaded", function() {
@@ -341,40 +458,38 @@
                                                                 <!-- Ảnh đại diện -->
                                                                 <div
                                                                     class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
-                                                                    <img src="{{ $currentUser->image ?? asset('assets/img/colums/default.png') }}"
+                                                                    <img src="{{ $currentUser->image ?? asset('https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg') }}"
                                                                         alt="Your Avatar">
                                                                 </div>
 
                                                                 <div class="w-100">
                                                                     <!-- Ô nhập nội dung trả lời -->
-                                                                    <textarea class="form-control form-control-sm reply-content" name="content" rows="2" required
-                                                                        placeholder="Trả lời: ..." onclick="addUsernameToReply(this, '{{ $comment->comment_id }}')">
-</textarea>
+                                                                    <textarea 
+                                                                    class="form-control form-control-sm reply-content" 
+                                                                    name="content" 
+                                                                    rows="2" 
+                                                                    required
+                                                                    data-username="@{{ $comment->user->username ?? 'Anonymous' }}"
+                                                                    placeholder="Trả lời: ..." 
+                                                                    onclick="addUsernameToReply(this)">
+                                                                </textarea>
+                                                                
 
                                                                     <script>
                                                                         function addUsernameToReply(textarea, commentId) {
-                                                                            // Log để đảm bảo hàm được gọi
                                                                             console.log("Textarea clicked for comment ID: " + commentId);
 
-                                                                            // Fetch username dựa trên commentId
                                                                             fetch(`/get-username-by-comment-id/${commentId}`)
                                                                                 .then(response => response.json())
                                                                                 .then(data => {
-                                                                                    let username = data.username ?? 'Người dùng ẩn danh'; // Default nếu không tìm thấy username
-                                                                                    username = '@' + username.trim(); // Đảm bảo username có dạng @username
-                                                                                    let currentValue = textarea.value.trim(); // Lấy giá trị hiện tại của textarea
+                                                                                    let username = data.username ?? 'Người dùng ẩn danh';
+                                                                                    username = '@' + username.trim();
 
-                                                                                    // Log để kiểm tra username đã lấy và giá trị textarea hiện tại
-                                                                                    console.log("Fetched username: " + username);
-                                                                                    console.log("Current textarea value: " + currentValue);
+                                                                                    // Luôn đặt lại nội dung với @username ở đầu
+                                                                                    let currentText = textarea.value.trim();
+                                                                                    textarea.value = username + ' ' + currentText;
 
-                                                                                    // Kiểm tra xem textarea có đang bắt đầu với @username không
-                                                                                    if (currentValue === "" || !currentValue.startsWith(username)) {
-                                                                                        // Nếu không, thêm @username vào đầu, đảm bảo có 1 khoảng trắng sau @username
-                                                                                        textarea.value = username + ' ' + currentValue.trim();
-                                                                                    }
-
-                                                                                    // Focus lại vào textarea để người dùng có thể tiếp tục nhập
+                                                                                    console.log("Inserted username:", username);
                                                                                     textarea.focus();
                                                                                 })
                                                                                 .catch(error => {
@@ -382,9 +497,6 @@
                                                                                 });
                                                                         }
                                                                     </script>
-
-
-
 
                                                                     <!-- Nút hành động -->
                                                                     <div class="d-flex justify-content-end gap-2 mt-2">
@@ -1109,10 +1221,10 @@
                         console.error("Không tìm thấy article id!");
                         return;
                     }
-                    
+
                     document.getElementById("report-article-id").value = articleId;
-                    
-                    document.getElementById("report-article-reason").value = ""; 
+
+                    document.getElementById("report-article-reason").value = "";
                     new bootstrap.Modal(document.getElementById("reportArticleModal")).show();
                 });
             });
@@ -1162,7 +1274,7 @@
                     document.getElementById("repost-comment-id").value = commentId;
                     // ✅ Xóa nội dung lý do báo cáo cũ nếu có
                     document.getElementById("repost-reason").value = "";
-                    
+
 
                     let modal = new bootstrap.Modal(document.getElementById("repostModal"));
                     modal.show();

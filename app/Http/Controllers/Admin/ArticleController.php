@@ -374,18 +374,27 @@ class ArticleController extends Controller
     private function processTags($tags)
     {
         $tagIds = [];
+        $processedTags = []; // Mảng để theo dõi các tag đã xử lý
+
         foreach ($tags as $tag) {
             $tag = trim($tag);
-            if (is_numeric($tag)) {
-                if (Tag::where('tag_id', $tag)->exists()) {
-                    $tagIds[] = (int) $tag;
-                }
-            } else {
-                if (! empty($tag)) {
-                    $tagModel = Tag::firstOrCreate(['name' => $tag]);
-                    $tagIds[] = $tagModel->tag_id;
-                }
+
+            // Bỏ qua các tag rỗng
+            if (empty($tag)) {
+                continue;
             }
+
+            // Kiểm tra xem tag đã được xử lý chưa (tránh trùng lặp)
+            if (in_array($tag, $processedTags)) {
+                continue;
+            }
+
+            // Thêm tag vào danh sách đã xử lý
+            $processedTags[] = $tag;
+
+            // Tìm hoặc tạo tag mới
+            $tagModel = Tag::firstOrCreate(['name' => $tag]);
+            $tagIds[] = $tagModel->tag_id;
         }
 
         return $tagIds;
@@ -411,8 +420,8 @@ class ArticleController extends Controller
         // Lấy tất cả tags có trong database
         $tags = Tag::select('tag_id', 'name')->get();
 
-        // Lấy danh sách tag đã chọn của bài viết
-        $selectedTags = $article->tags->pluck('tag_id')->toArray();
+        // Lấy danh sách tên tag đã chọn của bài viết
+        $selectedTags = $article->tags->pluck('name')->toArray();
 
         return view('admin.articles.edit', compact('article', 'categories', 'authors', 'approvers', 'tags', 'selectedTags'));
     }
