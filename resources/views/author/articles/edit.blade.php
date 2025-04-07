@@ -213,12 +213,13 @@
                                     <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
                                     <select name="tags[]" class="form-control select2" multiple="multiple">
                                         @foreach ($tags as $tag)
-                                            <option value="{{ $tag->tag_id }}"
-                                                    @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
+                                            <option value="{{ $tag->name }}"
+                                                    @if (in_array($tag->name, $selectedTags)) selected @endif>
                                                 {{ $tag->name }}
                                             </option>
                                         @endforeach
                                     </select>
+                                    <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới (chấp nhận cả chữ và số).</small>
                                 </div>
                             </div>
                         </div>
