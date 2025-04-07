@@ -76,10 +76,22 @@ class ArticleController extends Controller
                 'title' => 'required|string|max:255',
                 'slug' => 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id',
                 'category_id' => 'required|exists:categories,category_id',
+                'subcategory_id' => 'nullable|exists:categories,category_id',
                 'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                 'status' => 'required|in:draft,pending,published,archived,rejected',
                 'content' => 'nullable',
             ];
+
+            // Kiểm tra nếu có subcategory_id, phải thuộc category_id đã chọn
+            if ($request->subcategory_id) {
+                $subcategory = Category::find($request->subcategory_id);
+                if (!$subcategory || $subcategory->parent_id != $request->category_id) {
+                    return redirect()
+                        ->back()
+                        ->withInput()
+                        ->with('error', 'Danh mục con phải thuộc danh mục cha đã chọn.');
+                }
+            }
             $request->validate($rules);
 
             if ($request->status === 'draft') {
@@ -88,6 +100,7 @@ class ArticleController extends Controller
                     'slug' => $request->slug,
                     'content' => $request->input('content') ?? '',
                     'category_id' => $request->category_id,
+                    'subcategory_id' => $request->subcategory_id,
                     'status' => 'draft',
                 ]);
 
@@ -372,9 +385,22 @@ class ArticleController extends Controller
             'code' => 'nullable|string|max:255|unique:articles,code',
             'slug' => 'required|string|max:255|unique:articles,slug',
             'content' => 'required',
+            'category_id' => 'required|exists:categories,category_id',
+            'subcategory_id' => 'nullable|exists:categories,category_id',
             'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'status' => 'required|in:draft,pending,published,rejected,archived',
         ];
+
+        // Kiểm tra nếu có subcategory_id, phải thuộc category_id đã chọn
+        if ($request->subcategory_id) {
+            $subcategory = Category::find($request->subcategory_id);
+            if (!$subcategory || $subcategory->parent_id != $request->category_id) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', 'Danh mục con phải thuộc danh mục cha đã chọn.');
+            }
+        }
 
         $request->validate($rules);
 
@@ -386,6 +412,7 @@ class ArticleController extends Controller
                 'content' => $request->input('content') ?? '',
                 'author_id' => auth()->id(),
                 'category_id' => $request->category_id,
+                'subcategory_id' => $request->subcategory_id,
                 'status' => 'draft',
             ]);
 
@@ -564,6 +591,7 @@ class ArticleController extends Controller
                 'content' => $content,
                 'author_id' => auth()->id(),
                 'category_id' => $request->category_id,
+                'subcategory_id' => $request->subcategory_id,
                 'status' => 'pending',
             ]);
 
@@ -576,6 +604,7 @@ class ArticleController extends Controller
                 'slug' => $request->slug,
                 'content' => $content,
                 'category_id' => $request->category_id,
+                'subcategory_id' => $request->subcategory_id,
                 'featured_image' => $request->hasFile('thumbnail_url') ? $request->file('thumbnail_url')->store('thumbnails', 'public') : null,
                 'tags' => $request->input('tags', []),
                 'change_reason' => 'Tạo bài viết mới'
@@ -642,7 +671,8 @@ class ArticleController extends Controller
 
     public function create()
     {
-        $categories = Category::where('is_active', true)->get();
+        $parentCategories = Category::whereNull('parent_id')->where('is_active', true)->get();
+        $childCategories = Category::whereNotNull('parent_id')->where('is_active', true)->get();
         $authors = User::select('user_id', 'username')->get();
         $approvers = User::where('role_id', 1)
             ->select('user_id', 'username')
@@ -651,7 +681,7 @@ class ArticleController extends Controller
 
         return view(
             'author.articles.create',
-            compact('categories', 'authors', 'approvers', 'tags')
+            compact('parentCategories', 'childCategories', 'authors', 'approvers', 'tags')
         );
     }
 
@@ -699,7 +729,8 @@ class ArticleController extends Controller
                     'Bạn không có quyền chỉnh sửa bài viết này.'
                 );
         }
-        $categories = Category::all();
+        $parentCategories = Category::whereNull('parent_id')->where('is_active', true)->get();
+        $childCategories = Category::whereNotNull('parent_id')->where('is_active', true)->get();
         $authors = User::select('user_id', 'username')->get();
         $approvers = User::where('role_id', 1)
             ->select('user_id', 'username')
@@ -710,11 +741,21 @@ class ArticleController extends Controller
         // Lấy danh sách tên tag đã chọn của bài viết
         $selectedTags = $article->tags->pluck('name')->toArray();
 
+        // Lấy danh sách danh mục con thuộc danh mục cha đã chọn
+        $selectedChildCategories = collect();
+        if ($article->category_id) {
+            $selectedChildCategories = Category::where('parent_id', $article->category_id)
+                ->where('is_active', true)
+                ->get();
+        }
+
         return view(
             'author.articles.edit',
             compact(
                 'article',
-                'categories',
+                'parentCategories',
+                'childCategories',
+                'selectedChildCategories',
                 'authors',
                 'approvers',
                 'tags',

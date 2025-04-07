@@ -76,12 +76,13 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('is_active', true)->get();
+        $parentCategories = Category::whereNull('parent_id')->where('is_active', true)->get();
+        $childCategories = Category::whereNotNull('parent_id')->where('is_active', true)->get();
         $authors = User::select('user_id', 'username')->get();
         $approvers = User::where('role_id', 1)->select('user_id', 'username')->get();
         $tags = Tag::all();
 
-        return view('admin.articles.create', compact('categories', 'authors', 'approvers', 'tags'));
+        return view('admin.articles.create', compact('parentCategories', 'childCategories', 'authors', 'approvers', 'tags'));
     }
 
     /**
@@ -305,6 +306,7 @@ class ArticleController extends Controller
                     'content' => $content,
                     'author_id' => $request->author_id ?? auth()->id(),
                     'category_id' => $request->category_id,
+                    'subcategory_id' => $request->subcategory_id,
                     'status' => $status,
                 ]);
 
@@ -413,7 +415,8 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        $categories = Category::all();
+        $parentCategories = Category::whereNull('parent_id')->where('is_active', true)->get();
+        $childCategories = Category::whereNotNull('parent_id')->where('is_active', true)->get();
         $authors = User::select('user_id', 'username')->get();
         $approvers = User::where('role_id', 1)->select('user_id', 'username')->get();
 
@@ -423,7 +426,15 @@ class ArticleController extends Controller
         // Lấy danh sách tên tag đã chọn của bài viết
         $selectedTags = $article->tags->pluck('name')->toArray();
 
-        return view('admin.articles.edit', compact('article', 'categories', 'authors', 'approvers', 'tags', 'selectedTags'));
+        // Lấy danh sách danh mục con thuộc danh mục cha đã chọn
+        $selectedChildCategories = collect();
+        if ($article->category_id) {
+            $selectedChildCategories = Category::where('parent_id', $article->category_id)
+                ->where('is_active', true)
+                ->get();
+        }
+
+        return view('admin.articles.edit', compact('article', 'parentCategories', 'childCategories', 'selectedChildCategories', 'authors', 'approvers', 'tags', 'selectedTags'));
     }
 
     /**
@@ -623,6 +634,7 @@ class ArticleController extends Controller
                 'content' => $content,
                 'author_id' => $request->author_id,
                 'category_id' => $request->category_id,
+                'subcategory_id' => $request->subcategory_id,
                 'status' => $status,
             ]);
 
