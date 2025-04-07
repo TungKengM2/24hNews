@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
     Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
     Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
+    Route::post('/comments/{comment}/like', [ArticleUserController::class, 'toggleLike'])->name('comments.toggleLike');
 
 });
 // Client Category

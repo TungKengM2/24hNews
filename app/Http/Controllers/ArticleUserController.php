@@ -123,103 +123,100 @@ class ArticleUserController extends Controller
             ->get();
 
 
-        // Lấy danh sách bình luận
+        // Lấy danh sách bình luận gốc
         $comments = Comment::where('article_id', $article->article_id)
             ->where('status', 'approved')
-            ->whereNull('parent_id') // Chỉ lấy bình luận gốc
+            ->whereNull('parent_id')
             ->with([
                 'user:user_id,username,image',
                 'reactions',
             ])
             ->withCount([
-                'reactions as like_count' => function ($query) {
-                    $query->where('is_like', true);
-                },
-                'reactions as dislike_count' => function ($query) {
-                    $query->where('is_like', false);
-                },
+                'reactions as like_count' => fn($query) => $query->where('is_like', true),
+                'reactions as dislike_count' => fn($query) => $query->where('is_like', false),
             ])
             ->orderBy('created_at', 'desc')
-            ->paginate(4); // Phân trang bình luận gốc (5 bình luận mỗi trang)
+            ->paginate(4); // Phân trang bình luận gốc
 
-       // Lấy danh sách ID của bình luận gốc
-$commentIds = $comments->pluck('comment_id');
+        // Lấy danh sách ID của bình luận gốc
+        $commentIds = $comments->pluck('comment_id');
 
-// Lấy replies trực tiếp của các bình luận gốc
-$replies = Comment::whereIn('parent_id', $commentIds)
-    ->where('status', 'approved')
-    ->with([
-        'user:user_id,username,image',
-        'reactions',
-    ])
-    ->withCount([
-        'reactions as like_count' => function ($query) {
-            $query->where('is_like', true);
-        },
-        'reactions as dislike_count' => function ($query) {
-            $query->where('is_like', false);
-        },
-    ])
-    ->orderBy('created_at', 'asc')
-    ->get();
+        // Lấy replies trực tiếp của các bình luận gốc
+        $replies = Comment::whereIn('parent_id', $commentIds)
+            ->where('status', 'approved')
+            ->with([
+                'user:user_id,username,image',
+                'reactions',
+            ])
+            ->withCount([
+                'reactions as like_count' => fn($query) => $query->where('is_like', true),
+                'reactions as dislike_count' => fn($query) => $query->where('is_like', false),
+            ])
+            ->orderBy('created_at', 'asc')
+            ->get();
 
-// Lấy danh sách ID của các reply vừa lấy
-$replyIds = $replies->pluck('comment_id');
+        // Lấy ID của các replies
+        $replyIds = $replies->pluck('comment_id');
 
-// Hàm đệ quy lấy tất cả các cấp sub-replies
-function getAllSubReplies($parentIds)
-{
-    $subReplies = Comment::whereIn('parent_id', $parentIds)
-        ->where('status', 'approved')
-        ->with([
-            'user:user_id,username,image',
-            'reactions',
-        ])
-        ->withCount([
-            'reactions as like_count' => function ($query) {
-                $query->where('is_like', true);
-            },
-            'reactions as dislike_count' => function ($query) {
-                $query->where('is_like', false);
-            },
-        ])
-        ->orderBy('created_at', 'asc')
-        ->get();
+        // Hàm đệ quy có chống lặp
+        function getAllSubReplies($parentIds, &$visited = [])
+        {
+            $subReplies = Comment::whereIn('parent_id', $parentIds)
+                ->where('status', 'approved')
+                ->with([
+                    'user:user_id,username,image',
+                    'reactions',
+                ])
+                ->withCount([
+                    'reactions as like_count' => fn($query) => $query->where('is_like', true),
+                    'reactions as dislike_count' => fn($query) => $query->where('is_like', false),
+                ])
+                ->orderBy('created_at', 'asc')
+                ->get()
+                ->reject(function ($comment) use (&$visited) {
+                    return in_array($comment->comment_id, $visited);
+                });
 
-    if ($subReplies->isEmpty()) {
-        return collect();
-    }
+            if ($subReplies->isEmpty()) {
+                return collect();
+            }
 
-    $childParentIds = $subReplies->pluck('comment_id');
-    $childReplies = getAllSubReplies($childParentIds);
+            foreach ($subReplies as $reply) {
+                $visited[] = $reply->comment_id;
+            }
 
-    return $subReplies->merge($childReplies);
-}
+            $childParentIds = $subReplies->pluck('comment_id');
+            $childReplies = getAllSubReplies($childParentIds, $visited);
 
-// Lấy tất cả các cấp sub-replies của các replies
-$allSubReplies = getAllSubReplies($replyIds);
-
-// Gom replies và sub-replies theo parent_id
-$groupedReplies = $replies->groupBy('parent_id');
-$groupedSubReplies = $allSubReplies->groupBy('parent_id');
-
-// Hàm đệ quy để gán subReplies vào từng reply
-function attachSubReplies(&$replies, $groupedSubReplies)
-{
-    foreach ($replies as $reply) {
-        $reply->subReplies = $groupedSubReplies->get($reply->comment_id, collect());
-
-        if ($reply->subReplies->isNotEmpty()) {
-            attachSubReplies($reply->subReplies, $groupedSubReplies);
+            return $subReplies->merge($childReplies);
         }
-    }
-}
 
-// Gán replies vào từng comment gốc và gán luôn sub-replies đệ quy
-foreach ($comments as $comment) {
-    $comment->replies = $groupedReplies->get($comment->comment_id, collect());
-    attachSubReplies($comment->replies, $groupedSubReplies);
-}
+        // Lấy tất cả sub-replies của replies
+        $visitedIds = $replyIds->toArray();
+        $allSubReplies = getAllSubReplies($replyIds, $visitedIds);
+
+        // Gom replies và sub-replies theo parent_id
+        $groupedReplies = $replies->groupBy('parent_id');
+        $groupedSubReplies = $allSubReplies->groupBy('parent_id');
+
+        // Gán subReplies đệ quy
+        function attachSubReplies(&$replies, $groupedSubReplies)
+        {
+            foreach ($replies as $reply) {
+                $reply->subReplies = $groupedSubReplies->get($reply->comment_id, collect());
+
+                if ($reply->subReplies->isNotEmpty()) {
+                    attachSubReplies($reply->subReplies, $groupedSubReplies);
+                }
+            }
+        }
+
+        // Gán replies vào từng comment gốc
+        foreach ($comments as $comment) {
+            $comment->replies = $groupedReplies->get($comment->comment_id, collect());
+            attachSubReplies($comment->replies, $groupedSubReplies);
+        }
+
 
 
 
@@ -496,4 +493,54 @@ foreach ($comments as $comment) {
         // If the user is not the owner, abort with a 403 error
         abort(403);
     }
+
+ 
+    public function toggleLike(Request $request, $commentId)
+    {
+        $userId = auth()->id();
+    
+        if (!$userId) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+    
+        $comment = Comment::findOrFail($commentId);
+    
+        // Kiểm tra xem người dùng đã like chưa
+        $alreadyLiked = DB::table('comment_likes')
+            ->where('comment_id', $comment->comment_id)
+            ->where('user_id', $userId)
+            ->exists();
+    
+        if ($alreadyLiked) {
+            // Bỏ like: đảm bảo lượt like không âm
+            if ($comment->likes > 0) {
+                $comment->decrement('likes');
+            }
+            DB::table('comment_likes')
+                ->where('comment_id', $comment->comment_id)
+                ->where('user_id', $userId)
+                ->delete();
+            $liked = false;
+        } else {
+            // Thêm like
+            DB::table('comment_likes')->insert([
+                'comment_id' => $comment->comment_id,
+                'user_id' => $userId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+    
+            $comment->increment('likes');
+            $liked = true;
+        }
+    
+        return response()->json([
+            'message' => 'Success',
+            'likes' => $comment->likes,
+            'liked' => $liked,
+        ]);
+    }
+    
+
+    
 }
