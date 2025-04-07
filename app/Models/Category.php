@@ -28,10 +28,10 @@ class Category extends Model
     {
         $moderators = User::where('role_id', 3)->get();
         if ($moderators->isEmpty()) return;
-    
+
         $categories = Category::all(); // Lấy tất cả danh mục
         if ($categories->isEmpty()) return;
-    
+
         $modCount = $moderators->count();
         foreach ($categories as $index => $category) {
             $category->moderator_id = $moderators[$index % $modCount]->user_id;
@@ -42,6 +42,6 @@ class Category extends Model
     {
         return $this->hasMany(Article::class, 'category_id', 'category_id');
     }
-    
-    
+
+
 }
