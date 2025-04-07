@@ -168,15 +168,62 @@ class ArticleUserController extends Controller
             ) // Hiển thị replies theo thứ tự cũ -> mới
             ->get();
 
-        // ✅ Gán replies vào từng comment
-        $groupedReplies = $replies->groupBy('parent_id');
 
-        foreach ($comments as $comment) {
-            $comment->replies = $groupedReplies->get(
-                $comment->comment_id,
-                collect()
-            ); // Gán danh sách replies vào từng comment
+        // Lấy các reply của các reply (parent_id = comment_id của các reply)
+        $replyIds = $replies->pluck('comment_id'); // Lấy danh sách ID của các reply
+
+        // ------------------ PHẦN THAY ĐỔI: Lấy tất cả các cấp sub-replies đệ quy ------------------
+        // Hàm đệ quy để lấy tất cả các sub-replies từ danh sách parent IDs
+        function getAllSubReplies($parentIds)
+        {
+            $subReplies = Comment::whereIn('parent_id', $parentIds)
+                ->where('status', 'approved')
+                ->with([
+                    'user:user_id,username,image',
+                    'reactions',
+                ])
+                ->withCount([
+                    'reactions as like_count' => function ($query) {
+                        $query->where('is_like', true);
+                    },
+                    'reactions as dislike_count' => function ($query) {
+                        $query->where('is_like', false);
+                    },
+                ])
+                ->orderBy('created_at', 'asc')
+                ->get();
+
+            if ($subReplies->isEmpty()) {
+                return collect();
+            }
+
+            // Lấy đệ quy các cấp con của subReplies hiện tại
+            $childParentIds = $subReplies->pluck('comment_id');
+            $childReplies   = getAllSubReplies($childParentIds);
+
+            // Hợp nhất kết quả của cấp hiện tại và cấp đệ quy
+            return $subReplies->merge($childReplies);
         }
+
+        $allSubReplies = getAllSubReplies($replyIds);
+
+        // -----------------------------------------------------------------------------------------
+
+        // Kết hợp các replies của replies (sub-replies)
+        $groupedReplies    = $replies->groupBy('parent_id');
+        $groupedSubReplies = $allSubReplies->groupBy('parent_id');
+
+        // Gán replies vào từng comment gốc
+        foreach ($comments as $comment) {
+            // Gán các replies vào comment gốc
+            $comment->replies = $groupedReplies->get($comment->comment_id, collect());
+
+            // Gán sub-replies (tất cả các cấp con) vào từng reply của comment gốc
+            foreach ($comment->replies as $reply) {
+                $reply->subReplies = $groupedSubReplies->get($reply->comment_id, collect());
+            }
+        }
+
 
         $categories = Category::where('is_active', 1)->limit(7)->get();
 
@@ -294,6 +341,7 @@ class ArticleUserController extends Controller
 
     public function storeReplyComment(Request $request, CommentModerationService $moderationService)
     {
+        Log::info("📥 Nhận dữ liệu reply:", $request->all());
 
 
         $request->validate([
@@ -306,18 +354,22 @@ class ArticleUserController extends Controller
 
         if (!$moderationService->checkComment($content)) {
             Log::warning("🚫 Bình luận bị từ chối: " . $content);
-            return response()->json(['error' => 'Bình luận không được chấp gggg nhận vì chứa từ ngữ không phù hợp.'], 403);
+            return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
         }
 
         // Truy vấn `parentComment` trước để tối ưu
-        $parentComment = Comment::find($request->parent_id);
+        $parentComment = Comment::select('comment_id', 'depth')->find($request->parent_id);
+
+        $depth = min((int) $parentComment->depth + 1, 2);
+
+
 
         $reply = Comment::create([
             'article_id' => $request->article_id,
             'user_id' => auth()->id(),
             'content' => nl2br(e($request->content)), // Escape XSS
             'parent_id' => $request->parent_id,
-            'depth' => $parentComment ? $parentComment->depth + 1 : 0,
+            'depth' => $depth,
             'status' => 'approved',
             'created_at' => now(), // Thời gian tạo comment
             'updated_at' => now(),
