@@ -201,12 +201,13 @@
                                 <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
                                 <select name="tags[]" class="form-control select2" multiple="multiple">
                                     @foreach ($tags as $tag)
-                                        <option value="{{ $tag->tag_id }}"
-                                                @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
+                                        <option value="{{ $tag->name }}"
+                                                @if (in_array($tag->name, $selectedTags)) selected @endif>
                                             {{ $tag->name }}
                                         </option>
                                     @endforeach
                                 </select>
+                                <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới (chấp nhận cả chữ và số).</small>
                             </div>
                         </div>
                     </div>
@@ -336,18 +337,18 @@
                     const errorDiv = document.getElementById('moderation-error');
                     const errorMessage = document.getElementById('error-message');
                     const submitButton = document.getElementById('submitButton');
-                    
+
                     // Đảm bảo mặc định nút submit được bật và không có kiểm duyệt ảnh hiển thị
                     submitButton.disabled = false;
                     let isImageChanged = false; // Theo dõi xem người dùng đã thay đổi ảnh chưa
                     let isImageValid = true; // Mặc định ảnh hiện tại là hợp lệ
-                    
+
                     // Ẩn tất cả các phần tử kiểm duyệt ảnh khi trang mới tải
                     if (previewContainer) previewContainer.style.display = 'none';
                     if (moderationResult) moderationResult.style.display = 'none';
                     if (moderationLoading) moderationLoading.style.display = 'none';
                     if (errorDiv) errorDiv.style.display = 'none';
-                    
+
                     // Lưu nháp
                     document.getElementById('saveDraft').addEventListener('click', function() {
                         document.getElementById('articleStatus').value = 'draft';
@@ -358,7 +359,7 @@
                     if (imageUpload) {
                         imageUpload.addEventListener('change', function(e) {
                             const file = e.target.files[0];
-                            
+
                             // Chỉ xử lý khi có file được chọn
                             if (file) {
                                 isImageChanged = true; // Người dùng đã thay đổi ảnh
@@ -380,7 +381,7 @@
                                 moderationResult.style.display = 'block';
                                 moderationLoading.style.display = 'block';
                                 errorDiv.style.display = 'none';
-                                
+
                                 // Tạm thời vô hiệu hóa nút submit cho đến khi kiểm duyệt hoàn tất
                                 submitButton.disabled = true;
 

@@ -26,8 +26,12 @@ class AuthorProfileController extends Controller
             ->where('status', 'published')
             ->get();
 
-        // dd($articles);
-        $articleIds = $articles->pluck('article_id');
+        // Lấy danh sách bài viết đã xuất bản của tác giả
+        $articles = Article::where('author_id', $user_id)
+            ->where('status', 'published')
+            ->get();
+
+        $articleIds = $articles->pluck('id');
 
         // Lấy tổng số lượt thích và bình luận của tất cả bài viết
         $likesCounts = ArticleLike::whereIn('article_id', $articleIds)
@@ -69,6 +73,7 @@ class AuthorProfileController extends Controller
 
         // Tính trung bình điểm sao
         $averageRating = number_format($totalStars / max($articles->count(), 1), 1);
+
 
         return view('website.profiles.author', compact('author', 'articles', 'averageRating', 'followerCount'));
     }
