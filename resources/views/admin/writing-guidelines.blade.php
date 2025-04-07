@@ -168,7 +168,7 @@
                             </div>
 
                             <div class="text-center mt-4">
-                                <a href="{{ route('admin.articles.create') }}" class="btn btn-primary">
+                                <a href="{{ route('articles.create') }}" class="btn btn-primary">
                                     <i class="fas fa-pen"></i> Bắt đầu viết bài
                                 </a>
                                 <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">

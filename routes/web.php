@@ -511,10 +511,6 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 
     // Quản lý người dùng
     Route::resource('users', UserController::class)->names(['index' => 'admin.users.index',]);
-
-    // Articles
-    Route::get('/articles/create', [ArticleController::class, 'create'])->name('admin.articles.create');
-    Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
 });
 
 
