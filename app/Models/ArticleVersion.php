@@ -20,7 +20,14 @@ class ArticleVersion extends Model
         'title',
         'slug',
         'content',
+        'category_id',
+        'featured_image',
+        'tags',
         'change_reason',
+    ];
+
+    protected $casts = [
+        'tags' => 'array'
     ];
 
     public function article()
@@ -31,5 +38,10 @@ class ArticleVersion extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }
