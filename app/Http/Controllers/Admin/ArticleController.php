@@ -17,7 +17,6 @@ use App\Notifications\NewArticleSubmitted;
 use Illuminate\Support\Facades\Log;
 use DOMDocument;
 use Exception;
-use App\Services\WritingGuidelineService;
 
 class ArticleController extends Controller
 {
@@ -78,8 +77,11 @@ class ArticleController extends Controller
     public function create()
     {
         $categories = Category::where('is_active', true)->get();
+        $authors = User::select('user_id', 'username')->get();
+        $approvers = User::where('role_id', 1)->select('user_id', 'username')->get();
         $tags = Tag::all();
-        return view('admin.articles.create', compact('categories', 'tags'));
+
+        return view('admin.articles.create', compact('categories', 'authors', 'approvers', 'tags'));
     }
 
     /**
