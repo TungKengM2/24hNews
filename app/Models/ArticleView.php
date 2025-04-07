@@ -10,7 +10,7 @@ class ArticleView extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
+    public $timestamps = false; // Bảng không có cột created_at và updated_at
 
     protected $fillable = [
         'article_id',

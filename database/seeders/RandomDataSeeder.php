@@ -89,7 +89,8 @@ class RandomDataSeeder extends Seeder
         ArticleLike::factory(150)->create();
 
         // 12. Tạo article saves (bookmarks)
-        ArticleSave::factory(100)->create();
+        // Giảm số lượng để tránh xung đột
+        ArticleSave::factory(30)->create();
 
         // 13. Tạo article views
         \App\Models\ArticleView::factory(300)->create();
