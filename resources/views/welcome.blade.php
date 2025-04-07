@@ -342,7 +342,7 @@
                                         <h5 class="title mb-3">{{ $data['article']->title }}</h5>
                                         <a href="{{ Auth::check() ? route('articles.article', $data['article']->slug) : url('/login-user') }}"
                                             class="btn btn-sm btn-outline-primary mt-2">
-                                            Xem chi tiết <i class="la la-angle-right"></i>
+                                            Xem chi tiết <i class="la la-angle-right mt-1"></i>
                                         </a>
                                     </div>
                                 </div>
