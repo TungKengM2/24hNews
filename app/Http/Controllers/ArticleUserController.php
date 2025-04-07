@@ -305,10 +305,44 @@ class ArticleUserController extends Controller
 
         $content = $request->content;
 
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Người dùng chưa đăng nhập!',
+            ]);
+        }
+    
+        // Kiểm tra nếu người dùng bị cấm bình luận
+        if ($user->banned_until && now()->lessThan($user->banned_until)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn đã bị tạm khóa bình luận đến ' . $user->banned_until->format('H:i d/m/Y'),
+            ]);
+        }
+    
+        // Áp dụng hình phạt nếu vi phạm nhiều
+        if ($user->violation_count >= 5) {
+            $user->banned_until = now()->addDays(3);
+            $user->save();
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn đã bị cấm bình luận 3 ngày do vi phạm quá nhiều.',
+            ]);
+        } elseif ($user->violation_count >= 3) {
+            $user->banned_until = now()->addHours(24);
+            $user->save();
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn đã bị tạm khóa bình luận trong 24 giờ vì vi phạm nhiều lần.',
+            ]);
+        }
+
         if (!$moderationService->checkComment($content)) {
             Log::warning("🚫 Bình luận bị từ chối: " . $content);
             return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
         }
+        
 
 
 
@@ -329,102 +363,78 @@ class ArticleUserController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Bạn Comment thành công!',
-
+            'message' => 'Bạn đã trả lời bình luận thành công!',
         ]);
     }
+    
 
     public function storeReplyComment(Request $request, CommentModerationService $moderationService)
     {
-        Log::info("📥 Nhận dữ liệu reply:", $request->all());
-
-
         $request->validate([
             'article_id' => 'required|exists:articles,article_id',
-            'content' => 'required|string',
-            'parent_id' => 'required|exists:comments,comment_id',
+            'content'    => 'required|string',
+            'parent_id'  => 'required|exists:comments,comment_id',
         ]);
-
-        $content = $request->content;
+    
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Người dùng chưa đăng nhập!',
+            ]);
+        }
+    
+        // Kiểm tra nếu người dùng bị cấm bình luận
+        if ($user->banned_until && now()->lessThan($user->banned_until)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn đã bị tạm khóa bình luận đến ' . $user->banned_until->format('H:i d/m/Y'),
+            ]);
+        }
+    
+        // Áp dụng hình phạt nếu vi phạm nhiều
+        if ($user->violation_count >= 5) {
+            $user->banned_until = now()->addDays(3);
+            $user->save();
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn đã bị cấm bình luận 3 ngày do vi phạm quá nhiều.',
+            ]);
+        } elseif ($user->violation_count >= 3) {
+            $user->banned_until = now()->addHours(24);
+            $user->save();
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn đã bị tạm khóa bình luận trong 24 giờ vì vi phạm nhiều lần.',
+            ]);
+        }
 
         if (!$moderationService->checkComment($content)) {
             Log::warning("🚫 Bình luận bị từ chối: " . $content);
             return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
         }
-
-        // Truy vấn `parentComment` trước để tối ưu
+    
+        // Xác định độ sâu của reply
         $parentComment = Comment::select('comment_id', 'depth')->find($request->parent_id);
-
-        $depth = min((int) $parentComment->depth + 1, 2);
-
-
-
-        $reply = Comment::create([
+        $depth = min((int)$parentComment->depth + 1, 2);
+    
+        Comment::create([
             'article_id' => $request->article_id,
-            'user_id' => auth()->id(),
-            'content' => nl2br(e($request->content)), // Escape XSS
-            'parent_id' => $request->parent_id,
-            'depth' => $depth,
-            'status' => 'approved',
-            'created_at' => now(), // Thời gian tạo comment
+            'user_id'    => auth()->id(),
+            'content'    => nl2br(e($request->content)),
+            'parent_id'  => $request->parent_id,
+            'depth'      => $depth,
+            'status'     => 'approved',
+            'created_at' => now(),
             'updated_at' => now(),
-
         ]);
-
+    
         return response()->json([
             'success' => true,
-            'message' => 'Bạn trả lời bình luận thành công!',
+            'message' => 'Bạn đã trả lời bình luận thành công!',
         ]);
     }
-
-    public function reportComment(Request $request, $article_id, $comment_id)
-    {
-        // Validate dữ liệu: chỉ cần kiểm tra 'reason' nếu có (article_id và comment_id lấy từ route)
-        $request->validate([
-            'reason' => 'nullable|string'
-        ]);
-
-        try {
-            // Tìm bài viết dựa trên article_id
-            $article = Article::findOrFail($article_id);
-
-            // Tìm chính xác bình luận bị báo cáo
-            $comment = Comment::where('article_id', $article_id)
-                ->where('comment_id', $comment_id) // Chắc chắn lấy đúng comment cần báo cáo
-                ->firstOrFail();
-
-            // Xác định nội dung báo cáo: nếu có nhập 'reason' thì dùng, nếu không dùng nội dung của bình luận
-            $content = $request->input('reason') ?: $comment->content;  // Sử dụng nội dung bình luận hoặc lý do người dùng nhập
-            // Cắt nội dung nếu cần để đảm bảo độ dài trường 'detected_word' không vượt quá 50 ký tự
-            $detected_word = substr($content, 0, 50);
-
-            // Ghi nhận thông tin vào bảng violations với trạng thái "pending"
-            Violation::create([
-                'type'          => 'comment',
-                'reference_id'  => $comment->comment_id, // Sử dụng comment_id của bình luận báo cáo
-                'detected_word' => $detected_word,
-                'detected_at'   => now(),
-                'handled_by'    => null,
-                'status'        => 'pending',  // Mặc định là 'pending'
-                'warning_sent'  => false
-            ]);
-
-            // Trả về phản hồi thành công
-            return response()->json([
-                'success' => true,
-                'message' => 'Bình luận đã được báo cáo và chờ xử lý.'
-            ]);
-        } catch (\Exception $e) {
-            // Ghi log lỗi
-            Log::error("Error in reportComment", ['error' => $e->getMessage()]);
-            // Trả về phản hồi lỗi
-            return response()->json([
-                'success' => false,
-                'message' => 'Lỗi: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
+    
 
     public function reportArticle(Request $request, $article_id)
     {
@@ -494,23 +504,23 @@ class ArticleUserController extends Controller
         abort(403);
     }
 
- 
+
     public function toggleLike(Request $request, $commentId)
     {
         $userId = auth()->id();
-    
+
         if (!$userId) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-    
+
         $comment = Comment::findOrFail($commentId);
-    
+
         // Kiểm tra xem người dùng đã like chưa
         $alreadyLiked = DB::table('comment_likes')
             ->where('comment_id', $comment->comment_id)
             ->where('user_id', $userId)
             ->exists();
-    
+
         if ($alreadyLiked) {
             // Bỏ like: đảm bảo lượt like không âm
             if ($comment->likes > 0) {
@@ -529,18 +539,15 @@ class ArticleUserController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-    
+
             $comment->increment('likes');
             $liked = true;
         }
-    
+
         return response()->json([
             'message' => 'Success',
             'likes' => $comment->likes,
             'liked' => $liked,
         ]);
     }
-    
-
-    
 }

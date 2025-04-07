@@ -286,6 +286,7 @@
 
                                             </div>
                                         </div>
+                                        
                                         <br>
                                         <?php foreach ($comments as $comment): ?>
                                         <?php if (!$comment->parent_id): ?>
@@ -1272,78 +1273,7 @@
 
         });
     </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            console.log("Script loaded!");
-            let buttons = document.querySelectorAll(".send-reply");
-            console.log("Found", buttons.length, "send-reply buttons");
-
-            buttons.forEach(button => {
-                button.addEventListener("click", function() {
-                    console.log("Clicked send-reply button!");
-                    let commentId = this.getAttribute("data-comment-id");
-                    let articleId = this.getAttribute("data-article-id");
-                    let replyForm = document.querySelector(`#reply-form-${commentId} .reply-form`);
-                    let content = replyForm.querySelector(".reply-content").value.trim();
-
-                    console.log("articleId =", articleId, "commentId =", commentId);
-                    console.log("content =", content);
-
-                    // Kiểm tra xem form có input CSRF hay meta CSRF không
-                    let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute(
-                        "content");
-
-                    if (content === "") {
-                        alert("Vui lòng nhập nội dung bình luận!");
-                        return;
-                    }
-
-                    fetch(`/articles/${articleId}/comments/${commentId}/reply`, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-CSRF-TOKEN": csrfToken
-                            },
-                            body: JSON.stringify({
-                                content: content,
-                                article_id: articleId,
-                                parent_id: commentId
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: '🎉 Trả lời thành công!',
-                                    text: 'Bình luận của bạn đã được gửi.',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    location
-                                .reload(); // Reload lại trang để hiển thị comment mới
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: '😥 Thất bại',
-                                    text: data.message || 'Có lỗi xảy ra khi trả lời.',
-                                });
-                            }
-                        })
-                        .catch(error => {
-                            console.error("Lỗi khi gửi bình luận:", error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: '😵 Lỗi kết nối!',
-                                text: 'Không thể gửi bình luận. Kiểm tra kết nối mạng.',
-                            });
-                        });
-
-
-                });
-            });
-        });
-    </script>
+    
 
 
     {{-- TungKeng làm tìm comment --}}
@@ -1542,6 +1472,56 @@
 
 
 
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const buttons = document.querySelectorAll(".send-reply");
+
+        buttons.forEach(button => {
+            button.addEventListener("click", function () {
+                const commentId = this.getAttribute("data-comment-id");
+                const articleId = this.getAttribute("data-article-id");
+                const replyForm = document.querySelector(`#reply-form-${commentId} .reply-form`);
+                const content = replyForm.querySelector(".reply-content").value.trim();
+                const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+
+                if (content === "") {
+                    alert("Vui lòng nhập nội dung bình luận!");
+                    return;
+                }
+
+                fetch(`/articles/${articleId}/comments/${commentId}/reply`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrfToken
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                        article_id: articleId,
+                        parent_id: commentId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // ✅ Hiển thị alert, chờ OK rồi mới reload
+                        alert(data.message || 'Trả lời thành công!');
+                        location.reload();
+                    } else {
+                        alert(data.message || 'Có lỗi xảy ra!');
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi:", error);
+                    alert("Lỗi kết nối, vui lòng thử lại!");
+                });
+            });
+        });
+    });
+</script>
 
 
 
