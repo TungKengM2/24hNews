@@ -522,6 +522,9 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     // Quản lý danh mục
     Route::resource('categories', CategoryController::class);
 
+    // AJAX endpoints
+    Route::get('/ajax/subcategories', [App\Http\Controllers\Admin\AjaxController::class, 'getSubcategories'])->name('ajax.subcategories');
+
 
 
     // Quản lý người dùng
