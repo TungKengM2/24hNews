@@ -45,8 +45,8 @@
                                 <form action="{{ route('moderator.articles.reject', $article) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" class="btn btn-danger btn-sm" title="Từ chối bài viết"
-                                        onclick="return confirm('Bạn có chắc chắn muốn từ chối bài viết này không?')">
+                                    <button type="button" class="btn btn-danger btn-sm" title="Từ chối bài viết"
+                                        data-bs-toggle="modal" data-bs-target="#rejectModal">
                                         <i class="fa fa-times"></i> Từ chối
                                     </button>
                                 </form>
@@ -72,14 +72,14 @@
                                             <p class="text-muted"><i class="mdi mdi-link-variant"></i> {{ $article->slug }}</p>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="row mb-4">
                                         <div class="col-md-12">
                                             <h5>Nội dung tóm tắt:</h5>
                                             <p>{{ $article->preview_content }}</p>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h5>Nội dung chi tiết:</h5>
@@ -91,7 +91,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Thông tin bổ sung -->
                         <div class="col-md-4">
                             @if ($article->thumbnail_url)
@@ -105,7 +105,7 @@
                                     </div>
                                 </div>
                             @endif
-                            
+
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="card-title mb-0">Thông tin khác</h5>
@@ -158,6 +158,32 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Từ chối bài viết -->
+    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rejectModalLabel">Từ chối bài viết</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('moderator.articles.reject', $article) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="rejection_reason" class="form-label">Lý do từ chối</label>
+                            <textarea class="form-control" id="rejection_reason" name="rejection_reason" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-danger">Xác nhận từ chối</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

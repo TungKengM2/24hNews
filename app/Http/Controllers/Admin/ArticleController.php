@@ -713,18 +713,41 @@ class ArticleController extends Controller
         return view('admin.articles.approve', compact('articles'));
     }
 
-    public function reject(Article $article)
+    public function reject(Request $request, Article $article)
     {
         if ($article->status !== 'pending') {
             return redirect()->back()->with('error', 'Bài viết không hợp lệ để từ chối.');
         }
 
+        $request->validate([
+            'rejection_reason' => 'required|string|max:500',
+        ]);
+
         $article->update([
             'status' => 'rejected',
         ]);
 
+        // Cập nhật hoặc tạo bản ghi Approval
+        $approval = Approval::where('article_id', $article->article_id)->first();
+        if ($approval) {
+            $approval->update([
+                'status' => 'rejected',
+                'approved_by' => auth()->id(),
+                'remarks' => $request->rejection_reason,
+            ]);
+        } else {
+            Approval::create([
+                'article_id' => $article->article_id,
+                'type' => 'article',
+                'user_id' => $article->author_id,
+                'status' => 'rejected',
+                'approved_by' => auth()->id(),
+                'remarks' => $request->rejection_reason,
+            ]);
+        }
+
         // Gửi thông báo cho tác giả
-        $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã bị từ chối."));
+        $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã bị từ chối. Lý do: {$request->rejection_reason}"));
 
         return redirect()->back()->with('success', 'Bài viết đã bị từ chối.');
     }
