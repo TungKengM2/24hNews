@@ -89,11 +89,11 @@
             <div class="wrapper">
                 <div class="container mt-5 ">
                     <div class="card p-4">
-                        <h2 class="mb-4">Tạo Bài Viết Mới</h2>
-
-                        <div class="alert alert-info mb-4">
-                            <i class="fas fa-info-circle"></i>
-                            Vui lòng đọc kỹ <a href="{{ route('admin.writing-guidelines') }}" class="alert-link">hướng dẫn viết bài</a> trước khi tạo bài viết mới.
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="mb-0">Tạo Bài Viết Mới</h2>
+                            <a href="{{ route('admin.writing-guidelines') }}" class="btn btn-info">
+                                <i class="fas fa-book"></i> Xem hướng dẫn viết bài
+                            </a>
                         </div>
 
                         @if ($errors->any())
