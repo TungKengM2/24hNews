@@ -93,7 +93,6 @@
                     <div class="col-lg-8">
                         <div class="features-content mb-5">
                             <h4 class="fw-bold text-uppercase mb-4 border-start border-primary border-4 ps-3">Bài Viết Mới Nhất</h4>
-                            
                             @if (isset($featuredArticle) && $featuredArticle)
                                 <div class="featured-article mb-5">
                                     <div class="card border-0 shadow-sm overflow-hidden">
@@ -115,7 +114,8 @@
                                                 </a>
                                             </h3>
                                             <p class="card-text text-muted mb-3">
-                                                {{ Str::limit(strip_tags($featuredArticle->content), 200) }}
+                                                {{ Str::limit(trim(strip_tags(html_entity_decode($featuredArticle->content))), 300, '...') }}
+                                                
                                             </p>
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="d-flex align-items-center">
@@ -164,8 +164,9 @@
                                                             </a>
                                                         </h5>
                                                         <p class="card-text text-muted">
-                                                            {{ Str::limit(strip_tags($article->content), 100) }}
+                                                            {{ Str::limit(trim(strip_tags(html_entity_decode($article->content))), 200, '...') }}
                                                         </p>
+                                                        
                                                     </div>
                                                     <div class="card-footer bg-white border-0">
                                                         <div class="d-flex justify-content-between align-items-center text-muted small">
@@ -196,15 +197,12 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="d-flex flex-wrap gap-2">
-                                        <a href="#" class="btn btn-sm btn-outline-secondary">Covid-19</a>
-                                        <a href="#" class="btn btn-sm btn-outline-secondary">Bitcoin</a>
-                                        <a href="#" class="btn btn-sm btn-outline-secondary">WordPress</a>
-                                        <a href="#" class="btn btn-sm btn-outline-secondary">Elon Musk</a>
-                                        <a href="#" class="btn btn-sm btn-outline-secondary">Google Cloud</a>
-                                        <a href="#" class="btn btn-sm btn-outline-secondary">Figma</a>
-                                        <a href="#" class="btn btn-sm btn-outline-secondary">Tiền điện tử</a>
-                                        <a href="#" class="btn btn-sm btn-outline-secondary">Chợ trực tuyến</a>
-                                        <a href="#" class="btn btn-sm btn-outline-secondary">Graphicriver</a>
+                                      
+                                        @foreach ($tags as $tag)
+                                        <a href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}" class="btn btn-sm btn-outline-secondary">{{ $tag->name }}</a>
+                                        
+                                    @endforeach
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -244,11 +242,8 @@
                                         @foreach($recentArticles as $recentArticle)
                                             <a href="{{ route('articles.article', $recentArticle->slug) }}" 
                                                class="list-group-item list-group-item-action d-flex align-items-center p-3">
-                                                <img src="{{ asset('storage/' . $recentArticle->thumbnail_url) }}" 
-                                                     alt="{{ $recentArticle->title }}" 
-                                                     class="me-3 rounded" style="width: 80px; height: 60px; object-fit: cover;">
                                                 <div>
-                                                    <h6 class="mb-1">{{ Str::limit($recentArticle->title, 50) }}</h6>
+                                                    <h6 class="mb-1">{{ Str::limit($recentArticle->title, 100) }}</h6>
                                                     <small class="text-muted">
                                                         <i class="la la-calendar me-1"></i> {{ $recentArticle->created_at->format('d/m/Y') }}
                                                     </small>

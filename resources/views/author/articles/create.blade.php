@@ -79,7 +79,7 @@
 @endsection
 
 @section('title')
-    Thêm Mới Bài Viết
+    Tạo bài viết mới
 @endsection
 
 @section('content')
@@ -89,6 +89,28 @@
             <div class="wrapper">
                 <div class="container mt-5 ">
                     <div class="card p-4">
+                        <div class="content-header">
+                            <div class="d-flex align-items-center">
+                                <div class="me-auto">
+                                    <h4 class="page-title">Tạo Bài Viết Mới</h4>
+                                    <div class="d-inline-block align-items-center">
+                                        <nav>
+                                            <ol class="breadcrumb">
+                                                <li class="breadcrumb-item"><a href="{{ route('author.dashboard') }}"><i class="mdi mdi-home-outline"></i></a></li>
+                                                <li class="breadcrumb-item" aria-current="page">Trang Chủ</li>
+                                                <li class="breadcrumb-item active" aria-current="page">Tạo Bài Viết</li>
+                                            </ol>
+                                        </nav>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="{{ route('author.writing-guidelines') }}" class="btn btn-info">
+                                        <i class="fas fa-book"></i> Xem hướng dẫn viết bài
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
                         <h2 class="mb-4">Tạo Bài Viết Mới</h2>
 
                         @if ($errors->any())
@@ -96,6 +118,16 @@
                                 <ul>
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        @if (session('warnings'))
+                            <div class="alert alert-warning">
+                                <ul>
+                                    @foreach (session('warnings') as $warning)
+                                        <li>{{ $warning }}</li>
                                     @endforeach
                                 </ul>
                             </div>
@@ -145,27 +177,29 @@
                                 <h4 class="form-section-title">Thông tin cơ bản</h4>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label for="title" class="form-label">Tiêu đề</label>
+                                        <label for="title" class="form-label">Tiêu đề <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="title" name="title"
                                             value="{{ old('title') }}" required>
+                                        <small class="form-text text-muted">Tối đa 255 ký tự</small>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label for="slug" class="form-label">Đường dẫn</label>
+                                        <label for="slug" class="form-label">Đường dẫn <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="slug" name="slug"
                                             value="{{ old('slug') }}" required>
+                                        <small class="form-text text-muted">Tối đa 255 ký tự, chỉ chấp nhận chữ cái, số và dấu gạch ngang</small>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Danh mục</label>
-                                        <select name="category_id" class="form-control">
+                                        <label for="category_id" class="form-label">Danh mục <span class="text-danger">*</span></label>
+                                        <select name="category_id" class="form-control" required>
+                                            <option value="">Chọn danh mục</option>
                                             @foreach ($categories as $category)
-                                                @if ($category->is_active)
-                                                    <option value="{{ $category->category_id }}">{{ $category->name }}
-                                                    </option>
-                                                @endif
+                                                <option value="{{ $category->category_id }}" {{ old('category_id') == $category->category_id ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -189,10 +223,11 @@
                                 <h4 class="form-section-title">Ảnh đại diện</h4>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label for="thumbnail_url" class="form-label">Chọn ảnh đại diện</label>
+                                        <label for="thumbnail_url" class="form-label">Ảnh đại diện <span class="text-danger">*</span></label>
                                         <input type="file"
                                             class="form-control @error('thumbnail_url') is-invalid @enderror"
                                             id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
+                                        <small class="form-text text-muted">Kích thước tối thiểu: 1200x630px, tối đa 2MB</small>
 
                                         @error('thumbnail_url')
                                             <div class="invalid-feedback">
@@ -231,20 +266,33 @@
                                 </div>
                             </div>
 
+
+
                             <div class="form-section">
                                 <h4 class="form-section-title">Nội dung bài viết</h4>
                                 <div class="mb-3">
-                                    <label for="content" class="form-label">Nội dung</label>
+                                    <label for="content" class="form-label">Nội dung <span class="text-danger">*</span></label>
                                     @if (session()->has('violations') && !empty(session('violations')))
-                                        <textarea id="full-featured" name="content"
-                                            style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
-                                        {!! highlightWords(old('content', isset($article) ? $article->content : ''), session('violations')) !!}
+                                        <textarea id="full-featured" name="content" style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                                            {!! highlightWords(old('content'), session('violations')) !!}
                                         </textarea>
                                     @else
                                         <textarea id="full-featured" name="content" style="height: 800px;">
-                                {{ old('content', isset($article) ? $article->content : '') }}
-                                </textarea>
+                                            {{ old('content') }}
+                                        </textarea>
                                     @endif
+                                    <div class="mt-2">
+                                        <small class="form-text text-muted">
+                                            <strong>Yêu cầu về nội dung:</strong>
+                                            <ul>
+                                                <li>Tối thiểu 500 từ</li>
+                                                <li>Phải có đầy đủ các phần: Mở bài, Thân bài, Kết luận</li>
+                                                <li>Tối thiểu 1 hình ảnh cho mỗi 500 từ</li>
+                                                <li>Tất cả hình ảnh phải có alt text</li>
+                                                <li>Khi trích dẫn phải ghi rõ nguồn</li>
+                                            </ul>
+                                        </small>
+                                    </div>
                                 </div>
                             </div>
 
@@ -269,172 +317,77 @@
                                     placeholder: 'Chọn hoặc nhập thẻ mới',
                                     allowClear: true,
                                 });
-                            });
 
-                            document.getElementById('saveDraft').addEventListener('click', function() {
-                                document.getElementById('articleStatus').value = 'draft';
-                                document.getElementById('articleForm').setAttribute('novalidate', 'novalidate'); // Bỏ qua required
-                                document.getElementById('articleForm').submit();
-                            });
-
-                            // Cảnh báo khi người dùng rời khỏi trang nếu có thay đổi
-                            let isFormEdited = false;
-                            const formElements = document.getElementById('articleForm').elements;
-
-                            for (let i = 0; i < formElements.length; i++) {
-                                formElements[i].addEventListener('change', function() {
-                                    isFormEdited = true;
+                                // Tự động tạo slug từ tiêu đề
+                                $('#title').on('keyup', function() {
+                                    var title = $(this).val();
+                                    var slug = title.toLowerCase()
+                                        .replace(/[^\w\s-]/g, '')
+                                        .replace(/\s+/g, '-')
+                                        .replace(/-+/g, '-');
+                                    $('#slug').val(slug);
                                 });
-                            }
 
-                            window.addEventListener('beforeunload', function(e) {
-                                if (isFormEdited) {
-                                    const confirmationMessage =
-                                        'Bạn có chắc chắn muốn rời khỏi trang? Những thay đổi chưa được lưu sẽ bị mất.';
-                                    e.returnValue = confirmationMessage;
-                                    return confirmationMessage;
+                                // Xử lý nút lưu nháp
+                                $('#saveDraft').click(function() {
+                                    $('#articleStatus').val('draft');
+                                    $('#articleForm').submit();
+                                });
+
+                                // Xử lý nút gửi đi
+                                $('#submitButton').click(function() {
+                                    $('#articleStatus').val('pending');
+                                });
+
+                                // Cảnh báo khi người dùng rời khỏi trang nếu có thay đổi
+                                let isFormEdited = false;
+                                const formElements = document.getElementById('articleForm').elements;
+
+                                for (let i = 0; i < formElements.length; i++) {
+                                    formElements[i].addEventListener('change', function() {
+                                        isFormEdited = true;
+                                    });
                                 }
-                            });
 
-                            // Tạo slug tự động
-                            document.getElementById('title').addEventListener('input', function() {
-                                let title = this.value.trim();
-                                let slug = title.toLowerCase()
-                                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Loại bỏ dấu tiếng Việt
-                                    .replace(/đ/g, 'd').replace(/Đ/g, 'D')
-                                    .replace(/\s+/g, '-') // Thay dấu cách bằng "-"
-                                    .replace(/[^\w-]/g, '') // Xóa ký tự đặc biệt
-                                    .replace(/--+/g, '-') // Loại bỏ nhiều dấu "-" liên tiếp
-                                    .replace(/^-+|-+$/g, ''); // Xóa "-" ở đầu và cuối
+                                window.addEventListener('beforeunload', function(e) {
+                                    if (isFormEdited) {
+                                        const confirmationMessage =
+                                            'Bạn có chắc chắn muốn rời khỏi trang? Những thay đổi chưa được lưu sẽ bị mất.';
+                                        e.returnValue = confirmationMessage;
+                                        return confirmationMessage;
+                                    }
+                                });
 
-                                document.getElementById('slug').value = slug;
-                            });
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    // Ẩn các thành phần moderation khi trang mới tải
+                                    const moderationResult = document.getElementById('moderation-result');
+                                    const errorDiv = document.getElementById('moderation-error');
+                                    if (moderationResult) moderationResult.style.display = 'none';
+                                    if (errorDiv) errorDiv.style.display = 'none';
 
-                            const violationDescriptions = {
-                                'nudity': 'Hình ảnh chứa nội dung nhạy cảm, khỏa thân hoặc gợi dục',
-                                'violence': 'Hình ảnh chứa cảnh bạo lực, đánh đập hoặc gây tổn thương',
-                                'text_violation': 'Hình ảnh chứa văn bản vi phạm quy định (ngôn từ thô tục, kích động)',
-                                'gore': 'Hình ảnh chứa cảnh máu me, tổn thương cơ thể',
-                                'self_harm': 'Hình ảnh liên quan đến tự gây thương tích hoặc tự tử',
-                                'gambling': 'Hình ảnh liên quan đến cờ bạc, đánh bạc',
-                            };
-
-                            let isImageValid = false;
-                            const submitButton = document.getElementById('submitButton');
-
-                            document.getElementById('thumbnail_url').addEventListener('change', function(e) {
-                                const file = e.target.files[0];
-                                if (file) {
-                                    isImageValid = false;
-
-                                    const reader = new FileReader();
-                                    reader.onload = function(e) {
-                                        document.getElementById('image-preview').src = e.target.result;
-                                        document.getElementById('image-preview-container').style.display = 'block';
-                                    };
-                                    reader.readAsDataURL(file);
-
-                                    const formData = new FormData();
-                                    formData.append('image', file);
-                                    formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-
-                                    fetch('/api/check-image-moderation', {
-                                            method: 'POST',
-                                            body: formData,
-                                            headers: {
-                                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                            },
-                                        })
-                                        .then(response => {
-                                            if (!response.ok) {
-                                                throw new Error('Lỗi kết nối: ' + response.status);
+                                    // Kiểm tra trước khi submit form
+                                    const form = document.getElementById('articleForm');
+                                    if (form) {
+                                        form.addEventListener('submit', function(e) {
+                                            if (document.getElementById('articleStatus').value === 'draft') {
+                                                return true;
                                             }
-                                            return response.json();
-                                        })
-                                        .then(result => {
-                                            const moderationResult = document.getElementById('moderation-result');
-                                            const errorDiv = document.getElementById('moderation-error');
-                                            const errorMessage = document.getElementById('error-message');
 
-                                            moderationResult.style.display = 'block';
-
-                                            if (result.status === 'error') {
-                                                errorDiv.style.display = 'block';
-                                                errorMessage.textContent = result.message ||
-                                                    'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
-                                                isImageValid = false;
-                                                submitButton.disabled = true;
-                                            } else if (result.violation_level !== 'none') {
-                                                errorDiv.style.display = 'block';
-                                                let violationMessages = [];
-
-                                                for (let violation in result.reason) {
-                                                    violationMessages.push(result.reason[violation]);
-                                                }
-
-                                                errorMessage.innerHTML = `Vi phạm: ${violationMessages.join(', ')}`;
-                                                isImageValid = false;
-                                                submitButton.disabled = true;
-                                            } else {
-                                                errorDiv.style.display = 'none';
-                                                isImageValid = true;
-                                                submitButton.disabled = false;
+                                            const thumbnailInput = document.getElementById('thumbnail_url');
+                                            if (thumbnailInput && thumbnailInput.files && thumbnailInput.files[0] && !isImageValid) {
+                                                e.preventDefault();
+                                                alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
+                                                thumbnailInput.focus();
+                                                return false;
                                             }
-                                        })
-                                        .catch(error => {
-                                            console.error('Lỗi kiểm duyệt:', error);
-                                            const moderationResult = document.getElementById('moderation-result');
-                                            const errorDiv = document.getElementById('moderation-error');
-                                            const errorMessage = document.getElementById('error-message');
-
-                                            moderationResult.style.display = 'block';
-                                            errorDiv.style.display = 'block';
-                                            errorMessage.textContent = 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
-                                            isImageValid = false;
-                                            submitButton.disabled = true;
+                                            return true;
                                         });
-                                }
-                            });
-
-                            const form = document.getElementById('articleForm');
-                            form.addEventListener('submit', function(e) {
-                                const thumbnailInput = document.getElementById('thumbnail_url');
-                                if (document.getElementById('articleStatus').value === 'draft') {
-                                    return true;
-                                }
-
-                                if (thumbnailInput.files && thumbnailInput.files[0] && !isImageValid) {
-                                    e.preventDefault();
-                                    alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
-                                    thumbnailInput.focus();
-                                    return false;
-                                }
-                                return true;
+                                    }
+                                });
                             });
                         </script>
 
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
-                        <script>
-                            document.getElementById('thumbnail_url').addEventListener('change', function(event) {
-                                const file = event.target.files[0];
-                                if (file) {
-                                    const reader = new FileReader();
-                                    reader.onload = function(e) {
-                                        const arrayBuffer = e.target.result;
-                                        mammoth.extractRawText({
-                                                arrayBuffer: arrayBuffer,
-                                            })
-                                            .then(function(result) {
-                                                document.getElementById('editor').innerHTML = result.value;
-                                            })
-                                            .catch(function(error) {
-                                                console.error('Lỗi đọc file:', error);
-                                            });
-                                    };
-                                    reader.readAsArrayBuffer(file);
-                                }
-                            });
-                        </script>
                     </div>
                 </div>
             </div>

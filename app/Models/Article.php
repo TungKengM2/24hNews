@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use App\Notifications\NewArticleSubmitted;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

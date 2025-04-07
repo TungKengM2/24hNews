@@ -2,17 +2,19 @@
 
 namespace App\Providers;
 
-use App\Models\Category;
 use App\Models\User;
+use App\Models\Article;
+
+use App\Models\Category;
+use App\Observers\UserObserver;
+use App\Observers\ArticleObserver;
 use App\Observers\CategoryObserver;
 use App\Services\ModerationService;
-use App\Services\TinyMCEUploadService;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use App\Services\TinyMCEUploadService;
 use Illuminate\Support\ServiceProvider;
-use App\Models\Article;
-use App\Observers\ArticleObserver;
-use App\Observers\UserObserver;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -38,6 +40,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Article::observe(ArticleObserver::class);
+
+        Paginator::useBootstrap();
+
+
         View::composer(
             [
                 'author.articles.index',
@@ -62,8 +69,10 @@ class AppServiceProvider extends ServiceProvider
             function ($view) {
                 $user = Auth::user();
                 $view->with('username', $user->username ?? 'Tác Giả');
-                $view->with('avatar',
-                    $user->image ?? '/admin/main/../images/user5-128x128.jpg');
+                $view->with(
+                    'avatar',
+                    $user->image ?? '/admin/main/../images/user5-128x128.jpg'
+                );
                 // dat them
                 $view->with('categories', Category::where('is_active', 1)->get());
                 $view->with('category2', Category::where('is_active', 1)->get());

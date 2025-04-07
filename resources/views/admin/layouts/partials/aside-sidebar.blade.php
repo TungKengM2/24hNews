@@ -63,6 +63,9 @@
                         <li><a href="{{ route('admin.articles.approves') }}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Duyệt Bài Viết</a>
                         </li>
+                        <li><a href="{{ route('admin.violations.approves') }}"><i class="icon-Commit"><span
+                            class="path1"></span><span class="path2"></span></i>Duyệt Report</a>
+                        </li>
                 </li>
                 <li><a href="{{ route('admin.user-role-requests') }}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Nâng Cấp Tài Khoản

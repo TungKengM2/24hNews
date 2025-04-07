@@ -18,7 +18,11 @@
                         <li><a href="{{ route('moderator.articles.index') }}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Bài Viết</a>
                         </li>
+                        <li><a href="{{ route('moderator.violations.approves') }}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Report</a>
+                        </li>
                     </ul>
+
                 </li>
 
                 <li class="treeview">

@@ -151,8 +151,20 @@
 
             <!-- Main content -->
             <div class="card p-4">
+                <h2 class="mb-4">Chỉnh sửa bài viết</h2>
+
+                @if (session('warnings'))
+                    <div class="alert alert-warning">
+                        <ul>
+                            @foreach (session('warnings') as $warning)
+                                <li>{{ $warning }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <form action="{{ route('author.articles.update', $article) }}" method="POST" enctype="multipart/form-data"
-                    id="articleForm">
+                      id="articleForm">
                     @csrf
                     @method('PUT')
 
@@ -162,37 +174,34 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="title" class="form-label">Tiêu đề:</label>
+                                <label for="title" class="form-label">Tiêu đề <span class="text-danger">*</span></label>
                                 <div class="controls">
                                     <input type="text" class="form-control" id="title" name="title"
-                                        value="{{ $article->title }}" required>
+                                           value="{{ $article->title }}" required>
                                 </div>
+                                <small class="form-text text-muted">Tối đa 255 ký tự</small>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="slug" class="form-label">Đường dẫn:</label>
+                                <label for="slug" class="form-label">Đường dẫn <span class="text-danger">*</span></label>
                                 <div class="controls">
                                     <input type="text" class="form-control" id="slug" name="slug"
-                                        value="{{ $article->slug }}" required>
+                                           value="{{ $article->slug }}" required>
                                 </div>
+                                <small class="form-text text-muted">Tối đa 255 ký tự, chỉ chấp nhận chữ cái, số và dấu gạch ngang</small>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="category_id" class="form-label">Danh Mục</label>
-                                <select name="category_id" class="form-control">
-                                    <option value="">-- Không có danh mục --</option>
+                                <label for="category_id" class="form-label">Danh Mục <span class="text-danger">*</span></label>
+                                <select name="category_id" class="form-control" required>
+                                    <option value="">Chọn danh mục</option>
                                     @foreach ($categories as $category)
-                                        @if ($category->is_active || $article->category_id == $category->category_id)
                                             <option value="{{ $category->category_id }}"
                                                 {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
                                                 {{ $category->name }}
-                                                @if (!$category->is_active)
-                                                    (Đã vô hiệu hóa)
-                                                @endif
                                             </option>
-                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -202,7 +211,7 @@
                                 <select name="tags[]" class="form-control select2" multiple="multiple">
                                     @foreach ($tags as $tag)
                                         <option value="{{ $tag->tag_id }}"
-                                            @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
+                                                @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
                                             {{ $tag->name }}
                                         </option>
                                     @endforeach
@@ -218,12 +227,12 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <input type="file" class="form-control @error('thumbnail_url') is-invalid @enderror"
-                                    id="thumbnail_url" name="thumbnail_url" accept="image/*">
+                                       id="thumbnail_url" name="thumbnail_url" accept="image/*">
 
                                 @error('thumbnail_url')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                                 @enderror
 
                                 @if (session('thumbnail_reasons'))
@@ -245,7 +254,7 @@
                                         <div>
                                             <p><strong>Ảnh đại diện hiện tại:</strong></p>
                                             <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Ảnh đại diện"
-                                                class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+                                                 class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
                                         </div>
                                     @endif
                                 </div>
@@ -279,7 +288,7 @@
                         <label for="content" class="form-label" style="color: white">Nội dung</label>
                         @if (session('violations'))
                             <textarea id="full-featured" name="content"
-                                style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                                      style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
                             {!! highlightWords(old('content'), session('violations')) !!}
                         </textarea>
                         @else
@@ -323,29 +332,10 @@
                     document.getElementById('slug').value = slug;
                 });
             </script>
-            <script>
-                // Lưu nháp
-                document.getElementById('saveDraft').addEventListener('click', function() {
-                    document.getElementById('articleStatus').value = 'draft';
-                    document.getElementById('articleForm').submit();
-                });
-
-                document.getElementById('articleForm').addEventListener('submit', function(e) {
-                    if (document.activeElement.id !== 'saveDraft') {
-                        document.getElementById('articleStatus').value = 'pending';
-
-                        const errorDiv = document.getElementById('moderation-error');
-                        if (errorDiv && errorDiv.style.display !== 'none') {
-                            e.preventDefault();
-                            alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
-                            return false;
-                        }
-                    }
-                });
-            </script>
 
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
+                    // Khởi tạo các phần tử DOM
                     const imageUpload = document.getElementById('thumbnail_url');
                     const imagePreview = document.getElementById('image-preview');
                     const previewContainer = document.getElementById('image-preview-container');
@@ -355,14 +345,35 @@
                     const errorDiv = document.getElementById('moderation-error');
                     const errorMessage = document.getElementById('error-message');
                     const submitButton = document.getElementById('submitButton');
-                    let isImageValid = true;
 
+                    // Đảm bảo mặc định nút submit được bật và không có kiểm duyệt ảnh hiển thị
+                    submitButton.disabled = false;
+                    let isImageChanged = false; // Theo dõi xem người dùng đã thay đổi ảnh chưa
+                    let isImageValid = true; // Mặc định ảnh hiện tại là hợp lệ
+
+                    // Ẩn tất cả các phần tử kiểm duyệt ảnh khi trang mới tải
+                    if (previewContainer) previewContainer.style.display = 'none';
+                    if (moderationResult) moderationResult.style.display = 'none';
+                    if (moderationLoading) moderationLoading.style.display = 'none';
+                    if (errorDiv) errorDiv.style.display = 'none';
+
+                    // Lưu nháp
+                    document.getElementById('saveDraft').addEventListener('click', function() {
+                        document.getElementById('articleStatus').value = 'draft';
+                        document.getElementById('articleForm').submit();
+                    });
+
+                    // Chỉ xử lý sự kiện khi người dùng chọn ảnh mới
                     if (imageUpload) {
                         imageUpload.addEventListener('change', function(e) {
                             const file = e.target.files[0];
-                            if (file) {
-                                isImageValid = false;
 
+                            // Chỉ xử lý khi có file được chọn
+                            if (file) {
+                                isImageChanged = true; // Người dùng đã thay đổi ảnh
+                                isImageValid = false; // Đặt lại trạng thái khi có ảnh mới
+
+                                // Ẩn ảnh hiện tại, hiển thị xem trước
                                 if (currentImageContainer) {
                                     currentImageContainer.style.display = 'none';
                                 }
@@ -374,23 +385,26 @@
                                 };
                                 reader.readAsDataURL(file);
 
+                                // Hiển thị trạng thái kiểm duyệt
                                 moderationResult.style.display = 'block';
                                 moderationLoading.style.display = 'block';
                                 errorDiv.style.display = 'none';
+
+                                // Tạm thời vô hiệu hóa nút submit cho đến khi kiểm duyệt hoàn tất
                                 submitButton.disabled = true;
 
+                                // Gửi request kiểm duyệt ảnh
                                 if (document.querySelector('meta[name="csrf-token"]')) {
                                     const formData = new FormData();
                                     formData.append('image', file);
-                                    formData.append('_token', document.querySelector('meta[name="csrf-token"]')
-                                        .content);
+                                    formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
 
+                                    // Gửi API kiểm duyệt
                                     fetch('/api/check-image-moderation', {
                                             method: 'POST',
                                             body: formData,
                                             headers: {
-                                                'X-CSRF-TOKEN': document.querySelector(
-                                                    'meta[name="csrf-token"]').content,
+                                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                                             },
                                         })
                                         .then(response => {
@@ -437,6 +451,8 @@
                                         });
                                 }
                             } else {
+                                // Nếu người dùng hủy chọn ảnh
+                                isImageChanged = false;
                                 if (currentImageContainer) {
                                     currentImageContainer.style.display = 'block';
                                 }
@@ -449,11 +465,13 @@
                         });
                     }
 
+                    // Kiểm tra trước khi submit form
                     document.getElementById('articleForm').addEventListener('submit', function(e) {
                         if (document.activeElement.id !== 'saveDraft') {
                             document.getElementById('articleStatus').value = 'pending';
 
-                            if (imageUpload.files && imageUpload.files[0] && !isImageValid) {
+                            // Chỉ kiểm tra khi người dùng đã thay đổi ảnh và ảnh không hợp lệ
+                            if (isImageChanged && imageUpload && imageUpload.files && imageUpload.files[0] && !isImageValid) {
                                 e.preventDefault();
                                 alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
                                 return false;
@@ -463,7 +481,7 @@
                 });
             </script>
 
-        @endsection
+@endsection
 
-        @section('scripts')
-        @endsection
+@section('scripts')
+@endsection

@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CommentReaction extends Model
 {
     use HasFactory;
 
-    public $timestamps = false; // Tên bảng trong database
+
 
     protected $table = 'comment_reactions'; // Khóa chính
 

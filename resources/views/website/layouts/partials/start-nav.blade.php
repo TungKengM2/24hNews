@@ -24,17 +24,19 @@
                     </a>
                 </li>
 
-             {{-- dat them --}}
-              @foreach ($categories->take(7) as $category){{-- hiển thị limit tối đa 7 danh mục ở màn hình chính --}}
-                 @if ($category->is_active == 1)
-                     <li class="nav-item">
-                         <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
-                             {{ $category->name }}
-                         </a>
-                     </li>
-                 @endif
-             @endforeach
-             {{-- dat them --}}
+                {{-- dat them --}}
+                @foreach ($categories as $category)
+                    @if ($loop->iteration > 6)
+                        @break
+                    @endif
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
+                            {{ $category->name }}
+                        </a>
+                    </li>
+                @endforeach
+
+                {{-- dat them --}}
             </ul>
 
             <div class="nav-side navbar-nav ms-auto mb-2 mb-lg-0">
