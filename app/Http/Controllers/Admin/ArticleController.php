@@ -17,6 +17,7 @@ use App\Notifications\NewArticleSubmitted;
 use Illuminate\Support\Facades\Log;
 use DOMDocument;
 use Exception;
+use App\Notifications\ArticleRejected;
 
 class ArticleController extends Controller
 {
@@ -35,6 +36,7 @@ class ArticleController extends Controller
         $filter = $request->input('filter', 'all'); // Mặc định hiển thị tất cả bài viết
 
         $query = Article::with(['author', 'category', 'approver', 'tags'])
+            ->where('author_id', auth()->id()) // Chỉ lấy bài viết của admin đang đăng nhập
             ->orderBy('created_at', 'desc');
 
         if ($filter === 'inactive') {
@@ -747,7 +749,7 @@ class ArticleController extends Controller
         }
 
         // Gửi thông báo cho tác giả
-        $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã bị từ chối. Lý do: {$request->rejection_reason}"));
+        $article->author->notify(new ArticleRejected($article, $request->rejection_reason));
 
         return redirect()->back()->with('success', 'Bài viết đã bị từ chối.');
     }

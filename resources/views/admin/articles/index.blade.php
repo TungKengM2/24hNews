@@ -238,15 +238,7 @@
                                                             <i class="si-pencil si"></i>
                                                         </a>
                                                     @endif
-                                                                                                            @if ($article->status === 'pending')
-                                                            <form action="{{ route('articles.approve', $article) }}" method="POST" class="d-inline">
-                                                                @csrf
-                                                                @method('PATCH')
-                                                                <button type="submit" class="btn btn-success btn-sm" title="Duyệt bài viết" onclick="return confirm('Xác nhận duyệt?')">
-                                                                    <i class="fa fa-check"></i>
-                                                                </button>
-                                                            </form>
-                                                        @endif
+
                                                         @if (in_array($article->status, ['published', 'archived']))
                                                         <form action="{{ route('articles.toggle-visibility', $article) }}" method="POST" class="d-inline">
                                                             @csrf

@@ -31,6 +31,7 @@ class ModeratorArticleController extends Controller
     }
 
 
+
     public function approve(Article $article)
 {
     if ($article->status === 'published') {
