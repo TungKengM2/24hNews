@@ -41,18 +41,10 @@
                             <div class="input-group me-2">
                                 <input type="text" id="searchInput" class="form-control"
                                     placeholder="Tìm kiếm bài viết..." value="{{ request('search') }}">
-                                <select id="categoryFilter" class="form-select" style="max-width: 200px;">
-                                    <option value="">danh mục</option>
-                                    @foreach(\App\Models\Category::where('is_active', true)->get() as $category)
-                                        <option value="{{ $category->name }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                                <select id="authorFilter" class="form-select" style="max-width: 200px;">
-                                    <option value="">Người viết</option>
-                                    @foreach(\App\Models\User::has('articles')->get() as $author)
-                                        <option value="{{ $author->username }}">{{ $author->username }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" id="categoryFilter" class="form-control" 
+                                    placeholder="Tìm kiếm danh mục..." style="max-width: 200px;">
+                                <input type="text" id="authorFilter" class="form-control" 
+                                    placeholder="Tìm kiếm tác giả..." style="max-width: 200px;">
                                 <button type="button" class="btn btn-primary" id="searchButton">
                                     <i class="fa fa-search"></i>
                                 </button>
@@ -69,8 +61,8 @@
 
                                 function performSearch() {
                                     const searchTerm = searchInput.value.toLowerCase().trim();
-                                    const selectedCategory = categoryFilter.value.toLowerCase();
-                                    const selectedAuthor = authorFilter.value.toLowerCase();
+                                    const categorySearchTerm = categoryFilter.value.toLowerCase().trim();
+                                    const authorSearchTerm = authorFilter.value.toLowerCase().trim();
                                     
                                     articleRows.forEach(row => {
                                         const title = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
@@ -78,8 +70,8 @@
                                         const author = row.querySelector('td:nth-child(6)').textContent.toLowerCase();
                                         
                                         const matchesTitle = title.includes(searchTerm);
-                                        const matchesCategory = !selectedCategory || category.includes(selectedCategory);
-                                        const matchesAuthor = !selectedAuthor || author.includes(selectedAuthor);
+                                        const matchesCategory = !categorySearchTerm || category.includes(categorySearchTerm);
+                                        const matchesAuthor = !authorSearchTerm || author.includes(authorSearchTerm);
 
                                         if (matchesTitle && matchesCategory && matchesAuthor) {
                                             row.style.display = '';
@@ -93,20 +85,16 @@
                                 searchButton.addEventListener('click', performSearch);
 
                                 // Search on Enter key press
-                                searchInput.addEventListener('keyup', function(event) {
-                                    if (event.key === 'Enter') {
-                                        performSearch();
-                                    }
+                                [searchInput, categoryFilter, authorFilter].forEach(input => {
+                                    input.addEventListener('keyup', function(event) {
+                                        if (event.key === 'Enter') {
+                                            performSearch();
+                                        }
+                                    });
+                                    
+                                    // Real-time search as user types
+                                    input.addEventListener('input', performSearch);
                                 });
-
-                                // Real-time search as user types
-                                searchInput.addEventListener('input', performSearch);
-
-                                // Filter when category changes
-                                categoryFilter.addEventListener('change', performSearch);
-
-                                // Filter when author changes
-                                authorFilter.addEventListener('change', performSearch);
                             });
                         </script>
                         </div>
