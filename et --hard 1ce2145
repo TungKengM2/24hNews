@@ -1,0 +1,167 @@
+[33m1ce2145[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32msonwtungf[m[33m, [m[1;31morigin/sonwtungf[m[33m)[m fix chinh sua lan 2
+[33mfeb7915[m Fix chinh sua
+[33m6927c99[m[33m ([m[1;31morigin/tungkeng[m[33m)[m k hien thi chinh sua bai viet cua author ben adm
+[33mc520aa8[m[33m ([m[1;32mtungkeng[m[33m)[m Merge branch 'sonwtungf' into tungkeng
+[33mf1085a9[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33m571601c[m up
+[33m560a882[m up
+[33m10de712[m up
+[33me0979d6[m Fix noti kiem duyet vien
+[33me914512[m TungKeng fix lỗi nhỏ
+[33ma5170ab[m up
+[33mbdbc1fd[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33m3bb6589[m TungKeng chỉnh sửa phần rate sao cho tác giả
+[33m5455a54[m Merge branch 'dat' of https://github.com/TungKengM2/24hNews into dat
+[33m72ec8c7[m Added a line to handle image validation error in the article edit view
+[33mf755747[m Merge branch 'dat' of https://github.com/TungKengM2/24hNews into dat
+[33mfd7bd0f[m up
+[33m86de01c[m Merge branch 'dat' of https://github.com/TungKengM2/24hNews into dat
+[33m529f2ae[m up
+[33mc017e4c[m Merge branch 'sonwtungf' into tungkeng
+[33m7645b2a[m Merge branch 'sonwtungf' of github.com:TungKengM2/24hNews into sonwtungf
+[33maf347e2[m up
+[33m4e8f6eb[m Hien Thi Tuong tac xem chi tiet
+[33m0e1272f[m up
+[33m876a499[m up
+[33m5e53f0f[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33m5021a7d[m TungKeng cập nhập lấy bài viết tác giả đã fl trong 1 ngày
+[33ma6f6000[m Merge branch 'hien' of https://github.com/TungKengM2/24hNews into dat
+[33mc1b05a6[m TungKeng fix lỗi nhỏ
+[33m14bd221[m Merge branch 'hien' into tungkeng
+[33m4c00ed1[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into tungkeng  the commit.
+[33me02cf8e[m xóa thống kê người dùng ở kdv
+[33mb05ee18[m up
+[33m5b8a52b[m up
+[33mb77a72b[m TungKeng fix lỗi nhỏ
+[33m3662e05[m up
+[33mc16c2e8[m sửa lại thống kê bình luận
+[33m92b3243[m up
+[33m3588fef[m Merge branch 'dat' of https://github.com/TungKengM2/24hNews into dat
+[33mfa82386[m up phần hiển thị show bài viết
+[33mfd26e7a[m sửa lại thống kê author biểu đồ số nguyên
+[33m8047283[m up
+[33md365fb4[m up
+[33m7f315c9[m up
+[33mfb04011[m upload thống kê admin
+[33mae97fba[m up
+[33mc05dddc[m up
+[33m3ef714b[m up
+[33m924610a[m up
+[33m007bdc4[m upload biểu đồ thống kê admin
+[33mbc28be5[m fix lại thống kê author
+[33m1e94c23[m upload thông kê like và comments của kdv
+[33m738c390[m upload thống kê user bài viết của kdv
+[33mc0a92d7[m refactor(uploader): refactor TinyMCE image upload functionality
+[33mf01e579[m up
+[33m9376566[m feat(tinymce): optimize image moderation process and handle Word imports
+[33m1f13023[m up
+[33m85fc588[m update time noti
+[33m2cf7208[m up
+[33m8b39f27[m up
+[33m4cb2f87[m up
+[33m6f78891[m feat(moderation): enhance image moderation for all sources
+[33m7c839e7[m up
+[33mc1516da[m edit layout category và menu category
+[33m94eeaf0[m TungKeng Merge và sửa lại lỗi nhỏ
+[33m15f53e0[m TungKeng Merge SonwTungf
+[33m067e614[m refactor(profiles): optimize author profile page and related functionalities
+[33me6b5ab6[m feat(article): add filter option for archived articles
+[33mb7215f8[m feat(article): add filter option for archived articles
+[33m266638b[m refactor(admin/articles): - Improve the functionality for creating articles -Improve user support functionalities: -Display a warning when navigating away from a page with an edited form -Modify the title and submit button for better clarity
+[33m36b4cfd[m up
+[33mfc5dc78[m up
+[33ma0cbca7[m up
+[33mfb5fa19[m update noti
+[33m7ee20eb[m up phần thống kê author
+[33mfa079ea[m Merge branch 'hien' of https://github.com/TungKengM2/24hNews into dat
+[33m9664d86[m noti theo cate ma kdv quan ly
+[33me6968c0[m feat(article): implement content moderation and improve article management
+[33m04b102f[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33m5ed0e0d[m feat(author): add functionality to hide articles and display top authors
+[33mf0b5deb[m feat(database): add new fields to users and approvals tables
+[33m1f6b870[m feat(seeder): improve seeder structure and add more seeders
+[33m5a39089[m TungKeng fix lỗi nhỏ
+[33md49e6a8[m up chỉnh sửa giao diện categorise
+[33ma391810[m up
+[33m5030294[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33meffa851[m noti user fl author
+[33md5e6733[m TungKeng merge giao diện sửa lại của đạt + fix các lỗi nhỏ
+[33m3cad237[m[33m ([m[1;31morigin/nluan[m[33m, [m[1;32mnluan[m[33m)[m KD danh muc
+[33m7177686[m up
+[33m420ae0d[m up
+[33m0d6eb11[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33m2415b9a[m TungKeng upload thêm profile
+[33m6762f65[m up
+[33mc088b03[m up
+[33m31db7fe[m up
+[33mfeaf0d9[m up
+[33mc1bf548[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33ma8c8472[m up
+[33mfd6d1be[m up
+[33m1195224[m sửa lại giao diện
+[33mfc53115[m up phần about us
+[33m2d8bcac[m up
+[33mbbc399f[m TungKeng chỉnh lại route gọn hơn
+[33mb7ef86a[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33m498a28c[m up
+[33m6bf0af6[m TungKeng thêm chức năng cho admin + chỉnh sửa lại giao diện
+[33m9d75b35[m việt hóa moderator
+[33md1ec775[m viet hoa author
+[33m77f89a0[m việt hóa admin
+[33m6bbd377[m up
+[33mc5d08ad[m fix search
+[33mefad488[m upcode
+[33m36d1ee5[m Merge branch 'dat' of https://github.com/TungKengM2/24hNews into dat
+[33mf691b87[m fix search
+[33m25fe5d8[m edit icon user trang chủ
+[33mf62d620[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33m0472ff1[m TungKeng upload hiển thị danh sách bài viết tác giả đã fl cho user + làm lại tính điểm sao của author
+[33ma9fecb4[m up
+[33m909313a[m up
+[33madfc1ed[m up
+[33m60f01bf[m up
+[33m166f0b3[m việt hóa trang chủ , detail, category
+[33m73b299e[m up
+[33m78e9699[m up
+[33m0092856[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33m4367462[m TungKeng upload new DB (Follow) + list người follow cho user
+[33mcaf7aad[m chỉnh lại phần search
+[33ma6d9260[m up phần hiện category
+[33m8487945[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33mef957c2[m TungKeng upload rate sao cho author + admin đăng bài
+[33m1496268[m fix commetcommet
+[33mf23267b[m Merge branch 'tungkeng' into duongnew
+[33m586239f[m fix save
+[33m1359075[m TungKeng sửa lỗi ảnh ở profile
+[33m71b7d80[m Tungkeng update db User + làm profile admin + author
+[33mff5001b[m report bàiviet + fix + hoàn thiện chitiet baivietbaiviet
+[33mb142498[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33m90edecf[m repost done
+[33m68175f4[m FIX
+[33mdc67808[m TungKeng update db User + bổ profile cho admin
+[33m1619cc4[m up
+[33md0c8465[m up
+[33m0e7bb09[m up
+[33m8d14f84[m up
+[33me50907f[m fix lỗi hiển thị category bên trang profiles
+[33m864d50e[m up
+[33m54ef99c[m up
+[33m849ea70[m up
+[33m315da09[m TungKeng merge nluan
+[33mc78ab31[m Up
+[33m17ef0d9[m up
+[33mfcf70d2[m up
+[33m8c96133[m up
+[33ma6a38fc[m up author giao diện
+[33m8f54c2c[m up
+[33ma954a41[m nn
+[33m74fbe1c[m thêm file
+[33m960e3b2[m dddd
+[33mf4c36a5[m Nâng cấp tài khoảnn
+[33m13f6cc8[m Merge branch 'tungkeng' into duongnew
+[33m62a12e2[m Hien fix TinyMCE cho author
+[33m9cdd506[m TùngKeng merge hien
+[33mb4b8b76[m TùngKeng chỉnh sửa thống kê tương tác + tài khoản cho admin
+[33mbbc261c[m feat: add image to text conversion functionality
+[33m23f4725[m feat(routes): add import statements for new admin controllers
+[33m9ec7a9f[m Resolve merge conflict in routes/web.php between tungkeng and hien

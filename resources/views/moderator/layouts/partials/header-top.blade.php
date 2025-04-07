@@ -65,42 +65,25 @@
                     data-bs-toggle="dropdown" title="Notifications" style="position: relative; display: inline-block;">
                     <i data-feather="bell"></i>
                     @php
-                        // Chỉ đếm bài viết thuộc danh mục moderator quản lý
-                        $moderator = auth()->user();
-                        $categoryIds = $moderator->categories()->pluck('category_id');
-
-                        // Đếm bài viết pending
-                        $pendingCount = \App\Models\Article::where('status', 'pending')
-                                        ->whereIn('category_id', $categoryIds)
-                                        ->count();
-
-                        // Đếm bài viết pending quá 1 tiếng
-                        $longPendingCount = \App\Models\Article::where('status', 'pending')
-                                            ->whereIn('category_id', $categoryIds)
-                                            ->where('created_at', '<', now()->subMinutes(30))
-                                            ->count();
-
-                        // Tổng số thông báo (mỗi loại tính là 1)
-                        $totalNotifications = ($pendingCount > 0 ? 1 : 0) + ($longPendingCount > 0 ? 1 : 0);
+                    $pendingCount = \App\Models\Article::where('status', 'pending')->count();
+                    $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
+                    $totalPending = $pendingCount + $pendingViolations;
+            
+                    $longPendingArticles = \App\Models\Article::where('status', 'pending')
+                    ->where('created_at', '<', now()->subMinutes(30))
+                        ->count();
+                    $totalNotifications = $pendingCount > 0 ? 1 : 0; // 1 thông báo nếu có bài pending
+                    $totalNotifications += $longPendingArticles > 0 ? 1 : 0; // +1 nếu có bài chờ lâu
                     @endphp
-
-                    <!-- Badge chính - tổng số thông báo -->
-                    @if ($totalNotifications > 0)
+            
+                    @if ($pendingCount > 0 || $pendingViolations > 0)
                         <span class="badge badge-danger"
                             style="position: absolute; top: 6px; right: 5px; font-size: 10px; padding: 2px 5px; border-radius: 50%; line-height: 1; background: red; color: white;">
-                            {{ $totalNotifications }}
-                        </span>
-                    @endif
-
-                    <!-- Badge phụ - số bài viết pending -->
-                    @if ($pendingCount > 0)
-                        <span class="badge badge-warning"
-                            style="position: absolute; top: -5px; right: -5px; font-size: 8px; padding: 2px 4px; border-radius: 50%; line-height: 1; background: orange; color: white;">
-                            {{ $pendingCount }}
+                            {{ $totalPending }}
                         </span>
                     @endif
                 </a>
-                <ul class="dropdown-menu animated bounceIn" >
+                <ul class="dropdown-menu animated bounceIn">
                     <li class="header">
                         <div class="p-20">
                             <div class="flexbox">
@@ -112,29 +95,29 @@
                     </li>
                     <li>
                         <ul class="menu sm-scrol">
+                            <!-- Thông báo bài viết chờ duyệt -->
                             @if ($pendingCount > 0)
                                 <li>
-                                    <a href="{{ route('moderator.list-article') }}">
-                                        <i class="fas fa-file-alt text-warning"></i>
+                                    <a href="{{ route('moderator.articles.index') }}">
                                         {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
                                     </a>
                                 </li>
                             @endif
-
-                            @if ($longPendingCount > 0)
+            
+                            <!-- Thông báo vi phạm chờ duyệt -->
+                            @if ($pendingViolations > 0)
                                 <li>
-                                    <a href="{{ route('moderator.list-article') }}">
-                                        <i class="fas fa-clock text-danger"></i>
-                                        {{ "Cảnh báo: $longPendingCount bài chờ duyệt quá 30 phút!" }}
+                                    <a href="{{ route('moderator.violations.approves') }}">
+                                        {{ "Có $pendingViolations vi phạm đang chờ duyệt!" }}
                                     </a>
                                 </li>
                             @endif
-
-                            @if ($pendingCount == 0 && $longPendingCount == 0)
+            
+                            <!-- Thông báo bài viết chờ lâu hơn 30 phút -->
+                            @if ($longPendingArticles > 0)
                                 <li>
-                                    <a href="javascript:void(0)">
-                                        <i class="fas fa-check-circle text-success"></i>
-                                        Không có bài viết chờ duyệt
+                                    <a href="{{ route('moderator.articles.index') }}">
+                                        {{ "Cảnh báo: $longPendingArticles bài chờ duyệt quá 30 phút!" }}
                                     </a>
                                 </li>
                             @endif
@@ -145,16 +128,14 @@
                     </li>
                 </ul>
             </li>
+            
 
             <script>
+                // Gọi hàm mỗi 60 giây
+                setInterval(refreshNotificationCount, 60000);
 
-
-
-            // Gọi hàm mỗi 60 giây
-            setInterval(refreshNotificationCount, 60000);
-
-            // Gọi ngay khi trang load
-            document.addEventListener('DOMContentLoaded', refreshNotificationCount);
+                // Gọi ngay khi trang load
+                document.addEventListener('DOMContentLoaded', refreshNotificationCount);
             </script>
             <!-- User Account-->
             <li class="dropdown user user-menu">

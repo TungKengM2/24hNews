@@ -60,32 +60,26 @@
             </li> --}}
             <!-- Notifications -->
             <li class="dropdown notifications-menu" style="position: relative;">
-                <a href="index.html#"
+                <a href="#"
                     class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
                     data-bs-toggle="dropdown" title="Notifications" style="position: relative; display: inline-block;">
                     <i data-feather="bell"></i>
                     @php
-                        $pendingCount = \App\Models\Article::where('status', 'pending')->count();
-                        $longPendingArticles = \App\Models\Article::where('status', 'pending')
-                        ->where('created_at', '<', now()->subMinutes(30))
-                            ->count();
-                        $totalNotifications = $pendingCount > 0 ? 1 : 0; // 1 thông báo nếu có bài pending
-                        $totalNotifications += $longPendingArticles > 0 ? 1 : 0; // +1 nếu có bài chờ lâu
+                    $pendingCount = \App\Models\Article::where('status', 'pending')->count();
+                    $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
+                    $totalPending = $pendingCount + $pendingViolations;
+            
+                    $longPendingArticles = \App\Models\Article::where('status', 'pending')
+                    ->where('created_at', '<', now()->subMinutes(30))
+                        ->count();
+                    $totalNotifications = $pendingCount > 0 ? 1 : 0; // 1 thông báo nếu có bài pending
+                    $totalNotifications += $longPendingArticles > 0 ? 1 : 0; // +1 nếu có bài chờ lâu
                     @endphp
-
-                    <!-- Badge chính - tổng số thông báo -->
-                    @if ($totalNotifications > 0)
+            
+                    @if ($pendingCount > 0 || $pendingViolations > 0)
                         <span class="badge badge-danger"
                             style="position: absolute; top: 6px; right: 5px; font-size: 10px; padding: 2px 5px; border-radius: 50%; line-height: 1; background: red; color: white;">
-                            {{ $totalNotifications }}
-                        </span>
-                    @endif
-
-                    <!-- Badge phụ - số bài viết pending -->
-                    @if ($pendingCount > 0)
-                        <span class="badge badge-warning"
-                            style="position: absolute; top: -5px; right: -5px; font-size: 8px; padding: 2px 4px; border-radius: 50%; line-height: 1; background: orange; color: white;">
-                            {{ $pendingCount }}
+                            {{ $totalPending }}
                         </span>
                     @endif
                 </a>
@@ -101,6 +95,7 @@
                     </li>
                     <li>
                         <ul class="menu sm-scrol">
+                            <!-- Thông báo bài viết chờ duyệt -->
                             @if ($pendingCount > 0)
                                 <li>
                                     <a href="{{ route('admin.articles.approves') }}">
@@ -108,6 +103,17 @@
                                     </a>
                                 </li>
                             @endif
+            
+                            <!-- Thông báo vi phạm chờ duyệt -->
+                            @if ($pendingViolations > 0)
+                                <li>
+                                    <a href="{{ route('admin.violations.approves') }}">
+                                        {{ "Có $pendingViolations vi phạm đang chờ duyệt!" }}
+                                    </a>
+                                </li>
+                            @endif
+            
+                            <!-- Thông báo bài viết chờ lâu hơn 30 phút -->
                             @if ($longPendingArticles > 0)
                                 <li>
                                     <a href="{{ route('admin.articles.approves') }}">
@@ -118,7 +124,7 @@
                         </ul>
                     </li>
                     <li class="footer">
-                        <a href="index.html#">View all</a>
+                        <a href="{{ route('admin.articles.approves') }}">Xem danh sách bài viết</a>
                     </li>
                 </ul>
             </li>
@@ -134,7 +140,8 @@
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
-                        <a class="dropdown-item" href="{{route('admin.profile')}}"><i class="ti-user text-muted me-2"></i>
+                        <a class="dropdown-item" href="{{ route('admin.profile') }}"><i
+                                class="ti-user text-muted me-2"></i>
                             Profile</a>
                         {{-- <a class="dropdown-item" href="index.html#"><i class="ti-wallet text-muted me-2"></i> My
                             Wallet</a>

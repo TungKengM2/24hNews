@@ -9,7 +9,7 @@ class Comment extends Model
 {
     protected $table = 'comments';      // Tên bảng
     protected $primaryKey = 'comment_id'; // Khóa chính
-    public $timestamps = false;         // Nếu không có cột created_at, updated_at
+        // Nếu không có cột created_at, updated_at
 
     protected $fillable = [
         'article_id',
@@ -22,10 +22,9 @@ class Comment extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id')
+        return $this->belongsTo(User::class, 'user_id', 'user_id')
             ->select([
-                // 'user_id',
-                'id',
+                'user_id', // Dùng 'user_id' thay vì 'id'
                 'username',
                 'phone',
                 'image',
@@ -39,6 +38,7 @@ class Comment extends Model
                 'updated_at',
             ]);
     }
+    
 
     public function replies()
     {
@@ -54,6 +54,7 @@ class Comment extends Model
             'comment_id'
         );
     }
+    
 
     public function article()
     {
