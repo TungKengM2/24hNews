@@ -29,142 +29,121 @@
             <!-- Main content -->
             <div class="box">
                 <div class="box-header with-border">
-                    <h4 class="box-title">Chi Tiết Bài Viết</h4>
+                    <h4 class="box-title">Chi tiết bài viết - {{ $article->title }}</h4>
                     <div class="box-tools">
                         <div class="btn-group">
-                            <a href="{{ route('author.articles.edit', $article) }}" class="btn btn-warning btn-sm">
+                            <a href="{{ route('author.articles.versions', $article) }}" class="btn btn-info btn-sm me-2">
+                                <i class="si-history si"></i> Lịch sử phiên bản
+                            </a>
+                            <a href="{{ route('author.articles.edit', $article) }}" class="btn btn-warning btn-sm me-2">
                                 <i class="si-pencil si"></i> Chỉnh sửa
                             </a>
-                            <form action="{{ route('author.articles.destroy', $article) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
-                                    <i class="si-trash si"></i> Xóa
-                                </button>
-                            </form>
                             <a href="{{ route('author.articles.index') }}" class="btn btn-default btn-sm">
                                 <i class="mdi mdi-arrow-left"></i> Quay lại
                             </a>
                         </div>
                     </div>
                 </div>
+
                 <div class="box-body">
+                    <!-- Article Information -->
                     <div class="row">
-                        <!-- Thông tin cơ bản -->
                         <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Thông tin cơ bản</h5>
+                            <div class="box">
+                                <div class="box-header">
+                                    <h4 class="box-title">Thông tin bài viết</h4>
                                 </div>
-                                <div class="card-body">
-                                    <div class="row mb-3">
-                                        <div class="col-md-12">
-                                            <h4><i class="mdi mdi-title"></i> {{ $article->title }}</h4>
-                                            <p class="text-muted"><i class="mdi mdi-link-variant"></i> {{ $article->slug }}</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-4">
-                                        <div class="col-md-12">
-                                            <h5>Nội dung tóm tắt:</h5>
-                                            <p>{{ $article->preview_content }}</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <h5>Nội dung chi tiết:</h5>
-                                            <div class="bg-light p-3 rounded">
-                                                {!! $article->content !!}
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="box-body">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th style="width: 200px">Mã bài viết:</th>
+                                            <td>{{ $article->code }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Tiêu đề:</th>
+                                            <td>{{ $article->title }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Đường dẫn:</th>
+                                            <td>{{ $article->slug }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Danh mục:</th>
+                                            <td>{{ $article->category ? $article->category->name : 'Không có danh mục' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Thẻ:</th>
+                                            <td>
+                                                @foreach($article->tags as $tag)
+                                                    <span class="badge bg-info me-1">{{ $tag->name }}</span>
+                                                @endforeach
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Trạng thái:</th>
+                                            <td>
+                                                @switch($article->status)
+                                                    @case('draft')
+                                                        <span class="badge bg-secondary">Bản nháp</span>
+                                                        @break
+                                                    @case('pending')
+                                                        <span class="badge bg-warning">Chờ duyệt</span>
+                                                        @break
+                                                    @case('published')
+                                                        <span class="badge bg-success">Đã xuất bản</span>
+                                                        @break
+                                                    @case('archived')
+                                                        <span class="badge bg-danger">Đã ẩn</span>
+                                                        @break
+                                                    @default
+                                                        <span class="badge bg-secondary">{{ $article->status }}</span>
+                                                @endswitch
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Ngày tạo:</th>
+                                            <td>{{ $article->created_at->format('d/m/Y H:i:s') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Cập nhật lần cuối:</th>
+                                            <td>{{ $article->updated_at->format('d/m/Y H:i:s') }}</td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Thông tin bổ sung -->
                         <div class="col-md-4">
-                            @if ($article->thumbnail_url)
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">Ảnh đại diện</h5>
-                                    </div>
-                                    <div class="card-body text-center">
-                                        <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Ảnh đại diện"
-                                            class="img-fluid rounded" style="max-height: 200px;">
-                                    </div>
+                            <div class="box">
+                                <div class="box-header">
+                                    <h4 class="box-title">Ảnh đại diện</h4>
                                 </div>
-                            @endif
-
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Thông tin khác</h5>
+                                <div class="box-body text-center">
+                                    @if($article->thumbnail_url)
+                                        <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                             alt="Ảnh đại diện"
+                                             class="img-fluid rounded"
+                                             style="max-height: 300px;">
+                                    @else
+                                        <p class="text-muted">Không có ảnh đại diện</p>
+                                    @endif
                                 </div>
-                                <div class="card-body">
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-account"></i> Tác giả:</span>
-                                            <span class="badge bg-primary rounded-pill">{{ $article->author->username ?? 'Không có' }}</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-folder"></i> Danh mục:</span>
-                                            <span class="badge bg-info rounded-pill">{{ $article->category->name ?? 'Không có' }}</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-check-circle"></i> Trạng thái:</span>
-                                            <span class="badge bg-{{ $article->status == 'published' ? 'success' : 'warning' }} rounded-pill">
-                                                {{ ucfirst($article->status) }}
-                                            </span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-alert-circle"></i> Nội dung nhạy cảm:</span>
-                                            <span class="badge bg-{{ $article->contains_sensitive_content ? 'danger' : 'success' }} rounded-pill">
-                                                {{ $article->contains_sensitive_content ? 'Có' : 'Không' }}
-                                            </span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-account-check"></i> Được duyệt bởi:</span>
-                                            <span class="badge bg-dark rounded-pill">{{ $article->approver->username ?? 'Chưa được duyệt' }}</span>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <span><i class="mdi mdi-tag-multiple"></i> Thẻ:</span>
-                                            <div class="mt-2">
-                                                @if ($article->tags->isNotEmpty())
-                                                    @foreach ($article->tags as $tag)
-                                                        <span class="badge bg-primary m-1">{{ $tag->name }}</span>
-                                                    @endforeach
-                                                @else
-                                                    <span class="text-muted">Không có thẻ</span>
-                                                @endif
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-
                             </div>
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Tương Tác</h5>
-                                </div>
-                                <div class="card-body">
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-eye"></i> Lượt xem:</span>
-                                            <span class="badge bg-secondary rounded-pill">{{ $article->views }}</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-thumb-up"></i> Lượt thích:</span>
-                                            <span class="badge bg-success rounded-pill">{{ $article->likes->count() }}</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-comment"></i> Bình luận:</span>
-                                            <span class="badge bg-warning rounded-pill">{{ $article->comments->count() }}</span>
-                                        </li>
-                                    </ul>
-                                </div>
+                        </div>
+                    </div>
 
+                    <!-- Article Content -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h4 class="box-title">Nội dung bài viết</h4>
+                                </div>
+                                <div class="box-body">
+                                    <div class="content-preview border rounded p-3 bg-light">
+                                        {!! $article->content !!}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -172,4 +151,15 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .content-preview img {
+            max-width: 100%;
+            height: auto;
+        }
+        .badge {
+            font-size: 0.9em;
+            padding: 5px 10px;
+        }
+    </style>
 @endsection
