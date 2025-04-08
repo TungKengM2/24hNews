@@ -22,8 +22,9 @@ class Tag extends Model
         });
     }
 
-    public function articles()
+    public function publishedArticles()
     {
-        return $this->belongsToMany(Article::class, 'article_tags', 'tag_id', 'article_id');
+        return $this->belongsToMany(Article::class, 'article_tags', 'tag_id', 'article_id')
+            ->where('status', 'published');
     }
 }
