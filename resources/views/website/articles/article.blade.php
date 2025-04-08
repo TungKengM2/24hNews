@@ -29,7 +29,7 @@
                 </div>
                 <div class="meta-nav pt-30 pb-30 border-top border-1 brd-gray">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-8">
                             <div class="author-side color-666 fsz-13px">
                                 <div class="author me-40 d-flex d-lg-inline-flex align-items-center">
                                     <span class="icon-30 rounded-circle overflow-hidden me-10">
@@ -43,7 +43,8 @@
 
                                 <span class="me-40">
                                     <a href="#"><i class="la la-calendar me-1"></i>
-                                        <?= date('F d, Y', strtotime($article->created_at)) ?></a>
+                                        {{ \Carbon\Carbon::parse($article->created_at)->translatedFormat('d \t\há\n\g m, Y') }}
+                                    </a>
                                 </span>
 
                                 <span class="me-40">
@@ -56,12 +57,9 @@
                                         {{ $comments->total() }}
                                         Bình luận</a>
                                 </span>
-
-
-
                             </div>
                         </div>
-                        <div class="col-lg-6 text-lg-end">
+                        <div class="col-lg-4" style="margin-top: -4px; margin-left: -200px">
                             <div class="links-side color-000 fsz-13px">
                                 <span class="me-40 d-flex align-items-center">
                                     @php
