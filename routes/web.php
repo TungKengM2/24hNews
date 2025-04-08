@@ -288,6 +288,7 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     Route::get('/articles', [AuthorArticleController::class, 'index'])->name('author.articles.index');
     Route::get('/articles/search', [AuthorArticleController::class, 'search'])->name('author.articles.search');
     Route::post('/articles/upload', [AuthorArticleController::class, 'uploadImage',])->name('author.articles.upload');
+    Route::get('/ajax/subcategories', [App\Http\Controllers\Author\AjaxController::class, 'getSubcategories'])->name('author.ajax.subcategories');
 
 
     Route::middleware(['check.violations'])->group(function () {
