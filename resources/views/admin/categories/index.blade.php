@@ -203,9 +203,9 @@
                                                         @endphp
                                                         @if($moderator)
                                                             <span class="badge badge-info">{{ $moderator->username }}</span>
-                                                            @if(!$childCategory->moderator_id)
-                                                                <small class="text-muted d-block">(Kế thừa từ cha)</small>
-                                                            @endif
+{{--                                                            @if(!$childCategory->moderator_id)--}}
+{{--                                                                <small class="text-muted d-block">(Kế thừa từ cha)</small>--}}
+{{--                                                            @endif--}}
                                                         @else
                                                             <span class="badge badge-secondary">Chưa gán</span>
                                                         @endif
