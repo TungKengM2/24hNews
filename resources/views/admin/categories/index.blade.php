@@ -105,6 +105,7 @@
                                             <th scope="col">Danh mục cha</th>
                                             <th scope="col">Bài viết</th>
                                             <th scope="col">Trạng thái</th>
+                                            <th scope="col">Kiểm duyệt viên</th>
                                             <th scope="col">Thao tác</th>
                                         </tr>
                                     </thead>
@@ -150,6 +151,13 @@
                                                         <span class="badge badge-danger">Không hoạt động</span>
                                                     @endif
                                                 </td>
+                                                <td>
+                                                    @if($parentCategory->moderator)
+                                                        <span class="badge badge-info">{{ $parentCategory->moderator->username }}</span>
+                                                    @else
+                                                        <span class="badge badge-secondary">Chưa gán</span>
+                                                    @endif
+                                                </td>
                                                 <td class="d-flex">
                                                     <a class="btn btn-warning me-2"
                                                         href="{{ route('categories.edit', $parentCategory) }}">
@@ -187,6 +195,19 @@
                                                             <span class="badge badge-success">Hoạt động</span>
                                                         @else
                                                             <span class="badge badge-danger">Không hoạt động</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @php
+                                                            $moderator = $childCategory->getModerator();
+                                                        @endphp
+                                                        @if($moderator)
+                                                            <span class="badge badge-info">{{ $moderator->username }}</span>
+                                                            @if(!$childCategory->moderator_id)
+                                                                <small class="text-muted d-block">(Kế thừa từ cha)</small>
+                                                            @endif
+                                                        @else
+                                                            <span class="badge badge-secondary">Chưa gán</span>
                                                         @endif
                                                     </td>
                                                     <td class="d-flex">
