@@ -110,12 +110,12 @@
                                     </thead>
                                     <tbody>
                                         {{-- Hiển thị danh mục cha trước --}}
-                                        @foreach ($categories->where('parent_id', null) as $parentCategory)
+                                        @foreach ($categories as $parentCategory)
                                             <tr class="bg-light parent-row" id="parent-{{ $parentCategory->category_id }}">
                                                 <td scope="row">{{ $parentCategory->category_id }}</td>
                                                 <td>
                                                     @php
-                                                        $childCount = $categories->where('parent_id', $parentCategory->category_id)->count();
+                                                        $childCount = $childCategories->where('parent_id', $parentCategory->category_id)->count();
                                                     @endphp
                                                     @if($childCount > 0)
                                                         <span class="toggle-children" data-parent="{{ $parentCategory->category_id }}" style="cursor: pointer;">
@@ -136,7 +136,7 @@
                                                     @php
                                                         $articleCount = $parentCategory->articles->count();
                                                         $subArticleCount = 0;
-                                                        foreach($categories->where('parent_id', $parentCategory->category_id) as $child) {
+                                                        foreach($childCategories->where('parent_id', $parentCategory->category_id) as $child) {
                                                             $subArticleCount += $child->subArticles->count();
                                                         }
                                                         $totalArticles = $articleCount + $subArticleCount;
@@ -169,7 +169,7 @@
                                             </tr>
 
                                             {{-- Hiển thị danh mục con của danh mục cha này --}}
-                                            @foreach ($categories->where('parent_id', $parentCategory->category_id) as $childCategory)
+                                            @foreach ($childCategories->where('parent_id', $parentCategory->category_id) as $childCategory)
                                                 <tr class="child-row child-of-{{ $parentCategory->category_id }}">
                                                     <td scope="row">{{ $childCategory->category_id }}</td>
                                                     <td style="padding-left: 40px;">&#8627; {{ $childCategory->name }}</td>
