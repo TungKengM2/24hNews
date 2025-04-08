@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('thumbnail_url', 255)->nullable();
             $table->enum('status', ['draft', 'pending', 'published', 'archived', 'rejected'])->default('draft');
             $table->integer('views')->default(0);
+            $table->decimal('rating_star', 3, 1)->default(0);
             $table->foreignId('approved_by')->nullable()->constrained('users', 'user_id');
             $table->timestamps();
         });

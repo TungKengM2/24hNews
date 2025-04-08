@@ -40,25 +40,53 @@
                                     <a href="{{ route('website.profileAuth', ['id' => $article->author->user_id]) }}"
                                         class="text-decoration-underline text-primary ms-1">{{ $article->author->username }}</a>
                                 </div>
+
                                 <span class="me-40">
-                                    <a href="page-single-post-creative.html#"><i class="la la-calendar me-1"></i>
+                                    <a href="#"><i class="la la-calendar me-1"></i>
                                         <?= date('F d, Y', strtotime($article->created_at)) ?></a>
                                 </span>
+
                                 <span class="me-40">
-                                    <a href="page-single-post-creative.html#"><i class="la la-calendar me-1"></i>
+                                    <a href="#"><i class="la la-eye me-1"></i>
                                         {{ $article->views }} Lượt xem </a>
                                 </span>
 
-                                <span class="">
-                                    <a href="page-single-post-creative.html#"><i class="la la-comment me-1"></i>
+                                <span class="me-40">
+                                    <a href="#"><i class="la la-comment me-1"></i>
                                         {{ $comments->total() }}
                                         Bình luận</a>
                                 </span>
+
+
+
                             </div>
                         </div>
                         <div class="col-lg-6 text-lg-end">
                             <div class="links-side color-000 fsz-13px">
+                                <span class="me-40 d-flex align-items-center">
+                                    @php
+                                        $fullStars = floor($article->rating_star);
+                                        $halfStar = $article->rating_star - $fullStars >= 0.5;
+                                    @endphp
 
+                                    <div class="rating-stars">
+                                        @for ($i = 0; $i < $fullStars; $i++)
+                                            <i class="fas fa-star text-warning"></i>
+                                        @endfor
+
+                                        @if ($halfStar)
+                                            <i class="fas fa-star-half-alt text-warning"></i>
+                                        @endif
+
+                                        @for ($i = $fullStars + $halfStar; $i < 5; $i++)
+                                            <i class="far fa-star text-muted"></i>
+                                        @endfor
+                                    </div>
+
+                                    <div class="m-2 small text-muted">
+                                        {{ number_format($article->rating_star, 1) }} / 5
+                                    </div>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -464,16 +492,10 @@
 
                                                                 <div class="w-100">
                                                                     <!-- Ô nhập nội dung trả lời -->
-                                                                    <textarea 
-                                                                    class="form-control form-control-sm reply-content" 
-                                                                    name="content" 
-                                                                    rows="2" 
-                                                                    required
-                                                                    data-username="@{{ $comment->user->username ?? 'Anonymous' }}"
-                                                                    placeholder="Trả lời: ..." 
-                                                                    onclick="addUsernameToReply(this)">
+                                                                    <textarea class="form-control form-control-sm reply-content" name="content" rows="2" required
+                                                                        data-username="@{{ $comment - > user - > username ?? 'Anonymous' }}" placeholder="Trả lời: ..." onclick="addUsernameToReply(this)">
                                                                 </textarea>
-                                                                
+
 
                                                                     <script>
                                                                         function addUsernameToReply(textarea, commentId) {
