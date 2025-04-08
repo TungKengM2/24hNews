@@ -63,23 +63,25 @@ Route::get('/search', [HomeController::class, 'search'])->name('search');
 // Author Profile
 Route::get('/profiles/author/{id}', [ProfileAuthorProfileController::class, 'showAuth'])->name('website.profileAuth')->middleware('auth');
 
-Route::post('/user/{user}/follow', [ProfileAuthorProfileController::class, 'follow'])->name('user.follow');
-
-Route::post('/user/{user}/unfollow', [ProfileAuthorProfileController::class, 'unfollow'])->name('user.unfollow');
+Route::middleware(['auth', 'check.violations'])->group(function () {
+    Route::post('/user/{user}/follow', [ProfileAuthorProfileController::class, 'follow'])->name('user.follow');
+    Route::post('/user/{user}/unfollow', [ProfileAuthorProfileController::class, 'unfollow'])->name('user.unfollow');
+});
 
 
 
 // Client Articles
 Route::middleware('auth')->group(function () {
     Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])->name('articles.article');
-    Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
-    Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
-    Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
-    Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
-    Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
 
-    Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
-
+    Route::middleware(['check.violations'])->group(function () {
+        Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
+        Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
+        Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
+        Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
+        Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
+        Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
+    });
 });
 // Client Category
 Route::get('/category/{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
@@ -217,15 +219,14 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
 
 
     // Bookmark By TungKeng
-    Route::post('/save-article', [ModeratorArticleSaveController::class, 'saveArticle'])->name('save.article');
-
     Route::get('/saved-articles', [ModeratorArticleSaveController::class, 'savedArticles'])->name('moderator.saved');
-
     Route::get('/article/{slug}', [ArticleUserController::class, 'show'])->name('moderator.article.detail');
 
-    Route::delete('/user/remove-saved-article/{id}', [ModeratorArticleSaveController::class, 'removeSavedArticle'])->name('moderator.remove.saved');
-
-    Route::post('/bookmark/{article_id}', [ModeratorArticleSaveController::class, 'toggleBookmark']);
+    Route::middleware(['check.violations'])->group(function () {
+        Route::post('/save-article', [ModeratorArticleSaveController::class, 'saveArticle'])->name('save.article');
+        Route::delete('/user/remove-saved-article/{id}', [ModeratorArticleSaveController::class, 'removeSavedArticle'])->name('moderator.remove.saved');
+        Route::post('/bookmark/{article_id}', [ModeratorArticleSaveController::class, 'toggleBookmark']);
+    });
 
 
 
@@ -284,7 +285,6 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::get('/following', [ProfileController::class, 'followingOfAuthorList'])->name('author.following');
 
-    // Route resource articles - chỉ index và show không cần kiểm tra vi phạm
     Route::get('/articles', [AuthorArticleController::class, 'index'])->name('author.articles.index');
     Route::get('/articles/search', [AuthorArticleController::class, 'search'])->name('author.articles.search');
     Route::post('/articles/upload', [AuthorArticleController::class, 'uploadImage',])->name('author.articles.upload');
@@ -326,15 +326,15 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
 
     // Bookmark By TungKeng
-    Route::post('/save-article', [AuthorArticleSaveController::class, 'saveArticle'])->name('save.article');
-
     Route::get('/saved-articles', [AuthorArticleSaveController::class, 'savedArticles'])->name('author.saved');
-
     Route::get('/article/{slug}', [ArticleUserController::class, 'show'])->name('author.article.detail');
 
-    Route::delete('/user/remove-saved-article/{id}', [AuthorArticleSaveController::class, 'removeSavedArticle'])->name('author.remove.saved');
 
-    Route::post('/bookmark/{article_id}', [AuthorArticleSaveController::class, 'toggleBookmark']);
+    Route::middleware(['check.violations'])->group(function () {
+        Route::post('/save-article', [AuthorArticleSaveController::class, 'saveArticle'])->name('save.article');
+        Route::delete('/user/remove-saved-article/{id}', [AuthorArticleSaveController::class, 'removeSavedArticle'])->name('author.remove.saved');
+        Route::post('/bookmark/{article_id}', [AuthorArticleSaveController::class, 'toggleBookmark']);
+    });
 
 
 
@@ -414,16 +414,15 @@ Route::middleware(['auth', 'role:4'])->prefix('/user')->group(function () {
     // Route::post('/articles/view', [ArticleViewUserController::class, 'store']);
     // Route::get('/articles/viewed', [ArticleViewUserController::class, 'index']);
 
-    // Bookmark By TungKeng
-    Route::post('/save-article', [ArticleSaveController::class, 'saveArticle'])->name('save.article');
-
     Route::get('/saved-articles', [ArticleSaveController::class, 'savedArticles'])->name('user.saved');
-
     Route::get('/article/{slug}', [ArticleUserController::class, 'show'])->name('article.detail');
 
-    Route::delete('/user/remove-saved-article/{id}', [ArticleSaveController::class, 'removeSavedArticle'])->name('user.remove.saved');
-
-    Route::post('/bookmark/{article_id}', [ArticleSaveController::class, 'toggleBookmark']);
+    Route::middleware(['check.violations'])->group(function () {
+        // Bookmark By TungKeng
+        Route::post('/save-article', [ArticleSaveController::class, 'saveArticle'])->name('save.article');
+        Route::delete('/user/remove-saved-article/{id}', [ArticleSaveController::class, 'removeSavedArticle'])->name('user.remove.saved');
+        Route::post('/bookmark/{article_id}', [ArticleSaveController::class, 'toggleBookmark']);
+    });
 
 
 
@@ -440,7 +439,7 @@ Route::middleware(['auth', 'role:4'])->prefix('/user')->group(function () {
 
 // Khu vực dùng cho BookMark By TungKeng
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'check.violations'])->group(function () {
     Route::post('/save-article', [ArticleSaveController::class, 'saveArticle'])->name('save.article');
 });
 
@@ -461,15 +460,14 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/following', [ProfileController::class, 'followingOfAdminList'])->name('admin.following');
 
     // Bookmark By TungKeng
-    Route::post('/save-article', [AdminArticleSaveController::class, 'saveArticle'])->name('save.article');
-
     Route::get('/saved-articles', [AdminArticleSaveController::class, 'savedArticles'])->name('admin.saved');
-
     Route::get('/article/{slug}', [ArticleUserController::class, 'show'])->name('admin.article.detail');
 
-    Route::delete('/user/remove-saved-article/{id}', [AdminArticleSaveController::class, 'removeSavedArticle'])->name('admin.remove.saved');
-
-    Route::post('/bookmark/{article_id}', [AdminArticleSaveController::class, 'toggleBookmark']);
+    Route::middleware(['check.violations'])->group(function () {
+        Route::post('/save-article', [AdminArticleSaveController::class, 'saveArticle'])->name('save.article');
+        Route::delete('/user/remove-saved-article/{id}', [AdminArticleSaveController::class, 'removeSavedArticle'])->name('admin.remove.saved');
+        Route::post('/bookmark/{article_id}', [AdminArticleSaveController::class, 'toggleBookmark']);
+    });
 
 
 
