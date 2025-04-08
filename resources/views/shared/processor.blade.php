@@ -164,7 +164,8 @@
             title: false,
             tags: false,
             thumbnail: false,
-            content: false
+            content: false,
+            category: false
         };
 
         // Get elements
@@ -172,6 +173,7 @@
         const tagsSelect = document.getElementById('tags');
         const thumbnailInput = document.getElementById('thumbnail_url');
         const contentEditor = tinymce.get('full-featured');
+        const parentCategorySelect = document.getElementById('parent_category');
 
         // Get criteria elements
         const criteriaItems = document.querySelectorAll('.criteria-item');
@@ -270,10 +272,20 @@
                 }
             }
 
+            // Check category (parent category selected)
+            if (parentCategorySelect && parentCategorySelect.value) {
+                criteria.category = true;
+                updateCriteriaItem('criteria-category', true);
+                passedCount++;
+            } else {
+                criteria.category = false;
+                updateCriteriaItem('criteria-category', false);
+            }
+
             // Update progress bar and count
-            const percentage = (passedCount / 4) * 100;
+            const percentage = (passedCount / 5) * 100;
             progressBar.style.height = percentage + '%';
-            criteriaCount.textContent = passedCount + '/4 tiêu chí đạt';
+            criteriaCount.textContent = passedCount + '/5 tiêu chí đạt';
         }
 
         // Function to update a criteria item's appearance

@@ -391,7 +391,6 @@ class ArticleController extends Controller
             'status' => 'required|in:draft,pending,published,rejected,archived',
         ];
 
-        // Kiểm tra nếu có subcategory_id, phải thuộc category_id đã chọn
         if ($request->subcategory_id) {
             $subcategory = Category::find($request->subcategory_id);
             if (!$subcategory || $subcategory->parent_id != $request->category_id) {

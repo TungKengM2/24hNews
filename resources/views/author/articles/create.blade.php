@@ -90,12 +90,12 @@
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Danh mục</label>
-                                        <select name="category_id" class="form-control">
-                                            @foreach ($categories as $category)
+                                        <label class="form-label">Danh mục chính</label>
+                                        <select name="category_id" id="parent_category" class="form-control select2-categories">
+                                            <option value="">-- Chọn danh mục chính --</option>
+                                            @foreach ($parentCategories as $category)
                                                 @if ($category->is_active)
-                                                    <option value="{{ $category->category_id }}">{{ $category->name }}
-                                                    </option>
+                                                    <option value="{{ $category->category_id }}">{{ $category->name }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -112,6 +112,13 @@
                                             @endforeach
                                         </select>
                                         <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới (chấp nhận cả chữ và số).</small>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Danh mục phụ</label>
+                                        <select name="subcategory_id" id="child_category" class="form-control select2-subcategories" disabled>
+                                            <option value="">-- Chọn danh mục phụ --</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -224,6 +231,13 @@
                                                 <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn trong kết quả tìm kiếm và tối ưu cho người đọc</span>
                                             </div>
                                         </li>
+                                        <li class="criteria-item failed" id="criteria-category" data-target="parent_category">
+                                            <div class="criteria-icon failed">✗</div>
+                                            <div class="criteria-text criteria-tooltip">
+                                                Chọn danh mục phù hợp
+                                                <span class="tooltip-text">Chọn danh mục chính và danh mục phụ (nếu có) phù hợp với nội dung bài viết</span>
+                                            </div>
+                                        </li>
                                     </ul>
 
                                     <div class="progress-container">
@@ -251,6 +265,60 @@
                                     tokenSeparators: [',', ' '],
                                     placeholder: 'Chọn hoặc nhập thẻ mới',
                                     allowClear: true,
+                                });
+
+                                // Khởi tạo Select2 cho danh mục cha
+                                $('.select2-categories').select2({
+                                    placeholder: 'Chọn danh mục chính',
+                                    allowClear: true
+                                });
+
+                                // Khởi tạo Select2 cho danh mục con
+                                $('.select2-subcategories').select2({
+                                    placeholder: 'Chọn danh mục phụ',
+                                    allowClear: true
+                                });
+
+                                // Xử lý khi thay đổi danh mục cha
+                                $('#parent_category').on('change', function() {
+                                    var parentId = $(this).val();
+                                    var childSelect = $('#child_category');
+
+                                    // Reset danh mục con
+                                    childSelect.empty().append('<option value="">-- Chọn danh mục phụ --</option>');
+
+                                    // Cập nhật tiêu chí danh mục
+                                    if (window.updateCriteria) {
+                                        window.updateCriteria();
+                                    }
+
+                                    if (parentId) {
+                                        // Enable select danh mục con
+                                        childSelect.prop('disabled', false);
+
+                                        // Gọi AJAX để lấy danh sách danh mục con
+                                        $.ajax({
+                                            url: '{{ route("author.ajax.subcategories") }}',
+                                            type: 'GET',
+                                            data: {
+                                                parent_id: parentId
+                                            },
+                                            success: function(response) {
+                                                if (response.success && response.data.length > 0) {
+                                                    // Thêm các option mới
+                                                    $.each(response.data, function(key, value) {
+                                                        childSelect.append('<option value="' + value.category_id + '">' + value.name + '</option>');
+                                                    });
+                                                }
+                                            },
+                                            error: function() {
+                                                console.error('Lỗi khi lấy danh sách danh mục con');
+                                            }
+                                        });
+                                    } else {
+                                        // Disable select danh mục con
+                                        childSelect.prop('disabled', true);
+                                    }
                                 });
                             });
 

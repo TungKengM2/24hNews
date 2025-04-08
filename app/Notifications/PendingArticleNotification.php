@@ -29,8 +29,8 @@ class PendingArticleNotification extends Notification
     {
         return [
             'message' => 'Bài viết mới cần duyệt: ' . $this->article->title,
-            'article_id' => $this->article->id,
-            'link' => route('moderator.articles.show', $this->article->id)
+            'article_id' => $this->article->article_id,
+            'link' => route('moderator.articles.show', $this->article)
         ];
     }
 }
