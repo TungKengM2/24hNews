@@ -32,12 +32,25 @@
                             'Bạn không thể đăng bình luận do có quá nhiều vi phạm (> 5). Vui lòng liên hệ quản trị viên để được hỗ trợ.');
                 }
 
+                if ($request->is('*/report')) {
+                    if ($request->expectsJson()) {
+                        return response()->json([
+                            'error' => 'Bạn không thể báo cáo do có quá nhiều vi phạm (> 5). Vui lòng liên hệ quản trị viên để được hỗ trợ.',
+                        ], 403);
+                    }
+
+                    return redirect()
+                        ->back()
+                        ->with('error',
+                            'Bạn không thể báo cáo do có quá nhiều vi phạm (> 5). Vui lòng liên hệ quản trị viên để được hỗ trợ.');
+                }
+
                 if ($user->role_id == 2) {
                     return redirect()
                         ->route('author.dashboard')
                         ->with('error',
                             'Bạn không thể đăng hoặc sửa bài viết do có quá nhiều vi phạm (> 5). Vui lòng liên hệ quản trị viên để được hỗ trợ.');
-                } else { // User thông thường (role_id = 4)
+                } else {
                     return redirect()
                         ->route('home')
                         ->with('error',
