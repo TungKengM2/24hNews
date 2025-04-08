@@ -162,8 +162,14 @@
                                         </div>
 
                                         <div id="moderation-result" style="display: none;">
+                                            <div id="moderation-loading" class="alert alert-info" style="display: none;">
+                                                <strong><i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...</strong> Vui lòng đợi trong giây lát.
+                                            </div>
                                             <div id="moderation-error" class="alert alert-danger" style="display: none;">
                                                 <strong>Lỗi!</strong> <span id="error-message"></span>
+                                            </div>
+                                            <div id="moderation-success" class="alert alert-success" style="display: none;">
+                                                <strong><i class="fas fa-check-circle"></i> Thành công!</strong> Ảnh đã được kiểm duyệt và không vi phạm quy định.
                                             </div>
                                         </div>
                                     </div>
@@ -210,6 +216,13 @@
                                                 <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy đủ trên Google và tối ưu cho SEO</span>
                                             </div>
                                         </li>
+                                        <li class="criteria-item failed" id="criteria-category" data-target="parent_category">
+                                            <div class="criteria-icon failed">✗</div>
+                                            <div class="criteria-text criteria-tooltip">
+                                                Chọn danh mục chính và phụ
+                                                <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ phù hợp với nội dung bài viết</span>
+                                            </div>
+                                        </li>
                                         <li class="criteria-item failed" id="criteria-tags" data-target="tags">
                                             <div class="criteria-icon failed">✗</div>
                                             <div class="criteria-text criteria-tooltip">
@@ -231,13 +244,7 @@
                                                 <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn trong kết quả tìm kiếm và tối ưu cho người đọc</span>
                                             </div>
                                         </li>
-                                        <li class="criteria-item failed" id="criteria-category" data-target="parent_category">
-                                            <div class="criteria-icon failed">✗</div>
-                                            <div class="criteria-text criteria-tooltip">
-                                                Chọn danh mục phù hợp
-                                                <span class="tooltip-text">Chọn danh mục chính và danh mục phụ (nếu có) phù hợp với nội dung bài viết</span>
-                                            </div>
-                                        </li>
+
                                     </ul>
 
                                     <div class="progress-container">
@@ -277,6 +284,14 @@
                                 $('.select2-subcategories').select2({
                                     placeholder: 'Chọn danh mục phụ',
                                     allowClear: true
+                                });
+
+                                // Xử lý khi thay đổi danh mục con
+                                $('#child_category').on('change', function() {
+                                    // Cập nhật tiêu chí danh mục
+                                    if (window.updateCriteria) {
+                                        window.updateCriteria();
+                                    }
                                 });
 
                                 // Xử lý khi thay đổi danh mục cha
@@ -350,9 +365,13 @@
                             document.addEventListener('DOMContentLoaded', function() {
                                 // Ẩn các thành phần moderation khi trang mới tải
                                 const moderationResult = document.getElementById('moderation-result');
+                                const loadingDiv = document.getElementById('moderation-loading');
                                 const errorDiv = document.getElementById('moderation-error');
+                                const successDiv = document.getElementById('moderation-success');
                                 if (moderationResult) moderationResult.style.display = 'none';
+                                if (loadingDiv) loadingDiv.style.display = 'none';
                                 if (errorDiv) errorDiv.style.display = 'none';
+                                if (successDiv) successDiv.style.display = 'none';
 
                                 // Xử lý sinh slug tự động từ tiêu đề
                                 document.getElementById('title').addEventListener('input', function() {
@@ -389,6 +408,16 @@
                                         if (file) {
                                             isImageValid = false;
 
+                                            // Hiển thị thông báo đang kiểm tra và ẩn các thông báo khác
+                                            const moderationResult = document.getElementById('moderation-result');
+                                            const loadingDiv = document.getElementById('moderation-loading');
+                                            const errorDiv = document.getElementById('moderation-error');
+                                            const successDiv = document.getElementById('moderation-success');
+                                            if (moderationResult) moderationResult.style.display = 'block';
+                                            if (loadingDiv) loadingDiv.style.display = 'block';
+                                            if (errorDiv) errorDiv.style.display = 'none';
+                                            if (successDiv) successDiv.style.display = 'none';
+
                                             // Xử lý preview ảnh
                                             const reader = new FileReader();
                                             reader.onload = function(e) {
@@ -419,9 +448,12 @@
                                                 })
                                                 .then(result => {
                                                     const moderationResult = document.getElementById('moderation-result');
+                                                    const loadingDiv = document.getElementById('moderation-loading');
                                                     const errorDiv = document.getElementById('moderation-error');
                                                     const errorMessage = document.getElementById('error-message');
 
+                                                    // Ẩn thông báo đang kiểm tra
+                                                    if (loadingDiv) loadingDiv.style.display = 'none';
                                                     moderationResult.style.display = 'block';
 
                                                     if (result.status === 'error') {
@@ -450,21 +482,46 @@
                                                             updateCriteria();
                                                         }
                                                     } else {
+                                                        // Ẩn thông báo lỗi
                                                         errorDiv.style.display = 'none';
+
+                                                        // Hiển thị thông báo thành công
+                                                        const successDiv = document.getElementById('moderation-success');
+                                                        successDiv.style.display = 'block';
+                                                        successDiv.style.opacity = '1';
+
+                                                        // Cập nhật trạng thái hình ảnh hợp lệ
                                                         window.isImageValid = true;
                                                         submitButton.disabled = false;
-                                                        // Update verification criteria if function exists
+
+                                                        // Cập nhật tiêu chí kiểm tra
                                                         if (typeof updateCriteria === 'function') {
                                                             updateCriteria();
                                                         }
+
+                                                        // Tự động ẩn thông báo thành công sau 3 giây
+                                                        setTimeout(function() {
+                                                            // Hiệu ứng mờ dần trong 1 giây
+                                                            const fadeEffect = setInterval(function() {
+                                                                if (successDiv.style.opacity > 0) {
+                                                                    successDiv.style.opacity -= 0.1;
+                                                                } else {
+                                                                    clearInterval(fadeEffect);
+                                                                    successDiv.style.display = 'none';
+                                                                }
+                                                            }, 100);
+                                                        }, 3000);
                                                     }
                                                 })
                                                 .catch(error => {
                                                     console.error('Lỗi kiểm duyệt:', error);
                                                     const moderationResult = document.getElementById('moderation-result');
+                                                    const loadingDiv = document.getElementById('moderation-loading');
                                                     const errorDiv = document.getElementById('moderation-error');
                                                     const errorMessage = document.getElementById('error-message');
 
+                                                    // Ẩn thông báo đang kiểm tra
+                                                    if (loadingDiv) loadingDiv.style.display = 'none';
                                                     moderationResult.style.display = 'block';
                                                     errorDiv.style.display = 'block';
 
@@ -522,6 +579,14 @@
                                         // Kiểm tra các tiêu chí khác
                                         const criteriaItems = document.querySelectorAll('.criteria-item.passed');
                                         const criteriaCount = criteriaItems.length;
+
+                                        // Kiểm tra danh mục chính và danh mục phụ
+                                        const parentCategory = document.getElementById('parent_category').value;
+                                        if (!parentCategory) {
+                                            e.preventDefault();
+                                            alert('Vui lòng chọn danh mục cho bài viết.');
+                                            return false;
+                                        }
 
                                         if (criteriaCount < 4) {
                                             // Sử dụng SweetAlert2 thay vì confirm mặc định

@@ -272,8 +272,9 @@
                 }
             }
 
-            // Check category (parent category selected)
-            if (parentCategorySelect && parentCategorySelect.value) {
+            // Check category (both parent and child categories must be selected)
+            const childCategorySelect = document.getElementById('child_category');
+            if (parentCategorySelect && parentCategorySelect.value && childCategorySelect && childCategorySelect.value) {
                 criteria.category = true;
                 updateCriteriaItem('criteria-category', true);
                 passedCount++;
