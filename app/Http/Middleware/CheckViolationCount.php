@@ -32,7 +32,7 @@
                             'Bạn không thể đăng bình luận do có quá nhiều vi phạm (> 5). Vui lòng liên hệ quản trị viên để được hỗ trợ.');
                 }
 
-                if ($user->role_id == 2) { // Author (role_id = 2)
+                if ($user->role_id == 2) {
                     return redirect()
                         ->route('author.dashboard')
                         ->with('error',
