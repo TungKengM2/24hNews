@@ -8,6 +8,7 @@ use App\Models\Article;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Models\User;
+use App\Models\ModerationLog;
 use App\Notifications\ArticleStatusUpdated;
 use App\Notifications\PendingArticleNotification;
 use App\Services\ModerationService;
@@ -272,6 +273,11 @@ class ArticleController extends Controller
                 }
             }
 
+            // Lưu trạng thái trước khi cập nhật
+            $beforeState = [
+                'status' => $article->status
+            ];
+
             $article->update([
                 'title' => $request->title,
                 'slug' => $request->slug,
@@ -279,6 +285,33 @@ class ArticleController extends Controller
                 'category_id' => $request->category_id,
                 'status' => 'pending',
             ]);
+
+            // Lưu trạng thái sau khi cập nhật
+            $afterState = [
+                'status' => 'pending',
+                'submitted_at' => now()->toDateTimeString()
+            ];
+
+            // Tạo log kiểm duyệt
+            try {
+                ModerationLog::createLog(
+                    'auto_moderate',
+                    'article',
+                    $article->article_id,
+                    [
+                        'title' => $article->title,
+                        'author_id' => $article->author_id,
+                        'category_id' => $article->category_id,
+                        'action' => 'Bài viết được gửi lại để kiểm duyệt'
+                    ],
+                    $beforeState,
+                    $afterState,
+                    'none'
+                );
+            } catch (\Exception $e) {
+                // Ghi log lỗi nhưng không làm gián đoạn luồng
+                \Illuminate\Support\Facades\Log::error('Lỗi khi tạo log kiểm duyệt: ' . $e->getMessage());
+            }
 
             // Đếm số phiên bản hiện có và tạo số phiên bản mới
             $versionCount = ArticleVersion::where('article_id', $article->article_id)->count();
@@ -593,6 +626,30 @@ class ArticleController extends Controller
                 'subcategory_id' => $request->subcategory_id,
                 'status' => 'pending',
             ]);
+
+            // Tạo log kiểm duyệt cho bài viết mới
+            try {
+                ModerationLog::createLog(
+                    'auto_moderate',
+                    'article',
+                    $article->article_id,
+                    [
+                        'title' => $article->title,
+                        'author_id' => $article->author_id,
+                        'category_id' => $article->category_id,
+                        'action' => 'Bài viết mới được gửi để kiểm duyệt'
+                    ],
+                    null,
+                    [
+                        'status' => 'pending',
+                        'created_at' => now()->toDateTimeString()
+                    ],
+                    'none'
+                );
+            } catch (\Exception $e) {
+                // Ghi log lỗi nhưng không làm gián đoạn luồng
+                \Illuminate\Support\Facades\Log::error('Lỗi khi tạo log kiểm duyệt: ' . $e->getMessage());
+            }
 
             // Tạo phiên bản đầu tiên cho bài viết
             ArticleVersion::create([

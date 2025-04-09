@@ -151,6 +151,11 @@
 
             <!-- Main content -->
             <div class="card p-4">
+                <div class="d-flex justify-content-end mb-3">
+                    <a href="{{ route('articles.moderation-history', $article) }}" class="btn btn-info">
+                        <i class="fas fa-history"></i> Xem lịch sử kiểm duyệt
+                    </a>
+                </div>
                 <form action="{{ route('articles.update', $article) }}" method="POST" enctype="multipart/form-data"
                       id="articleForm">
                     @csrf
