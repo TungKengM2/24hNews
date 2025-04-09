@@ -40,5 +40,5 @@
 
 <script src="https://cdn.tiny.cloud/1/{{ env('TINYMCE_API_KEY') }}/tinymce/7/tinymce.min.js"
     referrerpolicy="origin"></script>
-    
+
     @include('shared.tiny')
