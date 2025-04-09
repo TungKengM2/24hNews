@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/fontawesome-all.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/iofrm-style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/iofrm-theme21.css') }}">
+
 </head>
 <body>
     <div class="form-body without-side">

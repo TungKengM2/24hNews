@@ -49,6 +49,10 @@
                             </div>
                         @endif
 
+                        <a href="{{ route('articles.moderation-history', $article) }}" class="btn btn-info btn-sm m-5">
+                            <i class="fas fa-history"></i> Lịch sử kiểm duyệt
+                        </a>
+
                         <a href="{{ route('articles.index') }}" class="btn btn-default btn-sm m-5">
                             <i class="mdi mdi-arrow-left"></i> Quay lại
                         </a>
