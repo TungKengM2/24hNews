@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use thiagoalessio\TesseractOCR\TesseractOCR;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -82,6 +83,38 @@ class ProfileController extends Controller
     public function upgradeToAuthor()
     {
         $user = auth()->user();
+
+        // Ghi log để gỡ lỗi
+        Log::info('Bắt đầu kiểm tra yêu cầu nâng cấp', [
+            'user_id' => $user->user_id,
+            'user_name' => $user->name
+        ]);
+
+        // Kiểm tra xem user đã gửi yêu cầu chưa
+        $existingRequest = DB::select('SELECT COUNT(*) as count FROM approvals WHERE user_id = ? AND type = ? AND status = ? AND requested_role = ?', 
+            [$user->user_id, 'role_upgrade', 'pending', 'author']);
+
+        // Ghi log để gỡ lỗi
+        Log::info('Kết quả kiểm tra yêu cầu nâng cấp', [
+            'user_id' => $user->user_id,
+            'count' => $existingRequest[0]->count
+        ]);
+
+        if ($existingRequest[0]->count > 0) {
+            Log::info('Người dùng đã có yêu cầu nâng cấp đang chờ duyệt', [
+                'user_id' => $user->user_id
+            ]);
+            
+            // Lưu thông báo lỗi vào session
+            session()->put('error', 'Bạn đã gửi yêu cầu trước đó và đang chờ duyệt.');
+            
+            // Chuyển hướng đến trang thông báo
+            return redirect()->to('/user/upgrade-result');
+        }
+
+        Log::info('Người dùng chưa có yêu cầu nâng cấp đang chờ duyệt', [
+            'user_id' => $user->user_id
+        ]);
 
         return view('user.upgrade', compact('user'));
     }
