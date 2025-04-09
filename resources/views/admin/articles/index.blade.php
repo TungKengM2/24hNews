@@ -217,6 +217,9 @@
                                                         @case('archived')
                                                             <span class="badge bg-danger">Đã Lưu Trữ</span>
                                                         @break
+                                                        @case('rejected')
+                                                            <span class="badge bg-danger">Từ Chối</span>
+                                                        @break
                                                     @endswitch
                                                 </td>
                                                 <td class="text-center">
@@ -244,6 +247,10 @@
                                                     <a href="{{ route('articles.show', $article) }}"
                                                         class="btn btn-info btn-sm" title="Xem chi tiết"><i
                                                             class="si-eye si"></i></a>
+                                                    <a href="{{ route('articles.moderation-history', $article) }}"
+                                                        class="btn btn-secondary btn-sm" title="Lịch sử kiểm duyệt">
+                                                        <i class="fas fa-history"></i>
+                                                    </a>
                                                     @if (auth()->id() === $article->author_id)
                                                         <a href="{{ route('articles.edit', $article) }}"
                                                             class="btn btn-warning btn-sm" title="Chỉnh sửa">
