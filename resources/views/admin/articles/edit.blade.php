@@ -284,12 +284,6 @@
                                 </div>
 
                                 <div id="moderation-result" style="display: none;">
-                                    <div id="moderation-loading" class="moderation-loading" style="display: none;">
-                                        <div class="spinner-border text-primary" role="status">
-                                            <span class="visually-hidden">Đang kiểm duyệt...</span>
-                                        </div>
-                                        <p>Đang kiểm duyệt ảnh...</p>
-                                    </div>
                                     <div id="moderation-error" class="alert alert-danger" style="display: none;">
                                         <strong>Lỗi!</strong> <span id="error-message"></span>
                                     </div>
@@ -360,7 +354,6 @@
                     const previewContainer = document.getElementById('image-preview-container');
                     const currentImageContainer = document.getElementById('current-image-container');
                     const moderationResult = document.getElementById('moderation-result');
-                    const moderationLoading = document.getElementById('moderation-loading');
                     const errorDiv = document.getElementById('moderation-error');
                     const errorMessage = document.getElementById('error-message');
                     const submitButton = document.getElementById('submitButton');
@@ -374,7 +367,6 @@
                     // Ẩn tất cả các phần tử kiểm duyệt ảnh khi trang mới tải
                     if (previewContainer) previewContainer.style.display = 'none';
                     if (moderationResult) moderationResult.style.display = 'none';
-                    if (moderationLoading) moderationLoading.style.display = 'none';
                     if (errorDiv) errorDiv.style.display = 'none';
                     if (imageUploadLoading) imageUploadLoading.style.display = 'none';
 
@@ -411,7 +403,6 @@
 
                                 // Hiển thị trạng thái kiểm duyệt
                                 moderationResult.style.display = 'block';
-                                moderationLoading.style.display = 'block';
                                 errorDiv.style.display = 'none';
 
                                 // Tạm thời vô hiệu hóa nút submit cho đến khi kiểm duyệt hoàn tất
@@ -438,7 +429,6 @@
                                             return response.json();
                                         })
                                         .then(result => {
-                                            moderationLoading.style.display = 'none';
                                             // Ẩn loading
                                             if (imageUploadLoading) imageUploadLoading.style.display = 'none';
 
@@ -468,7 +458,6 @@
                                         })
                                         .catch(error => {
                                             console.error('Lỗi kiểm duyệt:', error);
-                                            moderationLoading.style.display = 'none';
                                             // Ẩn loading khi có lỗi
                                             if (imageUploadLoading) imageUploadLoading.style.display = 'none';
                                             
