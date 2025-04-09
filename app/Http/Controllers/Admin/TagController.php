@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class TagController extends Controller
@@ -12,7 +13,13 @@ class TagController extends Controller
      */
     public function index()
     {
-        //
+        $tags = Tag::withCount('publishedArticles')
+            ->has('publishedArticles') // chỉ lấy tag có bài viết đã xuất bản
+            ->orderByDesc('published_articles_count')
+            ->paginate(10);
+
+
+        return view('admin.tags.index', compact('tags'));
     }
 
     /**

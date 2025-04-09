@@ -43,26 +43,29 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{{ route('articles.index') }}"><i class="icon-Commit"><span
-                                        class="path1"></span><span class="path2"></span></i>Bài Viết</a>
+                        <li>
+                            <a href="{{ route('articles.index') }}"><i class="icon-Commit">
+                                    <span class="path1"></span><span class="path2"></span></i>Bài Viết</a>
                         </li>
-                        <li><a href="{{ route('categories.index') }}"><i class="icon-Commit"><span
-                                        class="path1"></span><span class="path2"></span></i>Danh Mục
+
+                        <li>
+                            <a href="{{ route('categories.index') }}"><i class="icon-Commit">
+                                    <span class="path1"></span><span class="path2"></span></i>Danh Mục
                             </a>
                         </li>
-                        <li><a href="{{ route('admin.users.index') }}"><i class="icon-Commit"><span
-                                        class="path1"></span><span class="path2"></span></i>Người Dùng
+
+                        <li>
+                            <a href="{{ route('admin.users.index') }}"><i class="icon-Commit">
+                                    <span class="path1"></span><span class="path2"></span></i>Người Dùng
                             </a>
                         </li>
-                        {{-- <li><a href="contact_app_chat.html"><i class="icon-Commit"><span class="path1"></span><span
-                                        class="path2"></span></i>Chat</a>
+
+                        <li>
+                            <a href="{{ route('tags.index') }}"><i class="icon-Commit">
+                                    <span class="path1"></span><span class="path2"></span></i>Thẻ
+                            </a>
                         </li>
-                        <li><a href="extra_taskboard.html"><i class="icon-Commit"><span class="path1"></span><span
-                                        class="path2"></span></i>Todo</a>
-                        </li>
-                        <li><a href="mailbox.html"><i class="icon-Commit"><span class="path1"></span><span
-                                        class="path2"></span></i>Mailbox</a>
-                        </li> --}}
+
                     </ul>
                 </li>
 

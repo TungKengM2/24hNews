@@ -143,7 +143,7 @@
                         @endif
 
                         <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data"
-                              id="articleForm">
+                            id="articleForm">
                             @csrf
 
                             <div class="form-section">
@@ -152,13 +152,13 @@
                                     <div class="col-md-6 mb-3">
                                         <label for="title" class="form-label">Tiêu đề</label>
                                         <input type="text" class="form-control" id="title" name="title"
-                                               value="{{ old('title') }}" required>
+                                            value="{{ old('title') }}" required>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label for="slug" class="form-label">Đường dẫn</label>
                                         <input type="text" class="form-control" id="slug" name="slug"
-                                               value="{{ old('slug') }}" required>
+                                            value="{{ old('slug') }}" required>
                                     </div>
                                 </div>
 
@@ -177,14 +177,17 @@
 
                                     <div class="col-md-6 mb-3">
                                         <label for="tags">Chọn hoặc thêm thẻ:</label>
-                                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
+                                        <select name="tags[]" id="tags" class="form-control select2-tags"
+                                            multiple="multiple" data-placeholder="Chọn hoặc nhập thẻ mới">
                                             @foreach ($tags as $tag)
-                                                <option value="{{ $tag->tag_id }}"
-                                                    {{ in_array($tag->tag_id, old('tags', [])) ? 'selected' : '' }}>
+                                                <option value="{{ $tag->name }}"
+                                                    {{ in_array($tag->name, old('tags', [])) ? 'selected' : '' }}>
                                                     {{ $tag->name }}
                                                 </option>
                                             @endforeach
                                         </select>
+                                        <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới
+                                            (chấp nhận cả chữ và số).</small>
                                     </div>
                                 </div>
 
@@ -196,13 +199,13 @@
                                     <div class="col-md-6">
                                         <label for="thumbnail_url" class="form-label">Chọn ảnh đại diện</label>
                                         <input type="file"
-                                               class="form-control @error('thumbnail_url') is-invalid @enderror"
-                                               id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
+                                            class="form-control @error('thumbnail_url') is-invalid @enderror"
+                                            id="thumbnail_url" name="thumbnail_url" accept="image/*" required>
 
                                         @error('thumbnail_url')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
                                         @enderror
 
                                         @if (session('thumbnail_reasons'))
@@ -242,7 +245,7 @@
                                     <label for="content" class="form-label">Nội dung</label>
                                     @if (session()->has('violations') && !empty(session('violations')))
                                         <textarea id="full-featured" name="content"
-                                                  style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                                            style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
                                         {!! highlightWords(old('content', isset($article) ? $article->content : ''), session('violations')) !!}
                                         </textarea>
                                     @else
@@ -353,15 +356,17 @@
                                             // Kiểm duyệt hình ảnh
                                             const formData = new FormData();
                                             formData.append('image', file);
-                                            formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+                                            formData.append('_token', document.querySelector('meta[name="csrf-token"]')
+                                            .content);
 
                                             fetch('/api/check-image-moderation', {
-                                                method: 'POST',
-                                                body: formData,
-                                                headers: {
-                                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                                },
-                                            })
+                                                    method: 'POST',
+                                                    body: formData,
+                                                    headers: {
+                                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                                            .content,
+                                                    },
+                                                })
                                                 .then(response => {
                                                     if (!response.ok) {
                                                         throw new Error('Lỗi kết nối: ' + response.status);
@@ -406,19 +411,21 @@
 
                                                     moderationResult.style.display = 'block';
                                                     errorDiv.style.display = 'block';
-                                                    errorMessage.textContent = 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
+                                                    errorMessage.textContent = 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' +
+                                                        error.message;
                                                     isImageValid = false;
                                                     submitButton.disabled = true;
                                                 });
 
                                             // Nếu cần xử lý mammoth (chuyển đổi .docx)
-                                            if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                                            if (file.type ===
+                                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
                                                 const docReader = new FileReader();
                                                 docReader.onload = function(e) {
                                                     const arrayBuffer = e.target.result;
                                                     mammoth.extractRawText({
-                                                        arrayBuffer: arrayBuffer,
-                                                    })
+                                                            arrayBuffer: arrayBuffer,
+                                                        })
                                                         .then(function(result) {
                                                             document.getElementById('editor').innerHTML = result.value;
                                                         })
@@ -440,7 +447,8 @@
                                             return true;
                                         }
 
-                                        if (thumbnailInput && thumbnailInput.files && thumbnailInput.files[0] && !isImageValid) {
+                                        if (thumbnailInput && thumbnailInput.files && thumbnailInput.files[0] && !
+                                            isImageValid) {
                                             e.preventDefault();
                                             alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
                                             thumbnailInput.focus();

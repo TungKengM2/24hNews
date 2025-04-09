@@ -137,7 +137,7 @@
 
                         @if ($author->articles->count() > 0)
                             <div class="row" id="article-container">
-                                @foreach ($author->articles as $index => $article)
+                                @foreach ($articles as $index => $article)
                                     <div class="col-md-6 mb-4 article-item"
                                         style="{{ $index >= 4 ? 'display: none;' : '' }}">
                                         <div class="card h-100 border-0 shadow-sm">

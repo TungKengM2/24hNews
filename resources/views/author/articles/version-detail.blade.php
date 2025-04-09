@@ -92,6 +92,35 @@
                                         <input type="text" class="form-control" value="{{ $version->slug }}" readonly>
                                     </div>
 
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Danh mục</label>
+                                        <input type="text" class="form-control" value="{{ $version->category ? $version->category->name : 'Không có danh mục' }}" readonly>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Ảnh đại diện</label>
+                                        @if($version->featured_image)
+                                            <div class="mt-2">
+                                                <img src="{{ asset('storage/' . $version->featured_image) }}" alt="Ảnh đại diện" class="img-fluid" style="max-width: 300px;">
+                                            </div>
+                                        @else
+                                            <p class="text-muted">Không có ảnh đại diện</p>
+                                        @endif
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Tags</label>
+                                        @if($version->tags && count($version->tags) > 0)
+                                            <div class="mt-2">
+                                                @foreach($version->tags as $tag)
+                                                    <span class="badge bg-info me-1">{{ $tag }}</span>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <p class="text-muted">Không có tags</p>
+                                        @endif
+                                    </div>
+
                                     <div class="form-group">
                                         <label class="form-label">Nội dung</label>
                                         <div class="border rounded p-3 bg-light">
