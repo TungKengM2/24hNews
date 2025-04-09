@@ -1,7 +1,7 @@
 <?php
- 
+
  namespace App\Http\Controllers\Author;
- 
+
  use App\Http\Controllers\Controller;
  use App\Models\Article;
  use App\Models\ArticleView;
@@ -12,7 +12,7 @@
  use Carbon\Carbon; // dat them
  use Illuminate\Support\Facades\Schema; // dat them
  use Illuminate\Http\Request;
- 
+
  class AuthorDashboard extends Controller
  {
      //        public function __construct()
@@ -25,7 +25,7 @@
          // Get the type parameter from the request, default to 'daily'
          $type = $request->input('article_type', 'daily');
          $interactionType = $request->input('interaction_type', $type);
-         
+
          $user = Auth::user();
          $articleStats = [
              'total' => Article::where('author_id', $user->user_id)->count(),
@@ -41,7 +41,7 @@
          ];
           // Get time-based article statistics
           $timeBasedArticleStats = $this->getTimeBasedArticleStats($user->user_id, $type);
-         
+
           // Get time-based interaction statistics
           $timeBasedInteractionStats = $this->getTimeBasedInteractionStats($user->user_id, $interactionType);
           // Lấy số lượng người theo dõi
@@ -74,7 +74,7 @@
      if (Schema::hasTable('comments')) {
          $commentsColumns = Schema::getColumnListing('comments');
          $commentsArticleIdColumn = null;
-         
+
          // Find the article_id column
          foreach (['article_id', 'articleid', 'post_id', 'postid'] as $idCol) {
              if (in_array($idCol, $commentsColumns)) {
@@ -82,7 +82,7 @@
                  break;
              }
          }
-         
+
          if ($commentsArticleIdColumn) {
              $totalComments = DB::table('comments')
                  ->whereIn($commentsArticleIdColumn, $articleIds)
@@ -98,7 +98,7 @@
        }
 
        return view('author.dashboard', compact(
-           'articleStats', 
+           'articleStats',
            'followerCount',
            'recentArticles',
            'totalViews',
@@ -128,10 +128,10 @@
 
        return view('author.followers', compact('followers'));
    }
-   
+
    /**
     * Get time-based article statistics
-    * 
+    *
     * @param int $userId
     * @param string $type
     * @return array
@@ -140,7 +140,7 @@
    {
        // Using author_id instead of user_id
        $query = Article::where('author_id', $userId);
-       
+
        if ($type === 'daily') {
            // Get daily stats for the last 30 days
            return $query->selectRaw('DATE(created_at) as date, COUNT(*) as count')
@@ -167,10 +167,10 @@
                ->toArray();
        }
    }
-   
+
    /**
     * Get time-based interaction statistics
-    * 
+    *
     * @param int $userId
     * @param string $type
     * @return array
@@ -179,22 +179,22 @@
    {
        // Using author_id instead of user_id
        $articleIds = Article::where('author_id', $userId)->pluck('article_id');
-       
+
        // Log article IDs for debugging
        \Log::info('Article IDs for user ' . $userId, ['article_ids' => $articleIds]);
-       
+
        // Check if comments table exists
        $commentsTableExists = Schema::hasTable('comments');
        \Log::info('Comments table exists: ' . ($commentsTableExists ? 'Yes' : 'No'));
-       
+
        // If comments table exists, check its structure
        $commentsDateColumn = null;
        $commentsArticleIdColumn = null;
-       
+
        if ($commentsTableExists) {
            $commentsColumns = Schema::getColumnListing('comments');
            \Log::info('Comments table columns:', $commentsColumns);
-           
+
            // Find the date column
            foreach (['created_at', 'date_created', 'comment_date', 'commented_at'] as $dateCol) {
                if (in_array($dateCol, $commentsColumns)) {
@@ -202,7 +202,7 @@
                    break;
                }
            }
-           
+
            // Find the article_id column
            foreach (['article_id', 'articleid', 'post_id', 'postid'] as $idCol) {
                if (in_array($idCol, $commentsColumns)) {
@@ -210,26 +210,26 @@
                    break;
                }
            }
-           
+
            \Log::info('Comments columns detected:', [
                'date_column' => $commentsDateColumn,
                'article_id_column' => $commentsArticleIdColumn
            ]);
-           
+
            // Check for a sample comment to verify data
            $sampleComment = DB::table('comments')->first();
            \Log::info('Sample comment:', $sampleComment ? (array)$sampleComment : ['No comments found']);
        }
-       
+
        // Check if article_likes table exists
        $likesTableExists = Schema::hasTable('article_likes');
        $likesDateColumn = null;
        $likesArticleIdColumn = null;
-       
+
        if ($likesTableExists) {
            $likesColumns = Schema::getColumnListing('article_likes');
            \Log::info('Likes table columns:', $likesColumns);
-           
+
            // Find the date column
            foreach (['created_at', 'date_created', 'like_date', 'liked_at'] as $dateCol) {
                if (in_array($dateCol, $likesColumns)) {
@@ -237,7 +237,7 @@
                    break;
                }
            }
-           
+
            // Find the article_id column
            foreach (['article_id', 'articleid', 'post_id', 'postid'] as $idCol) {
                if (in_array($idCol, $likesColumns)) {
@@ -245,21 +245,21 @@
                    break;
                }
            }
-           
+
            \Log::info('Likes columns detected:', [
                'date_column' => $likesDateColumn,
                'article_id_column' => $likesArticleIdColumn
            ]);
        }
-       
+
        if ($type === 'daily') {
            // Get daily stats for the last 30 days
            $period = now()->subDays(30)->daysUntil(now());
            $stats = [];
-           
+
            foreach ($period as $date) {
                $dateString = $date->format('Y-m-d');
-               
+
                // Get views
                $views = 0;
                if (Schema::hasTable('article_views')) {
@@ -272,7 +272,7 @@
                        ->whereDate('updated_at', $dateString)
                        ->sum('views');
                }
-               
+
                // Get comments - only use date filtering if we found a date column
                $comments = 0;
                if ($commentsTableExists && $commentsArticleIdColumn) {
@@ -282,7 +282,7 @@
                    }
                    $comments = $query->count();
                }
-               
+
                // Get likes - only use date filtering if we found a date column
                $likes = 0;
                if ($likesTableExists && $likesArticleIdColumn) {
@@ -292,41 +292,41 @@
                    }
                    $likes = $query->count();
                }
-               
+
                // If no comments were found, add some sample data for testing
                if ($comments == 0 && $views > 0) {
                    // Generate a small number of comments based on views
                    $comments = max(1, round($views * 0.05));
                    \Log::info("No comments found, using sample data: {$comments}");
                }
-               
+
                $stats[] = [
                    'date' => $dateString,
                    'views' => $views,
                    'likes' => $likes,
                    'comments' => $comments
                ];
-               
+
                \Log::info("Stats for {$dateString}:", [
                    'views' => $views,
                    'likes' => $likes,
                    'comments' => $comments
                ]);
            }
-           
+
            // At the end of the method, log the final stats array
            \Log::info('Final interaction stats:', $stats);
-           
+
            return $stats;
        } else if ($type === 'monthly') {
            // Get monthly stats for the last 12 months
            $period = now()->subMonths(12)->monthsUntil(now());
            $stats = [];
-           
+
            foreach ($period as $date) {
                $year = $date->year;
                $month = $date->month;
-               
+
                // Get views
                $views = 0;
                if (Schema::hasTable('article_views')) {
@@ -341,7 +341,7 @@
                        ->whereMonth('updated_at', $month)
                        ->sum('views');
                }
-               
+
                // Get comments - only use date filtering if we found a date column
                $comments = 0;
                if ($commentsTableExists && $commentsArticleIdColumn) {
@@ -352,7 +352,7 @@
                    }
                    $comments = $query->count();
                }
-               
+
                // Get likes - only use date filtering if we found a date column
                $likes = 0;
                if ($likesTableExists && $likesArticleIdColumn) {
@@ -363,14 +363,14 @@
                    }
                    $likes = $query->count();
                }
-               
+
                // If no comments were found, add some sample data for testing
                if ($comments == 0 && $views > 0) {
                    // Generate a small number of comments based on views
                    $comments = max(1, round($views * 0.05));
                    \Log::info("No comments found, using sample data: {$comments}");
                }
-               
+
                $stats[] = [
                    'year' => $year,
                    'month' => $month,
@@ -378,21 +378,21 @@
                    'likes' => $likes,
                    'comments' => $comments
                ];
-               
+
                \Log::info("Stats for {$year}-{$month}:", [
                    'views' => $views,
                    'likes' => $likes,
                    'comments' => $comments
                ]);
            }
-           
+
            return $stats;
        } else {
            // Get yearly stats
            $startYear = Article::where('author_id', $userId)->min(DB::raw('YEAR(created_at)')) ?: now()->year;
            $endYear = now()->year;
            $stats = [];
-           
+
            for ($year = $startYear; $year <= $endYear; $year++) {
                // Get views
                $views = 0;
@@ -406,7 +406,7 @@
                        ->whereYear('updated_at', $year)
                        ->sum('views');
                }
-               
+
                // Get comments - only use date filtering if we found a date column
                $comments = 0;
                if ($commentsTableExists && $commentsArticleIdColumn) {
@@ -416,7 +416,7 @@
                    }
                    $comments = $query->count();
                }
-               
+
                // Get likes - only use date filtering if we found a date column
                $likes = 0;
                if ($likesTableExists && $likesArticleIdColumn) {
@@ -426,28 +426,28 @@
                    }
                    $likes = $query->count();
                }
-               
+
                // If no comments were found, add some sample data for testing
                if ($comments == 0 && $views > 0) {
                    // Generate a small number of comments based on views
                    $comments = max(1, round($views * 0.05));
                    \Log::info("No comments found, using sample data: {$comments}");
                }
-               
+
                $stats[] = [
                    'year' => $year,
                    'views' => $views,
                    'likes' => $likes,
                    'comments' => $comments
                ];
-               
+
                \Log::info("Stats for {$year}:", [
                    'views' => $views,
                    'likes' => $likes,
                    'comments' => $comments
                ]);
            }
-           
+
            return $stats;
        }
    }
