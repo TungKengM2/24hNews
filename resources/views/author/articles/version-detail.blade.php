@@ -93,8 +93,13 @@
                                     </div>
 
                                     <div class="form-group mb-3">
-                                        <label class="form-label">Danh mục</label>
+                                        <label class="form-label">Danh mục chính</label>
                                         <input type="text" class="form-control" value="{{ $version->category ? $version->category->name : 'Không có danh mục' }}" readonly>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Danh mục phụ</label>
+                                        <input type="text" class="form-control" value="{{ $version->subcategory ? $version->subcategory->name : 'Không có danh mục phụ' }}" readonly>
                                     </div>
 
                                     <div class="form-group mb-3">

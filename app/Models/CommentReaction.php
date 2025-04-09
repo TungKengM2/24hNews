@@ -9,11 +9,9 @@ class CommentReaction extends Model
 {
     use HasFactory;
 
-
-
     protected $table = 'comment_reactions'; // Khóa chính
-
-    protected $primaryKey = 'reaction_id'; // Vì bảng không có cột `created_at` và `updated_at`
+    protected $primaryKey = 'reaction_id'; // Khóa chính
+    public $timestamps = false; // Bảng không có cột created_at và updated_at
 
     protected $fillable = [
         'comment_id',

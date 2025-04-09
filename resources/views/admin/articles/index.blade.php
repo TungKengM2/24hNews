@@ -217,6 +217,9 @@
                                                         @case('archived')
                                                             <span class="badge bg-danger">Đã Lưu Trữ</span>
                                                         @break
+                                                        @case('rejected')
+                                                            <span class="badge bg-danger">Từ Chối</span>
+                                                        @break
                                                     @endswitch
                                                 </td>
                                                 <td class="text-center">
@@ -244,6 +247,10 @@
                                                     <a href="{{ route('articles.show', $article) }}"
                                                         class="btn btn-info btn-sm" title="Xem chi tiết"><i
                                                             class="si-eye si"></i></a>
+                                                    <a href="{{ route('articles.moderation-history', $article) }}"
+                                                        class="btn btn-secondary btn-sm" title="Lịch sử kiểm duyệt">
+                                                        <i class="fas fa-history"></i>
+                                                    </a>
                                                     @if (auth()->id() === $article->author_id)
                                                         <a href="{{ route('articles.edit', $article) }}"
                                                             class="btn btn-warning btn-sm" title="Chỉnh sửa">
@@ -267,6 +274,9 @@
                                                             method="POST" class="d-inline">
                                                             @csrf
                                                             @method('PUT')
+                                                            <input type="hidden" name="page" value="{{ request('page') }}">
+                                                            <input type="hidden" name="filter" value="{{ request('filter') }}">
+                                                            <input type="hidden" name="search" value="{{ request('search') }}">
                                                             <button class="btn btn-secondary btn-sm"
                                                                 title="{{ $article->status === 'published' ? 'Ẩn bài viết' : 'Hiện bài viết' }}"
                                                                 onclick="return confirm('Bạn có chắc chắn muốn {{ $article->status === 'published' ? 'ẩn' : 'hiện' }} bài viết này không?')">
@@ -295,7 +305,7 @@
                                         </tbody>
                                     </table>
                                     <div class="d-flex justify-content-end mt-4">
-                                        {{ $articles->links('pagination::bootstrap-5') }}
+                                        {{ $articles->appends(request()->query())->links('pagination::bootstrap-5') }}
                                     </div>
                                 </div>
                             </div>
