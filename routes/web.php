@@ -209,6 +209,12 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
 
     Route::patch('/articles/{article}/approve', [ModeratorArticleController::class, 'approve'])->name('moderator.articles.approve');
 
+    // Lịch sử kiểm duyệt bài viết
+    Route::get('/articles/{article}/moderation-history', [App\Http\Controllers\Moderator\ArticleModerationHistoryController::class, 'show'])->name('moderator.articles.moderation-history');
+
+    // Danh sách lịch sử kiểm duyệt bài viết
+    Route::get('/moderation-history', [App\Http\Controllers\Moderator\ArticleModerationHistoryController::class, 'index'])->name('moderator.articles.moderation-history.index');
+
 
     Route::get('/moderator/notifications', [NotificationController::class, 'index'])
     ->middleware(['auth', 'moderator'])

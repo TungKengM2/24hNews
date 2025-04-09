@@ -289,63 +289,63 @@
             <div class="container-fluid mt-5">
                 <div class="row no-gutters align-items-start">
                     <div class="col-md-9">
-                        <div class="card p-4">
+            <div class="card p-4">
                             <div class="d-flex justify-content-end mb-3">
                                 <a href="{{ route('articles.moderation-history', $article) }}" class="btn btn-info">
                                     <i class="fas fa-history"></i> Xem lịch sử kiểm duyệt
                                 </a>
                             </div>
-                            <form action="{{ route('articles.update', $article) }}" method="POST" enctype="multipart/form-data"
-                                id="articleForm">
-                    @csrf
-                    @method('PUT')
+                        <form action="{{ route('articles.update', $article) }}" method="POST" enctype="multipart/form-data"
+                            id="articleForm">
+                            @csrf
+                            @method('PUT')
 
                     <!-- Basic Information Section -->
-                    <div class="form-section">
+                            <div class="form-section">
                         <h5 class="form-section-title">Thông Tin Cơ Bản</h5>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
                                 <label for="title" class="form-label">Tiêu đề:</label>
                                 <div class="controls">
-                                    <input type="text" class="form-control" id="title" name="title"
-                                           value="{{ $article->title }}" required>
+                                        <input type="text" class="form-control" id="title" name="title"
+                                            value="{{ $article->title }}" required>
                                 </div>
-                            </div>
+                                    </div>
 
-                            <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-3">
                                 <label for="slug" class="form-label">Đường dẫn:</label>
                                 <div class="controls">
-                                    <input type="text" class="form-control" id="slug" name="slug"
-                                           value="{{ $article->slug }}" required>
+                                        <input type="text" class="form-control" id="slug" name="slug"
+                                            value="{{ $article->slug }}" required>
                                 </div>
                             </div>
-                        </div>
+                                </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
                                 <label class="form-label">Danh mục chính</label>
                                 <select name="category_id" id="parent_category" class="form-control select2-categories">
                                     <option value="">-- Chọn danh mục chính --</option>
                                     @foreach ($parentCategories as $category)
-                                        @if ($category->is_active || $article->category_id == $category->category_id)
+                                                @if ($category->is_active || $article->category_id == $category->category_id)
                                             <option value="{{ $category->category_id }}" {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
                                                 {{ $category->name }} @if (!$category->is_active) (Đã vô hiệu hóa) @endif
-                                            </option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                            <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-3">
                                 <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
                                 <select name="tags[]" id="tags" class="form-control select2-tags" multiple="multiple" data-placeholder="Chọn hoặc nhập thẻ mới">
-                                    @foreach ($tags as $tag)
+                                            @foreach ($tags as $tag)
                                         <option value="{{ $tag->name }}" @if (in_array($tag->name, $selectedTags)) selected @endif>
-                                            {{ $tag->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                                    {{ $tag->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                 <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới (chấp nhận cả chữ và số).</small>
                             </div>
 
@@ -357,7 +357,7 @@
                                         <option value="{{ $article->subcategory_id }}" selected>{{ $article->subcategory->name }}</option>
                                     @endif
                                 </select>
-                            </div>
+                                    </div>
                         </div>
                     </div>
 
@@ -387,7 +387,7 @@
                                         <p>Vui lòng chọn ảnh đại diện khác phù hợp với quy định.</p>
                                     </div>
                                 @endif
-                            </div>
+                                </div>
 
                             <div class="col-md-6">
                                 <div class="mt-2" id="current-image-container">
@@ -403,7 +403,7 @@
                                 <div id="image-preview-container" style="display: none;">
                                     <p class="mt-2"><strong>Ảnh xem trước:</strong></p>
                                     <img id="image-preview" src="#" alt="Xem trước" class="img-fluid mb-2">
-                                </div>
+                            </div>
 
                                 <div id="moderation-result" style="display: none;">
                                     <div id="moderation-loading" class="moderation-loading" style="display: none;">
@@ -437,17 +437,17 @@
                         {!! $content !!}
                         </textarea>
                         @endif
-                    </div>
+                            </div>
 
                     <!-- Hidden fields and buttons -->
                     <input type="hidden" name="status" id="articleStatus" value="pending">
-                    <input type="hidden" name="author_id" value="{{ $article->author_id }}">
+                            <input type="hidden" name="author_id" value="{{ $article->author_id }}">
 
-                    <div class="action-buttons">
+                            <div class="action-buttons">
                         <button type="submit" class="btn btn-primary" id="submitButton">Cập nhật</button>
                         <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
-                    </div>
-                </form>
+                            </div>
+                        </form>
             </div>
         </div>
 
@@ -507,13 +507,13 @@
             </div>
         </div>
     </div>
-</div>
+            </div>
 
-            <script>
-                $(document).ready(function() {
+                        <script>
+                            $(document).ready(function() {
                     // Khởi tạo Select2 với tính năng tags
                     $('.select2-tags').select2({
-                        tags: true,
+                                    tags: true,
                         tokenSeparators: [',', ' '],
                         placeholder: 'Chọn hoặc nhập thẻ mới',
                         allowClear: true,
@@ -584,12 +584,12 @@
                             // Disable select danh mục con
                             childSelect.prop('disabled', true);
                         }
-                    });
-                });
+                                });
+                            });
 
                 document.getElementById('title').addEventListener('input', function() {
-                    let title = this.value.trim();
-                    let slug = title.toLowerCase()
+                                let title = this.value.trim();
+                                let slug = title.toLowerCase()
                         .normalize('NFD').replace(/[̀-ͯ]/g, '')
                         .replace(/đ/g, 'd').replace(/Đ/g, 'D')
                         .replace(/\s+/g, '-')
@@ -891,12 +891,12 @@
 
                                     // Gửi API kiểm duyệt
                                     fetch('/api/check-image-moderation', {
-                                            method: 'POST',
-                                            body: formData,
-                                            headers: {
+                                        method: 'POST',
+                                        body: formData,
+                                        headers: {
                                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                                            },
-                                        })
+                                        },
+                                    })
                                         .then(response => {
                                             if (!response.ok) {
                                                 throw new Error('Lỗi kết nối: ' + response.status);
@@ -967,14 +967,14 @@
                             return true;
                         }
 
-                        document.getElementById('articleStatus').value = 'pending';
+                            document.getElementById('articleStatus').value = 'pending';
 
                         // Chỉ kiểm tra khi người dùng đã thay đổi ảnh và ảnh không hợp lệ
                         if (window.isImageChanged && imageUpload && imageUpload.files[0] && !window.isImageValid) {
-                            e.preventDefault();
-                            alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
-                            return false;
-                        }
+                                e.preventDefault();
+                                alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
+                                return false;
+                            }
 
                         // Kiểm tra danh mục chính và danh mục phụ
                         const parentCategory = document.getElementById('parent_category').value;
@@ -1016,8 +1016,8 @@
                         }
                         return true;
                     });
-                });
-            </script>
+                            });
+                        </script>
 
 @endsection
 

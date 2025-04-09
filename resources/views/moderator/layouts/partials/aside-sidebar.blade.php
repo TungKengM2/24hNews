@@ -18,8 +18,13 @@
                         <li><a href="{{ route('moderator.articles.index') }}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Bài Viết</a>
                         </li>
+
                         <li><a href="{{ route('moderator.violations.approves') }}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Report</a>
+                        </li>
+
+                        <li><a href="{{ route('moderator.articles.moderation-history.index') }}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Lịch Sử Duyệt</a>
                         </li>
                     </ul>
 

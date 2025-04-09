@@ -226,7 +226,7 @@
                 <div class="container-fluid mt-5">
                     <div class="row no-gutters align-items-start">
                         <div class="col-md-9">
-                            <div class="card p-4">
+                    <div class="card p-4">
                         <h2 class="mb-4">Tạo Bài Viết Mới</h2>
 
                         @if ($errors->any())
@@ -776,17 +776,17 @@
                                 }
 
                                 // Xử lý sinh slug tự động từ tiêu đề
-                                document.getElementById('title').addEventListener('input', function() {
-                                    let title = this.value.trim();
-                                    let slug = title.toLowerCase()
-                                        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Loại bỏ dấu tiếng Việt
-                                        .replace(/đ/g, 'd').replace(/Đ/g, 'D')
-                                        .replace(/\s+/g, '-') // Thay dấu cách bằng "-"
-                                        .replace(/[^\w-]/g, '') // Xóa ký tự đặc biệt
-                                        .replace(/--+/g, '-') // Loại bỏ nhiều dấu "-" liên tiếp
-                                        .replace(/^-+|-+$/g, ''); // Xóa "-" ở đầu và cuối
+                            document.getElementById('title').addEventListener('input', function() {
+                                let title = this.value.trim();
+                                let slug = title.toLowerCase()
+                                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Loại bỏ dấu tiếng Việt
+                                    .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+                                    .replace(/\s+/g, '-') // Thay dấu cách bằng "-"
+                                    .replace(/[^\w-]/g, '') // Xóa ký tự đặc biệt
+                                    .replace(/--+/g, '-') // Loại bỏ nhiều dấu "-" liên tiếp
+                                    .replace(/^-+|-+$/g, ''); // Xóa "-" ở đầu và cuối
 
-                                    document.getElementById('slug').value = slug;
+                                document.getElementById('slug').value = slug;
 
                                     // Cập nhật tiêu chí khi thay đổi tiêu đề
                                     if (window.updateCriteria) {
@@ -820,24 +820,24 @@
                                 // Gọi hàm xử lý cuộn trang
                                 handleCriteriaScroll();
 
-                                const violationDescriptions = {
-                                    'nudity': 'Hình ảnh chứa nội dung nhạy cảm, khỏa thân hoặc gợi dục',
-                                    'violence': 'Hình ảnh chứa cảnh bạo lực, đánh đập hoặc gây tổn thương',
-                                    'text_violation': 'Hình ảnh chứa văn bản vi phạm quy định (ngôn từ thô tục, kích động)',
-                                    'gore': 'Hình ảnh chứa cảnh máu me, tổn thương cơ thể',
-                                    'self_harm': 'Hình ảnh liên quan đến tự gây thương tích hoặc tự tử',
-                                    'gambling': 'Hình ảnh liên quan đến cờ bạc, đánh bạc',
-                                };
+                            const violationDescriptions = {
+                                'nudity': 'Hình ảnh chứa nội dung nhạy cảm, khỏa thân hoặc gợi dục',
+                                'violence': 'Hình ảnh chứa cảnh bạo lực, đánh đập hoặc gây tổn thương',
+                                'text_violation': 'Hình ảnh chứa văn bản vi phạm quy định (ngôn từ thô tục, kích động)',
+                                'gore': 'Hình ảnh chứa cảnh máu me, tổn thương cơ thể',
+                                'self_harm': 'Hình ảnh liên quan đến tự gây thương tích hoặc tự tử',
+                                'gambling': 'Hình ảnh liên quan đến cờ bạc, đánh bạc',
+                            };
 
                                 window.isImageValid = false;
-                                const submitButton = document.getElementById('submitButton');
+                            const submitButton = document.getElementById('submitButton');
 
                                 // Chỉ có một sự kiện lắng nghe cho phần tử thumbnail_url
                                 const thumbnailInput = document.getElementById('thumbnail_url');
                                 if (thumbnailInput) {
                                     thumbnailInput.addEventListener('change', function(e) {
-                                        const file = e.target.files[0];
-                                        if (file) {
+                                const file = e.target.files[0];
+                                if (file) {
                                             window.isImageValid = false;
 
                                             // Hiển thị thông báo đang kiểm tra và ẩn các thông báo khác
@@ -851,70 +851,70 @@
                                             if (successDiv) successDiv.style.display = 'none';
 
                                             // Xử lý preview ảnh
-                                            const reader = new FileReader();
-                                            reader.onload = function(e) {
-                                                document.getElementById('image-preview').src = e.target.result;
-                                                document.getElementById('image-preview-container').style.display = 'block';
-                                            };
-                                            reader.readAsDataURL(file);
+                                    const reader = new FileReader();
+                                    reader.onload = function(e) {
+                                        document.getElementById('image-preview').src = e.target.result;
+                                        document.getElementById('image-preview-container').style.display = 'block';
+                                    };
+                                    reader.readAsDataURL(file);
 
                                             // Kiểm duyệt hình ảnh
-                                            const formData = new FormData();
-                                            formData.append('image', file);
+                                    const formData = new FormData();
+                                    formData.append('image', file);
                                             formData.append('_token', document.querySelector('meta[name="csrf-token"]')
                                             .content);
 
-                                            fetch('/api/check-image-moderation', {
-                                                    method: 'POST',
-                                                    body: formData,
-                                                    headers: {
+                                    fetch('/api/check-image-moderation', {
+                                            method: 'POST',
+                                            body: formData,
+                                            headers: {
                                                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
                                                             .content,
-                                                    },
-                                                })
-                                                .then(response => {
-                                                    if (!response.ok) {
-                                                        throw new Error('Lỗi kết nối: ' + response.status);
-                                                    }
-                                                    return response.json();
-                                                })
-                                                .then(result => {
-                                                    const moderationResult = document.getElementById('moderation-result');
+                                            },
+                                        })
+                                        .then(response => {
+                                            if (!response.ok) {
+                                                throw new Error('Lỗi kết nối: ' + response.status);
+                                            }
+                                            return response.json();
+                                        })
+                                        .then(result => {
+                                            const moderationResult = document.getElementById('moderation-result');
                                                     const loadingDiv = document.getElementById('moderation-loading');
-                                                    const errorDiv = document.getElementById('moderation-error');
-                                                    const errorMessage = document.getElementById('error-message');
+                                            const errorDiv = document.getElementById('moderation-error');
+                                            const errorMessage = document.getElementById('error-message');
                                                     const successDiv = document.getElementById('moderation-success');
 
                                                     // Ẩn thông báo đang kiểm tra
                                                     if (loadingDiv) loadingDiv.style.display = 'none';
-                                                    moderationResult.style.display = 'block';
+                                            moderationResult.style.display = 'block';
 
-                                                    if (result.status === 'error') {
+                                            if (result.status === 'error') {
                                                         // Hiển thị thông báo lỗi
-                                                        errorDiv.style.display = 'block';
+                                                errorDiv.style.display = 'block';
                                                         successDiv.style.display = 'none';
-                                                        errorMessage.textContent = result.message ||
-                                                            'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
+                                                errorMessage.textContent = result.message ||
+                                                    'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
                                                         window.isImageValid = false;
-                                                        submitButton.disabled = true;
+                                                submitButton.disabled = true;
                                                         if (window.updateCriteria) window.updateCriteria();
-                                                    } else if (result.violation_level !== 'none') {
+                                            } else if (result.violation_level !== 'none') {
                                                         // Hiển thị thông báo lỗi vi phạm
-                                                        errorDiv.style.display = 'block';
+                                                errorDiv.style.display = 'block';
                                                         successDiv.style.display = 'none';
-                                                        let violationMessages = [];
+                                                let violationMessages = [];
 
-                                                        for (let violation in result.reason) {
-                                                            violationMessages.push(result.reason[violation]);
-                                                        }
+                                                for (let violation in result.reason) {
+                                                    violationMessages.push(result.reason[violation]);
+                                                }
 
-                                                        errorMessage.innerHTML = `Vi phạm: ${violationMessages.join(', ')}`;
+                                                errorMessage.innerHTML = `Vi phạm: ${violationMessages.join(', ')}`;
                                                         window.isImageValid = false;
-                                                        submitButton.disabled = true;
+                                                submitButton.disabled = true;
                                                         if (window.updateCriteria) window.updateCriteria();
-                                                    } else {
+                                            } else {
                                                         // Ẩn thông báo lỗi
-                                                        errorDiv.style.display = 'none';
+                                                errorDiv.style.display = 'none';
 
                                                         // Hiển thị thông báo thành công
                                                         successDiv.style.display = 'block';
@@ -922,7 +922,7 @@
 
                                                         // Cập nhật trạng thái hình ảnh hợp lệ
                                                         window.isImageValid = true;
-                                                        submitButton.disabled = false;
+                                                submitButton.disabled = false;
 
                                                         // Cập nhật tiêu chí kiểm tra
                                                         if (window.updateCriteria) window.updateCriteria();
@@ -939,25 +939,25 @@
                                                                 }
                                                             }, 100);
                                                         }, 3000);
-                                                    }
-                                                })
-                                                .catch(error => {
-                                                    console.error('Lỗi kiểm duyệt:', error);
-                                                    const moderationResult = document.getElementById('moderation-result');
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Lỗi kiểm duyệt:', error);
+                                            const moderationResult = document.getElementById('moderation-result');
                                                     const loadingDiv = document.getElementById('moderation-loading');
-                                                    const errorDiv = document.getElementById('moderation-error');
-                                                    const errorMessage = document.getElementById('error-message');
+                                            const errorDiv = document.getElementById('moderation-error');
+                                            const errorMessage = document.getElementById('error-message');
                                                     const successDiv = document.getElementById('moderation-success');
 
                                                     // Ẩn thông báo đang kiểm tra
                                                     if (loadingDiv) loadingDiv.style.display = 'none';
                                                     if (successDiv) successDiv.style.display = 'none';
-                                                    moderationResult.style.display = 'block';
-                                                    errorDiv.style.display = 'block';
+                                            moderationResult.style.display = 'block';
+                                            errorDiv.style.display = 'block';
                                                     errorMessage.textContent = 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' +
                                                         error.message;
                                                     window.isImageValid = false;
-                                                    submitButton.disabled = true;
+                                            submitButton.disabled = true;
                                                     if (window.updateCriteria) window.updateCriteria();
                                                 });
 
@@ -966,17 +966,17 @@
                                                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
                                                 const docReader = new FileReader();
                                                 docReader.onload = function(e) {
-                                                    const arrayBuffer = e.target.result;
-                                                    mammoth.extractRawText({
-                                                            arrayBuffer: arrayBuffer,
-                                                        })
-                                                        .then(function(result) {
-                                                            document.getElementById('editor').innerHTML = result.value;
-                                                        })
-                                                        .catch(function(error) {
-                                                            console.error('Lỗi đọc file:', error);
-                                                        });
-                                                };
+                                        const arrayBuffer = e.target.result;
+                                        mammoth.extractRawText({
+                                                arrayBuffer: arrayBuffer,
+                                            })
+                                            .then(function(result) {
+                                                document.getElementById('editor').innerHTML = result.value;
+                                            })
+                                            .catch(function(error) {
+                                                console.error('Lỗi đọc file:', error);
+                                            });
+                                    };
                                                 docReader.readAsArrayBuffer(file);
                                             }
                                         }
@@ -1045,9 +1045,9 @@
 
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
                     </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
