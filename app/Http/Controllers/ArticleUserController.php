@@ -207,6 +207,18 @@ class ArticleUserController extends Controller
         );
     }
 
+    public function rateArticle($article_id)
+    {
+        $article = Article::withCount(['likes', 'comments'])->findOrFail($article_id);
+
+        $score = $article->interaction_score;
+        $rating = $article->rating_star;
+
+        return view('website.articles.article', compact('article'));
+    }
+
+
+
     public function likeArticle(Request $request, $article_id)
     {
         $userId = auth()->id();
