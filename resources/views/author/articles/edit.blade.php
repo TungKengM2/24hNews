@@ -106,10 +106,10 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label for="category_id" class="form-label">Danh Mục</label>
-                                            <select name="category_id" class="form-control">
-                                                <option value="">-- Không có danh mục --</option>
-                                                @foreach ($categories as $category)
+                                            <label class="form-label">Danh mục chính</label>
+                                            <select name="category_id" id="parent_category" class="form-control select2-categories">
+                                                <option value="">-- Chọn danh mục chính --</option>
+                                                @foreach ($parentCategories as $category)
                                                     @if ($category->is_active || $article->category_id == $category->category_id)
                                                         <option value="{{ $category->category_id }}" {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
                                                             {{ $category->name }} @if (!$category->is_active) (Đã vô hiệu hóa) @endif
@@ -118,16 +118,27 @@
                                                 @endforeach
                                             </select>
                                         </div>
+
                                         <div class="col-md-6 mb-3">
                                             <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
-                                            <select name="tags[]" class="form-control select2" multiple="multiple">
+                                            <select name="tags[]" id="tags" class="form-control select2-tags" multiple="multiple" data-placeholder="Chọn hoặc nhập thẻ mới">
                                                 @foreach ($tags as $tag)
                                                     <option value="{{ $tag->name }}" @if (in_array($tag->name, $selectedTags)) selected @endif>
                                                         {{ $tag->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới.</small>
+                                            <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới (chấp nhận cả chữ và số).</small>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Danh mục phụ</label>
+                                            <select name="subcategory_id" id="child_category" class="form-control select2-subcategories" {{ empty($article->category_id) ? 'disabled' : '' }}>
+                                                <option value="">-- Chọn danh mục phụ --</option>
+                                                @if($article->subcategory_id)
+                                                    <option value="{{ $article->subcategory_id }}" selected>{{ $article->subcategory->name }}</option>
+                                                @endif
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -220,6 +231,13 @@
                                             <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy đủ trên Google và tối ưu cho SEO</span>
                                         </div>
                                     </li>
+                                    <li class="criteria-item failed" id="criteria-category" data-target="parent_category">
+                                        <div class="criteria-icon failed">✗</div>
+                                        <div class="criteria-text criteria-tooltip">
+                                            Chọn danh mục chính và phụ
+                                            <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ phù hợp với nội dung bài viết</span>
+                                        </div>
+                                    </li>
                                     <li class="criteria-item failed" id="criteria-tags" data-target="tags">
                                         <div class="criteria-icon failed">✗</div>
                                         <div class="criteria-text criteria-tooltip">
@@ -238,7 +256,7 @@
                                         <div class="criteria-icon failed">✗</div>
                                         <div class="criteria-text criteria-tooltip">
                                             Nội dung từ 800-1500 từ <span id="current-word-count">(0 từ)</span>
-                                            <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn trong kết quả tìm kiếm</span>
+                                            <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn trong kết quả tìm kiếm và tối ưu cho người đọc</span>
                                         </div>
                                     </li>
                                 </ul>
@@ -247,7 +265,7 @@
                                         <div class="criteria-progress-bar" id="criteria-progress-bar"></div>
                                     </div>
                                     <div class="text-center mt-2">
-                                        <small id="criteria-count">0/4 tiêu chí đạt</small>
+                                        <small id="criteria-count">0/5 tiêu chí đạt</small>
                                     </div>
                                 </div>
                             </div>
@@ -260,11 +278,74 @@
 
     <script>
         $(document).ready(function() {
-            $('.select2').select2({
+            // Khởi tạo Select2 với tính năng tags
+            $('.select2-tags').select2({
                 tags: true,
-                tokenSeparators: [','],
+                tokenSeparators: [',', ' '],
                 placeholder: 'Chọn hoặc nhập thẻ mới',
                 allowClear: true,
+            });
+
+            // Khởi tạo Select2 cho danh mục cha
+            $('.select2-categories').select2({
+                placeholder: 'Chọn danh mục chính',
+                allowClear: true
+            });
+
+            // Khởi tạo Select2 cho danh mục con
+            $('.select2-subcategories').select2({
+                placeholder: 'Chọn danh mục phụ',
+                allowClear: true
+            });
+
+            // Xử lý khi thay đổi danh mục con
+            $('#child_category').on('change', function() {
+                // Cập nhật tiêu chí danh mục
+                if (window.updateCriteria) {
+                    window.updateCriteria();
+                }
+            });
+
+            // Xử lý khi thay đổi danh mục cha
+            $('#parent_category').on('change', function() {
+                var parentId = $(this).val();
+                var childSelect = $('#child_category');
+
+                // Reset danh mục con
+                childSelect.empty().append('<option value="">-- Chọn danh mục phụ --</option>');
+
+                // Cập nhật tiêu chí danh mục
+                if (window.updateCriteria) {
+                    window.updateCriteria();
+                }
+
+                if (parentId) {
+                    // Enable select danh mục con
+                    childSelect.prop('disabled', false);
+
+                    // Gọi AJAX để lấy danh sách danh mục con
+                    $.ajax({
+                        url: '{{ route("author.ajax.subcategories") }}',
+                        type: 'GET',
+                        data: {
+                            parent_id: parentId
+                        },
+                        success: function(response) {
+                            if (response.success && response.data.length > 0) {
+                                // Thêm các option mới
+                                $.each(response.data, function(key, value) {
+                                    childSelect.append('<option value="' + value.category_id + '">' + value.name + '</option>');
+                                });
+                            }
+                        },
+                        error: function() {
+                            console.error('Lỗi khi lấy danh sách danh mục con');
+                        }
+                    });
+                } else {
+                    // Disable select danh mục con
+                    childSelect.prop('disabled', true);
+                }
             });
 
             window.isImageValid = true;
@@ -296,9 +377,29 @@
                     }
                 }
 
+                // Kiểm tra danh mục
+                const categoryCriteria = document.getElementById('criteria-category');
+                const parentCategory = document.getElementById('parent_category').value;
+                const childCategory = document.getElementById('child_category').value;
+                if (categoryCriteria) {
+                    if (parentCategory && childCategory) {
+                        categoryCriteria.classList.remove('failed');
+                        categoryCriteria.classList.add('passed');
+                        categoryCriteria.querySelector('.criteria-icon').textContent = '✓';
+                        categoryCriteria.querySelector('.criteria-icon').classList.remove('failed');
+                        categoryCriteria.querySelector('.criteria-icon').classList.add('passed');
+                    } else {
+                        categoryCriteria.classList.remove('passed');
+                        categoryCriteria.classList.add('failed');
+                        categoryCriteria.querySelector('.criteria-icon').textContent = '✗';
+                        categoryCriteria.querySelector('.criteria-icon').classList.remove('passed');
+                        categoryCriteria.querySelector('.criteria-icon').classList.add('failed');
+                    }
+                }
+
                 const tagCriteria = document.getElementById('criteria-tags');
                 const tagCountSpan = document.getElementById('current-tag-count');
-                let selectedTags = $('.select2').select2('data').length || $('select[name="tags[]"] option:selected').length;
+                let selectedTags = $('.select2-tags').select2('data').length || $('select[name="tags[]"] option:selected').length;
                 if (tagCountSpan) {
                     tagCountSpan.textContent = `(${selectedTags} thẻ)`;
                     if (selectedTags >= 2 && selectedTags <= 5) tagCountSpan.style.color = '#28a745';
@@ -371,14 +472,16 @@
                 const criteriaCount = document.querySelectorAll('.criteria-item.passed').length;
                 const progressBar = document.getElementById('criteria-progress-bar');
                 const criteriaCountSpan = document.getElementById('criteria-count');
-                if (progressBar) progressBar.style.width = `${criteriaCount * 25}%`;
-                if (criteriaCountSpan) criteriaCountSpan.textContent = `${criteriaCount}/4 tiêu chí đạt`;
+                if (progressBar) progressBar.style.width = `${criteriaCount * 20}%`;
+                if (criteriaCountSpan) criteriaCountSpan.textContent = `${criteriaCount}/5 tiêu chí đạt`;
             }
 
             window.updateCriteria = updateCriteria;
             setTimeout(updateCriteria, 1000);
             $('#title').on('input', updateCriteria);
-            $('.select2').on('change', updateCriteria);
+            $('.select2-tags').on('change', updateCriteria);
+            $('#parent_category').on('change', updateCriteria);
+            $('#child_category').on('change', updateCriteria);
             if (typeof tinymce !== 'undefined') {
                 tinymce.on('AddEditor', function(e) {
                     e.editor.on('input change', updateCriteria);
@@ -517,8 +620,17 @@
                     return false;
                 }
 
+                // Kiểm tra danh mục chính và danh mục phụ
+                const parentCategory = document.getElementById('parent_category').value;
+                const childCategory = document.getElementById('child_category').value;
+                if (!parentCategory) {
+                    e.preventDefault();
+                    alert('Vui lòng chọn danh mục chính cho bài viết.');
+                    return false;
+                }
+
                 const criteriaCount = document.querySelectorAll('.criteria-item.passed').length;
-                if (criteriaCount < 4) {
+                if (criteriaCount < 5) {
                     e.preventDefault();
                     const failedCriteria = [];
                     document.querySelectorAll('.criteria-item.failed').forEach(item => {
