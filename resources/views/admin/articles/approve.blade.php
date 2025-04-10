@@ -139,6 +139,11 @@
                                                         <i class="si-eye si"></i>
                                                     </a>
 
+                                                    <a href="{{ route('articles.moderation-history', $article) }}"
+                                                        class="btn btn-secondary btn-sm" title="Lịch sử kiểm duyệt">
+                                                        <i class="fas fa-history"></i>
+                                                    </a>
+
                                                     @if ($article->status === 'pending')
                                                         <form action="{{ route('articles.approve', $article) }}"
                                                             method="POST" class="d-inline">

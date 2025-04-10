@@ -25,6 +25,7 @@ class Article extends Model
         'contains_sensitive_content',
         'author_id',
         'category_id',
+        'subcategory_id',
         'thumbnail_url',
         'status',
         'views',
@@ -56,13 +57,25 @@ class Article extends Model
     }
 
     /**
-     * Quan hệ với bảng `categories`
+     * Quan hệ với bảng `categories` (danh mục chính - cha)
      */
     public function category()
     {
         return $this->belongsTo(
             Category::class,
             'category_id',
+            'category_id'
+        );
+    }
+
+    /**
+     * Quan hệ với bảng `categories` (danh mục phụ - con)
+     */
+    public function subcategory()
+    {
+        return $this->belongsTo(
+            Category::class,
+            'subcategory_id',
             'category_id'
         );
     }
@@ -74,6 +87,15 @@ class Article extends Model
         }
 
         return $this->category->is_active ? $this->category->name : 'Không hoạt động';
+    }
+
+    public function getSubcategoryNameAttribute()
+    {
+        if (! $this->subcategory) {
+            return 'Không có danh mục con';
+        }
+
+        return $this->subcategory->is_active ? $this->subcategory->name : 'Không hoạt động';
     }
 
     public function tags()
@@ -130,5 +152,24 @@ class Article extends Model
     public function likes()
     {
         return $this->hasMany(ArticleLike::class, 'article_id', 'article_id');
+    }
+    public function getInteractionScoreAttribute()
+    {
+        // Dùng count từ withCount nếu có, nếu không fallback
+        $likes = $this->likes_count ?? $this->likes()->count();
+        $comments = $this->comments_count ?? $this->comments()->count();
+        $views = $this->views ?? 0;
+
+        // Tuỳ chỉnh trọng số nếu muốn
+        $score = ($views * 1) + ($likes * 3) + ($comments * 5);
+        return (int) round($score);
+    }
+
+    public function getRatingStarAttribute()
+    {
+        $score = $this->interaction_score;
+        $maxScore = 100; // điểm tương tác tối đa để tính đủ 5 sao
+
+        return round(min(5, 1 + 4 * ($score / $maxScore)), 1); // Từ 1 đến 5 sao
     }
 }

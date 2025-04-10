@@ -12,7 +12,7 @@ class Role extends Model
     use HasFactory;
     protected $primaryKey = 'role_id'; // Định danh khóa chính
     protected $fillable = ['name', 'description'];
-    
+
 
     public function users()
     {

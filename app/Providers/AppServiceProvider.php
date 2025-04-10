@@ -14,6 +14,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use App\Services\TinyMCEUploadService;
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 
 
@@ -44,6 +45,8 @@ class AppServiceProvider extends ServiceProvider
 
         Paginator::useBootstrap();
 
+        Carbon::setLocale('vi');
+        setlocale(LC_TIME, 'vi_VN'); // Dành cho date/time truyền thống
 
         View::composer(
             [
@@ -85,7 +88,6 @@ class AppServiceProvider extends ServiceProvider
         Category::observe(CategoryObserver::class);
         Article::observe(ArticleObserver::class);
         User::observe(UserObserver::class);
-
     }
 
     /**

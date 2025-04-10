@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class, // Chạy RoleSeeder trước
             UserSeeder::class, // Sau đó mới chạy UserSeeder
+            RandomDataSeeder::class, // Tạo dữ liệu ngẫu nhiên cho tất cả các bảng
         ]);
 
         // \App\Models\User::factory(10)->create();

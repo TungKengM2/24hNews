@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Comment extends Model
 {
+    use HasFactory;
     protected $table = 'comments';      // Tên bảng
     protected $primaryKey = 'comment_id'; // Khóa chính
         // Nếu không có cột created_at, updated_at
@@ -38,7 +39,7 @@ class Comment extends Model
                 'updated_at',
             ]);
     }
-    
+
 
     public function replies()
     {
