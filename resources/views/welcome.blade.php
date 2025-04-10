@@ -234,7 +234,7 @@
                      <!-- ====== 4 tag có nhiều sd trong nhiều bàiV nhất ====== -->
                     <div class="links">
                         @foreach ($topTags as $tag)
-                            <a href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}" class="link item d-block">
+                            <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}" class="link item d-block">
                                 {{ $tag->name }} 
                             </a>
                         @endforeach
