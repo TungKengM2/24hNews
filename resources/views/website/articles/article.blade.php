@@ -56,28 +56,12 @@
     </style>
 
 
-    <?php
-    function time_ago($created_at)
-    {
-        $current_time = new DateTime();
-        $created_at = new DateTime($created_at);
-        $interval = $current_time->diff($created_at);
-    
-        if ($interval->y > 0) {
-            return $interval->y . ' năm' . ($interval->y > 1 ? '' : '');
-        } elseif ($interval->m > 0) {
-            return $interval->m . ' tháng' . ($interval->m > 1 ? '' : '');
-        } elseif ($interval->d > 0) {
-            return $interval->d . ' ngày' . ($interval->d > 1 ? '' : '');
-        } elseif ($interval->h > 0) {
-            return $interval->h . ' giờ' . ($interval->h > 1 ? '' : '');
-        } elseif ($interval->i > 0) {
-            return $interval->i . ' phút' . ($interval->i > 1 ? '' : '');
-        } else {
-            return $interval->s . ' giây' . ($interval->s > 1 ? '' : '');
-        }
-    }
-    ?>
+
+
+{{-- include_once 'app/helpers/helpers.php'; --}}
+
+
+
 
 
     <!--Contents-->
