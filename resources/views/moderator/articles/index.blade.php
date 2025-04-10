@@ -94,6 +94,20 @@
                                                             <span
                                                                 class="badge bg-info">{{ $article->category->name }}</span>
                                                         @endif
+
+                                                        @if ($article->subcategory)
+                                                            <div class="mt-1">
+
+                                                                @if (!$article->subcategory->is_active)
+                                                                    <span
+                                                                        class="text-warning">{{ $article->subcategory->name }}
+                                                                        <i class="fa fa-exclamation-triangle"></i></span>
+                                                                @else
+                                                                    <span
+                                                                        class="badge bg-secondary">{{ $article->subcategory->name }}</span>
+                                                                @endif
+                                                            </div>
+                                                        @endif
                                                     @else
                                                         <span class="text-danger">Không có danh mục</span>
                                                     @endif
@@ -147,7 +161,6 @@
                                                             class="btn btn-secondary btn-sm" title="Lịch sử kiểm duyệt">
                                                             <i class="fas fa-history"></i>
                                                         </a>
-
                                                         @if ($article->status === 'pending')
                                                             <form
                                                                 action="{{ route('moderator.articles.approve', $article) }}"
@@ -162,32 +175,47 @@
                                                             </form>
 
                                                             <button type="button" class="btn btn-danger btn-sm"
-                                                                title="Từ chối bài viết"
-                                                                data-bs-toggle="modal" data-bs-target="#rejectModal{{ $article->article_id }}">
+                                                                title="Từ chối bài viết" data-bs-toggle="modal"
+                                                                data-bs-target="#rejectModal{{ $article->article_id }}">
                                                                 <i class="fa fa-times"></i>
                                                             </button>
 
                                                             <!-- Modal Từ chối bài viết -->
-                                                            <div class="modal fade" id="rejectModal{{ $article->article_id }}" tabindex="-1"
-                                                                aria-labelledby="rejectModalLabel{{ $article->article_id }}" aria-hidden="true">
+                                                            <div class="modal fade"
+                                                                id="rejectModal{{ $article->article_id }}" tabindex="-1"
+                                                                aria-labelledby="rejectModalLabel{{ $article->article_id }}"
+                                                                aria-hidden="true">
                                                                 <div class="modal-dialog">
                                                                     <div class="modal-content">
-                                                                        <form action="{{ route('moderator.articles.reject', $article) }}" method="POST">
+                                                                        <form
+                                                                            action="{{ route('moderator.articles.reject', $article) }}"
+                                                                            method="POST">
                                                                             @csrf
                                                                             @method('PATCH')
                                                                             <div class="modal-header">
-                                                                                <h5 class="modal-title" id="rejectModalLabel{{ $article->article_id }}">Từ chối bài viết</h5>
-                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                                <h5 class="modal-title"
+                                                                                    id="rejectModalLabel{{ $article->article_id }}">
+                                                                                    Từ chối bài viết</h5>
+                                                                                <button type="button" class="btn-close"
+                                                                                    data-bs-dismiss="modal"
+                                                                                    aria-label="Close"></button>
                                                                             </div>
                                                                             <div class="modal-body">
                                                                                 <div class="form-group">
-                                                                                    <label for="rejection_reason{{ $article->article_id }}">Lý do từ chối</label>
-                                                                                    <textarea class="form-control" id="rejection_reason{{ $article->article_id }}" name="rejection_reason" rows="3" required></textarea>
+                                                                                    <label
+                                                                                        for="rejection_reason{{ $article->article_id }}">Lý
+                                                                                        do từ chối</label>
+                                                                                    <textarea class="form-control" id="rejection_reason{{ $article->article_id }}" name="rejection_reason"
+                                                                                        rows="3" required></textarea>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="modal-footer">
-                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                                                <button type="submit" class="btn btn-danger">Xác nhận từ chối</button>
+                                                                                <button type="button"
+                                                                                    class="btn btn-secondary"
+                                                                                    data-bs-dismiss="modal">Hủy</button>
+                                                                                <button type="submit"
+                                                                                    class="btn btn-danger">Xác nhận từ
+                                                                                    chối</button>
                                                                             </div>
                                                                         </form>
                                                                     </div>

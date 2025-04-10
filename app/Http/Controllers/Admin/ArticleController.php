@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\CodeHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\ArticleVersion;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Tag;
@@ -61,9 +63,9 @@ class ArticleController extends Controller
         // Xử lý tìm kiếm theo từ khóa nếu có
         if ($request->has('search') && !empty($request->search)) {
             $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
                 $q->where('title', 'like', "%{$searchTerm}%")
-                  ->orWhere('content', 'like', "%{$searchTerm}%");
+                    ->orWhere('content', 'like', "%{$searchTerm}%");
             });
         }
 
@@ -148,19 +150,35 @@ class ArticleController extends Controller
         try {
             $rules = [
                 'title' => 'required|string|max:255',
+                'code' => 'nullable|string|max:255|unique:articles,code',
                 'slug' => 'required|string|max:255|unique:articles,slug',
                 'content' => 'required',
+                'category_id' => 'required|exists:categories,category_id',
+                'subcategory_id' => 'nullable|exists:categories,category_id',
                 'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                 'status' => 'required|in:draft,pending,published,rejected,archived',
             ];
+
+            if ($request->subcategory_id) {
+                $subcategory = Category::find($request->subcategory_id);
+                if (!$subcategory || $subcategory->parent_id != $request->category_id) {
+                    return redirect()
+                        ->back()
+                        ->withInput()
+                        ->with('error', 'Danh mục con phải thuộc danh mục cha đã chọn.');
+                }
+            }
+
             $request->validate($rules);
 
             if ($request->status === 'draft') {
                 $article = Article::create([
                     'title' => $request->title,
+                    'code' => CodeHelper::generateArticleCode(),
                     'slug' => $request->slug,
                     'content' => $request->input('content') ?? '',
                     'category_id' => $request->category_id,
+                    'subcategory_id' => $request->subcategory_id,
                     'status' => 'draft',
                     'author_id' => $request->author_id ?? auth()->id(),
                 ]);
@@ -337,12 +355,28 @@ class ArticleController extends Controller
 
                 $article = Article::create([
                     'title' => $request->title,
+                    'code' => CodeHelper::generateArticleCode(),
                     'slug' => $request->slug,
                     'content' => $content,
                     'author_id' => $request->author_id ?? auth()->id(),
                     'category_id' => $request->category_id,
                     'subcategory_id' => $request->subcategory_id,
                     'status' => $status,
+                ]);
+
+                // Tạo phiên bản đầu tiên cho bài viết
+                ArticleVersion::create([
+                    'version_id' => $article->code . '-v1',
+                    'article_id' => $article->article_id,
+                    'user_id' => auth()->id(),
+                    'title' => $request->title,
+                    'slug' => $request->slug,
+                    'content' => $content,
+                    'category_id' => $request->category_id,
+                    'subcategory_id' => $request->subcategory_id,
+                    'featured_image' => $request->hasFile('thumbnail_url') ? $request->file('thumbnail_url')->store('thumbnails', 'public') : null,
+                    'tags' => $request->input('tags', []),
+                    'change_reason' => 'Tạo bài viết mới'
                 ]);
 
                 if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
@@ -380,6 +414,7 @@ class ArticleController extends Controller
 
                 session()->forget('blocked_images');
 
+
                 // Gửi thông báo cho admin nếu bài viết cần duyệt
                 if ($status === 'pending' && auth()->id() !== $request->author_id) {
                     $admins = User::where('role_id', 1)
@@ -411,27 +446,14 @@ class ArticleController extends Controller
     private function processTags($tags)
     {
         $tagIds = [];
-        $processedTags = []; // Mảng để theo dõi các tag đã xử lý
-
         foreach ($tags as $tag) {
             $tag = trim($tag);
 
-            // Bỏ qua các tag rỗng
-            if (empty($tag)) {
-                continue;
+            // Chỉ xử lý các tag không rỗng
+            if (!empty($tag)) {
+                $tagModel = Tag::firstOrCreate(['name' => $tag]);
+                $tagIds[] = $tagModel->tag_id;
             }
-
-            // Kiểm tra xem tag đã được xử lý chưa (tránh trùng lặp)
-            if (in_array($tag, $processedTags)) {
-                continue;
-            }
-
-            // Thêm tag vào danh sách đã xử lý
-            $processedTags[] = $tag;
-
-            // Tìm hoặc tạo tag mới
-            $tagModel = Tag::firstOrCreate(['name' => $tag]);
-            $tagIds[] = $tagModel->tag_id;
         }
 
         return $tagIds;
@@ -482,10 +504,23 @@ class ArticleController extends Controller
                 'title' => 'required|string|max:255',
                 'slug' => 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id',
                 'category_id' => 'required|exists:categories,category_id',
+                'subcategory_id' => 'nullable|exists:categories,category_id',
                 'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                 'status' => 'required|in:draft,pending,published,archived,rejected',
                 'content' => 'nullable',
             ];
+
+            // Kiểm tra nếu có subcategory_id, phải thuộc category_id đã chọn
+            if ($request->subcategory_id) {
+                $subcategory = Category::find($request->subcategory_id);
+                if (!$subcategory || $subcategory->parent_id != $request->category_id) {
+                    return redirect()
+                        ->back()
+                        ->withInput()
+                        ->with('error', 'Danh mục con phải thuộc danh mục cha đã chọn.');
+                }
+            }
+
             $request->validate($rules);
 
             if ($request->status === 'draft') {
@@ -495,6 +530,7 @@ class ArticleController extends Controller
                     'content' => $request->input('content') ?? '',
                     'author_id' => $request->author_id,
                     'category_id' => $request->category_id,
+                    'subcategory_id' => $request->subcategory_id,
                     'status' => 'draft',
                 ]);
 
@@ -671,6 +707,25 @@ class ArticleController extends Controller
                 'category_id' => $request->category_id,
                 'subcategory_id' => $request->subcategory_id,
                 'status' => $status,
+            ]);
+
+            // Đếm số phiên bản hiện có và tạo số phiên bản mới
+            $versionCount = ArticleVersion::where('article_id', $article->article_id)->count();
+            $nextVersionNumber = $versionCount + 1;
+
+            // Tạo version mới cho bài viết
+            ArticleVersion::create([
+                'version_id' => $article->code . '-v' . $nextVersionNumber,
+                'article_id' => $article->article_id,
+                'user_id' => auth()->id(),
+                'title' => $request->title,
+                'slug' => $request->slug,
+                'content' => $content,
+                'category_id' => $request->category_id,
+                'subcategory_id' => $request->subcategory_id,
+                'featured_image' => $request->hasFile('thumbnail_url') ? $request->file('thumbnail_url')->store('thumbnails', 'public') : $article->thumbnail_url,
+                'tags' => $request->input('tags', []),
+                'change_reason' => 'Cập nhật bài viết'
             ]);
 
             if ($request->hasFile('thumbnail_url')) {
@@ -904,5 +959,33 @@ class ArticleController extends Controller
 
         // Sử dụng redirect()->back() để đảm bảo tất cả tham số truy vấn được giữ lại
         return redirect()->back()->with('success', $message);
+    }
+
+    /**
+     * Hiển thị danh sách các phiên bản của bài viết
+     */
+    public function versions(Article $article)
+    {
+
+        $versions = ArticleVersion::where('article_id', $article->article_id)
+            ->with(['user', 'category', 'subcategory'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.articles.versions', compact('article', 'versions'));
+    }
+
+    /**
+     * Hiển thị chi tiết một phiên bản cụ thể
+     */
+    public function showVersion(Article $article, $versionId)
+    {
+
+        $version = ArticleVersion::where('article_id', $article->article_id)
+            ->where('version_id', $versionId)
+            ->with(['user', 'category', 'subcategory'])
+            ->firstOrFail();
+
+        return view('admin.articles.version-detail', compact('article', 'version'));
     }
 }

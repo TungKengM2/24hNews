@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Moderator;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\ArticleVersion;
 use App\Models\ModerationLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -47,115 +48,142 @@ class ModeratorArticleController extends Controller
 
 
     public function approve(Article $article)
-{
-    if ($article->status === 'published') {
-        return redirect()->back()->with('error', 'Bài viết đã được duyệt trước đó.');
+    {
+        if ($article->status === 'published') {
+            return redirect()->back()->with('error', 'Bài viết đã được duyệt trước đó.');
+        }
+
+        if ($article->status !== 'pending') {
+            return redirect()->back()->with('error', 'Bài viết không hợp lệ để duyệt.');
+        }
+
+        // Lưu trạng thái trước khi cập nhật
+        $beforeState = [
+            'status' => $article->status,
+            'approved_by' => $article->approved_by
+        ];
+
+        $article->update([
+            'status' => 'published',
+            'approved_by' => auth()->id(),
+        ]);
+
+        // Lưu trạng thái sau khi cập nhật
+        $afterState = [
+            'status' => 'published',
+            'approved_by' => auth()->id(),
+            'published_at' => now()->toDateTimeString()
+        ];
+
+        // Tạo log kiểm duyệt
+        try {
+            ModerationLog::createLog(
+                'approve',
+                'article',
+                $article->article_id,
+                [
+                    'title' => $article->title,
+                    'author_id' => $article->author_id,
+                    'category_id' => $article->category_id,
+                    'action' => 'Phê duyệt bài viết'
+                ],
+                $beforeState,
+                $afterState,
+                'none'
+            );
+        } catch (\Exception $e) {
+            // Ghi log lỗi nhưng không làm gián đoạn luồng
+            Log::error('Lỗi khi tạo log kiểm duyệt: ' . $e->getMessage());
+        }
+
+        // Gửi thông báo cho tác giả
+        if ($article->author) {
+            $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã được duyệt."));
+        }
+
+        return redirect()->back()->with('success', 'Bài viết đã được duyệt.');
     }
 
-    if ($article->status !== 'pending') {
-        return redirect()->back()->with('error', 'Bài viết không hợp lệ để duyệt.');
+
+    public function reject(Article $article, Request $request)
+    {
+        if ($article->status !== 'pending') {
+            return redirect()->back()->with('error', 'Bài viết không ở trạng thái chờ duyệt.');
+        }
+
+        // Lưu trạng thái trước khi cập nhật
+        $beforeState = [
+            'status' => $article->status
+        ];
+
+        $article->update([
+            'status' => 'rejected',
+        ]);
+
+        // Lưu trạng thái sau khi cập nhật
+        $afterState = [
+            'status' => 'rejected',
+            'rejected_at' => now()->toDateTimeString()
+        ];
+
+        // Lấy lý do từ chối nếu có
+        $reason = $request->input('rejection_reason', 'Không đạt yêu cầu');
+
+        // Tạo log kiểm duyệt
+        try {
+            ModerationLog::createLog(
+                'reject',
+                'article',
+                $article->article_id,
+                [
+                    'title' => $article->title,
+                    'author_id' => $article->author_id,
+                    'category_id' => $article->category_id,
+                    'action' => 'Từ chối bài viết',
+                    'reason' => $reason
+                ],
+                $beforeState,
+                $afterState,
+                'medium'
+            );
+        } catch (\Exception $e) {
+            // Ghi log lỗi nhưng không làm gián đoạn luồng
+            Log::error('Lỗi khi tạo log kiểm duyệt: ' . $e->getMessage());
+        }
+
+        // Gửi thông báo cho tác giả
+        if ($article->author) {
+            $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã bị từ chối."));
+        }
+
+        return redirect()->back()->with('success', 'Bài viết đã bị từ chối.');
     }
 
-    // Lưu trạng thái trước khi cập nhật
-    $beforeState = [
-        'status' => $article->status,
-        'approved_by' => $article->approved_by
-    ];
+    /**
+     * Hiển thị danh sách các phiên bản của bài viết
+     */
+    public function versions(Article $article)
+    {
 
-    $article->update([
-        'status' => 'published',
-        'approved_by' => auth()->id(),
-    ]);
+        $versions = ArticleVersion::where('article_id', $article->article_id)
+            ->with(['user', 'category', 'subcategory'])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    // Lưu trạng thái sau khi cập nhật
-    $afterState = [
-        'status' => 'published',
-        'approved_by' => auth()->id(),
-        'published_at' => now()->toDateTimeString()
-    ];
-
-    // Tạo log kiểm duyệt
-    try {
-        ModerationLog::createLog(
-            'approve',
-            'article',
-            $article->article_id,
-            [
-                'title' => $article->title,
-                'author_id' => $article->author_id,
-                'category_id' => $article->category_id,
-                'action' => 'Phê duyệt bài viết'
-            ],
-            $beforeState,
-            $afterState,
-            'none'
-        );
-    } catch (\Exception $e) {
-        // Ghi log lỗi nhưng không làm gián đoạn luồng
-        Log::error('Lỗi khi tạo log kiểm duyệt: ' . $e->getMessage());
+        return view('moderator.articles.versions', compact('article', 'versions'));
     }
 
-    // Gửi thông báo cho tác giả
-    if ($article->author) {
-        $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã được duyệt."));
+    /**
+     * Hiển thị chi tiết một phiên bản cụ thể
+     */
+    public function showVersion(Article $article, $versionId)
+    {
+
+        $version = ArticleVersion::where('article_id', $article->article_id)
+            ->where('version_id', $versionId)
+            ->with(['user', 'category', 'subcategory'])
+            ->firstOrFail();
+
+        return view('moderator.articles.version-detail', compact('article', 'version'));
     }
-
-    return redirect()->back()->with('success', 'Bài viết đã được duyệt.');
-}
-
-
-   public function reject(Article $article, Request $request)
-{
-    if ($article->status !== 'pending') {
-        return redirect()->back()->with('error', 'Bài viết không ở trạng thái chờ duyệt.');
-    }
-
-    // Lưu trạng thái trước khi cập nhật
-    $beforeState = [
-        'status' => $article->status
-    ];
-
-    $article->update([
-        'status' => 'rejected',
-    ]);
-
-    // Lưu trạng thái sau khi cập nhật
-    $afterState = [
-        'status' => 'rejected',
-        'rejected_at' => now()->toDateTimeString()
-    ];
-
-    // Lấy lý do từ chối nếu có
-    $reason = $request->input('rejection_reason', 'Không đạt yêu cầu');
-
-    // Tạo log kiểm duyệt
-    try {
-        ModerationLog::createLog(
-            'reject',
-            'article',
-            $article->article_id,
-            [
-                'title' => $article->title,
-                'author_id' => $article->author_id,
-                'category_id' => $article->category_id,
-                'action' => 'Từ chối bài viết',
-                'reason' => $reason
-            ],
-            $beforeState,
-            $afterState,
-            'medium'
-        );
-    } catch (\Exception $e) {
-        // Ghi log lỗi nhưng không làm gián đoạn luồng
-        Log::error('Lỗi khi tạo log kiểm duyệt: ' . $e->getMessage());
-    }
-
-    // Gửi thông báo cho tác giả
-    if ($article->author) {
-        $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã bị từ chối."));
-    }
-
-    return redirect()->back()->with('success', 'Bài viết đã bị từ chối.');
-}
-
 }

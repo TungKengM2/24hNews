@@ -27,6 +27,7 @@ use App\Http\Controllers\User\ArticleSaveController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Moderator\ModeratorController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\Author\TinyMCEUploadController;
 use App\Http\Controllers\User\ArticleViewUserController;
@@ -243,6 +244,11 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
 
     // Hoạt động bình luận
     Route::get('/{user_id}/comments', [ModeratorController::class, 'getUserComments'])->name('moderator.comments');
+
+    //Lịch sử phiên bản
+    Route::get('/articles/{article}/versions', [ModeratorArticleController::class, 'versions'])->name('moderator.articles.versions');
+
+    Route::get('/articles/{article}/versions/{versionId}', [ModeratorArticleController::class, 'showVersion'])->name('moderator.articles.version');
 });
 
 // Đặt trong nhóm auth middleware
@@ -301,7 +307,7 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     Route::get('/articles', [AuthorArticleController::class, 'index'])->name('author.articles.index');
     Route::get('/articles/search', [AuthorArticleController::class, 'search'])->name('author.articles.search');
     Route::post('/articles/upload', [AuthorArticleController::class, 'uploadImage',])->name('author.articles.upload');
-    Route::get('/ajax/subcategories', [App\Http\Controllers\Author\AjaxController::class, 'getSubcategories'])->name('author.ajax.subcategories');
+    Route::get('/ajax/subcategories', [AjaxController::class, 'getSubcategories'])->name('author.ajax.subcategories');
 
 
     Route::middleware(['check.violations'])->group(function () {
@@ -562,6 +568,11 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 
     // Quản lý người dùng
     Route::resource('users', UserController::class)->names(['index' => 'admin.users.index',]);
+
+    //Lịch sử phiên bản
+    Route::get('/articles/{article}/versions', [ArticleController::class, 'versions'])->name('admin.articles.versions');
+
+    Route::get('/articles/{article}/versions/{versionId}', [ArticleController::class, 'showVersion'])->name('admin.articles.version');
 });
 
 
