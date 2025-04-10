@@ -99,7 +99,7 @@ Route::middleware('auth')->group(function () {
 });
 // Client Category
 Route::get('/category/{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
-Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.show');
+Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.shows');
 
 
 
