@@ -187,6 +187,33 @@
                                             <span
                                                 class="badge bg-warning rounded-pill">{{ $article->comments->count() }}</span>
                                         </li>
+
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-star"></i> Đánh giá:</span>
+                                            <div class="text-end">
+                                                <div class="rating-stars mb-1">
+                                                    @php
+                                                        $fullStars = floor($article->rating_star);
+                                                        $halfStar = $article->rating_star - $fullStars >= 0.5;
+                                                    @endphp
+
+                                                    @for ($i = 0; $i < $fullStars; $i++)
+                                                        <i class="fas fa-star text-warning"></i>
+                                                    @endfor
+
+                                                    @if ($halfStar)
+                                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                                    @endif
+
+                                                    @for ($i = $fullStars + $halfStar; $i < 5; $i++)
+                                                        <i class="far fa-star text-muted"></i>
+                                                    @endfor
+                                                </div>
+                                                <span class="badge bg-warning rounded-pill small">
+                                                    {{ number_format($article->rating_star, 1) }} / 5
+                                                </span>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>
 
