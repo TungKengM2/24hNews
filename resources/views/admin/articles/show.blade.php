@@ -34,9 +34,12 @@
                     <div class="box-tools">
                         @if (auth()->id() === $article->author_id)
                             <div class="btn-group">
-                                <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm m-5">
-                                    <i class="si-pencil si"></i> Chỉnh sửa
-                                </a>
+                                @if (auth()->id() === $article->author_id)
+                                    <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm m-5">
+                                        <i class="si-pencil si"></i> Chỉnh sửa
+                                    </a>
+                                @endif
+
                                 <form action="{{ route('articles.destroy', $article) }}" method="POST"
                                     class="d-inline m-5">
                                     @csrf
@@ -48,6 +51,10 @@
                                 </form>
                             </div>
                         @endif
+
+                        <a href="{{ route('admin.articles.versions', $article) }}" class="btn btn-info btn-sm m-5">
+                            <i class="fas fa-history"></i> Lịch sử phiên bản
+                        </a>
 
                         <a href="{{ route('articles.moderation-history', $article) }}" class="btn btn-info btn-sm m-5">
                             <i class="fas fa-history"></i> Lịch sử kiểm duyệt
@@ -132,13 +139,13 @@
                                                 {{ ucfirst($article->status) }}
                                             </span>
                                         </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{-- <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-alert-circle"></i> Nội dung nhạy cảm:</span>
                                             <span
                                                 class="badge bg-{{ $article->contains_sensitive_content ? 'danger' : 'success' }} rounded-pill">
                                                 {{ $article->contains_sensitive_content ? 'Có' : 'Không' }}
                                             </span>
-                                        </li>
+                                        </li> --}}
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-account-check"></i> Được duyệt bởi:</span>
                                             <span
