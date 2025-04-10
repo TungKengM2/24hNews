@@ -9,7 +9,10 @@ use App\Models\User;
 use App\Models\Article;
 use App\Models\Approval;
 use App\Models\Category;
+use App\Helpers\CodeHelper;
 use Illuminate\Http\Request;
+use App\Models\ModerationLog;
+use App\Models\ArticleVersion;
 use App\Services\ModerationService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -17,6 +20,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Notifications\NewArticleSubmitted;
 use App\Notifications\ArticleStatusUpdated;
 use Illuminate\Support\Facades\Notification;
+
 
 class ArticleController extends Controller
 {
@@ -60,9 +64,9 @@ class ArticleController extends Controller
         // Xử lý tìm kiếm theo từ khóa nếu có
         if ($request->has('search') && !empty($request->search)) {
             $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
                 $q->where('title', 'like', "%{$searchTerm}%")
-                  ->orWhere('content', 'like', "%{$searchTerm}%");
+                    ->orWhere('content', 'like', "%{$searchTerm}%");
             });
         }
 
@@ -76,12 +80,13 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('is_active', true)->get();
+        $parentCategories = Category::whereNull('parent_id')->where('is_active', true)->get();
+        $childCategories = Category::whereNotNull('parent_id')->where('is_active', true)->get();
         $authors = User::select('user_id', 'username')->get();
         $approvers = User::where('role_id', 1)->select('user_id', 'username')->get();
         $tags = Tag::all();
 
-        return view('admin.articles.create', compact('categories', 'authors', 'approvers', 'tags'));
+        return view('admin.articles.create', compact('parentCategories', 'childCategories', 'authors', 'approvers', 'tags'));
     }
 
     /**
@@ -93,10 +98,44 @@ class ArticleController extends Controller
             return redirect()->back()->with('error', 'Bài viết không hợp lệ để duyệt.');
         }
 
+        // Lưu trạng thái trước khi cập nhật
+        $beforeState = [
+            'status' => $article->status,
+            'approved_by' => $article->approved_by
+        ];
+
         $article->update([
             'status' => 'published',
             'approved_by' => auth()->id(),
         ]);
+
+        // Lưu trạng thái sau khi cập nhật
+        $afterState = [
+            'status' => 'published',
+            'approved_by' => auth()->id(),
+            'published_at' => now()->toDateTimeString()
+        ];
+
+        // Tạo log kiểm duyệt
+        try {
+            ModerationLog::createLog(
+                'approve',
+                'article',
+                $article->article_id,
+                [
+                    'title' => $article->title,
+                    'author_id' => $article->author_id,
+                    'category_id' => $article->category_id,
+                    'action' => 'Phê duyệt bài viết'
+                ],
+                $beforeState,
+                $afterState,
+                'none'
+            );
+        } catch (\Exception $e) {
+            // Ghi log lỗi nhưng không làm gián đoạn luồng
+            \Illuminate\Support\Facades\Log::error('Lỗi khi tạo log kiểm duyệt: ' . $e->getMessage());
+        }
 
         // Gửi thông báo cho tác giả
         $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã được duyệt."));
@@ -112,19 +151,35 @@ class ArticleController extends Controller
         try {
             $rules = [
                 'title' => 'required|string|max:255',
+                'code' => 'nullable|string|max:255|unique:articles,code',
                 'slug' => 'required|string|max:255|unique:articles,slug',
                 'content' => 'required',
+                'category_id' => 'required|exists:categories,category_id',
+                'subcategory_id' => 'nullable|exists:categories,category_id',
                 'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                 'status' => 'required|in:draft,pending,published,rejected,archived',
             ];
+
+            if ($request->subcategory_id) {
+                $subcategory = Category::find($request->subcategory_id);
+                if (!$subcategory || $subcategory->parent_id != $request->category_id) {
+                    return redirect()
+                        ->back()
+                        ->withInput()
+                        ->with('error', 'Danh mục con phải thuộc danh mục cha đã chọn.');
+                }
+            }
+
             $request->validate($rules);
 
             if ($request->status === 'draft') {
                 $article = Article::create([
                     'title' => $request->title,
+                    'code' => CodeHelper::generateArticleCode(),
                     'slug' => $request->slug,
                     'content' => $request->input('content') ?? '',
                     'category_id' => $request->category_id,
+                    'subcategory_id' => $request->subcategory_id,
                     'status' => 'draft',
                     'author_id' => $request->author_id ?? auth()->id(),
                 ]);
@@ -301,11 +356,28 @@ class ArticleController extends Controller
 
                 $article = Article::create([
                     'title' => $request->title,
+                    'code' => CodeHelper::generateArticleCode(),
                     'slug' => $request->slug,
                     'content' => $content,
                     'author_id' => $request->author_id ?? auth()->id(),
                     'category_id' => $request->category_id,
+                    'subcategory_id' => $request->subcategory_id,
                     'status' => $status,
+                ]);
+
+                // Tạo phiên bản đầu tiên cho bài viết
+                ArticleVersion::create([
+                    'version_id' => $article->code . '-v1',
+                    'article_id' => $article->article_id,
+                    'user_id' => auth()->id(),
+                    'title' => $request->title,
+                    'slug' => $request->slug,
+                    'content' => $content,
+                    'category_id' => $request->category_id,
+                    'subcategory_id' => $request->subcategory_id,
+                    'featured_image' => $request->hasFile('thumbnail_url') ? $request->file('thumbnail_url')->store('thumbnails', 'public') : null,
+                    'tags' => $request->input('tags', []),
+                    'change_reason' => 'Tạo bài viết mới'
                 ]);
 
                 if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
@@ -343,6 +415,7 @@ class ArticleController extends Controller
 
                 session()->forget('blocked_images');
 
+
                 // Gửi thông báo cho admin nếu bài viết cần duyệt
                 if ($status === 'pending' && auth()->id() !== $request->author_id) {
                     $admins = User::where('role_id', 1)
@@ -374,27 +447,14 @@ class ArticleController extends Controller
     private function processTags($tags)
     {
         $tagIds = [];
-        $processedTags = []; // Mảng để theo dõi các tag đã xử lý
-
         foreach ($tags as $tag) {
             $tag = trim($tag);
 
-            // Bỏ qua các tag rỗng
-            if (empty($tag)) {
-                continue;
+            // Chỉ xử lý các tag không rỗng
+            if (!empty($tag)) {
+                $tagModel = Tag::firstOrCreate(['name' => $tag]);
+                $tagIds[] = $tagModel->tag_id;
             }
-
-            // Kiểm tra xem tag đã được xử lý chưa (tránh trùng lặp)
-            if (in_array($tag, $processedTags)) {
-                continue;
-            }
-
-            // Thêm tag vào danh sách đã xử lý
-            $processedTags[] = $tag;
-
-            // Tìm hoặc tạo tag mới
-            $tagModel = Tag::firstOrCreate(['name' => $tag]);
-            $tagIds[] = $tagModel->tag_id;
         }
 
         return $tagIds;
@@ -408,12 +468,24 @@ class ArticleController extends Controller
         return view('admin.articles.show', compact('article'));
     }
 
+    public function rateArticle($article_id)
+    {
+        $article = Article::withCount(['likes', 'comments'])->findOrFail($article_id);
+
+        $score = $article->interaction_score;
+        $rating = $article->rating_star;
+
+        return view('admin.articles.show', compact('article'));
+    }
+
+
     /**
      *
      */
     public function edit(Article $article)
     {
-        $categories = Category::all();
+        $parentCategories = Category::whereNull('parent_id')->where('is_active', true)->get();
+        $childCategories = Category::whereNotNull('parent_id')->where('is_active', true)->get();
         $authors = User::select('user_id', 'username')->get();
         $approvers = User::where('role_id', 1)->select('user_id', 'username')->get();
 
@@ -423,7 +495,15 @@ class ArticleController extends Controller
         // Lấy danh sách tên tag đã chọn của bài viết
         $selectedTags = $article->tags->pluck('name')->toArray();
 
-        return view('admin.articles.edit', compact('article', 'categories', 'authors', 'approvers', 'tags', 'selectedTags'));
+        // Lấy danh sách danh mục con thuộc danh mục cha đã chọn
+        $selectedChildCategories = collect();
+        if ($article->category_id) {
+            $selectedChildCategories = Category::where('parent_id', $article->category_id)
+                ->where('is_active', true)
+                ->get();
+        }
+
+        return view('admin.articles.edit', compact('article', 'parentCategories', 'childCategories', 'selectedChildCategories', 'authors', 'approvers', 'tags', 'selectedTags'));
     }
 
     /**
@@ -436,10 +516,23 @@ class ArticleController extends Controller
                 'title' => 'required|string|max:255',
                 'slug' => 'required|string|max:255|unique:articles,slug,' . $article->article_id . ',article_id',
                 'category_id' => 'required|exists:categories,category_id',
+                'subcategory_id' => 'nullable|exists:categories,category_id',
                 'thumbnail_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                 'status' => 'required|in:draft,pending,published,archived,rejected',
                 'content' => 'nullable',
             ];
+
+            // Kiểm tra nếu có subcategory_id, phải thuộc category_id đã chọn
+            if ($request->subcategory_id) {
+                $subcategory = Category::find($request->subcategory_id);
+                if (!$subcategory || $subcategory->parent_id != $request->category_id) {
+                    return redirect()
+                        ->back()
+                        ->withInput()
+                        ->with('error', 'Danh mục con phải thuộc danh mục cha đã chọn.');
+                }
+            }
+
             $request->validate($rules);
 
             if ($request->status === 'draft') {
@@ -449,6 +542,7 @@ class ArticleController extends Controller
                     'content' => $request->input('content') ?? '',
                     'author_id' => $request->author_id,
                     'category_id' => $request->category_id,
+                    'subcategory_id' => $request->subcategory_id,
                     'status' => 'draft',
                 ]);
 
@@ -622,7 +716,27 @@ class ArticleController extends Controller
                 'content' => $content,
                 'author_id' => $request->author_id,
                 'category_id' => $request->category_id,
+                'subcategory_id' => $request->subcategory_id,
                 'status' => $status,
+            ]);
+
+            // Đếm số phiên bản hiện có và tạo số phiên bản mới
+            $versionCount = ArticleVersion::where('article_id', $article->article_id)->count();
+            $nextVersionNumber = $versionCount + 1;
+
+            // Tạo version mới cho bài viết
+            ArticleVersion::create([
+                'version_id' => $article->code . '-v' . $nextVersionNumber,
+                'article_id' => $article->article_id,
+                'user_id' => auth()->id(),
+                'title' => $request->title,
+                'slug' => $request->slug,
+                'content' => $content,
+                'category_id' => $request->category_id,
+                'subcategory_id' => $request->subcategory_id,
+                'featured_image' => $request->hasFile('thumbnail_url') ? $request->file('thumbnail_url')->store('thumbnails', 'public') : $article->thumbnail_url,
+                'tags' => $request->input('tags', []),
+                'change_reason' => 'Cập nhật bài viết'
             ]);
 
             if ($request->hasFile('thumbnail_url')) {
@@ -721,15 +835,51 @@ class ArticleController extends Controller
         return view('admin.articles.approve', compact('articles'));
     }
 
-    public function reject(Article $article)
+    public function reject(Article $article, Request $request)
     {
         if ($article->status !== 'pending') {
             return redirect()->back()->with('error', 'Bài viết không hợp lệ để từ chối.');
         }
 
+        // Lưu trạng thái trước khi cập nhật
+        $beforeState = [
+            'status' => $article->status
+        ];
+
         $article->update([
             'status' => 'rejected',
         ]);
+
+        // Lưu trạng thái sau khi cập nhật
+        $afterState = [
+            'status' => 'rejected',
+            'rejected_at' => now()->toDateTimeString()
+        ];
+
+        // Lấy lý do từ chối nếu có
+        $reason = $request->input('rejection_reason', 'Không đạt yêu cầu');
+
+        // Tạo log kiểm duyệt
+        try {
+            ModerationLog::createLog(
+                'reject',
+                'article',
+                $article->article_id,
+                [
+                    'title' => $article->title,
+                    'author_id' => $article->author_id,
+                    'category_id' => $article->category_id,
+                    'action' => 'Từ chối bài viết',
+                    'reason' => $reason
+                ],
+                $beforeState,
+                $afterState,
+                'medium'
+            );
+        } catch (\Exception $e) {
+            // Ghi log lỗi nhưng không làm gián đoạn luồng
+            \Illuminate\Support\Facades\Log::error('Lỗi khi tạo log kiểm duyệt: ' . $e->getMessage());
+        }
 
         // Gửi thông báo cho tác giả
         $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã bị từ chối."));
@@ -760,15 +910,49 @@ class ArticleController extends Controller
      */
     public function toggleVisibility(Article $article)
     {
+        // Lưu trạng thái trước khi cập nhật
+        $beforeState = [
+            'status' => $article->status
+        ];
+
         // Nếu trạng thái là published, đổi thành archived và ngược lại
         if ($article->status === 'published') {
             $article->update(['status' => 'archived']);
             $message = "Bài viết đã được ẩn thành công.";
+            $action = "Ẩn bài viết đã xuất bản";
         } elseif ($article->status === 'archived') {
             $article->update(['status' => 'published']);
             $message = "Bài viết đã được hiện thành công.";
+            $action = "Hiện lại bài viết đã ẩn";
         } else {
             return redirect()->back()->with('error', "Chỉ có thể ẩn/hiện bài viết đã xuất bản hoặc đã ẩn.");
+        }
+
+        // Lưu trạng thái sau khi cập nhật
+        $afterState = [
+            'status' => $article->status,
+            'updated_at' => now()->toDateTimeString()
+        ];
+
+        // Tạo log kiểm duyệt
+        try {
+            ModerationLog::createLog(
+                $article->status === 'published' ? 'restore' : 'flag',
+                'article',
+                $article->article_id,
+                [
+                    'title' => $article->title,
+                    'author_id' => $article->author_id,
+                    'category_id' => $article->category_id,
+                    'action' => $action
+                ],
+                $beforeState,
+                $afterState,
+                'low'
+            );
+        } catch (\Exception $e) {
+            // Ghi log lỗi nhưng không làm gián đoạn luồng
+            \Illuminate\Support\Facades\Log::error('Lỗi khi tạo log kiểm duyệt: ' . $e->getMessage());
         }
 
         // Gửi thông báo cho tác giả nếu admin không phải là tác giả
@@ -786,5 +970,33 @@ class ArticleController extends Controller
 
         // Sử dụng redirect()->back() để đảm bảo tất cả tham số truy vấn được giữ lại
         return redirect()->back()->with('success', $message);
+    }
+
+    /**
+     * Hiển thị danh sách các phiên bản của bài viết
+     */
+    public function versions(Article $article)
+    {
+
+        $versions = ArticleVersion::where('article_id', $article->article_id)
+            ->with(['user', 'category', 'subcategory'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.articles.versions', compact('article', 'versions'));
+    }
+
+    /**
+     * Hiển thị chi tiết một phiên bản cụ thể
+     */
+    public function showVersion(Article $article, $versionId)
+    {
+
+        $version = ArticleVersion::where('article_id', $article->article_id)
+            ->where('version_id', $versionId)
+            ->with(['user', 'category', 'subcategory'])
+            ->firstOrFail();
+
+        return view('admin.articles.version-detail', compact('article', 'version'));
     }
 }

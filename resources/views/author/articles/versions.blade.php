@@ -78,7 +78,10 @@
                                                     $changes[] = "Nội dung đã thay đổi";
                                                 }
                                                 if($version->category_id !== $previousVersion->category_id) {
-                                                    $changes[] = "Danh mục đã thay đổi";
+                                                    $changes[] = "Danh mục chính đã thay đổi";
+                                                }
+                                                if($version->subcategory_id !== $previousVersion->subcategory_id) {
+                                                    $changes[] = "Danh mục phụ đã thay đổi";
                                                 }
                                                 if($version->featured_image !== $previousVersion->featured_image) {
                                                     $changes[] = "Ảnh đại diện đã thay đổi";

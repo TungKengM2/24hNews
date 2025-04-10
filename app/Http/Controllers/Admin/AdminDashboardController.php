@@ -126,6 +126,11 @@ class AdminDashboardController extends Controller
             $role = Role::where('name', $approval->requested_role)
                 ->firstOrFail();
 
+            $beforeState = [
+                'role_id' => $user->role_id,
+                'approval_status' => $approval->status
+            ];
+
             $user->update(['role_id' => 2]);
 
             $approval->update([
@@ -133,6 +138,27 @@ class AdminDashboardController extends Controller
                 'approved_by' => auth()->id(),
                 'approved_at' => now(),
             ]);
+
+            $afterState = [
+                'role_id' => $user->role_id,
+                'approval_status' => $approval->status
+            ];
+
+            // Create moderation log
+            \App\Models\ModerationLog::createLog(
+                'approve',
+                'role_upgrade',
+                $user->user_id,
+                [
+                    'action' => 'Nâng cấp vai trò người dùng',
+                    'username' => $user->username,
+                    'requested_role' => $approval->requested_role,
+                    'approval_id' => $approval->approval_id
+                ],
+                $beforeState,
+                $afterState,
+                'medium'
+            );
         });
 
         return redirect()
@@ -142,11 +168,39 @@ class AdminDashboardController extends Controller
 
     public function rejectRoleUpgrade(Approval $approval)
     {
+        $user = $approval->user;
+
+        $beforeState = [
+            'role_id' => $user->role_id,
+            'approval_status' => $approval->status
+        ];
+
         $approval->update([
             'status' => 'rejected',
             'approved_by' => auth()->id(),
             'approved_at' => now(),
         ]);
+
+        $afterState = [
+            'role_id' => $user->role_id,
+            'approval_status' => $approval->status
+        ];
+
+        // Create moderation log
+        \App\Models\ModerationLog::createLog(
+            'reject',
+            'role_upgrade',
+            $user->user_id,
+            [
+                'action' => 'Từ chối nâng cấp vai trò người dùng',
+                'username' => $user->username,
+                'requested_role' => $approval->requested_role,
+                'approval_id' => $approval->approval_id
+            ],
+            $beforeState,
+            $afterState,
+            'medium'
+        );
 
         return redirect()
             ->route('admin.user-role-requests')
