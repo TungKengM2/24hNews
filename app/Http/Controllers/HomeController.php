@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use App\Models\News;
 use App\Models\User;
 use App\Models\Article;
@@ -10,44 +11,70 @@ use App\Models\Category;
 use App\Models\ArticleLike;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        // breaking news
-        $featuredArticles = Article::where('status', 'published')
-            ->orderByDesc('created_at') // Sắp xếp theo thời gian mới nhất
-            ->take(7)
-            ->whereHas('category', function ($query) {
-                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+        //tin noi bat
+        $featuredArticles = Article::select('articles.*')
+            ->join('users', 'users.user_id', '=', 'articles.author_id')
+            ->where('articles.status', 'published')
+            ->where(function ($query) {
+                $query->where('articles.contains_sensitive_content', 0)
+                    ->orWhereNull('articles.contains_sensitive_content');
             })
+            ->where('articles.created_at', '>=', now()->subDays(7))
+            ->whereHas('category', fn($q) => $q->where('is_active', 1))
+            ->where(function ($q) {
+                $q->where('users.is_promoted', 1)
+                    ->orWhere('users.violation_count', '<', 3);
+            })
+            ->whereNull('users.banned_until')
+            ->whereNotNull('users.email_verified_at')
+            ->orderByDesc('articles.views')
+            ->take(7)
             ->get();
 
-        // top 2 bài viết nhiều lượt xem
+        //4 tag có nhiều bài viết nhất 
+        $topTags = Tag::withCount('articles')
+            ->orderByDesc('articles_count')
+            ->take(4)
+            ->get();
+
+
+
+        // top 3 bài viết nhiều lượt xem
         $D1Articles = Article::where('status', 'published')
-            ->orderByDesc('views') // Sắp xếp bài viết nhiều views nhất
-            ->take(2) // Lấy top 2 bài viết nhiều lượt xem
+            ->where('created_at', '>=', Carbon::now()->subDays(30)) // trong 30 ngày gần đây
+            ->whereHas('category', function ($query) {
+                $query->where('is_active', 1);
+            })
+            ->orderByDesc('views') // sắp xếp theo lượt xem
+            ->take(3)
+            ->get();
+
+
+
+        // top 4 bài viết nhiều Bluan nhất 30 ngày trở lại   
+        $trendingPosts = Article::withCount('comments')
+            ->where('status', 'published')
+            ->where('created_at', '>=', Carbon::now()->subDays(30)) // Chỉ lấy bài viết trong 30 ngày gần đây
             ->whereHas('category', function ($query) {
                 $query->where('is_active', 1); // Danh mục phải đang hoạt động
             })
+            ->orderByDesc('comments_count') // Sắp xếp theo số lượng bình luận
+            ->limit(4)
             ->get();
+
 
         // Lấy danh sách bài viết mới nhất
         $articles = Article::where('status', 'published')
-        ->whereHas('category', function ($query) {
-            $query->where('is_active', 1); // Danh mục phải đang hoạt động
-        })->latest()->get();
-
-        $trendingPosts = Article::withCount('comments')
-            ->orderByDesc('comments_count')
-            ->where('status', 'published')
             ->whereHas('category', function ($query) {
                 $query->where('is_active', 1); // Danh mục phải đang hoạt động
-            })
-            ->limit(4)
-            ->get();
+            })->latest()->get();
 
         $journalists = User::where('role_id', 3)
             ->get(); // Lấy nhà báo có ID = 3
@@ -59,7 +86,7 @@ class HomeController extends Controller
         $sportsArticles = Article::whereHas('category', function ($query) {
             $query->where('name', 'Thể Thao'); // Hoặc sử dụng category_id cụ thể
         })->inRandomOrder()->distinct()
-        ->where('status', 'published')
+            ->where('status', 'published')
             ->whereHas('category', function ($query) {
                 $query->where('is_active', 1); // Danh mục phải đang hoạt động
             })->get();
@@ -68,33 +95,32 @@ class HomeController extends Controller
         $newsData = [];
 
         foreach ($categories as $category) {
-            $article = Article::where('category_id', $category->category_id)
-                ->where('status', 'published')
-                ->whereHas('category', function ($query) {
-                    $query->where('is_active', 1); // Danh mục phải đang hoạt động
-                })
-                ->orderBy('created_at', 'desc')
+            $article = Article::where([
+                ['category_id', $category->category_id],
+                ['status', 'published'],
+                ['created_at', '>=', Carbon::now()->subDays(30)], // trong 30 ngày gần đây
+            ])
+                ->whereHas('category', fn($q) => $q->where('is_active', 1))
+                ->latest('created_at') // tương đương orderByDesc
                 ->first();
 
             if ($article) {
-                $newsData[] = [
-                    'category' => $category,
-                    'article' => $article,
-                ];
+                $newsData[] = compact('category', 'article'); // gọn hơn
             }
         }
 
         $category2 = Category::withCount(['articles' => function ($query) {
             $query->where('status', 'published'); // Điều kiện bài viết có trạng thái 'published'
         }])->where('is_active', 1)->get();
-        
-        
+
+
 
         //TungKeng làm hiển thị bài viết của author mà user đã fl
         $user = auth()->user();
 
         if (!$user) {
             return view('welcome', [
+                'topTags' => $topTags ?? null,
                 'categories' => $categories ?? null,
                 'category2' => $category2 ?? null,
                 'sportsArticles' => $sportsArticles ?? null,
@@ -123,8 +149,21 @@ class HomeController extends Controller
             ->get();
 
         // Truyền dữ liệu bài viết tới view
-        return view('welcome', compact('categories', 'category2', 'sportsArticles', 'newsData', 'journalists',
-            'trendingPosts', 'featuredArticles', 'articles', 'D1Articles', 'articlesfollow', 'followMessage', 'topAuthors'));
+        return view('welcome', compact(
+            'categories',
+            'category2',
+            'sportsArticles',
+            'newsData',
+            'journalists',
+            'trendingPosts',
+            'featuredArticles',
+            'articles',
+            'D1Articles',
+            'articlesfollow',
+            'followMessage',
+            'topAuthors',
+            'topTags'
+        ));
     }
 
     public function search(Request $request)
@@ -135,7 +174,7 @@ class HomeController extends Controller
         if ($keyword) {
             // Tìm kiếm chính xác theo từng ký tự trong tiêu đề
             $articles = Article::where('status', 'published')
-                ->where(function($query) use ($keyword) {
+                ->where(function ($query) use ($keyword) {
                     $query->where('title', 'LIKE', "%{$keyword}%");
                 })
                 ->orderBy('views', 'desc')
@@ -167,7 +206,7 @@ class HomeController extends Controller
             }
 
             // Sắp xếp kết quả theo độ phù hợp
-            usort($results, function($a, $b) {
+            usort($results, function ($a, $b) {
                 return $b['relevance'] - $a['relevance'];
             });
 
@@ -185,11 +224,11 @@ class HomeController extends Controller
         $endDate = now();
 
         $authors = User::where('role_id', 2)
-            ->whereHas('articles', function($query) use ($startDate, $endDate) {
+            ->whereHas('articles', function ($query) use ($startDate, $endDate) {
                 $query->where('status', 'published')
                     ->whereBetween('created_at', [$startDate, $endDate]);
             })
-            ->with(['articles' => function($query) use ($startDate, $endDate) {
+            ->with(['articles' => function ($query) use ($startDate, $endDate) {
                 $query->where('status', 'published')
                     ->whereBetween('created_at', [$startDate, $endDate]);
             }])
@@ -223,7 +262,7 @@ class HomeController extends Controller
             ];
         }
 
-        usort($authorRatings, function($a, $b) {
+        usort($authorRatings, function ($a, $b) {
             return $b['rating'] <=> $a['rating'];
         });
 

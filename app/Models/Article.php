@@ -172,4 +172,5 @@ class Article extends Model
 
         return round(min(5, 1 + 4 * ($score / $maxScore)), 1); // Từ 1 đến 5 sao
     }
+    
 }
