@@ -370,7 +370,7 @@
                                                         </span>
                                                     </div>
                                                     <!-- Danh sách replies -->
-                                                    <div class="replies ms-5 mt-3"
+                                                    <div class="replies  mt-3"
                                                         data-reply-count="<?= count($comment->replies) ?>">
                                                         <?php
                                                         $replyCount = count($comment->replies);
@@ -456,10 +456,13 @@
                                                                         @endif
                                                                     </span>
                                                                 </div>
+                                                            
                                                                 <!-- Sub-replies -->
-                                                                <div class="sub-replies mt-1">
+                                                               <div class="sub-replies mt-2 ms-5">
+
                                                                     @include('components.sub-reply', [])
                                                                 </div>
+                                                                
                                                             </div>
                                                         </div>
                                                         <?php $index++; ?>
@@ -1237,7 +1240,7 @@
                                 newComment);
                             e.target.reset();
                         } else {
-                            alert("Lỗi khi gửi comment có thể là do có những từ không chuẩn đạo đức !");
+                            alert("Lỗi khi gửi bình luận");
                         }
                     })
                     .catch(error => console.error("Error:", error));
