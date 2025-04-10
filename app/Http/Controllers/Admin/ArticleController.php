@@ -467,6 +467,17 @@ class ArticleController extends Controller
         return view('admin.articles.show', compact('article'));
     }
 
+    public function rateArticle($article_id)
+    {
+        $article = Article::withCount(['likes', 'comments'])->findOrFail($article_id);
+
+        $score = $article->interaction_score;
+        $rating = $article->rating_star;
+
+        return view('admin.articles.show', compact('article'));
+    }
+
+
     /**
      *
      */
