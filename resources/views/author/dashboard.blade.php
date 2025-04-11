@@ -326,7 +326,10 @@
                         responsive: true,
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
                             }
                         }
                     }
@@ -380,67 +383,75 @@
                 const interactionCtx = document.getElementById('interactionStatsChart').getContext('2d');
 
                 // Create the chart with all three datasets
-                new Chart(interactionCtx, {
-                    type: 'line',
-                    data: {
-                        labels: interactionLabels,
-                        datasets: [{
-                                label: 'Lượt xem',
-                                data: viewsData,
-                                borderColor: 'rgba(54, 162, 235, 1)',
-                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                borderWidth: 2,
-                                tension: 0.3,
-                                fill: true,
-                                yAxisID: 'y'
-                            },
-                            {
-                                label: 'Lượt thích',
-                                data: likesData,
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                borderWidth: 2,
-                                tension: 0.3,
-                                fill: true,
-                                yAxisID: 'y1'
-                            },
-                            {
-                                label: 'Bình luận',
-                                data: commentsData,
-                                borderColor: 'rgba(255, 206, 86, 1)',
-                                backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                                borderWidth: 3, // Make the line thicker
-                                tension: 0.3,
-                                fill: true,
-                                yAxisID: 'y1'
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                position: 'left',
-                                title: {
-                                    display: true,
-                                    text: 'Lượt xem'
-                                }
-                            },
-                            y1: {
-                                beginAtZero: true,
-                                position: 'right',
-                                grid: {
-                                    drawOnChartArea: false
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Lượt thích & Bình luận'
-                                }
-                            }
-                        }
-                    }
-                });
+             new Chart(interactionCtx, {
+                 type: 'line',
+                 data: {
+                     labels: interactionLabels,
+                     datasets: [{
+                             label: 'Lượt xem',
+                             data: viewsData,
+                             borderColor: 'rgba(54, 162, 235, 1)',
+                             backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                             borderWidth: 2,
+                             tension: 0.3,
+                             fill: true,
+                             yAxisID: 'y'
+                         },
+                         {
+                             label: 'Lượt thích',
+                             data: likesData,
+                             borderColor: 'rgba(255, 99, 132, 1)',
+                             backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                             borderWidth: 2,
+                             tension: 0.3,
+                             fill: true,
+                             yAxisID: 'y1'
+                         },
+                         {
+                             label: 'Bình luận',
+                             data: commentsData,
+                             borderColor: 'rgba(255, 206, 86, 1)',
+                             backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                             borderWidth: 3, // Make the line thicker
+                             tension: 0.3,
+                             fill: true,
+                             yAxisID: 'y1'
+                         }
+                     ]
+                 },
+                 options: {
+                     responsive: true,
+                     scales: {
+                         y: {
+                             beginAtZero: true,
+                             position: 'left',
+                             title: {
+                                 display: true,
+                                 text: 'Lượt xem'
+                             },
+                             ticks: {
+                                 stepSize: 1,
+                                 min: 1
+                             }
+                         },
+                         y1: {
+                             beginAtZero: true,
+                             position: 'right',
+                             grid: {
+                                 drawOnChartArea: false
+                             },
+                             title: {
+                                 display: true,
+                                 text: 'Lượt thích & Bình luận'
+                             },
+                             ticks: {
+                                 stepSize: 1,
+                                 min: 1
+                             }
+                         }
+                     }
+                 }
+             });
             } else {
                 document.getElementById('interactionStatsChart').style.display = 'none';
                 document.getElementById('noInteractionDataMessage').style.display = 'block';
