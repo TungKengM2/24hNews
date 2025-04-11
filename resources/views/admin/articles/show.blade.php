@@ -33,24 +33,36 @@
                     <h4 class="box-title">Chi Tiết Bài Viết</h4>
                     <div class="box-tools">
                         @if (auth()->id() === $article->author_id)
-                        <div class="btn-group">
-                            <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm m-5">
-                                <i class="si-pencil si"></i> Chỉnh sửa
-                            </a>
-                            <form action="{{ route('articles.destroy', $article) }}" method="POST" class="d-inline m-5">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
-                                    <i class="si-trash si"></i> Xóa
-                                </button>
-                            </form>
-                        </div>
-                    @endif
+                            <div class="btn-group">
+                                @if (auth()->id() === $article->author_id)
+                                    <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm m-5">
+                                        <i class="si-pencil si"></i> Chỉnh sửa
+                                    </a>
+                                @endif
 
-                    <a href="{{ route('articles.index') }}" class="btn btn-default btn-sm m-5">
-                        <i class="mdi mdi-arrow-left"></i> Quay lại
-                    </a>
+                                <form action="{{ route('articles.destroy', $article) }}" method="POST"
+                                    class="d-inline m-5">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
+                                        <i class="si-trash si"></i> Xóa
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+
+                        <a href="{{ route('admin.articles.versions', $article) }}" class="btn btn-info btn-sm m-5">
+                            <i class="fas fa-history"></i> Lịch sử phiên bản
+                        </a>
+
+                        <a href="{{ route('articles.moderation-history', $article) }}" class="btn btn-info btn-sm m-5">
+                            <i class="fas fa-history"></i> Lịch sử kiểm duyệt
+                        </a>
+
+                        <a href="{{ route('articles.index') }}" class="btn btn-default btn-sm m-5">
+                            <i class="mdi mdi-arrow-left"></i> Quay lại
+                        </a>
 
                     </div>
                 </div>
@@ -127,13 +139,13 @@
                                                 {{ ucfirst($article->status) }}
                                             </span>
                                         </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{-- <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-alert-circle"></i> Nội dung nhạy cảm:</span>
                                             <span
                                                 class="badge bg-{{ $article->contains_sensitive_content ? 'danger' : 'success' }} rounded-pill">
                                                 {{ $article->contains_sensitive_content ? 'Có' : 'Không' }}
                                             </span>
-                                        </li>
+                                        </li> --}}
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-account-check"></i> Được duyệt bởi:</span>
                                             <span
@@ -174,6 +186,33 @@
                                             <span><i class="mdi mdi-comment"></i> Bình luận:</span>
                                             <span
                                                 class="badge bg-warning rounded-pill">{{ $article->comments->count() }}</span>
+                                        </li>
+
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-star"></i> Đánh giá:</span>
+                                            <div class="text-end">
+                                                <div class="rating-stars mb-1">
+                                                    @php
+                                                        $fullStars = floor($article->rating_star);
+                                                        $halfStar = $article->rating_star - $fullStars >= 0.5;
+                                                    @endphp
+
+                                                    @for ($i = 0; $i < $fullStars; $i++)
+                                                        <i class="fas fa-star text-warning"></i>
+                                                    @endfor
+
+                                                    @if ($halfStar)
+                                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                                    @endif
+
+                                                    @for ($i = $fullStars + $halfStar; $i < 5; $i++)
+                                                        <i class="far fa-star text-muted"></i>
+                                                    @endfor
+                                                </div>
+                                                <span class="badge bg-warning rounded-pill small">
+                                                    {{ number_format($article->rating_star, 1) }} / 5
+                                                </span>
+                                            </div>
                                         </li>
                                     </ul>
                                 </div>

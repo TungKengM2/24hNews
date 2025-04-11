@@ -21,6 +21,7 @@ class ArticleVersion extends Model
         'slug',
         'content',
         'category_id',
+        'subcategory_id',
         'featured_image',
         'tags',
         'change_reason',
@@ -43,5 +44,10 @@ class ArticleVersion extends Model
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(Category::class, 'subcategory_id', 'category_id');
     }
 }

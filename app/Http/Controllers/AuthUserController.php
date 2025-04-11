@@ -43,8 +43,7 @@ class AuthUserController extends Controller
                 'username' => $request->username,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'password' => Hash::make($request->password),
-                // Mã hóa mật khẩu trước khi lưu
+                'password' => $request->password, // Không hash ở đây, để model tự hash
             ],
             'signup_otp' => Hash::make($otp),
             // Mã hóa OTP
