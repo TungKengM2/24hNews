@@ -307,11 +307,7 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     Route::get('/articles', [AuthorArticleController::class, 'index'])->name('author.articles.index');
     Route::get('/articles/search', [AuthorArticleController::class, 'search'])->name('author.articles.search');
     Route::post('/articles/upload', [AuthorArticleController::class, 'uploadImage',])->name('author.articles.upload');
-<<<<<<< HEAD
     Route::get('/ajax/subcategories', [App\Http\Controllers\Author\AjaxController::class, 'getSubcategories'])->name('author.ajax.subcategories');
-=======
-    Route::get('/ajax/subcategories', [AjaxController::class, 'getSubcategories'])->name('author.ajax.subcategories');
->>>>>>> tungkeng
 
 
     Route::middleware(['check.violations'])->group(function () {
@@ -420,20 +416,13 @@ Route::middleware(['auth', 'role:4'])->prefix('/user')->group(function () {
 
 
     // Yêu cầu nâng cấp vai trò lên Author
-    Route::get('/upgrade', function () {
-        return view('user.upgrade');
-    })
-        ->name('user.upgrade');
+    Route::get('/upgrade', [ProfileController::class, 'upgradeToAuthor'])->name('user.upgrade');
+    Route::post('/upgrade-request', [ProfileController::class, 'requestAuthorRole'])->name('user.upgrade.request');
 
     Route::get('/upgrade-result', function () {
         return view('user.upgrade-result');
     })
         ->name('user.upgrade.result');
-
-    Route::post('/upgrade', [ProfileController::class, 'requestAuthorRole'])->name('user.upgrade.author');
-    
-    // Thêm route mới với tên user.upgrade.request
-    Route::post('/upgrade-request', [ProfileController::class, 'requestAuthorRole'])->name('user.upgrade.request');
 
     Route::get('/change-password', [ProfileController::class, 'showChangePasswordForm'])->name('user.change-password');
 
