@@ -59,7 +59,7 @@ class AuthUserController extends Controller
                 'username' => $request->username,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'password' => Hash::make($request->password),
+                'password' => $request->password, // Không hash ở đây, để model tự hash
             ],
             'signup_otp' => Hash::make($otp),
             'otp_expires_at' => now()->addSeconds(60), // OTP hết hạn sau 60 giây
