@@ -28,37 +28,65 @@
                 </a>
 
                 <ul class="dropdown-menu animated bounceIn" aria-labelledby="notificationDropdown"
-                    style="width: 350px;">
+                    style="width: 350px; max-height: 400px; overflow-y: auto;">
                     <li class="header">
-                        <div class="p-3">
-                            <h4 class="mb-0">Notifications</h4>
+                        <div class="p-3 d-flex justify-content-between align-items-center">
+                            <h4 class="mb-0" style="font-size: 16px; font-weight: 600;">Thông báo mới</h4>
+                            <a href="#" id="clearNotifications" class="text-danger" style="font-size: 14px;">Xóa tất cả</a>
                         </div>
                     </li>
 
                     <li>
                         <ul class="menu sm-scroll" id="notificationList">
                             @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
-                            <li class="notification-item p-3" id="notification-{{ $notification->id }}">
+                            <li class="notification-item p-3" id="notification-{{ $notification->id }}" 
+                                style="border-bottom: 1px solid #f0f0f0;">
                                 <a href="#"
                                    onclick="openNotification('{{ $notification->id }}', '{{ addslashes($notification->data['message']) }}'); return false;"
-                                   style="font-size: 16px; display: block; padding: 10px;">
-                                    @if(isset($notification->data['type']) && $notification->data['type'] === 'article_reported')
-                                        {{ Str::limit('Bài viết của bạn đã bị report', 40, '...') }}
-                                    @else
-                                        {{ Str::limit($notification->data['message'], 40, '...') }}
-                                    @endif
+                                   style="font-size: 14px; display: block; padding: 10px; color: #333; text-decoration: none;">
+                                    <div class="d-flex align-items-start">
+                                        <div class="flex-shrink-0 me-3">
+                                            @if(isset($notification->data['type']) && $notification->data['type'] === 'article_reported')
+                                                <i class="fa fa-exclamation-triangle text-warning" style="font-size: 18px;"></i>
+                                            @elseif(isset($notification->data['type']) && $notification->data['type'] === 'role_upgrade_rejected')
+                                                <i class="fa fa-times-circle text-danger" style="font-size: 18px;"></i>
+                                            @else
+                                                <i class="fa fa-bell text-primary" style="font-size: 18px;"></i>
+                                            @endif
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="mb-1">
+                                                @if(isset($notification->data['type']) && $notification->data['type'] === 'article_reported')
+                                                    Bài viết của bạn đã bị report
+                                                @elseif(isset($notification->data['type']) && $notification->data['type'] === 'role_upgrade_rejected')
+                                                    {{ $notification->data['message'] }}
+                                                    @if(isset($notification->data['reason']))
+                                                        <div class="text-danger mt-1" style="font-size: 12px;">
+                                                            <i class="fa fa-info-circle"></i> Lý do: {{ Str::limit($notification->data['reason'], 30, '...') }}
+                                                        </div>
+                                                    @endif
+                                                @else
+                                                    {{ $notification->data['message'] }}
+                                                @endif
+                                            </div>
+                                            <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
+                                        </div>
+                                    </div>
                                 </a>
                             </li>
                         @empty
-                            <li class="text-muted dropdown-item p-3">Không có thông báo mới.</li>
+                            <li class="text-muted dropdown-item p-3 text-center">
+                                <i class="fa fa-bell-slash mb-2" style="font-size: 24px;"></i>
+                                <div>Không có thông báo mới</div>
+                            </li>
                         @endforelse
-                        
                         </ul>
                     </li>
 
-                    <li class="footer p-3">
-                        <a href="#" id="clearNotifications" style="display: block; text-align: center;">Xóa Thông
-                            Báo</a>
+                    <li class="footer p-3 text-center">
+                        <a href="{{ route('notifications.index') }}" class="text-primary" style="font-size: 14px;">
+                            Xem tất cả thông báo
+                        </a>
                     </li>
                 </ul>
             </li>
@@ -103,7 +131,7 @@
                             .then(data => {
                                 if (data.success) {
                                     document.getElementById("notificationList").innerHTML =
-                                        '<li class="text-muted dropdown-item p-3">Không có thông báo mới.</li>';
+                                        '<li class="text-muted dropdown-item p-3 text-center"><i class="fa fa-bell-slash mb-2" style="font-size: 24px;"></i><div>Không có thông báo mới</div></li>';
                                     updateNotificationCount(0);
                                 }
                             });
@@ -126,22 +154,18 @@
                 }
             </script>
 
-
-
-
-
             <!-- Custom Popup -->
             <div id="customPopup"
                 style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1050;">
                 <div
-                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 400px; max-width: 90%; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 500px; max-width: 90%; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #dee2e6;">
-                        <h5 style="margin: 0; font-size: 18px;">Chi tiết thông báo</h5>
+                        <h5 style="margin: 0; font-size: 18px; font-weight: 600;">Chi tiết thông báo</h5>
                         <button onclick="closePopup()"
-                            style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+                            style="background: none; border: none; font-size: 20px; cursor: pointer; color: #666;">&times;</button>
                     </div>
-                    <div id="customPopupContent" style="padding: 20px; font-size: 16px; min-height: 100px;">
+                    <div id="customPopupContent" style="padding: 20px; font-size: 16px; min-height: 100px; line-height: 1.6;">
                         <!-- Nội dung thông báo sẽ được thêm vào đây -->
                     </div>
                     <div style="padding: 15px; border-top: 1px solid #dee2e6; text-align: right;">

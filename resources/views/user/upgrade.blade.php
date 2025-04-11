@@ -3,8 +3,8 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="card mt-5 mb-5">
+            <div class="col-md-10 mt-40">
+                <div class="card mt-50 mb-5">
                     <div class="card-header bg-primary text-white">
                         <h4 class="mb-0">Nâng cấp tài khoản thành Tác giả</h4>
                     </div>
@@ -128,10 +128,19 @@
                                     </div>
 
                                     <div class="form-group mb-3">
-                                        <label for="certificate">Chứng chỉ hành nghề <span class="text-danger">*</span></label>
+                                        <label for="certificates">Chứng chỉ hành nghề <span class="text-danger">*</span></label>
                                         <input type="file" id="certificates" name="certificates[]" class="form-control"
                                                accept="application/pdf" multiple required>
                                         <small class="text-muted">Chỉ chấp nhận file .PDF, kích thước tối đa 10MB</small>
+                                        <div class="alert alert-info mt-2">
+                                            <i class="ti-info-alt"></i> Lưu ý:
+                                            <ul class="mb-0 mt-2">
+                                                <li>Vui lòng tải lên các chứng chỉ liên quan đến lĩnh vực bạn muốn viết bài</li>
+                                                <li>Chứng chỉ phải còn hiệu lực</li>
+                                                <li>File PDF phải rõ ràng, không bị mờ</li>
+                                                <li>Nếu có nhiều chứng chỉ, vui lòng tải lên tất cả</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -146,6 +155,15 @@
                                         <textarea id="reason" name="reason" class="form-control" rows="4"
                                                   placeholder="Nhập lý do bạn muốn trở thành tác giả" required>{{ old('reason') }}</textarea>
                                         <small class="text-muted">Lý do phải có ít nhất 10 ký tự</small>
+                                        <div class="alert alert-info mt-2">
+                                            <i class="ti-info-alt"></i> Lưu ý:
+                                            <ul class="mb-0 mt-2">
+                                                <li>Vui lòng nêu rõ lý do bạn muốn trở thành tác giả</li>
+                                                <li>Mô tả kinh nghiệm và kiến thức của bạn trong lĩnh vực muốn viết</li>
+                                                <li>Nêu rõ mục tiêu và định hướng nội dung bạn sẽ viết</li>
+                                                <li>Cam kết tuân thủ quy định và tiêu chuẩn của hệ thống</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
