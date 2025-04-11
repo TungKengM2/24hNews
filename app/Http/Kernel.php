@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role' => \App\Http\Middleware\CheckRole::class, // 👈 Thêm dòng này
         'auth.remember' => \App\Http\Middleware\AuthRememberMiddleware::class,
+        'check.violations' => \App\Http\Middleware\CheckViolationCount::class,
 
     ];
 }

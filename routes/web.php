@@ -27,6 +27,7 @@ use App\Http\Controllers\User\ArticleSaveController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Moderator\ModeratorController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\Author\TinyMCEUploadController;
 use App\Http\Controllers\User\ArticleViewUserController;
@@ -65,21 +66,25 @@ Route::get('/profiles/user/{id}', [ProfileAuthorProfileController::class, 'showU
 // Author Profile
 Route::get('/profiles/author/{id}', [ProfileAuthorProfileController::class, 'showAuth'])->name('website.profileAuth')->middleware('auth');
 
-Route::post('/user/{user}/follow', [ProfileAuthorProfileController::class, 'follow'])->name('user.follow');
-
-Route::post('/user/{user}/unfollow', [ProfileAuthorProfileController::class, 'unfollow'])->name('user.unfollow');
+Route::middleware(['auth', 'check.violations'])->group(function () {
+    Route::post('/user/{user}/follow', [ProfileAuthorProfileController::class, 'follow'])->name('user.follow');
+    Route::post('/user/{user}/unfollow', [ProfileAuthorProfileController::class, 'unfollow'])->name('user.unfollow');
+});
 
 
 
 // Client Articles
 Route::middleware('auth')->group(function () {
     Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])->name('articles.article');
-    Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
-    Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
-    Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
-    Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
-    Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
-    Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
+
+    Route::middleware(['check.violations'])->group(function () {
+        Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
+        Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
+        Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
+        Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
+        Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
+        Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
+    });
 });
 // Client Category
 Route::get('/category/{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
@@ -206,6 +211,12 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
 
     Route::patch('/articles/{article}/approve', [ModeratorArticleController::class, 'approve'])->name('moderator.articles.approve');
 
+    // Lịch sử kiểm duyệt bài viết
+    Route::get('/articles/{article}/moderation-history', [App\Http\Controllers\Moderator\ArticleModerationHistoryController::class, 'show'])->name('moderator.articles.moderation-history');
+
+    // Danh sách lịch sử kiểm duyệt bài viết
+    Route::get('/moderation-history', [App\Http\Controllers\Moderator\ArticleModerationHistoryController::class, 'index'])->name('moderator.articles.moderation-history.index');
+
 
     Route::get('/moderator/notifications', [NotificationController::class, 'index'])
         ->middleware(['auth', 'moderator'])
@@ -216,15 +227,14 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
 
 
     // Bookmark By TungKeng
-    Route::post('/save-article', [ModeratorArticleSaveController::class, 'saveArticle'])->name('save.article');
-
     Route::get('/saved-articles', [ModeratorArticleSaveController::class, 'savedArticles'])->name('moderator.saved');
-
     Route::get('/article/{slug}', [ArticleUserController::class, 'show'])->name('moderator.article.detail');
 
-    Route::delete('/user/remove-saved-article/{id}', [ModeratorArticleSaveController::class, 'removeSavedArticle'])->name('moderator.remove.saved');
-
-    Route::post('/bookmark/{article_id}', [ModeratorArticleSaveController::class, 'toggleBookmark']);
+    Route::middleware(['check.violations'])->group(function () {
+        Route::post('/save-article', [ModeratorArticleSaveController::class, 'saveArticle'])->name('save.article');
+        Route::delete('/user/remove-saved-article/{id}', [ModeratorArticleSaveController::class, 'removeSavedArticle'])->name('moderator.remove.saved');
+        Route::post('/bookmark/{article_id}', [ModeratorArticleSaveController::class, 'toggleBookmark']);
+    });
 
 
 
@@ -235,6 +245,11 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
 
     // Hoạt động bình luận
     Route::get('/{user_id}/comments', [ModeratorController::class, 'getUserComments'])->name('moderator.comments');
+
+    //Lịch sử phiên bản
+    Route::get('/articles/{article}/versions', [ModeratorArticleController::class, 'versions'])->name('moderator.articles.versions');
+
+    Route::get('/articles/{article}/versions/{versionId}', [ModeratorArticleController::class, 'showVersion'])->name('moderator.articles.version');
 });
 
 // Đặt trong nhóm auth middleware
@@ -290,7 +305,30 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::post('/articles/upload', [AuthorArticleController::class, 'uploadImage',])->name('author.articles.upload');
 
+    Route::get('/articles', [AuthorArticleController::class, 'index'])->name('author.articles.index');
     Route::get('/articles/search', [AuthorArticleController::class, 'search'])->name('author.articles.search');
+    Route::post('/articles/upload', [AuthorArticleController::class, 'uploadImage',])->name('author.articles.upload');
+    Route::get('/ajax/subcategories', [AjaxController::class, 'getSubcategories'])->name('author.ajax.subcategories');
+
+
+    Route::middleware(['check.violations'])->group(function () {
+        // Tạo và chỉnh sửa bài viết
+        Route::get('/articles/create', [AuthorArticleController::class, 'create'])->name('author.articles.create');
+        Route::post('/articles', [AuthorArticleController::class, 'store'])->name('author.articles.store');
+        Route::get('/articles/{article}/edit', [AuthorArticleController::class, 'edit'])->name('author.articles.edit');
+        Route::put('/articles/{article}', [AuthorArticleController::class, 'update'])->name('author.articles.update');
+        Route::delete('/articles/{article}', [AuthorArticleController::class, 'destroy'])->name('author.articles.destroy');
+
+
+        Route::put('/articles/{article}/toggle-visibility', [AuthorArticleController::class, 'toggleVisibility'])
+            ->name('author.articles.toggle-visibility');
+
+        Route::put('/articles/{article}/request-review', [AuthorArticleController::class, 'requestReview'])
+            ->name('author.articles.request-review');
+    });
+
+
+    Route::get('/articles/{article}', [AuthorArticleController::class, 'show'])->name('author.articles.show');
 
     Route::get('/profile', [ProfileController::class, 'profileAuthor'])->name('author.profile');
 
@@ -309,15 +347,15 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
 
     // Bookmark By TungKeng
-    Route::post('/save-article', [AuthorArticleSaveController::class, 'saveArticle'])->name('save.article');
-
     Route::get('/saved-articles', [AuthorArticleSaveController::class, 'savedArticles'])->name('author.saved');
-
     Route::get('/article/{slug}', [ArticleUserController::class, 'show'])->name('author.article.detail');
 
-    Route::delete('/user/remove-saved-article/{id}', [AuthorArticleSaveController::class, 'removeSavedArticle'])->name('author.remove.saved');
 
-    Route::post('/bookmark/{article_id}', [AuthorArticleSaveController::class, 'toggleBookmark']);
+    Route::middleware(['check.violations'])->group(function () {
+        Route::post('/save-article', [AuthorArticleSaveController::class, 'saveArticle'])->name('save.article');
+        Route::delete('/user/remove-saved-article/{id}', [AuthorArticleSaveController::class, 'removeSavedArticle'])->name('author.remove.saved');
+        Route::post('/bookmark/{article_id}', [AuthorArticleSaveController::class, 'toggleBookmark']);
+    });
 
 
 
@@ -398,16 +436,15 @@ Route::middleware(['auth', 'role:4'])->prefix('/user')->group(function () {
     // Route::post('/articles/view', [ArticleViewUserController::class, 'store']);
     // Route::get('/articles/viewed', [ArticleViewUserController::class, 'index']);
 
-    // Bookmark By TungKeng
-    Route::post('/save-article', [ArticleSaveController::class, 'saveArticle'])->name('save.article');
-
     Route::get('/saved-articles', [ArticleSaveController::class, 'savedArticles'])->name('user.saved');
-
     Route::get('/article/{slug}', [ArticleUserController::class, 'show'])->name('article.detail');
 
-    Route::delete('/user/remove-saved-article/{id}', [ArticleSaveController::class, 'removeSavedArticle'])->name('user.remove.saved');
-
-    Route::post('/bookmark/{article_id}', [ArticleSaveController::class, 'toggleBookmark']);
+    Route::middleware(['check.violations'])->group(function () {
+        // Bookmark By TungKeng
+        Route::post('/save-article', [ArticleSaveController::class, 'saveArticle'])->name('save.article');
+        Route::delete('/user/remove-saved-article/{id}', [ArticleSaveController::class, 'removeSavedArticle'])->name('user.remove.saved');
+        Route::post('/bookmark/{article_id}', [ArticleSaveController::class, 'toggleBookmark']);
+    });
 
 
 
@@ -424,7 +461,7 @@ Route::middleware(['auth', 'role:4'])->prefix('/user')->group(function () {
 
 // Khu vực dùng cho BookMark By TungKeng
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'check.violations'])->group(function () {
     Route::post('/save-article', [ArticleSaveController::class, 'saveArticle'])->name('save.article');
 });
 
@@ -443,15 +480,14 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/following', [ProfileController::class, 'followingOfAdminList'])->name('admin.following');
 
     // Bookmark By TungKeng
-    Route::post('/save-article', [AdminArticleSaveController::class, 'saveArticle'])->name('save.article');
-
     Route::get('/saved-articles', [AdminArticleSaveController::class, 'savedArticles'])->name('admin.saved');
-
     Route::get('/article/{slug}', [ArticleUserController::class, 'show'])->name('admin.article.detail');
 
-    Route::delete('/user/remove-saved-article/{id}', [AdminArticleSaveController::class, 'removeSavedArticle'])->name('admin.remove.saved');
-
-    Route::post('/bookmark/{article_id}', [AdminArticleSaveController::class, 'toggleBookmark']);
+    Route::middleware(['check.violations'])->group(function () {
+        Route::post('/save-article', [AdminArticleSaveController::class, 'saveArticle'])->name('save.article');
+        Route::delete('/user/remove-saved-article/{id}', [AdminArticleSaveController::class, 'removeSavedArticle'])->name('admin.remove.saved');
+        Route::post('/bookmark/{article_id}', [AdminArticleSaveController::class, 'toggleBookmark']);
+    });
 
 
 
@@ -499,10 +535,32 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 
     Route::patch('/articles/{article}/reject', [ArticleController::class, 'reject'])->name('articles.reject');
 
+    // Lịch sử kiểm duyệt bài viết
+    Route::get('/articles/{article}/moderation-history', [App\Http\Controllers\Admin\ArticleModerationHistoryController::class, 'show'])->name('articles.moderation-history');
+
+    // Lịch sử kiểm duyệt bình luận
+    Route::get('/comments/{comment}/moderation-history', [App\Http\Controllers\Admin\CommentModerationHistoryController::class, 'show'])->name('comments.moderation-history');
+
+    // Lịch sử kiểm duyệt nâng cấp vai trò
+    Route::get('/users/{user}/role-upgrade-history', [App\Http\Controllers\Admin\UserModerationHistoryController::class, 'show'])->name('users.role-upgrade-history');
+
+    // Trang lịch sử kiểm duyệt tổng hợp
+    Route::get('/moderation/history', [App\Http\Controllers\Admin\ModerationHistoryController::class, 'index'])->name('admin.moderation.history');
+
+    // Quản lý bình luận
+    Route::get('/comments', [App\Http\Controllers\Admin\CommentController::class, 'index'])->name('admin.comments.index');
+    Route::get('/comments/{comment}', [App\Http\Controllers\Admin\CommentController::class, 'show'])->name('admin.comments.show');
+    Route::patch('/comments/{comment}/approve', [App\Http\Controllers\Admin\CommentController::class, 'approve'])->name('admin.comments.approve');
+    Route::patch('/comments/{comment}/reject', [App\Http\Controllers\Admin\CommentController::class, 'reject'])->name('admin.comments.reject');
+    Route::delete('/comments/{comment}', [App\Http\Controllers\Admin\CommentController::class, 'destroy'])->name('admin.comments.destroy');
+
 
 
     // Quản lý danh mục
     Route::resource('categories', CategoryController::class);
+
+    // AJAX endpoints
+    Route::get('/ajax/subcategories', [App\Http\Controllers\Admin\AjaxController::class, 'getSubcategories'])->name('ajax.subcategories');
 
 
     //Danh sách tag
@@ -511,6 +569,11 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 
     // Quản lý người dùng
     Route::resource('users', UserController::class)->names(['index' => 'admin.users.index',]);
+
+    //Lịch sử phiên bản
+    Route::get('/articles/{article}/versions', [ArticleController::class, 'versions'])->name('admin.articles.versions');
+
+    Route::get('/articles/{article}/versions/{versionId}', [ArticleController::class, 'showVersion'])->name('admin.articles.version');
 });
 
 

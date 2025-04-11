@@ -7,6 +7,24 @@
             <!-- Main content -->
             <section class="content">
                 <div class="row">
+                    <script>
+                        // Hiển thị thông báo SweetAlert2 trực tiếp
+                        document.addEventListener('DOMContentLoaded', function() {
+                            setTimeout(function() {
+                                @if(auth()->user()->violation_count > 5)
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Cảnh báo vi phạm!',
+                                    html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
+                                          '<p>Bạn không thể thực hiện các hành động liên quan đến bài viết cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                                          '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
+                                    confirmButtonText: 'Tôi đã hiểu',
+                                    confirmButtonColor: '#3085d6'
+                                });
+                                @endif
+                            }, 300);
+                        });
+                    </script>
                     <div class="col-xl-3 col-md-6 col-12">
                         <div class="box">
                             <div class="box-body">
@@ -466,4 +484,55 @@
             };
         });
     </script>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: '{{ session("error") }}',
+                confirmButtonText: 'Tôi đã hiểu'
+            });
+        @endif
+
+        @if(session('violation_error'))
+            Swal.fire({
+                icon: 'warning',
+                title: 'Cảnh báo vi phạm!',
+                text: '{{ session("violation_error") }}',
+                confirmButtonText: 'Tôi đã hiểu'
+            });
+        @endif
+
+        // Hiển thị thông báo SweetAlert2 khi trang được tải
+        setTimeout(function() {
+            // Kiểm tra số vi phạm của author
+            @if(auth()->user()->violation_count > 5)
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Cảnh báo vi phạm!',
+                    html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
+                          '<p>Bạn không thể thực hiện các hành động liên quan đến bài viết cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                          '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
+                    confirmButtonText: 'Tôi đã hiểu',
+                    confirmButtonColor: '#3085d6'
+                });
+            @endif
+        }, 500);
+
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: '{{ session("success") }}',
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            });
+        @endif
+    });
+</script>
 @endsection
