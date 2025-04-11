@@ -29,10 +29,17 @@
                     @if ($loop->iteration > 6)
                         @break
                     @endif
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
-                            {{ $category->name }}
-                        </a>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="{{ route('client.category.show', $category->slug) }}" id="navbarDropdown1" role=""
+                          data-bs-toggle="dropdown" aria-expanded="true" onclick="window.location.href='{{ route('client.category.show', $category->slug) }}'">
+                          {{ $category->name }}
+                      </a>
+                        <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
+                            <li><a class="dropdown-item" href="page-about.html">Danh Mục Phụ 1</a></li>
+                            <li><a class="dropdown-item" href="page-team.html">Danh Mục Phụ 2</a></li>
+                            <li><a class="dropdown-item" href="page-product.html">Danh Mục Phụ 3</a></li>
+                            <li><a class="dropdown-item" href="page-404.html">Danh Mục Phụ 4</a></li>
+                        </ul>
                     </li>
                 @endforeach
 
