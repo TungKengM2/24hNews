@@ -1,0 +1,138 @@
+[33m828a12f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mhien[m[33m)[m Resolve merge conflict in routes/web.php
+[33mf1a3dff[m feat(author): add automatic alert dismissal functionality
+[33ma9a6298[m TùngKeng upload thống kê tương tác + tài khoản cho admin
+[33m9ffb7b4[m refactor(tinymce): improve image validation and upload notifications
+[33m3b0c948[m Resolve merge conflict between hien and tungkeng
+[33mb209b1c[m feat(author): implement image moderation and improve content review process
+[33m6e7c70c[m TungKeng hoàn thiện xem chi tiết comment
+[33mbfd5fa2[m TungKeng làm xem chi tiết comment
+[33meb98206[m Merge branch 'dat' into tungkeng
+[33mf96d5ad[m up thêm thoi tiet
+[33m0d96cb2[m fix search
+[33m7e2de91[m TungKeng merge dat
+[33m8aca85a[m up fix search
+[33mcd3bcae[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33meb6ca40[m TungKeng merge duongnew + chỉnh sửa lại các chức năng cho 3 role
+[33m697531f[m đc r đó
+[33m72dab6c[m dd
+[33mb0bbeb7[m fix check comment
+[33m233d4e8[m up
+[33m1ce31fd[m check commentcomment
+[33mfd1fc62[m fix tạm cho tùng chạy đc
+[33m5046632[m TungKeng check route dương lỗi, không vào được login từ trang chủ
+[33m838fb59[m TungKeng merge SonwTungf
+[33mbf4f748[m Cap Nhat Thong Bao
+[33m17738f7[m feat(moderation): enhance content moderation with additional checks and API calls
+[33m65bb03b[m ii
+[33m150a852[m Merge branch 'tungkeng' into duongnew
+[33m4e24dbd[m TungKeng bổ sung chức năng cho 2 role: Author, Moderator
+[33m34ecc24[m fix
+[33m4524cd7[m fix nhẹnhẹ
+[33m5a8fd8d[m slug
+[33mb3196c4[m h
+[33me436a65[m up
+[33m3a4f55d[m up
+[33m89f000b[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33m09c81bf[m up
+[33m6e42af2[m up
+[33mf65a4eb[m dd
+[33md3249fc[m chỉnh client vào websitewebsite
+[33me579a4a[m TungKeng hoàn thành chức năng user: tin đã lưu, tin đã xem, hoạt động bình luận
+[33mcb2d92d[m Thong Bao
+[33m3c7454f[m ảnh đại diện fix
+[33m03aa2f5[m fix
+[33m790e4b1[m fix catefory header ís_actice=1
+[33mfee6b8c[m up
+[33m1e8dd38[m up
+[33mec5b836[m up search
+[33mfb92523[m TungKeng up lưu bài viết + lịch sử xem cho user
+[33m835b1d5[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33m19726e1[m Thong bao duyet cho nguoi dung + thong bao cho adm
+[33m1b9088d[m up
+[33m5188a92[m feat(Article): add comments relationship and optimize query
+[33mb43e0de[m Merge remote-tracking branch 'origin/tungkeng' into tungkeng
+[33m01722e9[m refactor(auth): reorganize and optimize authentication controller
+[33m59d6b97[m TungKeng update moderator
+[33mb40e1c8[m feat(footer): add admin login link
+[33m67a1333[m TungKeng sửa lỗi thông báo cho đki
+[33mcaf1fe4[m TungKeng merge sonwtungf
+[33m539a7f6[m Merge branch 'dat' into tungkeng
+[33m50da974[m TungKeng update migrate + sửa lỗi author
+[33m00f9a51[m lỗi login
+[33m86d6ec1[m refactor(article): improve category filtering logic
+[33m89bd7a3[m tu choi bai viet
+[33meca1249[m TungKeng cập nhập giao diện moderator + author
+[33mc0b5a71[m TungKeng merge duong + chỉnh sửa giao diện user
+[33m46150f7[m Merge branch 'hien' into tungkeng
+[33m9f7edc4[m home
+[33m149bbf3[m fix commet reply
+[33m07b2905[m feat(api): add test route for listing files in storage
+[33m35828c1[m feat(article)(duong): add like functionality and comments
+[33m2f937f8[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33m7a5c070[m Merge branch 'tungkeng' of github.com:TungKengM2/24hNews into tungkeng
+[33m486d0f9[m TungKeng chỉnh sửa giao diện user nhỏ
+[33mad7c15f[m Merge branch 'hien' into tungkeng
+[33m8492676[m refactor(database): optimize approval table migrations
+[33m44673fd[m up
+[33mb074d3c[m TungKeng upload
+[33m647e6ef[m up
+[33mf4f5b9b[m Merge branch 'tungkeng' into hien
+[33m0e7b8b1[m feat(database): add type column to approvals table
+[33mf877231[m refactor(author): improve code readability and add migration for approval requested role
+[33m6d8ce70[m up
+[33m5c4942f[m feat(api): add NSFW image detection endpoint
+[33m9d9b2a5[m feat(article): improve article moderation and highlighting
+[33m0fae0bd[m TungKeng fix lỗi nhỏ
+[33m8ca5225[m refactor(migrations): update approvals table migrations
+[33m5f12ca7[m Hien thi kiem duyet sonwtungf
+[33m462da37[m TungKeng update giao diện moderator
+[33mfc05829[m TungKeng merge SonwTungf + chỉnh sửa lại giao diện
+[33m67c5c5f[m up
+[33m560edb9[m TungKeng sửa lỗi merge cho dat
+[33m2bb9740[m sonwtungf
+[33mcbb920e[m chuyen huong
+[33m3b7c5d7[m TungKeng điều chỉnh lại bảng migrate
+[33m1cb67f7[m TungKeng sửa config merge
+[33m2fd9089[m TungKeng sửa config merge
+[33m6531f28[m TungKeng bổ sung giao diện 4 role
+[33mfba2008[m Merge branch 'hien' into tungkeng
+[33maa4efd7[m feat(author): add article filtering and category status display
+[33m188bf82[m refactor(admin): split user management and role upgrade functionality
+[33m787ec50[m TungKeng fix lỗi nhỏ khi merge
+[33m7337863[m refactor(user): update profile route and rename settings to profile
+[33m3535074[m refactor(web): comment out admin dashboard route
+[33maf771a2[m refactor(routing): comment out user-specific routes for now
+[33mf192b81[m merge tungkeng
+[33mf42e7a4[m TungKeng merge nluan
+[33m5eb46c1[m feat(article): implement content moderation and draft functionality
+[33m2f970fa[m up
+[33mcfa9d15[m feat(author): integrate content moderation with AI
+[33m326cd69[m Cập nhap
+[33me624b47[m Resolve merge conflict in AppServiceProvider.php
+[33mc84a2d2[m refactor(author): improve article listing and detail views
+[33md7bb223[m feat(admin): paginate role upgrade requests- Change from retrieving all role upgrade requests to paginating them - Update the index view to include pagination links for the requests
+[33meaf5dc5[m refactor(admin): improve role upgrade approval process
+[33m23ba97d[m TungKeng fix phần Category Is_Active
+[33m7af24e7[m feat(user): add user upgrade functionality- Add upgrade to author feature for users - Create new database migration for user upgrades - Implement upgrade logic in ProfileController - Add new view for user upgrade request - Update header-top view to include upgrade link
+[33m843b9a8[m feat(user): display user information on dashboard
+[33m4b5ed6b[m TungKeng thêm chức năng category - is_active
+[33meff9cdd[m Up
+[33ma3c5bac[m Up
+[33m18d4c51[m Xóa thông tin nhạy cảm
+[33m39da129[m Xóa thông tin nhạy cảm
+[33m140f110[m Cập nhật code
+[33md78567f[m feat(author): implement profile update functionality- Add profile update feature for authors- Create AuthorProfileController to handle profile updates - Update routes to include new profile update route - Modify views to display user profile and update form - Implement image upload and update logic
+[33mde5b7be[m feat(routes): update web routes and add author functionality
+[33mbea1804[m merge route from tungkeng
+[33me37fd6e[m feat(author): add article search functionality- Implement search functionality for articles in the author dashboard - Add a search input field to the articles index page - Create a new method in the ArticleController to handle search requests - Update the routes file to include the new search route
+[33mc940762[m up
+[33ma5a5d17[m Up
+[33m72616c7[m feat(author): upgrade article management functionality- Add authorisation checks for article operations - Implement pagination for article index- Update article create and edit views- Remove unnecessary TinyMCE scripts- Improve code organisation and readability
+[33m321fd5d[m feat(author): upgrade TinyMCE editor and enhance article creation functionality
+[33m9e05907[m up
+[33md13f6e4[m Merge branch 'tungkeng' of https://github.com/TungKengM2/24hNews into dat
+[33mc27a329[m up thứ ngày tháng
+[33m5178d79[m up
+[33m8a4949a[m Cập nhật code
+[33m82d25d7[m TungKeng sửa phần lọc role cho danh sách users
+[3

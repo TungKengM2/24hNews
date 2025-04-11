@@ -48,9 +48,12 @@ class User extends Authenticatable implements CanResetPasswordContract
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+//        'password' => 'hashed',
         'banned_until' => 'datetime',
     ];
+
+
+
 
     /**
      * Quan hệ với bảng roles
@@ -73,9 +76,12 @@ class User extends Authenticatable implements CanResetPasswordContract
     {
         return $this->hasMany(Comment::class, 'user_id', 'comment_id')->latest();
     }
+    /**
+     * Lấy thông báo của người dùng từ bảng notifications tùy chỉnh
+     */
     public function notifications()
     {
-        return $this->morphMany(DatabaseNotification::class, 'notifiable', 'notifiable_type', 'notifiable_id', 'user_id');
+        return $this->hasMany(\App\Models\Notification::class, 'user_id', 'user_id');
     }
 
     public function articles()

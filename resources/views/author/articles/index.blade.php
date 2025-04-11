@@ -35,13 +35,20 @@
                                 <a href="{{ route('author.dashboard') }}" class="btn btn-default">
                                     <i class="fa fa-arrow-left me-1"></i> Quay Lại
                                 </a>
-                                <a href="{{ route('author.articles.create') }}" class="btn btn-primary ms-2">
-                                    <i class="si-plus si me-1"></i> Thêm Bài Viết Mới
-                                </a>
+                                @if (auth()->user()->violation_count > 5)
+                                    <button type="button" class="btn btn-primary ms-2 disabled" id="addNewArticleBtn">
+                                        <i class="si-plus si me-1"></i> Thêm Bài Viết Mới
+                                    </button>
+                                @else
+                                    <a href="{{ route('author.articles.create') }}" class="btn btn-primary ms-2">
+                                        <i class="si-plus si me-1"></i> Thêm Bài Viết Mới
+                                    </a>
+                                @endif
                             </div>
 
                             @if (session('success'))
-                                <div id="success-alert" class="alert alert-success alert-dismissible fade show custom-alert m-0">
+                                <div id="success-alert"
+                                    class="alert alert-success alert-dismissible fade show custom-alert m-0">
                                     <div class="d-flex align-items-center">
                                         <div class="alert-icon me-2">
                                             <i class="fas fa-check-circle"></i>
@@ -50,7 +57,8 @@
                                             <p class="mb-0"><strong>Thành công!</strong> {{ session('success') }}</p>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
                                 </div>
                             @endif
 
@@ -87,8 +95,13 @@
                             }
 
                             @keyframes fadeInAlert {
-                                0% { opacity: 0; }
-                                100% { opacity: 1; }
+                                0% {
+                                    opacity: 0;
+                                }
+
+                                100% {
+                                    opacity: 1;
+                                }
                             }
 
                             @media (max-width: 992px) {
@@ -105,21 +118,7 @@
                             }
                         </style>
 
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                console.log('Hiển thị thông báo thành công: {{ session("success") }}');
-                                setTimeout(function() {
-                                    var alertElement = document.getElementById('success-alert');
-                                    if (alertElement) {
-                                        alertElement.style.opacity = '0';
-                                        alertElement.style.transition = 'opacity 0.5s';
-                                        setTimeout(function() {
-                                            alertElement.style.display = 'none';
-                                        }, 500);
-                                    }
-                                }, 5000);
-                            });
-                        </script>
+                        {{-- Script moved to @section('scripts') --}}
 
                         <div class="box-body">
                             <div class="row mb-3">
@@ -189,6 +188,20 @@
                                                             <span
                                                                 class="badge bg-info">{{ $article->category->name }}</span>
                                                         @endif
+
+                                                        @if ($article->subcategory)
+                                                            <div class="mt-1">
+
+                                                                @if (!$article->subcategory->is_active)
+                                                                    <span
+                                                                        class="text-warning">{{ $article->subcategory->name }}
+                                                                        <i class="fa fa-exclamation-triangle"></i></span>
+                                                                @else
+                                                                    <span
+                                                                        class="badge bg-secondary">{{ $article->subcategory->name }}</span>
+                                                                @endif
+                                                            </div>
+                                                        @endif
                                                     @else
                                                         <span class="text-danger">Không có danh mục</span>
                                                     @endif
@@ -208,18 +221,22 @@
                                                         @break
 
                                                         @case('archived')
-                                                            <span class="badge bg-danger">Đã Lưu Trữ</span>
+                                                            <span class="badge bg-info">Đã Lưu Trữ</span>
+                                                        @break
+
+                                                        @case('rejected')
+                                                            <span class="badge bg-danger">Từ Chối</span>
                                                         @break
                                                     @endswitch
                                                 </td>
                                                 <td class="text-center">{{ number_format($article->views) }}</td>
                                                 {{-- <td class="text-center">
-                                                    @if ($article->contains_sensitive_content)
-                                                        <span class="badge bg-danger">Có</span>
-                                                    @else
-                                                        <span class="badge bg-success">Không</span>
-                                                    @endif
-                                                {{-- </td> --}}
+                                                @if ($article->contains_sensitive_content)
+                                                    <span class="badge bg-danger">Có</span>
+                                                @else
+                                                    <span class="badge bg-success">Không</span>
+                                                @endif
+                                            {{-- </td> --}}
                                                 <td class="text-center">
                                                     <div>
                                                         @if ($article->tags->isNotEmpty())
@@ -238,29 +255,136 @@
                                                             <i class="si-eye si"></i>
                                                         </a>
 
-                                                        <a href="{{ route('author.articles.edit', $article) }}"
-                                                            class="btn btn-warning btn-sm" title="Chỉnh sửa">
-                                                            <i class="si-pencil si"></i>
-                                                        </a>
+                                                        @if (in_array($article->status, ['published', 'pending']))
+                                                            @php
+                                                                $editStatus = \App\Http\Controllers\Author\ArticleEditRequestController::getEditStatus($article->article_id);
+                                                                $hasBeenEdited = $editStatus['request'] && $article->updated_at > $editStatus['request']->created_at;
+                                                            @endphp
+
+                                                            @if($editStatus['status'] === 'pending')
+                                                                <button class="btn btn-warning btn-sm" disabled title="Yêu cầu đang chờ phê duyệt">
+                                                                    <i class="fas fa-clock"></i> Đang chờ phê duyệt
+                                                                </button>
+                                                            @elseif($editStatus['status'] === 'approved' && !$hasBeenEdited)
+                                                                <a href="{{ route('author.articles.edit', $article) }}" class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-edit"></i> Chỉnh sửa
+                                                                </a>
+                                                            @else
+                                                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRequestModal{{ $article->article_id }}">
+                                                                    <i class="fas fa-edit"></i> Xin phép chỉnh sửa
+                                                                </button>
+
+                                                                {{-- Modal xin phép chỉnh sửa --}}
+                                                                <div class="modal fade" id="editRequestModal{{ $article->article_id }}" tabindex="-1" aria-hidden="true">
+                                                                    <div class="modal-dialog">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title">Xin phép chỉnh sửa bài viết</h5>
+                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                            </div>
+                                                                            <form action="{{ route('author.articles.edit-request.store', $article->article_id) }}" method="POST">
+                                                                                @csrf
+                                                                                <div class="modal-body">
+                                                                                    <p><strong>Bài viết:</strong> {{ $article->title }}</p>
+
+                                                                                    @if ($editStatus['status'] === 'rejected' && $editStatus['request']?->admin_note)
+                                                                                        <div class="alert alert-danger mb-3">
+                                                                                            <strong>Lý do từ chối trước đó:</strong><br>
+                                                                                            {{ $editStatus['request']->admin_note }}
+                                                                                        </div>
+                                                                                    @endif
+
+                                                                                    @if ($hasBeenEdited && $editStatus['status'] === 'approved')
+                                                                                        <div class="alert alert-info mb-3">
+                                                                                            <strong>Lưu ý:</strong> Bạn cần xin phép lại vì bài viết đã được chỉnh sửa sau lần phê duyệt trước.
+                                                                                        </div>
+                                                                                    @endif
+
+                                                                                    <div class="form-group">
+                                                                                        <label for="reason{{ $article->article_id }}">Lý do muốn chỉnh sửa <span class="text-danger">*</span></label>
+                                                                                        <textarea
+                                                                                            class="form-control"
+                                                                                            id="reason{{ $article->article_id }}"
+                                                                                            name="reason"
+                                                                                            rows="3"
+                                                                                            required
+                                                                                            placeholder="Vui lòng nêu rõ lý do bạn muốn chỉnh sửa bài viết này"
+                                                                                        ></textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                                                    <button type="submit" class="btn btn-primary">Gửi yêu cầu</button>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        @endif
 
                                                         @if (in_array($article->status, ['published', 'archived']))
-                                                        <form action="{{ route('author.articles.toggle-visibility', $article) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <button class="btn btn-secondary btn-sm"
-                                                                title="{{ $article->status === 'published' ? 'Ẩn bài viết' : 'Hiện bài viết' }}"
-                                                                onclick="return confirm('Bạn có chắc chắn muốn {{ $article->status === 'published' ? 'ẩn' : 'hiện' }} bài viết này không?')">
-                                                                <i class="fa {{ $article->status === 'published' ? 'fa-eye-slash' : 'fa-eye' }}"></i>
-                                                            </button>
-                                                        </form>
+                                                            <form
+                                                                action="{{ route('author.articles.toggle-visibility', $article) }}"
+                                                                method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                @if (request()->has('page'))
+                                                                    <input type="hidden" name="page"
+                                                                        value="{{ request('page') }}">
+                                                                @endif
+                                                                @if (request()->has('filter'))
+                                                                    <input type="hidden" name="filter"
+                                                                        value="{{ request('filter') }}">
+                                                                @endif
+                                                                @if (request()->has('search'))
+                                                                    <input type="hidden" name="search"
+                                                                        value="{{ request('search') }}">
+                                                                @endif
+                                                                <button
+                                                                    class="btn btn-secondary btn-sm toggle-visibility-btn"
+                                                                    title="{{ $article->status === 'published' ? 'Ẩn bài viết' : 'Hiện bài viết' }}"
+                                                                    data-action="{{ $article->status === 'published' ? 'ẩn' : 'hiện' }}">
+                                                                    <i
+                                                                        class="fa {{ $article->status === 'published' ? 'fa-eye-slash' : 'fa-eye' }}"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endif
+
+                                                        @if ($article->status === 'rejected')
+                                                            <form
+                                                                action="{{ route('author.articles.request-review', $article) }}"
+                                                                method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                @if (request()->has('page'))
+                                                                    <input type="hidden" name="page"
+                                                                        value="{{ request('page') }}">
+                                                                @endif
+                                                                @if (request()->has('filter'))
+                                                                    <input type="hidden" name="filter"
+                                                                        value="{{ request('filter') }}">
+                                                                @endif
+                                                                @if (request()->has('search'))
+                                                                    <input type="hidden" name="search"
+                                                                        value="{{ request('search') }}">
+                                                                @endif
+                                                                <button class="btn btn-primary btn-sm request-review-btn"
+                                                                    title="Xin duyệt lại"
+                                                                    data-article-id="{{ $article->article_id }}">
+                                                                    <i class="fa fa-paper-plane"></i>
+                                                                </button>
+                                                            </form>
                                                         @endif
 
                                                         <form action="{{ route('author.articles.destroy', $article) }}"
                                                             method="POST" class="d-inline">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button class="btn btn-danger btn-sm" title="Xóa bài viết"
-                                                                onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?')">
+                                                            <button class="btn btn-danger btn-sm delete-article-btn"
+                                                                title="Xóa bài viết"
+                                                                data-article-id="{{ $article->article_id }}"
+                                                                data-article-title="{{ $article->title }}">
                                                                 <i class="si-trash si"></i>
                                                             </button>
                                                         </form>
@@ -275,7 +399,7 @@
                                         </tbody>
                                     </table>
                                     <div class="d-flex justify-content-end mt-4">
-                                        {{ $articles->links('pagination::bootstrap-5') }}
+                                        {{ $articles->appends(request()->query())->links('pagination::bootstrap-5') }}
                                     </div>
                                 </div>
                             </div>
@@ -284,4 +408,220 @@
                 </div>
             </div>
         </div>
+    @endsection
+
+    @section('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Hiển thị thông báo thành công nếu có
+                @if (session('success'))
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: '{{ session('success') }}',
+                        timer: 3000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    });
+                @endif
+
+                @if (session('error'))
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: '{{ session('error') }}',
+                        confirmButtonText: 'Đóng'
+                    });
+                @endif
+
+                @if (session('violation_error'))
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Vi phạm!',
+                        text: '{{ session('violation_error') }}',
+                        confirmButtonText: 'Đóng'
+                    });
+                @endif
+
+                // Hiển thị cảnh báo vi phạm nếu có
+                @if (auth()->user()->violation_count > 5)
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cảnh báo vi phạm!',
+                        html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
+                            '<p>Bạn không thể thực hiện các hành động liên quan đến bài viết cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                            '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
+                        confirmButtonText: 'Tôi đã hiểu',
+                        confirmButtonColor: '#3085d6'
+                    });
+                @endif
+
+                // Xử lý nút xóa bài viết
+                document.querySelectorAll('.delete-article-btn').forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const articleId = this.getAttribute('data-article-id');
+                        const articleTitle = this.getAttribute('data-article-title');
+                        const form = this.closest('form');
+
+                        // Kiểm tra vi phạm trước khi cho phép hành động
+                        @if (auth()->user()->violation_count > 5)
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Không thể thực hiện!',
+                                html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
+                                    '<p>Bạn không thể xóa bài viết cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                                    '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
+                                confirmButtonText: 'Tôi đã hiểu',
+                                confirmButtonColor: '#3085d6'
+                            });
+                        @else
+                            Swal.fire({
+                                title: 'Xóa bài viết?',
+                                html: `Bạn có chắc chắn muốn xóa bài viết <strong>${articleTitle}</strong> không?<br>Hành động này không thể hoàn tác!`,
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#d33',
+                                cancelButtonColor: '#3085d6',
+                                confirmButtonText: 'Xóa',
+                                cancelButtonText: 'Hủy'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Hiển thị thông báo đang xử lý
+                                    Swal.fire({
+                                        title: 'Đang xử lý...',
+                                        text: 'Đang xóa bài viết, vui lòng đợi...',
+                                        icon: 'info',
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false,
+                                        showConfirmButton: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        }
+                                    });
+                                    form.submit();
+                                }
+                            });
+                        @endif
+                    });
+                });
+
+                // Xử lý nút ẩn/hiện bài viết
+                document.querySelectorAll('.toggle-visibility-btn').forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const action = this.getAttribute('data-action');
+                        const form = this.closest('form');
+
+                        // Kiểm tra vi phạm trước khi cho phép hành động
+                        @if (auth()->user()->violation_count > 5)
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Không thể thực hiện!',
+                                html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
+                                    '<p>Bạn không thể ẩn/hiện bài viết cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                                    '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
+                                confirmButtonText: 'Tôi đã hiểu',
+                                confirmButtonColor: '#3085d6'
+                            });
+                        @else
+                            Swal.fire({
+                                title: `${action.charAt(0).toUpperCase() + action.slice(1)} bài viết?`,
+                                text: `Bạn có chắc chắn muốn ${action} bài viết này không?`,
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Xác nhận',
+                                cancelButtonText: 'Hủy'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Hiển thị thông báo đang xử lý
+                                    Swal.fire({
+                                        title: 'Đang xử lý...',
+                                        text: `Đang ${action} bài viết, vui lòng đợi...`,
+                                        icon: 'info',
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false,
+                                        showConfirmButton: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        }
+                                    });
+                                    form.submit();
+                                }
+                            });
+                        @endif
+                    });
+                });
+
+                // Xử lý nút xin duyệt lại
+                document.querySelectorAll('.request-review-btn').forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const form = this.closest('form');
+                        const articleId = this.getAttribute('data-article-id');
+
+                        // Kiểm tra vi phạm trước khi cho phép hành động
+                        @if (auth()->user()->violation_count > 5)
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Không thể thực hiện!',
+                                html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
+                                    '<p>Bạn không thể gửi lại bài viết để xin duyệt cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                                    '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
+                                confirmButtonText: 'Tôi đã hiểu',
+                                confirmButtonColor: '#3085d6'
+                            });
+                        @else
+                            Swal.fire({
+                                title: 'Xin duyệt lại?',
+                                text: 'Bài viết sẽ được gửi lại để xin duyệt. Bạn có muốn tiếp tục không?',
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Gửi lại',
+                                cancelButtonText: 'Hủy'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Hiển thị thông báo đang xử lý
+                                    Swal.fire({
+                                        title: 'Đang xử lý...',
+                                        text: 'Đang gửi lại bài viết để xin duyệt, vui lòng đợi...',
+                                        icon: 'info',
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false,
+                                        showConfirmButton: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        }
+                                    });
+                                    form.submit();
+                                }
+                            });
+                        @endif
+                    });
+                });
+
+                // Xử lý nút thêm bài viết mới khi có vi phạm
+                @if (auth()->user()->violation_count > 5)
+                    const addNewArticleBtn = document.getElementById('addNewArticleBtn');
+                    if (addNewArticleBtn) {
+                        addNewArticleBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Không thể thực hiện!',
+                                html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
+                                    '<p>Bạn không thể thêm bài viết mới cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                                    '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
+                                confirmButtonText: 'Tôi đã hiểu',
+                                confirmButtonColor: '#3085d6'
+                            });
+                        });
+                    }
+                @endif
+            });
+        </script>
     @endsection

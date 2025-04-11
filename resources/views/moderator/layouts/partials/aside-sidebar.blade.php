@@ -9,6 +9,11 @@
     $pendingViolationsCount = \App\Models\Violation::whereHas('article', function($query) use ($moderatorCategories) {
         $query->whereIn('category_id', $moderatorCategories);
     })->where('status', 'pending')->count();
+
+    // Đếm số yêu cầu chỉnh sửa đang chờ xử lý trong các danh mục của moderator
+    $pendingEditRequestsCount = \App\Models\ArticleEditRequest::whereHas('article', function($query) use ($moderatorCategories) {
+        $query->whereIn('category_id', $moderatorCategories);
+    })->where('status', 'pending')->count();
 @endphp
 
 <section class="sidebar position-relative">
@@ -26,8 +31,11 @@
                         <span class="pull-right-container">
                             <i class="fa fa-angle-right pull-right"></i>
                         </span>
-                        @if($pendingArticlesCount + $pendingViolationsCount > 0)
-                            <x-notification-badge :count="$pendingArticlesCount + $pendingViolationsCount" />
+                        @php
+                            $totalPendingCount = $pendingArticlesCount + $pendingViolationsCount + $pendingEditRequestsCount;
+                        @endphp
+                        @if($totalPendingCount > 0)
+                            <x-notification-badge :count="$totalPendingCount" />
                         @endif
                     </a>
                     <ul class="treeview-menu">
@@ -41,6 +49,15 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{-- route('moderator.article-edit-requests.index') --}}" style="position: relative;"> <!-- Tạm thời comment route này -->
+                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                Yêu Cầu Chỉnh Sửa
+                                @if($pendingEditRequestsCount > 0)
+                                    <x-notification-badge :count="$pendingEditRequestsCount" />
+                                @endif
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('moderator.violations.approves') }}" style="position: relative;">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                 Report
@@ -48,6 +65,10 @@
                                     <x-notification-badge :count="$pendingViolationsCount" />
                                 @endif
                             </a>
+                        </li>
+
+                        <li><a href="{{ route('moderator.articles.moderation-history.index') }}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Lịch Sử Duyệt</a>
                         </li>
                     </ul>
 

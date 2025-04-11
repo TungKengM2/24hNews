@@ -22,8 +22,8 @@
                     style="position: relative; display: inline-block;">
                     <i class="fa fa-bell"></i>
                     <span id="notificationCount" class="badge badge-danger"
-                        style="position: absolute; top: 6px; right: 5px; font-size: 12px; padding: 4px 7px; border-radius: 50%; background: red; color: white; display: {{ auth()->user()->unreadNotifications->count() > 0 ? 'inline-block' : 'none' }};">
-                        {{ auth()->user()->unreadNotifications->count() }}
+                        style="position: absolute; top: 6px; right: 5px; font-size: 12px; padding: 4px 7px; border-radius: 50%; background: red; color: white; display: {{ auth()->user()->notifications()->whereNull('read_at')->count() > 0 ? 'inline-block' : 'none' }};">
+                        {{ auth()->user()->notifications()->whereNull('read_at')->count() }}
                     </span>
                 </a>
 
@@ -37,7 +37,7 @@
 
                     <li>
                         <ul class="menu sm-scroll" id="notificationList">
-                            @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
+                            @forelse(auth()->user()->notifications()->whereNull('read_at')->take(5)->get() as $notification)
                             <li class="notification-item p-3" id="notification-{{ $notification->id }}">
                                 <a href="#"
                                    onclick="openNotification('{{ $notification->id }}', '{{ addslashes($notification->data['message']) }}'); return false;"

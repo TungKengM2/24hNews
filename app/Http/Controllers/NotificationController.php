@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Notifications\PendingArticleNotification;
+use App\Models\Notification;
 
 class NotificationController extends Controller
 {
@@ -15,12 +15,8 @@ class NotificationController extends Controller
     {
         $user = Auth::user();
 
-        // Lấy cả 2 loại thông báo
-        $notifications = $user->notifications()
-            ->where(function($query) {
-                $query->where('type', 'App\Notifications\NewArticleFromFollowedAuthor')
-                      ->orWhere('type', 'App\Notifications\PendingArticleNotification');
-            })
+        // Lấy thông báo từ bảng notifications
+        $notifications = Notification::where('user_id', $user->user_id)
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
@@ -28,38 +24,42 @@ class NotificationController extends Controller
     }
 
     /**
-     * Đánh dấu một thông báo cụ thể là đã đọc
+     * Đánh dấu thông báo đã đọc
      */
     public function markAsRead($id)
     {
-        $notification = Auth::user()->notifications()->where('id', $id)->first();
+        $notification = Notification::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->first();
 
         if ($notification) {
-            $notification->markAsRead();
+            $notification->update(['read_at' => now()]);
             return response()->json(['success' => true]);
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Không tìm thấy thông báo'
-        ], 404);
+        return response()->json(['success' => false], 404);
     }
 
     /**
-     * Đánh dấu tất cả thông báo là đã đọc
+     * Xóa tất cả thông báo
      */
-    public function markAllAsRead()
+    public function clearAll()
     {
-        Auth::user()->unreadNotifications->markAsRead();
+        Notification::where('user_id', Auth::id())
+            ->update(['read_at' => now()]);
+
         return response()->json(['success' => true]);
     }
 
     /**
-     * Lấy số lượng thông báo chưa đọc (API)
+     * Đếm số thông báo chưa đọc
      */
     public function countUnread()
     {
-        $count = Auth::user()->unreadNotifications->count();
+        $count = Notification::where('user_id', Auth::id())
+            ->whereNull('read_at')
+            ->count();
+
         return response()->json(['count' => $count]);
     }
 
@@ -68,8 +68,7 @@ class NotificationController extends Controller
      */
     public function pendingArticles()
     {
-        $notifications = Auth::user()
-            ->notifications()
+        $notifications = Notification::where('user_id', Auth::id())
             ->where('type', 'App\Notifications\PendingArticleNotification')
             ->orderBy('created_at', 'desc')
             ->take(5)

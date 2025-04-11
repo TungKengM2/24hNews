@@ -17,14 +17,14 @@ class CommentModerationService
         $this->apiKey = env('GEMINI_API_KEYY'); // Lấy API Key từ .env
     }
 
-    public function checkComment(string $text): bool
+    public function checkComment(string $text, int $commentId = null, int $userId = null, int $articleId = null): bool
     {
-        
+
         if (!$this->apiKey) {
             Log::error("❌ GEMINI_API_KEY chưa được cấu hình trong .env");
             return false;
         }
-    
+
 
         Log::info("🔍 Kiểm tra bình luận với Gemini: {$text}");
 
@@ -33,7 +33,7 @@ class CommentModerationService
                 'json' => [
                     'contents' => [[
                         'parts' => [[
-                            'text' => "Hãy phân tích câu sau và trả về JSON với định dạng {\"toxic\": true/false}. 
+                            'text' => "Hãy phân tích câu sau và trả về JSON với định dạng {\"toxic\": true/false}.
                             Nếu bình luận có nội dung xúc phạm, thô tục, hãy đặt \"toxic\": true. Nếu không, đặt \"toxic\": false.
                             Bình luận: \"{$text}\""
                         ]]
@@ -58,9 +58,34 @@ class CommentModerationService
                 return false;
             }
 
-            Log::info("🔍 AI đánh giá bình luận: " . ($aiResponse['toxic'] ? "🚫 Xúc phạm" : "✅ Hợp lệ"));
+            $isToxic = $aiResponse['toxic'];
+            Log::info("🔍 AI đánh giá bình luận: " . ($isToxic ? "🚫 Xúc phạm" : "✅ Hợp lệ"));
 
-            return !$aiResponse['toxic']; // Nếu toxic = true, chặn bình luận
+            // Log moderation action if we have a comment ID
+            if ($commentId && $isToxic) {
+                try {
+                    // Create moderation log for auto-rejected comment
+                    \App\Models\ModerationLog::createLog(
+                        'auto_moderate',
+                        'comment',
+                        $commentId,
+                        [
+                            'action' => 'Tự động từ chối bình luận',
+                            'content' => $text,
+                            'reason' => 'Nội dung không phù hợp',
+                            'article_id' => $articleId,
+                            'user_id' => $userId,
+                        ],
+                        null,
+                        ['status' => 'rejected'],
+                        'medium'
+                    );
+                } catch (\Exception $e) {
+                    Log::error("❌ Lỗi khi tạo log kiểm duyệt: " . $e->getMessage());
+                }
+            }
+
+            return !$isToxic; // Nếu toxic = true, chặn bình luận
         } catch (RequestException $e) {
             Log::error("❌ Lỗi gọi API Gemini: " . $e->getMessage(), [
                 'response' => $e->hasResponse() ? $e->getResponse()->getBody()->getContents() : null,

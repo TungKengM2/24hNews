@@ -11,6 +11,9 @@
     $pendingRoleRequestsCount = \App\Models\Approval::where('type', 'role_upgrade')
         ->where('status', 'pending')
         ->count();
+
+    // Đếm số yêu cầu chỉnh sửa bài viết đang chờ xử lý
+    $pendingEditRequestsCount = \App\Models\ArticleEditRequest::where('status', 'pending')->count();
 @endphp
 
 <section class="sidebar position-relative">
@@ -76,8 +79,11 @@
                         <span class="pull-right-container">
                             <i class="fa fa-angle-right pull-right"></i>
                         </span>
-                        @if($pendingArticlesCount + $pendingViolationsCount + $pendingRoleRequestsCount > 0)
-                            <x-notification-badge :count="$pendingArticlesCount + $pendingViolationsCount + $pendingRoleRequestsCount" />
+                        @php
+                            $totalPendingCount = $pendingArticlesCount + $pendingViolationsCount + $pendingRoleRequestsCount + $pendingEditRequestsCount;
+                        @endphp
+                        @if($totalPendingCount > 0)
+                            <x-notification-badge :count="$totalPendingCount" />
                         @endif
                     </a>
                     <ul class="treeview-menu">
@@ -89,6 +95,18 @@
                                     <x-notification-badge :count="$pendingArticlesCount" />
                                 @endif
                             </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.article-edit-requests.index') }}" style="position: relative;">
+                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                Duyệt Yêu Cầu Chỉnh Sửa
+                                @if($pendingEditRequestsCount > 0)
+                                    <x-notification-badge :count="$pendingEditRequestsCount" />
+                                @endif
+                            </a>
+                        </li>
+                        <li><a href="{{ route('admin.comments.index') }}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Quản Lý Bình Luận</a>
                         </li>
                         <li>
                             <a href="{{ route('admin.violations.approves') }}" style="position: relative;">
@@ -107,6 +125,9 @@
                                     <x-notification-badge :count="$pendingRoleRequestsCount" />
                                 @endif
                             </a>
+                        </li>
+                         <li><a href="{{ route('admin.moderation.history') }}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Lịch sử kiểm duyệt</a>
                         </li>
                     </ul>
                 </li>

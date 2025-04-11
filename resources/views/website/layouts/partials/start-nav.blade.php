@@ -46,7 +46,7 @@
                         data-bs-toggle="dropdown">
                         <i class="la la-bell fs-4"></i>
                         @auth
-                            @if ($unreadCount = auth()->user()->unreadNotifications->where('type', 'App\Notifications\NewArticleFromFollowedAuthor')->count())
+                            @if ($unreadCount = auth()->user()->notifications()->whereNull('read_at')->where('type', 'App\Notifications\NewArticleFromFollowedAuthor')->count())
                                 <span
                                     class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                                     style="font-size: 10px;">
@@ -61,7 +61,7 @@
                             <h6 class="dropdown-header px-3">Thông báo mới</h6>
                         </li>
                         @auth
-                            @forelse(auth()->user()->unreadNotifications->where('type', 'App\Notifications\NewArticleFromFollowedAuthor')->take(5) as $notification)
+                            @forelse(auth()->user()->notifications()->whereNull('read_at')->where('type', 'App\Notifications\NewArticleFromFollowedAuthor')->take(5)->get() as $notification)
                                 <li>
                                     <a class="dropdown-item d-flex align-items-start py-2 px-3"
                                         href="/articles/{{ $notification->data['article_slug'] }}"
@@ -157,7 +157,7 @@
                 }
 
                 function markAllNotificationsAsRead() {
-                    fetch('/notifications/mark-all-read', {
+                    fetch('/notifications/clear', {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
