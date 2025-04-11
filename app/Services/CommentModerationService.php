@@ -61,29 +61,7 @@ class CommentModerationService
             $isToxic = $aiResponse['toxic'];
             Log::info("🔍 AI đánh giá bình luận: " . ($isToxic ? "🚫 Xúc phạm" : "✅ Hợp lệ"));
 
-            // Log moderation action if we have a comment ID
-            if ($commentId && $isToxic) {
-                try {
-                    // Create moderation log for auto-rejected comment
-                    \App\Models\ModerationLog::createLog(
-                        'auto_moderate',
-                        'comment',
-                        $commentId,
-                        [
-                            'action' => 'Tự động từ chối bình luận',
-                            'content' => $text,
-                            'reason' => 'Nội dung không phù hợp',
-                            'article_id' => $articleId,
-                            'user_id' => $userId,
-                        ],
-                        null,
-                        ['status' => 'rejected'],
-                        'medium'
-                    );
-                } catch (\Exception $e) {
-                    Log::error("❌ Lỗi khi tạo log kiểm duyệt: " . $e->getMessage());
-                }
-            }
+            // Comment moderation history has been removed
 
             return !$isToxic; // Nếu toxic = true, chặn bình luận
         } catch (RequestException $e) {

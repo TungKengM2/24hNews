@@ -546,6 +546,9 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     // Trang lịch sử kiểm duyệt tổng hợp
     Route::get('/moderation/history', [App\Http\Controllers\Admin\ModerationHistoryController::class, 'index'])->name('admin.moderation.history');
 
+    // Lịch sử kiểm duyệt bình luận
+    Route::get('/comments/{comment}/moderation-history', [App\Http\Controllers\Admin\CommentModerationHistoryController::class, 'show'])->name('comments.moderation-history');
+
     // Quản lý bình luận
     Route::get('/comments', [App\Http\Controllers\Admin\CommentController::class, 'index'])->name('admin.comments.index');
     Route::get('/comments/{comment}', [App\Http\Controllers\Admin\CommentController::class, 'show'])->name('admin.comments.show');
