@@ -59,7 +59,8 @@ Route::get('/search', [HomeController::class, 'search'])->name('search');
 // profile trang chủ dat them
 
 // // User Profile
-// Route::get('/profiles/user/{id}', [ProfileAuthorProfileController::class, 'showUser'])->name('website.profileUser')->middleware('auth');
+// dat them
+Route::get('/profiles/user/{id}', [ProfileAuthorProfileController::class, 'showUser'])->name('website.profileUser')->middleware('auth');
 
 // Author Profile
 Route::get('/profiles/author/{id}', [ProfileAuthorProfileController::class, 'showAuth'])->name('website.profileAuth')->middleware('auth');
