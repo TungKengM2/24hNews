@@ -311,25 +311,7 @@ class ArticleUserController extends Controller
 
         $tempComment->save();
 
-        // Create moderation log for approved comment
-        try {
-            \App\Models\ModerationLog::createLog(
-                'auto_moderate',
-                'comment',
-                $tempComment->comment_id,
-                [
-                    'action' => 'Tự động duyệt bình luận',
-                    'content' => strip_tags($tempComment->content),
-                    'article_id' => $tempComment->article_id,
-                    'user_id' => $tempComment->user_id,
-                ],
-                ['status' => 'pending'],
-                ['status' => 'approved'],
-                'low'
-            );
-        } catch (\Exception $e) {
-            Log::error("❌ Lỗi khi tạo log kiểm duyệt: " . $e->getMessage());
-        }
+        // Comment moderation history has been removed
 
         return response()->json([
             'success' => true,
@@ -379,26 +361,7 @@ class ArticleUserController extends Controller
         $tempReply->status = 'approved';
         $tempReply->save();
 
-        // Create moderation log for approved reply
-        try {
-            \App\Models\ModerationLog::createLog(
-                'auto_moderate',
-                'comment',
-                $tempReply->comment_id,
-                [
-                    'action' => 'Tự động duyệt bình luận trả lời',
-                    'content' => strip_tags($tempReply->content),
-                    'article_id' => $tempReply->article_id,
-                    'user_id' => $tempReply->user_id,
-                    'parent_id' => $tempReply->parent_id,
-                ],
-                ['status' => 'pending'],
-                ['status' => 'approved'],
-                'low'
-            );
-        } catch (\Exception $e) {
-            Log::error("❌ Lỗi khi tạo log kiểm duyệt: " . $e->getMessage());
-        }
+        // Comment moderation history has been removed
 
         return response()->json([
             'success' => true,
