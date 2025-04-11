@@ -57,6 +57,7 @@ class UserController extends Controller
 
         $approvals = Approval::with('user.role')
             ->where('type', 'role_upgrade')
+            ->where('status', 'pending')
             ->when($role_id, function ($query) use ($role_id) {
                 return $query->whereHas(
                     'user',
@@ -75,19 +76,49 @@ class UserController extends Controller
 
     public function approve(Request $request, $id)
     {
-        $approval = Approval::findOrFail($id);
-        $user = $approval->user;
+        try {
+            $approval = Approval::findOrFail($id);
+            $user = $approval->user;
 
-        $role = Role::where('name', $approval->requested_role)->first();
-        if ($role) {
-            $user->update(['role_id' => $role->role_id]);
+            // Kiểm tra xem yêu cầu đã được xử lý chưa
+            if ($approval->status !== 'pending') {
+                return redirect()->back()->with('error', 'Yêu cầu này đã được xử lý trước đó.');
+            }
+
+            $role = Role::where('name', $approval->requested_role)->first();
+            if ($role) {
+                $user->update(['role_id' => $role->role_id]);
+            }
+
+            $approval->update([
+                'status' => 'approved',
+                'processed_at' => now(),
+                'processed_by' => auth()->id()
+            ]);
+
+            // Ghi log kiểm duyệt
+            DB::table('moderation_logs')->insert([
+                'content_type' => 'role_upgrade',
+                'content_id' => $approval->user_id,
+                'action_type' => 'approve',
+                'moderator_id' => auth()->id(),
+                'details' => json_encode([
+                    'action' => 'Duyệt yêu cầu nâng cấp vai trò',
+                    'username' => $user->username,
+                    'requested_role' => $approval->requested_role,
+                    'approval_id' => $approval->approval_id
+                ]),
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            return redirect()
+                ->back()
+                ->with('success', 'Duyệt yêu cầu thành công!');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Lỗi khi duyệt yêu cầu nâng cấp vai trò: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Có lỗi xảy ra khi duyệt yêu cầu: ' . $e->getMessage());
         }
-
-        $approval->update(['status' => 'approved']);
-
-        return redirect()
-            ->back()
-            ->with('success', 'Duyệt yêu cầu thành công!');
     }
 
     /**
@@ -102,23 +133,19 @@ class UserController extends Controller
     {
         try {
             $approval = Approval::findOrFail($id);
-            
+            $user = $approval->user;
+
             // Kiểm tra xem yêu cầu đã được xử lý chưa
             if ($approval->status !== 'pending') {
                 return redirect()->back()->with('error', 'Yêu cầu này đã được xử lý trước đó.');
             }
 
-            // Validate lý do từ chối
-            $request->validate([
-                'reject_reason' => 'required|string|min:10|max:500'
+            $approval->update([
+                'status' => 'rejected',
+                'processed_at' => now(),
+                'processed_by' => auth()->id(),
+                'rejection_reason' => $request->input('rejection_reason')
             ]);
-
-            // Cập nhật trạng thái yêu cầu
-            $approval->status = 'rejected';
-            $approval->reject_reason = $request->reject_reason;
-            $approval->processed_at = now();
-            $approval->processed_by = auth()->id();
-            $approval->save();
 
             // Ghi log kiểm duyệt
             DB::table('moderation_logs')->insert([
@@ -126,19 +153,22 @@ class UserController extends Controller
                 'content_id' => $approval->user_id,
                 'action_type' => 'reject',
                 'moderator_id' => auth()->id(),
-                'reason' => $request->reject_reason,
+                'details' => json_encode([
+                    'action' => 'Từ chối yêu cầu nâng cấp vai trò',
+                    'username' => $user->username,
+                    'requested_role' => $approval->requested_role,
+                    'approval_id' => $approval->approval_id,
+                    'rejection_reason' => $request->input('rejection_reason')
+                ]),
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
 
-            // Gửi thông báo cho người dùng
-            if ($approval->user) {
-                $approval->user->notify(new \App\Notifications\RoleUpgradeRejected($approval));
-            }
-
-            return redirect()->back()->with('success', 'Đã từ chối yêu cầu nâng cấp vai trò.');
+            return redirect()
+                ->back()
+                ->with('success', 'Từ chối yêu cầu thành công!');
         } catch (\Exception $e) {
-            \Log::error('Lỗi khi từ chối yêu cầu nâng cấp vai trò: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Lỗi khi từ chối yêu cầu nâng cấp vai trò: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Có lỗi xảy ra khi từ chối yêu cầu: ' . $e->getMessage());
         }
     }
