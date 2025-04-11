@@ -25,6 +25,7 @@ class Article extends Model
         'contains_sensitive_content',
         'author_id',
         'category_id',
+        'subcategory_id',
         'thumbnail_url',
         'status',
         'views',
@@ -56,13 +57,25 @@ class Article extends Model
     }
 
     /**
-     * Quan hệ với bảng `categories`
+     * Quan hệ với bảng `categories` (danh mục chính - cha)
      */
     public function category()
     {
         return $this->belongsTo(
             Category::class,
             'category_id',
+            'category_id'
+        );
+    }
+
+    /**
+     * Quan hệ với bảng `categories` (danh mục phụ - con)
+     */
+    public function subcategory()
+    {
+        return $this->belongsTo(
+            Category::class,
+            'subcategory_id',
             'category_id'
         );
     }
@@ -74,6 +87,15 @@ class Article extends Model
         }
 
         return $this->category->is_active ? $this->category->name : 'Không hoạt động';
+    }
+
+    public function getSubcategoryNameAttribute()
+    {
+        if (! $this->subcategory) {
+            return 'Không có danh mục con';
+        }
+
+        return $this->subcategory->is_active ? $this->subcategory->name : 'Không hoạt động';
     }
 
     public function tags()

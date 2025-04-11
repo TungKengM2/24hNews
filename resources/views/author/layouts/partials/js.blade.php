@@ -42,3 +42,4 @@
     referrerpolicy="origin"></script>
 
     @include('shared.tiny')
+    @include('shared.processor')
