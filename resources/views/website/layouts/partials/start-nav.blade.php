@@ -182,7 +182,8 @@
                                 </li>
 
                             @elseif ($user->role_id == 4){{-- user  --}}
-                                <li><a class="dropdown-item" href="{{ route('user.dashboard') }}">
+                                {{-- dat them hiển thị profile user --}}
+                                <li><a class="dropdown-item" href="{{ route('website.profileUser', ['id' => auth()->id()]) }}">
                                         <i class="la la-tv fs-4"></i> Thông Tin Tài Khoản
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('viewed.articles') }}">
@@ -201,6 +202,12 @@
                                         <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
                                     </a>
                                 </li>
+                                {{-- dat them --}}
+                                <li><a class="dropdown-item" href="{{ route('user.change-password') }}">
+                                        <i class="la la-lock fs-4"></i> Đổi Mật Khẩu
+                                    </a>
+                                </li>
+
                             @endif
 
                             {{-- Đăng Xuất --}}
