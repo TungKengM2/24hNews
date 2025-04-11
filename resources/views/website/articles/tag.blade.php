@@ -1,6 +1,16 @@
 @extends('website.layouts.master')
 
 @section('content')
+<style>
+.hr-section {
+    background-color: #f9f9f9;
+    padding: 20px 0;
+}
+.hr-section .title a:hover {
+    color: #0056b3;
+}
+
+</style>
     <main>
         <section class="tc-category-header py-4 bg-light border-bottom">
             <div class="container">
@@ -90,7 +100,7 @@
         <!-- ====== end ====== -->
 
         <!-- ====== start Latest news ====== -->
-        <section class="tc-latest-news-style1">
+        <section class="hr-section">
             <div class="container">
                 <div class="section-content pt-50 pb-50 border-bottom border-1 brd-gray">
                     <div class="row gx-5">
@@ -175,9 +185,6 @@
                         
 
 
-
-
-
                         </div>
                         <div class="col-lg-3">
                             <div class="tc-widget-tags-style3">
@@ -200,115 +207,39 @@
         <!-- ====== end Latest news ====== -->
 
 
-        <!-- ====== start collectibles carousel ====== -->
-<section class="collectibles py-60">
-    <div class="container">
-      <div class="content radius-5 p-30" style="background: linear-gradient(to right, #0f2027, #203a43, #2c5364);">
-        <div class="d-flex justify-content-between align-items-center mb-40">
-          <h3 class="text-uppercase fsz-14px text-white mb-0">Latest Collectibles</h3>
-          <a href="page-blog.html" class="fsz-12px text-white text-uppercase">
-            View All <i class="la la-angle-right"></i>
-          </a>
+    <!-- ====== Tin tức có thể quan tâm ====== -->
+    <section class="tc-news-style1">
+        <div class="container">
+            <div class="content pt-50 pb-50 border-1 border-top brd-gray">
+                <h5 class="color-000 text-uppercase mb-40 ltspc-1 fw-bold">Tin Tức Có Thể Quan Tâm
+                    <i class="la la-angle-right ms-1"></i>
+                </h5>
+                <div class="row">
+                    @foreach ($otherArticles as $data)
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="news-card h-100 shadow-sm rounded overflow-hidden">
+                                <div class="img img-cover th-200">
+                                    <img src="{{ $data->thumbnail_url ? asset('storage/' . $data->thumbnail_url) : 'https://via.placeholder.com/400' }}"
+                                        alt="{{ $data->title }}">
+                                </div>
+                                <div class="info p-3">
+                                    <h6 class="category text-uppercase text-primary mb-2">
+                                        {{ $data['category']->name }}
+                                    </h6>
+                                    <h5 class="title mb-3">{{ $data->title }}</h5>
+                                    <a href="{{ Auth::check() ? route('articles.article', $data->slug) : url('/login-user') }}"
+                                        class="btn btn-sm btn-outline-primary mt-2">
+                                        Xem chi tiết <i class="la la-angle-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
-  
-        <!-- Swiper container -->
-        <div class="swiper collectibles-swiper">
-          <div class="swiper-wrapper">
-  
-            <!-- Slide item -->
-            <div class="swiper-slide">
-              <a href="page-single-post-creative.html" class="img img-cover radius-5 th-230 d-block mb-15">
-                <img src="https://newzin-html.themescamp.com/assets/img/latest/97.png" alt="">
-              </a>
-              <h6 class="title text-white mb-10">
-                <a href="page-single-post-creative.html" class="hover-underline">MekaVerse Collection Surpasses</a>
-              </h6>
-              <p class="text-white-50 fsz-13px">
-                <i class="la la-clock me-5"></i> 24 minutes ago
-              </p>
-            </div>
-  
-            <!-- You can duplicate this block for repeating posts -->
-            <div class="swiper-slide">
-              <a href="page-single-post-creative.html" class="img img-cover radius-5 th-230 d-block mb-15">
-                <img src="https://newzin-html.themescamp.com/assets/img/latest/98.png" alt="">
-              </a>
-              <h6 class="title text-white mb-10">
-                <a href="page-single-post-creative.html" class="hover-underline">Party Degenerates NFT Project</a>
-              </h6>
-              <p class="text-white-50 fsz-13px">
-                <i class="la la-clock me-5"></i> 10 days ago
-              </p>
-            </div>
-  
-            <!-- Repeat as needed -->
-            <div class="swiper-slide">
-              <a href="page-single-post-creative.html" class="img img-cover radius-5 th-230 d-block mb-15">
-                <img src="https://newzin-html.themescamp.com/assets/img/latest/100.png" alt="">
-              </a>
-              <h6 class="title text-white mb-10">
-                <a href="page-single-post-creative.html" class="hover-underline">The Notorious Frogs of Frogland</a>
-              </h6>
-              <p class="text-white-50 fsz-13px">
-                <i class="la la-clock me-5"></i> 10 hours ago
-              </p>
-            </div>
-  
-            <!-- More duplicated slides if needed -->
-            <div class="swiper-slide">
-              <a href="page-single-post-creative.html" class="img img-cover radius-5 th-230 d-block mb-15">
-                <img src="https://newzin-html.themescamp.com/assets/img/latest/97.png" alt="">
-              </a>
-              <h6 class="title text-white mb-10">
-                <a href="page-single-post-creative.html" class="hover-underline">MekaVerse Collection Surpasses</a>
-              </h6>
-              <p class="text-white-50 fsz-13px">
-                <i class="la la-clock me-5"></i> 24 minutes ago
-              </p>
-            </div>
-  
-          </div>
-  
-          <!-- Swiper navigation buttons -->
-          <div class="swiper-button-next"></div>
-          <div class="swiper-button-prev"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- ====== end collectibles carousel ====== -->
-  
-  <!-- Swiper CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-  
-  <!-- Swiper JS -->
-  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  
-  <!-- Swiper Init -->
-  <script>
-    const swiper = new Swiper('.collectibles-swiper', {
-      slidesPerView: 3,
-      spaceBetween: 30,
-      loop: true,
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-      breakpoints: {
-        992: {
-          slidesPerView: 3
-        },
-        768: {
-          slidesPerView: 2
-        },
-        0: {
-          slidesPerView: 1
-        }
-      }
-    });
-  </script>
-  
-
+    </section>
+    <!-- ====== end tin tức có thể quan tâm ====== -->
 
         
 
