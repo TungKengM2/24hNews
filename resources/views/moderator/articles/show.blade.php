@@ -33,7 +33,8 @@
                     <div class="box-tools">
                         <div class="btn-group">
                             @if ($article->status === 'pending')
-                                <form action="{{ route('moderator.articles.approve', $article) }}" method="POST" class="d-inline">
+                                <form action="{{ route('moderator.articles.approve', $article) }}" method="POST"
+                                    class="d-inline">
                                     @csrf
                                     @method('PATCH')
                                     <button type="submit" class="btn btn-success btn-sm" title="Duyệt bài viết"
@@ -42,15 +43,48 @@
                                     </button>
                                 </form>
 
-                                <form action="{{ route('moderator.articles.reject', $article) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="button" class="btn btn-danger btn-sm" title="Từ chối bài viết"
-                                        data-bs-toggle="modal" data-bs-target="#rejectModal">
-                                        <i class="fa fa-times"></i> Từ chối
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-danger btn-sm" title="Từ chối bài viết"
+                                    data-bs-toggle="modal" data-bs-target="#rejectModal">
+                                    <i class="fa fa-times"></i> Từ chối
+                                </button>
+
+                                <!-- Modal Từ chối bài viết -->
+                                <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form action="{{ route('moderator.articles.reject', $article) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="rejectModalLabel">Từ chối bài viết</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label for="rejection_reason">Lý do từ chối</label>
+                                                        <textarea class="form-control" id="rejection_reason" name="rejection_reason" rows="3" required></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Hủy</button>
+                                                    <button type="submit" class="btn btn-danger">Xác nhận từ chối</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             @endif
+                            <a href="{{ route('moderator.articles.versions', $article) }}" class="btn btn-info btn-sm m-5">
+                                <i class="fas fa-history"></i> Lịch sử phiên bản
+                            </a>
+                            <a href="{{ route('moderator.articles.moderation-history', $article) }}"
+                                class="btn btn-info btn-sm me-2">
+                                <i class="fas fa-history"></i> Lịch sử kiểm duyệt
+                            </a>
                             <a href="{{ route('moderator.articles.index') }}" class="btn btn-default btn-sm">
                                 <i class="mdi mdi-arrow-left"></i> Quay lại
                             </a>
@@ -69,7 +103,8 @@
                                     <div class="row mb-3">
                                         <div class="col-md-12">
                                             <h4><i class="mdi mdi-title"></i> {{ $article->title }}</h4>
-                                            <p class="text-muted"><i class="mdi mdi-link-variant"></i> {{ $article->slug }}</p>
+                                            <p class="text-muted"><i class="mdi mdi-link-variant"></i> {{ $article->slug }}
+                                            </p>
                                         </div>
                                     </div>
 
@@ -114,11 +149,13 @@
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-account"></i> Tác giả:</span>
-                                            <span class="badge bg-primary rounded-pill">{{ $article->author->username ?? 'Không có' }}</span>
+                                            <span
+                                                class="badge bg-primary rounded-pill">{{ $article->author->username ?? 'Không có' }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-folder"></i> Danh mục:</span>
-                                            <span class="badge bg-info rounded-pill">{{ $article->category->name ?? 'Không có' }}</span>
+                                            <span
+                                                class="badge bg-info rounded-pill">{{ $article->category->name ?? 'Không có' }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-eye"></i> Lượt xem:</span>
@@ -126,19 +163,21 @@
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-check-circle"></i> Trạng thái:</span>
-                                            <span class="badge bg-{{ $article->status == 'published' ? 'success' : 'warning' }} rounded-pill">
+                                            <span
+                                                class="badge bg-{{ $article->status == 'published' ? 'success' : 'warning' }} rounded-pill">
                                                 {{ ucfirst($article->status) }}
                                             </span>
                                         </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{-- <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-alert-circle"></i> Nội dung nhạy cảm:</span>
                                             <span class="badge bg-{{ $article->contains_sensitive_content ? 'danger' : 'success' }} rounded-pill">
                                                 {{ $article->contains_sensitive_content ? 'Có' : 'Không' }}
                                             </span>
-                                        </li>
+                                        </li> --}}
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-account-check"></i> Được duyệt bởi:</span>
-                                            <span class="badge bg-dark rounded-pill">{{ $article->approver->username ?? 'Chưa được duyệt' }}</span>
+                                            <span
+                                                class="badge bg-dark rounded-pill">{{ $article->approver->username ?? 'Chưa được duyệt' }}</span>
                                         </li>
                                         <li class="list-group-item">
                                             <span><i class="mdi mdi-tag-multiple"></i> Thẻ:</span>

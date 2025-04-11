@@ -3,79 +3,8 @@
 @section('head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- Style -->
-    <style>
-        .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: #c3bebe;
-            color: white;
-            border: 1px solid #c2c2c2;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 14px;
-        }
 
-        #image-preview-container {
-            margin-top: 10px;
-            text-align: center;
-            max-width: 300px;
-        }
 
-        #image-preview {
-            max-height: 150px;
-            width: auto;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 5px;
-        }
-
-        #moderation-result {
-            margin-top: 10px;
-        }
-
-        .moderation-loading {
-            text-align: center;
-            padding: 10px;
-        }
-
-        .violation-high {
-            color: #dc3545;
-            font-weight: bold;
-        }
-
-        .violation-medium {
-            color: #fd7e14;
-            font-weight: bold;
-        }
-
-        .violation-low {
-            color: #ffc107;
-        }
-
-        .violation-none {
-            color: #28a745;
-        }
-
-        .form-section {
-            margin-bottom: 30px;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .form-section-title {
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-            font-weight: 600;
-        }
-
-        .action-buttons {
-            margin-top: 30px;
-            display: flex;
-            gap: 10px;
-        }
-    </style>
 @endsection
 
 @section('title')
@@ -155,8 +84,8 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('author.articles.store') }}" method="POST" enctype="multipart/form-data"
-                            id="articleForm">
+                                <form action="{{ route('author.articles.store') }}" method="POST" enctype="multipart/form-data"
+                                    id="articleForm">
                             @csrf
 
                             <div class="form-section">
@@ -177,12 +106,12 @@
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Danh mục</label>
-                                        <select name="category_id" class="form-control">
-                                            @foreach ($categories as $category)
+                                        <label class="form-label">Danh mục chính</label>
+                                        <select name="category_id" id="parent_category" class="form-control select2-categories">
+                                            <option value="">-- Chọn danh mục chính --</option>
+                                            @foreach ($parentCategories as $category)
                                                 @if ($category->is_active)
-                                                    <option value="{{ $category->category_id }}">{{ $category->name }}
-                                                    </option>
+                                                    <option value="{{ $category->category_id }}">{{ $category->name }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -199,6 +128,13 @@
                                             @endforeach
                                         </select>
                                         <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới (chấp nhận cả chữ và số).</small>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Danh mục phụ</label>
+                                        <select name="subcategory_id" id="child_category" class="form-control select2-subcategories" disabled>
+                                            <option value="">-- Chọn danh mục phụ --</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -242,8 +178,14 @@
                                         </div>
 
                                         <div id="moderation-result" style="display: none;">
+                                            <div id="moderation-loading" class="alert alert-info" style="display: none;">
+                                                <strong><i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...</strong> Vui lòng đợi trong giây lát.
+                                            </div>
                                             <div id="moderation-error" class="alert alert-danger" style="display: none;">
                                                 <strong>Lỗi!</strong> <span id="error-message"></span>
+                                            </div>
+                                            <div id="moderation-success" class="alert alert-success" style="display: none;">
+                                                <strong><i class="fas fa-check-circle"></i> Thành công!</strong> Ảnh đã được kiểm duyệt và không vi phạm quy định.
                                             </div>
                                         </div>
                                     </div>
@@ -274,7 +216,65 @@
                                 <button type="submit" class="btn btn-primary" id="submitButton">Gửi đi</button>
                                 <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
                             </div>
-                        </form>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="verification-criteria">
+                                <h4 class="verification-criteria-title">Tiêu chí xuất bản</h4>
+                                <div class="criteria-content">
+                                    <ul class="criteria-list" id="criteria-list">
+                                        <li class="criteria-item failed" id="criteria-title" data-target="title">
+                                            <div class="criteria-icon failed">✗</div>
+                                            <div class="criteria-text criteria-tooltip">
+                                                Tiêu đề từ 50-60 ký tự <span id="current-title-length">(0 ký tự)</span>
+                                                <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy đủ trên Google và tối ưu cho SEO</span>
+                                            </div>
+                                        </li>
+                                        <li class="criteria-item failed" id="criteria-category" data-target="parent_category">
+                                            <div class="criteria-icon failed">✗</div>
+                                            <div class="criteria-text criteria-tooltip">
+                                                Chọn danh mục chính và phụ
+                                                <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ phù hợp với nội dung bài viết</span>
+                                            </div>
+                                        </li>
+                                        <li class="criteria-item failed" id="criteria-tags" data-target="tags">
+                                            <div class="criteria-icon failed">✗</div>
+                                            <div class="criteria-text criteria-tooltip">
+                                                Chọn 2-5 thẻ tag liên quan <span id="current-tag-count">(0 thẻ)</span>
+                                                <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và tăng khả năng xuất hiện trong tìm kiếm</span>
+                                            </div>
+                                        </li>
+                                        <li class="criteria-item failed" id="criteria-thumbnail" data-target="thumbnail_url">
+                                            <div class="criteria-icon failed">✗</div>
+                                            <div class="criteria-text criteria-tooltip">
+                                                Ảnh đại diện chất lượng cao
+                                                <span class="tooltip-text">Ảnh đại diện tối thiểu 1200x630px, rõ nét và vượt qua kiểm duyệt</span>
+                                            </div>
+                                        </li>
+                                        <li class="criteria-item failed" id="criteria-content" data-target="content">
+                                            <div class="criteria-icon failed">✗</div>
+                                            <div class="criteria-text criteria-tooltip">
+                                                Nội dung từ 800-1500 từ <span id="current-word-count">(0 từ)</span>
+                                                <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn trong kết quả tìm kiếm và tối ưu cho người đọc</span>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+
+                                    <div class="progress-container">
+                                        <div class="criteria-progress">
+                                            <div class="criteria-progress-bar" id="criteria-progress-bar"></div>
+                                        </div>
+                                        <div class="text-center mt-2">
+                                            <small id="criteria-count">0/4 tiêu chí đạt</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                         <!-- Scripts -->
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -288,6 +288,68 @@
                                     tokenSeparators: [',', ' '],
                                     placeholder: 'Chọn hoặc nhập thẻ mới',
                                     allowClear: true,
+                                });
+
+                                // Khởi tạo Select2 cho danh mục cha
+                                $('.select2-categories').select2({
+                                    placeholder: 'Chọn danh mục chính',
+                                    allowClear: true
+                                });
+
+                                // Khởi tạo Select2 cho danh mục con
+                                $('.select2-subcategories').select2({
+                                    placeholder: 'Chọn danh mục phụ',
+                                    allowClear: true
+                                });
+
+                                // Xử lý khi thay đổi danh mục con
+                                $('#child_category').on('change', function() {
+                                    // Cập nhật tiêu chí danh mục
+                                    if (window.updateCriteria) {
+                                        window.updateCriteria();
+                                    }
+                                });
+
+                                // Xử lý khi thay đổi danh mục cha
+                                $('#parent_category').on('change', function() {
+                                    var parentId = $(this).val();
+                                    var childSelect = $('#child_category');
+
+                                    // Reset danh mục con
+                                    childSelect.empty().append('<option value="">-- Chọn danh mục phụ --</option>');
+
+                                    // Cập nhật tiêu chí danh mục
+                                    if (window.updateCriteria) {
+                                        window.updateCriteria();
+                                    }
+
+                                    if (parentId) {
+                                        // Enable select danh mục con
+                                        childSelect.prop('disabled', false);
+
+                                        // Gọi AJAX để lấy danh sách danh mục con
+                                        $.ajax({
+                                            url: '{{ route("author.ajax.subcategories") }}',
+                                            type: 'GET',
+                                            data: {
+                                                parent_id: parentId
+                                            },
+                                            success: function(response) {
+                                                if (response.success && response.data.length > 0) {
+                                                    // Thêm các option mới
+                                                    $.each(response.data, function(key, value) {
+                                                        childSelect.append('<option value="' + value.category_id + '">' + value.name + '</option>');
+                                                    });
+                                                }
+                                            },
+                                            error: function() {
+                                                console.error('Lỗi khi lấy danh sách danh mục con');
+                                            }
+                                        });
+                                    } else {
+                                        // Disable select danh mục con
+                                        childSelect.prop('disabled', true);
+                                    }
                                 });
                             });
 
@@ -319,9 +381,13 @@
                             document.addEventListener('DOMContentLoaded', function() {
                                 // Ẩn các thành phần moderation khi trang mới tải
                                 const moderationResult = document.getElementById('moderation-result');
+                                const loadingDiv = document.getElementById('moderation-loading');
                                 const errorDiv = document.getElementById('moderation-error');
+                                const successDiv = document.getElementById('moderation-success');
                                 if (moderationResult) moderationResult.style.display = 'none';
+                                if (loadingDiv) loadingDiv.style.display = 'none';
                                 if (errorDiv) errorDiv.style.display = 'none';
+                                if (successDiv) successDiv.style.display = 'none';
 
                                 // Xử lý sinh slug tự động từ tiêu đề
                                 document.getElementById('title').addEventListener('input', function() {
@@ -346,7 +412,8 @@
                                     'gambling': 'Hình ảnh liên quan đến cờ bạc, đánh bạc',
                                 };
 
-                                let isImageValid = false;
+                                // Make isImageValid global so it can be accessed by the verification criteria system
+                                window.isImageValid = false;
                                 const submitButton = document.getElementById('submitButton');
 
                                 // Chỉ có một sự kiện lắng nghe cho phần tử thumbnail_url
@@ -356,6 +423,16 @@
                                         const file = e.target.files[0];
                                         if (file) {
                                             isImageValid = false;
+
+                                            // Hiển thị thông báo đang kiểm tra và ẩn các thông báo khác
+                                            const moderationResult = document.getElementById('moderation-result');
+                                            const loadingDiv = document.getElementById('moderation-loading');
+                                            const errorDiv = document.getElementById('moderation-error');
+                                            const successDiv = document.getElementById('moderation-success');
+                                            if (moderationResult) moderationResult.style.display = 'block';
+                                            if (loadingDiv) loadingDiv.style.display = 'block';
+                                            if (errorDiv) errorDiv.style.display = 'none';
+                                            if (successDiv) successDiv.style.display = 'none';
 
                                             // Xử lý preview ảnh
                                             const reader = new FileReader();
@@ -387,17 +464,24 @@
                                                 })
                                                 .then(result => {
                                                     const moderationResult = document.getElementById('moderation-result');
+                                                    const loadingDiv = document.getElementById('moderation-loading');
                                                     const errorDiv = document.getElementById('moderation-error');
                                                     const errorMessage = document.getElementById('error-message');
 
+                                                    // Ẩn thông báo đang kiểm tra
+                                                    if (loadingDiv) loadingDiv.style.display = 'none';
                                                     moderationResult.style.display = 'block';
 
                                                     if (result.status === 'error') {
                                                         errorDiv.style.display = 'block';
                                                         errorMessage.textContent = result.message ||
                                                             'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
-                                                        isImageValid = false;
+                                                        window.isImageValid = false;
                                                         submitButton.disabled = true;
+                                                        // Update verification criteria if function exists
+                                                        if (typeof updateCriteria === 'function') {
+                                                            updateCriteria();
+                                                        }
                                                     } else if (result.violation_level !== 'none') {
                                                         errorDiv.style.display = 'block';
                                                         let violationMessages = [];
@@ -407,26 +491,64 @@
                                                         }
 
                                                         errorMessage.innerHTML = `Vi phạm: ${violationMessages.join(', ')}`;
-                                                        isImageValid = false;
+                                                        window.isImageValid = false;
                                                         submitButton.disabled = true;
+                                                        // Update verification criteria if function exists
+                                                        if (typeof updateCriteria === 'function') {
+                                                            updateCriteria();
+                                                        }
                                                     } else {
+                                                        // Ẩn thông báo lỗi
                                                         errorDiv.style.display = 'none';
-                                                        isImageValid = true;
+
+                                                        // Hiển thị thông báo thành công
+                                                        const successDiv = document.getElementById('moderation-success');
+                                                        successDiv.style.display = 'block';
+                                                        successDiv.style.opacity = '1';
+
+                                                        // Cập nhật trạng thái hình ảnh hợp lệ
+                                                        window.isImageValid = true;
                                                         submitButton.disabled = false;
+
+                                                        // Cập nhật tiêu chí kiểm tra
+                                                        if (typeof updateCriteria === 'function') {
+                                                            updateCriteria();
+                                                        }
+
+                                                        // Tự động ẩn thông báo thành công sau 3 giây
+                                                        setTimeout(function() {
+                                                            // Hiệu ứng mờ dần trong 1 giây
+                                                            const fadeEffect = setInterval(function() {
+                                                                if (successDiv.style.opacity > 0) {
+                                                                    successDiv.style.opacity -= 0.1;
+                                                                } else {
+                                                                    clearInterval(fadeEffect);
+                                                                    successDiv.style.display = 'none';
+                                                                }
+                                                            }, 100);
+                                                        }, 3000);
                                                     }
                                                 })
                                                 .catch(error => {
                                                     console.error('Lỗi kiểm duyệt:', error);
                                                     const moderationResult = document.getElementById('moderation-result');
+                                                    const loadingDiv = document.getElementById('moderation-loading');
                                                     const errorDiv = document.getElementById('moderation-error');
                                                     const errorMessage = document.getElementById('error-message');
 
+                                                    // Ẩn thông báo đang kiểm tra
+                                                    if (loadingDiv) loadingDiv.style.display = 'none';
                                                     moderationResult.style.display = 'block';
                                                     errorDiv.style.display = 'block';
-                                                    errorMessage.textContent = 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' +
-                                                        error.message;
-                                                    isImageValid = false;
+
+                                                    errorMessage.textContent = 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
+                                                    window.isImageValid = false;
+
                                                     submitButton.disabled = true;
+                                                    // Update verification criteria if function exists
+                                                    if (typeof updateCriteria === 'function') {
+                                                        updateCriteria();
+                                                    }
                                                 });
 
                                             // Nếu cần xử lý mammoth (chuyển đổi .docx)
@@ -455,17 +577,69 @@
                                 const form = document.getElementById('articleForm');
                                 if (form) {
                                     form.addEventListener('submit', function(e) {
+                                        // Nếu là lưu nháp, cho phép submit mà không cần kiểm tra
                                         if (document.getElementById('articleStatus').value === 'draft') {
                                             return true;
                                         }
 
-                                        if (thumbnailInput && thumbnailInput.files && thumbnailInput.files[0] && !
-                                            isImageValid) {
+
+                                        // Kiểm tra ảnh có vi phạm không
+                                        if (thumbnailInput && thumbnailInput.files && thumbnailInput.files[0] && !isImageValid) {
+
                                             e.preventDefault();
                                             alert('Vui lòng chọn hình ảnh khác tuân thủ quy định nội dung.');
                                             thumbnailInput.focus();
                                             return false;
                                         }
+
+                                        // Kiểm tra các tiêu chí khác
+                                        const criteriaItems = document.querySelectorAll('.criteria-item.passed');
+                                        const criteriaCount = criteriaItems.length;
+
+                                        // Kiểm tra danh mục chính và danh mục phụ
+                                        const parentCategory = document.getElementById('parent_category').value;
+                                        if (!parentCategory) {
+                                            e.preventDefault();
+                                            alert('Vui lòng chọn danh mục cho bài viết.');
+                                            return false;
+                                        }
+
+                                        if (criteriaCount < 4) {
+                                            // Sử dụng SweetAlert2 thay vì confirm mặc định
+                                            e.preventDefault(); // Ngăn chặn submit form trước
+
+                                            // Tạo danh sách các tiêu chí chưa đạt
+                                            const failedCriteria = [];
+                                            document.querySelectorAll('.criteria-item.failed').forEach(item => {
+                                                const criteriaText = item.querySelector('.criteria-text').textContent.split('(')[0].trim();
+                                                failedCriteria.push(`<li>${criteriaText}</li>`);
+                                            });
+
+                                            Swal.fire({
+                                                title: 'Bài viết chưa đạt tất cả tiêu chí',
+                                                html: `
+                                                    <div class="text-left">
+                                                        <p>Bài viết của bạn chưa đạt các tiêu chí sau:</p>
+                                                        <ul class="text-danger">${failedCriteria.join('')}</ul>
+                                                        <p>Bạn vẫn muốn gửi bài?</p>
+                                                    </div>
+                                                `,
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3085d6',
+                                                cancelButtonColor: '#d33',
+                                                confirmButtonText: 'Vẫn gửi bài',
+                                                cancelButtonText: 'Chỉnh sửa thêm'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    // Nếu người dùng xác nhận, submit form
+                                                    document.getElementById('articleForm').submit();
+                                                }
+                                            });
+
+                                            return false;
+                                        }
+
                                         return true;
                                     });
                                 }
@@ -473,7 +647,8 @@
                         </script>
 
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.8/mammoth.browser.min.js"></script>
-                    </div>
+
+
                 </div>
             </div>
         </div>
