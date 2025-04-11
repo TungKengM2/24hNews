@@ -18,11 +18,11 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link {{ request()->is('/') ? 'active-home' : '' }}" href="{{ url('/') }}">
                         <i class="la la-home fs-4"></i>
                     </a>
-                </li>
+                </li> --}}
 
                 {{-- dat them --}}
                 @foreach ($categories as $category)
@@ -205,6 +205,11 @@
                                 {{-- dat them --}}
                                 <li><a class="dropdown-item" href="{{ route('user.change-password') }}">
                                         <i class="la la-lock fs-4"></i> Đổi Mật Khẩu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('user.upgrade') }}">
+                                        <i class="ti-arrow-up text-muted me-2"></i> Thành người viết báo
                                     </a>
                                 </li>
 
