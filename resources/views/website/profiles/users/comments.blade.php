@@ -23,7 +23,7 @@
         <section class="tc-author-details">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-lg-5">
+                    <div class="">
                         <div class="content">
                             <div class="author-img img-cover">
                                 <div class="widget-user-image">
@@ -48,7 +48,7 @@
                                             @if ($comments->isEmpty())
                                                 <p>Người dùng này chưa có bình luận nào.</p>
                                             @else
-                                                <table class="table table-bordered table-dark mb-0" style="width:100%">
+                                                <table class="table table-bordered mb-0" style="width:100%; background-color: white; border: 1px solid black;">
                                                     <thead>
                                                         <tr>
                                                             <th>STT</th>

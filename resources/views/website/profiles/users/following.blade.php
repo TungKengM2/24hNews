@@ -23,7 +23,7 @@
         <section class="tc-author-details">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-lg-5">
+                    <div class="">
                         <div class="content">
                             <div class="author-img img-cover">
                                 <div class="widget-user-image">
@@ -37,18 +37,19 @@
                                         style="display: none;">
                                 </div>
                             </div>
+                            
                             <div class="info mt-20">
                                 <div class="description mt-20">
-                                    <p class="color-666 mb-20"> {{ $user->description ?? 'Không Có Mô Tả Trang Cá Nhân' }}
+                                   
                                     </p>
                                     {{-- dat them hiển thị bài viết đã xem --}}
                                     <h4 class="page-title">Danh sách những người bạn đang theo dõi</h4>
-                                        <div class="container">
+                                        <div class="">
                                             <div class="table-responsive">
                                                 @if ($followingUsers->isEmpty())
                                                     <p>Bạn chưa theo dõi ai.</p>
                                                 @else
-                                                    <table class="table table-bordered table-dark mb-0">
+                                                    <table class="table table-bordered text-dark bg-white mb-0" style="border: 2px solid black;">
                                                         <thead>
                                                             <tr>
                                                                 <th>STT</th>
