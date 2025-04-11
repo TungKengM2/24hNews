@@ -35,43 +35,49 @@
                                     <div class="col-md-8">
                                         <div class="info">
                                             <div class="d-flex align-items-center mb-3">
-                                                <div class="rate me-3">
-                                                    @for ($i = 1; $i <= 5; $i++)
-                                                        @if ($i <= floor($averageRating))
-                                                            <i class="la la-star text-warning"></i> {{-- Sao đầy --}}
-                                                        @elseif ($i == ceil($averageRating) && $averageRating - floor($averageRating) > 0)
-                                                            @if ($averageRating - floor($averageRating) >= 0.75)
+                                                @if (in_array($author->role->name, ['admin', 'author']))
+                                                    <div class="rate me-3">
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            @if ($i <= floor($averageRating))
                                                                 <i class="la la-star text-warning"></i>
-                                                                {{-- Hiển thị sao đầy nếu > 0.75 --}}
-                                                            @elseif ($averageRating - floor($averageRating) >= 0.25)
-                                                                <i class="la la-star-half-alt text-warning"></i>
-                                                                {{-- Sao nửa --}}
+                                                                {{-- Sao đầy --}}
+                                                            @elseif ($i == ceil($averageRating) && $averageRating - floor($averageRating) > 0)
+                                                                @if ($averageRating - floor($averageRating) >= 0.75)
+                                                                    <i class="la la-star text-warning"></i>
+                                                                    {{-- Hiển thị sao đầy nếu > 0.75 --}}
+                                                                @elseif ($averageRating - floor($averageRating) >= 0.25)
+                                                                    <i class="la la-star-half-alt text-warning"></i>
+                                                                    {{-- Sao nửa --}}
+                                                                @else
+                                                                    <i class="la la-star-o text-secondary"></i>
+                                                                    {{-- Sao rỗng nếu < 0.25 --}}
+                                                                @endif
                                                             @else
                                                                 <i class="la la-star-o text-secondary"></i>
-                                                                {{-- Sao rỗng nếu < 0.25 --}}
+                                                                {{-- Sao rỗng --}}
                                                             @endif
-                                                        @else
-                                                            <i class="la la-star-o text-secondary"></i>
-                                                            {{-- Sao rỗng --}}
-                                                        @endif
-                                                    @endfor
-                                                    <span
-                                                        class="text-muted ms-2">({{ number_format($averageRating, 1) }})</span>
-                                                </div>
-
+                                                        @endfor
+                                                        <span
+                                                            class="text-muted ms-2">({{ number_format($averageRating, 1) }})</span>
+                                                    </div>
+                                                @endif
                                             </div>
 
                                             <div class="description mb-4">
                                                 <p class="lead mb-3">
                                                     {{ $author->description ?? 'Không có mô tả trang cá nhân' }}</p>
                                                 <div class="d-flex flex-wrap align-items-center text-muted">
-                                                    <div class="me-4 mb-2">
-                                                        <i class="la la-book me-1"></i> {{ $author->articles_count }} bài
-                                                        viết
-                                                    </div>
-                                                    <div class="me-4 mb-2">
-                                                        <i class="la la-user me-1"></i> {{ $followerCount }} người theo dõi
-                                                    </div>
+                                                    @if (in_array($author->role->name, ['admin', 'author']))
+                                                        <div class="me-4 mb-2">
+                                                            <i class="la la-book me-1"></i> {{ $author->articles_count }}
+                                                            bài
+                                                            viết
+                                                        </div>
+                                                        <div class="me-4 mb-2">
+                                                            <i class="la la-user me-1"></i> {{ $followerCount }} người theo
+                                                            dõi
+                                                        </div>
+                                                    @endif
                                                     <div class="mb-2">
                                                         <i class="la la-calendar me-1"></i>
                                                         @if ($author->created_at)
@@ -83,27 +89,29 @@
                                                 </div>
                                             </div>
 
-                                            <div class="follow">
-                                                @if (auth()->check() && auth()->id() !== $author->user_id)
-                                                    @if (auth()->user()->following()->where('following_id', $author->user_id)->exists())
-                                                        <form action="{{ route('user.unfollow', $author->user_id) }}"
-                                                            method="POST" class="d-inline">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-outline-danger">
-                                                                <i class="la la-user-minus me-1"></i> Bỏ theo dõi
-                                                            </button>
-                                                        </form>
-                                                    @else
-                                                        <form action="{{ route('user.follow', $author->user_id) }}"
-                                                            method="POST" class="d-inline">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-primary">
-                                                                <i class="la la-user-plus me-1"></i> Theo dõi
-                                                            </button>
-                                                        </form>
+                                            @if (in_array($author->role->name, ['admin', 'author']))
+                                                <div class="follow">
+                                                    @if (auth()->check() && auth()->id() !== $author->user_id)
+                                                        @if (auth()->user()->following()->where('following_id', $author->user_id)->exists())
+                                                            <form action="{{ route('user.unfollow', $author->user_id) }}"
+                                                                method="POST" class="d-inline">
+                                                                @csrf
+                                                                <button type="submit" class="btn btn-outline-danger">
+                                                                    <i class="la la-user-minus me-1"></i> Bỏ theo dõi
+                                                                </button>
+                                                            </form>
+                                                        @else
+                                                            <form action="{{ route('user.follow', $author->user_id) }}"
+                                                                method="POST" class="d-inline">
+                                                                @csrf
+                                                                <button type="submit" class="btn btn-primary">
+                                                                    <i class="la la-user-plus me-1"></i> Theo dõi
+                                                                </button>
+                                                            </form>
+                                                        @endif
                                                     @endif
-                                                @endif
-                                            </div>
+                                                </div>
+                                            @endif
 
                                             <div class="social-links mt-3">
                                                 <a href="#" class="btn btn-sm btn-outline-primary me-2"><i
@@ -125,77 +133,79 @@
             </div>
         </section>
         <!-- ====== end author-details ====== -->
+        @if (in_array($author->role->name, ['admin', 'author']))
+            <!-- ====== start author-post ====== -->
+            <section class="tc-author-post py-5">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h3 class="fw-bold">Bài viết của {{ $author->username }}</h3>
+                            </div>
 
-        <!-- ====== start author-post ====== -->
-        <section class="tc-author-post py-5">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-10">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h3 class="fw-bold">Bài viết của {{ $author->username }}</h3>
-                        </div>
-
-                        @if ($author->articles->count() > 0)
-                            <div class="row" id="article-container">
-                                @foreach ($articles as $index => $article)
-                                    <div class="col-md-6 mb-4 article-item"
-                                        style="{{ $index >= 4 ? 'display: none;' : '' }}">
-                                        <div class="card h-100 border-0 shadow-sm">
-                                            <div class="position-relative">
-                                                <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                    class="card-img-top" alt="{{ $article->title }}"
-                                                    style="height: 240px; object-fit: cover;">
-                                                <div class="position-absolute top-0 start-0 m-3">
-                                                    <span
-                                                        class="badge bg-primary">{{ $article->category->name ?? 'Uncategorized' }}</span>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <h4 class="card-title mb-3">
-                                                    <a href="{{ route('articles.article', $article->slug) }}"
-                                                        class="text-decoration-none text-dark">
-                                                        {{ $article->title }}
-                                                    </a>
-                                                </h4>
-                                                <p class="card-text text-muted">
-                                                    {!! Str::limit(strip_tags($article->content), 120) !!}
-                                                </p>
-                                            </div>
-                                            <div class="card-footer bg-white border-0 pt-0">
-                                                <div
-                                                    class="d-flex justify-content-between align-items-center text-muted small">
-                                                    <div>
-                                                        <i class="la la-calendar me-1"></i>
-                                                        {{ $article->created_at->format('d/m/Y') }}
+                            @if ($author->articles->count() > 0)
+                                <div class="row" id="article-container">
+                                    @foreach ($articles as $index => $article)
+                                        <div class="col-md-6 mb-4 article-item"
+                                            style="{{ $index >= 4 ? 'display: none;' : '' }}">
+                                            <div class="card h-100 border-0 shadow-sm">
+                                                <div class="position-relative">
+                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                                        class="card-img-top" alt="{{ $article->title }}"
+                                                        style="height: 240px; object-fit: cover;">
+                                                    <div class="position-absolute top-0 start-0 m-3">
+                                                        <span
+                                                            class="badge bg-primary">{{ $article->category->name ?? 'Uncategorized' }}</span>
                                                     </div>
-                                                    <div>
-                                                        <i class="la la-eye me-1"></i> {{ $article->views ?? 0 }} lượt xem
-                                                        <span class="mx-2">|</span>
-                                                        <i class="la la-comment me-1"></i>
-                                                        {{ $article->comments->count() }} bình luận
+                                                </div>
+                                                <div class="card-body">
+                                                    <h4 class="card-title mb-3">
+                                                        <a href="{{ route('articles.article', $article->slug) }}"
+                                                            class="text-decoration-none text-dark">
+                                                            {{ $article->title }}
+                                                        </a>
+                                                    </h4>
+                                                    <p class="card-text text-muted">
+                                                        {!! Str::limit(strip_tags($article->content), 120) !!}
+                                                    </p>
+                                                </div>
+                                                <div class="card-footer bg-white border-0 pt-0">
+                                                    <div
+                                                        class="d-flex justify-content-between align-items-center text-muted small">
+                                                        <div>
+                                                            <i class="la la-calendar me-1"></i>
+                                                            {{ $article->created_at->format('d/m/Y') }}
+                                                        </div>
+                                                        <div>
+                                                            <i class="la la-eye me-1"></i> {{ $article->views ?? 0 }} lượt
+                                                            xem
+                                                            <span class="mx-2">|</span>
+                                                            <i class="la la-comment me-1"></i>
+                                                            {{ $article->comments->count() }} bình luận
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
-                            </div>
+                                    @endforeach
+                                </div>
 
-                            <div class="text-center mt-4">
-                                <button id="load-more-btn" class="btn btn-outline-primary">Xem thêm bài viết</button>
-                            </div>
-                        @else
-                            <div class="alert alert-info text-center">
-                                <i class="la la-info-circle me-2"></i> Tác giả chưa có bài viết nào.
-                            </div>
-                        @endif
+                                <div class="text-center mt-4">
+                                    <button id="load-more-btn" class="btn btn-outline-primary">Xem thêm bài viết</button>
+                                </div>
+                            @else
+                                <div class="alert alert-info text-center">
+                                    <i class="la la-info-circle me-2"></i> Tác giả chưa có bài viết nào.
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-        <!-- ====== end author-post ====== -->
-        <!-- ====== start modals ====== -->
-
+            </section>
+            <!-- ====== end author-post ====== -->
+            <!-- ====== start modals ====== -->
+        @endif
+        
         <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
             aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
