@@ -112,7 +112,7 @@
                     </a>
                     <ul class="dropdownMenu" style="margin-top: 0; margin-top: -50px;" aria-labelledby="">
                         @if (Auth::check())
-                            <li><a class="dropdown-item" href="{{ route('loginuser') }}">
+                            <li><a class="dropdown-item" href="@if(Auth::user()->role_id == 1){{ route('admin.dashboard') }}@elseif(Auth::user()->role_id == 2){{ route('author.dashboard') }}@elseif(Auth::user()->role_id == 3){{ route('moderator.dashboard') }}@else{{ route('user.dashboard') }}@endif">
                                     <i class="la la-tv fs-4"></i> Dashboard
                                 </a></li>
 

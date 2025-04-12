@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\Violation;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class RandomDataSeeder extends Seeder
 {
@@ -117,6 +118,35 @@ class RandomDataSeeder extends Seeder
             $follower->following()->sync($followingIds);
         }
 
+        // Tạo dữ liệu mẫu cho moderation_logs
+        $this->createRandomData();
+
         $this->command->info('Random data seeded successfully!');
+    }
+
+    private function createRandomData()
+    {
+        // Tạo dữ liệu cho bảng article_saves
+        $users = User::all();
+        $articles = Article::all();
+
+        foreach ($users as $user) {
+            // Lấy ngẫu nhiên 5 bài viết để lưu
+            $randomArticles = $articles->random(5);
+            $saveData = [];
+            
+            foreach ($randomArticles as $article) {
+                $saveData[] = [
+                    'article_id' => $article->article_id,
+                    'user_id' => $user->user_id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+            }
+            
+            if (!empty($saveData)) {
+                DB::table('article_saves')->insertOrIgnore($saveData);
+            }
+        }
     }
 }
