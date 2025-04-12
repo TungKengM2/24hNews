@@ -30,6 +30,11 @@
                     <div class="form-items">
                         <h3>Get more things done with Loggin platform.</h3>
                         <p>Access to the most powerfull tool in the entire design and web industry.</p>
+                        @if(session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                         <form action="{{ route('loginadmin.process') }}" method="POST">
                             @csrf
                             <input class="form-control" type="email" name="email" placeholder="E-mail Address" required value="{{ old('email') }}">
