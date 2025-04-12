@@ -54,6 +54,194 @@
             transition: color 0.2s ease;
         }
     </style>
+    <style>
+        .reply-item {
+            position: relative;
+        }
+    
+        .reply-item .thread-line {
+            position: absolute;
+            top: 40px;
+            left: 18px;
+            width: 2px;
+            height: calc(100% - 40px);
+            background: #e0e0e0;
+            z-index: 0;
+        }
+    
+        .reply-avatar img {
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    
+        .reply-box {
+            background: #f0f2f5;
+            border-radius: 18px;
+            padding: 10px 15px;
+            margin-left: 10px;
+            display: inline-block;
+            max-width: 90%;
+        }
+    
+        .reply-meta {
+            font-size: 13px;
+            color: #65676b;
+        }
+    
+        .reply-actions {
+            font-size: 13px;
+            margin-top: 5px;
+            color: #65676b;
+        }
+    
+        .reply-actions button {
+            background: transparent;
+            border: none;
+            color: #65676b;
+            cursor: pointer;
+            padding: 0 6px;
+        }
+    
+        .reply-actions button:hover {
+            text-decoration: underline;
+        }
+        
+    </style>
+    <style>
+        .small-action-buttons button {
+        font-family: 'Arial', sans-serif; /* Đảm bảo font chung */
+        font-size: 14px; /* Kích thước chữ đồng đều */
+        font-weight: 600; /* Đảm bảo chữ đậm giống nhau */
+        text-transform: none; /* Ngừng chuyển chữ thành in hoa nếu có */
+    }
+    
+            /* Đảm bảo các nút có cùng kiểu chữ và định dạng */
+    .small-action-buttons button {
+        font-family: 'Arial', sans-serif; /* Font chữ chung */
+        font-size: 14px; /* Kích thước chữ đồng đều */
+        font-weight: 600; /* Đảm bảo chữ đậm giống nhau */
+        text-transform: none; /* Không tự động chuyển chữ thành in hoa */
+    }
+    
+    /* Đảm bảo các nút không bị chênh lệch với padding */
+    .small-action-buttons button.btn {
+        padding: 0;
+    }
+    
+    
+        .reply-content-box {
+            background-color: #f0f2f5;
+            /* Light background, like Facebook's comment section */
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            /* Rounded corners */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            /* Light shadow for depth */
+        }
+    
+        .reply-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+    
+        .reply-username {
+            font-weight: bold;
+            color: #1c1e21;
+            /* Dark text for the username */
+        }
+    
+        .reply-meta {
+            font-size: 12px;
+            color: #65676b;
+            /* Light grey for the date */
+            text-align: right;
+        }
+    
+        .mt-1 {
+            font-size: 14px;
+            /* Standard size for the content */
+            color: #1c1e21;
+            /* Dark text for the content */
+        }
+    
+        .reply-meta,
+        .reply-username {
+            display: inline-block;
+        }
+    
+        .comment-reply-cont {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+    
+        .icon-60 img,
+        .icon-40 img {
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    
+        .reply-item {
+            position: relative;
+        }
+    
+        .reply-item .thread-line {
+            position: absolute;
+            top: 40px;
+            left: 18px;
+            width: 2px;
+            height: calc(100% - 40px);
+            background: #e0e0e0;
+            z-index: 0;
+        }
+    
+        .reply-content-box {
+            background: #f0f2f5;
+            border-radius: 18px;
+            padding: 10px 15px;
+            display: inline-block;
+            max-width: 100%;
+            word-break: break-word;
+        }
+    
+        .reply-meta {
+            font-size: 13px;
+            color: #65676b;
+        }
+    
+        .reply-actions {
+            font-size: 13px;
+            margin-top: 5px;
+            color: #65676b;
+        }
+    
+        .reply-actions button {
+            background: transparent;
+            border: none;
+            color: #65676b;
+            cursor: pointer;
+            padding: 0 6px;
+        }
+    
+        .reply-actions button:hover {
+            text-decoration: underline;
+        }
+    
+        .r{
+            font-size: 14px;
+    
+        }
+    </style>
+    
 
 
 
@@ -1228,34 +1416,48 @@
         });
     </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            console.log("Script loaded!");
+    
+       <!-- 🔔 Thêm vào trong Blade để có chỗ hiển thị thông báo -->
+<div id="messageBox"></div>
 
-            /** 🟢 1️⃣ Xử lý gửi Comment thường **/
-            document.querySelector(".comment-form").addEventListener("submit", function(e) {
-                e.preventDefault();
-                let formData = new FormData(this);
-                let url = this.getAttribute("action");
+<script>
 
-                fetch(url, {
-                        method: "POST",
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            window.location.reload();
-                            document.querySelector(".reviews-content").insertAdjacentHTML("beforeend",
-                                newComment);
-                            e.target.reset();
-                        } else {
-                            alert("Lỗi khi gửi bình luận");
-                        }
-                    })
-                    .catch(error => console.error("Error:", error));
+document.addEventListener("DOMContentLoaded", function() {
+    const commentForm = document.querySelector(".comment-form");
+
+    if (commentForm) {
+        commentForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const url = this.getAttribute("action");
+
+            fetch(url, {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // ✅ Trường hợp bình luận thành công
+                    alert(data.message || "Bình luận của bạn đã được đăng!");
+                    window.location.reload(); // Nếu muốn reload
+                } else {
+                    // ❌ Trường hợp gặp lỗi (chưa đăng nhập, bị khóa, từ ngữ cấm, ...)
+                    alert(data.message || "Có lỗi xảy ra khi gửi bình luận.");
+                }
+            })
+            .catch(error => {
+                // ❌ Lỗi kết nối, lỗi server không trả JSON
+                console.error("Error:", error);
+                alert("Đã xảy ra lỗi khi gửi bình luận (network / server).");
             });
         });
+    }
+});
+</script>
+
+<script>
 
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -1491,7 +1693,6 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const buttons = document.querySelectorAll(".send-reply");
-
         buttons.forEach(button => {
             button.addEventListener("click", function () {
                 const commentId = this.getAttribute("data-comment-id");
@@ -1499,12 +1700,12 @@
                 const replyForm = document.querySelector(`#reply-form-${commentId} .reply-form`);
                 const content = replyForm.querySelector(".reply-content").value.trim();
                 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
-
+    
                 if (content === "") {
                     alert("Vui lòng nhập nội dung bình luận!");
                     return;
                 }
-
+    
                 fetch(`/articles/${articleId}/comments/${commentId}/reply`, {
                     method: "POST",
                     headers: {
@@ -1520,7 +1721,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // ✅ Hiển thị alert, chờ OK rồi mới reload
+                        // Hiển thị alert thành công, chờ người dùng nhấn OK rồi reload trang
                         alert(data.message || 'Trả lời thành công!');
                         location.reload();
                     } else {
@@ -1534,7 +1735,9 @@
             });
         });
     });
-</script>
+    </script>
+    
+    
 
 
 

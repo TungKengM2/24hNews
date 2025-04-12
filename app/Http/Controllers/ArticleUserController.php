@@ -308,61 +308,68 @@ class ArticleUserController extends Controller
     }
 
     public function storeComment(Request $request, CommentModerationService $moderationService)
-    {
-        $request->validate([
-            'article_id' => 'required|exists:articles,article_id',
-            'content'    => 'required|string',
-            'parent_id'  => 'nullable|exists:comments,comment_id',
-        ]);
-    
-        $user = auth()->user();
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Người dùng chưa đăng nhập!',
-            ]);
-        }
-    
-        if ($user->banned_until && now()->lessThan($user->banned_until)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn đã bị tạm khóa bình luận đến ' . $user->banned_until->format('H:i d/m/Y'),
-            ]);
-        }
-    
-        $content = $request->content;
-    
-        // Tạo mới bình luận với status 'approved'
-        $comment = new Comment([
-            'article_id' => $request->article_id,
-            'user_id'    => $user->user_id,  // Sửa tại đây, lấy user_id thay vì id
-            'content'    => nl2br(e($content)),
-            'parent_id'  => $request->parent_id,
-            'status'     => 'approved',
-            'depth'      => 0,
-        ]);
-    
-        if ($request->parent_id) {
-            $parentComment = Comment::find($request->parent_id);
-            if ($parentComment) {
-                $comment->depth = $parentComment->depth + 1;
-            }
-        }
-    
-        $comment->save();
-    
+{
+    $request->validate([
+        'article_id' => 'required|exists:articles,article_id',
+        'content'    => 'required|string',
+        'parent_id'  => 'nullable|exists:comments,comment_id',
+    ]);
+
+    $user = auth()->user();
+    if (!$user) {
         return response()->json([
-            'success' => true,
-            'message' => 'Bình luận của bạn đã được đăng thành công!',
-        ]);
+            'success' => false,
+            'message' => 'Người dùng chưa đăng nhập!'
+        ], 401);
     }
-    
 
-    
+    if ($user->banned_until && now()->lessThan($user->banned_until)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Bạn đã bị tạm khóa bình luận đến ' . $user->banned_until->format('H:i d/m/Y')
+        ], 403);
+    }
+
+    $content = $request->content;
+    if (!$moderationService->checkComment($content)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'
+        ], 403);
+    }
+
+    // Tạo mới bình luận
+    $comment = new Comment([
+        'article_id' => $request->article_id,
+        'user_id'    => $user->user_id,
+        'content'    => nl2br(e($content)),
+        'parent_id'  => $request->parent_id,
+        'status'     => 'approved',
+        'depth'      => 0,
+    ]);
+
+    if ($request->parent_id) {
+        $parentComment = Comment::find($request->parent_id);
+        if ($parentComment) {
+            $comment->depth = $parentComment->depth + 1;
+        }
+    }
+
+    $comment->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Bình luận của bạn đã được đăng thành công!'
+    ]);
+}
 
 
 
-    public function storeReplyComment(Request $request, CommentModerationService $moderationService)
+
+
+
+
+public function storeReplyComment(Request $request, CommentModerationService $moderationService)
 {
     $request->validate([
         'article_id' => 'required|exists:articles,article_id',
@@ -386,16 +393,16 @@ class ArticleUserController extends Controller
         ]);
     }
 
-    $content = $request->content;
+    $content   = $request->content;
     $articleId = $request->article_id;
-    $parentId = $request->parent_id;
-    $userId = $user->user_id;
+    $parentId  = $request->parent_id;
+    $userId    = $user->user_id;
 
-    // Tính depth
+    // Tính depth của bình luận trả lời (tối đa độ sâu là 2)
     $parentComment = Comment::find($parentId);
-    $depth = $parentComment ? min($parentComment->depth + 1, 2) : 0;
+    $depth         = $parentComment ? min($parentComment->depth + 1, 2) : 0;
 
-    // Kiểm duyệt trước khi tạo comment
+    // Kiểm duyệt nội dung bình luận trả lời
     if (!$moderationService->checkComment($content, null, $userId, $articleId)) {
         Log::warning("🚫 Bình luận trả lời bị từ chối: " . $content);
 
@@ -405,7 +412,7 @@ class ArticleUserController extends Controller
         ], 403);
     }
 
-    // Nếu được duyệt, tạo comment
+    // Nếu được duyệt, tạo bình luận trả lời mới
     Comment::create([
         'article_id' => $articleId,
         'user_id'    => $userId,
@@ -420,6 +427,7 @@ class ArticleUserController extends Controller
         'message' => 'Bạn đã trả lời bình luận thành công!',
     ]);
 }
+
 
     public function reportComment(Request $request, $article_id, $comment_id)
     {
