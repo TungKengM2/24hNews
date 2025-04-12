@@ -47,6 +47,7 @@ use App\Http\Controllers\Profile\AuthorProfileController as ProfileAuthorProfile
 
 use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
 
+use App\Http\Controllers\EditRequestController;
 
 // 🌟 Trang chủ & bài viết chi tiết
 
@@ -249,6 +250,11 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     Route::get('/articles/{article}/versions', [ModeratorArticleController::class, 'versions'])->name('moderator.articles.versions');
 
     Route::get('/articles/{article}/versions/{versionId}', [ModeratorArticleController::class, 'showVersion'])->name('moderator.articles.version');
+
+    // Edit Request routes
+    Route::get('/edit-requests', [EditRequestController::class, 'index'])->name('edit-requests.index');
+    Route::put('/edit-requests/{editRequest}/approve', [EditRequestController::class, 'approve'])->name('edit-requests.approve');
+    Route::put('/edit-requests/{editRequest}/reject', [EditRequestController::class, 'reject'])->name('edit-requests.reject');
 });
 
 // Đặt trong nhóm auth middleware
@@ -576,6 +582,11 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/articles/{article}/versions', [ArticleController::class, 'versions'])->name('admin.articles.versions');
 
     Route::get('/articles/{article}/versions/{versionId}', [ArticleController::class, 'showVersion'])->name('admin.articles.version');
+
+    // Edit Request routes
+    Route::get('/edit-requests', [EditRequestController::class, 'index'])->name('admin.edit-requests.index');
+    Route::put('/edit-requests/{editRequest}/approve', [EditRequestController::class, 'approve'])->name('admin.edit-requests.approve');
+    Route::put('/edit-requests/{editRequest}/reject', [EditRequestController::class, 'reject'])->name('admin.edit-requests.reject');
 });
 
 
@@ -604,3 +615,6 @@ Route::get('/tinymce/clear-blocked-images', [TinyMCEUploadController::class, 'cl
 Route::post('/admin/tinymce/upload', [TinyMCEUploadController::class, 'uploadImage'])->name('admin.tinymce.upload');
 
 Route::get('/admin/tinymce/clear-blocked-images', [TinyMCEUploadController::class, 'clearBlockedImages'])->name('admin.tinymce.clear-blocked-images');
+
+// Article routes
+Route::post('/articles/{article}/edit-request', [EditRequestController::class, 'store'])->name('articles.edit-request.store');
