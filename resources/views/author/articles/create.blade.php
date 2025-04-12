@@ -272,6 +272,7 @@
                                     tokenSeparators: [',', ' '],
                                     placeholder: 'Chọn hoặc nhập thẻ mới',
                                     allowClear: true,
+                                    maximumSelectionLength: 5,
                                 });
 
                                 // Khởi tạo Select2 cho danh mục cha
