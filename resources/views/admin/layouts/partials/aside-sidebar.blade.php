@@ -11,6 +11,9 @@
     $pendingRoleRequestsCount = \App\Models\Approval::where('type', 'role_upgrade')
         ->where('status', 'pending')
         ->count();
+
+    // Đếm số yêu cầu chỉnh sửa đang chờ duyệt
+    $pendingEditRequestsCount = \App\Models\EditRequest::where('status', 'pending')->count();
 @endphp
 
 <section class="sidebar position-relative">
@@ -76,8 +79,8 @@
                         <span class="pull-right-container">
                             <i class="fa fa-angle-right pull-right"></i>
                         </span>
-                        @if($pendingArticlesCount + $pendingViolationsCount + $pendingRoleRequestsCount > 0)
-                            <x-notification-badge :count="$pendingArticlesCount + $pendingViolationsCount + $pendingRoleRequestsCount" />
+                        @if($pendingArticlesCount + $pendingViolationsCount + $pendingRoleRequestsCount + $pendingEditRequestsCount > 0)
+                            <x-notification-badge :count="$pendingArticlesCount + $pendingViolationsCount + $pendingRoleRequestsCount + $pendingEditRequestsCount" />
                         @endif
                     </a>
                     <ul class="treeview-menu">
@@ -91,6 +94,15 @@
                         </li>
                         <li><a href="{{ route('admin.comments.index') }}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Quản Lý Bình Luận</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.edit-requests.index') }}" style="position: relative;">
+                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                Duyệt Yêu Cầu Chỉnh Sửa
+                                @if($pendingEditRequestsCount > 0)
+                                    <x-notification-badge :count="$pendingEditRequestsCount" />
+                                @endif
+                            </a>
                         </li>
                         <li><a href="{{ route('admin.violations.approves') }}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Duyệt Report</a>

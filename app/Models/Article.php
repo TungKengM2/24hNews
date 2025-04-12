@@ -172,4 +172,14 @@ class Article extends Model
 
         return round(min(5, 1 + 4 * ($score / $maxScore)), 1); // Từ 1 đến 5 sao
     }
+
+    public function editRequests()
+    {
+        return $this->hasMany(EditRequest::class);
+    }
+
+    public function hasEditRequest()
+    {
+        return $this->editRequests()->where('status', 'pending')->exists();
+    }
 }
