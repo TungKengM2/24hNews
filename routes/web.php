@@ -76,25 +76,24 @@ Route::middleware(['auth', 'check.violations'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])->name('articles.article');
 
-    
-   
-    
-    
-   
-   
-   
-
-
-
-    Route::middleware(['check.violations'])->group(function () {
-        Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
-        Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
+    Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
         Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
         Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
         Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
         Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
         Route::post('/comments/{comment}/like', [ArticleUserController::class, 'toggleLike'])->name('comments.toggleLike');
-    });
+        Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
+   
+   
+   
+
+
+
+    // Route::middleware(['check.violations'])->group(function () {
+        
+        
+        
+    // });
 
 });
 // Client Category
