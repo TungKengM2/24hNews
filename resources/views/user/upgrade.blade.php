@@ -136,6 +136,7 @@
                                             <i class="ti-info-alt"></i> Lưu ý:
                                             <ul class="mb-0 mt-2">
                                                 <li>Vui lòng tải lên các chứng chỉ liên quan đến lĩnh vực bạn muốn viết bài</li>
+                                                <li>CCCD phải rõ ràng, không bị mờ, không bị khuất góc</li>
                                                 <li>Chứng chỉ phải còn hiệu lực</li>
                                                 <li>File PDF phải rõ ràng, không bị mờ</li>
                                                 <li>Nếu có nhiều chứng chỉ, vui lòng tải lên tất cả</li>
@@ -191,13 +192,13 @@
             function showError(input, message) {
                 const formGroup = input.closest('.form-group');
                 let errorDiv = formGroup.querySelector('.error-message');
-                
+
                 if (!errorDiv) {
                     errorDiv = document.createElement('div');
                     errorDiv.className = 'error-message text-danger mt-1';
                     formGroup.appendChild(errorDiv);
                 }
-                
+
                 errorDiv.textContent = message;
                 input.classList.add('is-invalid');
                 input.style.borderColor = '#dc3545';
@@ -218,18 +219,18 @@
             function validateFullname() {
                 const value = fullnameInput.value.trim();
                 removeError(fullnameInput);
-                
+
                 if (!value) {
                     showError(fullnameInput, 'Họ tên là bắt buộc');
                     return false;
                 }
-                
+
                 const nameRegex = /^[a-zA-ZÀ-ỹ\s]{5,}$/;
                 if (!nameRegex.test(value)) {
                     showError(fullnameInput, 'Họ tên phải có ít nhất 5 ký tự, không chứa số và ký tự đặc biệt');
                     return false;
                 }
-                
+
                 return true;
             }
 
@@ -237,31 +238,31 @@
             function validateDob() {
                 const value = dobInput.value;
                 removeError(dobInput);
-                
+
                 if (!value) {
                     showError(dobInput, 'Ngày sinh là bắt buộc');
                     return false;
                 }
-                
+
                 const today = new Date();
                 const birthDate = new Date(value);
                 let age = today.getFullYear() - birthDate.getFullYear();
                 const monthDiff = today.getMonth() - birthDate.getMonth();
-                
+
                 if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                     age--;
                 }
-                
+
                 if (age < 18) {
                     showError(dobInput, 'Bạn phải đủ 18 tuổi trở lên');
                     return false;
                 }
-                
+
                 if (age > 45) {
                     showError(dobInput, 'Tuổi của bạn không được vượt quá 45');
                     return false;
                 }
-                
+
                 return true;
             }
 
@@ -269,18 +270,18 @@
             function validatePhone() {
                 const value = phoneInput.value.trim();
                 removeError(phoneInput);
-                
+
                 if (!value) {
                     showError(phoneInput, 'Số điện thoại là bắt buộc');
                     return false;
                 }
-                
+
                 const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
                 if (!phoneRegex.test(value)) {
                     showError(phoneInput, 'Số điện thoại không hợp lệ');
                     return false;
                 }
-                
+
                 return true;
             }
 
@@ -288,25 +289,25 @@
             function validateCCCD() {
                 const value = cccdInput.value.trim();
                 removeError(cccdInput);
-                
+
                 if (!value) {
                     showError(cccdInput, 'Số CCCD là bắt buộc');
                     return false;
                 }
-                
+
                 const cccdRegex = /^[0-9]{12}$/;
                 if (!cccdRegex.test(value)) {
                     showError(cccdInput, 'Số CCCD phải có 12 chữ số');
                     return false;
                 }
-                
+
                 return true;
             }
 
             // Validate địa chỉ
             function validateAddress() {
                 let isValid = true;
-                
+
                 // Validate tỉnh/thành phố
                 if (!provinceSelect.value) {
                     showError(provinceSelect, 'Vui lòng chọn Tỉnh/Thành phố');
@@ -314,7 +315,7 @@
                 } else {
                     removeError(provinceSelect);
                 }
-                
+
                 // Validate quận/huyện
                 if (!districtSelect.value) {
                     showError(districtSelect, 'Vui lòng chọn Quận/Huyện');
@@ -322,7 +323,7 @@
                 } else {
                     removeError(districtSelect);
                 }
-                
+
                 // Validate phường/xã
                 if (!wardSelect.value) {
                     showError(wardSelect, 'Vui lòng chọn Phường/Xã');
@@ -330,7 +331,7 @@
                 } else {
                     removeError(wardSelect);
                 }
-                
+
                 // Validate địa chỉ chi tiết
                 if (!addressDetailInput.value.trim()) {
                     showError(addressDetailInput, 'Vui lòng nhập địa chỉ chi tiết');
@@ -338,23 +339,23 @@
                 } else {
                     removeError(addressDetailInput);
                 }
-                
+
                 return isValid;
             }
 
             // Thêm sự kiện cho từng input
             fullnameInput.addEventListener('input', validateFullname);
             fullnameInput.addEventListener('blur', validateFullname);
-            
+
             dobInput.addEventListener('input', validateDob);
             dobInput.addEventListener('blur', validateDob);
-            
+
             phoneInput.addEventListener('input', validatePhone);
             phoneInput.addEventListener('blur', validatePhone);
-            
+
             cccdInput.addEventListener('input', validateCCCD);
             cccdInput.addEventListener('blur', validateCCCD);
-            
+
             provinceSelect.addEventListener('change', validateAddress);
             districtSelect.addEventListener('change', validateAddress);
             wardSelect.addEventListener('change', validateAddress);
@@ -368,7 +369,7 @@
                 const isPhoneValid = validatePhone();
                 const isCCCDValid = validateCCCD();
                 const isAddressValid = validateAddress();
-                
+
                 if (!isFullnameValid || !isDobValid || !isPhoneValid || !isCCCDValid || !isAddressValid) {
                     e.preventDefault();
                 }
