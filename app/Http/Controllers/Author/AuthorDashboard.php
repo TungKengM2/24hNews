@@ -38,6 +38,12 @@
              'draft' => Article::where('author_id', $user->user_id)
                  ->where('status', 'draft')
                  ->count(),
+            'reject' => Article::where('author_id', $user->user_id)
+                 ->where('status', 'rejected')
+                 ->count(),
+             'archived' => Article::where('author_id', $user->user_id)
+                 ->where('status', 'archived')
+                 ->count(),
          ];
           // Get time-based article statistics
           $timeBasedArticleStats = $this->getTimeBasedArticleStats($user->user_id, $type);

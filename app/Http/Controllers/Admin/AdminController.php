@@ -77,8 +77,9 @@ class AdminController extends Controller
         $totalLikes = Schema::hasTable('article_likes') ? DB::table('article_likes')->count() : 0;
         //   // Lấy danh sách tag và số lượng bài viết theo từng tag
        // Lấy danh sách tag và số lượng bài viết đã xuất bản
-       $tags = Tag::withCount(['publishedArticles'])
-       ->orderBy('published_articles_count', 'desc') // Sắp xếp theo số bài viết từ lớn đến bé
+       $tags = Tag::has('publishedArticles')
+       ->withCount(['publishedArticles'])
+       ->orderBy('published_articles_count', 'desc')
        ->get();
 
 
