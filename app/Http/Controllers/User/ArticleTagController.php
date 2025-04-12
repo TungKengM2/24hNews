@@ -69,7 +69,10 @@ class ArticleTagController extends Controller
 
 
         // Lấy tất cả tags
-        $tags = Tag::paginate(8);
+        $tags = Tag::withCount('publishedArticles')
+        ->has('publishedArticles') // chỉ lấy tag có bài viết đã xuất bản
+        ->orderByDesc('published_articles_count')
+        ->paginate(8);
 
         $categories = Category::where('is_active', 1)->limit(7)->get();
         $category2 = Category::withCount(['articles' => function ($query) {
