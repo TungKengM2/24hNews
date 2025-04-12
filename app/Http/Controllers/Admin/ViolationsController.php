@@ -81,23 +81,20 @@ class ViolationsController extends Controller
         $user->last_violation_at = now();
         $user->save();
 
-        // Áp dụng hình phạt nếu cần
-        if ($realViolation >= 5) {
-            $user->banned_until = now()->addDays(3);
+        if ($user) {
+            $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
+            $realViolation = max(0, $user->violation_count - $daysSinceLast);
+            $realViolation += 1;
+    
+            $user->violation_count = $realViolation;
+            $user->last_violation_at = now();
+    
+            if ($realViolation >= 5) {
+                $user->banned_until = now()->addDays(3);
+            } elseif ($realViolation >= 3) {
+                $user->banned_until = now()->addHours(24);
+            }
             $user->save();
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn đã bị cấm bình luận 3 ngày do vi phạm quá nhiều.',
-            ]);
-        } elseif ($realViolation >= 3) {
-            $user->banned_until = now()->addHours(24);
-            $user->save();
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn đã bị tạm khóa bình luận trong 24 giờ vì vi phạm nhiều lần.',
-            ]);
         }
     }
 
@@ -122,53 +119,39 @@ class ViolationsController extends Controller
 
 public function resolves(Violation $violation)
 {
-    // Kiểm tra xem vi phạm có trạng thái 'pending' hay không
     if ($violation->status !== 'pending') {
         return back()->with('error', 'Vi phạm không còn trong trạng thái chờ duyệt!');
     }
 
-    // Lấy bài viết bị vi phạm dựa trên reference_id
     $article = Article::where('article_id', $violation->reference_id)->first();
     if (!$article) {
         return back()->with('error', 'Không tìm thấy bài viết!');
     }
 
-    // Tăng số lần vi phạm của người dùng theo cách tính động
     $user = User::find($article->user_id);
+   
+
     if ($user) {
         $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
         $realViolation = max(0, $user->violation_count - $daysSinceLast);
+        $realViolation += 1;
 
-        $realViolation += 1; // Vi phạm mới
-
-        // Lưu lại giá trị mới
         $user->violation_count = $realViolation;
         $user->last_violation_at = now();
-        $user->save();
 
-        // Áp dụng hình phạt nếu vượt ngưỡng
         if ($realViolation >= 5) {
             $user->banned_until = now()->addDays(3);
-            $user->save();
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn đã bị cấm bình luận 3 ngày do vi phạm quá nhiều.',
-            ]);
         } elseif ($realViolation >= 3) {
             $user->banned_until = now()->addHours(24);
-            $user->save();
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn đã bị tạm khóa bình luận trong 24 giờ vì vi phạm nhiều lần.',
-            ]);
         }
+        $user->save();
     }
 
-    // Cập nhật trạng thái bài viết thành "draft"
+    // Đổi bài viết thành bản nháp
     $article->status = 'draft';
     $article->save();
 
-    // Gửi thông báo
+    // Gửi thông báo cho tác giả
     $detectedWord = $violation->detected_word;
     $author = $article->author;
     $author->notify(new ArticleStatusChangedNotification($article, $detectedWord));
@@ -176,7 +159,11 @@ public function resolves(Violation $violation)
     // Xóa vi phạm
     $violation->delete();
 
-    return back()->with('success', 'Vi phạm đã được giải quyết.');
+    $finalMessage = 'Vi phạm đã được giải quyết.';
+    
+
+    return back()->with('success', $finalMessage);
 }
+
 
 }
