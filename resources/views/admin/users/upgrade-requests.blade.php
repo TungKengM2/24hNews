@@ -7,84 +7,191 @@
 @section('content')
     <div class="content-wrapper">
         <div class="container-full">
-            <div class="box container mb-4">
+            <div class="box">
                 <div class="box-header with-border d-flex justify-content-between align-items-center">
                     <h4 class="box-title">Danh sách yêu cầu nâng cấp</h4>
+                    <a href="{{ route('admin.moderation.history') }}" class="btn btn-info">
+                        <i class="fa fa-history"></i> Xem lịch sử kiểm duyệt
+                    </a>
                 </div>
 
                 <div class="box-body">
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    <div class="alert alert-info">
+                        <i class="fa fa-info-circle"></i> 
+                        Đây là danh sách các yêu cầu nâng cấp đang chờ duyệt. 
+                        Để xem lịch sử các yêu cầu đã được xử lý, vui lòng nhấn vào nút "Xem lịch sử kiểm duyệt" phía trên.
+                    </div>
+
                     <div class="table-responsive">
-                        <table class="table table-bordered table-dark mb-0">
+                        <table class="table table-hover">
                             <thead>
-                                <tr>
+                                <tr class="bg-primary text-white">
                                     <th>ID</th>
                                     <th>Username</th>
                                     <th>Email</th>
                                     <th>Số điện thoại</th>
-                                    <th>Vai trò hiện tại</th>
-                                    <th>Trạng thái</th>
+                                    <th>Thời gian</th>
                                     <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($approvals as $approval)
+                                @forelse ($approvals as $approval)
                                     <tr>
                                         <td>{{ $approval->approval_id }}</td>
                                         <td>{{ $approval->user->username ?? 'N/A' }}</td>
                                         <td>{{ $approval->user->email ?? 'N/A' }}</td>
                                         <td>{{ $approval->user->phone ?? 'N/A' }}</td>
-                                        <td>{{ $approval->user?->role?->name ?? 'N/A' }}</td>
+                                        <td>{{ $approval->created_at->format('d/m/Y H:i') }}</td>
                                         <td>
-                                            @if ($approval->status === 'pending')
-                                                <span class="badge badge-warning">Chờ duyệt</span>
-                                            @elseif ($approval->status === 'approved')
-                                                <span class="badge badge-success">Đã duyệt</span>
-                                            @else
-                                                <span class="badge badge-danger">Từ chối</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('admin.user-role-request.show', $approval->approval_id) }}"
-                                               class="btn btn-info btn-sm">
-                                                Chi tiết
-                                            </a>
+                                            <div class="btn-group">
+                                                <a href="{{ route('admin.user-role-request.show', $approval->approval_id) }}"
+                                                    class="btn btn-info btn-sm" data-toggle="tooltip" title="Xem chi tiết">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
 
-                                            @if ($approval->status === 'pending')
                                                 <form action="{{ route('admin.approve.user', $approval->approval_id) }}"
                                                     method="POST" class="d-inline">
                                                     @csrf
                                                     <button type="submit" class="btn btn-success btn-sm"
+                                                        data-toggle="tooltip" title="Duyệt yêu cầu"
                                                         onclick="return confirm('Xác nhận duyệt?')">
-                                                        Duyệt
+                                                        <i class="fa fa-check"></i>
                                                     </button>
                                                 </form>
 
-                                                <form action="{{ route('admin.reject.user', $approval->approval_id) }}"
-                                                    method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Xác nhận từ chối?')">
-                                                        Từ chối
-                                                    </button>
-                                                </form>
-                                            @endif
+                                                <button type="button" class="btn btn-danger btn-sm" 
+                                                    data-toggle="modal" 
+                                                    data-target="#rejectModal{{ $approval->approval_id }}"
+                                                    data-toggle="tooltip" 
+                                                    title="Từ chối yêu cầu">
+                                                    <i class="fa fa-times"></i>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center">Không có yêu cầu nâng cấp nào đang chờ duyệt.</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
 
-                    <div id="pagination-wrapper" class="d-flex justify-content-end mt-5">
-                        <nav>
-                            <ul class="pagination pagination-sm">
-                                {{ $approvals->appends(['role_id' => $role_id])->links('pagination::bootstrap-5') }}
-                            </ul>
-                        </nav>
+                    <div class="mt-4">
+                        {{ $approvals->links() }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal Từ chối cho từng yêu cầu -->
+    @foreach($approvals as $approval)
+        <div class="modal fade" id="rejectModal{{ $approval->approval_id }}" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel{{ $approval->approval_id }}" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="rejectModalLabel{{ $approval->approval_id }}">Từ chối yêu cầu nâng cấp</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('admin.reject.user', $approval->approval_id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="rejectReason{{ $approval->approval_id }}">Lý do từ chối <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="rejectReason{{ $approval->approval_id }}" name="reject_reason" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-danger">Xác nhận từ chối</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    <style>
+        .table th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            background-color: #4a90e2;
+            color: white;
+            padding: 12px 15px;
+        }
+        .table td {
+            vertical-align: middle;
+            padding: 12px 15px;
+        }
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+            transition: background-color 0.3s ease;
+        }
+        .btn-group .btn {
+            margin-right: 5px;
+            border-radius: 4px;
+        }
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        .pagination {
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination .page-item.active .page-link {
+            background-color: #4a90e2;
+            border-color: #4a90e2;
+        }
+        .pagination .page-link {
+            color: #4a90e2;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        .modal-header {
+            border-bottom: none;
+            padding: 1rem 1.5rem;
+        }
+        .modal-footer {
+            border-top: none;
+            padding: 1rem 1.5rem;
+        }
+        .form-control {
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+        }
+        .form-control:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+        .alert-info {
+            background-color: #e3f2fd;
+            border-color: #90caf9;
+            color: #0d47a1;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 @endsection
