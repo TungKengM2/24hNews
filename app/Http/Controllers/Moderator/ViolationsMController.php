@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\UserViolationAlert;
 use App\Notifications\NewArticleSubmitted;
 use App\Notifications\ArticleStatusUpdated;
 use Illuminate\Support\Facades\Notification;
@@ -63,33 +64,26 @@ class ViolationsMController extends Controller
         if ($violation->status !== 'pending') {
             return back()->with('error', 'Vi phạm không còn trong trạng thái chờ duyệt!');
         }
-    
+
         // Lấy bình luận bị vi phạm dựa trên reference_id
         $comment = Comment::where('comment_id', $violation->reference_id)->first();
-    
+
         if (!$comment) {
             return back()->with('error', 'Bình luận vi phạm không tồn tại hoặc đã bị xóa trước đó.');
         }
-    
+
         // Tăng số lần vi phạm của người dùng (theo cách động)
         $user = User::find($comment->user_id);
-        if ($user) {
-            $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
-            $realViolation = max(0, $user->violation_count - $daysSinceLast);
-    
-            $realViolation += 1; // Cộng thêm 1 lần vi phạm mới
-            $user->violation_count = $realViolation;
-            $user->last_violation_at = now();
-            $user->save();
-    
+        
+
             if ($user) {
                 $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
                 $realViolation = max(0, $user->violation_count - $daysSinceLast);
                 $realViolation += 1;
-        
+
                 $user->violation_count = $realViolation;
                 $user->last_violation_at = now();
-        
+
                 if ($realViolation >= 5) {
                     $user->banned_until = now()->addDays(3);
                 } elseif ($realViolation >= 3) {
@@ -97,8 +91,13 @@ class ViolationsMController extends Controller
                 }
                 $user->save();
             }
+        
+
+        $usersToNotify = User::whereIn('violation_count', [3, 5])->get();
+        foreach ($usersToNotify as $user) {
+            Notification::route('database', $user->id)->notify(new UserViolationAlert($user));
         }
-    
+
         // Xử lý các bình luận con
         $childComments = Comment::where('parent_id', $comment->comment_id)->get();
         if ($childComments->isNotEmpty()) {
@@ -106,13 +105,14 @@ class ViolationsMController extends Controller
                 $child->delete();
             }
         }
-    
+
         // Xóa bình luận gốc và vi phạm
         $comment->delete();
         $violation->delete();
-    
+
         return back()->with('success', 'Vi phạm đã được giải quyết, bình luận và tất cả phản hồi đã bị xóa.');
     }
+
     
     
     
