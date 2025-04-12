@@ -30,7 +30,8 @@ class ArticleStatusUpdated extends Notification implements ShouldQueue
     {
         return [
             'article_id' => $this->article->id, // Thay vì $this->article->article_id
-            'title' => $this->article->title,
+            'title' => 'Cập nhật trạng thái bài viết',
+            'article_title' => $this->article->title,
             'message' => $this->message,
             'status' => $this->article->status,
             'updated_at' => now(),

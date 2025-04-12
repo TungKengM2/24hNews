@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Notifications;
 
@@ -25,6 +25,7 @@ class ArticleStatusChangedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
+            'title' => 'Trạng thái bài viết đã thay đổi',
             'message' => "Bài viết '{$this->article->title}' đã thay đổi trạng thái thành {$this->article->status}.",
             'article_id' => $this->article->id,
         ];

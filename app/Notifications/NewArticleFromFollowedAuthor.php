@@ -34,6 +34,7 @@ class NewArticleFromFollowedAuthor extends Notification implements ShouldQueue
                    ?? $this->author->username; // Không có trường hợp ẩn danh theo yêu cầu
 
         return [
+            'title'         => 'Bài viết mới từ tác giả bạn theo dõi',
             'type'          => 'new_article',
             'message'      => "{$authorName} vừa đăng bài viết mới: {$this->article->title}",
             'article_id'    => $this->article->id,

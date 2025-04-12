@@ -4,11 +4,11 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Models\Article;
-
 use App\Models\Category;
 use App\Observers\UserObserver;
 use App\Observers\ArticleObserver;
 use App\Observers\CategoryObserver;
+use App\Helpers\NotificationHelper;
 use App\Services\ModerationService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;

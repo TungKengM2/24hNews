@@ -28,11 +28,13 @@ class ArticleEditRequestApproved extends Notification implements ShouldQueue
     {
         return [
             'title' => 'Yêu cầu chỉnh sửa được chấp nhận',
-            'message' => 'Yêu cầu chỉnh sửa bài viết "' . $this->editRequest->article->title . '" đã được chấp nhận.',
+            'message' => 'Yêu cầu chỉnh sửa bài viết "' . $this->editRequest->article->title . '" đã được chấp nhận. Bạn có 30 phút để chỉnh sửa trường ' . $this->editRequest->field_to_edit . '.',
             'type' => 'edit_request_approved',
             'data' => [
                 'article_id' => $this->editRequest->article_id,
-                'request_id' => $this->editRequest->id
+                'request_id' => $this->editRequest->id,
+                'field_to_edit' => $this->editRequest->field_to_edit,
+                'edit_expires_at' => $this->editRequest->edit_expires_at
             ]
         ];
     }

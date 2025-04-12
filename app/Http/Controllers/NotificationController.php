@@ -74,10 +74,11 @@ class NotificationController extends Controller
             ->take(5)
             ->get()
             ->map(function ($notification) {
+                $data = is_array($notification->data) ? $notification->data : json_decode($notification->data, true);
                 return [
                     'id' => $notification->id,
-                    'message' => $notification->data['message'],
-                    'link' => $notification->data['link'],
+                    'message' => $data['message'] ?? 'Thông báo mới',
+                    'link' => $data['link'] ?? '#',
                     'read_at' => $notification->read_at,
                     'time' => $notification->created_at->diffForHumans()
                 ];

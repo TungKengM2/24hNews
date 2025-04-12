@@ -40,17 +40,20 @@
                             @forelse(auth()->user()->notifications()->whereNull('read_at')->take(5)->get() as $notification)
                             <li class="notification-item p-3" id="notification-{{ $notification->id }}">
                                 <a href="#"
-                                   onclick="openNotification('{{ $notification->id }}', '{{ addslashes($notification->data['message']) }}'); return false;"
+                                   onclick="openNotification('{{ $notification->id }}', '{{ addslashes(is_array($notification->data) ? $notification->data['message'] : (json_decode($notification->data, true)['message'] ?? 'Thông báo mới')) }}'); return false;"
                                    style="font-size: 16px; display: block; padding: 10px;">
-                                    @if(isset($notification->data['type']) && $notification->data['type'] === 'article_rejected')
+                                    @php
+                                        $data = is_array($notification->data) ? $notification->data : json_decode($notification->data, true);
+                                    @endphp
+                                    @if(isset($data['type']) && $data['type'] === 'article_rejected')
                                         <i class="fas fa-times-circle text-danger me-2"></i>
-                                        {{ Str::limit($notification->data['message'], 40, '...') }}
-                                    @elseif(isset($notification->data['type']) && $notification->data['type'] === 'article_reported')
+                                        {{ Str::limit($data['message'] ?? 'Thông báo mới', 40, '...') }}
+                                    @elseif(isset($data['type']) && $data['type'] === 'article_reported')
                                         <i class="fas fa-exclamation-triangle text-warning me-2"></i>
                                         {{ Str::limit('Bài viết của bạn đã bị report', 40, '...') }}
                                     @else
                                         <i class="fas fa-info-circle text-info me-2"></i>
-                                        {{ Str::limit($notification->data['message'], 40, '...') }}
+                                        {{ Str::limit($data['message'] ?? 'Thông báo mới', 40, '...') }}
                                     @endif
                                 </a>
                             </li>

@@ -26,6 +26,7 @@ class NewArticleSubmitted extends Notification
     public function toDatabase($notifiable)
     {
         return [
+            'title' => 'Bài viết mới đang chờ duyệt',
             'message' => "Bài viết mới đang chờ duyệt: {$this->article->title}",
             'article_id' => $this->article->id,
             'status' => $this->article->status,

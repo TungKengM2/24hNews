@@ -28,6 +28,7 @@ class PendingArticleNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
+            'title' => 'Bài viết mới cần duyệt',
             'message' => 'Bài viết mới cần duyệt: ' . $this->article->title,
             'article_id' => $this->article->article_id,
             'link' => route('moderator.articles.show', $this->article)

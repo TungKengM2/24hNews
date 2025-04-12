@@ -13,10 +13,13 @@ class ArticleEditRequest extends Model
         'article_id',
         'author_id',
         'reason',
+        'field_to_edit',
         'status',
         'admin_note',
         'processed_by',
-        'processed_at'
+        'processed_at',
+        'request_expires_at',
+        'edit_expires_at'
     ];
 
     public function article()

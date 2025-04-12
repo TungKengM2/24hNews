@@ -100,7 +100,18 @@ class ModeratorArticleController extends Controller
 
         // Gửi thông báo cho tác giả
         if ($article->author) {
-            $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã được duyệt."));
+            \App\Helpers\NotificationHelper::sendCustomNotification(
+                $article->author,
+                'Cập nhật trạng thái bài viết',
+                "Bài viết '{$article->title}' của bạn đã được duyệt.",
+                'article_status_updated',
+                [
+                    'article_id' => $article->article_id,
+                    'article_title' => $article->title,
+                    'status' => $article->status,
+                    'updated_at' => now()
+                ]
+            );
         }
 
         return redirect()->back()->with('success', 'Bài viết đã được duyệt.');
@@ -155,7 +166,19 @@ class ModeratorArticleController extends Controller
 
         // Gửi thông báo cho tác giả
         if ($article->author) {
-            $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã bị từ chối."));
+            \App\Helpers\NotificationHelper::sendCustomNotification(
+                $article->author,
+                'Cập nhật trạng thái bài viết',
+                "Bài viết '{$article->title}' của bạn đã bị từ chối.",
+                'article_status_updated',
+                [
+                    'article_id' => $article->article_id,
+                    'article_title' => $article->title,
+                    'status' => $article->status,
+                    'reason' => $reason,
+                    'updated_at' => now()
+                ]
+            );
         }
 
         return redirect()->back()->with('success', 'Bài viết đã bị từ chối.');

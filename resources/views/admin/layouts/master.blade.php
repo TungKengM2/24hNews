@@ -20,6 +20,10 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     @include('admin.layouts.partials.css')
 
     <style>
@@ -214,6 +218,9 @@
 
     <!-- Flash Messages with SweetAlert2 -->
     @include('admin.layouts.partials.flash-messages')
+
+    <!-- Page specific scripts -->
+    @yield('scripts')
 
 </body>
 

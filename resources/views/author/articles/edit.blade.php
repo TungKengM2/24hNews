@@ -71,6 +71,60 @@
                             </div>
                         @endif
 
+                        @if (session('error'))
+                            <div class="alert alert-danger error_message">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+
+                        @if (session('warning'))
+                            <div class="alert alert-warning error_message">
+                                {{ session('warning') }}
+                            </div>
+                        @endif
+
+                        <!-- Edit request info -->
+                        @php
+                            $editStatus = App\Http\Controllers\Author\ArticleEditRequestController::getEditStatus($article->article_id);
+                        @endphp
+
+                        @if($article->status === 'editing' && $editStatus['status'] === 'approved')
+                            <div class="alert alert-info">
+                                <strong>Thông tin chỉnh sửa:</strong>
+                                <p>Bạn được phép chỉnh sửa trường <strong>{{ $editStatus['request']->field_to_edit }}</strong></p>
+                                <p>Thời gian chỉnh sửa còn lại: <strong id="countdown"></strong></p>
+                                <p class="text-danger">Lưu ý: Sau khi chỉnh sửa, bài viết sẽ chuyển sang trạng thái chờ duyệt. Nếu không được duyệt trong vòng 30 phút, bài viết sẽ bị từ chối.</p>
+                            </div>
+
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    // Thời gian hết hạn
+                                    var expiryTime = new Date("{{ $editStatus['request']->edit_expires_at }}").getTime();
+
+                                    // Cập nhật đồng hồ đếm ngược mỗi giây
+                                    var countdownTimer = setInterval(function() {
+                                        var now = new Date().getTime();
+                                        var distance = expiryTime - now;
+
+                                        // Tính toán thời gian
+                                        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                                        // Hiển thị kết quả
+                                        document.getElementById("countdown").innerHTML = minutes + " phút " + seconds + " giây";
+
+                                        // Nếu hết thời gian
+                                        if (distance < 0) {
+                                            clearInterval(countdownTimer);
+                                            document.getElementById("countdown").innerHTML = "Hết thời gian!";
+                                            alert("Thời gian chỉnh sửa đã hết! Vui lòng gửi lại yêu cầu mới.");
+                                            window.location.href = "{{ route('author.articles.index') }}";
+                                        }
+                                    }, 1000);
+                                });
+                            </script>
+                        @endif
+
                         <!-- Violation reasons -->
                         @if (session('violation_reasons'))
                             <div class="alert alert-warning error_message">
@@ -97,17 +151,20 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="title" class="form-label">Tiêu đề:</label>
-                                            <input type="text" class="form-control" id="title" name="title" value="{{ $article->title }}" required>
+                                            <input type="text" class="form-control" id="title" name="title" value="{{ $article->title }}" required
+                                                   {{ ($article->status === 'editing' && $editStatus['status'] === 'approved' && $editStatus['request']->field_to_edit !== 'title') ? 'disabled' : '' }}>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="slug" class="form-label">Đường dẫn:</label>
-                                            <input type="text" class="form-control" id="slug" name="slug" value="{{ $article->slug }}" required>
+                                            <input type="text" class="form-control" id="slug" name="slug" value="{{ $article->slug }}" required
+                                                   {{ ($article->status === 'editing') ? 'disabled' : '' }}>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                             <label class="form-label">Danh mục chính</label>
-                                            <select name="category_id" id="parent_category" class="form-control select2-categories">
+                                            <select name="category_id" id="parent_category" class="form-control select2-categories"
+                                                   {{ ($article->status === 'editing' && $editStatus['status'] === 'approved' && $editStatus['request']->field_to_edit !== 'category_id') ? 'disabled' : '' }}>
                                                 <option value="">-- Chọn danh mục chính --</option>
                                                 @foreach ($parentCategories as $category)
                                         @if ($category->is_active || $article->category_id == $category->category_id)
@@ -121,7 +178,8 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
-                                            <select name="tags[]" id="tags" class="form-control select2-tags" multiple="multiple" data-placeholder="Chọn hoặc nhập thẻ mới">
+                                            <select name="tags[]" id="tags" class="form-control select2-tags" multiple="multiple" data-placeholder="Chọn hoặc nhập thẻ mới"
+                                                   {{ ($article->status === 'editing') ? 'disabled' : '' }}>
                                     @foreach ($tags as $tag)
                                                     <option value="{{ $tag->name }}" @if (in_array($tag->name, $selectedTags)) selected @endif>
                                             {{ $tag->name }}
@@ -133,7 +191,8 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Danh mục phụ</label>
-                                            <select name="subcategory_id" id="child_category" class="form-control select2-subcategories" {{ empty($article->category_id) ? 'disabled' : '' }}>
+                                            <select name="subcategory_id" id="child_category" class="form-control select2-subcategories"
+                                                   {{ empty($article->category_id) || ($article->status === 'editing' && $editStatus['status'] === 'approved' && $editStatus['request']->field_to_edit !== 'subcategory_id') ? 'disabled' : '' }}>
                                                 <option value="">-- Chọn danh mục phụ --</option>
                                                 @if($article->subcategory_id)
                                                     <option value="{{ $article->subcategory_id }}" selected>{{ $article->subcategory->name }}</option>
@@ -148,7 +207,8 @@
                         <h5 class="form-section-title">Ảnh Đại Diện</h5>
                         <div class="row">
                             <div class="col-md-6">
-                                            <input type="file" class="form-control @error('thumbnail_url') is-invalid @enderror" id="thumbnail_url" name="thumbnail_url" accept="image/*">
+                                            <input type="file" class="form-control @error('thumbnail_url') is-invalid @enderror" id="thumbnail_url" name="thumbnail_url" accept="image/*"
+                                                   {{ ($article->status === 'editing' && $editStatus['status'] === 'approved' && $editStatus['request']->field_to_edit !== 'thumbnail_url') ? 'disabled' : '' }}>
                                 @error('thumbnail_url')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -197,11 +257,11 @@
                     <div class="form-group">
                                     <label for="content" class="form-label">Nội dung</label>
                         @if (session('violations'))
-                                        <textarea id="full-featured" name="content" style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                                        <textarea id="full-featured" name="content" style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;" {{ ($article->status === 'editing' && $editStatus['status'] === 'approved' && $editStatus['request']->field_to_edit !== 'content') ? 'disabled' : '' }}>
                             {!! highlightWords(old('content'), session('violations')) !!}
                         </textarea>
                         @else
-                            <textarea id="full-featured" name="content" style="height: 800px;">
+                            <textarea id="full-featured" name="content" style="height: 800px;" {{ ($article->status === 'editing' && $editStatus['status'] === 'approved' && $editStatus['request']->field_to_edit !== 'content') ? 'disabled' : '' }}>
                         {!! $content !!}
                         </textarea>
                         @endif
@@ -665,4 +725,17 @@
 @endsection
 
 @section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hiển thị thông báo SweetAlert2
+            @if (session('warning'))
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Cảnh báo!',
+                    text: '{{ session('warning') }}',
+                    confirmButtonText: 'Đóng'
+                });
+            @endif
+        });
+    </script>
 @endsection

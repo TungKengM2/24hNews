@@ -48,6 +48,14 @@ class Article extends Model
     }
 
     /**
+     * Quan hệ với bảng article_edit_requests
+     */
+    public function editRequests()
+    {
+        return $this->hasMany(ArticleEditRequest::class, 'article_id', 'article_id');
+    }
+
+    /**
      * Quan hệ với bảng `users` (tác giả)
      */
     public function author()
@@ -123,10 +131,19 @@ class Article extends Model
     public function notifyAdmins(): void
     {
         $admins = User::where('role_id', 1)->get(); // Lấy danh sách admin
-        Notification::send(
-            $admins,
-            new NewArticleSubmitted($this)
-        ); // Gửi thông báo
+        foreach ($admins as $admin) {
+            \App\Helpers\NotificationHelper::sendCustomNotification(
+                $admin,
+                'Bài viết mới đang chờ duyệt',
+                "Bài viết mới đang chờ duyệt: {$this->title}",
+                'new_article_submitted',
+                [
+                    'article_id' => $this->article_id,
+                    'status' => $this->status,
+                    'pending_count' => Article::where('status', 'pending')->count()
+                ]
+            );
+        }
     }
 
     /**
@@ -162,6 +179,24 @@ class Article extends Model
         // Tuỳ chỉnh trọng số nếu muốn
         $score = ($views * 1) + ($likes * 3) + ($comments * 5);
         return (int) round($score);
+    }
+
+    /**
+     * Lấy thời gian xuất bản của bài viết từ bảng approvals
+     */
+    public function getPublishedAtAttribute()
+    {
+        if ($this->status !== 'published') {
+            return null;
+        }
+
+        $approval = \App\Models\Approval::where('article_id', $this->article_id)
+            ->where('status', 'approved')
+            ->where('type', 'article')
+            ->latest('updated_at')
+            ->first();
+
+        return $approval ? $approval->updated_at : $this->updated_at;
     }
 
     public function getRatingStarAttribute()

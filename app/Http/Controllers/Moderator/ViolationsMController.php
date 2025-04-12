@@ -108,7 +108,15 @@ class ViolationsMController extends Controller
         $violation->delete();
 
         if ($article->wasChanged('status')) {
-            $article->notify(new ArticleStatusChangedNotification($article));
+            \App\Helpers\NotificationHelper::sendCustomNotification(
+                $article->author,
+                'Trạng thái bài viết đã thay đổi',
+                "Bài viết '{$article->title}' đã thay đổi trạng thái thành {$article->status}.",
+                'article_status_changed',
+                [
+                    'article_id' => $article->article_id
+                ]
+            );
         }
 
         return back()->with('success', 'Vi phạm đã được giải quyết.');

@@ -62,6 +62,28 @@ class ArticleEditRequestController extends Controller
             $article = Article::findOrFail($article_id);
             Log::info('Found article:', ['article' => $article->toArray()]);
 
+            // Kiểm tra xem bài viết có phải là published không
+            if ($article->status !== 'published') {
+                DB::rollBack();
+                return redirect()->back()->with('sweet_alert', [
+                    'type' => 'warning',
+                    'title' => 'Không thể gửi yêu cầu!',
+                    'text' => 'Chỉ có thể yêu cầu chỉnh sửa bài viết đã được xuất bản.'
+                ]);
+            }
+
+            // Kiểm tra xem bài viết có được xuất bản trong vòng 3 giờ qua không
+            $publishedAt = $article->published_at; // Sử dụng accessor đã tạo
+            $publishedWithinThreeHours = $publishedAt ? $publishedAt->diffInHours(now()) < 3 : false;
+            if (!$publishedWithinThreeHours) {
+                DB::rollBack();
+                return redirect()->back()->with('sweet_alert', [
+                    'type' => 'warning',
+                    'title' => 'Không thể gửi yêu cầu!',
+                    'text' => 'Chỉ có thể yêu cầu chỉnh sửa trong vòng 3 giờ sau khi bài viết được xuất bản.'
+                ]);
+            }
+
             // Kiểm tra xem đã có yêu cầu pending nào chưa
             $existingRequest = ArticleEditRequest::where('article_id', $article_id)
                 ->where('author_id', Auth::id())
@@ -70,21 +92,33 @@ class ArticleEditRequestController extends Controller
 
             if ($existingRequest) {
                 DB::rollBack();
-                return redirect()->back()->with('error', 'Bạn đã có một yêu cầu chỉnh sửa đang chờ xử lý cho bài viết này.');
+                return redirect()->back()->with('sweet_alert', [
+                    'type' => 'warning',
+                    'title' => 'Không thể gửi yêu cầu!',
+                    'text' => 'Bạn đã có một yêu cầu chỉnh sửa đang chờ xử lý cho bài viết này.'
+                ]);
             }
+
+            // Validate field_to_edit
+            $request->validate([
+                'reason' => 'required|string',
+                'field_to_edit' => 'required|in:title,content,category_id,subcategory_id,thumbnail_url'
+            ]);
 
             // Tạo yêu cầu mới
             $editRequest = new ArticleEditRequest();
             $editRequest->article_id = $article_id;
             $editRequest->author_id = Auth::id();
             $editRequest->reason = $request->input('reason');
+            $editRequest->field_to_edit = $request->input('field_to_edit');
             $editRequest->status = 'pending';
+            $editRequest->request_expires_at = now()->addHour(); // Hết hạn sau 1 giờ
             $editRequest->save();
 
             Log::info('Created edit request:', ['editRequest' => $editRequest->toArray()]);
 
             // Tạo thông báo cho admin
-            $admins = User::where('role', 1)->get();
+            $admins = User::where('role_id', 1)->get();
             foreach ($admins as $admin) {
                 Notification::create([
                     'user_id' => $admin->user_id,
@@ -94,7 +128,9 @@ class ArticleEditRequestController extends Controller
                     'data' => json_encode([
                         'article_id' => $article_id,
                         'request_id' => $editRequest->id,
-                        'author_id' => Auth::id()
+                        'author_id' => Auth::id(),
+                        'field_to_edit' => $request->input('field_to_edit'),
+                        'expires_at' => $editRequest->request_expires_at
                     ]),
                     'read_at' => null
                 ]);
@@ -103,14 +139,22 @@ class ArticleEditRequestController extends Controller
             DB::commit();
             Log::info('Edit request process completed successfully');
 
-            return redirect()->back()->with('success', 'Yêu cầu chỉnh sửa đã được gửi thành công.');
+            return redirect()->back()->with('sweet_alert', [
+                'type' => 'success',
+                'title' => 'Thành công!',
+                'text' => 'Yêu cầu chỉnh sửa đã được gửi thành công và sẽ hết hạn sau 1 giờ nếu không được phê duyệt.'
+            ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error in ArticleEditRequestController@store: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
 
-            return redirect()->back()->with('error', 'Đã xảy ra lỗi khi gửi yêu cầu: ' . $e->getMessage());
+            return redirect()->back()->with('sweet_alert', [
+                'type' => 'error',
+                'title' => 'Lỗi!',
+                'text' => 'Đã xảy ra lỗi khi gửi yêu cầu: ' . $e->getMessage()
+            ]);
         }
     }
 

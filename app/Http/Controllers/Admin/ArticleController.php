@@ -117,6 +117,25 @@ class ArticleController extends Controller
             'published_at' => now()->toDateTimeString()
         ];
 
+        // Cập nhật bảng approvals
+        $approval = \App\Models\Approval::where('article_id', $article->article_id)->first();
+        if ($approval) {
+            $approval->update([
+                'status' => 'approved',
+                'approved_by' => auth()->id(),
+                'updated_at' => now()
+            ]);
+        } else {
+            \App\Models\Approval::create([
+                'article_id' => $article->article_id,
+                'type' => 'article',
+                'user_id' => $article->author_id,
+                'status' => 'approved',
+                'remarks' => 'Bài viết đã được duyệt',
+                'approved_by' => auth()->id(),
+            ]);
+        }
+
         // Tạo log kiểm duyệt
         try {
             ModerationLog::createLog(
@@ -139,7 +158,18 @@ class ArticleController extends Controller
         }
 
         // Gửi thông báo cho tác giả
-        $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã được duyệt."));
+        \App\Helpers\NotificationHelper::sendCustomNotification(
+            $article->author,
+            'Cập nhật trạng thái bài viết',
+            "Bài viết '{$article->title}' của bạn đã được duyệt.",
+            'article_status_updated',
+            [
+                'article_id' => $article->article_id,
+                'article_title' => $article->title,
+                'status' => $article->status,
+                'updated_at' => now()
+            ]
+        );
 
         return redirect()->back()->with('success', 'Bài viết đã được duyệt.');
     }
@@ -372,7 +402,7 @@ class ArticleController extends Controller
                     'article_id' => $article->article_id,
                     'user_id' => auth()->id(),
                     'title' => $request->title,
-                    'slug' => $request->slug,
+                    'slug' => $request->slug ?? $article->slug, // Ensure slug is never null by falling back to article's slug
                     'content' => $content,
                     'category_id' => $request->category_id,
                     'subcategory_id' => $request->subcategory_id,
@@ -422,7 +452,19 @@ class ArticleController extends Controller
                     $admins = User::where('role_id', 1)
                         ->where('user_id', '!=', auth()->id())
                         ->get();
-                    Notification::send($admins, new NewArticleSubmitted($article));
+                    foreach ($admins as $admin) {
+                        \App\Helpers\NotificationHelper::sendCustomNotification(
+                            $admin,
+                            'Bài viết mới đang chờ duyệt',
+                            "Bài viết mới đang chờ duyệt: {$article->title}",
+                            'new_article_submitted',
+                            [
+                                'article_id' => $article->article_id,
+                                'status' => $article->status,
+                                'pending_count' => Article::where('status', 'pending')->count()
+                            ]
+                        );
+                    }
                 }
 
                 return redirect()->route('articles.index')->with('success', 'Bài viết đã được tạo thành công!');
@@ -721,7 +763,7 @@ class ArticleController extends Controller
                 'article_id' => $article->article_id,
                 'user_id' => auth()->id(),
                 'title' => $request->title,
-                'slug' => $request->slug,
+                'slug' => $request->slug ?? $article->slug, // Ensure slug is never null by falling back to article's slug
                 'content' => $content,
                 'category_id' => $request->category_id,
                 'subcategory_id' => $request->subcategory_id,
@@ -790,13 +832,35 @@ class ArticleController extends Controller
                 // Gửi thông báo cho tác giả
                 $author = User::find($article->author_id);
                 if ($author && $author->id !== auth()->id()) {
-                    $author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã được duyệt và xuất bản."));
+                    \App\Helpers\NotificationHelper::sendCustomNotification(
+                        $author,
+                        'Cập nhật trạng thái bài viết',
+                        "Bài viết '{$article->title}' của bạn đã được duyệt và xuất bản.",
+                        'article_status_updated',
+                        [
+                            'article_id' => $article->article_id,
+                            'article_title' => $article->title,
+                            'status' => $article->status,
+                            'updated_at' => now()
+                        ]
+                    );
                 }
             } elseif ($status === 'rejected') {
                 // Gửi thông báo cho tác giả
                 $author = User::find($article->author_id);
                 if ($author && $author->id !== auth()->id()) {
-                    $author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã bị từ chối."));
+                    \App\Helpers\NotificationHelper::sendCustomNotification(
+                        $author,
+                        'Cập nhật trạng thái bài viết',
+                        "Bài viết '{$article->title}' của bạn đã bị từ chối.",
+                        'article_status_updated',
+                        [
+                            'article_id' => $article->article_id,
+                            'article_title' => $article->title,
+                            'status' => $article->status,
+                            'updated_at' => now()
+                        ]
+                    );
                 }
             }
 
@@ -850,6 +914,26 @@ class ArticleController extends Controller
         // Lấy lý do từ chối nếu có
         $reason = $request->input('rejection_reason', 'Không đạt yêu cầu');
 
+        // Cập nhật bảng approvals
+        $approval = \App\Models\Approval::where('article_id', $article->article_id)->first();
+        if ($approval) {
+            $approval->update([
+                'status' => 'rejected',
+                'approved_by' => auth()->id(),
+                'updated_at' => now(),
+                'remarks' => $reason
+            ]);
+        } else {
+            \App\Models\Approval::create([
+                'article_id' => $article->article_id,
+                'type' => 'article',
+                'user_id' => $article->author_id,
+                'status' => 'rejected',
+                'remarks' => $reason,
+                'approved_by' => auth()->id(),
+            ]);
+        }
+
         // Tạo log kiểm duyệt
         try {
             ModerationLog::createLog(
@@ -873,7 +957,17 @@ class ArticleController extends Controller
         }
 
         // Gửi thông báo cho tác giả
-        $article->author->notify(new ArticleRejected($article, $request->rejection_reason));
+        \App\Helpers\NotificationHelper::sendCustomNotification(
+            $article->author,
+            'Bài viết bị từ chối',
+            "Bài viết '{$article->title}' của bạn đã bị từ chối. Lý do: {$request->rejection_reason}",
+            'article_rejected',
+            [
+                'article_id' => $article->article_id,
+                'title' => $article->title,
+                'reason' => $request->rejection_reason
+            ]
+        );
 
         return redirect()->back()->with('success', 'Bài viết đã bị từ chối.');
     }
@@ -949,11 +1043,19 @@ class ArticleController extends Controller
         // Gửi thông báo cho tác giả nếu admin không phải là tác giả
         if ($article->author_id !== auth()->id()) {
             try {
-                $article->author->notify(new ArticleStatusUpdated(
-                    $article,
+                \App\Helpers\NotificationHelper::sendCustomNotification(
+                    $article->author,
+                    'Cập nhật trạng thái bài viết',
                     "Bài viết '{$article->title}' của bạn đã được " .
-                        ($article->status === 'published' ? 'hiện' : 'ẩn') . "."
-                ));
+                        ($article->status === 'published' ? 'hiện' : 'ẩn') . ".",
+                    'article_status_updated',
+                    [
+                        'article_id' => $article->article_id,
+                        'article_title' => $article->title,
+                        'status' => $article->status,
+                        'updated_at' => now()
+                    ]
+                );
             } catch (\Exception $e) {
                 Log::error("Không thể gửi thông báo: " . $e->getMessage());
             }

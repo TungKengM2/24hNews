@@ -63,22 +63,25 @@
                         @auth
                             @forelse(auth()->user()->notifications()->whereNull('read_at')->where('type', 'App\Notifications\NewArticleFromFollowedAuthor')->take(5)->get() as $notification)
                                 <li>
+                                    @php
+                                        $data = is_array($notification->data) ? $notification->data : json_decode($notification->data, true);
+                                    @endphp
                                     <a class="dropdown-item d-flex align-items-start py-2 px-3"
-                                        href="/articles/{{ $notification->data['article_slug'] }}"
+                                        href="/articles/{{ $data['article_slug'] ?? '#' }}"
                                         onclick="markNotificationAsRead('{{ $notification->id }}')">
                                         <div class="flex-shrink-0 me-2">
-                                            <img src="{{ $notification->data['author_avatar'] ?? asset('images/default-avatar.png') }}"
+                                            <img src="{{ $data['author_avatar'] ?? asset('images/default-avatar.png') }}"
                                                 width="30" class="rounded-circle">
                                         </div>
                                         <div class="flex-grow-1 overflow-hidden">
                                             <div class="d-flex justify-content-between">
                                                 <span
-                                                    class="fw-bold text-truncate">{{ $notification->data['author_name'] }}</span>
+                                                    class="fw-bold text-truncate">{{ $data['author_name'] ?? 'Tác giả' }}</span>
                                                 <small
                                                     class="text-muted ms-2">{{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}</small>
                                             </div>
                                             <div class="text-truncate" style="max-width: 220px;">
-                                                {{ Str::limit($notification->data['message'], 50) }}
+                                                {{ Str::limit($data['message'] ?? 'Thông báo mới', 50) }}
                                             </div>
                                         </div>
                                     </a>

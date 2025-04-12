@@ -13,6 +13,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+
+        // Kiểm tra các yêu cầu chỉnh sửa và thời gian chỉnh sửa đã hết hạn mỗi phút
+        $schedule->command('articles:process-edit-requests')->everyMinute();
     }
 
     /**

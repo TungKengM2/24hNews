@@ -75,7 +75,7 @@ class ArticleController extends Controller
             }
 
             // KIỂM TRA QUYỀN CHỈNH SỬA
-            if ($article->status === 'published' || $article->status === 'pending') {
+            if ($article->status === 'published' || $article->status === 'editing') {
                 $editStatus = ArticleEditRequestController::getEditStatus($article->article_id);
                 $hasBeenEdited = $editStatus['request'] && $article->updated_at > $editStatus['request']->created_at;
 
@@ -86,7 +86,74 @@ class ArticleController extends Controller
                         ->route('author.articles.index')
                         ->with('error', 'Bạn cần xin phép chỉnh sửa để cập nhật bài viết này.');
                 }
+
+                // Kiểm tra xem thời gian chỉnh sửa có còn hiệu lực không
+                if ($editStatus['status'] === 'approved' && $editStatus['request']->edit_expires_at < now()) {
+                    return redirect()
+                        ->route('author.articles.index')
+                        ->with('error', 'Thời gian chỉnh sửa đã hết hạn.');
+                }
+
+                // Kiểm tra xem người dùng có đang chỉnh sửa đúng trường đã xin phép không
+                if ($editStatus['status'] === 'approved') {
+                    $allowedField = $editStatus['request']->field_to_edit;
+                    $requestData = $request->all();
+
+                    // Kiểm tra xem có đang cố gắng chỉnh sửa các trường khác không
+                    $fieldsChanged = [];
+                    $originalArticle = Article::find($article->article_id);
+
+                    // Lưu lại các giá trị gốc để debug
+                    Log::info('Kiểm tra thay đổi trường:', [
+                        'allowed_field' => $allowedField,
+                        'original_title' => $originalArticle->title,
+                        'request_title' => $request->title,
+                        'original_content' => substr($originalArticle->content, 0, 50) . '...',
+                        'request_content' => substr($request->content, 0, 50) . '...',
+                        'original_category_id' => $originalArticle->category_id,
+                        'request_category_id' => $request->category_id,
+                        'original_subcategory_id' => $originalArticle->subcategory_id,
+                        'request_subcategory_id' => $request->subcategory_id,
+                    ]);
+
+                    // Khi form submit, các trường disabled vẫn được gửi lên với giá trị hiện tại
+                    // Nên chỉ kiểm tra trường được phép chỉnh sửa
+
+                    // Chỉ kiểm tra trường thumbnail_url nếu có file được tải lên
+                    if ($allowedField !== 'thumbnail_url' && $request->hasFile('thumbnail_url')) {
+                        $fieldsChanged[] = 'thumbnail_url';
+                    }
+
+                    if (!empty($fieldsChanged)) {
+                        return redirect()
+                            ->route('author.articles.edit', $article)
+                            ->with('error', 'Bạn chỉ được phép chỉnh sửa trường ' . $allowedField . '. Các trường đã thay đổi: ' . implode(', ', $fieldsChanged));
+                    }
+
+                    // Kiểm tra xem trường được phép chỉnh sửa có thay đổi không
+                    $fieldChanged = false;
+
+                    if ($allowedField === 'title' && $originalArticle->title != $request->title) {
+                        $fieldChanged = true;
+                    } elseif ($allowedField === 'content' && $originalArticle->content != $request->content) {
+                        $fieldChanged = true;
+                    } elseif ($allowedField === 'category_id' && $originalArticle->category_id != $request->category_id) {
+                        $fieldChanged = true;
+                    } elseif ($allowedField === 'subcategory_id' && $originalArticle->subcategory_id != $request->subcategory_id) {
+                        $fieldChanged = true;
+                    } elseif ($allowedField === 'thumbnail_url' && $request->hasFile('thumbnail_url')) {
+                        $fieldChanged = true;
+                    }
+
+                    if (!$fieldChanged) {
+                        return redirect()
+                            ->route('author.articles.edit', $article)
+                            ->with('warning', 'Bạn chưa thay đổi nội dung của trường ' . $allowedField . '. Vui lòng thực hiện thay đổi trước khi cập nhật.');
+                    }
+                }
             }
+
+            // Đối với bài viết draft, rejected, archived, pending: cho phép chỉnh sửa đầy đủ
 
             $rules = [
                 'title' => 'required|string|max:255',
@@ -108,7 +175,39 @@ class ArticleController extends Controller
                         ->with('error', 'Danh mục con phải thuộc danh mục cha đã chọn.');
                 }
             }
-            $request->validate($rules);
+            // Chỉ validate khi không phải là bài viết editing hoặc khi là bài viết editing và đang chỉnh sửa trường title hoặc slug
+            $originalStatus = $article->getOriginal('status');
+            $editStatus = null;
+            $allowedField = null;
+
+            if ($originalStatus === 'editing') {
+                $editStatus = ArticleEditRequestController::getEditStatus($article->article_id);
+                $allowedField = $editStatus['request']->field_to_edit;
+
+                // Chỉ validate các trường cần thiết dựa trên trường được phép chỉnh sửa
+                if ($allowedField === 'title') {
+                    $request->validate([
+                        'title' => $rules['title']
+                    ]);
+                } elseif ($allowedField === 'content') {
+                    // Không cần validate content
+                } elseif ($allowedField === 'category_id') {
+                    $request->validate([
+                        'category_id' => $rules['category_id']
+                    ]);
+                } elseif ($allowedField === 'subcategory_id') {
+                    $request->validate([
+                        'subcategory_id' => $rules['subcategory_id']
+                    ]);
+                } elseif ($allowedField === 'thumbnail_url') {
+                    $request->validate([
+                        'thumbnail_url' => $rules['thumbnail_url']
+                    ]);
+                }
+            } else {
+                // Nếu không phải bài viết editing, validate tất cả các trường
+                $request->validate($rules);
+            }
 
             if ($request->status === 'draft') {
                 $article->update([
@@ -290,15 +389,75 @@ class ArticleController extends Controller
 
             $originalStatus = $article->getOriginal('status'); // Lấy trạng thái gốc trước khi cập nhật
 
-            $article->update([
-                'title' => $request->title,
-                'slug' => $request->slug,
-                'content' => $content,
-                'category_id' => $request->category_id,
-                'subcategory_id' => $request->subcategory_id,
-                // Nếu trạng thái gốc là 'editing', chuyển về 'pending', ngược lại giữ nguyên 'pending'
-                'status' => ($originalStatus === 'editing') ? 'pending' : 'pending',
-            ]);
+            // Xác định trạng thái mới dựa trên trạng thái gốc
+            $newStatus = $originalStatus;
+
+            // Nếu là bài viết editing hoặc draft, chuyển về pending
+            if ($originalStatus === 'editing' || $originalStatus === 'draft') {
+                $newStatus = 'pending';
+            }
+            // Nếu là bài viết rejected, archived, giữ nguyên trạng thái
+            // Nếu là bài viết pending, giữ nguyên trạng thái pending
+
+            // Nếu là bài viết editing, chỉ cập nhật trường được phép chỉnh sửa
+            if ($originalStatus === 'editing') {
+                // Sử dụng $allowedField đã được xác định ở phần validation
+                $updateData = ['status' => $newStatus];
+
+                try {
+                    if ($allowedField === 'title') {
+                        $updateData['title'] = $request->title;
+                    } elseif ($allowedField === 'content') {
+                        $updateData['content'] = $content;
+                    } elseif ($allowedField === 'category_id') {
+                        $updateData['category_id'] = $request->category_id;
+                    } elseif ($allowedField === 'subcategory_id') {
+                        $updateData['subcategory_id'] = $request->subcategory_id;
+                    } elseif ($allowedField === 'thumbnail_url' && $request->hasFile('thumbnail_url')) {
+                        // Xử lý thumbnail_url nếu cần
+                    }
+
+                    $article->update($updateData);
+
+                    // Log thông tin cập nhật
+                    Log::info('Cập nhật bài viết editing thành công:', [
+                        'article_id' => $article->article_id,
+                        'allowed_field' => $allowedField,
+                        'update_data' => $updateData
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('Lỗi khi cập nhật bài viết editing:', [
+                        'article_id' => $article->article_id,
+                        'allowed_field' => $allowedField,
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
+                    ]);
+
+                    return redirect()
+                        ->back()
+                        ->withInput()
+                        ->with('error', 'Lỗi khi cập nhật bài viết: ' . $e->getMessage());
+                }
+            } else {
+                // Đối với các bài viết khác, cập nhật tất cả các trường
+                $article->update([
+                    'title' => $request->title,
+                    'slug' => $request->slug,
+                    'content' => $content,
+                    'category_id' => $request->category_id,
+                    'subcategory_id' => $request->subcategory_id,
+                    'status' => $newStatus,
+                ]);
+
+                // Log thông tin cập nhật
+                Log::info('Cập nhật bài viết:', [
+                    'article_id' => $article->article_id,
+                    'status' => $newStatus
+                ]);
+            }
+
+            // Log trạng thái cập nhật
+            Log::info('Cập nhật bài viết: ID=' . $article->article_id . ', Trạng thái gốc=' . $originalStatus . ', Trạng thái mới=' . $newStatus);
 
             // Lưu trạng thái sau khi cập nhật
             $afterState = [
@@ -337,7 +496,7 @@ class ArticleController extends Controller
                 'article_id' => $article->article_id,
                 'user_id' => auth()->id(),
                 'title' => $request->title,
-                'slug' => $request->slug,
+                'slug' => $request->slug ?? $article->slug, // Ensure slug is never null by falling back to article's slug
                 'content' => $content,
                 'category_id' => $request->category_id,
                 'subcategory_id' => $request->subcategory_id,
@@ -404,45 +563,76 @@ class ArticleController extends Controller
             try {
                 // Gửi thông báo cho admin và moderator nếu bài viết được cập nhật từ trạng thái 'editing'
                 if ($originalStatus === 'editing') {
-                    // Thông báo cho Admin
-                    $admin = User::where('role', 'admin')->first();
-                    if ($admin) {
-                        \App\Models\Notification::create([
-                            'user_id' => $admin->user_id,
-                            'title' => 'Bài viết đã được cập nhật và cần duyệt lại',
-                            'message' => 'Tác giả ' . auth()->user()->name . ' đã cập nhật bài viết: ' . $article->title,
-                            'type' => 'article_updated_pending',
-                            'data' => json_encode(['article_id' => $article->article_id]),
-                        ]);
+                    // Thông báo cho tất cả Admin
+                    $admins = User::where('role_id', 1)->get();
+                    foreach ($admins as $admin) {
+                        \App\Helpers\NotificationHelper::sendCustomNotification(
+                            $admin,
+                            'Bài viết đã được cập nhật và cần duyệt lại',
+                            'Tác giả ' . auth()->user()->username . ' đã cập nhật bài viết: ' . $article->title,
+                            'article_updated_pending',
+                            [
+                                'article_id' => $article->article_id,
+                                'status' => $article->status,
+                                'pending_count' => Article::where('status', 'pending')->count()
+                            ]
+                        );
                     }
                     // Thông báo cho Moderator
-                    $moderator = $article->category->moderator;
-                    if ($moderator) {
-                         \App\Models\Notification::create([
-                            'user_id' => $moderator->user_id,
-                            'title' => 'Bài viết đã được cập nhật và cần duyệt lại',
-                            'message' => 'Tác giả ' . auth()->user()->name . ' đã cập nhật bài viết: ' . $article->title . ' trong danh mục bạn quản lý.',
-                            'type' => 'article_updated_pending',
-                            'data' => json_encode(['article_id' => $article->article_id]),
-                        ]);
+                    if ($article->category && $article->category->moderator) {
+                        $moderator = $article->category->moderator;
+                        \App\Helpers\NotificationHelper::sendCustomNotification(
+                            $moderator,
+                            'Bài viết đã được cập nhật và cần duyệt lại',
+                            'Tác giả ' . auth()->user()->username . ' đã cập nhật bài viết: ' . $article->title . ' trong danh mục bạn quản lý.',
+                            'article_updated_pending',
+                            [
+                                'article_id' => $article->article_id,
+                                'status' => $article->status,
+                                'link' => route('moderator.articles.show', $article)
+                            ]
+                        );
                     }
                 } else {
                     // Gửi thông báo cho moderator quản lý danh mục này (khi gửi lần đầu)
                     $moderator = $article->category->moderator;
                     if ($moderator) {
-                        $moderator->notify(new PendingArticleNotification($article));
+                        \App\Helpers\NotificationHelper::sendCustomNotification(
+                            $moderator,
+                            'Bài viết mới cần duyệt',
+                            'Bài viết mới cần duyệt: ' . $article->title,
+                            'pending_article',
+                            [
+                                'article_id' => $article->article_id,
+                                'link' => route('moderator.articles.show', $article)
+                            ]
+                        );
                     }
                 }
             } catch (Exception $e) {
                 Log::error('Lỗi gửi thông báo: ' . $e->getMessage());
             }
 
+            // Xác định thông báo phù hợp với trạng thái bài viết
+            $successMessage = '';
+            if ($newStatus === 'pending') {
+                $successMessage = 'Bài viết đã được cập nhật thành công và đang chờ phê duyệt!';
+            } elseif ($newStatus === 'draft') {
+                $successMessage = 'Bài viết đã được cập nhật thành công và được lưu dưới dạng nháp!';
+            } elseif ($newStatus === 'rejected') {
+                $successMessage = 'Bài viết đã được cập nhật thành công và vẫn đang ở trạng thái bị từ chối!';
+            } elseif ($newStatus === 'archived') {
+                $successMessage = 'Bài viết đã được cập nhật thành công và vẫn đang ở trạng thái đã lưu trữ!';
+            } else {
+                $successMessage = 'Bài viết đã được cập nhật thành công!';
+            }
+
             // Log xác nhận session success đã được thiết lập
-            Log::info('Session success đã được thiết lập sau khi cập nhật: Bài viết đã được cập nhật thành công và đang chờ phê duyệt!');
+            Log::info('Session success đã được thiết lập sau khi cập nhật: ' . $successMessage);
 
             return redirect()
                 ->route('author.articles.index')
-                ->with('success', 'Bài viết đã được cập nhật thành công và đang chờ phê duyệt!');
+                ->with('success', $successMessage);
         } catch (Exception $e) {
             Log::error('Lỗi cập nhật bài viết: ' . $e->getMessage() . "\nStack trace: " . $e->getTraceAsString());
             return redirect()
@@ -698,7 +888,7 @@ class ArticleController extends Controller
                 'article_id' => $article->article_id,
                 'user_id' => auth()->id(),
                 'title' => $request->title,
-                'slug' => $request->slug,
+                'slug' => $request->slug ?? $article->slug, // Ensure slug is never null by falling back to article's slug
                 'content' => $content,
                 'category_id' => $request->category_id,
                 'subcategory_id' => $request->subcategory_id,
@@ -746,7 +936,16 @@ class ArticleController extends Controller
             // Gửi thông báo cho moderator quản lý danh mục này
             $moderator = $article->category->moderator;
             if ($moderator) {
-                $moderator->notify(new PendingArticleNotification($article));
+                \App\Helpers\NotificationHelper::sendCustomNotification(
+                    $moderator,
+                    'Bài viết mới cần duyệt',
+                    'Bài viết mới cần duyệt: ' . $article->title,
+                    'pending_article',
+                    [
+                        'article_id' => $article->article_id,
+                        'link' => route('moderator.articles.show', $article)
+                    ]
+                );
             }
 
             return redirect()
@@ -939,7 +1138,18 @@ class ArticleController extends Controller
                 ($article->status === 'published' ? 'duyệt.' : 'từ chối.');
 
             try {
-                $article->author->notify(new ArticleStatusUpdated($article, $message));
+                \App\Helpers\NotificationHelper::sendCustomNotification(
+                    $article->author,
+                    'Cập nhật trạng thái bài viết',
+                    $message,
+                    'article_status_updated',
+                    [
+                        'article_id' => $article->article_id,
+                        'article_title' => $article->title,
+                        'status' => $article->status,
+                        'updated_at' => now()
+                    ]
+                );
             } catch (\Exception $e) {
                 Log::error("Lỗi khi gửi thông báo: " . $e->getMessage());
             }
@@ -987,7 +1197,16 @@ class ArticleController extends Controller
 
             // Gửi thông báo cho moderator quản lý danh mục này nếu có
             if ($article->category && $article->category->moderator) {
-                $article->category->moderator->notify(new PendingArticleNotification($article));
+                \App\Helpers\NotificationHelper::sendCustomNotification(
+                    $article->category->moderator,
+                    'Bài viết mới cần duyệt',
+                    'Bài viết mới cần duyệt: ' . $article->title,
+                    'pending_article',
+                    [
+                        'article_id' => $article->article_id,
+                        'link' => route('moderator.articles.show', $article)
+                    ]
+                );
             }
 
             return redirect()

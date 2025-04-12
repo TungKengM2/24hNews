@@ -3,7 +3,7 @@
     <ul>
         @foreach (auth()->user()->notifications as $notification)
             @php
-                $data = $notification->data;
+                $data = is_array($notification->data) ? $notification->data : json_decode($notification->data, true);
                 $article = \App\Models\Article::find($data['article_id'] ?? null);
             @endphp
 

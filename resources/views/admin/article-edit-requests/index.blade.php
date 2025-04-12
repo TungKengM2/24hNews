@@ -43,6 +43,25 @@
                                 </div>
                             @endif
 
+                            @if(session('sweet_alert'))
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        Swal.fire({
+                                            icon: '{{ session('sweet_alert.type') }}',
+                                            title: '{{ session('sweet_alert.title') }}',
+                                            text: '{{ session('sweet_alert.text') }}',
+                                            @if(session('sweet_alert.type') == 'success')
+                                            timer: 3000,
+                                            timerProgressBar: true,
+                                            showConfirmButton: false
+                                            @else
+                                            confirmButtonText: 'Đóng'
+                                            @endif
+                                        });
+                                    });
+                                </script>
+                            @endif
+
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover">
                                     <thead class="bg-primary text-white">
@@ -70,10 +89,10 @@
                                                 <td>{{ $request->reason }}</td>
                                                 <td>{{ $request->created_at->format('d/m/Y H:i') }}</td>
                                                 <td class="text-center">
-                                                    <button type="button" class="btn btn-success btn-sm" onclick="showApproveModal({{ $request->id }})">
+                                                    <button type="button" class="btn btn-success btn-sm approve-btn" data-id="{{ $request->id }}">
                                                         <i class="fas fa-check"></i> Đồng ý
                                                     </button>
-                                                    <button type="button" class="btn btn-danger btn-sm" onclick="showRejectModal({{ $request->id }})">
+                                                    <button type="button" class="btn btn-danger btn-sm reject-btn" data-id="{{ $request->id }}">
                                                         <i class="fas fa-times"></i> Từ chối
                                                     </button>
                                                 </td>
@@ -106,7 +125,7 @@
                 <h5 class="modal-title">Phê duyệt yêu cầu chỉnh sửa</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="approveForm" method="POST">
+            <form id="approveForm" method="POST" action="">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -131,7 +150,7 @@
                 <h5 class="modal-title">Từ chối yêu cầu chỉnh sửa</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="rejectForm" method="POST">
+            <form id="rejectForm" method="POST" action="">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -149,39 +168,63 @@
 </div>
 @endsection
 
-@section('scripts')
+<!-- Modal Scripts -->
 <script>
-function showApproveModal(requestId) {
-    const modal = document.getElementById('approveModal');
-    const form = document.getElementById('approveForm');
-    form.action = `{{ url('admin/article-edit-requests') }}/${requestId}/approve`;
-    new bootstrap.Modal(modal).show();
-}
+document.addEventListener('DOMContentLoaded', function() {
+    // Define the functions in global scope
+    function showApproveModal(requestId) {
+        const modal = document.getElementById('approveModal');
+        const form = document.getElementById('approveForm');
+        form.action = '/admin/article-edit-requests/' + requestId + '/approve';
+        console.log('Setting approve form action to:', form.action);
+        const bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+    }
 
-function showRejectModal(requestId) {
-    const modal = document.getElementById('rejectModal');
-    const form = document.getElementById('rejectForm');
-    form.action = `{{ url('admin/article-edit-requests') }}/${requestId}/reject`;
-    new bootstrap.Modal(modal).show();
-}
+    function showRejectModal(requestId) {
+        const modal = document.getElementById('rejectModal');
+        const form = document.getElementById('rejectForm');
+        form.action = '/admin/article-edit-requests/' + requestId + '/reject';
+        console.log('Setting reject form action to:', form.action);
+        const bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+    }
 
-// Xử lý thông báo
-@if(session('success'))
-    Swal.fire({
-        icon: 'success',
-        title: 'Thành công!',
-        text: '{{ session('success') }}',
-        timer: 3000,
-        timerProgressBar: true
+    // Add event listeners to buttons
+    document.querySelectorAll('.approve-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const requestId = this.getAttribute('data-id');
+            showApproveModal(requestId);
+        });
     });
-@endif
 
-@if(session('error'))
-    Swal.fire({
-        icon: 'error',
-        title: 'Lỗi!',
-        text: '{{ session('error') }}'
+    document.querySelectorAll('.reject-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const requestId = this.getAttribute('data-id');
+            showRejectModal(requestId);
+        });
     });
-@endif
+
+    // Xử lý thông báo
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: '{{ session('success') }}',
+            timer: 3000,
+            timerProgressBar: true
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: '{{ session('error') }}'
+        });
+    @endif
+});
 </script>
+@section('scripts')
+<!-- Additional scripts can go here -->
 @endsection

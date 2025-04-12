@@ -223,7 +223,9 @@
                                                         @case('archived')
                                                             <span class="badge bg-info">Đã Lưu Trữ</span>
                                                         @break
-
+                                                        @case('editing')
+                                                            <span class="badge bg-info">Đang chỉnh sửa</span>
+                                                            @break
                                                         @case('rejected')
                                                             <span class="badge bg-danger">Từ Chối</span>
                                                         @break
@@ -255,27 +257,47 @@
                                                             <i class="si-eye si"></i>
                                                         </a>
 
-                                                        @if (in_array($article->status, ['published', 'pending']))
-                                                            @php
-                                                                $editStatus = \App\Http\Controllers\Author\ArticleEditRequestController::getEditStatus($article->article_id);
-                                                                $hasBeenEdited = $editStatus['request'] && $article->updated_at > $editStatus['request']->created_at;
-                                                            @endphp
+                                                        @php
+                                                            $editStatus = \App\Http\Controllers\Author\ArticleEditRequestController::getEditStatus($article->article_id);
+                                                            $hasBeenEdited = $editStatus['request'] && $article->updated_at > $editStatus['request']->created_at;
+                                                            $publishedWithinThreeHours = $article->status === 'published' ? ($article->published_at ? $article->published_at->diffInHours(now()) < 3 : false) : true;
+                                                        @endphp
 
+                                                        {{-- Bài viết draft, rejected, archived: hiển thị nút chỉnh sửa đầy đủ --}}
+                                                        @if (in_array($article->status, ['draft', 'rejected', 'archived']))
+                                                            <a href="{{ route('author.articles.edit', $article) }}" class="btn btn-primary btn-sm">
+                                                                <i class="fas fa-edit"></i> Chỉnh sửa
+                                                            </a>
+                                                        {{-- Bài viết pending: hiển thị nút chỉnh sửa đầy đủ --}}
+                                                        @elseif ($article->status === 'pending')
+                                                            <a href="{{ route('author.articles.edit', $article) }}" class="btn btn-primary btn-sm">
+                                                                <i class="fas fa-edit"></i> Chỉnh sửa
+                                                            </a>
+                                                        {{-- Bài viết published: kiểm tra yêu cầu chỉnh sửa --}}
+                                                        @elseif ($article->status === 'published')
                                                             @if($editStatus['status'] === 'pending')
                                                                 <button class="btn btn-warning btn-sm" disabled title="Yêu cầu đang chờ phê duyệt">
                                                                     <i class="fas fa-clock"></i> Đang chờ phê duyệt
                                                                 </button>
-                                                            @elseif($editStatus['status'] === 'approved' && !$hasBeenEdited)
-                                                                <a href="{{ route('author.articles.edit', $article) }}" class="btn btn-primary btn-sm">
-                                                                    <i class="fas fa-edit"></i> Chỉnh sửa
-                                                                </a>
-                                                            @else
+                                                            @elseif($publishedWithinThreeHours)
                                                                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editRequestModal{{ $article->article_id }}">
                                                                     <i class="fas fa-edit"></i> Xin phép chỉnh sửa
                                                                 </button>
+                                                            @else
+                                                                <button type="button" class="btn btn-secondary btn-sm" disabled title="Không thể chỉnh sửa sau 3 giờ xuất bản">
+                                                                    <i class="fas fa-edit"></i> Hết thời gian chỉnh sửa
+                                                                </button>
+                                                            @endif
+                                                        {{-- Bài viết editing: hiển thị nút chỉnh sửa trường cụ thể --}}
+                                                        @elseif ($article->status === 'editing' && $editStatus['request'] && $editStatus['request']->edit_expires_at > now())
+                                                            <a href="{{ route('author.articles.edit', $article) }}" class="btn btn-primary btn-sm">
+                                                                <i class="fas fa-edit"></i> Chỉnh sửa
+                                                            </a>
+                                                        @endif
 
-                                                                {{-- Modal xin phép chỉnh sửa --}}
-                                                                <div class="modal fade" id="editRequestModal{{ $article->article_id }}" tabindex="-1" aria-hidden="true">
+                                                        {{-- Modal xin phép chỉnh sửa cho bài viết published --}}
+                                                        @if($article->status === 'published' && $publishedWithinThreeHours && $editStatus['status'] !== 'pending')
+                                                            <div class="modal fade" id="editRequestModal{{ $article->article_id }}" tabindex="-1" aria-hidden="true">
                                                                     <div class="modal-dialog">
                                                                         <div class="modal-content">
                                                                             <div class="modal-header">
@@ -286,6 +308,8 @@
                                                                                 @csrf
                                                                                 <div class="modal-body">
                                                                                     <p><strong>Bài viết:</strong> {{ $article->title }}</p>
+                                                                                    <p class="text-warning">Lưu ý: Bạn chỉ có thể yêu cầu chỉnh sửa bài viết trong vòng 3 giờ sau khi được xuất bản.</p>
+                                                                                    <p class="text-info">Yêu cầu sẽ tự động hết hạn sau 1 giờ nếu không được phê duyệt.</p>
 
                                                                                     @if ($editStatus['status'] === 'rejected' && $editStatus['request']?->admin_note)
                                                                                         <div class="alert alert-danger mb-3">
@@ -299,6 +323,18 @@
                                                                                             <strong>Lưu ý:</strong> Bạn cần xin phép lại vì bài viết đã được chỉnh sửa sau lần phê duyệt trước.
                                                                                         </div>
                                                                                     @endif
+
+                                                                                    <div class="form-group mb-3">
+                                                                                        <label for="field_to_edit{{ $article->article_id }}">Trường muốn chỉnh sửa <span class="text-danger">*</span></label>
+                                                                                        <select class="form-control" id="field_to_edit{{ $article->article_id }}" name="field_to_edit" required>
+                                                                                            <option value="">-- Chọn trường muốn chỉnh sửa --</option>
+                                                                                            <option value="title">Tiêu đề</option>
+                                                                                            <option value="content">Nội dung</option>
+                                                                                            <option value="category_id">Danh mục</option>
+                                                                                            <option value="subcategory_id">Danh mục con</option>
+                                                                                            <option value="thumbnail_url">Ảnh đại diện</option>
+                                                                                        </select>
+                                                                                    </div>
 
                                                                                     <div class="form-group">
                                                                                         <label for="reason{{ $article->article_id }}">Lý do muốn chỉnh sửa <span class="text-danger">*</span></label>
@@ -321,7 +357,6 @@
                                                                     </div>
                                                                 </div>
                                                             @endif
-                                                        @endif
 
                                                         @if (in_array($article->status, ['published', 'archived']))
                                                             <form
@@ -413,7 +448,23 @@
     @section('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // Hiển thị thông báo thành công nếu có
+                // Hiển thị thông báo SweetAlert2
+                @if (session('sweet_alert'))
+                    Swal.fire({
+                        icon: '{{ session('sweet_alert.type') }}',
+                        title: '{{ session('sweet_alert.title') }}',
+                        text: '{{ session('sweet_alert.text') }}',
+                        @if (session('sweet_alert.type') == 'success')
+                        timer: 3000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                        @else
+                        confirmButtonText: 'Đóng'
+                        @endif
+                    });
+                @endif
+
+                // Hiển thị thông báo thành công nếu có (legacy)
                 @if (session('success'))
                     Swal.fire({
                         icon: 'success',
