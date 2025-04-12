@@ -94,16 +94,11 @@
                                         <th>Số CCCD:</th>
                                         <td>{{ $approval->cccd_number ?? 'N/A' }}</td>
                                     </tr>
+                                    <tr>
+                                        <th>Địa chỉ:</th>
+                                        <td>{{ $user->address ?? 'N/A' }}</td>
+                                    </tr>
                                 </table>
-
-                                <div class="mt-3">
-                                    <h6 class="text-primary">Lý do yêu cầu nâng cấp:</h6>
-                                    <div class="card bg-light">
-                                        <div class="card-body">
-                                            {{ $approval->remarks ?? 'Không có lý do' }}
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

@@ -146,17 +146,17 @@ class ProfileController extends Controller
         }
 
         try {
-            // Validate dữ liệu đầu vào
+            // Validate dữ liệu
             $request->validate([
                 'fullname' => 'required|string|max:255',
                 'phone' => 'required|string|max:15',
                 'address' => 'required|string|max:255',
                 'dob' => 'required|date',
-                'reason' => 'required|string|min:10',
                 'cccd_number' => 'required|string|size:12',
                 'cccd_front' => 'required|image|mimes:jpeg,png,jpg|max:4048',
                 'cccd_back' => 'required|image|mimes:jpeg,png,jpg|max:4048',
-                'certificates.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'certificates' => 'required|array',
+                'certificates.*' => 'required|file|mimes:pdf|max:10240',
             ]);
 
             // Kiểm tra xem số CCCD đã được sử dụng chưa
@@ -241,6 +241,15 @@ class ProfileController extends Controller
                 return redirect()->back()->with('error', 'Ảnh CCCD bị mờ');
             }
 
+            // Lưu chứng chỉ
+            $certificatePaths = [];
+            if ($request->hasFile('certificates')) {
+                foreach ($request->file('certificates') as $certificate) {
+                    $path = $certificate->store('certificates', 'public');
+                    $certificatePaths[] = str_replace('public/', '', $path);
+                }
+            }
+
             // Cập nhật thông tin user
             $user->update([
                 'fullname' => $request->fullname,
@@ -255,10 +264,10 @@ class ProfileController extends Controller
             $approval->user_id = $user->user_id;
             $approval->requested_role = 'author';
             $approval->status = 'pending';
-            $approval->remarks = $request->reason;
             $approval->cccd_number = $request->cccd_number;
-            $approval->cccd_front = $cccdFrontPath;
-            $approval->cccd_back = $cccdBackPath;
+            $approval->cccd_front = str_replace('public/', '', $cccdFrontPath);
+            $approval->cccd_back = str_replace('public/', '', $cccdBackPath);
+            $approval->certificates = json_encode($certificatePaths);
             $approval->save();
 
             return redirect()->route('user.upgrade.result')

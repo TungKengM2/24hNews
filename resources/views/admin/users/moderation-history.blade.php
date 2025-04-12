@@ -32,12 +32,11 @@
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p><strong>ID:</strong> {{ $user->user_id }}</p>
-                                    <p><strong>Tên người dùng:</strong> {{ $user->username }}</p>
+                                    <p><strong>Tên người dùng:</strong> {{ $user->fullname }}</p>
                                     <p><strong>Email:</strong> {{ $user->email }}</p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p><strong>Vai trò hiện tại:</strong> {{ $user->role->name ?? 'Chưa có vai trò' }}</p>
+                                    <p><strong>Vai trò :</strong> {{ $user->role->name ?? 'Chưa có vai trò' }}</p>
                                     <p><strong>Ngày tham gia:</strong> {{ $user->created_at->format('d/m/Y') }}</p>
                                     <p><strong>Số vi phạm:</strong> {{ $user->violation_count ?? 0 }}</p>
                                 </div>
@@ -63,7 +62,7 @@
                                     <table class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Thời gian</th>
+                                                <th>Thời gian yêu cầu</th>
                                                 <th>Hành động</th>
                                                 <th>Người thực hiện</th>
                                                 <th>Chi tiết</th>
@@ -173,6 +172,18 @@
                                                                         <pre class="bg-light p-2">{{ json_encode($log->details, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
                                                                     </div>
                                                                 </div>
+                                                                @if($log->action_type == 'reject')
+                                                                <div class="row mt-3">
+                                                                    <div class="col-12">
+                                                                        <h6>Lý do từ chối:</h6>
+                                                                        <div class="card bg-light">
+                                                                            <div class="card-body">
+                                                                                {{ $log->approval->reject_reason ?? 'Không có lý do' }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                @endif
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
