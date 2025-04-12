@@ -6,9 +6,9 @@
             <!-- Main content -->
             <section class="content">
                 <div class="row">
-                    <h1>Tổng Quan Bài Viết </h1>
+                    <h3>Tổng Quan Bài Viết </h3>
                     <!-- Tổng số bài viết -->
-                    <div class="col-xl-2 col-md-6 col-12  ">
+                    <div class="col-xl-3 col-md-6 col-12  ">
                         <div class="box ">
                             <div class="box-body">
                                 <div class="d-flex align-items-center">
@@ -17,7 +17,7 @@
 
                                     </div>
                                 </div>
-                                <div class="mt-40 d-flex justify-content-between align-items-center">
+                                <div class="mt-20 d-flex justify-content-between align-items-center">
                                     <h3 class="fw-600">{{ $articleStats['total'] }}</h3>
                                     <div class="text-primary">
                                         <i class="fa fa-file-text fa-2x"></i>
@@ -26,48 +26,8 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Archived -->
-                    <div class="col-xl-2 col-md-6 col-12 ">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Bài viết đã lưu trữ</h5>
-
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['archived'] }}</h3>
-                                    <div class="text-secondary">
-                                        <i class="fa fa-archive fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pending -->
-                    <div class="col-xl-2 col-md-6 col-12 ">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Bài viết đang chờ</h5>
-
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['pending'] }}</h3>
-                                    <div class="text-warning">
-                                        <i class="fa fa-hourglass-half fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Published -->
-                    <div class="col-xl-2 col-md-6 col-12 ">
+                     <!-- Published -->
+                     <div class="col-xl-3 col-md-6 col-12 ">
                         <div class="box">
                             <div class="box-body">
                                 <div class="d-flex align-items-center">
@@ -86,8 +46,31 @@
                         </div>
                     </div>
 
+
+                    <!-- Pending -->
+                    <div class="col-xl-3 col-md-6 col-12 ">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="ms-15">
+                                        <h5 class="mb-0">Bài viết đang chờ</h5>
+
+                                    </div>
+                                </div>
+                                <div class="mt-20 d-flex justify-content-between align-items-center">
+                                    <h3 class="fw-600">{{ $articleStats['pending'] }}</h3>
+                                    <div class="text-warning">
+                                        <i class="fa fa-hourglass-half fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
                     <!-- Rejected -->
-                    <div class="col-xl-2 col-md-6 col-12 ">
+                    <div class="col-xl-3 col-md-6 col-12 ">
                         <div class="box">
                             <div class="box-body">
                                 <div class="d-flex align-items-center">
@@ -105,9 +88,28 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Archived -->
+                    {{-- <div class="col-xl-3 col-md-6 col-12 ">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="ms-15">
+                                        <h5 class="mb-0">Bài viết đã lưu trữ</h5>
+
+                                    </div>
+                                </div>
+                                <div class="mt-20 d-flex justify-content-between align-items-center">
+                                    <h3 class="fw-600">{{ $articleStats['archived'] }}</h3>
+                                    <div class="text-secondary">
+                                        <i class="fa fa-archive fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> --}}
 
                     <!-- Draft -->
-                    <div class="col-xl-2 col-md-6 col-12 ">
+                    {{-- <div class="col-xl-3 col-md-6 col-12 ">
                         <div class="box">
                             <div class="box-body">
                                 <div class="d-flex align-items-center">
@@ -124,13 +126,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                 </div>
                 <!-- Thống kê người dùng -->
                 <div class="row">
                     <!-- Tổng số người dùng -->
-                    <h1>Tổng Quan Người Dùng</h1>
+                    <h3>Tổng Quan Người Dùng</h3>
                     <div class="col-xl-3 col-md-6 col-12">
                         <div class="box">
                             <div class="box-body">
@@ -212,7 +214,7 @@
                 </div>
 
                 <div class="row">
-                    <h1>Tổng Quan Tương Tác</h1>
+                    <h3>Tổng Quan Tương Tác</h3>
                     <!-- Lượt thích -->
                     <div class="col-xl-4 col-md-6 col-12">
                         <div class="box">
@@ -361,15 +363,14 @@
 
 
     <script>
-
-
         // Biểu đồ thống kê tag theo số lượng bài viết
         document.addEventListener('DOMContentLoaded', function() {
             const tagsData = @json($tags);
 
             // Lấy tên tag và số lượng bài viết
             const labels = tagsData.map(tag => tag.name); // Tên tag
-            const data = tagsData.map(tag => tag.published_articles_count); // Số lượng bài viết
+            const data = tagsData.map(tag => Math.floor(tag
+            .published_articles_count)); // Số lượng bài viết (chỉ lấy số nguyên)
 
             // Cấu hình chiều rộng canvas dựa trên số lượng tag
             const tagsPerView = 10; // Số tag hiển thị mỗi lần
@@ -387,7 +388,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Số lượng Tag Theo Số Lượng Bài Viết Đã Xuất Bản',
+                        label: 'Biểu Đồ Thống Kê Tag Theo Số Lượng Bài Viết Đã Xuất Bản',
                         data: data,
                         backgroundColor: 'rgba(75, 192, 192, 0.6)',
                         borderColor: 'rgba(75, 192, 192, 1)',
@@ -409,7 +410,10 @@
                             }
                         },
                         y: {
-                            beginAtZero: true // Bắt đầu từ 0 trên trục Y
+                            beginAtZero: true, // Bắt đầu từ 0 trên trục Y,
+                            ticks: {
+                                stepSize: 1 // Bước nhảy của trục Y
+                            }
                         }
                     }
                 }

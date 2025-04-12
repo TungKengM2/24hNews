@@ -117,7 +117,7 @@
                     <a class="icon-link">
                         <i class="la la-user fs-4"></i>
                     </a>
-                    <ul class="dropdownMenu" style="margin-top: 0; margin-top: -50px;" aria-labelledby="">
+                    <ul class="dropdownMenu mr-10 pr-5 " style="margin-top: 0; margin-top: -50px;" aria-labelledby="">
                         @if (Auth::check())
                             @php
                                 $user = Auth::user();
@@ -215,9 +215,11 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('user.upgrade') }}">
-                                        <i class="ti-arrow-up text-muted me-2"></i> Thành người viết báo
-                                    </a>
+                                  <a class="dropdown-item" href="{{ route('user.upgrade') }}">
+
+                                      <i class="la la-pen fs-4 "></i>
+                                      Nâng Cấp Lên Tác Giả
+                                  </a>
                                 </li>
 
                             @endif
