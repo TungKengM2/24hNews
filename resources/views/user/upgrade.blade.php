@@ -145,29 +145,6 @@
                                 </div>
                             </div>
 
-                            <div class="card mb-4">
-                                <div class="card-header bg-light">
-                                    <h5 class="mb-0">Lý do nâng cấp</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="form-group mb-3">
-                                        <label for="reason">Lý do yêu cầu nâng cấp <span class="text-danger">*</span></label>
-                                        <textarea id="reason" name="reason" class="form-control" rows="4"
-                                                  placeholder="Nhập lý do bạn muốn trở thành tác giả" required>{{ old('reason') }}</textarea>
-                                        <small class="text-muted">Lý do phải có ít nhất 10 ký tự</small>
-                                        <div class="alert alert-info mt-2">
-                                            <i class="ti-info-alt"></i> Lưu ý:
-                                            <ul class="mb-0 mt-2">
-                                                <li>Vui lòng nêu rõ lý do bạn muốn trở thành tác giả</li>
-                                                <li>Mô tả kinh nghiệm và kiến thức của bạn trong lĩnh vực muốn viết</li>
-                                                <li>Nêu rõ mục tiêu và định hướng nội dung bạn sẽ viết</li>
-                                                <li>Cam kết tuân thủ quy định và tiêu chuẩn của hệ thống</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             {{-- Nút gửi yêu cầu --}}
                             <div class="form-group text-center">
                                 <button type="submit" class="btn btn-primary btn-lg px-5">Gửi yêu cầu nâng cấp</button>
@@ -204,13 +181,11 @@
             const dobInput = document.getElementById('dob');
             const phoneInput = document.getElementById('phone');
             const cccdInput = document.getElementById('cccd_number');
-            const reasonInput = document.getElementById('reason');
             const provinceSelect = document.getElementById('province');
             const districtSelect = document.getElementById('district');
             const wardSelect = document.getElementById('ward');
             const addressDetailInput = document.getElementById('address_detail');
             const addressInput = document.getElementById('address');
-            const certificatesInput = document.getElementById('certificates');
 
             // Hàm hiển thị lỗi
             function showError(input, message) {
@@ -328,24 +303,6 @@
                 return true;
             }
 
-            // Validate lý do
-            function validateReason() {
-                const value = reasonInput.value.trim();
-                removeError(reasonInput);
-                
-                if (!value) {
-                    showError(reasonInput, 'Lý do là bắt buộc');
-                    return false;
-                }
-                
-                if (value.length < 10) {
-                    showError(reasonInput, 'Lý do phải có ít nhất 10 ký tự');
-                    return false;
-                }
-                
-                return true;
-            }
-
             // Validate địa chỉ
             function validateAddress() {
                 let isValid = true;
@@ -385,34 +342,6 @@
                 return isValid;
             }
 
-            // Validate chứng chỉ
-            function validateCertificates() {
-                removeError(certificatesInput);
-                
-                if (!certificatesInput.files.length) {
-                    showError(certificatesInput, 'Vui lòng tải lên ít nhất một chứng chỉ');
-                    return false;
-                }
-                
-                for (let i = 0; i < certificatesInput.files.length; i++) {
-                    const file = certificatesInput.files[i];
-                    
-                    // Kiểm tra định dạng file
-                    if (file.type !== 'application/pdf') {
-                        showError(certificatesInput, 'Chỉ chấp nhận file PDF');
-                        return false;
-                    }
-                    
-                    // Kiểm tra kích thước file (10MB = 10 * 1024 * 1024 bytes)
-                    if (file.size > 10 * 1024 * 1024) {
-                        showError(certificatesInput, 'Kích thước file không được vượt quá 10MB');
-                        return false;
-                    }
-                }
-                
-                return true;
-            }
-
             // Thêm sự kiện cho từng input
             fullnameInput.addEventListener('input', validateFullname);
             fullnameInput.addEventListener('blur', validateFullname);
@@ -426,15 +355,11 @@
             cccdInput.addEventListener('input', validateCCCD);
             cccdInput.addEventListener('blur', validateCCCD);
             
-            reasonInput.addEventListener('input', validateReason);
-            reasonInput.addEventListener('blur', validateReason);
-            
             provinceSelect.addEventListener('change', validateAddress);
             districtSelect.addEventListener('change', validateAddress);
             wardSelect.addEventListener('change', validateAddress);
             addressDetailInput.addEventListener('input', validateAddress);
             addressDetailInput.addEventListener('blur', validateAddress);
-            certificatesInput.addEventListener('change', validateCertificates);
 
             // Validate form trước khi submit
             form.addEventListener('submit', function(e) {
@@ -442,11 +367,9 @@
                 const isDobValid = validateDob();
                 const isPhoneValid = validatePhone();
                 const isCCCDValid = validateCCCD();
-                const isReasonValid = validateReason();
                 const isAddressValid = validateAddress();
-                const isCertificatesValid = validateCertificates();
                 
-                if (!isFullnameValid || !isDobValid || !isPhoneValid || !isCCCDValid || !isReasonValid || !isAddressValid || !isCertificatesValid) {
+                if (!isFullnameValid || !isDobValid || !isPhoneValid || !isCCCDValid || !isAddressValid) {
                     e.preventDefault();
                 }
             });

@@ -142,9 +142,9 @@ class UserController extends Controller
 
             $approval->update([
                 'status' => 'rejected',
+                'reject_reason' => $request->reject_reason,
                 'processed_at' => now(),
-                'processed_by' => auth()->id(),
-                'rejection_reason' => $request->input('rejection_reason')
+                'processed_by' => auth()->id()
             ]);
 
             // Ghi log kiểm duyệt
@@ -158,7 +158,7 @@ class UserController extends Controller
                     'username' => $user->username,
                     'requested_role' => $approval->requested_role,
                     'approval_id' => $approval->approval_id,
-                    'rejection_reason' => $request->input('rejection_reason')
+                    'rejection_reason' => $request->reject_reason
                 ]),
                 'created_at' => now(),
                 'updated_at' => now()

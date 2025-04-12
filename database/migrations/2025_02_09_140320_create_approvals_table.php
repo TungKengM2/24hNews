@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('cccd_number')->nullable();
             $table->string('cccd_front')->nullable();
             $table->string('cccd_back')->nullable();
+            $table->json('certificates')->nullable();
             $table->string('requested_role')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('reject_reason')->nullable();

@@ -105,9 +105,15 @@ Route::middleware('guest')
 
         Route::post('/signup-user', 'processSignup')->name('signupuser.process');
 
+        Route::get('/signup', 'showSignupUserForm')->name('signup');
+
+        Route::post('/signup', 'processSignup')->name('signup.process');
+
         Route::get('/verify-otp', 'showOtpForm')->name('otp.verify.form');
 
         Route::post('/verify-otp', 'verifyOtp')->name('otp.verify.process');
+
+        Route::post('/resend-otp', 'resendOtp')->name('otp.resend');
 
         Route::get('/forget-user', 'showForgetUserForm')->name('forgetuser');
     });
