@@ -188,6 +188,7 @@ class ArticleController extends Controller
                     $article->update(['thumbnail_url' => $path]);
                 }
 
+
                 $tagIds = $this->processTags($request->input('tags', []));
                 $article->tags()->sync($tagIds);
 
