@@ -311,15 +311,10 @@ class ArticleUserController extends Controller
     {
         $request->validate([
             'article_id' => 'required|exists:articles,article_id',
-            'content' => 'required|string',
-            'parent_id' => 'nullable|exists:comments,comment_id',
+            'content'    => 'required|string',
+            'parent_id'  => 'nullable|exists:comments,comment_id',
         ]);
-
-        $content = $request->content;
-        $articleId = $request->article_id;
-        $userId = auth()->id();
-
-
+    
         $user = auth()->user();
         if (!$user) {
             return response()->json([
@@ -328,7 +323,6 @@ class ArticleUserController extends Controller
             ]);
         }
     
-        // Kiểm tra nếu người dùng bị cấm bình luận
         if ($user->banned_until && now()->lessThan($user->banned_until)) {
             return response()->json([
                 'success' => false,
@@ -336,179 +330,97 @@ class ArticleUserController extends Controller
             ]);
         }
     
-        
-
-        if (!$moderationService->checkComment($content)) {
-
-        // Create a temporary comment to get an ID for logging
-        $tempComment = new Comment([
-            'article_id' => $articleId,
-            'user_id' => $userId,
-            'content' => nl2br(e($content)),
-            'parent_id' => $request->parent_id,
-            'depth' => 0,
-            'status' => 'pending',
+        $content = $request->content;
+    
+        // Tạo mới bình luận với status 'approved'
+        $comment = new Comment([
+            'article_id' => $request->article_id,
+            'user_id'    => $user->user_id,  // Sửa tại đây, lấy user_id thay vì id
+            'content'    => nl2br(e($content)),
+            'parent_id'  => $request->parent_id,
+            'status'     => 'approved',
+            'depth'      => 0,
         ]);
-        $tempComment->save();
-
-        if (!$moderationService->checkComment($content, $tempComment->comment_id, $userId, $articleId)) {
-
-            Log::warning("🚫 Bình luận bị từ chối: " . $content);
-
-            // Update the comment status to rejected
-            $tempComment->status = 'rejected';
-            $tempComment->save();
-
-            return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
-        }
-        
-
-        // If comment passes moderation, update its status to approved
-        $tempComment->status = 'approved';
-
-        // Update depth if it's a reply
+    
         if ($request->parent_id) {
             $parentComment = Comment::find($request->parent_id);
             if ($parentComment) {
-                $tempComment->depth = $parentComment->depth + 1;
+                $comment->depth = $parentComment->depth + 1;
             }
         }
-
-        $tempComment->save();
-
-        // Create moderation log for approved comment
-        try {
-            \App\Models\ModerationLog::createLog(
-                'auto_moderate',
-                'comment',
-                $tempComment->comment_id,
-                [
-                    'action' => 'Tự động duyệt bình luận',
-                    'content' => strip_tags($tempComment->content),
-                    'article_id' => $tempComment->article_id,
-                    'user_id' => $tempComment->user_id,
-                ],
-                ['status' => 'pending'],
-                ['status' => 'approved'],
-                'low'
-            );
-        } catch (\Exception $e) {
-            Log::error("❌ Lỗi khi tạo log kiểm duyệt: " . $e->getMessage());
-        }
-
+    
+        $comment->save();
+    
         return response()->json([
             'success' => true,
-            'message' => 'Bạn đã trả lời bình luận thành công!',
+            'message' => 'Bình luận của bạn đã được đăng thành công!',
         ]);
     }
-}
     
+
+    
+
+
 
     public function storeReplyComment(Request $request, CommentModerationService $moderationService)
-    {
-        $request->validate([
-            'article_id' => 'required|exists:articles,article_id',
-            'content'    => 'required|string',
-            'parent_id'  => 'required|exists:comments,comment_id',
-        ]);
-        $content = $request->content;
+{
+    $request->validate([
+        'article_id' => 'required|exists:articles,article_id',
+        'content'    => 'required|string',
+        'parent_id'  => 'required|exists:comments,comment_id',
+    ]);
 
-    
-        $user = auth()->user();
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Người dùng chưa đăng nhập!',
-            ]);
-        }
-    
-         // Kiểm tra nếu người dùng bị cấm bình luận
-         if ($user->banned_until && now()->lessThan($user->banned_until)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn đã bị tạm khóa bình luận đến ' . $user->banned_until->format('H:i d/m/Y'),
-            ]);
-        }
-
-        
-    
-        // Xác định độ sâu của reply
-        $parentComment = Comment::select('comment_id', 'depth')->find($request->parent_id);
-        $depth = min((int)$parentComment->depth + 1, 2);
-    
-        Comment::create([
-            'article_id' => $request->article_id,
-            'user_id'    => auth()->id(),
-            'content'    => nl2br(e($request->content)),
-            'parent_id'  => $request->parent_id,
-            'depth'      => $depth,
-            'status'     => 'approved',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-    
-
-        $articleId = $request->article_id;
-        $userId = auth()->id();
-        $parentId = $request->parent_id;
-
-        // Get parent comment for depth calculation
-        $parentComment = Comment::find($parentId);
-        $depth = $parentComment ? $parentComment->depth + 1 : 0;
-
-        // Create a temporary comment to get an ID for logging
-        $tempReply = new Comment([
-            'article_id' => $articleId,
-            'user_id' => $userId,
-            'content' => nl2br(e($content)),
-            'parent_id' => $parentId,
-            'depth' => $depth,
-            'status' => 'pending',
-        ]);
-        $tempReply->save();
-
-        if (!$moderationService->checkComment($content, $tempReply->comment_id, $userId, $articleId)) {
-            Log::warning("🚫 Bình luận trả lời bị từ chối: " . $content);
-
-            // Update the comment status to rejected
-            $tempReply->status = 'rejected';
-            $tempReply->save();
-
-            return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
-        }
-
-        // If reply passes moderation, update its status to approved
-        $tempReply->status = 'approved';
-        $tempReply->save();
-
-        // Create moderation log for approved reply
-        try {
-            \App\Models\ModerationLog::createLog(
-                'auto_moderate',
-                'comment',
-                $tempReply->comment_id,
-                [
-                    'action' => 'Tự động duyệt bình luận trả lời',
-                    'content' => strip_tags($tempReply->content),
-                    'article_id' => $tempReply->article_id,
-                    'user_id' => $tempReply->user_id,
-                    'parent_id' => $tempReply->parent_id,
-                ],
-                ['status' => 'pending'],
-                ['status' => 'approved'],
-                'low'
-            );
-        } catch (\Exception $e) {
-            Log::error("❌ Lỗi khi tạo log kiểm duyệt: " . $e->getMessage());
-        }
-
-
+    $user = auth()->user();
+    if (!$user) {
         return response()->json([
-            'success' => true,
-            'message' => 'Bạn đã trả lời bình luận thành công!',
+            'success' => false,
+            'message' => 'Người dùng chưa đăng nhập!',
         ]);
     }
-    
+
+    // Kiểm tra nếu người dùng bị cấm bình luận
+    if ($user->banned_until && now()->lessThan($user->banned_until)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Bạn đã bị tạm khóa bình luận đến ' . $user->banned_until->format('H:i d/m/Y'),
+        ]);
+    }
+
+    $content = $request->content;
+    $articleId = $request->article_id;
+    $parentId = $request->parent_id;
+    $userId = $user->user_id;
+
+    // Tính depth
+    $parentComment = Comment::find($parentId);
+    $depth = $parentComment ? min($parentComment->depth + 1, 2) : 0;
+
+    // Kiểm duyệt trước khi tạo comment
+    if (!$moderationService->checkComment($content, null, $userId, $articleId)) {
+        Log::warning("🚫 Bình luận trả lời bị từ chối: " . $content);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.',
+        ], 403);
+    }
+
+    // Nếu được duyệt, tạo comment
+    Comment::create([
+        'article_id' => $articleId,
+        'user_id'    => $userId,
+        'content'    => nl2br(e($content)),
+        'parent_id'  => $parentId,
+        'depth'      => $depth,
+        'status'     => 'approved',
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Bạn đã trả lời bình luận thành công!',
+    ]);
+}
+
     public function reportComment(Request $request, $article_id, $comment_id)
     {
         // Validate dữ liệu: chỉ cần kiểm tra 'reason' nếu có (article_id và comment_id lấy từ route)
