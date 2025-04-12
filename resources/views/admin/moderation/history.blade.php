@@ -46,7 +46,6 @@
                                     <select name="content_type" id="content_type" class="form-select">
                                         <option value="all" {{ request('content_type') == 'all' ? 'selected' : '' }}>Tất cả</option>
                                         <option value="article" {{ request('content_type') == 'article' ? 'selected' : '' }}>Bài viết</option>
-                                        <option value="comment" {{ request('content_type') == 'comment' ? 'selected' : '' }}>Bình luận</option>
                                         <option value="role_upgrade" {{ request('content_type') == 'role_upgrade' ? 'selected' : '' }}>Nâng cấp vai trò</option>
                                     </select>
                                 </div>
@@ -126,17 +125,7 @@
                                                         @else
                                                             <span class="text-muted">Bài viết #{{ $log->content_id }}</span>
                                                         @endif
-                                                    @elseif($log->content_type == 'comment')
-                                                        @php
-                                                            $comment = App\Models\Comment::find($log->content_id);
-                                                        @endphp
-                                                        @if($comment)
-                                                            <span title="{{ strip_tags($comment->content) }}">
-                                                                {{ Str::limit(strip_tags($comment->content), 30) }}
-                                                            </span>
-                                                        @else
-                                                            <span class="text-muted">Bình luận #{{ $log->content_id }}</span>
-                                                        @endif
+
                                                     @elseif($log->content_type == 'role_upgrade')
                                                         @php
                                                             $user = App\Models\User::find($log->content_id);
@@ -229,15 +218,7 @@
                                                                 <i class="fas fa-history"></i> Xem lịch sử
                                                             </a>
                                                         @endif
-                                                    @elseif($log->content_type == 'comment')
-                                                        @php
-                                                            $comment = App\Models\Comment::find($log->content_id);
-                                                        @endphp
-                                                        @if($comment)
-                                                            <a href="{{ route('comments.moderation-history', $comment) }}" class="btn btn-sm btn-secondary">
-                                                                <i class="fas fa-history"></i> Xem lịch sử
-                                                            </a>
-                                                        @endif
+
                                                     @elseif($log->content_type == 'role_upgrade')
                                                         @php
                                                             $user = App\Models\User::find($log->content_id);

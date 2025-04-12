@@ -50,21 +50,7 @@ class CommentController extends Controller
             'status' => $comment->status,
         ];
 
-        // Create moderation log
-        ModerationLog::createLog(
-            'approve',
-            'comment',
-            $comment->comment_id,
-            [
-                'action' => 'Phê duyệt bình luận',
-                'content' => strip_tags($comment->content),
-                'article_id' => $comment->article_id,
-                'user_id' => $comment->user_id,
-            ],
-            $beforeState,
-            $afterState,
-            'low'
-        );
+        // Comment moderation history has been removed
 
         return redirect()->back()->with('success', 'Bình luận đã được duyệt thành công.');
     }
@@ -89,21 +75,7 @@ class CommentController extends Controller
             'status' => $comment->status,
         ];
 
-        // Create moderation log
-        ModerationLog::createLog(
-            'reject',
-            'comment',
-            $comment->comment_id,
-            [
-                'action' => 'Từ chối bình luận',
-                'content' => strip_tags($comment->content),
-                'article_id' => $comment->article_id,
-                'user_id' => $comment->user_id,
-            ],
-            $beforeState,
-            $afterState,
-            'medium'
-        );
+        // Comment moderation history has been removed
 
         return redirect()->back()->with('success', 'Bình luận đã bị từ chối thành công.');
     }
@@ -118,21 +90,7 @@ class CommentController extends Controller
             'content' => strip_tags($comment->content),
         ];
 
-        // Create moderation log before deleting
-        ModerationLog::createLog(
-            'delete',
-            'comment',
-            $comment->comment_id,
-            [
-                'action' => 'Xóa bình luận',
-                'content' => strip_tags($comment->content),
-                'article_id' => $comment->article_id,
-                'user_id' => $comment->user_id,
-            ],
-            $beforeState,
-            null,
-            'high'
-        );
+        // Comment moderation history has been removed
 
         $comment->delete();
 

@@ -14,6 +14,7 @@
         .criteria-item.passed #current-word-count {
             color: #28a745 !important;
         }
+
         .criteria-item.failed #current-title-length,
         .criteria-item.failed #current-tag-count,
         .criteria-item.failed #current-word-count {
@@ -36,7 +37,8 @@
                         <h4 class="page-title">Cập Nhật Bài Viết</h4>
                         <nav>
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('author.articles.index') }}"><i class="mdi mdi-home-outline"></i></a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('author.articles.index') }}"><i
+                                            class="mdi mdi-home-outline"></i></a></li>
                                 <li class="breadcrumb-item" aria-current="page">Danh Sách Bài Viết</li>
                                 <li class="breadcrumb-item active" aria-current="page">Cập Nhật</li>
                             </ol>
@@ -87,7 +89,8 @@
                                 </div>
                             @endif
 
-                            <form action="{{ route('author.articles.update', $article) }}" method="POST" enctype="multipart/form-data" id="articleForm">
+                            <form action="{{ route('author.articles.update', $article) }}" method="POST"
+                                enctype="multipart/form-data" id="articleForm">
                                 @csrf
                                 @method('PUT')
 
@@ -97,22 +100,28 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="title" class="form-label">Tiêu đề:</label>
-                                            <input type="text" class="form-control" id="title" name="title" value="{{ $article->title }}" required>
+                                            <input type="text" class="form-control" id="title" name="title"
+                                                value="{{ $article->title }}" required>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="slug" class="form-label">Đường dẫn:</label>
-                                            <input type="text" class="form-control" id="slug" name="slug" value="{{ $article->slug }}" required>
+                                            <input type="text" class="form-control" id="slug" name="slug"
+                                                value="{{ $article->slug }}" required>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Danh mục chính</label>
-                                            <select name="category_id" id="parent_category" class="form-control select2-categories">
+                                            <select name="category_id" id="parent_category"
+                                                class="form-control select2-categories">
                                                 <option value="">-- Chọn danh mục chính --</option>
                                                 @foreach ($parentCategories as $category)
                                                     @if ($category->is_active || $article->category_id == $category->category_id)
-                                                        <option value="{{ $category->category_id }}" {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
-                                                            {{ $category->name }} @if (!$category->is_active) (Đã vô hiệu hóa) @endif
+                                                        <option value="{{ $category->category_id }}"
+                                                            {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
+                                                            {{ $category->name }} @if (!$category->is_active)
+                                                                (Đã vô hiệu hóa)
+                                                            @endif
                                                         </option>
                                                     @endif
                                                 @endforeach
@@ -121,22 +130,28 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
-                                            <select name="tags[]" id="tags" class="form-control select2-tags" multiple="multiple" data-placeholder="Chọn hoặc nhập thẻ mới">
+                                            <select name="tags[]" id="tags" class="form-control select2-tags"
+                                                multiple="multiple" data-placeholder="Chọn hoặc nhập thẻ mới">
                                                 @foreach ($tags as $tag)
-                                                    <option value="{{ $tag->name }}" @if (in_array($tag->name, $selectedTags)) selected @endif>
+                                                    <option value="{{ $tag->name }}"
+                                                        @if (in_array($tag->name, $selectedTags)) selected @endif>
                                                         {{ $tag->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới (chấp nhận cả chữ và số).</small>
+                                            <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới
+                                                (chấp nhận cả chữ và số).</small>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Danh mục phụ</label>
-                                            <select name="subcategory_id" id="child_category" class="form-control select2-subcategories" {{ empty($article->category_id) ? 'disabled' : '' }}>
+                                            <select name="subcategory_id" id="child_category"
+                                                class="form-control select2-subcategories"
+                                                {{ empty($article->category_id) ? 'disabled' : '' }}>
                                                 <option value="">-- Chọn danh mục phụ --</option>
-                                                @if($article->subcategory_id)
-                                                    <option value="{{ $article->subcategory_id }}" selected>{{ $article->subcategory->name }}</option>
+                                                @if ($article->subcategory_id)
+                                                    <option value="{{ $article->subcategory_id }}" selected>
+                                                        {{ $article->subcategory->name }}</option>
                                                 @endif
                                             </select>
                                         </div>
@@ -148,9 +163,11 @@
                                     <h5 class="form-section-title">Ảnh Đại Diện</h5>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <input type="file" class="form-control @error('thumbnail_url') is-invalid @enderror" id="thumbnail_url" name="thumbnail_url" accept="image/*">
+                                            <input type="file"
+                                                class="form-control @error('thumbnail_url') is-invalid @enderror"
+                                                id="thumbnail_url" name="thumbnail_url" accept="image/*">
                                             @error('thumbnail_url')
-                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                             @if (session('thumbnail_reasons'))
                                                 <div class="alert alert-warning mt-2">
@@ -168,21 +185,26 @@
                                             <div class="mt-2" id="current-image-container">
                                                 @if ($article->thumbnail_url)
                                                     <p><strong>Ảnh đại diện hiện tại:</strong></p>
-                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Ảnh đại diện" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                                        alt="Ảnh đại diện" class="img-thumbnail"
+                                                        style="max-width: 200px; max-height: 150px;">
                                                 @endif
                                             </div>
                                             <div id="image-preview-container" style="display: none;">
                                                 <p class="mt-2"><strong>Ảnh xem trước:</strong></p>
-                                                <img id="image-preview" src="#" alt="Xem trước" class="img-fluid mb-2">
+                                                <img id="image-preview" src="#" alt="Xem trước"
+                                                    class="img-fluid mb-2">
                                             </div>
                                             <div id="moderation-result" style="display: none;">
-                                                <div id="moderation-loading" class="moderation-loading" style="display: none;">
+                                                <div id="moderation-loading" class="moderation-loading"
+                                                    style="display: none;">
                                                     <div class="spinner-border text-primary" role="status">
                                                         <span class="visually-hidden">Đang kiểm duyệt...</span>
                                                     </div>
                                                     <p>Đang kiểm duyệt ảnh...</p>
                                                 </div>
-                                                <div id="moderation-error" class="alert alert-danger" style="display: none;">
+                                                <div id="moderation-error" class="alert alert-danger"
+                                                    style="display: none;">
                                                     <strong>Lỗi!</strong> <span id="error-message"></span>
                                                 </div>
                                             </div>
@@ -197,7 +219,8 @@
                                 <div class="form-group">
                                     <label for="content" class="form-label">Nội dung</label>
                                     @if (session('violations'))
-                                        <textarea id="full-featured" name="content" style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                                        <textarea id="full-featured" name="content"
+                                            style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
                                             {!! highlightWords(old('content'), session('violations')) !!}
                                         </textarea>
                                     @else
@@ -228,35 +251,41 @@
                                         <div class="criteria-icon failed">✗</div>
                                         <div class="criteria-text criteria-tooltip">
                                             Tiêu đề từ 50-60 ký tự <span id="current-title-length">(0 ký tự)</span>
-                                            <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy đủ trên Google và tối ưu cho SEO</span>
+                                            <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy đủ
+                                                trên Google và tối ưu cho SEO</span>
                                         </div>
                                     </li>
-                                    <li class="criteria-item failed" id="criteria-category" data-target="parent_category">
+                                    <li class="criteria-item failed" id="criteria-category"
+                                        data-target="parent_category">
                                         <div class="criteria-icon failed">✗</div>
                                         <div class="criteria-text criteria-tooltip">
                                             Chọn danh mục chính và phụ
-                                            <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ phù hợp với nội dung bài viết</span>
+                                            <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ phù
+                                                hợp với nội dung bài viết</span>
                                         </div>
                                     </li>
                                     <li class="criteria-item failed" id="criteria-tags" data-target="tags">
                                         <div class="criteria-icon failed">✗</div>
                                         <div class="criteria-text criteria-tooltip">
                                             Chọn 2-5 thẻ tag liên quan <span id="current-tag-count">(0 thẻ)</span>
-                                            <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và tăng khả năng xuất hiện trong tìm kiếm</span>
+                                            <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và tăng khả
+                                                năng xuất hiện trong tìm kiếm</span>
                                         </div>
                                     </li>
                                     <li class="criteria-item failed" id="criteria-thumbnail" data-target="thumbnail_url">
                                         <div class="criteria-icon failed">✗</div>
                                         <div class="criteria-text criteria-tooltip">
                                             Ảnh đại diện chất lượng cao
-                                            <span class="tooltip-text">Ảnh đại diện tối thiểu 1200x630px, rõ nét và vượt qua kiểm duyệt</span>
+                                            <span class="tooltip-text">Ảnh đại diện tối thiểu 1200x630px, rõ nét và vượt
+                                                qua kiểm duyệt</span>
                                         </div>
                                     </li>
                                     <li class="criteria-item failed" id="criteria-content" data-target="content">
                                         <div class="criteria-icon failed">✗</div>
                                         <div class="criteria-text criteria-tooltip">
                                             Nội dung từ 800-1500 từ <span id="current-word-count">(0 từ)</span>
-                                            <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn trong kết quả tìm kiếm và tối ưu cho người đọc</span>
+                                            <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn trong
+                                                kết quả tìm kiếm và tối ưu cho người đọc</span>
                                         </div>
                                     </li>
                                 </ul>
@@ -284,6 +313,7 @@
                 tokenSeparators: [',', ' '],
                 placeholder: 'Chọn hoặc nhập thẻ mới',
                 allowClear: true,
+                maximumSelectionLength: 5,
             });
 
             // Khởi tạo Select2 cho danh mục cha
@@ -325,7 +355,7 @@
 
                     // Gọi AJAX để lấy danh sách danh mục con
                     $.ajax({
-                        url: '{{ route("author.ajax.subcategories") }}',
+                        url: '{{ route('author.ajax.subcategories') }}',
                         type: 'GET',
                         data: {
                             parent_id: parentId
@@ -334,7 +364,9 @@
                             if (response.success && response.data.length > 0) {
                                 // Thêm các option mới
                                 $.each(response.data, function(key, value) {
-                                    childSelect.append('<option value="' + value.category_id + '">' + value.name + '</option>');
+                                    childSelect.append('<option value="' + value
+                                        .category_id + '">' + value.name +
+                                        '</option>');
                                 });
                             }
                         },
@@ -399,7 +431,8 @@
 
                 const tagCriteria = document.getElementById('criteria-tags');
                 const tagCountSpan = document.getElementById('current-tag-count');
-                let selectedTags = $('.select2-tags').select2('data').length || $('select[name="tags[]"] option:selected').length;
+                let selectedTags = $('.select2-tags').select2('data').length || $(
+                    'select[name="tags[]"] option:selected').length;
                 if (tagCountSpan) {
                     tagCountSpan.textContent = `(${selectedTags} thẻ)`;
                     if (selectedTags >= 2 && selectedTags <= 5) tagCountSpan.style.color = '#28a745';
@@ -442,7 +475,9 @@
                 const contentCriteria = document.getElementById('criteria-content');
                 const wordCountSpan = document.getElementById('current-word-count');
                 if (typeof tinymce !== 'undefined' && tinymce.get('full-featured')) {
-                    const content = tinymce.get('full-featured').getContent({format: 'text'});
+                    const content = tinymce.get('full-featured').getContent({
+                        format: 'text'
+                    });
                     wordCount = content.trim().split(/\s+/).length;
                 } else {
                     const textarea = document.getElementById('full-featured');
@@ -478,10 +513,13 @@
 
             window.updateCriteria = updateCriteria;
             setTimeout(updateCriteria, 1000);
-            $('#title').on('input', updateCriteria);
+            $('#title').on(
+                'input', updateCriteria);
             $('.select2-tags').on('change', updateCriteria);
-            $('#parent_category').on('change', updateCriteria);
-            $('#child_category').on('change', updateCriteria);
+            $(
+                '#parent_category').on('change', updateCriteria);
+            $('#child_category').on('change',
+                updateCriteria);
             if (typeof tinymce !== 'undefined') {
                 tinymce.on('AddEditor', function(e) {
                     e.editor.on('input change', updateCriteria);
@@ -549,15 +587,17 @@
 
                         const formData = new FormData();
                         formData.append('image', file);
-                        formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+                        formData.append('_token', document.querySelector('meta[name="csrf-token"]')
+                            .content);
 
                         fetch('/api/check-image-moderation', {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            },
-                        })
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                        .content,
+                                },
+                            })
                             .then(response => {
                                 if (!response.ok) throw new Error('Lỗi kết nối: ' + response.status);
                                 return response.json();
@@ -566,7 +606,8 @@
                                 moderationLoading.style.display = 'none';
                                 if (result.status === 'error') {
                                     errorDiv.style.display = 'block';
-                                    errorMessage.textContent = result.message || 'Có lỗi khi kiểm duyệt hình ảnh';
+                                    errorMessage.textContent = result.message ||
+                                        'Có lỗi khi kiểm duyệt hình ảnh';
                                     submitButton.disabled = true;
                                     window.isImageValid = false;
                                 } else if (result.violation_level !== 'none') {
@@ -634,7 +675,8 @@
                     e.preventDefault();
                     const failedCriteria = [];
                     document.querySelectorAll('.criteria-item.failed').forEach(item => {
-                        const criteriaText = item.querySelector('.criteria-text').textContent.split('(')[0].trim();
+                        const criteriaText = item.querySelector('.criteria-text').textContent.split(
+                            '(')[0].trim();
                         failedCriteria.push(`<li>${criteriaText}</li>`);
                     });
 

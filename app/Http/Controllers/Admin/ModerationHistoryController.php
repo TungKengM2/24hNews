@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ModerationLog;
 use App\Models\Article;
-use App\Models\Comment;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -26,7 +26,7 @@ class ModerationHistoryController extends Controller
                 return view('admin.moderation.history', [
                     'logs' => collect([]),
                     'articles' => Article::select('article_id', 'title')->get(),
-                    'comments' => Comment::select('comment_id', 'content')->limit(100)->get(),
+
                     'users' => User::select('user_id', 'username')->get(),
                     'error' => 'Bảng moderation_logs không tồn tại trong cơ sở dữ liệu.'
                 ]);
@@ -49,7 +49,7 @@ class ModerationHistoryController extends Controller
                 ->orderBy('moderation_logs.created_at', 'desc');
 
             // Lọc theo loại nội dung
-            if ($request->has('content_type') && in_array($request->content_type, ['article', 'comment', 'role_upgrade'])) {
+            if ($request->has('content_type') && in_array($request->content_type, ['article', 'role_upgrade'])) {
                 $query->where('moderation_logs.content_type', $request->content_type);
             } elseif (!$request->has('content_type') || $request->content_type == 'all') {
                 // Không lọc theo loại nội dung nếu chọn 'all' hoặc không chọn gì
@@ -116,9 +116,8 @@ class ModerationHistoryController extends Controller
                 }
             }
 
-            // Lấy danh sách bài viết, bình luận và người dùng để hiển thị trong dropdown lọc
+            // Lấy danh sách bài viết và người dùng để hiển thị trong dropdown lọc
             $articles = Article::select('article_id', 'title')->get();
-            $comments = Comment::select('comment_id', 'content')->limit(100)->get();
             $users = User::select('user_id', 'username')->get();
 
             // Lấy dữ liệu mẫu trực tiếp từ bảng moderation_logs để hiển thị trong debug
@@ -127,7 +126,7 @@ class ModerationHistoryController extends Controller
                 ->limit(5)
                 ->get();
 
-            return view('admin.moderation.history', compact('logs', 'articles', 'comments', 'users', 'sampleData'));
+            return view('admin.moderation.history', compact('logs', 'articles', 'users', 'sampleData'));
         } catch (\Exception $e) {
             // Ghi log lỗi
             \Illuminate\Support\Facades\Log::error('Lỗi khi truy vấn lịch sử kiểm duyệt: ' . $e->getMessage());
@@ -136,7 +135,6 @@ class ModerationHistoryController extends Controller
             return view('admin.moderation.history', [
                 'logs' => collect([]),
                 'articles' => Article::select('article_id', 'title')->get(),
-                'comments' => Comment::select('comment_id', 'content')->limit(100)->get(),
                 'users' => User::select('user_id', 'username')->get(),
                 'error' => 'Có lỗi xảy ra khi truy vấn dữ liệu: ' . $e->getMessage()
             ]);
