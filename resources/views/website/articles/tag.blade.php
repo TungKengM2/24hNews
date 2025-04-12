@@ -193,7 +193,7 @@
                                     @foreach ($tags as $tag)
                                         <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}"
                                             class="btn border border-1 mt-20 py-2 px-3">
-                                            {{ $tag->name }}
+                                            {{ $tag->name }} ({{ $tag->published_articles_count }})
                                         </a>
                                     @endforeach
                                 </div>
