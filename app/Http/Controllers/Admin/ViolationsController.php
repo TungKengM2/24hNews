@@ -73,14 +73,7 @@ class ViolationsController extends Controller
 
         // Tăng số lần vi phạm của người dùng (theo cách động)
         $user = User::find($comment->user_id);
-        if ($user) {
-            $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
-            $realViolation = max(0, $user->violation_count - $daysSinceLast);
-
-            $realViolation += 1; // Cộng thêm 1 lần vi phạm mới
-            $user->violation_count = $realViolation;
-            $user->last_violation_at = now();
-            $user->save();
+        
 
             if ($user) {
                 $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
@@ -97,7 +90,7 @@ class ViolationsController extends Controller
                 }
                 $user->save();
             }
-        }
+        
 
         $usersToNotify = User::whereIn('violation_count', [3, 5])->get();
         foreach ($usersToNotify as $user) {
