@@ -4,7 +4,12 @@
 /******/ 	"use strict";
 /******/ 	// The require scope
 /******/ 	var __webpack_require__ = {};
+<<<<<<< HEAD
+/******/ 	
+/************************************************************************/
+=======
 /******/
+>>>>>>> c8f85802d98004cd3d8007e37c78e51bb8c5f865
 =======
 =======
 >>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
@@ -7155,12 +7160,19 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 	})();
 <<<<<<< HEAD
 <<<<<<< HEAD
+/******/ 	
+>>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
+=======
+/******/
+=======
+<<<<<<< HEAD
 /******/
 =======
 /******/ 	
 >>>>>>> tungkeng
 =======
 /******/
+>>>>>>> c8f85802d98004cd3d8007e37c78e51bb8c5f865
 >>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
@@ -7175,16 +7187,35 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/
 /************************************************************************/
 var __webpack_exports__ = {};
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
 // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
+>>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
+=======
+// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
+(() => {
+"use strict";
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
 __webpack_require__.r(__webpack_exports__);
+<<<<<<< HEAD
+<<<<<<< HEAD
+Object(function webpackMissingModule() { var e = new Error("Cannot find module './bootstrap'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+=======
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 })();
+>>>>>>> a1d5130132ec68db69e96f865df4f85cc957fc2a
+=======
+/* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+
+})();
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
 
 /******/ })()
 ;

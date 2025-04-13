@@ -1,8 +1,43 @@
 @extends('admin.layouts.master')
 
 @section('head')
+<<<<<<< HEAD
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+=======
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.2.0/ckeditor5.css" />
+
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5-premium-features/44.2.0/ckeditor5-premium-features.css" />
+    <script src="{{ asset('js/ckeditor.js') }}"></script>
+    <script src="https://cdn.ckbox.io/ckbox/2.4.0/ckbox.js"></script>
+<<<<<<< HEAD
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .wrapper {
+            display: flex;
+            margin: 0px;
+        }
+
+        .container {
+            width: 100%;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-left: 300px;
+        }
+
+        .form-label {
+            font-weight: 600;
+=======
+>>>>>>> 8c67697e0fd6cd5f4dcf9bc8f3be6ff16f804d14
 
     <!-- Style -->
     <style>
@@ -13,6 +48,7 @@
             padding: 5px 10px;
             border-radius: 5px;
             font-size: 14px;
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
         }
 
         #image-preview-container {

@@ -23,6 +23,111 @@
                             </nav>
                         </div>
                     </div>
+<<<<<<< HEAD
+=======
+
+<<<<<<< HEAD
+
+                <div class="mb-3 content-display">
+                    <strong>Nội dung bài viết:</strong>
+                    <div>{!! $article->content !!}</div>
+                </div>
+
+                @if ($article->preview_content)
+                    <div class="mb-3">
+                        <strong>Mô tả ngắn:</strong>
+                        <p>{{ $article->preview_content }}</p>
+
+                    </div>
+                @endif
+
+                <div class="mb-3">
+                    <strong>Nội dung nhạy cảm:</strong>
+                    <p>{{ $article->contains_sensitive_content ? 'Có' : 'Không' }}</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <strong>Tác giả:</strong>
+                        <p>{{ $article->author->username ?? 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Danh mục:</strong>
+                        <p>{{ $article->category->name ?? 'N/A' }}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <strong>Trạng thái:</strong>
+                        <p><span class="badge bg-info text-dark">{{ ucfirst($article->status) }}</span></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Lượt xem:</strong>
+                        <p>{{ $article->views }}</p>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <strong>Người duyệt:</strong>
+                    <p>{{ $article->approver->username ?? 'Chưa duyệt' }}</p>
+                </div>
+
+                @if ($article->tags->count() > 0)
+                    <div class="mb-3">
+
+
+                        <strong><i class="lni lni-pencil"></i> Content:</strong>
+                        <div class="border p-3" style="width: 100%; min-height: 300px;">{!! $article->content !!}</div>
+
+                        <strong>Thumbnail:</strong>
+                        <br>
+                        <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Thumbnail" class="img-thumbnail" style="max-width: 300px;">
+
+                        <strong>Tags:</strong>
+                        <div>
+                            @foreach ($article->tags as $tag)
+                                <span class="tag-badge">{{ $tag->name }}</span>
+                            @endforeach
+                        </div>
+
+                    </div>
+                @endif
+
+                <div class="mt-4">
+                    <a href="{{ route('articles.edit', $article->article_id) }}" class="btn btn-primary">
+                        <i class="lni lni-pencil"></i> Chỉnh sửa
+                    </a>
+                    <a href="{{ route('articles.index') }}" class="btn btn-secondary">
+                        <i class="lni lni-list"></i> Quay lại danh sách
+                    </a>
+
+                    <div class="mt-4">
+                        <a href="{{ route('articles.edit', $article->article_id) }}" class="btn btn-primary"><i class="lni lni-pencil"></i> Edit</a>
+                        <a href="{{ route('articles.index') }}" class="btn btn-secondary"><i class="lni lni-list"></i> Back to List</a>
+
+                        <form action="{{ route('articles.destroy', $article->article_id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this article?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger"><i class="lni lni-trash"></i> Delete</button>
+                        </form>
+                    </div>
+
+                    <form action="{{ route('articles.destroy', $article->article_id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this article?');">
+
+                    <form action="{{ route('articles.destroy', $article->article_id) }}" method="POST"
+                        class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này?');">
+
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">
+                            <i class="lni lni-trash-can"></i> Xóa
+                        </button>
+                    </form>
+
+=======
+>>>>>>> 4f4bd7cc0ce4f018506921aec4238874f7978459
+>>>>>>> 8c67697e0fd6cd5f4dcf9bc8f3be6ff16f804d14
                 </div>
             </div>
 
