@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Helpers\CodeHelper;
-use App\Http\Controllers\Controller;
-use App\Models\Article;
-use App\Models\ArticleVersion;
-use App\Models\Category;
-use App\Models\User;
-use App\Models\Tag;
-use App\Models\Approval;
-use App\Models\ModerationLog;
-use App\Services\ModerationService;
-use App\Notifications\ArticleStatusUpdated;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\NewArticleSubmitted;
-use Illuminate\Support\Facades\Log;
-use DOMDocument;
 use Exception;
-use Illuminate\Support\Str;
-// use Illuminate\Support\Facades\Storage;
+use DOMDocument;
+use App\Models\Tag;
+use App\Models\User;
+use App\Models\Article;
+use App\Models\Approval;
+use App\Models\Category;
+use App\Helpers\CodeHelper;
+use Illuminate\Http\Request;
+use App\Models\ModerationLog;
+use App\Models\ArticleVersion;
+use App\Services\ModerationService;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use App\Notifications\NewArticleSubmitted;
+use App\Notifications\ArticleStatusUpdated;
+use Illuminate\Support\Facades\Notification;
+
+use App\Notifications\ArticleRejected;
 
 class ArticleController extends Controller
 {
@@ -40,6 +40,7 @@ class ArticleController extends Controller
         $filter = $request->input('filter', 'all'); // Mặc định hiển thị tất cả bài viết
 
         $query = Article::with(['author', 'category', 'approver', 'tags'])
+            ->where('author_id', auth()->id()) // Chỉ lấy bài viết của admin đang đăng nhập
             ->orderBy('created_at', 'desc');
 
         if ($filter === 'inactive') {
@@ -608,7 +609,6 @@ class ArticleController extends Controller
                     );
 
                     $images = $dom->getElementsByTagName('img');
-
                     $nodesToRemove = [];
                     foreach ($images as $image) {
                         $src = $image->getAttribute('src');
@@ -885,7 +885,7 @@ class ArticleController extends Controller
         }
 
         // Gửi thông báo cho tác giả
-        $article->author->notify(new ArticleStatusUpdated($article, "Bài viết '{$article->title}' của bạn đã bị từ chối."));
+        $article->author->notify(new ArticleRejected($article, $request->rejection_reason));
 
         return redirect()->back()->with('success', 'Bài viết đã bị từ chối.');
     }

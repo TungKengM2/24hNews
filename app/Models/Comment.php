@@ -62,4 +62,14 @@ class Comment extends Model
     {
         return $this->belongsTo(Article::class, 'article_id');
     }
+
+    public function likesUsers()
+    {
+        // Nếu bảng trung gian tên là "comment_likes", 
+        // cột "comment_id" và "user_id"
+        return $this->belongsToMany(User::class, 'comment_likes', 'comment_id', 'user_id');
+    }
 }
+
+
+
