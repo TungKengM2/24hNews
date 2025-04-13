@@ -9,14 +9,17 @@ use App\Models\Comment;
 use App\Models\Category;
 use App\Models\Violation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\UserViolationAlert;
 use App\Notifications\NewArticleSubmitted;
 use App\Notifications\ArticleStatusUpdated;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\ArticleStatusChangedNotification;
+
 
 class ViolationsMController extends Controller
 {
@@ -69,48 +72,99 @@ class ViolationsMController extends Controller
             return back()->with('error', 'Bình luận vi phạm không tồn tại hoặc đã bị xóa trước đó.');
         }
 
-        // Lấy danh sách tất cả bình luận con của bình luận bị vi phạm
-        $childComments = Comment::where('parent_id', $comment->comment_id)->get();
+        // Tăng số lần vi phạm của người dùng (theo cách động)
+        $user = User::find($comment->user_id);
+        
 
-        // Kiểm tra nếu có bình luận con
+            if ($user) {
+                $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
+                $realViolation = max(0, $user->violation_count - $daysSinceLast);
+                $realViolation += 1;
+
+                $user->violation_count = $realViolation;
+                $user->last_violation_at = now();
+
+                if ($realViolation >= 5) {
+                    $user->banned_until = now()->addDays(3);
+                } elseif ($realViolation >= 3) {
+                    $user->banned_until = now()->addHours(24);
+                }
+                $user->save();
+            }
+        
+
+        $usersToNotify = User::whereIn('violation_count', [3, 5])->get();
+        foreach ($usersToNotify as $user) {
+            Notification::route('database', $user->id)->notify(new UserViolationAlert($user));
+        }
+
+        // Xử lý các bình luận con
+        $childComments = Comment::where('parent_id', $comment->comment_id)->get();
         if ($childComments->isNotEmpty()) {
             foreach ($childComments as $child) {
-                // Xóa bình luận con
                 $child->delete();
             }
         }
 
-        // Xóa bình luận cha sau khi đã xóa các bình luận con
+        // Xóa bình luận gốc và vi phạm
         $comment->delete();
-
-        // Xóa vi phạm khỏi bảng violations
         $violation->delete();
 
         return back()->with('success', 'Vi phạm đã được giải quyết, bình luận và tất cả phản hồi đã bị xóa.');
     }
 
+    
+    
+    
+    
+    
     public function resolves(Violation $violation)
     {
-        // Kiểm tra xem vi phạm có trạng thái 'pending' hay không
         if ($violation->status !== 'pending') {
             return back()->with('error', 'Vi phạm không còn trong trạng thái chờ duyệt!');
         }
-
-        // Lấy bài viết bị vi phạm dựa trên reference_id
+    
         $article = Article::where('article_id', $violation->reference_id)->first();
-        if ($article) {
-            // Cập nhật trạng thái thành "draft"
-            $article->status = 'draft';
-            $article->save();
+        if (!$article) {
+            return back()->with('error', 'Không tìm thấy bài viết!');
         }
-
-        // Xóa vi phạm khỏi bảng violations
+    
+        $user = User::find($article->user_id);
+       
+    
+        if ($user) {
+            $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
+            $realViolation = max(0, $user->violation_count - $daysSinceLast);
+            $realViolation += 1;
+    
+            $user->violation_count = $realViolation;
+            $user->last_violation_at = now();
+    
+            if ($realViolation >= 5) {
+                $user->banned_until = now()->addDays(3);
+            } elseif ($realViolation >= 3) {
+                $user->banned_until = now()->addHours(24);
+            }
+            $user->save();
+        }
+    
+        // Đổi bài viết thành bản nháp
+        $article->status = 'draft';
+        $article->save();
+    
+        // Gửi thông báo cho tác giả
+        $detectedWord = $violation->detected_word;
+        $author = $article->author;
+        $author->notify(new ArticleStatusChangedNotification($article, $detectedWord));
+    
+        // Xóa vi phạm
         $violation->delete();
-
-        if ($article->wasChanged('status')) {
-            $article->notify(new ArticleStatusChangedNotification($article));
-        }
-
-        return back()->with('success', 'Vi phạm đã được giải quyết.');
+    
+        $finalMessage = 'Vi phạm đã được giải quyết.';
+        
+    
+        return back()->with('success', $finalMessage);
     }
+    
+    
 }

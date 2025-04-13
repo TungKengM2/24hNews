@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\TagController;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -8,7 +7,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthUserController;
+use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\AuthAdminController;
+use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ArticleUserController;
@@ -27,7 +28,6 @@ use App\Http\Controllers\User\ArticleSaveController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Moderator\ModeratorController;
 use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\Author\TinyMCEUploadController;
 use App\Http\Controllers\User\ArticleViewUserController;
@@ -76,18 +76,29 @@ Route::middleware(['auth', 'check.violations'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])->name('articles.article');
 
-    Route::middleware(['check.violations'])->group(function () {
-        Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
-        Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
+    Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
         Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
         Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
         Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
         Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
-    });
+        Route::post('/comments/{comment}/like', [ArticleUserController::class, 'toggleLike'])->name('comments.toggleLike');
+        Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
+   
+   
+   
+
+
+
+    // Route::middleware(['check.violations'])->group(function () {
+        
+        
+        
+    // });
+
 });
 // Client Category
 Route::get('/category/{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
-Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.show');
+Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.shows');
 
 
 
