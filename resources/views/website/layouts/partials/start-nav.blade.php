@@ -119,9 +119,9 @@
                     </a>
                     <ul class="dropdownMenu mr-10 pr-5 " style="margin-top: 0; margin-top: -50px;" aria-labelledby="">
                         @if (Auth::check())
-                            @php
-                                $user = Auth::user();
-                            @endphp
+                            <li><a class="dropdown-item" href="@if(Auth::user()->role_id == 1){{ route('admin.dashboard') }}@elseif(Auth::user()->role_id == 2){{ route('author.dashboard') }}@elseif(Auth::user()->role_id == 3){{ route('moderator.dashboard') }}@else{{ route('user.dashboard') }}@endif">
+                                    <i class="la la-tv fs-4"></i> Dashboard
+                                </a></li>
 
                             {{-- Kiểm tra vai trò và hiển thị các liên kết tương ứng --}}
 
