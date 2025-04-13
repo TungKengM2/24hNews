@@ -11,20 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('moderation_logs')) {
-            Schema::create('moderation_logs', function (Blueprint $table) {
-                $table->id('log_id');
-                $table->enum('action_type', ['approve', 'reject', 'flag', 'edit', 'delete', 'restore', 'auto_moderate']);
-                $table->enum('content_type', ['article', 'comment', 'user', 'category', 'role_upgrade']);
-                $table->unsignedBigInteger('content_id');
-                $table->unsignedBigInteger('moderator_id')->nullable();
-                $table->text('details')->nullable();
-                $table->text('before_state')->nullable();
-                $table->text('after_state')->nullable();
-                $table->enum('severity', ['none', 'low', 'medium', 'high'])->default('none');
-                $table->timestamps();
-            });
-        }
+        Schema::create('moderation_logs', function (Blueprint $table) {
+            $table->id();
+            $table->string('content_type');
+            $table->unsignedBigInteger('content_id');
+            $table->string('action_type');
+            $table->unsignedBigInteger('moderator_id');
+            $table->text('after_state')->nullable();
+            $table->enum('severity', ['none', 'low', 'medium', 'high'])->default('none');
+            $table->text('reason')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**

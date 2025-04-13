@@ -1,12 +1,22 @@
 @extends('website.layouts.master')
 
 @section('content')
+<style>
+.hr-section {
+    background-color: #f9f9f9;
+    padding: 20px 0;
+}
+.hr-section .title a:hover {
+    color: #0056b3;
+}
+
+</style>
     <main>
         <section class="tc-category-header py-4 bg-light border-bottom">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-8">
-                        <h4 class="mb-2">Các bài viết tag :  {{ $tag->name }}</h4>
+                        <h4 class="mb-2">{{ $tag->name }}</h4>
                         <p class="text-muted mb-0">{{ $tag->description ?? 'Khám phá các bài viết trong tag này' }}</p>
                     </div>
                     <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
@@ -90,7 +100,7 @@
         <!-- ====== end ====== -->
 
         <!-- ====== start Latest news ====== -->
-        <section class="tc-latest-news-style1">
+        <section class="hr-section">
             <div class="container">
                 <div class="section-content pt-50 pb-50 border-bottom border-1 brd-gray">
                     <div class="row gx-5">
@@ -172,9 +182,7 @@
                             @else
                                 <p>Hiện tại không có bài viết nào</p>
                             @endif
-
-
-
+                        
 
 
                         </div>
@@ -183,9 +191,9 @@
                                 <p class="color-000 text-uppercase mb-20 ltspc-1 fw-bold">Thẻ phổ biến</p>
                                 <div class="content">
                                     @foreach ($tags as $tag)
-                                        <a href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}"
+                                        <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}"
                                             class="btn border border-1 mt-20 py-2 px-3">
-                                            {{ $tag->name }}
+                                            {{ $tag->name }} ({{ $tag->published_articles_count }})
                                         </a>
                                     @endforeach
                                 </div>
@@ -199,51 +207,41 @@
         <!-- ====== end Latest news ====== -->
 
 
-        <!-- ====== start tabs ====== -->
-        <section class="tc-posts-tabs-style4 pt-60 pb-60">
-            <div class="container">
-                <div class="tc-tabs-head">
-                    <a href="#" class="active" data-filter="all">Tất Cả</a>
-                </div>
-                <div class="tc-tabs-body tc-post-grid-style4 mt-50">
-                    <div class="row gx-0">
-                        @foreach ($otherArticles as $post)
-                            <div class="col-lg-3 border-1 border-end brd-gray">
-                                <div class="item mix {{ $post->tags->pluck('name')->implode(' ') }}">
-                                    <!-- Hiển thị ảnh với đường dẫn chính xác và đảm bảo ảnh không bị vỡ -->
-                                    <a href="{{ route('articles.article', $post->slug) }}" class="img img-cover"
-                                        data-fancybox="tabs">
-                                        <img src="{{ asset('storage/' . $post->thumbnail_url) }}" alt="{{ $post->title }}"
-                                            class="img-fluid">
+    <!-- ====== Tin tức có thể quan tâm ====== -->
+    <section class="tc-news-style1">
+        <div class="container">
+            <div class="content pt-50 pb-50 border-1 border-top brd-gray">
+                <h5 class="color-000 text-uppercase mb-40 ltspc-1 fw-bold">Tin Tức Có Thể Quan Tâm
+                    <i class="la la-angle-right ms-1"></i>
+                </h5>
+                <div class="row">
+                    @foreach ($otherArticles as $data)
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="news-card h-100 shadow-sm rounded overflow-hidden">
+                                <div class="img img-cover th-200">
+                                    <img src="{{ $data->thumbnail_url ? asset('storage/' . $data->thumbnail_url) : 'https://via.placeholder.com/400' }}"
+                                        alt="{{ $data->title }}">
+                                </div>
+                                <div class="info p-3">
+                                    <h6 class="category text-uppercase text-primary mb-2">
+                                        {{ $data['category']->name }}
+                                    </h6>
+                                    <h5 class="title mb-3">{{ $data->title }}</h5>
+                                    <a href="{{ Auth::check() ? route('articles.article', $data->slug) : url('/login-user') }}"
+                                        class="btn btn-sm btn-outline-primary mt-2">
+                                        Xem chi tiết <i class="la la-angle-right"></i>
                                     </a>
-                                    <div class="info">
-                                        <h4 class="title">
-                                            <a href="{{ route('articles.article', $post->slug) }}">{{ $post->title }}</a>
-                                        </h4>
-                                        <div class="tags">
-                                            <!-- Lặp qua các tag của bài viết -->
-                                            @foreach ($post->tags as $tag)
-                                                <a
-                                                    href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}">{{ $tag->name }}</a>
-                                            @endforeach
-                                        </div>
-                                        <div class="text">
-                                            <!-- Cắt nội dung bài viết để hiển thị một đoạn văn bản ngắn -->
-                                            {{ Str::limit(strip_tags(html_entity_decode($post->content)), 100) }}
-
-                                        </div>
-                                        <a href="{{ route('articles.article', $post->slug) }}" class="more">Xem tiếp</a>
-                                    </div>
                                 </div>
                             </div>
-                        @endforeach
-                    
-                    </div>
+                        </div>
+                    @endforeach
                 </div>
-
-
             </div>
-        </section>
+        </div>
+    </section>
+    <!-- ====== end tin tức có thể quan tâm ====== -->
+
+        
 
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

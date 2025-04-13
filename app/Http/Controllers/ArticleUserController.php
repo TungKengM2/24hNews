@@ -123,60 +123,102 @@ class ArticleUserController extends Controller
             ->get();
 
 
-        // Lấy danh sách bình luận
+        // Lấy danh sách bình luận gốc
         $comments = Comment::where('article_id', $article->article_id)
             ->where('status', 'approved')
-            ->whereNull('parent_id') // Chỉ lấy bình luận gốc
+            ->whereNull('parent_id')
             ->with([
                 'user:user_id,username,image',
                 'reactions',
             ])
             ->withCount([
-                'reactions as like_count' => function ($query) {
-                    $query->where('is_like', true);
-                },
-                'reactions as dislike_count' => function ($query) {
-                    $query->where('is_like', false);
-                },
+                'reactions as like_count' => fn($query) => $query->where('is_like', true),
+                'reactions as dislike_count' => fn($query) => $query->where('is_like', false),
             ])
             ->orderBy('created_at', 'desc')
-            ->paginate(4); // Phân trang bình luận gốc (5 bình luận mỗi trang)
+            ->paginate(4); // Phân trang bình luận gốc
 
-        // ✅ Lấy tất cả các replies của các bình luận đã phân trang
-        $commentIds = $comments->pluck('comment_id'); // Lấy danh sách ID của bình luận gốc
+        // Lấy danh sách ID của bình luận gốc
+        $commentIds = $comments->pluck('comment_id');
 
-        $replies = Comment::whereIn(
-            'parent_id',
-            $commentIds
-        ) // Chỉ lấy replies của bình luận gốc
+        // Lấy replies trực tiếp của các bình luận gốc
+        $replies = Comment::whereIn('parent_id', $commentIds)
             ->where('status', 'approved')
             ->with([
                 'user:user_id,username,image',
                 'reactions',
             ])
             ->withCount([
-                'reactions as like_count' => function ($query) {
-                    $query->where('is_like', true);
-                },
-                'reactions as dislike_count' => function ($query) {
-                    $query->where('is_like', false);
-                },
+                'reactions as like_count' => fn($query) => $query->where('is_like', true),
+                'reactions as dislike_count' => fn($query) => $query->where('is_like', false),
             ])
-            ->orderBy(
-                'created_at',
-                'asc'
-            ) // Hiển thị replies theo thứ tự cũ -> mới
+            ->orderBy('created_at', 'asc')
             ->get();
 
-        // ✅ Gán replies vào từng comment
-        $groupedReplies = $replies->groupBy('parent_id');
+        // Lấy ID của các replies
+        $replyIds = $replies->pluck('comment_id');
 
-        foreach ($comments as $comment) {
-            $comment->replies = $groupedReplies->get(
-                $comment->comment_id,
-                collect()
-            ); // Gán danh sách replies vào từng comment
+        // Hàm đệ quy có chống lặp
+        function getAllSubReplies($parentIds, &$visited = [])
+        {
+            $subReplies = Comment::whereIn('parent_id', $parentIds)
+                ->where('status', 'approved')
+                ->with([
+                    'user:user_id,username,image',
+                    'reactions',
+                ])
+                ->withCount([
+                    'reactions as like_count' => fn($query) => $query->where('is_like', true),
+                    'reactions as dislike_count' => fn($query) => $query->where('is_like', false),
+                ])
+                ->orderBy('created_at', 'asc')
+                ->get()
+                ->reject(function ($comment) use (&$visited) {
+                    return in_array($comment->comment_id, $visited);
+                });
+
+            if ($subReplies->isEmpty()) {
+                return collect();
+            }
+
+            foreach ($subReplies as $reply) {
+                $visited[] = $reply->comment_id;
+            }
+
+            $childParentIds = $subReplies->pluck('comment_id');
+            $childReplies = getAllSubReplies($childParentIds, $visited);
+
+            return $subReplies->merge($childReplies);
         }
+
+        // Lấy tất cả sub-replies của replies
+        $visitedIds = $replyIds->toArray();
+        $allSubReplies = getAllSubReplies($replyIds, $visitedIds);
+
+        // Gom replies và sub-replies theo parent_id
+        $groupedReplies = $replies->groupBy('parent_id');
+        $groupedSubReplies = $allSubReplies->groupBy('parent_id');
+
+        // Gán subReplies đệ quy
+        function attachSubReplies(&$replies, $groupedSubReplies)
+        {
+            foreach ($replies as $reply) {
+                $reply->subReplies = $groupedSubReplies->get($reply->comment_id, collect());
+
+                if ($reply->subReplies->isNotEmpty()) {
+                    attachSubReplies($reply->subReplies, $groupedSubReplies);
+                }
+            }
+        }
+
+        // Gán replies vào từng comment gốc
+        foreach ($comments as $comment) {
+            $comment->replies = $groupedReplies->get($comment->comment_id, collect());
+            attachSubReplies($comment->replies, $groupedSubReplies);
+        }
+
+
+
 
         $categories = Category::where('is_active', 1)->limit(7)->get();
 
@@ -266,145 +308,126 @@ class ArticleUserController extends Controller
     }
 
     public function storeComment(Request $request, CommentModerationService $moderationService)
-    {
-        $request->validate([
-            'article_id' => 'required|exists:articles,article_id',
-            'content' => 'required|string',
-            'parent_id' => 'nullable|exists:comments,comment_id',
-        ]);
+{
+    $request->validate([
+        'article_id' => 'required|exists:articles,article_id',
+        'content'    => 'required|string',
+        'parent_id'  => 'nullable|exists:comments,comment_id',
+    ]);
 
-        $content = $request->content;
-        $articleId = $request->article_id;
-        $userId = auth()->id();
-
-        // Create a temporary comment to get an ID for logging
-        $tempComment = new Comment([
-            'article_id' => $articleId,
-            'user_id' => $userId,
-            'content' => nl2br(e($content)),
-            'parent_id' => $request->parent_id,
-            'depth' => 0,
-            'status' => 'pending',
-        ]);
-        $tempComment->save();
-
-        if (!$moderationService->checkComment($content, $tempComment->comment_id, $userId, $articleId)) {
-            Log::warning("🚫 Bình luận bị từ chối: " . $content);
-
-            // Update the comment status to rejected
-            $tempComment->status = 'rejected';
-            $tempComment->save();
-
-            return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
-        }
-
-        // If comment passes moderation, update its status to approved
-        $tempComment->status = 'approved';
-
-        // Update depth if it's a reply
-        if ($request->parent_id) {
-            $parentComment = Comment::find($request->parent_id);
-            if ($parentComment) {
-                $tempComment->depth = $parentComment->depth + 1;
-            }
-        }
-
-        $tempComment->save();
-
-        // Create moderation log for approved comment
-        try {
-            \App\Models\ModerationLog::createLog(
-                'auto_moderate',
-                'comment',
-                $tempComment->comment_id,
-                [
-                    'action' => 'Tự động duyệt bình luận',
-                    'content' => strip_tags($tempComment->content),
-                    'article_id' => $tempComment->article_id,
-                    'user_id' => $tempComment->user_id,
-                ],
-                ['status' => 'pending'],
-                ['status' => 'approved'],
-                'low'
-            );
-        } catch (\Exception $e) {
-            Log::error("❌ Lỗi khi tạo log kiểm duyệt: " . $e->getMessage());
-        }
-
+    $user = auth()->user();
+    if (!$user) {
         return response()->json([
-            'success' => true,
-            'message' => 'Bạn Comment thành công!',
+            'success' => false,
+            'message' => 'Người dùng chưa đăng nhập!'
+        ], 401);
+    }
+
+    if ($user->banned_until && now()->lessThan($user->banned_until)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Bạn đã bị tạm khóa bình luận đến ' . $user->banned_until->format('H:i d/m/Y')
+        ], 403);
+    }
+
+    $content = $request->content;
+    if (!$moderationService->checkComment($content)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'
+        ], 403);
+    }
+
+    // Tạo mới bình luận
+    $comment = new Comment([
+        'article_id' => $request->article_id,
+        'user_id'    => $user->user_id,
+        'content'    => nl2br(e($content)),
+        'parent_id'  => $request->parent_id,
+        'status'     => 'approved',
+        'depth'      => 0,
+    ]);
+
+    if ($request->parent_id) {
+        $parentComment = Comment::find($request->parent_id);
+        if ($parentComment) {
+            $comment->depth = $parentComment->depth + 1;
+        }
+    }
+
+    $comment->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Bình luận của bạn đã được đăng thành công!'
+    ]);
+}
+
+
+
+
+
+
+
+public function storeReplyComment(Request $request, CommentModerationService $moderationService)
+{
+    $request->validate([
+        'article_id' => 'required|exists:articles,article_id',
+        'content'    => 'required|string',
+        'parent_id'  => 'required|exists:comments,comment_id',
+    ]);
+
+    $user = auth()->user();
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Người dùng chưa đăng nhập!',
         ]);
     }
 
-    public function storeReplyComment(Request $request, CommentModerationService $moderationService)
-    {
-        $request->validate([
-            'article_id' => 'required|exists:articles,article_id',
-            'content' => 'required|string',
-            'parent_id' => 'required|exists:comments,comment_id',
-        ]);
-
-        $content = $request->content;
-        $articleId = $request->article_id;
-        $userId = auth()->id();
-        $parentId = $request->parent_id;
-
-        // Get parent comment for depth calculation
-        $parentComment = Comment::find($parentId);
-        $depth = $parentComment ? $parentComment->depth + 1 : 0;
-
-        // Create a temporary comment to get an ID for logging
-        $tempReply = new Comment([
-            'article_id' => $articleId,
-            'user_id' => $userId,
-            'content' => nl2br(e($content)),
-            'parent_id' => $parentId,
-            'depth' => $depth,
-            'status' => 'pending',
-        ]);
-        $tempReply->save();
-
-        if (!$moderationService->checkComment($content, $tempReply->comment_id, $userId, $articleId)) {
-            Log::warning("🚫 Bình luận trả lời bị từ chối: " . $content);
-
-            // Update the comment status to rejected
-            $tempReply->status = 'rejected';
-            $tempReply->save();
-
-            return response()->json(['error' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.'], 403);
-        }
-
-        // If reply passes moderation, update its status to approved
-        $tempReply->status = 'approved';
-        $tempReply->save();
-
-        // Create moderation log for approved reply
-        try {
-            \App\Models\ModerationLog::createLog(
-                'auto_moderate',
-                'comment',
-                $tempReply->comment_id,
-                [
-                    'action' => 'Tự động duyệt bình luận trả lời',
-                    'content' => strip_tags($tempReply->content),
-                    'article_id' => $tempReply->article_id,
-                    'user_id' => $tempReply->user_id,
-                    'parent_id' => $tempReply->parent_id,
-                ],
-                ['status' => 'pending'],
-                ['status' => 'approved'],
-                'low'
-            );
-        } catch (\Exception $e) {
-            Log::error("❌ Lỗi khi tạo log kiểm duyệt: " . $e->getMessage());
-        }
-
+    // Kiểm tra nếu người dùng bị cấm bình luận
+    if ($user->banned_until && now()->lessThan($user->banned_until)) {
         return response()->json([
-            'success' => true,
-            'message' => 'Bạn trả lời bình luận thành công!',
+            'success' => false,
+            'message' => 'Bạn đã bị tạm khóa bình luận đến ' . $user->banned_until->format('H:i d/m/Y'),
         ]);
     }
+
+    $content   = $request->content;
+    $articleId = $request->article_id;
+    $parentId  = $request->parent_id;
+    $userId    = $user->user_id;
+
+    // Tính depth của bình luận trả lời (tối đa độ sâu là 2)
+    $parentComment = Comment::find($parentId);
+    $depth         = $parentComment ? min($parentComment->depth + 1, 2) : 0;
+
+    // Kiểm duyệt nội dung bình luận trả lời
+    if (!$moderationService->checkComment($content, null, $userId, $articleId)) {
+        Log::warning("🚫 Bình luận trả lời bị từ chối: " . $content);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.',
+        ], 403);
+    }
+
+    // Nếu được duyệt, tạo bình luận trả lời mới
+    Comment::create([
+        'article_id' => $articleId,
+        'user_id'    => $userId,
+        'content'    => nl2br(e($content)),
+        'parent_id'  => $parentId,
+        'depth'      => $depth,
+        'status'     => 'approved',
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Bạn đã trả lời bình luận thành công!',
+    ]);
+}
+
 
     public function reportComment(Request $request, $article_id, $comment_id)
     {
@@ -453,7 +476,6 @@ class ArticleUserController extends Controller
             ], 500);
         }
     }
-
 
     public function reportArticle(Request $request, $article_id)
     {
@@ -521,5 +543,52 @@ class ArticleUserController extends Controller
 
         // If the user is not the owner, abort with a 403 error
         abort(403);
+    }
+
+
+    public function toggleLike(Request $request, $commentId)
+    {
+        $userId = auth()->id();
+
+        if (!$userId) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $comment = Comment::findOrFail($commentId);
+
+        // Kiểm tra xem người dùng đã like chưa
+        $alreadyLiked = DB::table('comment_likes')
+            ->where('comment_id', $comment->comment_id)
+            ->where('user_id', $userId)
+            ->exists();
+
+        if ($alreadyLiked) {
+            // Bỏ like: đảm bảo lượt like không âm
+            if ($comment->likes > 0) {
+                $comment->decrement('likes');
+            }
+            DB::table('comment_likes')
+                ->where('comment_id', $comment->comment_id)
+                ->where('user_id', $userId)
+                ->delete();
+            $liked = false;
+        } else {
+            // Thêm like
+            DB::table('comment_likes')->insert([
+                'comment_id' => $comment->comment_id,
+                'user_id' => $userId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            $comment->increment('likes');
+            $liked = true;
+        }
+
+        return response()->json([
+            'message' => 'Success',
+            'likes' => $comment->likes,
+            'liked' => $liked,
+        ]);
     }
 }

@@ -182,4 +182,5 @@ class Article extends Model
     {
         return $this->editRequests()->where('status', 'pending')->exists();
     }
+
 }

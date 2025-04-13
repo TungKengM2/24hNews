@@ -504,6 +504,7 @@
                                     tokenSeparators: [',', ' '],
                                     placeholder: 'Chọn hoặc nhập thẻ mới',
                                     allowClear: true,
+                                    maximumSelectionLength: 5,
                                 }).on('change', function() {
                                     // Cập nhật tiêu chí khi thay đổi tag
                                     if (window.updateCriteria) {

@@ -54,6 +54,113 @@
 
                         @if($category->parent_id === null)
                         <!-- Chỉnh sửa danh mục cha -->
+                        <script>
+                        // Biến đếm cho các danh mục con mới
+                        let newChildCount = 0;
+                        let existingChildCount = 0;
+
+                        // Khởi tạo Select2 cho các select box
+                        function initSelect2() {
+                            $('.select2-child-categories').select2({
+                                placeholder: 'Chọn danh mục con',
+                                allowClear: true
+                            });
+                        }
+
+                        // Thêm danh mục con từ danh mục có sẵn
+                        function addExistingChildCategory() {
+                            console.log('Function addExistingChildCategory called');
+                            const container = document.getElementById('existing-child-categories-container');
+                            console.log('Container found:', !!container);
+
+                            if (!container) {
+                                console.error('Container #existing-child-categories-container not found!');
+                                return;
+                            }
+
+                            const childIndex = existingChildCount++;
+                            console.log('Creating child with index:', childIndex);
+
+                            const childItem = document.createElement('div');
+                            childItem.className = 'child-category-item';
+                            childItem.innerHTML = `
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <label for="existing_child_${childIndex}" class="form-label">Chọn danh mục con</label>
+                                        <select class="form-control select2-child-categories" id="existing_child_${childIndex}" name="existing_children[]">
+                                            <option value="">-- Chọn danh mục --</option>
+                                            @foreach($availableChildCategories as $childCat)
+                                                <option value="{{ $childCat->category_id }}">{{ $childCat->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-danger btn-remove" style="margin-top: 30px;">
+                                            <i class="fa fa-trash"></i> Xóa
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+
+                            container.appendChild(childItem);
+                            console.log('Child element added to container');
+
+                            // Khởi tạo Select2 cho select box mới thêm
+                            initSelect2();
+
+                            // Xử lý sự kiện xóa
+                            childItem.querySelector('.btn-remove').addEventListener('click', function() {
+                                console.log('Remove button clicked');
+                                container.removeChild(childItem);
+                            });
+                        }
+
+                        // Thêm danh mục con mới
+                        function addNewChildCategory() {
+                            console.log('Function addNewChildCategory called');
+                            const container = document.getElementById('new-child-categories-container');
+                            console.log('Container found:', !!container);
+
+                            if (!container) {
+                                console.error('Container #new-child-categories-container not found!');
+                                return;
+                            }
+
+                            const childIndex = newChildCount++;
+                            console.log('Creating child with index:', childIndex);
+
+                            const childItem = document.createElement('div');
+                            childItem.className = 'child-category-item';
+                            childItem.innerHTML = `
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <label for="new_child_name_${childIndex}" class="form-label">Tên danh mục con mới</label>
+                                        <input type="text" class="form-control" id="new_child_name_${childIndex}" name="new_children[${childIndex}][name]" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-check" style="margin-top: 30px;">
+                                            <input type="checkbox" id="new_child_active_${childIndex}" name="new_children[${childIndex}][is_active]" value="1" checked>
+                                            <label for="new_child_active_${childIndex}">Kích hoạt</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-danger btn-remove" style="margin-top: 30px;">
+                                            <i class="fa fa-trash"></i> Xóa
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+
+                            container.appendChild(childItem);
+                            console.log('Child element added to container');
+
+                            // Xử lý sự kiện xóa
+                            childItem.querySelector('.btn-remove').addEventListener('click', function() {
+                                console.log('Remove button clicked');
+                                container.removeChild(childItem);
+                            });
+                        }
+                        </script>
                         <form action="{{ route('categories.update', $category) }}" method="POST" enctype="multipart/form-data" id="categoryForm">
                             @csrf
                             @method('PUT')
@@ -110,7 +217,7 @@
 
                             <!-- Thêm danh mục con từ danh mục có sẵn -->
                             <div class="mb-3">
-                                <button type="button" class="btn btn-info" id="add-existing-child-btn">
+                                <button type="button" class="btn btn-info" onclick="addExistingChildCategory()">
                                     <i class="fa fa-plus-circle"></i> Thêm danh mục con từ danh mục có sẵn
                                 </button>
 
@@ -121,7 +228,7 @@
 
                             <!-- Tạo danh mục con mới -->
                             <div class="mb-3">
-                                <button type="button" class="btn btn-success" id="add-new-child-btn">
+                                <button type="button" class="btn btn-success" onclick="addNewChildCategory()">
                                     <i class="fa fa-plus-circle"></i> Tạo danh mục con mới
                                 </button>
 
@@ -175,6 +282,7 @@
                             </div>
                             <button type="submit" class="btn btn-primary">Lưu</button>
                             <a href="{{ route('categories.index') }}" class="btn btn-secondary">Hủy</a>
+
                         </form>
                         @endif
                     </div>
@@ -189,90 +297,6 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Khởi tạo Select2 cho các select box
-        function initSelect2() {
-            $('.select2-child-categories').select2({
-                placeholder: 'Chọn danh mục con',
-                allowClear: true
-            });
-        }
-
-        // Biến đếm cho các danh mục con mới
-        let newChildCount = 0;
-        let existingChildCount = 0;
-
-        // Thêm danh mục con từ danh mục có sẵn
-        document.getElementById('add-existing-child-btn').addEventListener('click', function() {
-            const container = document.getElementById('existing-child-categories-container');
-            const childIndex = existingChildCount++;
-
-            const childItem = document.createElement('div');
-            childItem.className = 'child-category-item';
-            childItem.innerHTML = `
-                <div class="row">
-                    <div class="col-md-10">
-                        <label for="existing_child_${childIndex}" class="form-label">Chọn danh mục con</label>
-                        <select class="form-control select2-child-categories" id="existing_child_${childIndex}" name="existing_children[]">
-                            <option value="">-- Chọn danh mục --</option>
-                            @foreach($availableChildCategories as $category)
-                                <option value="{{ $category->category_id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-danger btn-remove" style="margin-top: 30px;">
-                            <i class="fa fa-trash"></i> Xóa
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            container.appendChild(childItem);
-
-            // Khởi tạo Select2 cho select box mới thêm
-            initSelect2();
-
-            // Xử lý sự kiện xóa
-            childItem.querySelector('.btn-remove').addEventListener('click', function() {
-                container.removeChild(childItem);
-            });
-        });
-
-        // Thêm danh mục con mới
-        document.getElementById('add-new-child-btn').addEventListener('click', function() {
-            const container = document.getElementById('new-child-categories-container');
-            const childIndex = newChildCount++;
-
-            const childItem = document.createElement('div');
-            childItem.className = 'child-category-item';
-            childItem.innerHTML = `
-                <div class="row">
-                    <div class="col-md-8">
-                        <label for="new_child_name_${childIndex}" class="form-label">Tên danh mục con mới</label>
-                        <input type="text" class="form-control" id="new_child_name_${childIndex}" name="new_children[${childIndex}][name]" required>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-check" style="margin-top: 30px;">
-                            <input type="checkbox" id="new_child_active_${childIndex}" name="new_children[${childIndex}][is_active]" value="1" checked>
-                            <label for="new_child_active_${childIndex}">Kích hoạt</label>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-danger btn-remove" style="margin-top: 30px;">
-                            <i class="fa fa-trash"></i> Xóa
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            container.appendChild(childItem);
-
-            // Xử lý sự kiện xóa
-            childItem.querySelector('.btn-remove').addEventListener('click', function() {
-                container.removeChild(childItem);
-            });
-        });
-
         // Validation khi submit form
         const categoryForm = document.getElementById('categoryForm');
         if (categoryForm) {

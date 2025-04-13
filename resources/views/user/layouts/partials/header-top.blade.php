@@ -99,9 +99,29 @@
                 </a>
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
-                        <a class="dropdown-item" href="{{ route('user.upgrade') }}">
-                            <i class="ti-arrow-up text-muted me-2"></i> Upgrade to author
-                        </a>
+                        @if(Auth::user()->role_id == 1)
+                            <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                                <i class="ti-dashboard text-muted me-2"></i> Admin Dashboard
+                            </a>
+                        @elseif(Auth::user()->role_id == 2)
+                            <a class="dropdown-item" href="{{ route('author.dashboard') }}">
+                                <i class="ti-dashboard text-muted me-2"></i> Author Dashboard
+                            </a>
+                        @elseif(Auth::user()->role_id == 3)
+                            <a class="dropdown-item" href="{{ route('moderator.dashboard') }}">
+                                <i class="ti-dashboard text-muted me-2"></i> Moderator Dashboard
+                            </a>
+                        @else
+                            <a class="dropdown-item" href="{{ route('user.dashboard') }}">
+                                <i class="ti-dashboard text-muted me-2"></i> User Dashboard
+                            </a>
+                        @endif
+
+                        @if(Auth::user()->role_id == 4)
+                            <a class="dropdown-item" href="{{ route('user.upgrade') }}">
+                                <i class="ti-arrow-up text-muted me-2"></i> Upgrade to author
+                            </a>
+                        @endif
 
                         <a class="dropdown-item" href="#"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -111,7 +131,6 @@
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
-
                     </li>
                 </ul>
             </li>

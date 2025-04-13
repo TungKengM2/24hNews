@@ -15,11 +15,12 @@ class NotificationController extends Controller
     {
         $user = Auth::user();
 
-        // Lấy cả 2 loại thông báo
+        // Lấy tất cả các loại thông báo
         $notifications = $user->notifications()
             ->where(function($query) {
                 $query->where('type', 'App\Notifications\NewArticleFromFollowedAuthor')
-                      ->orWhere('type', 'App\Notifications\PendingArticleNotification');
+                      ->orWhere('type', 'App\Notifications\PendingArticleNotification')
+                      ->orWhere('type', 'App\Notifications\RoleUpgradeRejected');
             })
             ->orderBy('created_at', 'desc')
             ->paginate(15);

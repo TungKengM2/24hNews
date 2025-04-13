@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\TagController;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -8,7 +7,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthUserController;
+use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\AuthAdminController;
+use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ArticleUserController;
@@ -27,7 +28,6 @@ use App\Http\Controllers\User\ArticleSaveController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Moderator\ModeratorController;
 use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\Author\TinyMCEUploadController;
 use App\Http\Controllers\User\ArticleViewUserController;
@@ -77,18 +77,29 @@ Route::middleware(['auth', 'check.violations'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])->name('articles.article');
 
-    Route::middleware(['check.violations'])->group(function () {
-        Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
-        Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
+    Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
         Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
         Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
         Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
         Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
-    });
+        Route::post('/comments/{comment}/like', [ArticleUserController::class, 'toggleLike'])->name('comments.toggleLike');
+        Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
+
+
+
+
+
+
+    // Route::middleware(['check.violations'])->group(function () {
+
+
+
+    // });
+
 });
 // Client Category
 Route::get('/category/{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
-Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.show');
+Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.shows');
 
 
 
@@ -106,9 +117,15 @@ Route::middleware('guest')
 
         Route::post('/signup-user', 'processSignup')->name('signupuser.process');
 
+        Route::get('/signup', 'showSignupUserForm')->name('signup');
+
+        Route::post('/signup', 'processSignup')->name('signup.process');
+
         Route::get('/verify-otp', 'showOtpForm')->name('otp.verify.form');
 
         Route::post('/verify-otp', 'verifyOtp')->name('otp.verify.process');
+
+        Route::post('/resend-otp', 'resendOtp')->name('otp.resend');
 
         Route::get('/forget-user', 'showForgetUserForm')->name('forgetuser');
     });
@@ -313,7 +330,7 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     Route::get('/articles', [AuthorArticleController::class, 'index'])->name('author.articles.index');
     Route::get('/articles/search', [AuthorArticleController::class, 'search'])->name('author.articles.search');
     Route::post('/articles/upload', [AuthorArticleController::class, 'uploadImage',])->name('author.articles.upload');
-    Route::get('/ajax/subcategories', [AjaxController::class, 'getSubcategories'])->name('author.ajax.subcategories');
+    Route::get('/ajax/subcategories', [App\Http\Controllers\Author\AjaxController::class, 'getSubcategories'])->name('author.ajax.subcategories');
 
 
     Route::middleware(['check.violations'])->group(function () {
@@ -424,17 +441,13 @@ Route::middleware(['auth', 'role:4'])->prefix('/user')->group(function () {
 
 
     // Yêu cầu nâng cấp vai trò lên Author
-    Route::get('/upgrade', function () {
-        return view('user.upgrade');
-    })
-        ->name('user.upgrade');
+    Route::get('/upgrade', [ProfileController::class, 'upgradeToAuthor'])->name('user.upgrade');
+    Route::post('/upgrade-request', [ProfileController::class, 'requestAuthorRole'])->name('user.upgrade.request');
 
     Route::get('/upgrade-result', function () {
         return view('user.upgrade-result');
     })
         ->name('user.upgrade.result');
-
-    Route::post('/upgrade', [ProfileController::class, 'requestAuthorRole'])->name('user.upgrade.author');
 
     Route::get('/change-password', [ProfileController::class, 'showChangePasswordForm'])->name('user.change-password');
 
@@ -554,6 +567,9 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 
     // Trang lịch sử kiểm duyệt tổng hợp
     Route::get('/moderation/history', [App\Http\Controllers\Admin\ModerationHistoryController::class, 'index'])->name('admin.moderation.history');
+
+    // Lịch sử kiểm duyệt bình luận
+    Route::get('/comments/{comment}/moderation-history', [App\Http\Controllers\Admin\CommentModerationHistoryController::class, 'show'])->name('comments.moderation-history');
 
     // Quản lý bình luận
     Route::get('/comments', [App\Http\Controllers\Admin\CommentController::class, 'index'])->name('admin.comments.index');

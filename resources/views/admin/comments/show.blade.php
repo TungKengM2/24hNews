@@ -34,9 +34,7 @@
                                 <a href="{{ route('admin.comments.index') }}" class="btn btn-sm btn-default">
                                     <i class="fa fa-arrow-left"></i> Quay lại
                                 </a>
-                                <a href="{{ route('comments.moderation-history', $comment) }}" class="btn btn-sm btn-info">
-                                    <i class="fa fa-history"></i> Lịch sử kiểm duyệt
-                                </a>
+
                             </div>
                         </div>
                         <!-- /.box-header -->
@@ -44,14 +42,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <p><strong>ID:</strong> {{ $comment->comment_id }}</p>
-                                    <p><strong>Người bình luận:</strong> 
+                                    <p><strong>Người bình luận:</strong>
                                         @if($comment->user)
                                             {{ $comment->user->username }}
                                         @else
                                             <span class="text-muted">Không xác định</span>
                                         @endif
                                     </p>
-                                    <p><strong>Bài viết:</strong> 
+                                    <p><strong>Bài viết:</strong>
                                         @if($comment->article)
                                             <a href="{{ route('articles.show', $comment->article) }}" target="_blank">
                                                 {{ $comment->article->title }}
@@ -62,7 +60,7 @@
                                     </p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p><strong>Trạng thái:</strong> 
+                                    <p><strong>Trạng thái:</strong>
                                         @if($comment->status == 'approved')
                                             <span class="badge badge-success">Đã duyệt</span>
                                         @elseif($comment->status == 'rejected')
@@ -83,7 +81,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row mt-4">
                                 <div class="col-12">
                                     <div class="d-flex justify-content-end">
@@ -96,7 +94,7 @@
                                                 </button>
                                             </form>
                                         @endif
-                                        
+
                                         @if($comment->status != 'rejected')
                                             <form action="{{ route('admin.comments.reject', $comment) }}" method="POST" class="mr-2">
                                                 @csrf
@@ -106,7 +104,7 @@
                                                 </button>
                                             </form>
                                         @endif
-                                        
+
                                         <form action="{{ route('admin.comments.destroy', $comment) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
