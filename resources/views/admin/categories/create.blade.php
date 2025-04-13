@@ -94,9 +94,17 @@
 
                             // Hàm thêm danh mục con từ danh mục có sẵn
                             function addExistingChildCategory() {
-                                console.log('Adding existing child category');
+                                console.log('Function addExistingChildCategory called');
                                 var container = document.getElementById('existing-child-categories-container');
+                                console.log('Container found:', !!container);
+
+                                if (!container) {
+                                    console.error('Container #existing-child-categories-container not found!');
+                                    return;
+                                }
+
                                 var childIndex = existingChildCount++;
+                                console.log('Creating child with index:', childIndex);
 
                                 var html = '<div class="child-category-item">' +
                                     '<div class="row">' +
@@ -118,13 +126,22 @@
                                 '</div>';
 
                                 container.innerHTML += html;
+                                console.log('Child element added to container');
                             }
 
                             // Hàm thêm danh mục con mới
                             function addNewChildCategory() {
-                                console.log('Adding new child category');
+                                console.log('Function addNewChildCategory called');
                                 var container = document.getElementById('new-child-categories-container');
+                                console.log('Container found:', !!container);
+
+                                if (!container) {
+                                    console.error('Container #new-child-categories-container not found!');
+                                    return;
+                                }
+
                                 var childIndex = newChildCount++;
+                                console.log('Creating child with index:', childIndex);
 
                                 // Tạo phần tử mới thay vì sử dụng innerHTML
                                 var childItem = document.createElement('div');
@@ -152,14 +169,22 @@
 
                                 // Thêm phần tử vào container
                                 container.appendChild(childItem);
+                                console.log('Child element added to container');
 
                                 // Thêm sự kiện xóa cho nút xóa
                                 var removeBtn = childItem.querySelector('.remove-btn');
-                                removeBtn.addEventListener('click', function() {
-                                    container.removeChild(childItem);
-                                });
+                                console.log('Remove button found:', !!removeBtn);
+
+                                if (removeBtn) {
+                                    removeBtn.addEventListener('click', function() {
+                                        console.log('Remove button clicked');
+                                        container.removeChild(childItem);
+                                    });
+                                }
                             }
                             </script>
+
+
 
                             <div class="mt-4">
                                 <br>
@@ -176,16 +201,16 @@
 
 @section('script')
 <script>
-
-
     // Form validation
-    document.getElementById('categoryForm').onsubmit = function(e) {
-        var name = document.getElementById('name').value.trim();
-        if (!name) {
-            e.preventDefault();
-            alert('Vui lòng nhập tên danh mục chính!');
-            return false;
-        }
-    };
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('categoryForm').onsubmit = function(e) {
+            var name = document.getElementById('name').value.trim();
+            if (!name) {
+                e.preventDefault();
+                alert('Vui lòng nhập tên danh mục chính!');
+                return false;
+            }
+        };
+    });
 </script>
 @endsection

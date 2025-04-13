@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Author;
 
-use App\Http\Controllers\Controller;
-use App\Models\Approval;
-use App\Models\Article;
-use App\Models\Category;
+use Exception;
+use DOMDocument;
 use App\Models\Tag;
 use App\Models\User;
-use App\Models\ModerationLog;
-use App\Notifications\ArticleStatusUpdated;
-use App\Notifications\PendingArticleNotification;
-use App\Services\ModerationService;
-use DOMDocument;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\ValidationException;
+use App\Models\Article;
+use App\Models\Approval;
+use App\Models\Category;
 use App\Helpers\CodeHelper;
+use Illuminate\Http\Request;
+use App\Models\ModerationLog;
 use App\Models\ArticleVersion;
+use App\Services\ModerationService;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use App\Notifications\ArticleStatusUpdated;
+use Illuminate\Validation\ValidationException;
+use App\Notifications\PendingArticleNotification;
 
 class ArticleController extends Controller
 {
@@ -981,6 +981,9 @@ class ArticleController extends Controller
         ]);
     }
 
+
+
+
 //    public function updateStatus(Request $request, $id)
 //    {
 //        $article = Article::find($id);
@@ -1038,6 +1041,10 @@ class ArticleController extends Controller
     //     ]);
     // }
 
+
+    /**
+     * Hiển thị danh sách các phiên bản của bài viết
+     */
     public function versions(Article $article)
     {
         if ($article->author_id !== auth()->id()) {

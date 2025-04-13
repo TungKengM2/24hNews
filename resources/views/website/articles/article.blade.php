@@ -4,6 +4,252 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="article-id" content="{{ $article->article_id }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- CSS Tùy chỉnh -->
+    <style>
+        .show-more-replies-btn {
+            text-decoration: none !important;
+            /* Gỡ gạch chân */
+            color: #0d6efd;
+            /* Màu chữ mặc định (Bootstrap primary) */
+            font-weight: bold;
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .show-more-replies-btn:hover {
+            color: white !important;
+            /* Chữ trắng khi hover */
+            background-color: #0d6efd;
+            /* Tùy: có thể thêm nền xanh khi hover */
+            border-radius: 4px;
+            padding: 2px 6px;
+            text-decoration: none !important;
+            /* Chắc chắn gỡ underline luôn */
+        }
+
+        .btn.like-btn {
+            border: none;
+            background: transparent;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .like-text,
+        .like-count {
+            font-weight: bold;
+            color: #6c757d;
+            /* Màu xám mặc định */
+            transition: color 0.3s;
+        }
+
+        .like-text.liked,
+        .like-count.liked {
+            color: #007bff;
+            /* Màu xanh khi đã like */
+        }
+
+        .like-count.liked {
+            color: #1877F2;
+            transition: color 0.2s ease;
+        }
+    </style>
+    <style>
+        .reply-item {
+            position: relative;
+        }
+    
+        .reply-item .thread-line {
+            position: absolute;
+            top: 40px;
+            left: 18px;
+            width: 2px;
+            height: calc(100% - 40px);
+            background: #e0e0e0;
+            z-index: 0;
+        }
+    
+        .reply-avatar img {
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    
+        .reply-box {
+            background: #f0f2f5;
+            border-radius: 18px;
+            padding: 10px 15px;
+            margin-left: 10px;
+            display: inline-block;
+            max-width: 90%;
+        }
+    
+        .reply-meta {
+            font-size: 13px;
+            color: #65676b;
+        }
+    
+        .reply-actions {
+            font-size: 13px;
+            margin-top: 5px;
+            color: #65676b;
+        }
+    
+        .reply-actions button {
+            background: transparent;
+            border: none;
+            color: #65676b;
+            cursor: pointer;
+            padding: 0 6px;
+        }
+    
+        .reply-actions button:hover {
+            text-decoration: underline;
+        }
+        
+    </style>
+    <style>
+        .small-action-buttons button {
+        font-family: 'Arial', sans-serif; /* Đảm bảo font chung */
+        font-size: 14px; /* Kích thước chữ đồng đều */
+        font-weight: 600; /* Đảm bảo chữ đậm giống nhau */
+        text-transform: none; /* Ngừng chuyển chữ thành in hoa nếu có */
+    }
+    
+            /* Đảm bảo các nút có cùng kiểu chữ và định dạng */
+    .small-action-buttons button {
+        font-family: 'Arial', sans-serif; /* Font chữ chung */
+        font-size: 14px; /* Kích thước chữ đồng đều */
+        font-weight: 600; /* Đảm bảo chữ đậm giống nhau */
+        text-transform: none; /* Không tự động chuyển chữ thành in hoa */
+    }
+    
+    /* Đảm bảo các nút không bị chênh lệch với padding */
+    .small-action-buttons button.btn {
+        padding: 0;
+    }
+    
+    
+        .reply-content-box {
+            background-color: #f0f2f5;
+            /* Light background, like Facebook's comment section */
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            /* Rounded corners */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            /* Light shadow for depth */
+        }
+    
+        .reply-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+    
+        .reply-username {
+            font-weight: bold;
+            color: #1c1e21;
+            /* Dark text for the username */
+        }
+    
+        .reply-meta {
+            font-size: 12px;
+            color: #65676b;
+            /* Light grey for the date */
+            text-align: right;
+        }
+    
+        .mt-1 {
+            font-size: 14px;
+            /* Standard size for the content */
+            color: #1c1e21;
+            /* Dark text for the content */
+        }
+    
+        .reply-meta,
+        .reply-username {
+            display: inline-block;
+        }
+    
+        .comment-reply-cont {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+    
+        .icon-60 img,
+        .icon-40 img {
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    
+        .reply-item {
+            position: relative;
+        }
+    
+        .reply-item .thread-line {
+            position: absolute;
+            top: 40px;
+            left: 18px;
+            width: 2px;
+            height: calc(100% - 40px);
+            background: #e0e0e0;
+            z-index: 0;
+        }
+    
+        .reply-content-box {
+            background: #f0f2f5;
+            border-radius: 18px;
+            padding: 10px 15px;
+            display: inline-block;
+            max-width: 100%;
+            word-break: break-word;
+        }
+    
+        .reply-meta {
+            font-size: 13px;
+            color: #65676b;
+        }
+    
+        .reply-actions {
+            font-size: 13px;
+            margin-top: 5px;
+            color: #65676b;
+        }
+    
+        .reply-actions button {
+            background: transparent;
+            border: none;
+            color: #65676b;
+            cursor: pointer;
+            padding: 0 6px;
+        }
+    
+        .reply-actions button:hover {
+            text-decoration: underline;
+        }
+    
+        .r{
+            font-size: 14px;
+    
+        }
+    </style>
+    
+
+
+
+
+{{-- include_once 'app/helpers/helpers.php'; --}}
+
+
+
 
 
     <!--Contents-->
@@ -178,7 +424,7 @@
                                 <div class="col-lg-12">
                                     <div class="btm-tags d-flex flex-wrap justify-content-center gap-2">
                                         @foreach ($article->tags as $tag)
-                                            <a href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}"
+                                            <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}"
                                                 class="btn border border-1 mt-20 py-2 px-3">
                                                 {{ $tag->name }}
                                             </a>
@@ -233,312 +479,255 @@
                                         <div class="comments-filter">
                                             <div class="row align-items-center">
                                                 <div class="col-12">
-                                                    <p class="text-uppercase">{{ $comments->total() }} Bình Luận</p>
+                                                    <p class="text-uppercase"> Bình Luận</p>
                                                 </div>
 
                                             </div>
                                         </div>
+                                        
                                         <br>
                                         <?php foreach ($comments as $comment): ?>
                                         <?php if (!$comment->parent_id): ?>
-                                        <div class="comment-reply-cont bg-light py-3 px-4 mb-3 rounded shadow-sm">
+                                        <div class="comment-reply-cont bg-white py-3 px-4 mb-3 rounded shadow-sm">
                                             <div class="d-flex align-items-start">
-                                                <div
-                                                    class="icon-60 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
+                                                <!-- Avatar -->
+                                                <div class="icon-60 rounded-circle img-cover me-3 flex-shrink">
                                                     <img src="<?= !empty($comment->user->image) ? asset('storage/' . $comment->user->image) : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>"
                                                         alt="User Avatar">
                                                 </div>
+                                                <!-- Nội dung comment -->
                                                 <div class="inf w-100">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <h6 class="fw-bold mb-0">
-                                                            <a
-                                                                href="{{ route('website.profileAuth', ['id' => $comment->user->user_id]) }}">
-                                                                <?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>
-                                                            </a>
-                                                        </h6>
-                                                        <div class="d-flex align-items-center gap-2">
-                                                            <span class="fs-12px text-muted">
-                                                                <i class="fas fa-clock me-1"></i>
-                                                                <?= date('F d, Y', strtotime($comment->created_at)) ?>
-                                                            </span>
-
-                                                            @if (auth()->check() && auth()->id() === $comment->user_id)
-                                                                <!-- Trash can icon button -->
-                                                                <form method="POST"
-                                                                    action="{{ route('comments.destroy', $comment->comment_id) }}"
-                                                                    onsubmit="return confirm('Bạn có chắc muốn xóa bình luận này?');">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit"
-                                                                        class="btn trash-can-btn butn border border-1 py-2 px-3 ms-2"
-                                                                        title="Xóa bình luận">
-                                                                        <i class="fas fa-trash-alt"></i>
-                                                                    </button>
-                                                                </form>
-                                                            @endif
-                                                            <?php if ($comment->user_id !== auth()->id()): ?>
-                                                            <!-- Repost button -->
-                                                            <button
-                                                                class="btn repost-btn butn border border-1 py-2 px-3 ms-2"
-                                                                data-comment-id="{{ $comment->comment_id }}"
-                                                                data-content="{{ htmlspecialchars($comment->content, ENT_QUOTES, 'UTF-8') }}"
-                                                                title="Repost bình luận này">
-                                                                <i class="la la-exclamation-triangle"
-                                                                    style=" color: red;"></i>
-
-                                                                <!-- Icon repost dạng tam giác -->
-                                                            </button>
-                                                            <?php endif; ?>
-
+                                                    <div class="reply-content-box">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <h6 class="fw-bold mb-0">
+                                                                <a
+                                                                    href="{{ route('website.profileAuth', ['id' => $comment->user->user_id]) }}">
+                                                                    <?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>
+                                                                </a>
+                                                            </h6>
+                                                        </div>
+                                                        <div id="comment-<?= $comment->comment_id ?>"
+                                                            class="text color-000 fs-14px mt-2">
+                                                            <?= nl2br(htmlspecialchars($comment->content)) ?>
                                                         </div>
                                                     </div>
-
-                                                    <div id="comment-<?= $comment->comment_id ?>"
-                                                        class="text color-000 fs-14px mt-2">
-                                                        <?= nl2br(htmlspecialchars($comment->content)) ?>
-                                                    </div>
-
-                                                    <div class="mt-2">
-                                                        <button
-                                                            class="btn reply-btn butn border border-1 py-2 px-3 d-inline-block"
-                                                            data-comment-id="<?= $comment->comment_id ?>"
-                                                            data-username="<?= htmlspecialchars($comment->user->username ?? 'Anonymous') ?>">
+                                                    <div
+                                                        class="mt-2 d-flex align-items-center flex-wrap gap-3 small-action-buttons">
+                                                        <button type="button"
+                                                            class="btn btn-link p-0 text-decoration-none text-gray reply-btn"
+                                                            data-comment-id="{{ $comment->comment_id }}"
+                                                            data-username="{{ '@' . ($comment->user->username ?? 'Anonymous') }}"
+                                                            data-article-id="<?= $comment->article_id ?>"
+                                                            onclick="openReplyModal(this)">
                                                             <span class="fw-bold">Trả lời</span>
                                                         </button>
 
 
-                                                    </div>
+                                                        <!-- Nút Like -->
+                                                        <button type="button" class="btn like-btn"
+                                                            data-comment-id="{{ $comment->comment_id }}">
+                                                            <span
+                                                                class="like-text @if ($comment->likesUsers->contains(auth()->id())) text-primary @endif">
+                                                                Thích
+                                                            </span>
+                                                        </button>
 
-                                                    <!-- Delete form (ẩn/hiện khi bấm vào icon thùng rác) -->
-                                                    @if (auth()->check() && auth()->id() === $comment->user_id)
-                                                        <div id="delete-options-{{ $comment->comment_id }}"
-                                                            class="mt-2" style="display: none;">
+
+                                                        @if (auth()->check() && auth()->id() === $comment->user_id)
                                                             <form method="POST"
                                                                 action="{{ route('comments.destroy', $comment->comment_id) }}"
-                                                                class="d-inline-block">
+                                                                onsubmit="return confirm('Bạn có chắc muốn xóa bình luận này?');"
+                                                                class="d-inline">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger btn-sm">
-                                                                    <i class="fas fa-trash-alt me-1"></i> Xóa
+                                                                <button type="submit"
+                                                                    class="btn btn-link p-0 text-decoration-none text-gray fw-bold">
+                                                                    Xóa
                                                                 </button>
                                                             </form>
+                                                        @else
+                                                            <?php if ($comment->user_id !== auth()->id()): ?>
+                                                            <button type="button"
+                                                                class="btn btn-link p-0 text-decoration-none text-gray repost-btn fw-bold"
+                                                                data-comment-id="{{ $comment->comment_id }}"
+                                                                data-content="<?= htmlspecialchars($comment->content, ENT_QUOTES, 'UTF-8') ?>"
+                                                                title="Báo cáo bình luận này">
+                                                                Báo cáo
+                                                            </button>
+                                                            <?php endif; ?>
+                                                        @endif
+                                                        <div class="reply-meta text-muted small">
+                                                            <?= time_ago($comment->created_at) ?>
                                                         </div>
-                                                    @endif
-
-                                                    @if (session('success'))
-                                                        <script>
-                                                            alert("{{ session('success') }}");
-                                                            window.location.reload();
-                                                        </script>
-                                                    @endif
-
-                                                    <script>
-                                                        function toggleDeleteOptions(commentId) {
-                                                            const options = document.getElementById('delete-options-' + commentId);
-                                                            options.style.display = (options.style.display === 'none') ? 'block' : 'none';
-                                                        }
-                                                    </script>
-
-
+                                                        <!-- Hiển thị icon + số lượt like -->
+                                                        <span id="like-count-{{ $comment->comment_id }}"
+                                                            class="like-count @if ($comment->likesUsers->contains(auth()->id())) liked @endif">
+                                                            @if ($comment->likes > 0)
+                                                                <i class="fas fa-thumbs-up"></i> {{ $comment->likes }}
+                                                            @endif
+                                                        </span>
+                                                    </div>
                                                     <!-- Danh sách replies -->
-                                                    <div class="replies ms-5 mt-3"
+                                                    <div class="replies  mt-3"
                                                         data-reply-count="<?= count($comment->replies) ?>">
                                                         <?php
                                                         $replyCount = count($comment->replies);
-                                                        $visibleReplies = 3; // Initial number of replies to show
+                                                        $visibleReplies = 0;
                                                         $index = 0;
                                                         ?>
                                                         <?php foreach ($comment->replies as $reply): ?>
                                                         <div
-                                                            class="comment-reply-cont bg-white py-2 px-3 mb-2 rounded shadow-sm reply-item <?= $index >= $visibleReplies ? 'd-none' : '' ?>">
-                                                            <div class="d-flex align-items-start">
+                                                            class="reply-item d-flex mb-3 position-relative <?= $index >= $visibleReplies ? 'd-none' : '' ?>">
+                                                            <!-- Avatar và Line -->
+                                                            <div class="position-relative me-2">
                                                                 <div
-                                                                    class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
+                                                                    class="icon-40 rounded-circle img-cover overflow-hidden">
                                                                     <img src="<?= $reply->user->image ? asset('storage/' . $reply->user->image) : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>"
                                                                         alt="User Avatar">
                                                                 </div>
-                                                                <div class="inf w-100">
-                                                                    <div
-                                                                        class="d-flex justify-content-between align-items-center">
-                                                                        <h6 class="fw-bold">
-                                                                            <?= htmlspecialchars($reply->user->username ?? 'Anonymous') ?>
-                                                                        </h6>
-                                                                        <div class="d-flex align-items-center">
-                                                                            <span class="fs-12px text-muted">
-                                                                                <i class="fas fa-clock"></i>
-                                                                                <?= date('F d, Y', strtotime($reply->created_at)) ?>
-                                                                            </span>
-                                                                            @if (auth()->check() && auth()->id() === $reply->user_id)
-                                                                                <!-- Kiểm tra ID người dùng với bình luận con -->
-                                                                                <button
-                                                                                    class="btn trash-can-btn butn border border-1 py-2 px-3 ms-2"
-                                                                                    onclick="confirmDelete(event, {{ $reply->comment_id }})">
-                                                                                    <!-- Sử dụng comment_id của reply -->
-                                                                                    <i class="fas fa-trash-alt"></i>
-                                                                                    <!-- Trash can icon -->
-                                                                                </button>
-                                                                            @endif
-                                                                            @if (auth()->check() && auth()->id() !== $reply->user_id)
-                                                                                <!-- Nếu không phải là chủ bình luận -->
-                                                                                <button
-                                                                                    class="btn repost-btn butn border border-1 py-2 px-3 ms-2"
-                                                                                    data-comment-id="{{ $reply->comment_id }}"
-                                                                                    data-content="{{ htmlspecialchars($comment->content, ENT_QUOTES, 'UTF-8') }}">
-                                                                                    <i class="la la-exclamation-triangle"
-                                                                                        style=" color: #fa0000;"></i>
-                                                                                    <span class="fw-bold"></span>
-                                                                                </button>
-                                                                            @endif
-
-
-                                                                        </div>
+                                                                <?php if ($index < $replyCount - 1): ?>
+                                                                <div class="thread-line"></div>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                            <!-- Nội dung reply -->
+                                                            <div class="flex-grow-1">
+                                                                <div class="reply-content-box">
+                                                                    <div class="reply-header">
+                                                                        <strong class="reply-username">
+                                                                            <?= htmlspecialchars($reply->user->username ?? 'Người dùng ẩn danh') ?>
+                                                                        </strong>
                                                                     </div>
-                                                                    <div id="comment-<?= $reply->comment_id ?>"
-                                                                        class="text color-000 fs-14px mt-1">
+                                                                    <div class="mt-1">
                                                                         <?= nl2br(htmlspecialchars($reply->content)) ?>
                                                                     </div>
-                                                                    <div class="mt-2">
-                                                                        <button
-                                                                            class="btn reply-btn butn border border-1 py-2 px-3 d-inline-block"
-                                                                            data-comment-id="<?= $reply->comment_id ?>"
-                                                                            data-username="<?= htmlspecialchars($reply->user->username ?? 'Anonymous') ?>">
-                                                                            <span class="fw-bold">Trả lời</span>
-                                                                        </button>
-
-
-                                                                        <!-- Delete options (hidden initially) -->
-                                                                        @if (auth()->check() && auth()->id() === $comment->user_id)
-                                                                            <div id="delete-options-{{ $reply->comment_id }}"
-                                                                                class="delete-options"
-                                                                                style="display: none;">
-                                                                                <form method="POST"
-                                                                                    action="{{ route('comments.destroy', $reply->comment_id) }}"
-                                                                                    class="d-inline-block">
-                                                                                    @csrf
-                                                                                    @method('DELETE')
-                                                                                    <button type="submit"
-                                                                                        class="btn btn-danger btn-sm">
-                                                                                        <i class="fas fa-trash-alt"></i>
-                                                                                        Xóa
-                                                                                    </button>
-                                                                                </form>
-                                                                            </div>
-                                                                        @endif
-                                                                        <script>
-                                                                            function confirmDelete(event, commentId) {
-                                                                                event.preventDefault(); // Prevent the default form submission behavior
-
-                                                                                // Ask for confirmation
-                                                                                if (confirm("Bạn có chắc chắn muốn xóa bình luận này không?")) {
-                                                                                    // If confirmed, submit the form
-                                                                                    var form = document.querySelector(`#delete-options-${commentId} form`);
-                                                                                    if (form) {
-                                                                                        form.submit(); // Submit the form to delete the comment
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        </script>
-
-                                                                    </div>
                                                                 </div>
+                                                                <div
+                                                                    class="mt-2 d-flex align-items-center flex-wrap gap-3 small-action-buttons">
+                                                                    <button type="button"
+                                                                        class="btn btn-link p-0 text-decoration-none text-gray reply-btn"
+                                                                        data-comment-id="{{ $reply->comment_id }}"
+                                                                        data-username="{{ '@' . ($reply->user->username ?? 'Anonymous') }}"
+                                                                        data-article-id="<?= $reply->article_id ?>"
+                                                                        onclick="openReplyModal(this)">
+                                                                        <span class="fw-bold">Trả lời</span>
+                                                                    </button>
+                                                                    <!-- Nút Like -->
+                                                                    <button type="button" class="btn like-btn"
+                                                                        data-comment-id="{{ $reply->comment_id }}">
+                                                                        <span
+                                                                            class="like-text @if ($reply->likesUsers->contains(auth()->id())) text-primary @endif">
+                                                                            Thích
+                                                                        </span>
+                                                                    </button>
+                                                                    @if (auth()->check() && auth()->id() === $reply->user_id)
+                                                                        <form method="POST"
+                                                                            action="{{ route('comments.destroy', $reply->comment_id) }}"
+                                                                            onsubmit="return confirm('Bạn có chắc muốn xóa bình luận này?');"
+                                                                            class="d-inline">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="submit"
+                                                                                class="btn btn-link p-0 text-decoration-none text-gray">
+                                                                                <span class="fw-bold">Xóa</span>
+                                                                            </button>
+                                                                        </form>
+                                                                    @else
+                                                                        <?php if ($reply->user_id !== auth()->id()): ?>
+                                                                        <button type="button"
+                                                                            class="btn btn-link p-0 text-decoration-none text-gray repost-btn fw-bold"
+                                                                            data-comment-id="{{ $reply->comment_id }}"
+                                                                            data-content="<?= htmlspecialchars($reply->content, ENT_QUOTES, 'UTF-8') ?>"
+                                                                            title="Báo cáo bình luận này">
+                                                                            Báo cáo
+                                                                        </button>
+                                                                        <?php endif; ?>
+                                                                    @endif
+                                                                    <div class="reply-meta text-muted small">
+                                                                        <?= time_ago($reply->created_at) ?>
+                                                                    </div>
+                                                                    <!-- Hiển thị icon + số lượt like -->
+                                                                    <span id="like-count-{{ $reply->comment_id }}"
+                                                                        class="like-count @if ($reply->likesUsers->contains(auth()->id())) liked @endif">
+                                                                        @if ($reply->likes > 0)
+                                                                            <i class="fas fa-thumbs-up"></i>
+                                                                            {{ $reply->likes }}
+                                                                        @endif
+                                                                    </span>
+                                                                </div>
+                                                            
+                                                                <!-- Sub-replies -->
+                                                               <div class="sub-replies mt-2 ms-5">
+
+                                                                    @include('components.sub-reply', [])
+                                                                </div>
+                                                                
                                                             </div>
                                                         </div>
                                                         <?php $index++; ?>
                                                         <?php endforeach; ?>
+
                                                         <?php if ($replyCount > $visibleReplies): ?>
                                                         <button
-                                                            class="btn btn-link text-primary px-0 show-more-replies text-decoration-none">Xem
-                                                            thêm</button>
+                                                            class="btn btn-link p-0 text-primary fw-bold show-more-replies-btn mt-2"
+                                                            onclick="toggleReplies(this)" data-collapsed="true">
+                                                            Xem thêm
+                                                        </button>
                                                         <?php endif; ?>
+
                                                     </div>
-
-
-                                                    <!-- JavaScript để hiển thị form khi nhấn nút Reply -->
-                                                    <script>
-                                                        document.addEventListener("DOMContentLoaded", function() {
-                                                            document.querySelectorAll(".replies").forEach(replyContainer => {
-                                                                const showMoreBtn = replyContainer.querySelector(".show-more-replies");
-                                                                const hiddenReplies = replyContainer.querySelectorAll(".reply-item.d-none");
-
-                                                                if (showMoreBtn) {
-                                                                    showMoreBtn.addEventListener("click", function() {
-                                                                        hiddenReplies.forEach(reply => reply.classList.remove("d-none"));
-                                                                        showMoreBtn.style.display = "none"; // Ẩn nút sau khi mở rộng
-                                                                    });
-                                                                }
-                                                            });
-                                                        });
-                                                    </script>
-                                                    <!-- Form Reply -->
-                                                    <div class="reply-form-container mt-2 d-none"
-                                                        id="reply-form-{{ $comment->comment_id }}">
-                                                        <form class="reply-form">
-                                                            @csrf
-                                                            <input type="hidden" name="comment_id"
-                                                                value="{{ $comment->comment_id }}">
-                                                            <input type="hidden" name="article_id"
-                                                                value="{{ $comment->article_id }}">
-
-                                                            <div
-                                                                class="d-flex align-items-start bg-white p-3 rounded shadow-sm border">
-                                                                <!-- Ảnh đại diện -->
-                                                                <div
-                                                                    class="icon-40 rounded-circle img-cover overflow-hidden me-2 flex-shrink-0">
-                                                                    <img src="{{ $currentUser->image ?? asset('https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg') }}"
-                                                                        alt="Your Avatar">
-                                                                </div>
-
-                                                                <div class="w-100">
-                                                                    <!-- Ô nhập nội dung trả lời -->
-                                                                    <textarea class="form-control form-control-sm reply-content" name="content" rows="2" required
-                                                                        data-username="@{{ $comment - > user - > username ?? 'Anonymous' }}" placeholder="Trả lời: ..." onclick="addUsernameToReply(this)">
-                                                                </textarea>
-
-
-                                                                    <script>
-                                                                        function addUsernameToReply(textarea, commentId) {
-                                                                            console.log("Textarea clicked for comment ID: " + commentId);
-
-                                                                            fetch(`/get-username-by-comment-id/${commentId}`)
-                                                                                .then(response => response.json())
-                                                                                .then(data => {
-                                                                                    let username = data.username ?? 'Người dùng ẩn danh';
-                                                                                    username = '@' + username.trim();
-
-                                                                                    // Luôn đặt lại nội dung với @username ở đầu
-                                                                                    let currentText = textarea.value.trim();
-                                                                                    textarea.value = username + ' ' + currentText;
-
-                                                                                    console.log("Inserted username:", username);
-                                                                                    textarea.focus();
-                                                                                })
-                                                                                .catch(error => {
-                                                                                    console.error('Error fetching username:', error);
-                                                                                });
-                                                                        }
-                                                                    </script>
-
-                                                                    <!-- Nút hành động -->
-                                                                    <div class="d-flex justify-content-end gap-2 mt-2">
-                                                                        <button type="button"
-                                                                            class="btn butn border border-1 mt-20 py-2 px-3 cancel-reply">Hủy</button>
-                                                                        <button type="button"
-                                                                            class="btn butn border border-1 mt-20 py-2 px-3 send-reply"
-                                                                            data-comment-id="{{ $comment->comment_id }}"
-                                                                            data-article-id="{{ $comment->article_id }}">
-                                                                            Trả lời
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-
+                                                    <!-- End danh sách replies -->
                                                 </div>
                                             </div>
                                         </div>
                                         <?php endif; ?>
                                         <?php endforeach; ?>
+
+                                        <script>
+                                            function toggleReplies(button) {
+                                                const repliesContainer = button.closest('.replies');
+                                                const allReplies = repliesContainer.querySelectorAll('.reply-item');
+                                                const isCollapsed = button.getAttribute('data-collapsed') === 'true';
+                                                const visibleCount = 0; // Số reply muốn hiển thị ban đầu
+
+                                                if (isCollapsed) {
+                                                    // Hiển thị tất cả
+                                                    allReplies.forEach(reply => reply.classList.remove('d-none'));
+                                                    button.innerText = 'Thu gọn';
+                                                    button.setAttribute('data-collapsed', 'false');
+                                                } else {
+                                                    // Ẩn lại những reply vượt quá visibleCount
+                                                    allReplies.forEach((reply, index) => {
+                                                        if (index >= visibleCount) {
+                                                            reply.classList.add('d-none');
+                                                        }
+                                                    });
+                                                    button.innerText = 'Xem thêm';
+                                                    button.setAttribute('data-collapsed', 'true');
+                                                }
+                                            }
+                                        </script>
+
+
+
+                                        <script>
+                                            function toggleDeleteOptions(commentId) {
+                                                const options = document.getElementById('delete-options-' + commentId);
+                                                options.style.display = (options.style.display === 'none') ? 'block' : 'none';
+                                            }
+                                        </script>
+                                        <script>
+                                            function confirmDelete(event, commentId) {
+                                                event.preventDefault();
+                                                if (confirm("Bạn có chắc chắn muốn xóa bình luận này không?")) {
+                                                    var form = document.querySelector(`#delete-options-${commentId} form`);
+                                                    if (form) {
+                                                        form.submit();
+                                                    }
+                                                }
+                                            }
+                                        </script>
+
+
 
                                         <!-- THÊM PHÂN TRANG -->
                                         <div class="d-flex justify-content-center mt-4">
@@ -577,6 +766,142 @@
             </div>
         </section>
         <!-- ====== end comments ====== -->
+
+        <!-- Modal dùng chung cho Reply -->
+        <div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content rounded-4 shadow-sm">
+                    <!-- Form bao bọc toàn bộ modal -->
+                    <form id="replyForm">
+                        @csrf
+                        <!-- Các trường ẩn để lưu comment_id và article_id -->
+                        <input type="hidden" name="comment_id" value="">
+                        <input type="hidden" name="article_id" value="">
+                        <!-- Modal Header -->
+                        <div class="modal-header border-bottom-0">
+                            <h5 class="modal-title" id="replyModalLabel">Trả lời</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                        </div>
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <div class="d-flex align-items-start bg-light p-3 rounded shadow-sm mb-3">
+                                <!-- Ảnh đại diện của user hiện tại -->
+                                <div class="icon-40 rounded-circle img-cover overflow-hidden me-3 flex-shrink-0">
+                                    <img src="{{ $currentUser->image ?? asset('https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg') }}"
+                                        alt="Your Avatar" class="w-100 h-100">
+                                </div>
+                                <!-- Nội dung reply -->
+                                <div class="w-100">
+                                    <textarea id="replyTextarea" class="form-control border-0 shadow-none p-2" name="content" rows="4" required
+                                        placeholder="Nhập nội dung trả lời..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal Footer -->
+                        <div class="modal-footer border-top-0">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <!-- Nút gửi sẽ không có data-bs-dismiss, modal sẽ được đóng sau khi gửi thành công -->
+                            <button type="button" class="btn btn-primary send-reply">Gửi trả lời</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- JavaScript: Hàm mở modal và cập nhật dữ liệu từ button -->
+        <script>
+            // Hàm mở modal và cập nhật dữ liệu từ button "Trả lời"
+            function openReplyModal(button) {
+                // Lấy các giá trị từ thuộc tính data của button
+                const username = button.getAttribute('data-username');
+                const commentId = button.getAttribute('data-comment-id');
+                const articleId = button.getAttribute('data-article-id') || '';
+
+                // Cập nhật tiêu đề modal (vd: "Trả lời @username")
+                document.getElementById('replyModalLabel').innerText = "Trả lời " + username;
+
+                // Reset nội dung textarea với @username và focus
+                const textarea = document.getElementById('replyTextarea');
+                if (textarea) {
+                    textarea.value = username + ' ';
+                    textarea.focus();
+                }
+
+                // Cập nhật giá trị các input ẩn trong form
+                const replyForm = document.getElementById('replyForm');
+                replyForm.querySelector("input[name='comment_id']").value = commentId;
+                replyForm.querySelector("input[name='article_id']").value = articleId;
+
+                // Hiển thị modal sử dụng Bootstrap
+                const replyModalEl = document.getElementById('replyModal');
+                const replyModal = new bootstrap.Modal(replyModalEl);
+                replyModal.show();
+            }
+
+            // Xử lý gửi bình luận qua AJAX khi nhấn nút "Gửi trả lời" trong modal
+            document.addEventListener("DOMContentLoaded", function() {
+                console.log("Script loaded!");
+                let sendReplyBtn = document.querySelector("#replyModal .send-reply");
+                console.log("Found send-reply button", sendReplyBtn);
+
+                if (sendReplyBtn) {
+                    sendReplyBtn.addEventListener("click", function() {
+                        console.log("Clicked send-reply button!");
+                        let replyForm = document.getElementById("replyForm");
+                        let commentId = replyForm.querySelector("input[name='comment_id']").value;
+                        let articleId = replyForm.querySelector("input[name='article_id']").value;
+                        let content = replyForm.querySelector("textarea[name='content']").value.trim();
+
+                        console.log("articleId =", articleId, "commentId =", commentId);
+                        console.log("content =", content);
+
+                        // Lấy CSRF token từ meta
+                        let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute(
+                            "content");
+
+                        if (content === "") {
+                            alert("Vui lòng nhập nội dung bình luận!");
+                            return;
+                        }
+
+                        // Gửi dữ liệu qua fetch
+                        fetch(`/articles/${articleId}/comments/${commentId}/reply`, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": csrfToken
+                                },
+                                body: JSON.stringify({
+                                    content: content,
+                                    article_id: articleId,
+                                    parent_id: commentId
+                                })
+                            })
+                            .then(response => {
+                                console.log("Response status:", response.status);
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log("Server data:", data);
+                                if (data.success) {
+                                    // Nếu gửi thành công, đóng modal và reload trang
+                                    const replyModalEl = document.getElementById('replyModal');
+                                    const modalInstance = bootstrap.Modal.getInstance(replyModalEl);
+                                    modalInstance.hide();
+                                    location.reload();
+                                } else {
+                                    alert(data.message || "Có lỗi xảy ra, vui lòng thử lại!");
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Lỗi khi gửi bình luận:", error);
+                                alert("Lỗi khi gửi bình luận!");
+                            });
+                    });
+                }
+            });
+        </script>
+
 
 
 
@@ -1091,34 +1416,48 @@
         });
     </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            console.log("Script loaded!");
+    
+       <!-- 🔔 Thêm vào trong Blade để có chỗ hiển thị thông báo -->
+<div id="messageBox"></div>
 
-            /** 🟢 1️⃣ Xử lý gửi Comment thường **/
-            document.querySelector(".comment-form").addEventListener("submit", function(e) {
-                e.preventDefault();
-                let formData = new FormData(this);
-                let url = this.getAttribute("action");
+<script>
 
-                fetch(url, {
-                        method: "POST",
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            window.location.reload();
-                            document.querySelector(".reviews-content").insertAdjacentHTML("beforeend",
-                                newComment);
-                            e.target.reset();
-                        } else {
-                            alert("Lỗi khi gửi comment có thể là do có những từ không chuẩn đạo đức !");
-                        }
-                    })
-                    .catch(error => console.error("Error:", error));
+document.addEventListener("DOMContentLoaded", function() {
+    const commentForm = document.querySelector(".comment-form");
+
+    if (commentForm) {
+        commentForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const url = this.getAttribute("action");
+
+            fetch(url, {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // ✅ Trường hợp bình luận thành công
+                    alert(data.message || "Bình luận của bạn đã được đăng!");
+                    window.location.reload(); // Nếu muốn reload
+                } else {
+                    // ❌ Trường hợp gặp lỗi (chưa đăng nhập, bị khóa, từ ngữ cấm, ...)
+                    alert(data.message || "Có lỗi xảy ra khi gửi bình luận.");
+                }
+            })
+            .catch(error => {
+                // ❌ Lỗi kết nối, lỗi server không trả JSON
+                console.error("Error:", error);
+                alert("Đã xảy ra lỗi khi gửi bình luận (network / server).");
             });
         });
+    }
+});
+</script>
+
+<script>
 
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -1149,65 +1488,7 @@
 
         });
     </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            console.log("Script loaded!");
-            let buttons = document.querySelectorAll(".send-reply");
-            console.log("Found", buttons.length, "send-reply buttons");
-
-            buttons.forEach(button => {
-                button.addEventListener("click", function() {
-                    console.log("Clicked send-reply button!");
-                    let commentId = this.getAttribute("data-comment-id");
-                    let articleId = this.getAttribute("data-article-id");
-                    let replyForm = document.querySelector(`#reply-form-${commentId} .reply-form`);
-                    let content = replyForm.querySelector(".reply-content").value.trim();
-
-                    console.log("articleId =", articleId, "commentId =", commentId);
-                    console.log("content =", content);
-
-                    // Kiểm tra xem form có input CSRF hay meta CSRF không
-                    let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute(
-                        "content");
-
-                    if (content === "") {
-                        alert("Vui lòng nhập nội dung bình luận!");
-                        return;
-                    }
-
-                    fetch(`/articles/${articleId}/comments/${commentId}/reply`, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-CSRF-TOKEN": csrfToken
-                            },
-                            body: JSON.stringify({
-                                content: content,
-                                article_id: articleId,
-                                parent_id: commentId
-                            })
-                        })
-                        .then(response => {
-                            console.log("Response status:", response.status);
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log("Server data:", data);
-                            if (data.success) {
-                                // Reload trang
-                                location.reload();
-                            } else {
-                                alert(data.message || "Có lỗi xảy ra, vui lòng thử lại!");
-                            }
-                        })
-                        .catch(error => {
-                            console.error("Lỗi khi gửi bình luận:", error);
-                            alert("Lỗi khi gửi bình luận!");
-                        });
-                });
-            });
-        });
-    </script>
+    
 
 
     {{-- TungKeng làm tìm comment --}}
@@ -1341,4 +1622,123 @@
             });
         });
     </script>
+    {{-- like cmt nhé --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const likeButtons = document.querySelectorAll('.like-btn');
+
+            likeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    button.disabled = true;
+
+                    const commentId = button.getAttribute('data-comment-id');
+                    const url = `/comments/${commentId}/like`;
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content');
+
+                    fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({})
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.message === 'Success') {
+                                const likeText = button.querySelector('.like-text');
+                                const likeCountElem = document.getElementById(
+                                    `like-count-${commentId}`);
+
+                                // Cập nhật màu chữ "Thích"
+                                if (data.liked) {
+                                    likeText.classList.add('text-primary');
+                                    likeCountElem.classList.add(
+                                        'liked'); // 💙 Thêm màu cho số like
+                                } else {
+                                    likeText.classList.remove('text-primary');
+                                    likeCountElem.classList.remove(
+                                        'liked'); // Gỡ màu nếu unlike
+                                }
+
+                                // Cập nhật nội dung số like + icon
+                                if (data.likes > 0) {
+                                    likeCountElem.innerHTML =
+                                        `<i class="fas fa-thumbs-up"></i> ${data.likes}`;
+                                } else {
+                                    likeCountElem.innerHTML = ''; // Ẩn nếu like = 0
+                                }
+                            } else if (data.message === 'Unauthorized') {
+                                alert('Bạn cần đăng nhập để thực hiện thao tác này!');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Có lỗi xảy ra:', error);
+                        })
+                        .finally(() => {
+                            button.disabled = false;
+                        });
+                });
+            });
+        });
+    </script>
+
+
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const buttons = document.querySelectorAll(".send-reply");
+        buttons.forEach(button => {
+            button.addEventListener("click", function () {
+                const commentId = this.getAttribute("data-comment-id");
+                const articleId = this.getAttribute("data-article-id");
+                const replyForm = document.querySelector(`#reply-form-${commentId} .reply-form`);
+                const content = replyForm.querySelector(".reply-content").value.trim();
+                const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+    
+                if (content === "") {
+                    alert("Vui lòng nhập nội dung bình luận!");
+                    return;
+                }
+    
+                fetch(`/articles/${articleId}/comments/${commentId}/reply`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrfToken
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                        article_id: articleId,
+                        parent_id: commentId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Hiển thị alert thành công, chờ người dùng nhấn OK rồi reload trang
+                        alert(data.message || 'Trả lời thành công!');
+                        location.reload();
+                    } else {
+                        alert(data.message || 'Có lỗi xảy ra!');
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi:", error);
+                    alert("Lỗi kết nối, vui lòng thử lại!");
+                });
+            });
+        });
+    });
+    </script>
+    
+    
+
+
+
 @endsection

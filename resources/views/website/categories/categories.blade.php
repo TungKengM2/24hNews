@@ -199,7 +199,7 @@
                                     <div class="d-flex flex-wrap gap-2">
                                       
                                         @foreach ($tags as $tag)
-                                        <a href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}" class="btn btn-sm btn-outline-secondary">{{ $tag->name }}</a>
+                                        <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}" class="btn btn-sm btn-outline-secondary">{{ $tag->name }}</a>
                                         
                                     @endforeach
                                        

@@ -95,9 +95,7 @@
                                                         <a href="{{ route('admin.comments.show', $comment) }}" class="btn btn-info btn-sm" title="Xem chi tiết">
                                                             <i class="fa fa-eye"></i>
                                                         </a>
-                                                        <a href="{{ route('comments.moderation-history', $comment) }}" class="btn btn-secondary btn-sm" title="Lịch sử kiểm duyệt">
-                                                            <i class="fa fa-history"></i>
-                                                        </a>
+
                                                         @if($comment->status != 'approved')
                                                             <form action="{{ route('admin.comments.approve', $comment) }}" method="POST" class="d-inline">
                                                                 @csrf
