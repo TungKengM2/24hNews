@@ -65,17 +65,27 @@
                     data-bs-toggle="dropdown" title="Notifications" style="position: relative; display: inline-block;">
                     <i data-feather="bell"></i>
                     @php
-                    $pendingCount = \App\Models\Article::where('status', 'pending')->count();
+                    // Lấy danh mục mà kiểm duyệt viên quản lý
+                    $moderatorCategories = auth()->user()->categories()->pluck('category_id')->toArray();
+
+                    // Đếm số bài viết chờ duyệt thuộc danh mục của kiểm duyệt viên
+                    $pendingCount = \App\Models\Article::where('status', 'pending')
+                        ->whereIn('category_id', $moderatorCategories)
+                        ->count();
+
                     $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
                     $totalPending = $pendingCount + $pendingViolations;
-            
+
+                    // Đếm số bài viết chờ lâu hơn 30 phút thuộc danh mục của kiểm duyệt viên
                     $longPendingArticles = \App\Models\Article::where('status', 'pending')
-                    ->where('created_at', '<', now()->subMinutes(30))
+                        ->whereIn('category_id', $moderatorCategories)
+                        ->where('created_at', '<', now()->subMinutes(30))
                         ->count();
+
                     $totalNotifications = $pendingCount > 0 ? 1 : 0; // 1 thông báo nếu có bài pending
                     $totalNotifications += $longPendingArticles > 0 ? 1 : 0; // +1 nếu có bài chờ lâu
                     @endphp
-            
+
                     @if ($pendingCount > 0 || $pendingViolations > 0)
                         <span class="badge badge-danger"
                             style="position: absolute; top: 6px; right: 5px; font-size: 10px; padding: 2px 5px; border-radius: 50%; line-height: 1; background: red; color: white;">
@@ -103,7 +113,7 @@
                                     </a>
                                 </li>
                             @endif
-            
+
                             <!-- Thông báo vi phạm chờ duyệt -->
                             @if ($pendingViolations > 0)
                                 <li>
@@ -112,7 +122,7 @@
                                     </a>
                                 </li>
                             @endif
-            
+
                             <!-- Thông báo bài viết chờ lâu hơn 30 phút -->
                             @if ($longPendingArticles > 0)
                                 <li>
@@ -128,7 +138,7 @@
                     </li>
                 </ul>
             </li>
-            
+
 
             <script>
                 // Gọi hàm mỗi 60 giây

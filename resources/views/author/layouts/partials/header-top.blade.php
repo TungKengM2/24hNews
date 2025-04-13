@@ -1,4 +1,4 @@
-<nav class="navbar navbar-static-top">
+D<nav class="navbar navbar-static-top">
     <!-- Sidebar toggle button-->
     <div class="app-menu">
         <ul class="header-megamenu nav">
@@ -39,7 +39,7 @@
                     <li>
                         <ul class="menu sm-scroll" id="notificationList">
                             @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
-                            <li class="notification-item p-3" id="notification-{{ $notification->id }}" 
+                            <li class="notification-item p-3" id="notification-{{ $notification->id }}"
                                 style="border-bottom: 1px solid #f0f0f0;">
                                 <a href="#"
                                    onclick="openNotification('{{ $notification->id }}', '{{ addslashes($notification->data['message']) }}'); return false;"
@@ -72,7 +72,18 @@
                                             <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
                                         </div>
                                     </div>
-                                </a>
+                                   {{-- style="font-size: 16px; display: block; padding: 10px;">
+                                    @if(isset($notification->data['type']) && $notification->data['type'] === 'article_rejected')
+                                        <i class="fas fa-times-circle text-danger me-2"></i>
+                                        {{ Str::limit($notification->data['message'], 40, '...') }}
+                                    @elseif(isset($notification->data['type']) && $notification->data['type'] === 'article_reported')
+                                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                                        {{ Str::limit('Bài viết của bạn đã bị report', 40, '...') }}
+                                    @else
+                                        <i class="fas fa-info-circle text-info me-2"></i>
+                                        {{ Str::limit($notification->data['message'], 40, '...') }}DD
+                                    @endif
+                                </a> --}}
                             </li>
                         @empty
                             <li class="text-muted dropdown-item p-3 text-center">
@@ -80,6 +91,7 @@
                                 <div>Không có thông báo mới</div>
                             </li>
                         @endforelse
+
                         </ul>
                     </li>
 
