@@ -22,6 +22,8 @@ use App\Notifications\ArticleStatusUpdated;
 use Illuminate\Support\Facades\Notification;
 
 use App\Notifications\ArticleRejected;
+use Illuminate\Support\Str;
+// use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {

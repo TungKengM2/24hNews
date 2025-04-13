@@ -20,6 +20,27 @@
         .criteria-item.failed #current-word-count {
             color: #dc3545 !important;
         }
+        
+        /* CSS cho hiệu ứng loading */
+        .image-upload-loading {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #007bff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 @endsection
 
@@ -302,6 +323,12 @@
                                             {!! $content !!}
                                         </textarea>
                                     @endif
+                                    
+                                    <!-- Thêm phần loading -->
+                                    <div class="image-upload-loading" id="image-upload-loading">
+                                        <div class="spinner"></div>
+                                        <p class="mt-2">Đang tải lên và kiểm duyệt hình ảnh...</p>
+                                    </div>
                                 </div>
 
                                 <!-- Hidden fields and buttons -->
@@ -621,10 +648,10 @@
             const previewContainer = document.getElementById('image-preview-container');
             const currentImageContainer = document.getElementById('current-image-container');
             const moderationResult = document.getElementById('moderation-result');
-            const moderationLoading = document.getElementById('moderation-loading');
             const errorDiv = document.getElementById('moderation-error');
             const errorMessage = document.getElementById('error-message');
             const submitButton = document.getElementById('submitButton');
+            const imageUploadLoading = document.getElementById('image-upload-loading');
 
             submitButton.disabled = false;
             window.isImageChanged = false;
@@ -632,8 +659,8 @@
 
             if (previewContainer) previewContainer.style.display = 'none';
             if (moderationResult) moderationResult.style.display = 'none';
-            if (moderationLoading) moderationLoading.style.display = 'none';
             if (errorDiv) errorDiv.style.display = 'none';
+            if (imageUploadLoading) imageUploadLoading.style.display = 'none';
 
             document.getElementById('saveDraft').addEventListener('click', function() {
                 document.getElementById('articleStatus').value = 'draft';
@@ -647,6 +674,9 @@
                         window.isImageChanged = true;
                         window.isImageValid = false;
 
+                        // Hiển thị phần loading
+                        if (imageUploadLoading) imageUploadLoading.style.display = 'block';
+
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             imagePreview.src = e.target.result;
@@ -655,7 +685,6 @@
                         reader.readAsDataURL(file);
 
                         moderationResult.style.display = 'block';
-                        moderationLoading.style.display = 'block';
                         errorDiv.style.display = 'none';
                         submitButton.disabled = true;
 
@@ -715,6 +744,7 @@
                         previewContainer.style.display = 'none';
                         moderationResult.style.display = 'none';
                         errorDiv.style.display = 'none';
+                        if (imageUploadLoading) imageUploadLoading.style.display = 'none';
                         submitButton.disabled = false;
                         window.isImageValid = true;
                         window.updateCriteria();

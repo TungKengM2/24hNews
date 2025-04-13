@@ -51,8 +51,8 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
         $followingUsers = $user->following()->paginate(10);
-
-        return view('user.following', compact('followingUsers'));
+        // dat them
+        return view('website.profiles.users.following', compact('followingUsers', 'user'));
     }
     //fl author
     public function followingOfAuthorList()
@@ -410,8 +410,8 @@ class ProfileController extends Controller
                     'Tài khoản của bạn đăng nhập bằng Google/Facebook, không thể đổi mật khẩu.'
                 );
         }
-
-        return view('user.change-password');
+        // dat them
+        return view('website.profiles.users.change-password', compact('user'));
     }
 
     public function showChangePasswordFormModerator()

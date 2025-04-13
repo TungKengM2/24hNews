@@ -8,7 +8,8 @@
                 <div class="row align-items-center">
                     <div class="col-lg-8">
                         <h1 class="mb-2">{{ $category->name }}</h1>
-                        <p class="text-muted mb-0">{{ $category->description ?? 'Khám phá các bài viết trong danh mục này' }}</p>
+                        <p class="text-muted mb-0">{{ $category->description ?? 'Khám phá các bài viết trong danh mục này' }}
+                        </p>
                     </div>
                     <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
                         <nav aria-label="breadcrumb">
@@ -29,37 +30,41 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h4 class="fw-bold text-uppercase mb-4 border-start border-primary border-4 ps-3">Bài Viết Nổi Bật</h4>
+                        <h4 class="fw-bold text-uppercase mb-4 border-start border-primary border-4 ps-3">Bài Viết Nổi Bật
+                        </h4>
                         <div class="tc-post-grid-default">
                             <div class="tc-slider-style1">
                                 <div class="swiper-container">
                                     <div class="swiper-wrapper">
-                                        @if(isset($articlesViews) && $articlesViews->count() > 0)
-                                            @foreach($articlesViews as $articleviews)
+                                        @if (isset($articlesViews) && $articlesViews->count() > 0)
+                                            @foreach ($articlesViews as $articleviews)
                                                 <div class="swiper-slide">
                                                     <div class="item d-block">
                                                         <div class="row gx-4 align-items-center">
                                                             <div class="col-6">
-                                                                <a href="{{ Auth::check() ? route('articles.article', ['slug' => $articleviews->slug]) : url('/login-user') }}" 
-                                                                   class="img th-200 img-cover rounded overflow-hidden">
+                                                                <a href="{{ Auth::check() ? route('articles.article', ['slug' => $articleviews->slug]) : url('/login-user') }}"
+                                                                    class="img img-cover rounded overflow-hidden">
                                                                     <img src="{{ asset('storage/' . $articleviews->thumbnail_url) }}"
-                                                                        alt="{{ $articleviews->title }}" class="w-100 h-100 object-fit-cover">
+                                                                        alt="{{ $articleviews->title }}" class="w-100"
+                                                                        style="height: calc(50vh - 80px); object-fit: cover;">
                                                                 </a>
                                                             </div>
                                                             <div class="col-6">
                                                                 <div class="content">
                                                                     <h5 class="title mb-3">
                                                                         <a href="{{ Auth::check() ? route('articles.article', ['slug' => $articleviews->slug]) : url('/login-user') }}"
-                                                                           class="text-dark hover-primary text-decoration-none">
+                                                                            class="text-dark hover-primary text-decoration-none">
                                                                             {{ $articleviews->title }}
                                                                         </a>
                                                                     </h5>
-                                                                    <div class="meta-bot mt-3 text-muted d-flex align-items-center">
+                                                                    <div
+                                                                        class="meta-bot mt-3 text-muted d-flex align-items-center">
                                                                         <i class="la la-clock me-1"></i>
                                                                         <span>{{ $articleviews->created_at->diffForHumans() }}</span>
                                                                         <span class="mx-2">|</span>
                                                                         <i class="la la-eye me-1"></i>
-                                                                        <span>{{ $articleviews->views ?? 0 }} lượt xem</span>
+                                                                        <span>{{ $articleviews->views ?? 0 }} lượt
+                                                                            xem</span>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -92,39 +97,42 @@
                     <!-- Main content -->
                     <div class="col-lg-8">
                         <div class="features-content mb-5">
-                            <h4 class="fw-bold text-uppercase mb-4 border-start border-primary border-4 ps-3">Bài Viết Mới Nhất</h4>
+                            <h4 class="fw-bold text-uppercase mb-4 border-start border-primary border-4 ps-3">Bài Viết Mới
+                                Nhất</h4>
                             @if (isset($featuredArticle) && $featuredArticle)
                                 <div class="featured-article mb-5">
                                     <div class="card border-0 shadow-sm overflow-hidden">
                                         <div class="position-relative">
                                             <a href="{{ route('articles.article', ['slug' => $featuredArticle->slug]) }}">
-                                                <img src="{{ asset('storage/' . $featuredArticle->thumbnail_url) }}" 
-                                                     alt="{{ $featuredArticle->title }}" 
-                                                     class="card-img-top" style="height: 400px; object-fit: cover;">
+                                                <img src="{{ asset('storage/' . $featuredArticle->thumbnail_url) }}"
+                                                    alt="{{ $featuredArticle->title }}" class="card-img-top"
+                                                    style="height: 400px; object-fit: cover;">
                                             </a>
                                             <div class="position-absolute top-0 start-0 m-3">
-                                                <span class="badge bg-primary">{{ $featuredArticle->category->name }}</span>
+                                                <span
+                                                    class="badge bg-primary">{{ $featuredArticle->category->name }}</span>
                                             </div>
                                         </div>
                                         <div class="card-body p-4">
                                             <h3 class="card-title mb-3">
-                                                <a href="{{ route('articles.article', ['slug' => $featuredArticle->slug]) }}" 
-                                                   class="text-decoration-none text-dark hover-primary">
+                                                <a href="{{ route('articles.article', ['slug' => $featuredArticle->slug]) }}"
+                                                    class="text-decoration-none text-dark hover-primary">
                                                     {{ $featuredArticle->title }}
                                                 </a>
                                             </h3>
                                             <p class="card-text text-muted mb-3">
                                                 {{ Str::limit(trim(strip_tags(html_entity_decode($featuredArticle->content))), 300, '...') }}
-                                                
+
                                             </p>
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="d-flex align-items-center">
-                                                    <img src="{{ $featuredArticle->author->image ? asset('storage/' . $featuredArticle->author->image) : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' }}" 
-                                                         alt="{{ $featuredArticle->author->username }}" 
-                                                         class="rounded-circle me-2" width="40" height="40">
+                                                    <img src="{{ $featuredArticle->author->image ? asset('storage/' . $featuredArticle->author->image) : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' }}"
+                                                        alt="{{ $featuredArticle->author->username }}"
+                                                        class="rounded-circle me-2" width="40" height="40">
                                                     <div>
                                                         <h6 class="mb-0">{{ $featuredArticle->author->username }}</h6>
-                                                        <small class="text-muted">{{ $featuredArticle->created_at->format('d/m/Y') }}</small>
+                                                        <small
+                                                            class="text-muted">{{ $featuredArticle->created_at->format('d/m/Y') }}</small>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex align-items-center text-muted">
@@ -138,7 +146,7 @@
                                     </div>
                                 </div>
                             @endif
-                            
+
                             <!-- Related articles -->
                             <div class="related-articles">
                                 <div class="row">
@@ -147,31 +155,36 @@
                                             <div class="col-md-6 mb-4">
                                                 <div class="card h-100 border-0 shadow-sm">
                                                     <div class="position-relative">
-                                                        <a href="{{ route('articles.article', ['slug' => $article->slug]) }}">
-                                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" 
-                                                                 alt="{{ $article->title }}" 
-                                                                 class="card-img-top" style="height: 200px; object-fit: cover;">
+                                                        <a
+                                                            href="{{ route('articles.article', ['slug' => $article->slug]) }}">
+                                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                                                alt="{{ $article->title }}" class="card-img-top"
+                                                                style="height: 200px; object-fit: cover;">
                                                         </a>
                                                         <div class="position-absolute top-0 start-0 m-2">
-                                                            <span class="badge bg-primary">{{ $article->category->name }}</span>
+                                                            <span
+                                                                class="badge bg-primary">{{ $article->category->name }}</span>
                                                         </div>
                                                     </div>
                                                     <div class="card-body">
                                                         <h5 class="card-title mb-3">
-                                                            <a href="{{ route('articles.article', ['slug' => $article->slug]) }}" 
-                                                               class="text-decoration-none text-dark hover-primary">
+                                                            <a href="{{ route('articles.article', ['slug' => $article->slug]) }}"
+                                                                class="text-decoration-none text-dark hover-primary">
                                                                 {{ $article->title }}
                                                             </a>
                                                         </h5>
                                                         <p class="card-text text-muted">
                                                             {{ Str::limit(trim(strip_tags(html_entity_decode($article->content))), 200, '...') }}
                                                         </p>
-                                                        
+
                                                     </div>
                                                     <div class="card-footer bg-white border-0">
-                                                        <div class="d-flex justify-content-between align-items-center text-muted small">
-                                                            <span><i class="la la-calendar me-1"></i> {{ $article->created_at->format('d/m/Y') }}</span>
-                                                            <span><i class="la la-eye me-1"></i> {{ $article->views ?? 0 }}</span>
+                                                        <div
+                                                            class="d-flex justify-content-between align-items-center text-muted small">
+                                                            <span><i class="la la-calendar me-1"></i>
+                                                                {{ $article->created_at->format('d/m/Y') }}</span>
+                                                            <span><i class="la la-eye me-1"></i>
+                                                                {{ $article->views ?? 0 }}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -186,7 +199,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Sidebar -->
                     <div class="col-lg-4">
                         <div class="sidebar">
@@ -197,26 +210,26 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="d-flex flex-wrap gap-2">
-                                      
+
                                         @foreach ($tags as $tag)
-                                        <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}" class="btn btn-sm btn-outline-secondary">{{ $tag->name }}</a>
-                                        
-                                    @endforeach
-                                       
+                                            <a href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}"
+                                                class="btn btn-sm btn-outline-secondary">{{ $tag->name }}</a>
+                                        @endforeach
+
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Categories list -->
                             <div class="card border-0 shadow-sm mb-4">
                                 <div class="card-header bg-white border-bottom border-primary border-3">
                                     <h5 class="mb-0 fw-bold text-uppercase">Danh Mục Hàng Đầu</h5>
                                 </div>
                                 <div class="list-group list-group-flush">
-                                    @if(isset($categories) && $categories->count() > 0)
-                                        @foreach($categories as $cat)
-                                            <a href="{{ route('client.category.show', $cat->slug) }}" 
-                                               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    @if (isset($categories) && $categories->count() > 0)
+                                        @foreach ($categories as $cat)
+                                            <a href="{{ route('client.category.show', $cat->slug) }}"
+                                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                                 <div>
                                                     <i class="la la-folder me-2 text-primary"></i>
                                                     <span>{{ $cat->name }}</span>
@@ -231,21 +244,22 @@
                                     @endif
                                 </div>
                             </div>
-                            
+
                             <!-- Recent articles -->
                             <div class="card border-0 shadow-sm">
                                 <div class="card-header bg-white border-bottom border-primary border-3">
                                     <h5 class="mb-0 fw-bold text-uppercase">Bài Viết Gần Đây</h5>
                                 </div>
                                 <div class="list-group list-group-flush">
-                                    @if(isset($recentArticles) && $recentArticles->count() > 0)
-                                        @foreach($recentArticles as $recentArticle)
-                                            <a href="{{ route('articles.article', $recentArticle->slug) }}" 
-                                               class="list-group-item list-group-item-action d-flex align-items-center p-3">
+                                    @if (isset($recentArticles) && $recentArticles->count() > 0)
+                                        @foreach ($recentArticles as $recentArticle)
+                                            <a href="{{ route('articles.article', $recentArticle->slug) }}"
+                                                class="list-group-item list-group-item-action d-flex align-items-center p-3">
                                                 <div>
                                                     <h6 class="mb-1">{{ Str::limit($recentArticle->title, 100) }}</h6>
                                                     <small class="text-muted">
-                                                        <i class="la la-calendar me-1"></i> {{ $recentArticle->created_at->format('d/m/Y') }}
+                                                        <i class="la la-calendar me-1"></i>
+                                                        {{ $recentArticle->created_at->format('d/m/Y') }}
                                                     </small>
                                                 </div>
                                             </a>

@@ -907,6 +907,9 @@
                                                     return response.json();
                                                 })
                                                 .then(result => {
+                                                    // Ẩn loading
+                                                    document.getElementById('image-upload-loading').style.display = 'none';
+                                                    
                                                     const moderationResult = document.getElementById('moderation-result');
                                                     const loadingDiv = document.getElementById('moderation-loading');
                                                     const errorDiv = document.getElementById('moderation-error');
@@ -970,6 +973,9 @@
                                                     }
                                                 })
                                                 .catch(error => {
+                                                    // Ẩn loading khi có lỗi
+                                                    document.getElementById('image-upload-loading').style.display = 'none';
+                                                    
                                                     console.error('Lỗi kiểm duyệt:', error);
                                                     const moderationResult = document.getElementById('moderation-result');
                                                     const loadingDiv = document.getElementById('moderation-loading');

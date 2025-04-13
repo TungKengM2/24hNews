@@ -23,7 +23,7 @@ class UserController extends Controller
             ->with('article') // Load bài viết liên quan
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-
-        return view('user.user-comments', compact('user', 'comments'));
+        // dat them
+        return view('website.profiles.users.comments', compact('user', 'comments'));
     }
 }
