@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class AuthUserController extends Controller
 {
@@ -155,6 +156,26 @@ class AuthUserController extends Controller
             'password' => 'required'
         ]);
 
+        // Debug: Log thông tin đăng nhập chi tiết
+        $user = User::where('email', $credentials['email'])->first();
+        
+        if ($user) {
+            Log::info('Login attempt details', [
+                'email' => $credentials['email'],
+                'user_id' => $user->user_id,
+                'role_id' => $user->role_id,
+                'input_password' => $credentials['password'],
+                'stored_password' => $user->password,
+                'password_match' => Hash::check($credentials['password'], $user->password),
+                'hashed_input' => Hash::make($credentials['password'])
+            ]);
+        } else {
+            Log::info('Login attempt failed - user not found', [
+                'email' => $credentials['email']
+            ]);
+        }
+
+        // Thử đăng nhập với mật khẩu thô
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             

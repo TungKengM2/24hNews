@@ -20,7 +20,7 @@
                                     <h6 class="widget-user-desc text-white">{{ $user->description }}</h6>
                                 </div>
                                 <div class="widget-user-image">
-                                    <img class="rounded-circle"
+                                    <img id="avatarPreview" class="rounded-circle"
                                         src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/default-avatar.png') }}"
                                         alt="Ảnh đại diện">
                                     <label for="avatarUpload" class="avatar-edit">
