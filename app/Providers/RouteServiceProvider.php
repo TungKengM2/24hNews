@@ -31,7 +31,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(function () {
             Route::middleware(['web', 'auth.remember']) // Thêm 'auth.remember'
                 ->group(base_path('routes/web.php'));
-    
+
             Route::middleware('api')
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));

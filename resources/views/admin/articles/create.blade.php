@@ -226,11 +226,14 @@
     <div class="content-wrapper">
         <div class="container-full">
             <div class="wrapper">
-                <div class="container-fluid mt-5">
-                    <div class="row no-gutters align-items-start">
-                        <div class="col-md-9">
-                            <div class="card p-4">
-                                <h2 class="mb-4">Tạo Bài Viết Mới</h2>
+                <div class="container mt-5 ">
+                    <div class="card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="mb-0">Tạo Bài Viết Mới</h2>
+                            <a href="{{ route('admin.writing-guidelines') }}" class="btn btn-info">
+                                <i class="fas fa-book"></i> Xem hướng dẫn viết bài
+                            </a>
+                        </div>
 
                                 @if ($errors->any())
                                     <div class="alert alert-danger error_message">

@@ -51,96 +51,99 @@
 
 
 
-		 <!-- ====== start columnist ====== -->
+        <!-- ====== start columnist ====== -->
         <section class="tc-columnist-style1">
             <div class="container">
                 <div class="content pt-50 pb-50 border-1 border-top brd-gray">
-                    <p class="color-000 text-uppercase mb-40 ltspc-1 lh-1">Tác giả nổi bật  </p>
+                    <p class="color-000 text-uppercase mb-40 ltspc-1 lh-1">Tác giả nổi bật </p>
                     <div class="row">
                         @forelse($topAuthors as $authorData)
-                        <div class="col-lg-4 col-md-4 mb-4">
-                            <div class="columnist-card d-flex align-items-center">
-                                <div
-                                    class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                    <a href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
-                                        <img src="{{ $authorData['author']->image ? asset('storage/'.$authorData['author']->image) : asset('/images/default-avatar.png') }}" alt="{{ $authorData['author']->username }}">
-                                    </a>
-                                </div>
-                                <div class="info">
-                                    <h6 class="name fsz-20px mb-10">
-                                        <a href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
-                                            {{ $authorData['author']->name ?? $authorData['author']->username }}
+                            <div class="col-lg-4 col-md-4 mb-4">
+                                <div class="columnist-card d-flex align-items-center">
+                                    <div
+                                        class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                        <a
+                                            href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
+                                            <img src="{{ $authorData['author']->image ? asset('storage/' . $authorData['author']->image) : asset('/images/default-avatar.png') }}"
+                                                alt="{{ $authorData['author']->username }}">
                                         </a>
-                                    </h6>
-                                    <div class="rating mb-1">
-                                        <span class="text-warning">
-                                            @for($i = 0; $i < floor($authorData['rating']); $i++)
-                                                <i class="la la-star" style="color: #ffc107;"></i>
-                                            @endfor
-                                            @if($authorData['rating'] - floor($authorData['rating']) >= 0.5)
-                                                <i class="la la-star-half-alt" style="color: #ffc107;"></i>
-                                            @endif
-                                        </span>
                                     </div>
-                                    <div class="jop-title">
-                                        <small class="fsz-13px color-999">Chuyên đề</small>
-                                        <p class="fsz-13px text-uppercase">{{ $authorData['specializes_in'] }}</p>
+                                    <div class="info">
+                                        <h6 class="name fsz-20px mb-10">
+                                            <a
+                                                href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
+                                                {{ $authorData['author']->name ?? $authorData['author']->username }}
+                                            </a>
+                                        </h6>
+                                        <div class="rating mb-1">
+                                            <span class="text-warning">
+                                                @for ($i = 0; $i < floor($authorData['rating']); $i++)
+                                                    <i class="la la-star" style="color: #ffc107;"></i>
+                                                @endfor
+                                                @if ($authorData['rating'] - floor($authorData['rating']) >= 0.5)
+                                                    <i class="la la-star-half-alt" style="color: #ffc107;"></i>
+                                                @endif
+                                            </span>
+                                        </div>
+                                        <div class="jop-title">
+                                            <small class="fsz-13px color-999">Chuyên đề</small>
+                                            <p class="fsz-13px text-uppercase">{{ $authorData['specializes_in'] }}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         @empty
-                        <div class="col-lg-4 col-md-4 mb-4">
-                            <div class="columnist-card d-flex align-items-center">
-                                <div
-                                    class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                    <img src="assets/img/colums/1.png" alt="">
-                                </div>
-                                <div class="info">
-                                    <h6 class="name fsz-20px mb-10">
-                                        Conor Bradley
-                                    </h6>
-                                    <div class="jop-title">
-                                        <small class="fsz-13px color-999">Specialize in</small>
-                                        <p class="fsz-13px text-uppercase">Business, technology</p>
+                            <div class="col-lg-4 col-md-4 mb-4">
+                                <div class="columnist-card d-flex align-items-center">
+                                    <div
+                                        class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                        <img src="assets/img/colums/1.png" alt="">
+                                    </div>
+                                    <div class="info">
+                                        <h6 class="name fsz-20px mb-10">
+                                            Conor Bradley
+                                        </h6>
+                                        <div class="jop-title">
+                                            <small class="fsz-13px color-999">Specialize in</small>
+                                            <p class="fsz-13px text-uppercase">Business, technology</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 mb-4">
-                            <div class="columnist-card d-flex align-items-center">
-                                <div
-                                    class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                    <img src="assets/img/colums/2.png" alt="">
-                                </div>
-                                <div class="info">
-                                    <h6 class="name fsz-20px mb-10">
-                                        Luis Diaz
-                                    </h6>
-                                    <div class="jop-title">
-                                        <small class="fsz-13px color-999">Specialize in</small>
-                                        <p class="fsz-13px text-uppercase">Politic, lifestyle</p>
+                            <div class="col-lg-4 col-md-4 mb-4">
+                                <div class="columnist-card d-flex align-items-center">
+                                    <div
+                                        class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                        <img src="assets/img/colums/2.png" alt="">
+                                    </div>
+                                    <div class="info">
+                                        <h6 class="name fsz-20px mb-10">
+                                            Luis Diaz
+                                        </h6>
+                                        <div class="jop-title">
+                                            <small class="fsz-13px color-999">Specialize in</small>
+                                            <p class="fsz-13px text-uppercase">Politic, lifestyle</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 mb-4">
-                            <div class="columnist-card d-flex align-items-center">
-                                <div
-                                    class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                    <img src="assets/img/colums/3.png" alt="">
-                                </div>
-                                <div class="info">
-                                    <h6 class="name fsz-20px mb-10">
-                                        Alberto Moreno
-                                    </h6>
-                                    <div class="jop-title">
-                                        <small class="fsz-13px color-999">Specialize in</small>
-                                        <p class="fsz-13px text-uppercase">Entertaiment, culture, wolrd </p>
+                            <div class="col-lg-4 col-md-4 mb-4">
+                                <div class="columnist-card d-flex align-items-center">
+                                    <div
+                                        class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                                        <img src="assets/img/colums/3.png" alt="">
+                                    </div>
+                                    <div class="info">
+                                        <h6 class="name fsz-20px mb-10">
+                                            Alberto Moreno
+                                        </h6>
+                                        <div class="jop-title">
+                                            <small class="fsz-13px color-999">Specialize in</small>
+                                            <p class="fsz-13px text-uppercase">Entertaiment, culture, wolrd </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         @endforelse
                     </div>
                 </div>
@@ -221,26 +224,30 @@
         </section>
         <!-- ====== end bài viết tác giả bạn quan tâm ====== -->
 
-        <!-- ====== Xu hướng nóng ====== -->
+       
         <section class="tc-trends-news-style1 pt-50 pb-50 bg-gray1">
             <div class="container">
                 <div class="hot-trends-tabs-style1 mb-4">
                     <p class="color-999 text-uppercase ltspc-1 flex-shrink-0 me-4 pt-1 fw-bold">
                         <i class="ion-arrow-graph-up-right me-2"></i> Xu Hướng Nóng
                     </p>
+                     <!-- ====== 4 tag có nhiều sd trong nhiều bàiV nhất ====== -->
                     <div class="links">
-                        {{-- @foreach ($hottrendsArticles as $article)
-                    <a class="link" href="{{ Auth::check() ? route('client.articles.article', $article->id) : url('/login-user') }}" class="item d-block">{{ $article->preview_contentt }}
-                    </a>
-                    @endforeach  --}}
+                        @foreach ($topTags as $tag)
+                            <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}" class="link item d-block">
+                                {{ $tag->name }} 
+                            </a>
+                        @endforeach
                     </div>
+                     <!-- ====== end 4 tag có nhiều sd trong nhiều bàiV nhất ====== -->
                 </div>
                 <div class="section-content">
-                    <div class="row">
+                    <div class="row align-items-stretch">
                         <div class="col-lg-8">
                             <div class="tc-trends-news-slider1 tc-slider-style2">
                                 <div class="swiper-container">
                                     <div class="swiper-wrapper">
+                                        {{-- // top 3 bài viết nhiều lượt xem --}}
                                         @foreach ($D1Articles as $article)
                                             <div class="swiper-slide">
                                                 <div class="tc-post-overlay-default">
@@ -283,6 +290,7 @@
                                                 </div>
                                             </div>
                                         @endforeach
+                                         {{-- // ènd top 3 bài viết nhiều lượt xem --}}
                                     </div>
                                 </div>
                                 <!-- arrows -->
@@ -290,12 +298,12 @@
                                 <div class="swiper-button-prev"></div>
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <div class="tc-post-list-style1 bg-white p-3 rounded shadow">
+                        <div class="col-lg-4 h-110">
+                            <div class="tc-post-list-style1 bg-white p-3 rounded shadow h-100">
                                 <div class="tc-post-title-style1 mb-3">
                                     <h5 class="text-dark fw-bold">Top Bài Viết Thảo Luận</h5>
                                 </div>
-
+                                {{-- // top 4 bài viết nhiều Bluan nhất 30 ngày trở lại  --}}
                                 @if ($trendingPosts->isNotEmpty())
                                     @foreach ($trendingPosts as $index => $post)
                                         <a href="{{ Auth::check() ? route('articles.article', $post->slug) : url('/login-user') }}"
@@ -310,8 +318,9 @@
                                         </a>
                                     @endforeach
                                 @else
-                                    <p class="text-center text-muted">Chưa có bài viết thịnh hành.</p>
+                                    <p class="text-center text-muted">Chưa có bài viết nào.</p>
                                 @endif
+                                 {{-- // top 4 bài viết nhiều Bluan nhất 30 ngày trở lại  --}}
                             </div>
                         </div>
                     </div>

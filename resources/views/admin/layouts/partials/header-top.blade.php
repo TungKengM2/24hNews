@@ -68,14 +68,14 @@
                     $pendingCount = \App\Models\Article::where('status', 'pending')->count();
                     $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
                     $totalPending = $pendingCount + $pendingViolations;
-            
+
                     $longPendingArticles = \App\Models\Article::where('status', 'pending')
                     ->where('created_at', '<', now()->subMinutes(30))
                         ->count();
                     $totalNotifications = $pendingCount > 0 ? 1 : 0; // 1 thông báo nếu có bài pending
                     $totalNotifications += $longPendingArticles > 0 ? 1 : 0; // +1 nếu có bài chờ lâu
                     @endphp
-            
+
                     @if ($pendingCount > 0 || $pendingViolations > 0)
                         <span class="badge badge-danger"
                             style="position: absolute; top: 6px; right: 5px; font-size: 10px; padding: 2px 5px; border-radius: 50%; line-height: 1; background: red; color: white;">
@@ -103,7 +103,7 @@
                                     </a>
                                 </li>
                             @endif
-            
+
                             <!-- Thông báo vi phạm chờ duyệt -->
                             @if ($pendingViolations > 0)
                                 <li>
@@ -112,7 +112,7 @@
                                     </a>
                                 </li>
                             @endif
-            
+
                             <!-- Thông báo bài viết chờ lâu hơn 30 phút -->
                             @if ($longPendingArticles > 0)
                                 <li>

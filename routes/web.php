@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\TagController;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -8,7 +7,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthUserController;
+use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\AuthAdminController;
+use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ArticleUserController;
@@ -27,7 +28,6 @@ use App\Http\Controllers\User\ArticleSaveController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Moderator\ModeratorController;
 use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Author\AuthorProfileController;
 use App\Http\Controllers\Author\TinyMCEUploadController;
 use App\Http\Controllers\User\ArticleViewUserController;
@@ -47,6 +47,7 @@ use App\Http\Controllers\Profile\AuthorProfileController as ProfileAuthorProfile
 
 use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
 
+use App\Http\Controllers\EditRequestController;
 
 // 🌟 Trang chủ & bài viết chi tiết
 
@@ -77,18 +78,29 @@ Route::middleware(['auth', 'check.violations'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])->name('articles.article');
 
-    Route::middleware(['check.violations'])->group(function () {
-        Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
-        Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
-        Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
-        Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
-        Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
-        Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
-    });
+    Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
+    Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
+    Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
+    Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
+    Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
+    Route::post('/comments/{comment}/like', [ArticleUserController::class, 'toggleLike'])->name('comments.toggleLike');
+    Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
+
+
+
+
+
+
+    // Route::middleware(['check.violations'])->group(function () {
+
+
+
+    // });
+
 });
 // Client Category
 Route::get('/category/{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
-Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.show');
+Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.shows');
 
 
 
@@ -256,6 +268,11 @@ Route::middleware(['auth', 'role:3'])->prefix('moderator')->group(function () {
     Route::get('/articles/{article}/versions', [ModeratorArticleController::class, 'versions'])->name('moderator.articles.versions');
 
     Route::get('/articles/{article}/versions/{versionId}', [ModeratorArticleController::class, 'showVersion'])->name('moderator.articles.version');
+
+    // Edit Request routes
+    Route::get('/edit-requests', [EditRequestController::class, 'index'])->name('edit-requests.index');
+    Route::put('/edit-requests/{editRequest}/approve', [EditRequestController::class, 'approve'])->name('edit-requests.approve');
+    Route::put('/edit-requests/{editRequest}/reject', [EditRequestController::class, 'reject'])->name('edit-requests.reject');
 });
 
 // Đặt trong nhóm auth middleware
@@ -389,6 +406,8 @@ Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
     Route::get('/articles/{article}/versions', [AuthorArticleController::class, 'versions'])->name('author.articles.versions');
 
     Route::get('/articles/{article}/versions/{versionId}', [AuthorArticleController::class, 'showVersion'])->name('author.articles.version');
+
+    Route::get('/writing-guidelines', [AuthorArticleController::class, 'writingGuidelines'])->name('author.writing-guidelines');
 });
 
 
@@ -537,6 +556,7 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 
     Route::patch('/articles/{article}/reject', [ArticleController::class, 'reject'])->name('articles.reject');
 
+    Route::get('/writing-guidelines', [ArticleController::class, 'writingGuidelines'])->name('admin.writing-guidelines');
     // Lịch sử kiểm duyệt bài viết
     Route::get('/articles/{article}/moderation-history', [App\Http\Controllers\Admin\ArticleModerationHistoryController::class, 'show'])->name('articles.moderation-history');
 
@@ -579,6 +599,11 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/articles/{article}/versions', [ArticleController::class, 'versions'])->name('admin.articles.versions');
 
     Route::get('/articles/{article}/versions/{versionId}', [ArticleController::class, 'showVersion'])->name('admin.articles.version');
+
+    // Edit Request routes
+    Route::get('/edit-requests', [EditRequestController::class, 'index'])->name('admin.edit-requests.index');
+    Route::put('/edit-requests/{editRequest}/approve', [EditRequestController::class, 'approve'])->name('admin.edit-requests.approve');
+    Route::put('/edit-requests/{editRequest}/reject', [EditRequestController::class, 'reject'])->name('admin.edit-requests.reject');
 });
 
 
@@ -607,3 +632,7 @@ Route::get('/tinymce/clear-blocked-images', [TinyMCEUploadController::class, 'cl
 Route::post('/admin/tinymce/upload', [TinyMCEUploadController::class, 'uploadImage'])->name('admin.tinymce.upload');
 
 Route::get('/admin/tinymce/clear-blocked-images', [TinyMCEUploadController::class, 'clearBlockedImages'])->name('admin.tinymce.clear-blocked-images');
+Route::get('/admin/tinymce/clear-blocked-images', [TinyMCEUploadController::class, 'clearBlockedImages'])->name('admin.tinymce.clear-blocked-images');
+
+// Article routes
+Route::post('/articles/{article}/edit-request', [EditRequestController::class, 'store'])->name('articles.edit-request.store');
