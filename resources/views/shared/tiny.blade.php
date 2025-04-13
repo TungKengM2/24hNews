@@ -1959,43 +1959,61 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const imageUpload = document.getElementById('avatarUpload');
-        const imagePreview = document.querySelector('.widget-user-image img.rounded-circle');
+        const avatarInput = document.getElementById('avatarUpload');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const widgetUserImage = document.querySelector('.widget-user-image');
 
-        if (document.querySelector('.avatar-edit')) {
-            document.querySelector('.avatar-edit').addEventListener('click', function() {
-                imageUpload.click();
+        if (widgetUserImage) {
+            // Click vào ảnh hoặc icon camera để mở dialog chọn file
+            widgetUserImage.addEventListener('click', function() {
+                avatarInput.click();
             });
 
-            imageUpload.addEventListener('change', function() {
+            // Xử lý khi chọn file
+            avatarInput.addEventListener('change', function() {
                 if (this.files && this.files[0]) {
                     const formData = new FormData();
                     formData.append('image', this.files[0]);
-                    formData.append('_token', "{{ csrf_token() }}");
-
-                    fetch("{{ route('profile.upload-avatar') }}", {
+                    formData.append('_token', '{{ csrf_token() }}');
+                    
+                    // Hiển thị loading state
+                    avatarPreview.style.opacity = '0.5';
+                    
+                    fetch('{{ route("profile.update.avatar") }}', {
                         method: 'POST',
-                        body: formData,
+                        body: formData
                     })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Error uploading the image!');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                imagePreview.src = data.image_url;
-                            } else {
-                                alert('Error uploading the image.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('An error occurred while uploading the image.');
-                        });
-
-                    this.value = '';
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Cập nhật ảnh preview
+                            avatarPreview.src = data.avatar_url;
+                            // Hiển thị thông báo thành công
+                            const alertDiv = document.createElement('div');
+                            alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                            alertDiv.innerHTML = `
+                                ${data.message}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            `;
+                            document.querySelector('.box-body').insertBefore(alertDiv, document.querySelector('.edit-profile-toggle'));
+                        } else {
+                            throw new Error(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        // Hiển thị thông báo lỗi
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+                        alertDiv.innerHTML = `
+                            ${error.message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        `;
+                        document.querySelector('.box-body').insertBefore(alertDiv, document.querySelector('.edit-profile-toggle'));
+                    })
+                    .finally(() => {
+                        // Reset loading state
+                        avatarPreview.style.opacity = '1';
+                    });
                 }
             });
         }
@@ -2080,3 +2098,79 @@
         }
     });
 </script>
+
+<style>
+    .widget-user-image {
+        position: relative;
+        width: 128px;
+        height: 128px;
+        margin: -64px auto 0;
+        border: 3px solid #fff;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .widget-user-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .avatar-edit {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .avatar-edit i {
+        color: #333;
+        font-size: 16px;
+    }
+
+    .widget-user-header {
+        position: relative;
+        padding: 3rem 1rem;
+        background-size: cover;
+        background-position: center;
+        text-align: center;
+    }
+
+    .widget-user-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .widget-user-username,
+    .widget-user-desc {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+    }
+
+    .widget-user-username {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .widget-user-desc {
+        font-size: 0.875rem;
+        opacity: 0.9;
+    }
+</style>

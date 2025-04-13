@@ -49,6 +49,8 @@ use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorAr
 
 use App\Http\Controllers\EditRequestController;
 
+use App\Http\Controllers\Client\UserProfileController;
+
 // 🌟 Trang chủ & bài viết chi tiết
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -171,6 +173,8 @@ Route::middleware(['auth'])->group(function () {
     // )->name('profile.change-password');
 
     Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
+
+    Route::post('/profile/update-avatar', [UserProfileController::class, 'updateAvatar'])->name('profile.update.avatar');
 
     Route::post('/profile/upload-avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.upload-avatar');
 });

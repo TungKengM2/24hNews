@@ -25,9 +25,9 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-5">
                         <div class="content">
-                            <div class="author-img img-cover">
+                            <div class="author-img">
                                 <div class="widget-user-image">
-                                    <img class="rounded-circle"
+                                    <img id="avatarPreview" class="rounded-circle"
                                         src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/default-avatar.png') }}"
                                         alt="Avatar">
                                     <label for="avatarUpload" class="avatar-edit">
@@ -118,12 +118,60 @@
                                         </div>
                                     </div>
 
+                                    <style>
+                                        .author-img {
+                                            display: flex;
+                                            justify-content: center;
+                                            margin-bottom: 20px;
+                                        }
+                                        .widget-user-image {
+                                            position: relative;
+                                            width: 150px;
+                                            height: 150px;
+                                            cursor: pointer;
+                                            border-radius: 50%;
+                                            overflow: hidden;
+                                        }
+                                        .widget-user-image img {
+                                            width: 100%;
+                                            height: 100%;
+                                            object-fit: cover;
+                                            border-radius: 50%;
+                                        }
+                                        .avatar-edit {
+                                            position: absolute;
+                                            bottom: 0;
+                                            right: 0;
+                                            background: rgba(0, 0, 0, 0.5);
+                                            width: 40px;
+                                            height: 40px;
+                                            border-radius: 50%;
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            color: white;
+                                            cursor: pointer;
+                                            transition: all 0.3s ease;
+                                            z-index: 1;
+                                        }
+                                        .avatar-edit:hover {
+                                            background: rgba(0, 0, 0, 0.7);
+                                        }
+                                        .avatar-edit i {
+                                            font-size: 20px;
+                                        }
+                                    </style>
+
                                     <script>
                                         document.addEventListener('DOMContentLoaded', function() {
                                             const toggle = document.querySelector('.edit-profile-toggle');
                                             const form = document.querySelector('.profile-form');
                                             const chevron = toggle.querySelector('.fa-chevron-down');
+                                            const avatarInput = document.getElementById('avatarUpload');
+                                            const avatarPreview = document.getElementById('avatarPreview');
+                                            const widgetUserImage = document.querySelector('.widget-user-image');
 
+                                            // Toggle profile form
                                             toggle.addEventListener('click', function() {
                                                 form.style.display = form.style.display === 'none' ? 'block' : 'none';
                                                 chevron.style.transform = form.style.display === 'none' ? 'rotate(0deg)' : 'rotate(180deg)';
@@ -134,6 +182,58 @@
                                                 form.style.display = 'none';
                                                 chevron.style.transform = 'rotate(0deg)';
                                             }
+
+                                            // Handle avatar upload
+                                            widgetUserImage.addEventListener('click', function() {
+                                                avatarInput.click();
+                                            });
+
+                                            avatarInput.addEventListener('change', function() {
+                                                if (this.files && this.files[0]) {
+                                                    const formData = new FormData();
+                                                    formData.append('image', this.files[0]);
+                                                    formData.append('_token', '{{ csrf_token() }}');
+                                                    
+                                                    // Show loading state
+                                                    avatarPreview.style.opacity = '0.5';
+                                                    
+                                                    fetch('{{ route("profile.update.avatar") }}', {
+                                                        method: 'POST',
+                                                        body: formData
+                                                    })
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        if (data.success) {
+                                                            // Update avatar preview
+                                                            avatarPreview.src = data.avatar_url;
+                                                            // Show success message
+                                                            const alertDiv = document.createElement('div');
+                                                            alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                                                            alertDiv.innerHTML = `
+                                                                ${data.message}
+                                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                            `;
+                                                            document.querySelector('.box-body').insertBefore(alertDiv, document.querySelector('.edit-profile-toggle'));
+                                                        } else {
+                                                            throw new Error(data.message);
+                                                        }
+                                                    })
+                                                    .catch(error => {
+                                                        // Show error message
+                                                        const alertDiv = document.createElement('div');
+                                                        alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+                                                        alertDiv.innerHTML = `
+                                                            ${error.message}
+                                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        `;
+                                                        document.querySelector('.box-body').insertBefore(alertDiv, document.querySelector('.edit-profile-toggle'));
+                                                    })
+                                                    .finally(() => {
+                                                        // Reset loading state
+                                                        avatarPreview.style.opacity = '1';
+                                                    });
+                                                }
+                                            });
                                         });
                                     </script>
                                 </div>
@@ -145,3 +245,7 @@
         </section>
     </main>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/profile-avatar.js') }}"></script>
+@endpush
