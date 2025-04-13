@@ -1960,7 +1960,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const imageUpload = document.getElementById('avatarUpload');
-        const imagePreview = document.getElementById('avatarPreview');
+        const imagePreview = document.querySelector('.widget-user-image img.rounded-circle');
 
         if (document.querySelector('.avatar-edit')) {
             document.querySelector('.avatar-edit').addEventListener('click', function() {
