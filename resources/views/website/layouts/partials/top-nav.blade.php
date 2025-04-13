@@ -203,7 +203,7 @@
 </div> --}}
 
 <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
-    aria-labelledby="offcanvasExampleLabel">
+    aria-labelledby="offcanvasExampleLabel" style="width: 100%;">
     <div class="offcanvas-header">
         <div class="col-lg-4">
             <a href="{{ url('/') }}" class="logo-brand d-none d-lg-block">
