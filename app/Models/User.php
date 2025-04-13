@@ -52,8 +52,13 @@ class User extends Authenticatable implements CanResetPasswordContract
         'banned_until' => 'datetime',
     ];
 
-
-
+    /**
+     * Mutator để mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
 
     /**
      * Quan hệ với bảng roles

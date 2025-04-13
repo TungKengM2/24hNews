@@ -18,6 +18,7 @@
 
     <!-- ====== start loading page ====== -->
     @include('website.layouts.partials.loadingpage')
+
     <!-- ====== end loading page ====== -->
 
     <!-- ====== start navbar-container ====== -->
@@ -33,6 +34,7 @@
 
             <!-- ====== start nav-search ====== -->
             @include('website.layouts.partials.nav-search')
+
             <!-- ====== end nav-search ====== -->
         </div>
     </div>

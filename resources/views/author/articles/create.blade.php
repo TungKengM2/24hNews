@@ -170,6 +170,12 @@
                                         @if (old('thumbnail_url'))
                                             <p>File đã chọn trước đó: {{ old('thumbnail_url') }}</p>
                                         @endif
+                                        
+                                        <!-- Thêm phần loading -->
+                                        <div class="image-upload-loading" id="image-upload-loading">
+                                            <div class="spinner"></div>
+                                            <p class="mt-2">Đang tải lên và kiểm duyệt hình ảnh...</p>
+                                        </div>
                                     </div>
 
                                     <div class="col-md-6">
@@ -424,6 +430,9 @@
                                         const file = e.target.files[0];
                                         if (file) {
                                             isImageValid = false;
+                                            
+                                            // Hiển thị loading
+                                            document.getElementById('image-upload-loading').style.display = 'block';
 
                                             // Hiển thị thông báo đang kiểm tra và ẩn các thông báo khác
                                             const moderationResult = document.getElementById('moderation-result');
@@ -464,6 +473,9 @@
                                                     return response.json();
                                                 })
                                                 .then(result => {
+                                                    // Ẩn loading
+                                                    document.getElementById('image-upload-loading').style.display = 'none';
+                                                    
                                                     const moderationResult = document.getElementById('moderation-result');
                                                     const loadingDiv = document.getElementById('moderation-loading');
                                                     const errorDiv = document.getElementById('moderation-error');
@@ -531,6 +543,9 @@
                                                     }
                                                 })
                                                 .catch(error => {
+                                                    // Ẩn loading khi có lỗi
+                                                    document.getElementById('image-upload-loading').style.display = 'none';
+                                                    
                                                     console.error('Lỗi kiểm duyệt:', error);
                                                     const moderationResult = document.getElementById('moderation-result');
                                                     const loadingDiv = document.getElementById('moderation-loading');

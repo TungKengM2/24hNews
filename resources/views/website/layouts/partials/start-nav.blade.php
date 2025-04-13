@@ -18,21 +18,28 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link {{ request()->is('/') ? 'active-home' : '' }}" href="{{ url('/') }}">
                         <i class="la la-home fs-4"></i>
                     </a>
-                </li>
+                </li> --}}
 
                 {{-- dat them --}}
                 @foreach ($categories as $category)
                     @if ($loop->iteration > 6)
                         @break
                     @endif
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('client.category.show', $category->slug) }}">
-                            {{ $category->name }}
-                        </a>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="{{ route('client.category.show', $category->slug) }}" id="navbarDropdown1" role=""
+                          data-bs-toggle="dropdown" aria-expanded="true" onclick="window.location.href='{{ route('client.category.show', $category->slug) }}'">
+                          {{ $category->name }}
+                      </a>
+                        <ul class="dropdownMenu" aria-labelledby="navbarDropdown1">
+                            <li><a class="dropdown-item" href="page-about.html">Danh Mục Phụ 1</a></li>
+                            <li><a class="dropdown-item" href="page-team.html">Danh Mục Phụ 2</a></li>
+                            <li><a class="dropdown-item" href="page-product.html">Danh Mục Phụ 3</a></li>
+                            <li><a class="dropdown-item" href="page-404.html">Danh Mục Phụ 4</a></li>
+                        </ul>
                     </li>
                 @endforeach
 
@@ -110,23 +117,127 @@
                     <a class="icon-link">
                         <i class="la la-user fs-4"></i>
                     </a>
-                    <ul class="dropdownMenu" style="margin-top: 0; margin-top: -50px;" aria-labelledby="">
+                    <ul class="dropdownMenu mr-10 pr-5 " style="margin-top: 0; margin-top: -50px;" aria-labelledby="">
                         @if (Auth::check())
                             <li><a class="dropdown-item" href="@if(Auth::user()->role_id == 1){{ route('admin.dashboard') }}@elseif(Auth::user()->role_id == 2){{ route('author.dashboard') }}@elseif(Auth::user()->role_id == 3){{ route('moderator.dashboard') }}@else{{ route('user.dashboard') }}@endif">
                                     <i class="la la-tv fs-4"></i> Dashboard
                                 </a></li>
 
+                            {{-- Kiểm tra vai trò và hiển thị các liên kết tương ứng --}}
+
+                            @if ($user->role_id == 1) {{-- admin  --}}
+                                <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                                        <i class="la la-tv fs-4"></i> Dashboard
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('admin.viewed.articles') }}">
+                                        <i class="la la-eye fs-4"></i> Tin đã xem
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('admin.saved') }}">
+                                        <i class="la la-bookmark fs-4"></i> Tin đã lưu
+                                    </a></li>
+
+                                <li><a class="dropdown-item" href="{{ route('admin.following') }}">
+                                        <i class="la la-users fs-4"></i> Người đã theo dõi
+                                    </a></li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('admin.comments', ['user_id' => auth()->id()]) }}">
+                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
+                                    </a>
+                                </li>
+
+                            @elseif ($user->role_id == 2)  {{-- tác giả  --}}
+                                <li><a class="dropdown-item" href="{{ route('author.dashboard') }}">
+                                        <i class="la la-tv fs-4"></i> Dashboard
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('author.viewed.articles') }}">
+                                        <i class="la la-eye fs-4"></i> Tin đã xem
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('author.saved') }}">
+                                        <i class="la la-bookmark fs-4"></i> Tin đã lưu
+                                    </a></li>
+
+                                <li><a class="dropdown-item" href="{{ route('author.following') }}">
+                                        <i class="la la-users fs-4"></i> Người đã theo dõi
+                                    </a></li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('author.comments', ['user_id' => auth()->id()]) }}">
+                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
+                                    </a>
+                                </li>
+
+                            @elseif ($user->role_id == 3) {{-- kiểm duyệt viên  --}}
+                                <li><a class="dropdown-item" href="{{ route('moderator.dashboard') }}">
+                                        <i class="la la-tv fs-4"></i> Dashboard
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('moderator.viewed.articles') }}">
+                                        <i class="la la-eye fs-4"></i> Tin đã xem
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('moderator.saved') }}">
+                                        <i class="la la-bookmark fs-4"></i> Tin đã lưu
+                                    </a></li>
+
+                                <li><a class="dropdown-item" href="{{ route('moderator.following') }}">
+                                        <i class="la la-users fs-4"></i> Người đã theo dõi
+                                    </a></li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('moderator.comments', ['user_id' => auth()->id()]) }}">
+                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
+                                    </a>
+                                </li>
+
+                            @elseif ($user->role_id == 4){{-- user  --}}
+                                {{-- dat them hiển thị profile user --}}
+                                <li><a class="dropdown-item" href="{{ route('website.profileUser', ['id' => auth()->id()]) }}">
+                                        <i class="la la-tv fs-4"></i> Thông Tin Tài Khoản
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('viewed.articles') }}">
+                                        <i class="la la-eye fs-4"></i> Tin đã xem
+                                    </a></li>
+                                <li><a class="dropdown-item" href="{{ route('user.saved') }}">
+                                        <i class="la la-bookmark fs-4"></i> Tin đã lưu
+                                    </a></li>
+
+                                <li><a class="dropdown-item" href="{{ route('user.following') }}">
+                                        <i class="la la-users fs-4"></i> Người đã theo dõi
+                                    </a></li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('user.comments', ['user_id' => auth()->id()]) }}">
+                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
+                                    </a>
+                                </li>
+                                {{-- dat them --}}
+                                <li><a class="dropdown-item" href="{{ route('user.change-password') }}">
+                                        <i class="la la-lock fs-4"></i> Đổi Mật Khẩu
+                                    </a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item" href="{{ route('user.upgrade') }}">
+
+                                      <i class="la la-pen fs-4 "></i>
+                                      Nâng Cấp Lên Tác Giả
+                                  </a>
+                                </li>
+
+                            @endif
+
+                            {{-- Đăng Xuất --}}
                             <li>
                                 <a class="dropdown-item" href="#"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <i class="la la-sign-out fs-4"></i> Đăng Xuất
                                 </a>
                             </li>
+
                             <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                 style="display: none;">
                                 @csrf
                             </form>
                         @else
+                            {{-- Liên kết Đăng nhập --}}
                             <li><a class="dropdown-item" href="{{ route('loginuser') }}">
                                     <i class="la la-unlock fs-4"></i> Login
                                 </a></li>

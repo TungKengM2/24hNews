@@ -1,29 +1,29 @@
 /*
-Theme Name: Iteck     
+Theme Name: Iteck
 Theme URI: https://themeforest.net/
-Author: ThemesCamp 
-Author URI:  http://themeforest.net/user/themescamp/ 
+Author: ThemesCamp
+Author URI:  http://themeforest.net/user/themescamp/
 Description: Iteck is a Modern portfolio and Agency WordPress Theme for agencies to show their creative works.
-Version: 1.4.0     
+Version: 1.4.0
 License: GNU General Public License version 3.0
-License URI: http://www.gnu.org/licenses/gpl-3.0.html    
-Text Domain: Iteck 
-Domain Path: /lang   
-Tags: one-column, two-columns, right-sidebar,custom-colors,featured-images 
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
+Text Domain: Iteck
+Domain Path: /lang
+Tags: one-column, two-columns, right-sidebar,custom-colors,featured-images
 */
 /* -----------------------------------------------------------
-TABLE OF CONTENTS:-                                                                                                      
+TABLE OF CONTENTS:-
 --------------------------------------------------------------
-* Helper Section         
-	- text color   
-	- font-weight       
-	- font-size 
+* Helper Section
+	- text color
+	- font-weight
+	- font-size
 	- line-height
-	- text-transform  
-	- letter-spacing 
-	- Overlay Effect Bg image     
+	- text-transform
+	- letter-spacing
+	- Overlay Effect Bg image
 	- margin-top
-	- margin-bottom 
+	- margin-bottom
 	- padding-top
 	- padding-bottom
 	- the spacing
@@ -31,7 +31,7 @@ TABLE OF CONTENTS:-
 * General Section
 	- Typography
 	- To top style
-	- inner page style  
+	- inner page style
 	- wp post style
 	- Bootstrap Clearfix
 	- Elementor Editor Style
@@ -52,7 +52,7 @@ TABLE OF CONTENTS:-
 
 ------------------------------------------------------------*/
 /* ===============================================================
-			[ * variable Section ] 
+			[ * variable Section ]
 ================================================================*/
 /* --------------- variable --------------- */
 :root {
@@ -281,7 +281,7 @@ TABLE OF CONTENTS:-
 }
 
 /* ===============================================================
-			[ * global Section ] 
+			[ * global Section ]
 ================================================================*/
 /* --------------- global --------------- */
 @font-face {
@@ -336,9 +336,9 @@ body {
 }
 
 .container, .container-lg, .container-md, .container-sm, .container-xl {
-  max-width: 1200px;
-  padding-right: 15px;
-  padding-left: 15px;
+  max-width: 100%;
+  padding-right: 50px;
+  padding-left: 50px;
 }
 
 .row:not(.gx-0):not(.gx-1):not(.gx-2):not(.gx-3):not(.gx-4):not(.gx-5) {
@@ -682,7 +682,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * buttons Section ] 
+			[ * buttons Section ]
 ================================================================*/
 /* --------------- helper classes --------------- */
 /* --------------- radius classes --------------- */
@@ -1932,7 +1932,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * buttons Section ] 
+			[ * buttons Section ]
 ================================================================*/
 /* --------------- buttons styles --------------- */
 .butn,
@@ -2034,7 +2034,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * navbar Section ] 
+			[ * navbar Section ]
 ================================================================*/
 /* --------------- navbar style --------------- */
 .navbar-container {
@@ -4148,7 +4148,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * navbar Section ] 
+			[ * navbar Section ]
 ================================================================*/
 /* ----------  tc-header-style2 ------------ */
 .tc-header-style2 {
@@ -4495,7 +4495,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * section_title Section ] 
+			[ * section_title Section ]
 ================================================================*/
 /* ----------  section-title-style2 ------------ */
 .section-title-style2 {
@@ -4569,7 +4569,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * post_grid Section ] 
+			[ * post_grid Section ]
 ================================================================*/
 /* ----------  Post grid default ------------ */
 .tc-post-grid-default .item .img {
@@ -5358,7 +5358,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * post_list Section ] 
+			[ * post_list Section ]
 ================================================================*/
 /* ----------  Post list default ------------ */
 /* ----------  Post list style1 ------------ */
@@ -5832,7 +5832,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * post_overlay Section ] 
+			[ * post_overlay Section ]
 ================================================================*/
 /* ----------  Post overlay default ------------ */
 .tc-post-overlay-default {
@@ -6484,7 +6484,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * post_latest Section ] 
+			[ * post_latest Section ]
 ================================================================*/
 /* ----------  tc-latest-posts-style3 ------------ */
 .tc-latest-posts-style3 {
@@ -6699,7 +6699,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * post_featured Section ] 
+			[ * post_featured Section ]
 ================================================================*/
 .tc-featured-news-style8 {
   background-color: #fff;
@@ -6782,7 +6782,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * post_latest Section ] 
+			[ * post_latest Section ]
 ================================================================*/
 /* ----------  tc-latest-posts-style3 ------------ */
 .tc-soon-posts-style3 {
@@ -6842,7 +6842,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * sliders Section ] 
+			[ * sliders Section ]
 ================================================================*/
 .slider-active-psNone .swiper-slide {
   -webkit-transition: all 0.3s ease;
@@ -6981,7 +6981,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * trends_news Section ] 
+			[ * trends_news Section ]
 ================================================================*/
 /* ----------  trends-news style-1 ------------ */
 .tc-trends-news-style1 .hot-trends-tabs-style1 {
@@ -7258,7 +7258,7 @@ small.text {
   }
 }
 /* ===============================================================
-			[ * google_stories Section ] 
+			[ * google_stories Section ]
 ================================================================*/
 /* ----------  tc-google-stories-style1 ------------ */
 .tc-google-stories-style1 .story-item {
@@ -7356,7 +7356,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * widget Section ] 
+			[ * widget Section ]
 ================================================================*/
 .wid-title-style2 {
   font-size: 18px;
@@ -8881,7 +8881,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * videos Section ] 
+			[ * videos Section ]
 ================================================================*/
 /* ----------  tc-hot-videos-style1 ------------ */
 .tc-hot-videos-style1 {
@@ -9444,7 +9444,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * tabs_posts Section ] 
+			[ * tabs_posts Section ]
 ================================================================*/
 /* ----------  tabs_posts style-2 ------------ */
 .tc-posts-tabs-style2 .nav-pills {
@@ -9525,7 +9525,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * subscribe Section ] 
+			[ * subscribe Section ]
 ================================================================*/
 /* ----------  subscribe style-1 ------------ */
 .tc-subscribe-style1 {
@@ -9809,7 +9809,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * download Section ] 
+			[ * download Section ]
 ================================================================*/
 /* ----------  download style-1 ------------ */
 .tc-download-style1 .content {
@@ -9837,7 +9837,7 @@ small.text {
   margin: 10px 0;
 }
 /* ===============================================================
-			[ * sidebar_popup Section ] 
+			[ * sidebar_popup Section ]
 ================================================================*/
 /* ----------  sidebar-popup-style1 ------------ */
 .sidebar-popup-style1 {
@@ -9978,7 +9978,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * breaking_news Section ] 
+			[ * breaking_news Section ]
 ================================================================*/
 /* ----------  breaking-news-style2 ------------ */
 .tc-breaking-news-style2 {
@@ -10252,7 +10252,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * categories Section ] 
+			[ * categories Section ]
 ================================================================*/
 /* ----------  popular-categories-style3 ------------ */
 .tc-popular-categories-style3 .category-card {
@@ -10392,7 +10392,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * banners Section ] 
+			[ * banners Section ]
 ================================================================*/
 /* ----------  banner style 24 ------------ */
 .banner-style24 {
@@ -10424,7 +10424,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * footer Section ] 
+			[ * footer Section ]
 ================================================================*/
 /* ----------  footer style-1 ------------ */
 .footer-style1 {
@@ -11899,7 +11899,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * blog page Section ] 
+			[ * blog page Section ]
 ================================================================*/
 /* ----------  blog page style ------------ */
 .tc-blog-page {
@@ -11976,7 +11976,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * single-post-creative-page ] 
+			[ * single-post-creative-page ]
 ================================================================*/
 /* ----------  tc-single-post-creative-page style ------------ */
 .tc-single-post-creative-page ::-moz-selection {
@@ -12227,7 +12227,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * single-post-features-page ] 
+			[ * single-post-features-page ]
 ================================================================*/
 /* ----------  tc-single-post-creative-page style ------------ */
 .tc-single-post-features-page ::-moz-selection {
@@ -12732,7 +12732,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * author details page ] 
+			[ * author details page ]
 ================================================================*/
 /* ----------  blog author-details style ------------ */
 .tc-author-details ::-moz-selection {
@@ -12781,7 +12781,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * contact page ] 
+			[ * contact page ]
 ================================================================*/
 /* ----------  blog author-details style ------------ */
 .tc-contact-page .tc-contact-info h2 {
@@ -12859,7 +12859,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * shop page ] 
+			[ * shop page ]
 ================================================================*/
 /* ----------  blog author-details style ------------ */
 .tc-shop-page .tc-shop-header {
@@ -13051,7 +13051,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * product page ] 
+			[ * product page ]
 ================================================================*/
 /* --------------- services product styles --------------- */
 .product-page {
@@ -13384,7 +13384,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * about page ] 
+			[ * about page ]
 ================================================================*/
 /* ----------  about page style ------------ */
 .tc-about-page .tc-about-header .content {
@@ -13625,7 +13625,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * team page ] 
+			[ * team page ]
 ================================================================*/
 /* ----------  team page style ------------ */
 .tc-team-page .tc-team-header .content {
@@ -13672,7 +13672,7 @@ small.text {
   text-decoration: underline;
 }
 /* ===============================================================
-			[ * author page ] 
+			[ * author page ]
 ================================================================*/
 /* ----------  author page style ------------ */
 .tc-author-page .tc-author-header .content {
@@ -13751,7 +13751,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * 404 page ] 
+			[ * 404 page ]
 ================================================================*/
 /* ----------  404 page style ------------ */
 .tc-404-page .tc-404-info {
@@ -13768,7 +13768,7 @@ small.text {
 }
 
 /* ===============================================================
-			[ * loaders style ] 
+			[ * loaders style ]
 ================================================================*/
 /* --------------- Start laoder --------------- */
 /* common */
@@ -14518,7 +14518,7 @@ small.loading01 {
 }
 /* --------------- End Preloader --------------- */
 /* ===============================================================
-			[ * responsive style ] 
+			[ * responsive style ]
 ================================================================*/
 /* -------------------- responsive style ------------------------- */
 @media screen and (min-width: 991px) {
@@ -15520,7 +15520,7 @@ small.loading01 {
   }
 }
 /* ===============================================================
-			[ * darkStyle style ] 
+			[ * darkStyle style ]
 ================================================================*/
 /* --------------- dark theme --------------- */
 .dark-theme {

@@ -63,6 +63,8 @@ class AppServiceProvider extends ServiceProvider
                 'user.layouts.partials.header-top',
                 //dat them
                 'website.layouts.partials.start-nav',
+                //dat them
+                'website.layouts.partials.top-nav',
                 'website.profiles.admin',
                 'website.profiles.author',
                 'website.profiles.moderator',

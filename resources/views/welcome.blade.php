@@ -18,7 +18,7 @@
                                             class="item d-block">
                                             <div class="row gx-4 align-items-center">
                                                 <div class="col-4">
-                                                    <div class="img th-70 img-cover rounded">
+                                                    <div class="img th-175vh img-cover rounded">
                                                         <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
                                                             alt="{{ $article->title }}">
                                                     </div>
@@ -340,7 +340,7 @@
                         @foreach ($newsData as $data)
                             <div class="col-lg-4 col-md-6 mb-4">
                                 <div class="news-card h-100 shadow-sm rounded overflow-hidden">
-                                    <div class="img img-cover th-200">
+                                    <div class="img img-cover th-275">
                                         <img src="{{ $data['article']->thumbnail_url ? asset('storage/' . $data['article']->thumbnail_url) : 'https://via.placeholder.com/400' }}"
                                             alt="{{ $data['article']->title }}">
                                     </div>
@@ -351,7 +351,7 @@
                                         <h5 class="title mb-3">{{ $data['article']->title }}</h5>
                                         <a href="{{ Auth::check() ? route('articles.article', $data['article']->slug) : url('/login-user') }}"
                                             class="btn btn-sm btn-outline-primary mt-2">
-                                            Xem chi tiết <i class="la la-angle-right"></i>
+                                            Xem chi tiết <i class="la la-angle-right mt-1"></i>
                                         </a>
                                     </div>
                                 </div>

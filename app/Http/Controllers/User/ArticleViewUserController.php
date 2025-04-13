@@ -18,12 +18,14 @@ class ArticleViewUserController extends Controller
         }
 
         $user_id = Auth::id();
+        // dat them
+        $user = Auth::user(); // Lấy thông tin người dùng hiện tại
         $viewedArticles = ArticleView::where('user_id', $user_id)
             ->with('article')
             ->orderBy('viewed_at', 'desc')
             ->paginate(6);
-
-        return view('user.viewed-articles', compact('viewedArticles'));
+        // dat them
+            return view('website.profiles.users.viewed-acticles', compact('viewedArticles', 'user'));
     }
     // Lưu bài viết đã xem
     public function store(Request $request)

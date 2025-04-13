@@ -11,92 +11,145 @@
                         // Hiển thị thông báo SweetAlert2 trực tiếp
                         document.addEventListener('DOMContentLoaded', function() {
                             setTimeout(function() {
-                                @if(auth()->user()->violation_count > 5)
-                                Swal.fire({
-                                    icon: 'warning',
-                                    title: 'Cảnh báo vi phạm!',
-                                    html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
-                                          '<p>Bạn không thể thực hiện các hành động liên quan đến bài viết cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
-                                          '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
-                                    confirmButtonText: 'Tôi đã hiểu',
-                                    confirmButtonColor: '#3085d6'
-                                });
+                                @if (auth()->user()->violation_count > 5)
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: 'Cảnh báo vi phạm!',
+                                        html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
+                                            '<p>Bạn không thể thực hiện các hành động liên quan đến bài viết cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                                            '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
+                                        confirmButtonText: 'Tôi đã hiểu',
+                                        confirmButtonColor: '#3085d6'
+                                    });
                                 @endif
                             }, 300);
                         });
                     </script>
-                    <div class="col-xl-3 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Tổng bài viết</h5>
-                                        <p class="mb-0 text-fade fs-12">Tất cả bài viết</p>
+                    <div class="row">
+                        <h3>Tổng Quan Bài Viết </h3>
+                        <!-- Tổng số bài viết -->
+                        <div class="col-xl-3 col-md-4 col-12  ">
+                            <div class="box ">
+                                <div class="box-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="ms-15">
+                                            <h5 class="mb-0">Tổng bài viết</h5>
+
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['total'] }}</h3>
-                                    <div class="text-primary">
-                                        <i class="fa fa-file-text fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Đã xuất bản</h5>
-                                        <p class="mb-0 text-fade fs-12">Bài viết đã xuất bản</p>
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['published'] }}</h3>
-                                    <div class="text-success">
-                                        <i class="fa fa-check-circle fa-2x"></i>
+                                    <div class="mt-20 d-flex justify-content-between align-items-center">
+                                        <h3 class="fw-600">{{ $articleStats['total'] }}</h3>
+                                        <div class="text-primary">
+                                            <i class="fa fa-file-text fa-2x"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Chờ duyệt</h5>
-                                        <p class="mb-0 text-fade fs-12">Bài viết đang chờ duyệt</p>
+                         <!-- Published -->
+                         <div class="col-xl-3 col-md-4 col-12 ">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="ms-15">
+                                            <h5 class="mb-0">Bài viết đã xuất bản</h5>
+
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['pending'] }}</h3>
-                                    <div class="text-warning">
-                                        <i class="fa fa-hourglass-half fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Bản nháp</h5>
-                                        <p class="mb-0 text-fade fs-12">Bài viết đang lưu nháp</p>
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['draft'] }}</h3>
-                                    <div class="text-secondary">
-                                        <i class="fa fa-pencil-square-o fa-2x"></i>
+                                    <div class="mt-20 d-flex justify-content-between align-items-center">
+                                        <h3 class="fw-600">{{ $articleStats['published'] }}</h3>
+                                        <div class="text-success">
+                                            <i class="fa fa-check-circle fa-2x"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+
+                        <!-- Pending -->
+                        <div class="col-xl-3 col-md-4 col-12 ">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="ms-15">
+                                            <h5 class="mb-0">Bài viết đang chờ</h5>
+
+                                        </div>
+                                    </div>
+                                    <div class="mt-20 d-flex justify-content-between align-items-center">
+                                        <h3 class="fw-600">{{ $articleStats['pending'] }}</h3>
+                                        <div class="text-warning">
+                                            <i class="fa fa-hourglass-half fa-2x"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Rejected -->
+                        <div class="col-xl-3 col-md-4 col-12 ">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="ms-15">
+                                            <h5 class="mb-0">Bài viết bị từ chối</h5>
+
+                                        </div>
+                                    </div>
+                                    <div class="mt-20 d-flex justify-content-between align-items-center">
+                                        <h3 class="fw-600">{{ $articleStats['reject'] }}</h3>
+                                        <div class="text-danger">
+                                            <i class="fa fa-times-circle fa-2x"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Archived -->
+                        {{-- <div class="col-xl-3 col-md-4 col-12 ">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="ms-15">
+                                            <h5 class="mb-0">Bài viết đã lưu trữ</h5>
+
+                                        </div>
+                                    </div>
+                                    <div class="mt-20 d-flex justify-content-between align-items-center">
+                                        <h3 class="fw-600">{{ $articleStats['archived'] }}</h3>
+                                        <div class="text-secondary">
+                                            <i class="fa fa-archive fa-2x"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> --}}
+
+                        <!-- Draft -->
+                        {{-- <div class="col-xl-3 col-md-4 col-12 ">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="ms-15">
+                                            <h5 class="mb-0">Bài viết lưu nháp</h5>
+
+                                        </div>
+                                    </div>
+                                    <div class="mt-40 d-flex justify-content-between align-items-center">
+                                        <h3 class="fw-600">{{ $articleStats['draft'] }}</h3>
+                                        <div class="text-info">
+                                            <i class="fa fa-pencil-square fa-2x"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> --}}
+
                     </div>
+
                 </div>
 
                 <!-- Time-based statistics section -->
@@ -344,7 +397,10 @@
                         responsive: true,
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
                             }
                         }
                     }
@@ -443,6 +499,10 @@
                                 title: {
                                     display: true,
                                     text: 'Lượt xem'
+                                },
+                                ticks: {
+                                    stepSize: 1,
+                                    min: 1
                                 }
                             },
                             y1: {
@@ -454,6 +514,10 @@
                                 title: {
                                     display: true,
                                     text: 'Lượt thích & Bình luận'
+                                },
+                                ticks: {
+                                    stepSize: 1,
+                                    min: 1
                                 }
                             }
                         }
@@ -476,52 +540,52 @@
 @endsection
 
 @section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        @if(session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: '{{ session("error") }}',
-                confirmButtonText: 'Tôi đã hiểu'
-            });
-        @endif
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: '{{ session('error') }}',
+                    confirmButtonText: 'Tôi đã hiểu'
+                });
+            @endif
 
-        @if(session('violation_error'))
-            Swal.fire({
-                icon: 'warning',
-                title: 'Cảnh báo vi phạm!',
-                text: '{{ session("violation_error") }}',
-                confirmButtonText: 'Tôi đã hiểu'
-            });
-        @endif
-
-        // Hiển thị thông báo SweetAlert2 khi trang được tải
-        setTimeout(function() {
-            // Kiểm tra số vi phạm của author
-            @if(auth()->user()->violation_count > 5)
+            @if (session('violation_error'))
                 Swal.fire({
                     icon: 'warning',
                     title: 'Cảnh báo vi phạm!',
-                    html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
-                          '<p>Bạn không thể thực hiện các hành động liên quan đến bài viết cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
-                          '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
-                    confirmButtonText: 'Tôi đã hiểu',
-                    confirmButtonColor: '#3085d6'
+                    text: '{{ session('violation_error') }}',
+                    confirmButtonText: 'Tôi đã hiểu'
                 });
             @endif
-        }, 500);
 
-        @if(session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Thành công!',
-                text: '{{ session("success") }}',
-                timer: 3000,
-                timerProgressBar: true,
-                showConfirmButton: false
-            });
-        @endif
-    });
-</script>
+            // Hiển thị thông báo SweetAlert2 khi trang được tải
+            setTimeout(function() {
+                // Kiểm tra số vi phạm của author
+                @if (auth()->user()->violation_count > 5)
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cảnh báo vi phạm!',
+                        html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
+                            '<p>Bạn không thể thực hiện các hành động liên quan đến bài viết cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                            '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
+                        confirmButtonText: 'Tôi đã hiểu',
+                        confirmButtonColor: '#3085d6'
+                    });
+                @endif
+            }, 500);
+
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: '{{ session('success') }}',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+            @endif
+        });
+    </script>
 @endsection

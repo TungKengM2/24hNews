@@ -419,10 +419,10 @@
                     const previewContainer = document.getElementById('image-preview-container');
                     const currentImageContainer = document.getElementById('current-image-container');
                     const moderationResult = document.getElementById('moderation-result');
-                    const moderationLoading = document.getElementById('moderation-loading');
                     const errorDiv = document.getElementById('moderation-error');
                     const errorMessage = document.getElementById('error-message');
                     const submitButton = document.getElementById('submitButton');
+                    const imageUploadLoading = document.getElementById('image-upload-loading');
 
                     // Đảm bảo mặc định nút submit được bật và không có kiểm duyệt ảnh hiển thị
                     submitButton.disabled = false;
@@ -432,8 +432,8 @@
                     // Ẩn tất cả các phần tử kiểm duyệt ảnh khi trang mới tải
                     if (previewContainer) previewContainer.style.display = 'none';
                     if (moderationResult) moderationResult.style.display = 'none';
-                    if (moderationLoading) moderationLoading.style.display = 'none';
                     if (errorDiv) errorDiv.style.display = 'none';
+                    if (imageUploadLoading) imageUploadLoading.style.display = 'none';
 
                     // Hàm cập nhật tiêu chí xuất bản
                     function updateCriteria() {
@@ -674,6 +674,9 @@
                                 if (currentImageContainer) {
                                     currentImageContainer.style.display = 'none';
                                 }
+                                
+                                // Hiển thị phần loading
+                                if (imageUploadLoading) imageUploadLoading.style.display = 'block';
 
                                 const reader = new FileReader();
                                 reader.onload = function(e) {
@@ -684,7 +687,6 @@
 
                                 // Hiển thị trạng thái kiểm duyệt
                                 moderationResult.style.display = 'block';
-                                moderationLoading.style.display = 'block';
                                 errorDiv.style.display = 'none';
 
                                 // Tạm thời vô hiệu hóa nút submit cho đến khi kiểm duyệt hoàn tất
@@ -713,7 +715,8 @@
                                             return response.json();
                                         })
                                         .then(result => {
-                                            moderationLoading.style.display = 'none';
+                                            // Ẩn loading
+                                            if (imageUploadLoading) imageUploadLoading.style.display = 'none';
 
                                             if (result.status === 'error') {
                                                 errorDiv.style.display = 'block';
@@ -744,7 +747,9 @@
                                         })
                                         .catch(error => {
                                             console.error('Lỗi kiểm duyệt:', error);
-                                            moderationLoading.style.display = 'none';
+                                            // Ẩn loading khi có lỗi
+                                            if (imageUploadLoading) imageUploadLoading.style.display = 'none';
+                                            
                                             errorDiv.style.display = 'block';
                                             errorMessage.textContent =
                                                 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
@@ -762,6 +767,7 @@
                                 previewContainer.style.display = 'none';
                                 moderationResult.style.display = 'none';
                                 errorDiv.style.display = 'none';
+                                if (imageUploadLoading) imageUploadLoading.style.display = 'none';
                                 submitButton.disabled = false;
                                 window.isImageValid = true;
                                 if (window.updateCriteria) window.updateCriteria();
