@@ -175,6 +175,19 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
+                                            <label class="form-label">Danh mục phụ</label>
+                                            <select name="subcategory_id" id="child_category"
+                                                class="form-control select2-subcategories"
+                                                {{ empty($article->category_id) ? 'disabled' : '' }}>
+                                                <option value="">-- Chọn danh mục phụ --</option>
+                                                @if ($article->subcategory_id)
+                                                    <option value="{{ $article->subcategory_id }}" selected>
+                                                        {{ $article->subcategory->name }}</option>
+                                                @endif
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
                                             <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
                                             <select name="tags[]" id="tags" class="form-control select2-tags"
                                                 multiple="multiple" data-placeholder="Chọn hoặc nhập thẻ mới">
@@ -189,18 +202,7 @@
                                                 (chấp nhận cả chữ và số).</small>
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Danh mục phụ</label>
-                                            <select name="subcategory_id" id="child_category"
-                                                class="form-control select2-subcategories"
-                                                {{ empty($article->category_id) ? 'disabled' : '' }}>
-                                                <option value="">-- Chọn danh mục phụ --</option>
-                                                @if ($article->subcategory_id)
-                                                    <option value="{{ $article->subcategory_id }}" selected>
-                                                        {{ $article->subcategory->name }}</option>
-                                                @endif
-                                            </select>
-                                        </div>
+                                     
                                     </div>
                                 </div>
 
