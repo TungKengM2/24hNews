@@ -42,7 +42,7 @@ class ArticleController extends Controller
         $filter = $request->input('filter', 'all'); // Mặc định hiển thị tất cả bài viết
 
         $query = Article::with(['author', 'category', 'approver', 'tags'])
-            ->where('author_id', auth()->id()) // Chỉ lấy bài viết của admin đang đăng nhập
+            // ->where('author_id', auth()->id()) // Chỉ lấy bài viết của admin đang đăng nhập
             ->orderBy('created_at', 'desc');
 
         if ($filter === 'inactive') {
