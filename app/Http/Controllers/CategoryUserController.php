@@ -79,7 +79,11 @@ class CategoryUserController extends Controller
             ->get();
 
 
-        $tags = Tag::all();
+        // Lấy tất cả tags
+        $tags = Tag::withCount('publishedArticles')
+        ->has('publishedArticles') // chỉ lấy tag có bài viết đã xuất bản
+        ->orderByDesc('published_articles_count')
+        ->paginate(8);
 
         $categories = Category::withCount(['articles' => function ($query) {
             $query->where('status', 'published'); // Đếm bài viết có trạng thái 'published'
