@@ -98,11 +98,27 @@ class CategoryUserController extends Controller
             $category2 = Category::withCount(['articles' => function ($query) {
                 $query->where('status', 'published'); // Điều kiện bài viết có trạng thái 'published'
             }])->where('is_active', 1)->get();
+             
+        
+        // Lấy tất cả danh mục cha (parent_id = null) và sắp xếp theo thứ tự mới nhất
+        $parentCategories = Category::whereNull('parent_id')
+            ->latest('category_id')
+            ->paginate(10);
+
+        // Lấy ID của tất cả danh mục cha trong trang hiện tại
+        $parentIds = $parentCategories->pluck('category_id')->toArray();
+
+        // Lấy tất cả danh mục con của các danh mục cha trong trang hiện tại
+        $childCategories = Category::whereIn('parent_id', $parentIds)->get()->groupBy('parent_id');
+
+        // Gắn childCategories vào từng parent category
+        foreach ($parentCategories as $category) {
+            $category->children = $childCategories[$category->category_id] ?? collect();
+        }
             
-            
 
 
 
-        return view('website.categories.categories', compact('relatedArticles', 'recentArticles', 'tags', 'categories', 'articlesNews', 'category2', 'articles', 'articlesViews', 'category', 'featuredArticle'));
+        return view('website.categories.categories', compact('parentCategories','relatedArticles', 'recentArticles', 'tags', 'categories', 'articlesNews', 'category2', 'articles', 'articlesViews', 'category', 'featuredArticle'));
     }
 }

@@ -114,6 +114,24 @@ class HomeController extends Controller
         }])->where('is_active', 1)->get();
 
 
+        // Lấy tất cả danh mục cha (parent_id = null) và sắp xếp theo thứ tự mới nhất
+        $parentCategories = Category::whereNull('parent_id')
+            ->latest('category_id')
+            ->paginate(10);
+
+        // Lấy ID của tất cả danh mục cha trong trang hiện tại
+        $parentIds = $parentCategories->pluck('category_id')->toArray();
+
+        // Lấy tất cả danh mục con của các danh mục cha trong trang hiện tại
+        $childCategories = Category::whereIn('parent_id', $parentIds)->get()->groupBy('parent_id');
+
+        // Gắn childCategories vào từng parent category
+        foreach ($parentCategories as $category) {
+            $category->children = $childCategories[$category->category_id] ?? collect();
+        }
+
+ 
+
 
         //TungKeng làm hiển thị bài viết của author mà user đã fl
         $user = auth()->user();
@@ -123,6 +141,7 @@ class HomeController extends Controller
                 'topTags' => $topTags ?? null,
                 'categories' => $categories ?? null,
                 'category2' => $category2 ?? null,
+                'parentCategories' => $parentCategories ?? null,
                 'sportsArticles' => $sportsArticles ?? null,
                 'newsData' => $newsData ?? null,
                 'journalists' => $journalists ?? null,
@@ -152,6 +171,7 @@ class HomeController extends Controller
         return view('welcome', compact(
             'categories',
             'category2',
+            'parentCategories',
             'sportsArticles',
             'newsData',
             'journalists',
