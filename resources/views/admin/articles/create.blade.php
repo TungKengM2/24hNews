@@ -102,11 +102,11 @@
             top: 20px;
             z-index: 1000;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
+            background-color: #f8f9fa;
         }
 
         .verification-criteria-title {
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid #f8f9fa;
             padding-bottom: 10px;
             margin-bottom: 20px;
             font-weight: 600;
