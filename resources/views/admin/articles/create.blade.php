@@ -86,8 +86,8 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             max-height: calc(100vh - 40px);
             overflow-y: auto;
-            position: sticky;
-            top: 20px;
+            position: relative;
+            transition: box-shadow 0.3s ease, top 0.3s ease;
         }
 
         /* Class được thêm bằng JavaScript khi cuộn trang */
@@ -95,7 +95,22 @@
             position: fixed;
             top: 20px;
             z-index: 100;
-            width: calc(25% - 30px); /* Tương ứng với col-md-3 trừ đi padding */
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            animation: smoothFixed 0.3s forwards;
+        }
+        
+        @keyframes smoothFixed {
+            from {
+                transform: translateY(-10px);
+                opacity: 0.8;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .verification-criteria-title {
@@ -826,15 +841,40 @@
 
                                 // Xử lý cuộn trang để làm cho phần Tiêu chí xuất bản di chuyển theo
                                 function handleCriteriaScroll() {
-                                    // Không cần thêm sự kiện cuộn khi đã sử dụng position:sticky trong CSS
-                                    // Position:sticky sẽ tự động xử lý việc làm cho phần tiêu chí gắn vào phía trên khi cuộn
-                                    console.log('Sử dụng position:sticky cho tiêu chí xuất bản');
-                                    
-                                    // Đảm bảo phần tiêu chí có đủ không gian khi cuộn
                                     const criteriaBox = document.querySelector('.verification-criteria');
                                     if (criteriaBox) {
                                         // Đảm bảo có padding-bottom cho container cha để tránh bị che khuất nội dung
                                         criteriaBox.closest('.col-md-3').style.paddingBottom = '40px';
+                                        
+                                        // Lấy vị trí ban đầu của phần criteria
+                                        const originalTop = criteriaBox.getBoundingClientRect().top + window.pageYOffset;
+                                        
+                                        // Hàm cập nhật kích thước criteria khi cố định
+                                        const updateCriteriaSize = function() {
+                                            const containerWidth = criteriaBox.closest('.col-md-3').offsetWidth;
+                                            criteriaBox.style.width = `${containerWidth}px`;
+                                        };
+                                        
+                                        // Xử lý sự kiện cuộn trang
+                                        window.addEventListener('scroll', function() {
+                                            const scrollDistance = window.pageYOffset;
+                                            
+                                            // Nếu đã cuộn qua vị trí ban đầu của phần criteria
+                                            if (scrollDistance > originalTop - 20) {
+                                                criteriaBox.classList.add('fixed');
+                                                updateCriteriaSize();
+                                            } else {
+                                                criteriaBox.classList.remove('fixed');
+                                                criteriaBox.style.width = '';
+                                            }
+                                        });
+                                        
+                                        // Xử lý sự kiện khi thay đổi kích thước cửa sổ
+                                        window.addEventListener('resize', function() {
+                                            if (criteriaBox.classList.contains('fixed')) {
+                                                updateCriteriaSize();
+                                            }
+                                        });
                                     }
                                 }
 
