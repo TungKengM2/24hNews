@@ -85,9 +85,9 @@
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             max-height: calc(100vh - 40px);
-            /* Chiều cao tối đa là chiều cao của viewport trừ đi khoảng cách từ top */
             overflow-y: auto;
-            /* Cho phép cuộn nếu nội dung quá dài */
+            position: sticky;
+            top: 20px;
         }
 
         /* Class được thêm bằng JavaScript khi cuộn trang */
@@ -95,8 +95,7 @@
             position: fixed;
             top: 20px;
             z-index: 100;
-            width: 23%;
-            /* Tương ứng với col-md-3 */
+            width: calc(25% - 30px); /* Tương ứng với col-md-3 trừ đi padding */
         }
 
         .verification-criteria-title {
@@ -226,7 +225,7 @@
     <div class="content-wrapper">
         <div class="container-full">
             <div class="wrapper">
-                <div class="container mt-5 ">
+                <div class="container mt-5">
                     <div class="card p-4">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h2 class="mb-0">Tạo Bài Viết Mới</h2>
@@ -235,6 +234,9 @@
                             </a>
                         </div>
 
+                        <div class="row">
+                            <!-- Phần form tạo bài viết -->
+                            <div class="col-md-9">
                                 @if ($errors->any())
                                     <div class="alert alert-danger error_message">
                                         <ul>
@@ -427,65 +429,65 @@
                                     </div>
                                 </form>
                             </div>
-                        </div>
 
-                        <!-- Tiêu chí xuất bản -->
-                        <div class="col-md-3">
-                            <div class="verification-criteria">
-                                <h4 class="verification-criteria-title">Tiêu chí xuất bản</h4>
-                                <div class="criteria-content">
-                                    <ul class="criteria-list" id="criteria-list">
-                                        <li class="criteria-item failed" id="criteria-title" data-target="title">
-                                            <div class="criteria-icon failed">✗</div>
-                                            <div class="criteria-text criteria-tooltip">
-                                                Tiêu đề từ 50-60 ký tự <span id="current-title-length">(0 ký tự)</span>
-                                                <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy
-                                                    đủ trên Google và tối ưu cho SEO</span>
+                            <!-- Tiêu chí xuất bản -->
+                            <div class="col-md-3">
+                                <div class="verification-criteria">
+                                    <h4 class="verification-criteria-title">Tiêu chí xuất bản</h4>
+                                    <div class="criteria-content">
+                                        <ul class="criteria-list" id="criteria-list">
+                                            <li class="criteria-item failed" id="criteria-title" data-target="title">
+                                                <div class="criteria-icon failed">✗</div>
+                                                <div class="criteria-text criteria-tooltip">
+                                                    Tiêu đề từ 50-60 ký tự <span id="current-title-length">(0 ký tự)</span>
+                                                    <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy
+                                                        đủ trên Google và tối ưu cho SEO</span>
+                                                </div>
+                                            </li>
+                                            <li class="criteria-item failed" id="criteria-category"
+                                                data-target="parent_category">
+                                                <div class="criteria-icon failed">✗</div>
+                                                <div class="criteria-text criteria-tooltip">
+                                                    Chọn danh mục chính và phụ
+                                                    <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ
+                                                        phù hợp với nội dung bài viết</span>
+                                                </div>
+                                            </li>
+                                            <li class="criteria-item failed" id="criteria-tags" data-target="tags">
+                                                <div class="criteria-icon failed">✗</div>
+                                                <div class="criteria-text criteria-tooltip">
+                                                    Chọn 2-5 thẻ tag liên quan <span id="current-tag-count">(0 thẻ)</span>
+                                                    <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và tăng
+                                                        khả năng xuất hiện trong tìm kiếm</span>
+                                                </div>
+                                            </li>
+                                            <li class="criteria-item failed" id="criteria-thumbnail"
+                                                data-target="thumbnail_url">
+                                                <div class="criteria-icon failed">✗</div>
+                                                <div class="criteria-text criteria-tooltip">
+                                                    Ảnh đại diện chất lượng cao
+                                                    <span class="tooltip-text">Ảnh đại diện tối thiểu 1200x630px, rõ nét và
+                                                        vượt qua kiểm duyệt</span>
+                                                </div>
+                                            </li>
+                                            <li class="criteria-item failed" id="criteria-content" data-target="content">
+                                                <div class="criteria-icon failed">✗</div>
+                                                <div class="criteria-text criteria-tooltip">
+                                                    Nội dung từ 800-1500 từ <span id="current-word-count">(0 từ)</span>
+                                                    <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn
+                                                        trong kết quả tìm kiếm và tối ưu cho người đọc</span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div class="d-flex flex-column align-items-center justify-content-center">
+                                            <div class="progress-container position-relative" style="height: 150px;">
+                                                <div class="criteria-progress">
+                                                    <div class="criteria-progress-bar" id="criteria-progress-bar"></div>
+                                                </div>
                                             </div>
-                                        </li>
-                                        <li class="criteria-item failed" id="criteria-category"
-                                            data-target="parent_category">
-                                            <div class="criteria-icon failed">✗</div>
-                                            <div class="criteria-text criteria-tooltip">
-                                                Chọn danh mục chính và phụ
-                                                <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ
-                                                    phù hợp với nội dung bài viết</span>
+                                            <div class="text-center mt-2">
+                                                <small id="criteria-count">0/5 tiêu chí đạt</small>
                                             </div>
-                                        </li>
-                                        <li class="criteria-item failed" id="criteria-tags" data-target="tags">
-                                            <div class="criteria-icon failed">✗</div>
-                                            <div class="criteria-text criteria-tooltip">
-                                                Chọn 2-5 thẻ tag liên quan <span id="current-tag-count">(0 thẻ)</span>
-                                                <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và tăng
-                                                    khả năng xuất hiện trong tìm kiếm</span>
-                                            </div>
-                                        </li>
-                                        <li class="criteria-item failed" id="criteria-thumbnail"
-                                            data-target="thumbnail_url">
-                                            <div class="criteria-icon failed">✗</div>
-                                            <div class="criteria-text criteria-tooltip">
-                                                Ảnh đại diện chất lượng cao
-                                                <span class="tooltip-text">Ảnh đại diện tối thiểu 1200x630px, rõ nét và
-                                                    vượt qua kiểm duyệt</span>
-                                            </div>
-                                        </li>
-                                        <li class="criteria-item failed" id="criteria-content" data-target="content">
-                                            <div class="criteria-icon failed">✗</div>
-                                            <div class="criteria-text criteria-tooltip">
-                                                Nội dung từ 800-1500 từ <span id="current-word-count">(0 từ)</span>
-                                                <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn
-                                                    trong kết quả tìm kiếm và tối ưu cho người đọc</span>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <div class="d-flex flex-column align-items-center justify-content-center">
-                                        <div class="progress-container position-relative" style="height: 150px;">
-                                            <div class="criteria-progress">
-                                                <div class="criteria-progress-bar" id="criteria-progress-bar"></div>
-                                            </div>
-                                        </div>
-                                        <div class="text-center mt-2">
-                                            <small id="criteria-count">0/5 tiêu chí đạt</small>
                                         </div>
                                     </div>
                                 </div>
@@ -824,25 +826,16 @@
 
                                 // Xử lý cuộn trang để làm cho phần Tiêu chí xuất bản di chuyển theo
                                 function handleCriteriaScroll() {
+                                    // Không cần thêm sự kiện cuộn khi đã sử dụng position:sticky trong CSS
+                                    // Position:sticky sẽ tự động xử lý việc làm cho phần tiêu chí gắn vào phía trên khi cuộn
+                                    console.log('Sử dụng position:sticky cho tiêu chí xuất bản');
+                                    
+                                    // Đảm bảo phần tiêu chí có đủ không gian khi cuộn
                                     const criteriaBox = document.querySelector('.verification-criteria');
-                                    if (!criteriaBox) return;
-
-                                    // Lấy vị trí ban đầu của phần Tiêu chí xuất bản
-                                    const criteriaBoxOffset = criteriaBox.getBoundingClientRect().top + window.scrollY;
-
-                                    // Lấy chiều rộng ban đầu của phần Tiêu chí xuất bản
-                                    const criteriaBoxWidth = criteriaBox.offsetWidth;
-
-                                    // Xử lý sự kiện cuộn trang
-                                    window.addEventListener('scroll', function() {
-                                        if (window.scrollY > criteriaBoxOffset - 20) {
-                                            criteriaBox.classList.add('fixed');
-                                            criteriaBox.style.width = criteriaBoxWidth + 'px';
-                                        } else {
-                                            criteriaBox.classList.remove('fixed');
-                                            criteriaBox.style.width = '';
-                                        }
-                                    });
+                                    if (criteriaBox) {
+                                        // Đảm bảo có padding-bottom cho container cha để tránh bị che khuất nội dung
+                                        criteriaBox.closest('.col-md-3').style.paddingBottom = '40px';
+                                    }
                                 }
 
                                 // Gọi hàm xử lý cuộn trang
@@ -1083,6 +1076,5 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 @endsection

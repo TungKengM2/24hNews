@@ -126,9 +126,9 @@
                         </div>
                     </div>
 
-                </div>
+                </div> --}}
                 <!-- Thống kê người dùng -->
-                <div class="row">
+                {{-- <div class="row">
                     <!-- Tổng số người dùng -->
                     <h1>Tổng Quan Người Dùng</h1>
                     <div class="col-xl-3 col-md-6 col-12">
@@ -378,6 +378,7 @@
                             </div>
                         </div>
                     </div> --}}
+
                 </div>
 
 

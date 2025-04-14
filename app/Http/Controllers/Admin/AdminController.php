@@ -30,13 +30,12 @@ class AdminController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('admin.comments', compact('user', 'comments'));
+        return view('moderator.comments', compact('user', 'comments'));
     }
 
 
     public function dashboard(Request $request)
     {
-
 
         $type = $request->input('article_type', 'daily');
         $interactionType = $request->input('interaction_type', $type);
@@ -60,7 +59,7 @@ class AdminController extends Controller
         // // Tổng số người dùng
         // $userCount = User::count();
         // Lấy số lượng người dùng theo vai trò
-            $userCount = [
+        $userCount = [
             'total' => User::where('role_id', '!=', 1)->count(), // Tổng số người dùng (không bao gồm admin)
                 'user' => User::where('role_id', 4)->count(), // Người dùng
                 'moderators' => User::where('role_id', 3)->count(), // Kiểm duyệt viên
@@ -76,15 +75,15 @@ class AdminController extends Controller
         // Tổng lượt thích
         $totalLikes = Schema::hasTable('article_likes') ? DB::table('article_likes')->count() : 0;
         //   // Lấy danh sách tag và số lượng bài viết theo từng tag
-       // Lấy danh sách tag và số lượng bài viết đã xuất bản
-       $tags = Tag::has('publishedArticles')
-       ->withCount(['publishedArticles'])
-       ->orderBy('published_articles_count', 'desc')
-       ->get();
+ // Lấy danh sách tag và số lượng bài viết đã xuất bản, sắp xếp từ lớn đến bé
+$tags = Tag::whereHas('publishedArticles') // Chỉ lấy các tag có ít nhất 1 bài viết xuất bản
+->withCount(['publishedArticles'])    // Đếm số lượng bài viết đã xuất bản
+->orderByDesc('published_articles_count') // Sắp xếp từ lớn đến bé theo số lượng bài viết
+->get();
 
 
         return view('admin.dashboard', compact(
-
+            // 'stats',
             'tags',
             'articleStats',
             'userCount',
@@ -192,5 +191,4 @@ class AdminController extends Controller
             'comments' => Comment::whereIn('article_id', $articleIds)->whereYear('created_at', $year)->count(),
         ];
     }
-
-    }
+}

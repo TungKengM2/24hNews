@@ -450,7 +450,7 @@ Route::middleware(['auth', 'role:4'])->prefix('/user')->group(function () {
     Route::post('/upgrade-request', [ProfileController::class, 'requestAuthorRole'])->name('user.upgrade.request');
 
     Route::get('/upgrade-result', function () {
-        return view('user.upgrade-result');
+        return view('website.profiles.users.upgrade-result');
     })
         ->name('user.upgrade.result');
 
