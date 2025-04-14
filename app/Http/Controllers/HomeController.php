@@ -114,23 +114,44 @@ class HomeController extends Controller
         }])->where('is_active', 1)->get();
 
 
-        // Lấy tất cả danh mục cha (parent_id = null) và sắp xếp theo thứ tự mới nhất
+        // Lấy tất cả danh mục cha (parent_id = null) với điều kiện is_active = 1
         $parentCategories = Category::whereNull('parent_id')
-            ->latest('category_id')
+            ->where('is_active', 1)
+            ->withCount(['articles' => function ($query) {
+                // Chỉ đếm bài viết có is_active = 1
+                $query->where('is_active', 1);
+            }])
+            ->orderBy('articles_count', 'desc') // Sắp xếp theo số lượng bài viết trực tiếp của cha giảm dần
             ->paginate(10);
 
-        // Lấy ID của tất cả danh mục cha trong trang hiện tại
+        // Lấy ID của các danh mục cha trên trang hiện tại
         $parentIds = $parentCategories->pluck('category_id')->toArray();
 
-        // Lấy tất cả danh mục con của các danh mục cha trong trang hiện tại
-        $childCategories = Category::whereIn('parent_id', $parentIds)->get()->groupBy('parent_id');
+        // Lấy danh mục con của các danh mục cha vừa chọn với điều kiện is_active = 1
+        $childCategories = Category::whereIn('parent_id', $parentIds)
+            ->where('is_active', 1)
+            ->withCount(['articles' => function ($query) {
+                $query->where('is_active', 1);
+            }])
+            ->get()
+            ->groupBy('parent_id');
 
-        // Gắn childCategories vào từng parent category
+        // Gắn danh mục con vào từng danh mục cha và tính tổng số bài viết (cha + con)
         foreach ($parentCategories as $category) {
-            $category->children = $childCategories[$category->category_id] ?? collect();
+            // Lấy danh sách danh mục con của danh mục cha hiện tại
+            $children = $childCategories[$category->category_id] ?? collect();
+
+            // Tính tổng số bài viết ở danh mục con
+            $childArticlesCount = $children->sum('articles_count');
+
+            // Tạo thuộc tính mới total_articles_count = bài viết của cha + bài viết của con
+            $category->total_articles_count = $category->articles_count + $childArticlesCount;
+
+            // Gán danh mục con vào thuộc tính children
+            $category->children = $children;
         }
 
- 
+
 
 
         //TungKeng làm hiển thị bài viết của author mà user đã fl
