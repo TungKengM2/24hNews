@@ -1,0 +1,96 @@
+/* Style cho phần upload ảnh đại diện */
+.author-img {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.widget-user-image {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    cursor: pointer;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.widget-user-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+#avatarPreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    padding: 0;
+    margin: 0;
+}
+
+.avatar-edit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.avatar-edit:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.avatar-edit i {
+    font-size: 20px;
+}
+
+#avatarUpload {
+    display: none;
+}
+
+.widget-user-header {
+    position: relative;
+    padding: 3rem 1rem;
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+}
+
+.widget-user-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.widget-user-username,
+.widget-user-desc {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+}
+
+.widget-user-username {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.widget-user-desc {
+    font-size: 0.875rem;
+    opacity: 0.9;
+} 
