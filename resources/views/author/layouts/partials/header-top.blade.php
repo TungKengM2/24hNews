@@ -1,4 +1,4 @@
-D<nav class="navbar navbar-static-top">
+<nav class="navbar navbar-static-top">
     <!-- Sidebar toggle button-->
     <div class="app-menu">
         <ul class="header-megamenu nav">

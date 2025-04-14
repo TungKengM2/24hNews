@@ -224,22 +224,22 @@
         </section>
         <!-- ====== end bài viết tác giả bạn quan tâm ====== -->
 
-       
+
         <section class="tc-trends-news-style1 pt-50 pb-50 bg-gray1">
             <div class="container">
                 <div class="hot-trends-tabs-style1 mb-4">
                     <p class="color-999 text-uppercase ltspc-1 flex-shrink-0 me-4 pt-1 fw-bold">
                         <i class="ion-arrow-graph-up-right me-2"></i> Xu Hướng Nóng
                     </p>
-                     <!-- ====== 4 tag có nhiều sd trong nhiều bàiV nhất ====== -->
+                    <!-- ====== 4 tag có nhiều sd trong nhiều bàiV nhất ====== -->
                     <div class="links">
                         @foreach ($topTags as $tag)
                             <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}" class="link item d-block">
-                                {{ $tag->name }} 
+                                {{ $tag->name }}
                             </a>
                         @endforeach
                     </div>
-                     <!-- ====== end 4 tag có nhiều sd trong nhiều bàiV nhất ====== -->
+                    <!-- ====== end 4 tag có nhiều sd trong nhiều bàiV nhất ====== -->
                 </div>
                 <div class="section-content">
                     <div class="row align-items-stretch">
@@ -290,7 +290,7 @@
                                                 </div>
                                             </div>
                                         @endforeach
-                                         {{-- // ènd top 3 bài viết nhiều lượt xem --}}
+                                        {{-- // ènd top 3 bài viết nhiều lượt xem --}}
                                     </div>
                                 </div>
                                 <!-- arrows -->
@@ -320,7 +320,7 @@
                                 @else
                                     <p class="text-center text-muted">Chưa có bài viết nào.</p>
                                 @endif
-                                 {{-- // top 4 bài viết nhiều Bluan nhất 30 ngày trở lại  --}}
+                                {{-- // top 4 bài viết nhiều Bluan nhất 30 ngày trở lại  --}}
                             </div>
                         </div>
                     </div>
@@ -362,6 +362,1136 @@
             </div>
         </section>
         <!-- ====== end tin tức có thể quan tâm ====== -->
+
+
+        <!-- ====== start Latest news ====== -->
+        <section class="tc-latest-news-style1">
+            <div class="container">
+                <div class="section-content  pb-50 border-bottom border-1 brd-gray">
+                    <p class="color-000 text-uppercase mb-30 ltspc-1 font-bold ">
+                    <h3>Tin Tức Mới Nhất</h3>{{--  <i class="la la-angle-right "></i> --}}
+                    </p>
+                    <div class="row">
+                        <div class="col-lg-5 border-end brd-gray border-1">
+                            <div class="tc-post-grid-default">
+                                <div class="item">
+                                    <div class="img img-cover th-330">
+                                        <img src="https://newzin-html.themescamp.com/assets/img/latest/1.png"
+                                            alt="">
+
+                                    </div>
+                                    <div class="content pt-30">
+                                        <a href="page-blog.html"
+                                            class="news-cat color-999 fsz-13px text-uppercase mb-10">politics</a>
+                                        <h2 class="title mb-20">
+                                            <a href="page-single-post-features.html">Biden asks Congress for $33 billion
+                                                to support Ukraine</a>
+                                        </h2>
+                                        <div class="text color-666">
+                                            The social-media company is in discussions to sell itself to Elon, a
+                                            dramatic turn of events just 11 days after the [...]
+                                        </div>
+                                        <div class="meta-bot lh-1 mt-40">
+                                            <ul class="d-flex">
+                                                <li class="date me-5">
+                                                    <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec
+                                                        14, 2022</a>
+                                                </li>
+                                                <li class="author me-5">
+                                                    <a href="home-default.html#"><i class="la la-user me-2"></i> by Admin
+                                                    </a>
+                                                </li>
+                                                <li class="comment">
+                                                    <a href="home-default.html#"><i class="la la-comment me-2"></i> 55
+                                                        Comments</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 border-end brd-gray border-1">
+                            <div class="tc-post-list-style2">
+                                <div class="items">
+                                    <div class="item">
+                                        <div class="row gx-3 align-items-center">
+                                            <div class="col-4">
+                                                <div class="img th-70 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/latest/3.png"
+                                                        alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                                                        politics
+                                                    </div>
+                                                    <h5 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"
+                                                            class="hover-underline">Disputes in the South China
+                                                            Sea show no sign of ending</a>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="row gx-3 align-items-center">
+                                            <div class="col-4">
+                                                <div class="img th-70 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/latest/4.png"
+                                                        alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-1">sport
+                                                        <b class="text-danger"> <i
+                                                                class="icon-6 rounded-circle bg-danger ms-2 me-1 d-inline-block"></i>
+                                                            live</b>
+                                                    </div>
+                                                    <h5 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"
+                                                            class="hover-underline">Live of MLB Baseball 2022:
+                                                            NY Yankees Vs NY Mets</a>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="row gx-3 align-items-center">
+                                            <div class="col-4">
+                                                <div class="img th-70 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/latest/5.png"
+                                                        alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                                                        lifestyle</div>
+                                                    <h5 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"
+                                                            class="hover-underline">Paddling in Miami Beach</a>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="row gx-3 align-items-center">
+                                            <div class="col-4">
+                                                <div class="img th-70 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/latest/6.png"
+                                                        alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                                                        business
+                                                    </div>
+                                                    <h5 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"
+                                                            class="hover-underline">Stock market in last week:
+                                                            "The strength of bulls"</a>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="row gx-3 align-items-center">
+                                            <div class="col-4">
+                                                <div class="img th-70 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/latest/7.png"
+                                                        alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                                                        lifestyle</div>
+                                                    <h5 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"
+                                                            class="hover-underline">Stock market in last week:
+                                                            "The strength of bulls"</a>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item border-0">
+                                        <div class="row gx-3 align-items-center">
+                                            <div class="col-4">
+                                                <div class="img th-70 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/latest/8.png"
+                                                        alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-1">
+                                                        lifestyle</div>
+                                                    <h5 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"
+                                                            class="hover-underline">Helm Extract Infuse cream,
+                                                            1000mg Full spectrum</a>
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="tc-post-grid-default border-1 border-bottom brd-gray pb-10">
+                                <div class="item">
+                                    <div class="img img-cover th-200">
+                                        <img src="https://newzin-html.themescamp.com/assets/img/latest/2.png"
+                                            alt="">
+                                    </div>
+                                    <div class="content pt-20">
+
+                                        <h5 class="title ltspc--1 mb-10"> <a href="page-single-post-creative.html">Fact
+                                                of Camel in Dubai</a> </h5>
+                                        <div class="text color-666">
+                                            Crime rates on trains and buses are up in some of the nation’s biggest [...]
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tc-post-grid-default border-1 border-bottom brd-gray pb-10">
+                                <div class="item">
+                                    <div class="img img-cover th-200">
+                                        <img src="https://newzin-html.themescamp.com/assets/img/must_read/1.png"
+                                            alt="">
+                                    </div>
+                                    <div class="content pt-20">
+
+                                        <h5 class="title ltspc--1 mb-10"> <a href="page-single-post-creative.html">Fact
+                                                of Camel in Dubai</a> </h5>
+                                        <div class="text color-666">
+                                            Crime rates on trains and buses are up in some of the nation’s biggest [...]
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end Latest news ====== -->
+        <!-- ====== start trending posts ====== -->
+        <section class="">
+            <div class="container bg-white">
+                <div class="content bg-white">
+                    <div class="section-title-style2 mb-30 ">
+                        <h3>Bài viết thịnh hành tuần này </h3>
+                    </div>
+                    <div class="tc-trends-news-slider2">
+                        <div class="swiper-container">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <div class="card-item">
+                                        <div class="img img-cover">
+                                            <img src="https://newzin-html.themescamp.com/assets/img/trend/5.png"
+                                                alt="">
+                                            <span class="num">1</span>
+                                        </div>
+                                        <div class="info">
+                                            <div class="tags mt-20">
+                                                <a href="home-technology.html#"
+                                                    class="bg-primary text-white py-1 px-3 rounded-pill fsz-12px text-uppercase me-2">Giáo
+                                                    Dục</a>
+                                            </div>
+                                            <h4 class="title mt-20">
+                                                <a href="page-single-post-creative.html" class="hover-underline">
+                                                    The zappi EV Charger, Best charger for future
+                                                </a>
+                                            </h4>
+                                            <div class="meta-bot lh-1 text-capitalize color-666 fsz-13px mt-30">
+                                                <ul class="d-flex">
+                                                    <li class="date me-4">
+                                                        <a href="home-technology.html#"><i
+                                                                class="la la-calendar me-1"></i> Dec 14,
+                                                            2022</a>
+                                                    </li>
+                                                    <li class="comment">
+                                                        <a href="home-technology.html#"><i class="la la-comment me-1"></i>
+                                                            7 </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="card-item">
+                                        <div class="img img-cover">
+                                            <img src="https://newzin-html.themescamp.com/assets/img/trend/6.png"
+                                                alt="">
+                                            <span class="num">2</span>
+                                        </div>
+                                        <div class="info">
+                                            <div class="tags mt-20">
+                                                <a href="home-technology.html#"
+                                                    class="bg-orange text-white py-1 px-3 rounded-pill fsz-12px text-uppercase me-2">Lối
+                                                    Sống</a>
+                                            </div>
+                                            <h4 class="title mt-20">
+                                                <a href="page-single-post-creative.html" class="hover-underline">
+                                                    Netflix change their policy for package faminly
+                                                </a>
+                                            </h4>
+                                            <div class="meta-bot lh-1 text-capitalize color-666 fsz-13px mt-30">
+                                                <ul class="d-flex">
+                                                    <li class="date me-4">
+                                                        <a href="home-technology.html#"><i
+                                                                class="la la-calendar me-1"></i> Dec 14,
+                                                            2022</a>
+                                                    </li>
+                                                    <li class="comment">
+                                                        <a href="home-technology.html#"><i class="la la-comment me-1"></i>
+                                                            1 </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="card-item">
+                                        <div class="img img-cover">
+                                            <img src="https://newzin-html.themescamp.com/assets/img/trend/7.png"
+                                                alt="">
+                                            <span class="num">3</span>
+                                        </div>
+                                        <div class="info">
+                                            <div class="tags mt-20">
+                                                <a href="home-technology.html#"
+                                                    class="bg-cyan text-white py-1 px-3 rounded-pill fsz-12px text-uppercase me-2">Kinh
+                                                    Doanh</a>
+                                                <a href="home-technology.html#"
+                                                    class="bg-primary text-white py-1 px-3 rounded-pill fsz-12px text-uppercase me-2">Công
+                                                    Nghệ</a>
+                                            </div>
+                                            <h4 class="title mt-20">
+                                                <a href="page-single-post-creative.html" class="hover-underline">
+                                                    VR Oculus 3.0 Next gen, Future of AI
+                                                </a>
+                                            </h4>
+                                            <div class="meta-bot lh-1 text-capitalize color-666 fsz-13px mt-30">
+                                                <ul class="d-flex">
+                                                    <li class="date me-4">
+                                                        <a href="home-technology.html#"><i
+                                                                class="la la-calendar me-1"></i> Dec 14,
+                                                            2022</a>
+                                                    </li>
+                                                    <li class="comment">
+                                                        <a href="home-technology.html#"><i class="la la-comment me-1"></i>
+                                                            71 </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="card-item">
+                                        <div class="img img-cover">
+                                            <img src="https://newzin-html.themescamp.com/assets/img/trend/8.png"
+                                                alt="">
+                                            <span class="num">4</span>
+                                        </div>
+                                        <div class="info">
+                                            <div class="tags mt-20">
+                                                <a href="home-technology.html#"
+                                                    class="bg-purple text-white py-1 px-3 rounded-pill fsz-12px text-uppercase me-2">giải
+                                                    trí</a>
+                                            </div>
+                                            <h4 class="title mt-20">
+                                                <a href="page-single-post-creative.html" class="hover-underline">
+                                                    Become Backend Dev at Google Studio
+                                                </a>
+                                            </h4>
+                                            <div class="meta-bot lh-1 text-capitalize color-666 fsz-13px mt-30">
+                                                <ul class="d-flex">
+                                                    <li class="date me-4">
+                                                        <a href="home-technology.html#"><i
+                                                                class="la la-calendar me-1"></i> Dec 14,
+                                                            2022</a>
+                                                    </li>
+                                                    <li class="comment">
+                                                        <a href="home-technology.html#"><i class="la la-comment me-1"></i>
+                                                            4 </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="card-item">
+                                        <div class="img img-cover">
+                                            <img src="https://newzin-html.themescamp.com/assets/img/trend/9.png"
+                                                alt="">
+                                            <span class="num">5</span>
+                                        </div>
+                                        <div class="info">
+                                            <div class="tags mt-20">
+                                                <a href="home-technology.html#"
+                                                    class="bg-cyan text-white py-1 px-3 rounded-pill fsz-12px text-uppercase me-2">Chính
+                                                    Trị</a>
+                                                <a href="home-technology.html#"
+                                                    class="bg-primary text-white py-1 px-3 rounded-pill fsz-12px text-uppercase me-2">Pháp
+                                                    Luật</a>
+                                            </div>
+                                            <h4 class="title mt-20">
+                                                <a href="page-single-post-creative.html" class="hover-underline">
+                                                    Next gen, Future of ropots whats new
+                                                </a>
+                                            </h4>
+                                            <div class="meta-bot lh-1 text-capitalize color-666 fsz-13px mt-30">
+                                                <ul class="d-flex">
+                                                    <li class="date me-4">
+                                                        <a href="home-technology.html#"><i
+                                                                class="la la-calendar me-1"></i> Dec 14,
+                                                            2022</a>
+                                                    </li>
+                                                    <li class="comment">
+                                                        <a href="home-technology.html#"><i class="la la-comment me-1"></i>
+                                                            71 </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- pagination -->
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end trending posts ====== -->
+
+         <!-- ====== start another-news ====== -->
+         <section class="another-news pt-50 pb-50 border-1 border-top brd-gray">
+            <div class="container">
+                <h3 class="mb-10">Danh Mục Hàng Đầu</h3>
+
+                <div class="content">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">Thể Thao</a> <i
+                                    class="la la-angle-right ms-1"></i> </p>
+                            <div class="row">
+                                <div class="col-12 border-1 border-end brd-gray">
+                                    <div class="tc-post-grid-default">
+                                        <div class="item">
+                                            <div class="img img-cover th-250">
+                                                <img src="https://newzin-html.themescamp.com/assets/img/another_news/1.png" alt="">
+                                            </div>
+                                            <div class="content pt-20">
+                                                <a href="home-default.html#"
+                                                    class="news-cat color-999 fsz-13px text-uppercase mb-10">Thể Thao</a>
+                                                <h4 class="title ltspc--1 mb-10">
+                                                    <a href="page-single-post-creative.html">
+                                                        America's track and field team won the 2022 olympics?
+                                                    </a>
+                                                </h4>
+                                                <div class="text color-666">
+                                                    Crime rates on trains and buses are up in some of the nation’s
+                                                    biggest [...]
+                                                </div>
+                                                <div class="meta-bot lh-1 mt-20">
+                                                    <ul class="d-flex">
+                                                        <li class="date me-5">
+                                                            <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14,
+                                                                2022</a>
+                                                        </li>
+                                                        <li class="comment">
+                                                            <a href="home-default.html#"><i class="la la-comment me-2"></i> 7</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tc-post-list-style2">
+                                        <div class="items">
+                                            <a href="page-single-post-creative.html"
+                                                class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
+                                                <div class="row gx-3 align-items-center">
+                                                    <div class="col-4">
+                                                        <div class="img th-70 img-cover">
+                                                            <img src="https://newzin-html.themescamp.com/assets/img/another_news/2.png" alt="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <small
+                                                                class="news-cat color-999 fsz-13px text-uppercase mb-10">Thể Thao</small>
+                                                            <h5 class="title ltspc--1">
+                                                                How’s Ameican Football Ball created out?
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a href="page-single-post-creative.html"
+                                                class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
+                                                <div class="row gx-3 align-items-center">
+                                                    <div class="col-4">
+                                                        <div class="img th-70 img-cover">
+                                                            <img src="https://newzin-html.themescamp.com/assets/img/another_news/3.png" alt="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <small
+                                                                class="news-cat color-999 fsz-13px text-uppercase mb-10">Thể Thao</small>
+                                                            <h5 class="title ltspc--1">
+                                                                Daniel share experience ski on Everest
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">Giải Trí</a> <i
+                                    class="la la-angle-right ms-1"></i> </p>
+                            <div class="row">
+                                <div class="col-12 border-1 border-end brd-gray">
+                                    <div class="tc-post-grid-default">
+                                        <div class="item">
+                                            <div class="img img-cover th-250">
+                                                <img src="https://newzin-html.themescamp.com/assets/img/another_news/4.png" alt="">
+                                            </div>
+                                            <div class="content pt-20">
+                                                <a href="home-default.html#"
+                                                    class="news-cat color-999 fsz-13px text-uppercase mb-10">Giải Trí</a>
+                                                <h4 class="title ltspc--1 mb-10">
+                                                    <a href="page-single-post-creative.html">
+                                                        Logan Cee's Best Contemporary Art Works
+                                                    </a>
+                                                </h4>
+                                                <div class="text color-666">
+                                                    Crime rates on trains and buses are up in some of the nation’s
+                                                    biggest [...]
+                                                </div>
+                                                <div class="meta-bot lh-1 mt-20">
+                                                    <ul class="d-flex">
+                                                        <li class="date me-5">
+                                                            <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14,
+                                                                2022</a>
+                                                        </li>
+                                                        <li class="comment">
+                                                            <a href="home-default.html#"><i class="la la-comment me-2"></i> 7</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tc-post-list-style2">
+                                        <div class="items">
+                                            <a href="page-single-post-creative.html"
+                                                class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
+                                                <div class="row gx-3 align-items-center">
+                                                    <div class="col-4">
+                                                        <div class="img th-70 img-cover">
+                                                            <img src="https://newzin-html.themescamp.com/assets/img/another_news/5.png" alt="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <small
+                                                                class="news-cat color-999 fsz-13px text-uppercase mb-10">Giải Trí</small>
+                                                            <h5 class="title ltspc--1">
+                                                                Netflix change their policy for package family
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a href="page-single-post-creative.html"
+                                                class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
+                                                <div class="row gx-3 align-items-center">
+                                                    <div class="col-4">
+                                                        <div class="img th-70 img-cover">
+                                                            <img src="https://newzin-html.themescamp.com/assets/img/another_news/6.png" alt="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <small
+                                                                class="news-cat color-999 fsz-13px text-uppercase mb-10">Giải Trí</small>
+                                                            <h5 class="title ltspc--1">
+                                                                Buy black vinyl record at Festival Oldschool market
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">Du Lịch</a> <i
+                                    class="la la-angle-right ms-1"></i> </p>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="tc-post-grid-default">
+                                        <div class="item">
+                                            <div class="img img-cover th-250">
+                                                <img src="https://newzin-html.themescamp.com/assets/img/latest/7.png" alt="">
+                                            </div>
+                                            <div class="content pt-20">
+                                                <a href="home-default.html#"
+                                                    class="news-cat color-999 fsz-13px text-uppercase mb-10">Du Lịch</a>
+                                                <h4 class="title ltspc--1 mb-10">
+                                                    <a href="page-single-post-creative.html">
+                                                        Top 10 Most beautiful hot springs in the world
+                                                    </a>
+                                                </h4>
+                                                <div class="text color-666">
+                                                    Crime rates on trains and buses are up in some of the nation’s
+                                                    biggest [...]
+                                                </div>
+                                                <div class="meta-bot lh-1 mt-20">
+                                                    <ul class="d-flex">
+                                                        <li class="date me-5">
+                                                            <a href="home-default.html#"><i class="la la-calendar me-2"></i> Dec 14,
+                                                                2022</a>
+                                                        </li>
+                                                        <li class="comment">
+                                                            <a href="home-default.html#"><i class="la la-comment me-2"></i> 7</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tc-post-list-style2">
+                                        <div class="items">
+                                            <a href="page-single-post-creative.html"
+                                                class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
+                                                <div class="row gx-3 align-items-center">
+                                                    <div class="col-4">
+                                                        <div class="img th-70 img-cover">
+                                                            <img src="https://newzin-html.themescamp.com/assets/img/another_news/8.png" alt="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <small
+                                                                class="news-cat color-999 fsz-13px text-uppercase mb-10">Du Lịch</small>
+                                                            <h5 class="title ltspc--1">
+                                                                Experience in applying for a visa card for newcomers
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a href="page-single-post-creative.html"
+                                                class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
+                                                <div class="row gx-3 align-items-center">
+                                                    <div class="col-4">
+                                                        <div class="img th-70 img-cover">
+                                                            <img src="https://newzin-html.themescamp.com/assets/img/another_news/9.png" alt="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <small
+                                                                class="news-cat color-999 fsz-13px text-uppercase mb-10">Du Lịch</small>
+                                                            <h5 class="title ltspc--1">
+                                                                Release yourself on the sea and get the vibe chill
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end another-news ====== -->
+          <!-- ====== start author-posts ====== -->
+          <section class="tc-author-posts pb-100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="posts-side">
+                            <p class="color-000 text-uppercase mb-30 ltspc-1"> <a href="page-blog.html">recently
+                                    added</a> <i class="la la-angle-right ms-1"></i></p>
+
+                            <div class="tc-post-list-style2">
+                                <div class="items">
+                                    <div class="item pt-30 pb-30 mt-30 border-1 border-top border-bottom brd-gray">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="img th-200 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/technology/2.png" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
+                                                        <a href="page-author.html#">technology</a>
+                                                    </div>
+                                                    <h3 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"> Big Title for featured
+                                                            post with double line and
+                                                            more text </a>
+                                                    </h3>
+                                                    <div class="meta-bot lh-1 mt-80">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-calendar me-2"></i> Dec 14,
+                                                                    2022</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-user me-2"></i> by Admin
+                                                                </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-comment me-2"></i> 55
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="img th-200 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/technology/3.png" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
+                                                        <a href="page-author.html#">technology</a>
+                                                    </div>
+                                                    <h3 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"> Big Title for featured
+                                                            post with double line and
+                                                            more text </a>
+                                                    </h3>
+                                                    <div class="meta-bot lh-1 mt-80">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-calendar me-2"></i> Dec 14,
+                                                                    2022</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-user me-2"></i> by Admin
+                                                                </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-comment me-2"></i> 55
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="img th-200 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/page_author/1.jpg" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
+                                                        <a href="page-author.html#">technology</a>
+                                                    </div>
+                                                    <h3 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"> Big Title for featured
+                                                            post with double line and
+                                                            more text </a>
+                                                    </h3>
+                                                    <div class="meta-bot lh-1 mt-80">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-calendar me-2"></i> Dec 14,
+                                                                    2022</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-user me-2"></i> by Admin
+                                                                </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-comment me-2"></i> 55
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="img th-200 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/page_author/2.jpg" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
+                                                        <a href="page-author.html#">technology</a>
+                                                    </div>
+                                                    <h3 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"> Big Title for featured
+                                                            post with double line and
+                                                            more text </a>
+                                                    </h3>
+                                                    <div class="meta-bot lh-1 mt-80">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-calendar me-2"></i> Dec 14,
+                                                                    2022</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-user me-2"></i> by Admin
+                                                                </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-comment me-2"></i> 55
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="img th-200 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/page_author/3.jpg" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
+                                                        <a href="page-author.html#">technology</a>
+                                                    </div>
+                                                    <h3 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"> Big Title for featured
+                                                            post with double line and
+                                                            more text </a>
+                                                    </h3>
+                                                    <div class="meta-bot lh-1 mt-80">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-calendar me-2"></i> Dec 14,
+                                                                    2022</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-user me-2"></i> by Admin
+                                                                </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-comment me-2"></i> 55
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="img th-200 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/page_author/4.jpg" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
+                                                        <a href="page-author.html#">technology</a>
+                                                    </div>
+                                                    <h3 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"> Big Title for featured
+                                                            post with double line and
+                                                            more text </a>
+                                                    </h3>
+                                                    <div class="meta-bot lh-1 mt-80">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-calendar me-2"></i> Dec 14,
+                                                                    2022</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-user me-2"></i> by Admin
+                                                                </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-comment me-2"></i> 55
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="img th-200 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/page_author/5.jpg" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
+                                                        <a href="page-author.html#">technology</a>
+                                                    </div>
+                                                    <h3 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"> Big Title for featured
+                                                            post with double line and
+                                                            more text </a>
+                                                    </h3>
+                                                    <div class="meta-bot lh-1 mt-80">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-calendar me-2"></i> Dec 14,
+                                                                    2022</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-user me-2"></i> by Admin
+                                                                </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-comment me-2"></i> 55
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="img th-200 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/page_author/6.jpg" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
+                                                        <a href="page-author.html#">technology</a>
+                                                    </div>
+                                                    <h3 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"> Big Title for featured
+                                                            post with double line and
+                                                            more text </a>
+                                                    </h3>
+                                                    <div class="meta-bot lh-1 mt-80">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-calendar me-2"></i> Dec 14,
+                                                                    2022</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-user me-2"></i> by Admin
+                                                                </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-comment me-2"></i> 55
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item pt-30 pb-30 border-1 border-bottom brd-gray">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="img th-200 img-cover">
+                                                    <img src="https://newzin-html.themescamp.com/assets/img/page_author/7.jpg" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="content">
+                                                    <div class="news-cat color-999 fsz-13px text-uppercase mb-3">
+                                                        <a href="page-author.html#">technology</a>
+                                                    </div>
+                                                    <h3 class="title ltspc--1">
+                                                        <a href="page-single-post-creative.html"> Big Title for featured
+                                                            post with double line and
+                                                            more text </a>
+                                                    </h3>
+                                                    <div class="meta-bot lh-1 mt-80">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-calendar me-2"></i> Dec 14,
+                                                                    2022</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-user me-2"></i> by Admin
+                                                                </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="page-author.html#"><i
+                                                                        class="la la-comment me-2"></i> 55
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="tc-side-widgets mt-5 mt-lg-0">
+
+
+                            <!-- popular posts -->
+                            <div class="tc-widget-popular-style1">
+                                <p class="color-000 text-uppercase mb-20 ltspc-1"> popular posts </p>
+                                <div class="main-card">
+                                    <div class="img th-300 img-cover">
+                                        <img src="https://newzin-html.themescamp.com/assets/img/wid_popular/1.png" alt="">
+                                        <div class="tags">
+                                            <a href="page-author.html#">business</a>
+                                        </div>
+                                    </div>
+                                    <div class="content">
+                                        <h4 class="title">
+                                            <a href="page-single-post-creative.html">Big Title for featured post with
+                                                double</a>
+                                        </h4>
+                                        <div class="meta-bot">
+                                            <ul class="d-flex">
+                                                <li class="date me-4">
+                                                    <a href="page-author.html#"><i class="la la-calendar me-1"></i> Dec
+                                                        14, 2022</a>
+                                                </li>
+                                                <li class="comment">
+                                                    <a href="page-author.html#"><i class="la la-comment me-1"></i> 55
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tc-widget-popular-list">
+                                    <a href="page-single-post-creative.html" class="item">
+                                        <div class="img img-cover">
+                                            <img src="https://newzin-html.themescamp.com/assets/img/wid_popular/2.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h6 class="title">
+                                                Joe Biden did not participate in the war
+                                            </h6>
+                                        </div>
+                                    </a>
+                                    <a href="page-single-post-creative.html" class="item">
+                                        <div class="img img-cover">
+                                            <img src="https://newzin-html.themescamp.com/assets/img/wid_popular/3.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h6 class="title">
+                                                Mindset to Succesful, Become Lion King
+                                            </h6>
+                                        </div>
+                                    </a>
+                                    <a href="page-single-post-creative.html" class="item">
+                                        <div class="img img-cover">
+                                            <img src="https://newzin-html.themescamp.com/assets/img/wid_popular/4.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h6 class="title">
+                                                Experience ballon balls in Turkey
+                                            </h6>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== End author-posts ====== -->
 
 
         <!-- ====== start modals ====== -->

@@ -41,14 +41,14 @@ class ModeratorDashboardController extends Controller
         $interactionType = $request->input('interaction_type', $type);
 
         // // Tổng quan bài viết
-        // $articleStats = [
-        //     'total' => Article::count(),
-        //     'archived' => Article::where('status', 'archived')->count(),
-        //     'pending' => Article::where('status', 'pending')->count(),
-        //     'published' => Article::where('status', 'published')->count(),
-        //     'reject' => Article::where('status', 'rejected')->count(),
-        //     'draft' => Article::where('status', 'draft')->count(),
-        // ];
+        $articleStats = [
+            'total' => Article::count(),
+            'archived' => Article::where('status', 'archived')->count(),
+            'pending' => Article::where('status', 'pending')->count(),
+            'published' => Article::where('status', 'published')->count(),
+            'reject' => Article::where('status', 'rejected')->count(),
+            'draft' => Article::where('status', 'draft')->count(),
+        ];
 
         // Thống kê bài viết theo thời gian
         $timeBasedArticleStats = $this->getTimeBasedArticleStats($type);
@@ -59,12 +59,12 @@ class ModeratorDashboardController extends Controller
         // // Tổng số người dùng
         // $userCount = User::count();
         // Lấy số lượng người dùng theo vai trò
-            // $userCount = [
-            //     'total' => User::count(), // Tổng số người dùng
-            //     'user' => User::where('role_id', 4)->count(), // Người dùng
-            //     'moderators' => User::where('role_id', 3)->count(), // Kiểm duyệt viên
-            //     'authors' => User::where('role_id', 2)->count(),    // Tác giả
-            // ];
+        $userCount = [
+            'total' => User::where('role_id', '!=', 1)->count(), // Tổng số người dùng (không bao gồm admin)
+                'user' => User::where('role_id', 4)->count(), // Người dùng
+                'moderators' => User::where('role_id', 3)->count(), // Kiểm duyệt viên
+                'authors' => User::where('role_id', 2)->count(),    // Tác giả
+            ];
 
         // Tổng lượt xem
         $totalViews = ArticleView::count();
@@ -75,15 +75,18 @@ class ModeratorDashboardController extends Controller
         // Tổng lượt thích
         $totalLikes = Schema::hasTable('article_likes') ? DB::table('article_likes')->count() : 0;
         //   // Lấy danh sách tag và số lượng bài viết theo từng tag
-       // Lấy danh sách tag và số lượng bài viết đã xuất bản
-    //    $tags = Tag::withCount(['publishedArticles'])->get();
+ // Lấy danh sách tag và số lượng bài viết đã xuất bản, sắp xếp từ lớn đến bé
+// $tags = Tag::whereHas('publishedArticles') // Chỉ lấy các tag có ít nhất 1 bài viết xuất bản
+// ->withCount(['publishedArticles'])    // Đếm số lượng bài viết đã xuất bản
+// ->orderByDesc('published_articles_count') // Sắp xếp từ lớn đến bé theo số lượng bài viết
+// ->get();
 
 
         return view('moderator.dashboard', compact(
             // 'stats',
             // 'tags',
-            // 'articleStats',
-            // 'userCount',
+            'articleStats',
+            'userCount',
             'totalViews',
             'totalComments',
             'totalLikes',
