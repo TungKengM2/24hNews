@@ -70,76 +70,9 @@
 
             <!-- Main content -->
             <div class="card p-4">
-                <h2 class="mb-4">Chỉnh sửa bài viết</h2>
-
-                @if (session('warnings'))
-                    <div class="alert alert-warning">
-                        <ul>
-                            @foreach (session('warnings') as $warning)
-                                <li>{{ $warning }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <form action="{{ route('author.articles.update', $article) }}" method="POST" enctype="multipart/form-data"
-                      id="articleForm">
-                    @csrf
-                    @method('PUT')
-
-                    <!-- Basic Information Section -->
-                    <div class="form-section">
-                        <h5 class="form-section-title">Thông Tin Cơ Bản</h5>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="title" class="form-label">Tiêu đề <span class="text-danger">*</span></label>
-                                <div class="controls">
-                                    <input type="text" class="form-control" id="title" name="title"
-                                           value="{{ $article->title }}" required>
-                                </div>
-                                <small class="form-text text-muted">Tối đa 255 ký tự</small>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="slug" class="form-label">Đường dẫn <span class="text-danger">*</span></label>
-                                <div class="controls">
-                                    <input type="text" class="form-control" id="slug" name="slug"
-                                           value="{{ $article->slug }}" required>
-                                </div>
-                                <small class="form-text text-muted">Tối đa 255 ký tự, chỉ chấp nhận chữ cái, số và dấu gạch ngang</small>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="category_id" class="form-label">Danh Mục <span class="text-danger">*</span></label>
-                                <select name="category_id" class="form-control" required>
-                                    <option value="">Chọn danh mục</option>
-                                    @foreach ($categories as $category)
-                                            <option value="{{ $category->category_id }}"
-                                                {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
-                                                {{ $category->name }}
-                                            </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
-                                <select name="tags[]" class="form-control select2" multiple="multiple">
-                                    @foreach ($tags as $tag)
-                                        <option value="{{ $tag->tag_id }}"
-                                                @if (in_array($tag->tag_id, $selectedTags)) selected @endif>
-                                            {{ $tag->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-            <div class="box">
-                <div class="box-header with-border">
-                    <h4 class="box-title">Chỉnh sửa bài viết</h4>
-                    <div class="box-tools">
+                <div class="d-flex justify-content-between">
+                    <h2 class="mb-4">Chỉnh sửa bài viết</h2>
+                    <div class="box-tools p-4">
                         <div class="btn-group">
                             <a href="{{ route('author.articles.versions', $article) }}" class="btn btn-info btn-sm me-2">
                                 <i class="si-history si"></i> Lịch sử phiên bản
@@ -150,8 +83,26 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
+                @if (session('warnings'))
+                    <div class="alert alert-warning">
+                        <ul>
+                            @foreach (session('warnings') as $warning)
+                                <li>{{ $warning }}</li>
+                            @endforeach
+                        </ul>
+                       
+                        
+                    </div>
+                @endif
+
+                <form action="{{ route('author.articles.update', $article) }}" method="POST" enctype="multipart/form-data"
+                      id="articleForm">
+                    @csrf
+                    @method('PUT')
+
+                    <!-- Basic Information Section -->
+           
             <!-- Main content -->
             <div class="container-fluid mt-5">
                 <div class="row no-gutters align-items-start">
