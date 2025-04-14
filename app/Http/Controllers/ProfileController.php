@@ -125,7 +125,7 @@ class ProfileController extends Controller
             'user_id' => $user->user_id
         ]);
 
-        return view('user.upgrade', compact('user'));
+        return view('website.profiles.users.upgrade', compact('user'));
     }
 
     public function requestAuthorRole(Request $request)
