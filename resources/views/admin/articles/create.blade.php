@@ -101,7 +101,6 @@
             position: fixed;
             top: 20px;
             z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             background-color: #f8f9fa;
         }
 
