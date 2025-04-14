@@ -87,30 +87,22 @@
             max-height: calc(100vh - 40px);
             overflow-y: auto;
             position: relative;
-            transition: box-shadow 0.3s ease, top 0.3s ease;
+            transition: box-shadow 0.3s ease;
+            width: 100%;
         }
 
+        /* Placeholder để giữ không gian khi criteria được cố định */
+        .criteria-placeholder {
+            display: none;
+        }
+        
         /* Class được thêm bằng JavaScript khi cuộn trang */
         .verification-criteria.fixed {
             position: fixed;
             top: 20px;
-            z-index: 100;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
+            z-index: 1000;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             background-color: #fff;
-            animation: smoothFixed 0.3s forwards;
-        }
-        
-        @keyframes smoothFixed {
-            from {
-                transform: translateY(-10px);
-                opacity: 0.8;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
         }
 
         .verification-criteria-title {
@@ -843,36 +835,43 @@
                                 function handleCriteriaScroll() {
                                     const criteriaBox = document.querySelector('.verification-criteria');
                                     if (criteriaBox) {
-                                        // Đảm bảo có padding-bottom cho container cha để tránh bị che khuất nội dung
-                                        criteriaBox.closest('.col-md-3').style.paddingBottom = '40px';
+                                        // Tạo placeholder để giữ không gian khi criteria được cố định
+                                        const placeholder = document.createElement('div');
+                                        placeholder.className = 'criteria-placeholder';
+                                        criteriaBox.parentNode.insertBefore(placeholder, criteriaBox);
                                         
-                                        // Lấy vị trí ban đầu của phần criteria
+                                        // Lấy vị trí ban đầu và kích thước của phần criteria
                                         const originalTop = criteriaBox.getBoundingClientRect().top + window.pageYOffset;
-                                        
-                                        // Hàm cập nhật kích thước criteria khi cố định
-                                        const updateCriteriaSize = function() {
-                                            const containerWidth = criteriaBox.closest('.col-md-3').offsetWidth;
-                                            criteriaBox.style.width = `${containerWidth}px`;
-                                        };
+                                        const criteriaWidth = criteriaBox.offsetWidth;
+                                        const criteriaHeight = criteriaBox.offsetHeight;
                                         
                                         // Xử lý sự kiện cuộn trang
                                         window.addEventListener('scroll', function() {
                                             const scrollDistance = window.pageYOffset;
                                             
-                                            // Nếu đã cuộn qua vị trí ban đầu của phần criteria
+                                            // Nếu đã cuộn quá vị trí ban đầu, cố định phần criteria
                                             if (scrollDistance > originalTop - 20) {
                                                 criteriaBox.classList.add('fixed');
-                                                updateCriteriaSize();
+                                                criteriaBox.style.width = criteriaWidth + 'px';
+                                                
+                                                // Hiển thị placeholder để giữ không gian
+                                                placeholder.style.display = 'block';
+                                                placeholder.style.height = criteriaHeight + 'px';
+                                                placeholder.style.width = criteriaWidth + 'px';
                                             } else {
                                                 criteriaBox.classList.remove('fixed');
                                                 criteriaBox.style.width = '';
+                                                placeholder.style.display = 'none';
                                             }
                                         });
                                         
-                                        // Xử lý sự kiện khi thay đổi kích thước cửa sổ
+                                        // Xử lý khi thay đổi kích thước cửa sổ
                                         window.addEventListener('resize', function() {
+                                            // Cập nhật lại kích thước nếu đang ở trạng thái cố định
                                             if (criteriaBox.classList.contains('fixed')) {
-                                                updateCriteriaSize();
+                                                const newWidth = criteriaBox.parentNode.offsetWidth;
+                                                criteriaBox.style.width = newWidth + 'px';
+                                                placeholder.style.width = newWidth + 'px';
                                             }
                                         });
                                     }
