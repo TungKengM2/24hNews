@@ -214,164 +214,39 @@
     </div>
     <div class="offcanvas-body">
         <h6 class="text-uppercase mb-4">Tất cả chuyên mục</h6>
-        <div class="row ">
-            <!-- Danh mục chính -->
+        <div class="row">
+            <!-- Danh mục chính hiển thị động -->
             <div class="col-lg-9">
                 <div class="row row-cols-6 g-4">
-                    <!-- Danh mục 1 -->
-                    <div class="col">
-                        <h5 class="fw-bold" style="color: #a10034;">
-                            <a href="#" class="text-decoration-none hover-underline" style="color: #a10034;">Thời sự</a>
-                        </h5>
-                        <ul class="list-unstyled py-3">
-                            <li><a href="#" class="mb-3">Chính trị</a></li>
-                            <li><a href="#" class="mb-3">Nhân sự</a></li>
-                            <li><a href="#" class="mb-3">Kỷ nguyên mới</a></li>
-                            <li><a href="#" class="mb-3">Dân sinh</a></li>
-                        </ul>
-                    </div>
-                    <!-- Danh mục 2 -->
-                    <div class="col">
-                        <h5 class="fw-bold" style="color: #a10034;">
-                            <a href="#" class="text-decoration-none hover-underline" style="color: #a10034;">Thế giới</a>
-                        </h5>
-                        <ul class="list-unstyled py-3">
-                            <li><a href="#" class="mb-3">Tư liệu</a></li>
-                            <li><a href="#" class="mb-3">Phân tích</a></li>
-                            <li><a href="#" class="mb-3">Người Việt 5 châu</a></li>
-                            <li><a href="#" class="mb-3">Cuộc sống đó đây</a></li>
-                        </ul>
-                    </div>
-                    <!-- Danh mục 3 -->
-                    <div class="col">
-                        <h5 class="fw-bold" style="color: #a10034;">
-                            <a href="#" class="text-decoration-none hover-underline" style="color: #a10034;">Kinh doanh</a>
-                        </h5>
-                        <ul class="list-unstyled py-3">
-                            <li><a href="#" class="mb-3">NetZero</a></li>
-                            <li><a href="#" class="mb-3">Quốc tế</a></li>
-                            <li><a href="#" class="mb-3">Doanh nghiệp</a></li>
-                            <li><a href="#" class="mb-3">Chứng khoán</a></li>
-                        </ul>
-                    </div>
-                    <!-- Danh mục 4 -->
-                    <div class="col">
-                        <h5 class="fw-bold" style="color: #a10034;">
-                            <a href="#" class="text-decoration-none hover-underline" style="color: #a10034;">Công nghệ</a>
-                        </h5>
-                        <ul class="list-unstyled py-3">
-                            <li><a href="#" class="mb-3">AI</a></li>
-                            <li><a href="#" class="mb-3">Chuyển đổi số</a></li>
-                            <li><a href="#" class="mb-3">Nhịp sống số</a></li>
-                            <li><a href="#" class="mb-3">Thiết bị</a></li>
-                        </ul>
-                    </div>
-                    <!-- Danh mục 5 -->
-                    <div class="col">
-                        <h5 class="fw-bold" style="color: #a10034;">
-                            <a href="#" class="text-decoration-none hover-underline" style="color: #a10034;">Khoa học</a>
-                        </h5>
-                        <ul class="list-unstyled py-3">
-                            <li><a href="#" class="mb-3">Tin tức</a></li>
-                            <li><a href="#" class="mb-3">Đổi mới sáng tạo</a></li>
-                            <li><a href="#" class="mb-3">Bàn tròn</a></li>
-                            <li><a href="#" class="mb-3">Nhân vật</a></li>
-                        </ul>
-                    </div>
-                    <!-- Danh mục 6 -->
-                    <div class="col">
-                        <h5 class="fw-bold" style="color: #a10034;">
-                            <a href="#" class="text-decoration-none hover-underline" style="color: #a10034;">Giải trí</a>
-                        </h5>
-                        <ul class="list-unstyled py-3">
-                            <li><a href="#" class="mb-3">Giới sao</a></li>
-                            <li><a href="#" class="mb-3">Sách</a></li>
-                            <li><a href="#" class="mb-3">Video</a></li>
-                            <li><a href="#" class="mb-3">Phim</a></li>
-                        </ul>
-                    </div>
-                    <!-- Danh mục 7 -->
-                    <div class="col">
-                        <h5 class="fw-bold" style="color: #a10034;">
-                            <a href="#" class="text-decoration-none hover-underline" style="color: #a10034;">Thể thao</a>
-                        </h5>
-                        <ul class="list-unstyled py-3">
-                            <li><a href="#" class="mb-3">Bóng đá</a></li>
-                            <li><a href="#" class="mb-3">Lịch thi đấu</a></li>
-                            <li><a href="#" class="mb-3">Marathon</a></li>
-                            <li><a href="#" class="mb-3">Tennis</a></li>
-                        </ul>
-                    </div>
-                    <!-- Danh mục 8 -->
-                    <div class="col">
-                        <h5 class="fw-bold" style="color: #a10034;">
-                            <a href="#" class="text-decoration-none hover-underline" style="color: #a10034;">Podcasts</a>
-                        </h5>
-                        <ul class="list-unstyled py-3">
-                            <li><a href="#" class="mb-3">VnExpress hôm nay</a></li>
-                            <li><a href="#" class="mb-3">Tâm điểm kinh tế</a></li>
-                            <li><a href="#" class="mb-3">Tài chính cá nhân</a></li>
-                            <li><a href="#" class="mb-3">Giải mã</a></li>
-                        </ul>
-                    </div>
-                    <!-- Danh mục 9 -->
-                    <div class="col">
-                        <h5 class="fw-bold" style="color: #a10034;">
-                            <a href="#" class="text-decoration-none hover-underline" style="color: #a10034;">Góc nhìn</a>
-                        </h5>
-                        <ul class="list-unstyled py-3">
-                            <li><a href="#" class="mb-3">Bình luận nhiều</a></li>
-                            <li><a href="#" class="mb-3">Chính trị & chính sách</a></li>
-                            <li><a href="#" class="mb-3">Y tế & sức khỏe</a></li>
-                            <li><a href="#" class="mb-3">Kinh doanh & quản trị</a></li>
-                        </ul>
-                    </div>
-                    <!-- Danh mục 10 -->
-                    <div class="col">
-                        <h5 class="fw-bold" style="color: #a10034;">
-                            <a href="#" class="text-decoration-none hover-underline" style="color: #a10034;">Bất động sản</a>
-                        </h5>
-                        <ul class="list-unstyled py-3">
-                            <li><a href="#" class="mb-3">Chính sách</a></li>
-                            <li><a href="#" class="mb-3">Thị trường</a></li>
-                            <li><a href="#" class="mb-3">Dự án</a></li>
-                            <li><a href="#" class="mb-3">Không gian sống</a></li>
-                        </ul>
-                    </div>
-                    <!-- Danh mục 11 -->
-                    <div class="col">
-                        <h5 class="fw-bold" style="color: #a10034;">
-                            <a href="#" class="text-decoration-none hover-underline" style="color: #a10034;">Du lịch</a>
-                        </h5>
-                        <ul class="list-unstyled py-3">
-                            <li><a href="#" class="mb-3">Điểm đến</a></li>
-                            <li><a href="#" class="mb-3">Ẩm thực</a></li>
-                            <li><a href="#" class="mb-3">Dấu chân</a></li>
-                            <li><a href="#" class="mb-3">Tư vấn</a></li>
-                        </ul>
-                    </div>
-                    <!-- Danh mục 12 -->
-                    <div class="col">
-                        <h5 class="fw-bold" style="color: #a10034;">
-                            <a href="#" class="text-decoration-none hover-underline" style="color: #a10034;">Pháp luật</a>
-                        </h5>
-                        <ul class="list-unstyled py-3">
-                            <li><a href="#" class="mb-3">Hồ sơ phá án</a></li>
-                            <li><a href="#" class="mb-3">Tư vấn</a></li>
-                            <li><a href="#" class="mb-3">Video</a></li>
-                            <li><a href="#" class="mb-3">Tin tức</a></li>
-                        </ul>
-                    </div>
+                    @foreach ($parentCategories as $category)
+                        <div class="col">
+                            <h5 class="fw-bold" style="color: #a10034;">
+                                <a href="{{ route('client.category.show', $category->slug) }}" class="text-decoration-none hover-underline" style="color: #a10034;">
+                                    {{ $category->name }}
+                                </a>
+                            </h5>
+                            @if($category->children->isNotEmpty())
+                                <ul class="list-unstyled py-3">
+                                    @foreach ($category->children as $child)
+                                        <li>
+                                            <a href="{{ route('client.category.show', $child->slug) }}" class="mb-3">
+                                                {{ $child->name }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </div>
+                    @endforeach
                 </div>
             </div>
-            <!-- Phần liên hệ -->
+            <!-- Phần liên hệ (giữ nguyên như cũ) -->
             <div class="col-lg-3">
-                <h6 class="color-000 text-uppercase mb-15 ltspc-1 fw-bold"> Giới Thiệu News24h <i
-                        class="la la-angle-right ms-1"></i>
+                <h6 class="color-000 text-uppercase mb-15 ltspc-1 fw-bold">
+                    Giới Thiệu News24h <i class="la la-angle-right ms-1"></i>
                 </h6>
                 <div class="text mb-4">
-                    News24h là nền tảng tin tức hàng đầu Việt Nam, cung cấp thông tin chính xác, đa dạng và cập nhật
-                    24/7.
+                    News24h là nền tảng tin tức hàng đầu Việt Nam, cung cấp thông tin chính xác, đa dạng và cập nhật 24/7.
                     Chúng tôi cam kết mang đến cho độc giả những tin tức chất lượng và đáng tin cậy từ mọi lĩnh vực.
                 </div>
                 <div class="mt-4">
@@ -400,14 +275,13 @@
                             <p class="mb-0">Cộng đồng độc giả lớn mạnh</p>
                         </div>
                     </div>
-                    <h6 class="color-000 text-uppercase mb-20 ltspc-1 fw-bold"> Liên Hệ & Theo Dõi <i
-                            class="la la-angle-right ms-1"></i> </h6>
+                    <h6 class="color-000 text-uppercase mb-20 ltspc-1 fw-bold">
+                        Liên Hệ & Theo Dõi <i class="la la-angle-right ms-1"></i>
+                    </h6>
                     <ul class="m-0">
                         <li class="mb-3">
                             <i class="las la-map-marker me-2 color-main fs-5"></i>
-                            <a href="#">Tòa nhà FPT Polytechnic., Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam
-                                Từ
-                                Liêm, Hà Nội</a>
+                            <a href="#">Tòa nhà FPT Polytechnic., Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội</a>
                         </li>
                         <li class="mb-3">
                             <i class="las la-envelope me-2 color-main fs-5"></i>
@@ -436,4 +310,5 @@
             </div>
         </div>
     </div>
+    
 </div>
