@@ -829,7 +829,7 @@
                                     // Không cần thêm sự kiện cuộn khi đã sử dụng position:sticky trong CSS
                                     // Position:sticky sẽ tự động xử lý việc làm cho phần tiêu chí gắn vào phía trên khi cuộn
                                     console.log('Sử dụng position:sticky cho tiêu chí xuất bản');
-                                    
+
                                     // Đảm bảo phần tiêu chí có đủ không gian khi cuộn
                                     const criteriaBox = document.querySelector('.verification-criteria');
                                     if (criteriaBox) {
@@ -901,8 +901,10 @@
                                                 })
                                                 .then(result => {
                                                     // Ẩn loading
-                                                    document.getElementById('image-upload-loading').style.display = 'none';
-                                                    
+                                                    if (document.getElementById('moderation-loading')) {
+                                                        document.getElementById('moderation-loading').style.display = 'none';
+                                                    }
+
                                                     const moderationResult = document.getElementById('moderation-result');
                                                     const loadingDiv = document.getElementById('moderation-loading');
                                                     const errorDiv = document.getElementById('moderation-error');
@@ -968,7 +970,7 @@
                                                 .catch(error => {
                                                     // Ẩn loading khi có lỗi
                                                     document.getElementById('image-upload-loading').style.display = 'none';
-                                                    
+
                                                     console.error('Lỗi kiểm duyệt:', error);
                                                     const moderationResult = document.getElementById('moderation-result');
                                                     const loadingDiv = document.getElementById('moderation-loading');
