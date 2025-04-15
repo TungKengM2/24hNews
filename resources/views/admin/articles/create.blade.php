@@ -86,20 +86,26 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             max-height: calc(100vh - 40px);
             overflow-y: auto;
-            position: sticky;
-            top: 20px;
+            position: relative;
+            transition: box-shadow 0.3s ease;
+            width: 100%;
+        }
+
+        /* Placeholder để giữ không gian khi criteria được cố định */
+        .criteria-placeholder {
+            display: none;
         }
 
         /* Class được thêm bằng JavaScript khi cuộn trang */
         .verification-criteria.fixed {
             position: fixed;
             top: 20px;
-            z-index: 100;
-            width: calc(25% - 30px); /* Tương ứng với col-md-3 trừ đi padding */
+            z-index: 1000;
+            background-color: #f8f9fa;
         }
 
         .verification-criteria-title {
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid #f8f9fa;
             padding-bottom: 10px;
             margin-bottom: 20px;
             font-weight: 600;
@@ -440,7 +446,8 @@
                                                 <div class="criteria-icon failed">✗</div>
                                                 <div class="criteria-text criteria-tooltip">
                                                     Tiêu đề từ 50-60 ký tự <span id="current-title-length">(0 ký tự)</span>
-                                                    <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy
+                                                    <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị
+                                                        đầy
                                                         đủ trên Google và tối ưu cho SEO</span>
                                                 </div>
                                             </li>
@@ -449,7 +456,8 @@
                                                 <div class="criteria-icon failed">✗</div>
                                                 <div class="criteria-text criteria-tooltip">
                                                     Chọn danh mục chính và phụ
-                                                    <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ
+                                                    <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục
+                                                        phụ
                                                         phù hợp với nội dung bài viết</span>
                                                 </div>
                                             </li>
@@ -457,7 +465,8 @@
                                                 <div class="criteria-icon failed">✗</div>
                                                 <div class="criteria-text criteria-tooltip">
                                                     Chọn 2-5 thẻ tag liên quan <span id="current-tag-count">(0 thẻ)</span>
-                                                    <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và tăng
+                                                    <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và
+                                                        tăng
                                                         khả năng xuất hiện trong tìm kiếm</span>
                                                 </div>
                                             </li>
@@ -474,7 +483,8 @@
                                                 <div class="criteria-icon failed">✗</div>
                                                 <div class="criteria-text criteria-tooltip">
                                                     Nội dung từ 800-1500 từ <span id="current-word-count">(0 từ)</span>
-                                                    <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn
+                                                    <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao
+                                                        hơn
                                                         trong kết quả tìm kiếm và tối ưu cho người đọc</span>
                                                 </div>
                                             </li>
@@ -833,8 +843,45 @@
                                     // Đảm bảo phần tiêu chí có đủ không gian khi cuộn
                                     const criteriaBox = document.querySelector('.verification-criteria');
                                     if (criteriaBox) {
-                                        // Đảm bảo có padding-bottom cho container cha để tránh bị che khuất nội dung
-                                        criteriaBox.closest('.col-md-3').style.paddingBottom = '40px';
+                                        // Tạo placeholder để giữ không gian khi criteria được cố định
+                                        const placeholder = document.createElement('div');
+                                        placeholder.className = 'criteria-placeholder';
+                                        criteriaBox.parentNode.insertBefore(placeholder, criteriaBox);
+
+                                        // Lấy vị trí ban đầu và kích thước của phần criteria
+                                        const originalTop = criteriaBox.getBoundingClientRect().top + window.pageYOffset;
+                                        const criteriaWidth = criteriaBox.offsetWidth;
+                                        const criteriaHeight = criteriaBox.offsetHeight;
+
+                                        // Xử lý sự kiện cuộn trang
+                                        window.addEventListener('scroll', function() {
+                                            const scrollDistance = window.pageYOffset;
+
+                                            // Nếu đã cuộn quá vị trí ban đầu, cố định phần criteria
+                                            if (scrollDistance > originalTop - 20) {
+                                                criteriaBox.classList.add('fixed');
+                                                criteriaBox.style.width = criteriaWidth + 'px';
+
+                                                // Hiển thị placeholder để giữ không gian
+                                                placeholder.style.display = 'block';
+                                                placeholder.style.height = criteriaHeight + 'px';
+                                                placeholder.style.width = criteriaWidth + 'px';
+                                            } else {
+                                                criteriaBox.classList.remove('fixed');
+                                                criteriaBox.style.width = '';
+                                                placeholder.style.display = 'none';
+                                            }
+                                        });
+
+                                        // Xử lý khi thay đổi kích thước cửa sổ
+                                        window.addEventListener('resize', function() {
+                                            // Cập nhật lại kích thước nếu đang ở trạng thái cố định
+                                            if (criteriaBox.classList.contains('fixed')) {
+                                                const newWidth = criteriaBox.parentNode.offsetWidth;
+                                                criteriaBox.style.width = newWidth + 'px';
+                                                placeholder.style.width = newWidth + 'px';
+                                            }
+                                        });
                                     }
                                 }
 
@@ -902,7 +949,8 @@
                                                 .then(result => {
                                                     // Ẩn loading
                                                     if (document.getElementById('moderation-loading')) {
-                                                        document.getElementById('moderation-loading').style.display = 'none';
+                                                        document.getElementById('moderation-loading').style.display =
+                                                        'none';
                                                     }
 
                                                     const moderationResult = document.getElementById('moderation-result');
