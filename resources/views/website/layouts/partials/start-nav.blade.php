@@ -26,16 +26,20 @@
 
                 {{-- dat them --}}
                 @foreach ($parentCategories as $category)
-                @if ($loop->iteration > 6)
+                @if ($loop->iteration > 9)
                     @break
                 @endif
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" 
-                       href="{{ route('client.category.show', $category->slug) }}" 
-                       id="navbarDropdown{{ $loop->iteration }}" 
-                       data-bs-toggle="dropdown" 
-                       aria-expanded="true" 
-                       onclick="window.location.href='{{ route('client.category.show', $category->slug) }}'">
+                    <a
+                        class="nav-link {{ $category->children->isNotEmpty() ? 'dropdown-toggle' : '' }}"
+                        href="{{ route('client.category.show', $category->slug) }}"
+                        @if ($category->children->isNotEmpty())
+                            id="navbarDropdown{{ $loop->iteration }}"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        @endif
+                        onclick="window.location.href='{{ route('client.category.show', $category->slug) }}'"
+                    >
                         {{ $category->name }}
                     </a>
                     @if ($category->children->isNotEmpty())
@@ -51,7 +55,8 @@
                     @endif
                 </li>
             @endforeach
-            
+
+
 
                 {{-- dat them --}}
             </ul>
@@ -129,13 +134,14 @@
                     </a>
                     <ul class="dropdownMenu mr-10 pr-5 " style="margin-top: 0; margin-top: -50px;" aria-labelledby="">
                         @if (Auth::check())
-                            {{-- <li><a class="dropdown-item" href="@if(Auth::user()->role_id == 1){{ route('admin.dashboard') }}@elseif(Auth::user()->role_id == 2){{ route('author.dashboard') }}@elseif(Auth::user()->role_id == 3){{ route('moderator.dashboard') }}@else{{ route('user.dashboard') }}@endif">
+                            {{-- <li><a class="dropdown-item" href="@if (Auth::user()->role_id == 1){{ route('admin.dashboard') }}@elseif(Auth::user()->role_id == 2){{ route('author.dashboard') }}@elseif(Auth::user()->role_id == 3){{ route('moderator.dashboard') }}@else{{ route('user.dashboard') }}@endif">
                                     <i class="la la-tv fs-4"></i> Dashboard
                                 </a></li> --}}
 
                             {{-- Kiểm tra vai trò và hiển thị các liên kết tương ứng --}}
 
-                            @if (Auth::user()->role_id == 1) {{-- admin  --}}
+                            @if (Auth::user()->role_id == 1)
+                                {{-- admin  --}}
                                 <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">
                                         <i class="la la-tv fs-4"></i> Dashboard
                                     </a></li>
@@ -155,8 +161,8 @@
                                         <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
                                     </a>
                                 </li>
-
-                            @elseif (Auth::user()->role_id == 2)  {{-- tác giả  --}}
+                            @elseif (Auth::user()->role_id == 2)
+                                {{-- tác giả  --}}
                                 <li><a class="dropdown-item" href="{{ route('author.dashboard') }}">
                                         <i class="la la-tv fs-4"></i> Dashboard
                                     </a></li>
@@ -176,8 +182,8 @@
                                         <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
                                     </a>
                                 </li>
-
-                            @elseif (Auth::user()->role_id == 3) {{-- kiểm duyệt viên  --}}
+                            @elseif (Auth::user()->role_id == 3)
+                                {{-- kiểm duyệt viên  --}}
                                 <li><a class="dropdown-item" href="{{ route('moderator.dashboard') }}">
                                         <i class="la la-tv fs-4"></i> Dashboard
                                     </a></li>
@@ -197,10 +203,11 @@
                                         <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
                                     </a>
                                 </li>
-
-                            @elseif (Auth::user()->role_id == 4) {{-- user  --}}
+                            @elseif (Auth::user()->role_id == 4)
+                                {{-- user  --}}
                                 {{-- dat them hiển thị profile user --}}
-                                <li><a class="dropdown-item" href="{{ route('website.profileUser', ['id' => auth()->id()]) }}">
+                                <li><a class="dropdown-item"
+                                        href="{{ route('website.profileUser', ['id' => auth()->id()]) }}">
                                         <i class="la la-tv fs-4"></i> Thông Tin Tài Khoản
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('viewed.articles') }}">
@@ -225,13 +232,12 @@
                                     </a>
                                 </li>
                                 <li>
-                                  <a class="dropdown-item" href="{{ route('user.upgrade') }}">
+                                    <a class="dropdown-item" href="{{ route('user.upgrade') }}">
 
-                                      <i class="la la-pen fs-4 "></i>
-                                      Nâng Cấp Lên Tác Giả
-                                  </a>
+                                        <i class="la la-pen fs-4 "></i>
+                                        Nâng Cấp Lên Tác Giả
+                                    </a>
                                 </li>
-
                             @endif
 
                             {{-- Đăng Xuất --}}
