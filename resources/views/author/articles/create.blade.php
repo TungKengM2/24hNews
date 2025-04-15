@@ -118,6 +118,13 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Danh mục phụ</label>
+                                        <select name="subcategory_id" id="child_category" class="form-control select2-subcategories" disabled>
+                                            <option value="">-- Chọn danh mục phụ --</option>
+                                        </select>
+                                    </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label for="tags">Chọn hoặc thêm thẻ:</label>
@@ -132,12 +139,7 @@
                                         <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới (chấp nhận cả chữ và số).</small>
                                     </div>
 
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Danh mục phụ</label>
-                                        <select name="subcategory_id" id="child_category" class="form-control select2-subcategories" disabled>
-                                            <option value="">-- Chọn danh mục phụ --</option>
-                                        </select>
-                                    </div>
+                                   
                                 </div>
 
                             </div>
