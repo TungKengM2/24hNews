@@ -399,7 +399,7 @@
         <!-- ====== end tc-main-post-style ====== -->
 
         <!-- ====== start banner18 ====== -->
-        <section class="banner18">
+        {{-- <section class="banner18">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-11">
@@ -411,7 +411,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> --}}
         <!-- ====== end banner18 ====== -->
 
         <!-- ====== start video content ====== -->
