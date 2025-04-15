@@ -237,45 +237,484 @@
                     }
                 });
 
+                // Xử lý các thẻ p trống hoặc chỉ chứa &nbsp;
+                const emptyParagraphs = div.querySelectorAll('p');
+                emptyParagraphs.forEach(p => {
+                    const content = p.innerHTML.trim();
+                    if (content === '' || content === '&nbsp;' || content === '<br>' || content === '<br />') {
+                        // Nếu là thẻ p trống và không phải là thẻ p duy nhất
+                        if (p.parentNode && p.parentNode.children.length > 1) {
+                            p.parentNode.removeChild(p);
+                        }
+                    }
+                });
+
+                // Xử lý đặc biệt cho cấu trúc HTML khi paste
+                // Tìm tất cả các thẻ p có chứa ảnh và text
+                const mixedParagraphs = Array.from(div.querySelectorAll('p')).filter(p => {
+                    const hasImage = p.querySelector('img') !== null;
+                    const hasText = Array.from(p.childNodes).some(node =>
+                        node.nodeType === 3 && node.textContent.trim() !== '');
+                    return hasImage && hasText;
+                });
+
+                // Xử lý các thẻ p có chứa cả ảnh và text
+                mixedParagraphs.forEach(p => {
+                    // Tạo một fragment để chứa nội dung mới
+                    const fragment = document.createDocumentFragment();
+
+                    // Tạo thẻ p mới cho nội dung trước ảnh đầu tiên
+                    let currentP = document.createElement('p');
+                    fragment.appendChild(currentP);
+
+                    // Duyệt qua từng node con của thẻ p
+                    Array.from(p.childNodes).forEach(node => {
+                        if (node.nodeType === 1 && node.tagName === 'IMG') {
+                            // Nếu gặp ảnh, tạo thẻ p mới chỉ chứa ảnh
+                            const imgP = document.createElement('p');
+                            imgP.style.margin = '0';
+                            imgP.style.padding = '0';
+                            imgP.appendChild(node.cloneNode(true));
+                            fragment.appendChild(imgP);
+
+                            // Tạo thẻ p mới cho nội dung sau ảnh
+                            currentP = document.createElement('p');
+                            fragment.appendChild(currentP);
+                        } else {
+                            // Nếu không phải ảnh, thêm vào thẻ p hiện tại
+                            currentP.appendChild(node.cloneNode(true));
+                        }
+                    });
+
+                    // Xóa các thẻ p trống
+                    Array.from(fragment.querySelectorAll('p')).forEach(para => {
+                        if (para.innerHTML.trim() === '' || para.innerHTML.trim() === '&nbsp;' ||
+                            para.innerHTML.trim() === '<br>' || para.innerHTML.trim() === '<br />') {
+                            fragment.removeChild(para);
+                        }
+                    });
+
+                    // Thay thế thẻ p gốc bằng fragment
+                    if (p.parentNode) {
+                        p.parentNode.replaceChild(fragment, p);
+                    }
+                });
+
+                // Xử lý đặc biệt cho ảnh khi paste
                 const images = div.querySelectorAll('img');
 
                 if (images.length > 0) {
                     console.log('Tìm thấy ' + images.length + ' hình ảnh trong nội dung paste');
 
-                    [...images].forEach(img => {
+                    // Giải pháp mới: Thay thế tất cả ảnh bằng placeholder và xử lý sau
+                    [...images].forEach((img, index) => {
                         if (img.src) {
-                            const imgId = 'img-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
+                            const imgId = 'img-paste-' + Date.now() + '-' + index;
+                            const originalSrc = img.src;
 
-                            img.setAttribute('data-need-moderation', 'true');
-                            img.setAttribute('data-paste-id', imgId);
+                            // Tạo một placeholder để giữ vị trí cho ảnh
+                            const placeholder = document.createElement('img');
+                            placeholder.setAttribute('src', originalSrc); // Giữ nguyên src để hiển thị
+                            placeholder.setAttribute('data-original-src', originalSrc);
+                            placeholder.setAttribute('data-paste-id', imgId);
+                            placeholder.setAttribute('data-need-moderation', 'true');
+                            placeholder.setAttribute('data-mce-src', originalSrc);
+                            placeholder.classList.add('waiting-moderation');
 
-                            ['data-mce-src', 'data-mce-selected', 'data-mce-object',
-                                'data-mce-placeholder', 'contenteditable', 'data-mce-resize',
-                                'data-mce-bogus'
-                            ].forEach(attr => {
-                                if (img.hasAttribute(attr)) {
-                                    img.removeAttribute(attr);
-                                }
-                            });
-
-                            img.setAttribute('onload', 'this.removeAttribute("data-mce-src")');
-                            img.classList.add('waiting-moderation');
-
-                            if (img.parentNode && img.parentNode.tagName !== 'P' &&
-                                img.parentNode.tagName !== 'DIV') {
-                                const wrapper = document.createElement('p');
-                                img.parentNode.replaceChild(wrapper, img);
-                                wrapper.appendChild(img);
+                            // Sao chép các thuộc tính kích thước từ ảnh gốc
+                            if (img.hasAttribute('width')) {
+                                placeholder.setAttribute('width', img.getAttribute('width'));
                             }
+                            if (img.hasAttribute('height')) {
+                                placeholder.setAttribute('height', img.getAttribute('height'));
+                            }
+
+                            // Đặt style để tránh khoảng cách không mong muốn
+                            placeholder.style.display = 'inline-block';
+                            placeholder.style.verticalAlign = 'middle';
+
+                            // Thay thế ảnh gốc bằng placeholder
+                            if (img.parentNode) {
+                                img.parentNode.replaceChild(placeholder, img);
+                            }
+
+                            // Đảm bảo ảnh được bao bọc trong thẻ p hoặc div
+                            if (placeholder.parentNode && placeholder.parentNode.tagName !== 'P' &&
+                                placeholder.parentNode.tagName !== 'DIV') {
+                                const wrapper = document.createElement('p');
+                                wrapper.style.margin = '0';
+                                wrapper.style.padding = '0';
+                                placeholder.parentNode.replaceChild(wrapper, placeholder);
+                                wrapper.appendChild(placeholder);
+                            }
+
+                            // Lưu trữ thông tin ảnh gốc để xử lý sau
+                            setTimeout(() => {
+                                // Tạo một ảnh mới với src là ảnh gốc
+                                const newImg = new Image();
+                                newImg.onload = function() {
+                                    // Khi ảnh đã tải xong, gọi API kiểm duyệt
+                                    const formData = new FormData();
+                                    fetch(originalSrc)
+                                        .then(res => res.blob())
+                                        .then(blob => {
+                                            const fileName = `pasted-image-${Date.now()}-${index}.png`;
+                                            const file = new File([blob], fileName, {
+                                                type: 'image/png'
+                                            });
+
+                                            formData.append('file', file);
+                                            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+                                            formData.append('image_id', imgId);
+
+                                            return fetch('/author/tinymce/upload', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                                },
+                                                body: formData
+                                            });
+                                        })
+                                        .then(response => response.json())
+                                        .then(result => {
+                                            if (result.status === 'success' || result.location) {
+                                                // Tìm placeholder trong editor
+                                                const placeholders = tinymce.activeEditor.getBody().querySelectorAll(`img[data-paste-id="${imgId}"]`);
+                                                placeholders.forEach(placeholder => {
+                                                    // Lưu lại các thuộc tính kích thước và style
+                                                    const width = placeholder.getAttribute('width');
+                                                    const height = placeholder.getAttribute('height');
+                                                    const style = placeholder.getAttribute('style');
+
+                                                    // Cập nhật src của placeholder
+                                                    placeholder.setAttribute('src', result.location);
+                                                    placeholder.setAttribute('data-mce-src', result.location);
+                                                    placeholder.setAttribute('data-moderated', 'true');
+                                                    placeholder.setAttribute('moderated', 'true');
+                                                    placeholder.classList.remove('waiting-moderation');
+
+                                                    // Khôi phục các thuộc tính kích thước và style
+                                                    if (width) placeholder.setAttribute('width', width);
+                                                    if (height) placeholder.setAttribute('height', height);
+                                                    if (style) placeholder.setAttribute('style', style);
+
+                                                    // Đảm bảo ảnh hiển thị đúng
+                                                    placeholder.style.display = 'inline-block';
+                                                    placeholder.style.verticalAlign = 'middle';
+
+                                                    // Lưu vào danh sách ảnh đã kiểm duyệt
+                                                    window._premoderatedImages = window._premoderatedImages || {};
+                                                    window._premoderatedImages[result.location] = true;
+                                                });
+                                            } else if (result.blocked === true || result.status === 'error') {
+                                                // Xóa placeholder nếu ảnh bị chặn
+                                                const placeholders = tinymce.activeEditor.getBody().querySelectorAll(`img[data-paste-id="${imgId}"]`);
+                                                placeholders.forEach(placeholder => {
+                                                    if (placeholder.parentNode) {
+                                                        placeholder.parentNode.removeChild(placeholder);
+                                                    }
+                                                });
+
+                                                // Hiển thị thông báo lỗi
+                                                let errorMessage = 'Hình ảnh không vượt qua kiểm duyệt';
+                                                if (result.reason) {
+                                                    if (typeof result.reason === 'object') {
+                                                        try {
+                                                            errorMessage = Object.values(result.reason).join(', ');
+                                                        } catch (e) {
+                                                            errorMessage = JSON.stringify(result.reason);
+                                                        }
+                                                    } else {
+                                                        errorMessage = String(result.reason);
+                                                    }
+                                                } else if (result.message) {
+                                                    errorMessage = result.message;
+                                                }
+
+                                                tinymce.activeEditor.notificationManager.open({
+                                                    text: 'Hình ảnh không vượt qua kiểm duyệt: ' + errorMessage,
+                                                    type: 'error',
+                                                    timeout: 5000
+                                                });
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Lỗi kiểm duyệt ảnh:', error);
+                                            // Xóa placeholder nếu có lỗi
+                                            const placeholders = tinymce.activeEditor.getBody().querySelectorAll(`img[data-paste-id="${imgId}"]`);
+                                            placeholders.forEach(placeholder => {
+                                                if (placeholder.parentNode) {
+                                                    placeholder.parentNode.removeChild(placeholder);
+                                                }
+                                            });
+                                        });
+                                };
+                                newImg.onerror = function() {
+                                    console.error('Không thể tải ảnh:', originalSrc);
+                                };
+                                newImg.src = originalSrc;
+                            }, 100);
                         }
                     });
                 }
+
+                // Xử lý lần cuối để đảm bảo không có khoảng cách không mong muốn
+                // Tìm tất cả các thẻ p chứa ảnh
+                const imgParagraphs = div.querySelectorAll('p > img:only-child');
+                imgParagraphs.forEach(img => {
+                    const p = img.parentNode;
+                    if (p) {
+                        // Đặt style cho thẻ p chứa ảnh
+                        p.style.margin = '0';
+                        p.style.padding = '0';
+                        p.style.lineHeight = '1';
+                    }
+                });
+
+                // Xóa các khoảng trắng thừa giữa các thẻ p
+                const allParagraphs = div.querySelectorAll('p');
+                allParagraphs.forEach(p => {
+                    // Xóa các khoảng trắng ở đầu và cuối nội dung
+                    if (p.firstChild && p.firstChild.nodeType === 3) {
+                        p.firstChild.textContent = p.firstChild.textContent.trimStart();
+                    }
+                    if (p.lastChild && p.lastChild.nodeType === 3) {
+                        p.lastChild.textContent = p.lastChild.textContent.trimEnd();
+                    }
+                });
 
                 args.content = div.innerHTML;
                 console.log('Đã xử lý paste_preprocess, nội dung mới:', args.content);
             },
 
+            paste_postprocess: function(plugin, args) {
+                console.log('paste_postprocess event', args);
+
+                // Xử lý đặc biệt cho trường hợp paste cả ảnh và text
+                const node = args.node;
+
+                // Tìm tất cả các thẻ p có chứa cả ảnh và text
+                const mixedParagraphs = Array.from(node.querySelectorAll('p')).filter(p => {
+                    const hasImage = p.querySelector('img') !== null;
+                    const hasText = Array.from(p.childNodes).some(n =>
+                        n.nodeType === 3 && n.textContent.trim() !== '');
+                    return hasImage && hasText;
+                });
+
+                console.log('Tìm thấy ' + mixedParagraphs.length + ' thẻ p có chứa cả ảnh và text');
+
+                // Xử lý từng thẻ p có chứa cả ảnh và text
+                mixedParagraphs.forEach(p => {
+                    // Tạo một mảng chứa các node mới
+                    const newNodes = [];
+
+                    // Tạo thẻ p mới cho nội dung trước ảnh đầu tiên
+                    let currentTextP = document.createElement('p');
+                    newNodes.push(currentTextP);
+
+                    // Duyệt qua từng node con của thẻ p
+                    Array.from(p.childNodes).forEach(child => {
+                        if (child.nodeType === 1 && child.tagName === 'IMG') {
+                            // Nếu gặp ảnh, tạo thẻ p mới chỉ chứa ảnh
+                            const imgP = document.createElement('p');
+                            imgP.style.margin = '0';
+                            imgP.style.padding = '0';
+                            imgP.style.lineHeight = '1';
+
+                            // Sao chép ảnh vào thẻ p mới
+                            const imgClone = child.cloneNode(true);
+                            imgP.appendChild(imgClone);
+                            newNodes.push(imgP);
+
+                            // Tạo thẻ p mới cho nội dung sau ảnh
+                            currentTextP = document.createElement('p');
+                            newNodes.push(currentTextP);
+                        } else {
+                            // Nếu không phải ảnh, thêm vào thẻ p hiện tại
+                            currentTextP.appendChild(child.cloneNode(true));
+                        }
+                    });
+
+                    // Xóa các thẻ p trống
+                    const nonEmptyNodes = newNodes.filter(n => {
+                        const content = n.innerHTML.trim();
+                        return content !== '' && content !== '&nbsp;' && content !== '<br>' && content !== '<br />';
+                    });
+
+                    // Thay thế thẻ p gốc bằng các node mới
+                    if (nonEmptyNodes.length > 0 && p.parentNode) {
+                        // Chèn node đầu tiên vào vị trí của p
+                        p.parentNode.replaceChild(nonEmptyNodes[0], p);
+
+                        // Chèn các node còn lại sau node đầu tiên
+                        let prevNode = nonEmptyNodes[0];
+                        for (let i = 1; i < nonEmptyNodes.length; i++) {
+                            if (prevNode.nextSibling) {
+                                p.parentNode.insertBefore(nonEmptyNodes[i], prevNode.nextSibling);
+                            } else {
+                                p.parentNode.appendChild(nonEmptyNodes[i]);
+                            }
+                            prevNode = nonEmptyNodes[i];
+                        }
+                    }
+                });
+
+                // Xử lý các thẻ p chứa ảnh
+                const imgParagraphs = node.querySelectorAll('p > img:only-child');
+                imgParagraphs.forEach(img => {
+                    const p = img.parentNode;
+                    if (p) {
+                        p.style.margin = '0';
+                        p.style.padding = '0';
+                        p.style.lineHeight = '1';
+                    }
+                });
+            },
+
             setup: function(editor) {
+                // Thêm sự kiện sau khi paste để xử lý cấu trúc HTML
+                // Sự kiện khi nội dung thay đổi
+                editor.on('change', function(e) {
+                    // Xử lý đặc biệt cho trường hợp có ảnh trong nội dung
+                    const content = editor.getContent();
+                    if (content.includes('<img')) {
+                        // Tạo một div tạm thời để xử lý nội dung
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = content;
+
+                        // Xử lý các thẻ p chứa ảnh
+                        const imgParagraphs = tempDiv.querySelectorAll('p > img:only-child');
+                        let contentChanged = false;
+
+                        imgParagraphs.forEach(img => {
+                            const p = img.parentNode;
+                            if (p) {
+                                if (p.style.margin !== '0px' || p.style.padding !== '0px' || p.style.lineHeight !== '1') {
+                                    p.style.margin = '0';
+                                    p.style.padding = '0';
+                                    p.style.lineHeight = '1';
+                                    contentChanged = true;
+                                }
+                            }
+                        });
+
+                        // Nếu nội dung đã thay đổi, cập nhật lại editor
+                        if (contentChanged) {
+                            // Lưu vị trí con trỏ hiện tại
+                            const bookmark = editor.selection.getBookmark();
+
+                            // Cập nhật nội dung của editor
+                            editor.setContent(tempDiv.innerHTML);
+
+                            // Khôi phục vị trí con trỏ
+                            editor.selection.moveToBookmark(bookmark);
+                        }
+                    }
+                });
+
+                editor.on('PastePostProcess', function(e) {
+                    console.log('PastePostProcess event', e);
+
+                    // Xử lý đặc biệt cho trường hợp paste cả ảnh và text
+                    setTimeout(function() {
+                        // Lấy toàn bộ nội dung của editor
+                        const content = editor.getContent();
+
+                        // Tạo một div tạm thời để xử lý nội dung
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = content;
+
+                        // Tìm tất cả các thẻ p có chứa cả ảnh và text
+                        const mixedParagraphs = Array.from(tempDiv.querySelectorAll('p')).filter(p => {
+                            const hasImage = p.querySelector('img') !== null;
+                            const hasText = Array.from(p.childNodes).some(n =>
+                                n.nodeType === 3 && n.textContent.trim() !== '');
+                            return hasImage && hasText;
+                        });
+
+                        console.log('Tìm thấy ' + mixedParagraphs.length + ' thẻ p có chứa cả ảnh và text');
+
+                        let contentChanged = false;
+
+                        // Xử lý từng thẻ p có chứa cả ảnh và text
+                        mixedParagraphs.forEach(p => {
+                            // Tạo một mảng chứa các node mới
+                            const newNodes = [];
+
+                            // Tạo thẻ p mới cho nội dung trước ảnh đầu tiên
+                            let currentTextP = document.createElement('p');
+                            newNodes.push(currentTextP);
+
+                            // Duyệt qua từng node con của thẻ p
+                            Array.from(p.childNodes).forEach(child => {
+                                if (child.nodeType === 1 && child.tagName === 'IMG') {
+                                    // Nếu gặp ảnh, tạo thẻ p mới chỉ chứa ảnh
+                                    const imgP = document.createElement('p');
+                                    imgP.style.margin = '0';
+                                    imgP.style.padding = '0';
+                                    imgP.style.lineHeight = '1';
+
+                                    // Sao chép ảnh vào thẻ p mới
+                                    const imgClone = child.cloneNode(true);
+                                    imgP.appendChild(imgClone);
+                                    newNodes.push(imgP);
+
+                                    // Tạo thẻ p mới cho nội dung sau ảnh
+                                    currentTextP = document.createElement('p');
+                                    newNodes.push(currentTextP);
+
+                                    contentChanged = true;
+                                } else {
+                                    // Nếu không phải ảnh, thêm vào thẻ p hiện tại
+                                    currentTextP.appendChild(child.cloneNode(true));
+                                }
+                            });
+
+                            // Xóa các thẻ p trống
+                            const nonEmptyNodes = newNodes.filter(n => {
+                                const content = n.innerHTML.trim();
+                                return content !== '' && content !== '&nbsp;' && content !== '<br>' && content !== '<br />';
+                            });
+
+                            // Thay thế thẻ p gốc bằng các node mới
+                            if (nonEmptyNodes.length > 0 && p.parentNode) {
+                                // Chèn node đầu tiên vào vị trí của p
+                                p.parentNode.replaceChild(nonEmptyNodes[0], p);
+
+                                // Chèn các node còn lại sau node đầu tiên
+                                let prevNode = nonEmptyNodes[0];
+                                for (let i = 1; i < nonEmptyNodes.length; i++) {
+                                    if (prevNode.nextSibling) {
+                                        p.parentNode.insertBefore(nonEmptyNodes[i], prevNode.nextSibling);
+                                    } else {
+                                        p.parentNode.appendChild(nonEmptyNodes[i]);
+                                    }
+                                    prevNode = nonEmptyNodes[i];
+                                }
+                            }
+                        });
+
+                        // Xử lý các thẻ p chứa ảnh
+                        const imgParagraphs = tempDiv.querySelectorAll('p > img:only-child');
+                        imgParagraphs.forEach(img => {
+                            const p = img.parentNode;
+                            if (p) {
+                                p.style.margin = '0';
+                                p.style.padding = '0';
+                                p.style.lineHeight = '1';
+                                contentChanged = true;
+                            }
+                        });
+
+                        // Nếu nội dung đã thay đổi, cập nhật lại editor
+                        if (contentChanged) {
+                            // Cập nhật nội dung của editor
+                            editor.setContent(tempDiv.innerHTML);
+                            console.log('Đã cập nhật nội dung của editor');
+                        }
+                    }, 100);
+                });
+
 
                 function needsModeration(img) {
                     // Luôn yêu cầu kiểm duyệt trừ khi đã được đánh dấu rõ ràng
@@ -310,7 +749,7 @@
                         console.log('Tự động kiểm duyệt bị vô hiệu hóa và không phải do người dùng khởi tạo, bỏ qua việc quét ảnh');
                         return;
                     }
-                    
+
                     if (window.checkingImages) {
                         console.log('Đang trong quá trình kiểm duyệt, bỏ qua');
                         return;
@@ -413,6 +852,9 @@
                                     formData.append('file', file);
                                     formData.append('_token', document.querySelector(
                                         'meta[name="csrf-token"]').getAttribute('content'));
+
+                                    // Lưu trữ ID của ảnh để cập nhật sau khi kiểm duyệt
+                                    formData.append('image_id', img.getAttribute('data-paste-id') || '');
 
                                     return fetch('/author/tinymce/upload', {
                                         method: 'POST',
@@ -525,10 +967,36 @@
                                             }, 5000);
                                         }, 200);
                                     } else {
-
+                                        // Ảnh đã vượt qua kiểm duyệt
                                         if (result.location) {
+                                            // Cập nhật src của ảnh
                                             img.setAttribute('src', result.location);
+
+                                            // Cập nhật data-mce-src để ảnh hiển thị được trong TinyMCE
+                                            img.setAttribute('data-mce-src', result.location);
+
+                                            // Cập nhật tất cả các ảnh có cùng ID trong editor
+                                            const pasteId = img.getAttribute('data-paste-id');
+                                            if (pasteId) {
+                                                const sameIdImages = editor.getBody().querySelectorAll(`img[data-paste-id="${pasteId}"]`);
+                                                if (sameIdImages.length > 0) {
+                                                    sameIdImages.forEach(sameImg => {
+                                                        if (sameImg !== img) {
+                                                            sameImg.setAttribute('src', result.location);
+                                                            sameImg.setAttribute('data-mce-src', result.location);
+                                                            sameImg.setAttribute('data-moderated', 'true');
+                                                            sameImg.setAttribute('data-no-remoderation', 'true');
+                                                            sameImg.setAttribute('moderated', 'true');
+                                                            sameImg.style.opacity = '1';
+                                                            sameImg.style.border = 'none';
+                                                            sameImg.classList.remove('moderating');
+                                                        }
+                                                    });
+                                                }
+                                            }
                                         }
+
+                                        // Đánh dấu ảnh đã được kiểm duyệt
                                         img.setAttribute('data-moderated', 'true');
                                         img.setAttribute('data-no-remoderation', 'true');
                                         img.setAttribute('moderated', 'true');
@@ -538,8 +1006,10 @@
                                             noRemoderation: true,
                                         };
 
-                                        if (img.hasAttribute('data-mce-src')) {
-                                            img.removeAttribute('data-mce-src');
+                                        // Lưu vào danh sách ảnh đã kiểm duyệt
+                                        if (result.location) {
+                                            window._premoderatedImages = window._premoderatedImages || {};
+                                            window._premoderatedImages[result.location] = true;
                                         }
                                     }
 
@@ -762,7 +1232,7 @@
                 // Thêm xử lý đặc biệt cho sự kiện PastePreProcess khi paste từ Word
                 editor.on('PastePreProcess', function(e) {
                     console.log('PastePreProcess event');
-                    
+
                     // Đánh dấu là người dùng đã khởi tạo quét ảnh
                     window.userInitiatedImageScan = true;
 
@@ -776,7 +1246,7 @@
                 // Xử lý sau khi paste nội dung từ Word
                 editor.on('PastePostProcess', function(e) {
                     console.log('PastePostProcess event');
-                    
+
                     // Đánh dấu là người dùng đã khởi tạo quét ảnh
                     window.userInitiatedImageScan = true;
 
@@ -951,12 +1421,12 @@
                                 'img:not([data-moderated]):not([data-need-moderation])');
                             if (images.length > 0) {
                                 console.log('Tìm thấy ' + images.length + ' hình ảnh chưa được xử lý trong lần quét định kỳ');
-                                
+
                                 // Nếu tìm thấy ảnh chưa được kiểm duyệt, đánh dấu là người dùng đã khởi tạo quét
                                 window.userInitiatedImageScan = true;
-                                
+
                                 let needModeration = false;
-                                
+
                                 images.forEach(img => {
                                     const src = img.getAttribute('src');
                                     if (src && (src.includes('/storage/uploads/') || src
@@ -1151,7 +1621,7 @@
                 // Đánh dấu là đang trong quá trình upload để tránh xử lý trùng lặp
                 window.uploadingImages = window.uploadingImages || 0;
                 window.uploadingImages++;
-                
+
                 // Đánh dấu đây là quét do người dùng khởi tạo
                 window.userInitiatedImageScan = true;
 
@@ -1613,7 +2083,7 @@
                 return new Promise(function(resolve, reject) {
                     // Đánh dấu đây là quét do người dùng khởi tạo
                     window.userInitiatedImageScan = true;
-                    
+
                     var input = document.createElement('input');
                     input.setAttribute('type', 'file');
 
@@ -1975,10 +2445,10 @@
                     const formData = new FormData();
                     formData.append('image', this.files[0]);
                     formData.append('_token', '{{ csrf_token() }}');
-                    
+
                     // Hiển thị loading state
                     avatarPreview.style.opacity = '0.5';
-                    
+
                     fetch('{{ route("profile.update.avatar") }}', {
                         method: 'POST',
                         body: formData

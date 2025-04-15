@@ -298,21 +298,26 @@
                                                             <i class="si-eye si"></i>
                                                         </a>
 
-                                                        {{-- @if (in_array($article->status, ['pending', 'published']))
-                                                            <button class="btn btn-warning btn-sm" title="Xin phép chỉnh sửa">
-                                                                <i class="si-pencil si"></i> Xin phép chỉnh sửa
-                                                            </button>
-                                                        @else
+{{--                                                        @if (in_array($article->status, ['pending', 'published']))--}}
+{{--                                                            <button class="btn btn-warning btn-sm" title="Xin phép chỉnh sửa">--}}
+{{--                                                                <i class="si-pencil si"></i> Xin phép chỉnh sửa--}}
+{{--                                                            </button>--}}
+{{--                                                        @else--}}
+{{--                                                            <a href="{{ route('author.articles.edit', $article) }}"--}}
+{{--                                                                class="btn btn-warning btn-sm" title="Chỉnh sửa">--}}
+{{--                                                                <i class="si-pencil si"></i> Chỉnh sửa--}}
+{{--                                                            </a>--}}
+{{--                                                        @endif--}}
+                                                        @if ($article->status !== 'published')
                                                             <a href="{{ route('author.articles.edit', $article) }}"
-                                                                class="btn btn-warning btn-sm" title="Chỉnh sửa">
-                                                                <i class="si-pencil si"></i> Chỉnh sửa
+                                                               class="btn btn-warning btn-sm" title="Chỉnh sửa">
+                                                                <i class="si-pencil si"></i>
                                                             </a>
-                                                        @endif --}}
-
-                                                        <a href="{{ route('author.articles.edit', $article) }}"
-                                                            class="btn btn-warning btn-sm" title="Chỉnh sửa">
-                                                            <i class="si-pencil si"></i> Chỉnh sửa
-                                                        </a>
+                                                        @else
+                                                            <button type="button" class="btn btn-secondary btn-sm" style="display: none" title="Không thể chỉnh sửa bài viết đã xuất bản">
+                                                                <i class="si-pencil si"></i>
+                                                            </button>
+                                                        @endif
 
                                                         @if (in_array($article->status, ['published', 'archived']))
                                                             <form
