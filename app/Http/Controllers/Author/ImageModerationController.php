@@ -214,18 +214,27 @@
 
         public function checkImageModeration(Request $request)
         {
-            if (! $request->hasFile('image') || ! $request->file('image')
-                    ->isValid()) {
+            try {
+                if (! $request->hasFile('image') || ! $request->file('image')
+                        ->isValid()) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'File không hợp lệ',
+                        'violation_level' => 'none',
+                    ]);
+                }
+
+                $result = $this->moderationService->handleImageUploadModeration($request->file('image'));
+                return response()->json($result);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Lỗi kiểm duyệt hình ảnh: ' . $e->getMessage() . '\n' . $e->getTraceAsString());
+
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'File không hợp lệ',
+                    'message' => 'Đã xảy ra lỗi khi kiểm duyệt hình ảnh: ' . $e->getMessage(),
                     'violation_level' => 'none',
-                ]);
+                ], 500);
             }
-
-            return response()->json(
-                $this->moderationService->handleImageUploadModeration($request->file('image'))
-            );
         }
 
         public function moderateImage(Request $request)
