@@ -55,18 +55,66 @@
                                         aria-label="Close"></button>
                                 </div>
                             @endif
-
                             <div class="d-flex">
-                                <form method="GET" action="{{ route('articles.index') }}" class="me-2">
-                                    <div class="input-group">
-                                        <input type="text" name="search" class="form-control"
-                                            placeholder="Tìm kiếm bài viết..." value="{{ request('search') }}">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </div>
-                                </form>
+                                <div class="input-group me-2">
+                                    <input type="text" id="searchInput" class="form-control"
+                                        placeholder="Tìm kiếm bài viết..." value="{{ request('search') }}">
+                                    <input type="text" id="categoryFilter" class="form-control" 
+                                        placeholder="Tìm kiếm danh mục..." style="max-width: 200px;">
+                                    <input type="text" id="authorFilter" class="form-control" 
+                                        placeholder="Tìm kiếm tác giả..." style="max-width: 200px;">
+                                    <button type="button" class="btn btn-primary" id="searchButton">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
                             </div>
+
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const searchInput = document.getElementById('searchInput');
+                                    const categoryFilter = document.getElementById('categoryFilter');
+                                    const authorFilter = document.getElementById('authorFilter');
+                                    const searchButton = document.getElementById('searchButton');
+                                    const articleRows = document.querySelectorAll('tbody tr');
+
+                                    function performSearch() {
+                                        const searchTerm = searchInput.value.toLowerCase().trim();
+                                        const categorySearchTerm = categoryFilter.value.toLowerCase().trim();
+                                        const authorSearchTerm = authorFilter.value.toLowerCase().trim();
+                                        
+                                        articleRows.forEach(row => {
+                                            const title = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                                            const category = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+                                            const author = row.querySelector('td:nth-child(6)').textContent.toLowerCase();
+                                            
+                                            const matchesTitle = title.includes(searchTerm);
+                                            const matchesCategory = !categorySearchTerm || category.includes(categorySearchTerm);
+                                            const matchesAuthor = !authorSearchTerm || author.includes(authorSearchTerm);
+
+                                            if (matchesTitle && matchesCategory && matchesAuthor) {
+                                                row.style.display = '';
+                                            } else {
+                                                row.style.display = 'none';
+                                            }
+                                        });
+                                    }
+
+                                    // Search on button click
+                                    searchButton.addEventListener('click', performSearch);
+
+                                    // Search on Enter key press
+                                    [searchInput, categoryFilter, authorFilter].forEach(input => {
+                                        input.addEventListener('keyup', function(event) {
+                                            if (event.key === 'Enter') {
+                                                performSearch();
+                                            }
+                                        });
+                                        
+                                        // Real-time search as user types
+                                        input.addEventListener('input', performSearch);
+                                    });
+                                });
+                            </script>
                         </div>
 
                         <style>

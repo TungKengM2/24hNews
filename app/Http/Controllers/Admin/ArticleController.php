@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use Exception;
-use App\Notifications\ArticleRejected;
 use DOMDocument;
 use App\Models\Tag;
 use App\Models\User;
@@ -22,6 +21,9 @@ use App\Notifications\NewArticleSubmitted;
 use App\Notifications\ArticleStatusUpdated;
 use Illuminate\Support\Facades\Notification;
 
+use App\Notifications\ArticleRejected;
+use Illuminate\Support\Str;
+// use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
@@ -40,7 +42,7 @@ class ArticleController extends Controller
         $filter = $request->input('filter', 'all'); // Mặc định hiển thị tất cả bài viết
 
         $query = Article::with(['author', 'category', 'approver', 'tags'])
-            ->where('author_id', auth()->id()) // Chỉ lấy bài viết của admin đang đăng nhập
+            // ->where('author_id', auth()->id()) // Chỉ lấy bài viết của admin đang đăng nhập
             ->orderBy('created_at', 'desc');
 
         if ($filter === 'inactive') {

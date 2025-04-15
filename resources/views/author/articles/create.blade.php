@@ -2,9 +2,57 @@
 
 @section('head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Style -->
+    <style>
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #c3bebe;
+            color: white;
+            border: 1px solid #c2c2c2;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
 
+        #image-preview-container {
+            margin-top: 10px;
+            text-align: center;
+            max-width: 300px;
+        }
 
+        #image-preview {
+            max-height: 150px;
+            width: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
+
+        #moderation-result {
+            margin-top: 10px;
+        }
+
+        .moderation-loading {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .violation-high {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .violation-medium {
+            color: #fd7e14;
+            font-weight: bold;
+        }
+
+        .violation-low {
+            color: #ffc107;
+            font-weight: bold;
+        }
+    </style>
 @endsection
 
 @section('title')
@@ -84,6 +132,8 @@
                             </div>
                         @endif
 
+                        <div class="row">
+                            <div class="col-md-9">
                                 <form action="{{ route('author.articles.store') }}" method="POST" enctype="multipart/form-data"
                                     id="articleForm">
                             @csrf
@@ -116,6 +166,13 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Danh mục phụ</label>
+                                        <select name="subcategory_id" id="child_category" class="form-control select2-subcategories" disabled>
+                                            <option value="">-- Chọn danh mục phụ --</option>
+                                        </select>
+                                    </div>
 
                                     <div class="col-md-6 mb-3">
                                         <label for="tags">Chọn hoặc thêm thẻ:</label>
@@ -130,12 +187,7 @@
                                         <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới (chấp nhận cả chữ và số).</small>
                                     </div>
 
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Danh mục phụ</label>
-                                        <select name="subcategory_id" id="child_category" class="form-control select2-subcategories" disabled>
-                                            <option value="">-- Chọn danh mục phụ --</option>
-                                        </select>
-                                    </div>
+                                   
                                 </div>
 
                             </div>
@@ -170,6 +222,8 @@
                                         @if (old('thumbnail_url'))
                                             <p>File đã chọn trước đó: {{ old('thumbnail_url') }}</p>
                                         @endif
+
+
                                     </div>
 
                                     <div class="col-md-6">
@@ -218,57 +272,57 @@
                             </div>
                                 </form>
                             </div>
-                        </div>
 
-                        <div class="col-md-3">
-                            <div class="verification-criteria">
-                                <h4 class="verification-criteria-title">Tiêu chí xuất bản</h4>
-                                <div class="criteria-content">
-                                    <ul class="criteria-list" id="criteria-list">
-                                        <li class="criteria-item failed" id="criteria-title" data-target="title">
-                                            <div class="criteria-icon failed">✗</div>
-                                            <div class="criteria-text criteria-tooltip">
-                                                Tiêu đề từ 50-60 ký tự <span id="current-title-length">(0 ký tự)</span>
-                                                <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy đủ trên Google và tối ưu cho SEO</span>
-                                            </div>
-                                        </li>
-                                        <li class="criteria-item failed" id="criteria-category" data-target="parent_category">
-                                            <div class="criteria-icon failed">✗</div>
-                                            <div class="criteria-text criteria-tooltip">
-                                                Chọn danh mục chính và phụ
-                                                <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ phù hợp với nội dung bài viết</span>
-                                            </div>
-                                        </li>
-                                        <li class="criteria-item failed" id="criteria-tags" data-target="tags">
-                                            <div class="criteria-icon failed">✗</div>
-                                            <div class="criteria-text criteria-tooltip">
-                                                Chọn 2-5 thẻ tag liên quan <span id="current-tag-count">(0 thẻ)</span>
-                                                <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và tăng khả năng xuất hiện trong tìm kiếm</span>
-                                            </div>
-                                        </li>
-                                        <li class="criteria-item failed" id="criteria-thumbnail" data-target="thumbnail_url">
-                                            <div class="criteria-icon failed">✗</div>
-                                            <div class="criteria-text criteria-tooltip">
-                                                Ảnh đại diện chất lượng cao
-                                                <span class="tooltip-text">Ảnh đại diện tối thiểu 1200x630px, rõ nét và vượt qua kiểm duyệt</span>
-                                            </div>
-                                        </li>
-                                        <li class="criteria-item failed" id="criteria-content" data-target="content">
-                                            <div class="criteria-icon failed">✗</div>
-                                            <div class="criteria-text criteria-tooltip">
-                                                Nội dung từ 800-1500 từ <span id="current-word-count">(0 từ)</span>
-                                                <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn trong kết quả tìm kiếm và tối ưu cho người đọc</span>
-                                            </div>
-                                        </li>
+                            <div class="col-md-3">
+                                <div class="verification-criteria">
+                                    <h4 class="verification-criteria-title">Tiêu chí xuất bản</h4>
+                                    <div class="criteria-content">
+                                        <ul class="criteria-list" id="criteria-list">
+                                            <li class="criteria-item failed" id="criteria-title" data-target="title">
+                                                <div class="criteria-icon failed">✗</div>
+                                                <div class="criteria-text criteria-tooltip">
+                                                    Tiêu đề từ 50-60 ký tự <span id="current-title-length">(0 ký tự)</span>
+                                                    <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy đủ trên Google và tối ưu cho SEO</span>
+                                                </div>
+                                            </li>
+                                            <li class="criteria-item failed" id="criteria-category" data-target="parent_category">
+                                                <div class="criteria-icon failed">✗</div>
+                                                <div class="criteria-text criteria-tooltip">
+                                                    Chọn danh mục chính và phụ
+                                                    <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ phù hợp với nội dung bài viết</span>
+                                                </div>
+                                            </li>
+                                            <li class="criteria-item failed" id="criteria-tags" data-target="tags">
+                                                <div class="criteria-icon failed">✗</div>
+                                                <div class="criteria-text criteria-tooltip">
+                                                    Chọn 2-5 thẻ tag liên quan <span id="current-tag-count">(0 thẻ)</span>
+                                                    <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và tăng khả năng xuất hiện trong tìm kiếm</span>
+                                                </div>
+                                            </li>
+                                            <li class="criteria-item failed" id="criteria-thumbnail" data-target="thumbnail_url">
+                                                <div class="criteria-icon failed">✗</div>
+                                                <div class="criteria-text criteria-tooltip">
+                                                    Ảnh đại diện chất lượng cao
+                                                    <span class="tooltip-text">Ảnh đại diện tối thiểu 1200x630px, rõ nét và vượt qua kiểm duyệt</span>
+                                                </div>
+                                            </li>
+                                            <li class="criteria-item failed" id="criteria-content" data-target="content">
+                                                <div class="criteria-icon failed">✗</div>
+                                                <div class="criteria-text criteria-tooltip">
+                                                    Nội dung từ 800-1500 từ <span id="current-word-count">(0 từ)</span>
+                                                    <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn trong kết quả tìm kiếm và tối ưu cho người đọc</span>
+                                                </div>
+                                            </li>
 
-                                    </ul>
+                                        </ul>
 
-                                    <div class="progress-container">
-                                        <div class="criteria-progress">
-                                            <div class="criteria-progress-bar" id="criteria-progress-bar"></div>
-                                        </div>
-                                        <div class="text-center mt-2">
-                                            <small id="criteria-count">0/4 tiêu chí đạt</small>
+                                        <div class="progress-container">
+                                            <div class="criteria-progress">
+                                                <div class="criteria-progress-bar" id="criteria-progress-bar"></div>
+                                            </div>
+                                            <div class="text-center mt-2">
+                                                <small id="criteria-count">0/4 tiêu chí đạt</small>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -423,7 +477,7 @@
                                     thumbnailInput.addEventListener('change', function(e) {
                                         const file = e.target.files[0];
                                         if (file) {
-                                            isImageValid = false;
+                                            window.isImageValid = false;
 
                                             // Hiển thị thông báo đang kiểm tra và ẩn các thông báo khác
                                             const moderationResult = document.getElementById('moderation-result');
@@ -464,27 +518,34 @@
                                                     return response.json();
                                                 })
                                                 .then(result => {
+                                                    // Ẩn loading
+                                                    if (document.getElementById('moderation-loading')) {
+                                                        document.getElementById('moderation-loading').style.display = 'none';
+                                                    }
+
                                                     const moderationResult = document.getElementById('moderation-result');
                                                     const loadingDiv = document.getElementById('moderation-loading');
                                                     const errorDiv = document.getElementById('moderation-error');
                                                     const errorMessage = document.getElementById('error-message');
+                                                    const successDiv = document.getElementById('moderation-success');
 
                                                     // Ẩn thông báo đang kiểm tra
                                                     if (loadingDiv) loadingDiv.style.display = 'none';
                                                     moderationResult.style.display = 'block';
 
                                                     if (result.status === 'error') {
+                                                        // Hiển thị thông báo lỗi
                                                         errorDiv.style.display = 'block';
+                                                        successDiv.style.display = 'none';
                                                         errorMessage.textContent = result.message ||
                                                             'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
                                                         window.isImageValid = false;
                                                         submitButton.disabled = true;
-                                                        // Update verification criteria if function exists
-                                                        if (typeof updateCriteria === 'function') {
-                                                            updateCriteria();
-                                                        }
+                                                        if (window.updateCriteria) window.updateCriteria();
                                                     } else if (result.violation_level !== 'none') {
+                                                        // Hiển thị thông báo lỗi vi phạm
                                                         errorDiv.style.display = 'block';
+                                                        successDiv.style.display = 'none';
                                                         let violationMessages = [];
 
                                                         for (let violation in result.reason) {
@@ -494,16 +555,12 @@
                                                         errorMessage.innerHTML = `Vi phạm: ${violationMessages.join(', ')}`;
                                                         window.isImageValid = false;
                                                         submitButton.disabled = true;
-                                                        // Update verification criteria if function exists
-                                                        if (typeof updateCriteria === 'function') {
-                                                            updateCriteria();
-                                                        }
+                                                        if (window.updateCriteria) window.updateCriteria();
                                                     } else {
                                                         // Ẩn thông báo lỗi
                                                         errorDiv.style.display = 'none';
 
                                                         // Hiển thị thông báo thành công
-                                                        const successDiv = document.getElementById('moderation-success');
                                                         successDiv.style.display = 'block';
                                                         successDiv.style.opacity = '1';
 
@@ -512,9 +569,7 @@
                                                         submitButton.disabled = false;
 
                                                         // Cập nhật tiêu chí kiểm tra
-                                                        if (typeof updateCriteria === 'function') {
-                                                            updateCriteria();
-                                                        }
+                                                        if (window.updateCriteria) window.updateCriteria();
 
                                                         // Tự động ẩn thông báo thành công sau 3 giây
                                                         setTimeout(function() {
@@ -536,20 +591,19 @@
                                                     const loadingDiv = document.getElementById('moderation-loading');
                                                     const errorDiv = document.getElementById('moderation-error');
                                                     const errorMessage = document.getElementById('error-message');
+                                                    const successDiv = document.getElementById('moderation-success');
 
                                                     // Ẩn thông báo đang kiểm tra
                                                     if (loadingDiv) loadingDiv.style.display = 'none';
                                                     moderationResult.style.display = 'block';
                                                     errorDiv.style.display = 'block';
+                                                    successDiv.style.display = 'none';
 
                                                     errorMessage.textContent = 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
                                                     window.isImageValid = false;
 
                                                     submitButton.disabled = true;
-                                                    // Update verification criteria if function exists
-                                                    if (typeof updateCriteria === 'function') {
-                                                        updateCriteria();
-                                                    }
+                                                    if (window.updateCriteria) window.updateCriteria();
                                                 });
 
                                             // Nếu cần xử lý mammoth (chuyển đổi .docx)

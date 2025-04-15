@@ -61,4 +61,12 @@ class AuthorProfileController extends Controller
         auth()->user()->following()->detach($user->user_id);
         return back()->with('success', 'Bạn đã unfollow ' . $user->username);
     }
+    // dat them hiển thị profile user
+
+    public function showUser($id)
+    {
+        $user = User::findOrFail($id);
+        
+        return view('website.profiles.user', compact('user'));
+    }
 }

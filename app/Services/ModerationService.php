@@ -2,12 +2,12 @@
 
 		namespace App\Services;
 
-use finfole;
-use CURLFileon;
-use Exceptionfo;
-use Illuminate\Support\Facades\Loghe;
-use Illuminate\Support\Facades\Cacheog;
-use Illuminate\Support\Facades\Storagege;
+use finfo;
+use CURLFile;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 		class ModerationService
 		{
@@ -55,6 +55,15 @@ use Illuminate\Support\Facades\Storagege;
 
 				public function moderateContent($inputText): array
 				{
+						// Tối ưu 1: Kiểm tra cache trước khi gọi API
+						$cacheKey = 'content_moderation_' . md5($inputText);
+						$cachedResult = \Illuminate\Support\Facades\Cache::get($cacheKey);
+
+						if ($cachedResult) {
+							Log::info('Lấy kết quả kiểm duyệt nội dung từ cache');
+							return $cachedResult;
+						}
+
 						try {
 								$inputText = str_replace(['<br>', '<br />', '<br/>', '</p><p>'], "\n", $inputText);
 
@@ -68,6 +77,12 @@ use Illuminate\Support\Facades\Storagege;
 
 								$plainText = preg_replace('/\s+/', ' ', $plainText);
 								$plainText = trim($plainText);
+
+								// Tối ưu 2: Giới hạn độ dài văn bản để giảm thời gian xử lý
+								$maxLength = 5000; // Giới hạn 5000 ký tự
+								if (mb_strlen($plainText) > $maxLength) {
+									$plainText = mb_substr($plainText, 0, $maxLength) . '...';
+								}
 
 								$API_KEY = env('GOOGLE_API_KEY');
 
@@ -125,7 +140,7 @@ EOD;
 										'temperature' => 0,
 										'topK' => 40,
 										'topP' => 0.9,
-										'maxOutputTokens' => 8192,
+										'maxOutputTokens' => 2048, // Giảm số lượng token đầu ra
 										'responseMimeType' => 'text/plain',
 									],
 								];
@@ -141,8 +156,8 @@ EOD;
 								curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 								curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 								// Tăng timeout cho request API
-								curl_setopt($ch, CURLOPT_TIMEOUT, 30); // timeout sau 30 giây
-								curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // timeout kết nối sau 10 giây
+								curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Khôi phục lại timeout 30 giây
+								curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // Khôi phục lại timeout kết nối 10 giây
 
 								$response = curl_exec($ch);
 
@@ -207,12 +222,17 @@ EOD;
 										}
 								}
 
-								return [
+								$result = [
 									'status' => 'success',
 									'violation_level' => $apiResponse['severity']['level'] ?? 'none',
 									'violations' => $violationTerms,
 									'reason' => $violationReasons,
 								];
+
+								// Tối ưu 4: Lưu kết quả vào cache để sử dụng lại
+								\Illuminate\Support\Facades\Cache::put($cacheKey, $result, now()->addDays(7));
+
+								return $result;
 						} catch (Exception $e) {
 								Log::error('Lỗi trong quá trình kiểm duyệt nội dung: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
 								return [

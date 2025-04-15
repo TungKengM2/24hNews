@@ -15,85 +15,80 @@
         <ul class="nav navbar-nav">
             <!-- Notifications -->
 
-            <li class="dropdown notifications-menu" style="position: relative;">
-                <a href="#"
-                    class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
-                    id="notificationDropdown" data-bs-toggle="dropdown" title="Notifications"
-                    style="position: relative; display: inline-block;">
-                    <i class="fa fa-bell"></i>
-                    <span id="notificationCount" class="badge badge-danger"
-                        style="position: absolute; top: 6px; right: 5px; font-size: 12px; padding: 4px 7px; border-radius: 50%; background: red; color: white; display: {{ auth()->user()->unreadNotifications->count() > 0 ? 'inline-block' : 'none' }};">
-                        {{ auth()->user()->unreadNotifications->count() }}
-                    </span>
-                </a>
+            @php
+            $notificationCount = auth()->user()->unreadNotifications->count();
+        @endphp
 
-                <ul class="dropdown-menu animated bounceIn" aria-labelledby="notificationDropdown"
-                    style="width: 350px; max-height: 400px; overflow-y: auto;">
-                    <li class="header">
-                        <div class="p-3 d-flex justify-content-between align-items-center">
-                            <h4 class="mb-0" style="font-size: 16px; font-weight: 600;">Thông báo mới</h4>
-                            <a href="#" id="clearNotifications" class="text-danger" style="font-size: 14px;">Xóa tất cả</a>
-                        </div>
-                    </li>
+        <li class="dropdown notifications-menu" style="position: relative;">
+            <a href="#"
+                class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
+                id="notificationDropdown" data-bs-toggle="dropdown" title="Notifications"
+                style="position: relative; display: inline-block;">
+                <i class="fa fa-bell"></i>
+                <span id="notificationCount" class="badge badge-danger"
+                    style="position: absolute; top: 6px; right: 5px; font-size: 12px; padding: 4px 7px; border-radius: 50%; background: red; color: white; display: {{ $notificationCount > 0 ? 'inline-block' : 'none' }};">
+                    {{ $notificationCount }}
+                </span>
+            </a>
 
-                    <li>
-                        <ul class="menu sm-scroll" id="notificationList">
-                            @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
-                                <li class="notification-item p-3" id="notification-{{ $notification->id }}" style="border-bottom: 1px solid #f0f0f0;">
-                                    <a href="#"
-                                       onclick="openNotification('{{ $notification->id }}', '{{ addslashes($notification->data['message']) }}'); return false;"
-                                       style="font-size: 14px; display: block; padding: 10px; color: #333; text-decoration: none;">
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-shrink-0 me-3">
-                                                @if(isset($notification->data['type']) && $notification->data['type'] === 'article_reported')
-                                                    <i class="fa fa-exclamation-triangle text-warning" style="font-size: 18px;"></i>
-                                                @elseif(isset($notification->data['type']) && $notification->data['type'] === 'article_rejected')
-                                                    <i class="fa fa-times-circle text-danger" style="font-size: 18px;"></i>
-                                                @elseif(isset($notification->data['type']) && $notification->data['type'] === 'role_upgrade_rejected')
-                                                    <i class="fa fa-times-circle text-danger" style="font-size: 18px;"></i>
-                                                @else
-                                                    <i class="fa fa-bell text-primary" style="font-size: 18px;"></i>
-                                                @endif
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <div class="mb-1">
-                                                    @if($notification->data['type'] === 'article_reported')
-                                                        Bài viết của bạn đã bị report
-                                                    @elseif($notification->data['type'] === 'article_rejected')
-                                                        {{ Str::limit($notification->data['message'], 40, '...') }}
-                                                    @elseif($notification->data['type'] === 'role_upgrade_rejected')
-                                                        {{ $notification->data['message'] }}
-                                                        @if(isset($notification->data['reason']))
-                                                            <div class="text-danger mt-1" style="font-size: 12px;">
-                                                                <i class="fa fa-info-circle"></i> Lý do: {{ Str::limit($notification->data['reason'], 30, '...') }}
-                                                            </div>
-                                                        @endif
-                                                    @else
-                                                        {{ Str::limit($notification->data['message'], 40, '...') }}
-                                                    @endif
-                                                </div>
-                                                <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
-                                            </div>
+            <ul class="dropdown-menu animated bounceIn" aria-labelledby="notificationDropdown"
+                style="width: 350px; max-height: 400px; overflow-y: auto;">
+                <li class="header">
+                    <div class="p-3 d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0" style="font-size: 16px; font-weight: 600;">Thông báo mới</h4>
+                        <a href="#" id="clearNotifications" class="text-danger" style="font-size: 14px;">Xóa tất cả</a>
+                    </div>
+                </li>
+
+                <li>
+                    <ul class="menu sm-scroll" id="notificationList">
+                        @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
+                            @php
+                                $type = $notification->data['type'] ?? 'default';
+                                $icons = [
+                                    'article_reported' => ['fa-exclamation-triangle', 'text-warning', 'Bài viết của bạn đã bị report'],
+                                    'article_rejected' => ['fa-times-circle', 'text-danger', $notification->data['message']],
+                                    'role_upgrade_rejected' => ['fa-times-circle', 'text-danger', $notification->data['message']],
+                                    'default' => ['fa-info-circle', 'text-info', $notification->data['message'] ?? ''],
+                                ];
+                                [$icon, $color, $message] = $icons[$type] ?? $icons['default'];
+                            @endphp
+
+                            <li class="notification-item p-3" id="notification-{{ $notification->id }}"
+                                style="border-bottom: 1px solid #f0f0f0;">
+                                <a href="#"
+                                    onclick="openNotification('{{ $notification->id }}', '{{ addslashes($message) }}'); return false;"
+                                    style="font-size: 14px; display: block; padding: 10px; color: #333; text-decoration: none;">
+                                    <div class="d-flex align-items-start">
+                                        <div class="flex-shrink-0 me-3">
+                                            <i class="fa {{ $icon }} {{ $color }}" style="font-size: 18px;"></i>
                                         </div>
-                                    </a>
-                                </li>
-                            @empty
-                                <li class="text-muted dropdown-item p-3 text-center">
-                                    <i class="fa fa-bell-slash mb-2" style="font-size: 24px;"></i>
-                                    <div>Không có thông báo mới</div>
-                                </li>
-                            @endforelse
-                        </ul>
-                    </li>
+                                        <div class="flex-grow-1">
+                                            <div class="mb-1">
+                                                {{ Str::limit($message, 40, '...') }}
+                                            </div>
+                                            <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        @empty
+                            <li class="text-muted dropdown-item p-3 text-center">
+                                <i class="fa fa-bell-slash mb-2" style="font-size: 24px;"></i>
+                                <div>Không có thông báo mới</div>
+                            </li>
+                        @endforelse
+                    </ul>
+                </li>
 
+                <li class="footer p-3 text-center">
+                    <a href="{{ route('notifications.index') }}" class="text-primary" style="font-size: 14px;">
+                        Xem tất cả thông báo
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-                    <li class="footer p-3 text-center">
-                        <a href="{{ route('notifications.index') }}" class="text-primary" style="font-size: 14px;">
-                            Xem tất cả thông báo
-                        </a>
-                    </li>
-                </ul>
-            </li>
 
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
