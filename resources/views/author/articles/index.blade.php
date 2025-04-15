@@ -66,7 +66,7 @@
                                 <div class="input-group me-2">
                                     <input type="text" id="searchInput" class="form-control"
                                         placeholder="Tìm kiếm bài viết..." value="{{ request('search') }}">
-                                    <input type="text" id="categoryFilter" class="form-control" 
+                                    <input type="text" id="categoryFilter" class="form-control"
                                         placeholder="Tìm kiếm danh mục..." style="max-width: 200px;">
                                     <button type="button" class="btn btn-primary" id="searchButton">
                                         <i class="fa fa-search"></i>
@@ -84,11 +84,11 @@
                                     function performSearch() {
                                         const searchTerm = searchInput.value.toLowerCase().trim();
                                         const categorySearchTerm = categoryFilter.value.toLowerCase().trim();
-                                        
+
                                         articleRows.forEach(row => {
                                             const title = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
                                             const category = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
-                                            
+
                                             const matchesTitle = title.includes(searchTerm);
                                             const matchesCategory = !categorySearchTerm || category.includes(categorySearchTerm);
 
@@ -110,7 +110,7 @@
                                                 performSearch();
                                             }
                                         });
-                                        
+
                                         // Real-time search as user types
                                         input.addEventListener('input', performSearch);
                                     });
@@ -219,7 +219,8 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                        alt="Hình ảnh" class="img-thumbnail" width="80" height="80">
+                                                        alt="Hình ảnh" class="img-thumbnail" width="80"
+                                                        height="80">
                                                 </td>
                                                 <td class="text-center">
                                                     @if ($article->category)
@@ -297,7 +298,7 @@
                                                             <i class="si-eye si"></i>
                                                         </a>
 
-                                                        @if (in_array($article->status, ['pending', 'published']))
+                                                        {{-- @if (in_array($article->status, ['pending', 'published']))
                                                             <button class="btn btn-warning btn-sm" title="Xin phép chỉnh sửa">
                                                                 <i class="si-pencil si"></i> Xin phép chỉnh sửa
                                                             </button>
@@ -306,7 +307,12 @@
                                                                 class="btn btn-warning btn-sm" title="Chỉnh sửa">
                                                                 <i class="si-pencil si"></i> Chỉnh sửa
                                                             </a>
-                                                        @endif
+                                                        @endif --}}
+
+                                                        <a href="{{ route('author.articles.edit', $article) }}"
+                                                            class="btn btn-warning btn-sm" title="Chỉnh sửa">
+                                                            <i class="si-pencil si"></i> Chỉnh sửa
+                                                        </a>
 
                                                         @if (in_array($article->status, ['published', 'archived']))
                                                             <form
