@@ -59,11 +59,7 @@
                 <div class="sub-darkLight">
                     <div class="row text-end align-items-center">
                         <div class="col-6">
-                            <a href="home-default.html#0"
-                                class="text-uppercase fs-6 border-bottom border-1 border-dark subs">
-                                <i class="la la-envelope fs-5 me-1"></i>
-                                Đăng ký
-                            </a>
+                            
                         </div>
                         <div class="col-6">
                             <div class="darkLight-btn">
@@ -76,131 +72,50 @@
                             </div>
                         </div>
                     </div>
-                    <div class="nav-subs-card">
-                        <p class="fsz-16px text-uppercase mb-20">Bản tin</p>
-                        <div class="sub-form">
-                            <div class="form-group">
-                                <span class="icon">
-                                    <i class="la la-envelope"></i>
-                                </span>
-                                <input type="text" class="form-control" placeholder="Nhập email của bạn">
-                                <button>Đăng ký</button>
-                            </div>
-                            <p class="mt-3 color-666 fsz-12px fst-italic">Bằng cách đăng ký, bạn đã chấp nhận <a
-                                    href="home-default.html#0"
-                                    class="color-777 text-decoration-underline fst-normal">Chính sách</a></p>
-                        </div>
-                        <span class="cls"><i class="la la-times"></i></span>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{{-- <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
-    aria-labelledby="offcanvasExampleLabel">
-    <div class="offcanvas-header">
-        <div class="logo">
-            <h1>News24h</h1>
-        </div>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body mt-[-20px]">
 
 
-        <div class="sidebar-categories mt-40">
-            <h6 class="color-000 text-uppercase mb-30 ltspc-1"> Tất Cả Danh Mục <i class="la la-angle-right ms-1"></i>
-            </h6>
-
-            @foreach ($category2 as $category)
-                <a href="{{ route('client.category.show', $category->slug) }}" class="cat-card">
-                    <div class="img img-cover ">
-
-                        <div class="info">
-                            <h5 href="{{ route('client.category.show', $category->slug) }}">
-                                {{ $category->name }}
-                            </h5>
-                            <span class="num">{{ $category->articles_count }}</span>
-                        </div>
-                    </div>
-                </a>
-            @endforeach
-
-
-        </div>
-        <div class="offcanvas-body mt-4">
-            <h6 class="color-000 text-uppercase mb-15 ltspc-1 fw-bold"> Giới Thiệu News24h <i
-                    class="la la-angle-right ms-1"></i>
-            </h6>
-            <div class="text mb-4">
-                News24h là nền tảng tin tức hàng đầu Việt Nam, cung cấp thông tin chính xác, đa dạng và cập nhật 24/7.
-                Chúng tôi cam kết mang đến cho độc giả những tin tức chất lượng và đáng tin cậy từ mọi lĩnh vực.
-            </div>
-
-            <div class="mt-4">
-                <h6 class="color-000 mb-3 fw-bold">Tại sao chọn News24h?</h6>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="icon-box me-3 bg-light rounded p-2" style="color: var(--bs-primary);">
-                        <i class="la la-newspaper-o text-primary"></i>
-                    </div>
-                    <div>
-                        <p class="mb-0">Tin tức chính xác, đa chiều</p>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="icon-box me-3 bg-light rounded p-2" style="color: var(--bs-primary);">
-                        <i class="la la-bolt text-primary"></i>
-                    </div>
-                    <div>
-                        <p class="mb-0">Cập nhật tin tức 24/7</p>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mb-4">
-                    <div class="icon-box me-3 bg-light rounded p-2" style="color: var(--bs-primary);">
-                        <i class="la la-users text-primary"></i>
-                    </div>
-                    <div>
-                        <p class="mb-0">Cộng đồng độc giả lớn mạnh</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="sidebar-contact-info mt-4 pt-4 border-top">
-                <h6 class="color-000 text-uppercase mb-20 ltspc-1 fw-bold"> Liên Hệ & Theo Dõi <i
-                        class="la la-angle-right ms-1"></i> </h6>
-                <ul class="m-0">
-                    <li class="mb-3">
-                        <i class="las la-map-marker me-2 color-main fs-5"></i>
-                        <a href="#">Tòa nhà FPT Polytechnic., Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ
-                            Liêm, Hà Nội</a>
-                    </li>
-                    <li class="mb-3">
-                        <i class="las la-envelope me-2 color-main fs-5"></i>
-                        <a href="#">bayanhtai@gmail.com</a>
-                    </li>
-                    <li class="mb-3">
-                        <i class="las la-phone-volume me-2 color-main fs-5"></i>
-                        <a href="#">0981 725 836</a>
-                    </li>
-                </ul>
-                <div class="social-links mt-3">
-                    <a href="#" class="me-2">
-                        <i class="la la-twitter"></i>
-                    </a>
-                    <a href="#" class="me-2">
-                        <i class="la la-facebook-f"></i>
-                    </a>
-                    <a href="#" class="me-2">
-                        <i class="la la-instagram"></i>
-                    </a>
-                    <a href="#" class="me-2">
-                        <i class="la la-youtube"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const lightIcon = document.getElementById('light-icon');
+        const darkIcon = document.getElementById('dark-icon');
+        const body = document.body;
+        
+        // Kiểm tra trạng thái đã lưu trong localStorage
+        const savedTheme = localStorage.getItem('theme');
+        
+        // Áp dụng theme từ localStorage nếu có
+        if (savedTheme === 'dark') {
+            lightIcon.classList.remove('active');
+            darkIcon.classList.add('active');
+            body.classList.add('dark-theme');
+        } else {
+            lightIcon.classList.add('active');
+            darkIcon.classList.remove('active');
+            body.classList.remove('dark-theme');
+        }
+        
+        // Xử lý sự kiện khi click vào icon light mode
+        lightIcon.addEventListener('click', function() {
+            lightIcon.classList.add('active');
+            darkIcon.classList.remove('active');
+            body.classList.remove('dark-theme');
+            localStorage.setItem('theme', 'light');
+        });
+        
+        // Xử lý sự kiện khi click vào icon dark mode
+        darkIcon.addEventListener('click', function() {
+            darkIcon.classList.add('active');
+            lightIcon.classList.remove('active');
+            body.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark');
+        });
+    });
+</script>
 
 <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
     aria-labelledby="offcanvasExampleLabel" style="width: 100%;">
