@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Author;
 
-use Exception;
-use DOMDocument;
+use App\Http\Controllers\Controller;
+use App\Models\Approval;
+use App\Models\Article;
+use App\Models\Category;
 use App\Models\Tag;
 use App\Models\User;
-use App\Models\Article;
-use App\Models\Approval;
-use App\Models\Category;
-use App\Helpers\CodeHelper;
-use Illuminate\Http\Request;
 use App\Models\ModerationLog;
-use App\Models\ArticleVersion;
-use App\Services\ModerationService;
-use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
 use App\Notifications\ArticleStatusUpdated;
-use Illuminate\Validation\ValidationException;
 use App\Notifications\PendingArticleNotification;
+use App\Services\ModerationService;
+use DOMDocument;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
+use App\Helpers\CodeHelper;
+use App\Models\ArticleVersion;
 
 class ArticleController extends Controller
 {
@@ -669,29 +669,8 @@ class ArticleController extends Controller
             ]);
 
             if ($request->hasFile('thumbnail_url') && $thumbnailModerationResult['violation_level'] !== 'high') {
-                $file = $request->file('thumbnail_url');
-                if ($file && $file->isValid()) {
-                    // Lấy thông tin file
-                    $originalName = $file->getClientOriginalName();
-                    $extension = $file->getClientOriginalExtension();
-                    $mimeType = $file->getMimeType();
-                    
-                    // Di chuyển file tạm thời đến thư mục storage
-                    $filename = time() . '_' . uniqid() . '.' . $extension;
-                    $result = $file->move(storage_path('app/public/thumbnails'), $filename);
-                    
-                    if ($result) {
-                        $path = 'thumbnails/' . $filename;
-                        $article->update(['thumbnail_url' => $path]);
-                    } else {
-                        Log::error('Failed to move thumbnail file', [
-                            'original_name' => $originalName,
-                            'mime_type' => $mimeType
-                        ]);
-                    }
-                } else {
-                    Log::error('Invalid thumbnail file in request');
-                }
+                $path = $request->file('thumbnail_url')->store('thumbnails', 'public');
+                $article->update(['thumbnail_url' => $path]);
             }
 
             $tagIds = $this->processTags($request->input('tags', []));
@@ -891,7 +870,10 @@ class ArticleController extends Controller
     {
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $path = $file->store('uploads', 'public');
+            $path = $file->store(
+                'uploads',
+                'public'
+            );
 
             return response()->json([
                 'location' => asset("storage/$path"),
@@ -901,81 +883,83 @@ class ArticleController extends Controller
     }
 
 
-    public function updateStatus(Request $request, $id)
-    {
-        $article = Article::find($id);
+        public function updateStatus(Request $request, $id)
+        {
+            $article = Article::find($id);
 
-        if (!$article) {
-            return response()->json(['message' => 'Bài viết không tồn tại'], 404);
+            if (!$article) {
+                return response()->json(['message' => 'Bài viết không tồn tại'], 404);
+            }
+
+            $article->status = $request->status;
+            $article->save();
+
+            if (!$article->author) {
+                Log::error("Không tìm thấy tác giả của bài viết ID: {$article->id}");
+                return response()->json(['message' => 'Không tìm thấy tác giả'], 500);
+            }
+
+            $message = "Bài viết '{$article->title}' của bạn đã được " .
+                ($article->status === 'published' ? 'duyệt.' : 'từ chối.');
+
+            try {
+                $article->author->notify(new ArticleStatusUpdated($article, $message));
+            } catch (\Exception $e) {
+                Log::error("Lỗi khi gửi thông báo: " . $e->getMessage());
+            }
         }
 
-        $article->status = $request->status;
-        $article->save();
+        public function requestReview(Article $article)
+        {
+            // Kiểm tra quyền sở hữu bài viết
+            if ($article->author_id !== auth()->id()) {
+                return redirect()
+                    ->back()
+                    ->with('error', 'Bạn không có quyền thực hiện hành động này.');
+            }
 
-        if (!$article->author) {
-            Log::error("Không tìm thấy tác giả của bài viết ID: {$article->id}");
-            return response()->json(['message' => 'Không tìm thấy tác giả'], 500);
-        }
+            // Kiểm tra trạng thái bài viết
+            if ($article->status !== 'rejected') {
+                return redirect()
+                    ->back()
+                    ->with('error', 'Chỉ có thể xin duyệt lại các bài viết đã bị từ chối.');
+            }
 
-        $message = "Bài viết '{$article->title}' của bạn đã được " .
-            ($article->status === 'published' ? 'duyệt.' : 'từ chối.');
+            // Cập nhật trạng thái bài viết thành 'pending'
+            $article->update([
+                'status' => 'pending'
+            ]);
 
-        try {
-            $article->author->notify(new ArticleStatusUpdated($article, $message));
-        } catch (\Exception $e) {
-            Log::error("Lỗi khi gửi thông báo: " . $e->getMessage());
-        }
-    }
 
-    public function requestReview(Article $article)
-    {
-        // Kiểm tra quyền sở hữu bài viết
-        if ($article->author_id !== auth()->id()) {
+            $approvalData = [
+                'type' => 'article',
+                'user_id' => auth()->id(),
+                'status' => 'pending',
+                'remarks' => 'Bài viết đã được gửi lại để xin duyệt',
+                'approved_by' => null,
+            ];
+
+            $approval = Approval::where('article_id', $article->article_id)->first();
+            if ($approval) {
+                $approval->update($approvalData);
+            } else {
+                Approval::create(array_merge(
+                    ['article_id' => $article->article_id],
+                    $approvalData
+                ));
+            }
+
+            // Gửi thông báo cho moderator quản lý danh mục này nếu có
+            if ($article->category && $article->category->moderator) {
+                $article->category->moderator->notify(new PendingArticleNotification($article));
+            }
+
             return redirect()
-                ->back()
-                ->with('error', 'Bạn không có quyền thực hiện hành động này.');
+                ->route('author.articles.index')
+                ->with('success', 'Bài viết đã được gửi lại để xin duyệt!');
         }
 
-        // Kiểm tra trạng thái bài viết
-        if ($article->status !== 'rejected') {
-            return redirect()
-                ->back()
-                ->with('error', 'Chỉ có thể xin duyệt lại các bài viết đã bị từ chối.');
-        }
 
-        // Cập nhật trạng thái bài viết thành 'pending'
-        $article->update([
-            'status' => 'pending'
-        ]);
-
-
-        $approvalData = [
-            'type' => 'article',
-            'user_id' => auth()->id(),
-            'status' => 'pending',
-            'remarks' => 'Bài viết đã được gửi lại để xin duyệt',
-            'approved_by' => null,
-        ];
-
-        $approval = Approval::where('article_id', $article->article_id)->first();
-        if ($approval) {
-            $approval->update($approvalData);
-        } else {
-            Approval::create(array_merge(
-                ['article_id' => $article->article_id],
-                $approvalData
-            ));
-        }
-
-        // Gửi thông báo cho moderator quản lý danh mục này nếu có
-        if ($article->category && $article->category->moderator) {
-            $article->category->moderator->notify(new PendingArticleNotification($article));
-        }
-
-        return redirect()
-            ->route('author.articles.index')
-            ->with('success', 'Bài viết đã được gửi lại để xin duyệt!');
-    }
 
 
     public function search(Request $request)
@@ -1002,70 +986,37 @@ class ArticleController extends Controller
         ]);
     }
 
-
-
-
-    //    public function updateStatus(Request $request, $id)
-    //    {
-    //        $article = Article::find($id);
-    //
-    //        if (!$article) {
-    //            return response()->json(['message' => 'Bài viết không tồn tại'], 404);
-    //        }
-    //
-    //        $article->status = $request->status;
-    //        $article->save();
-    //
-    //        if (!$article->author) {
-    //            Log::error("Không tìm thấy tác giả của bài viết ID: {$article->id}");
-    //            return response()->json(['message' => 'Không tìm thấy tác giả'], 500);
-    //        }
-    //
-    //        $message = "Bài viết '{$article->title}' của bạn đã được " .
-    //            ($article->status === 'published' ? 'duyệt.' : 'từ chối.');
-    //
-    //        try {
-    //            $article->author->notify(new ArticleStatusUpdated($article, $message));
-    //        } catch (\Exception $e) {
-    //            Log::error("Lỗi khi gửi thông báo: " . $e->getMessage());
-    //        }
-    //
-    //        return response()->json(['message' => 'Trạng thái bài viết đã được cập nhật.']);
-    //    }
-
+//    public function updateStatus(Request $request, $id)
+//    {
+//        $article = Article::find($id);
+//
+//        if (!$article) {
+//            return response()->json(['message' => 'Bài viết không tồn tại'], 404);
+//        }
+//
+//        $article->status = $request->status;
+//        $article->save();
+//
+//        if (!$article->author) {
+//            Log::error("Không tìm thấy tác giả của bài viết ID: {$article->id}");
+//            return response()->json(['message' => 'Không tìm thấy tác giả'], 500);
+//        }
+//
+//        $message = "Bài viết '{$article->title}' của bạn đã được " .
+//            ($article->status === 'published' ? 'duyệt.' : 'từ chối.');
+//
+//        try {
+//            $article->author->notify(new ArticleStatusUpdated($article, $message));
+//        } catch (\Exception $e) {
+//            Log::error("Lỗi khi gửi thông báo: " . $e->getMessage());
+//        }
+//
+//        return response()->json(['message' => 'Trạng thái bài viết đã được cập nhật.']);
+//    }
 
     /**
      * Hiển thị danh sách các phiên bản của bài viết
      */
-    public function writingGuidelines()
-    {
-        return view('author.writing-guidelines');
-    }
-
-    // public function search(Request $request)
-    // {
-    //     $query = $request->input('query');
-
-    //     $articlesQuery = Article::with(['category', 'tags'])
-    //         ->where('author_id', auth()->id())
-    //         ->orderBy('created_at', 'desc');
-
-    //     if ($query) {
-    //         $articlesQuery->where(function ($q) use ($query) {
-    //             $q->where('title', 'like', "%{$query}%")
-    //                 ->orWhere('content', 'like', "%{$query}%");
-    //         });
-    //     }
-
-    //     $articles = $articlesQuery->paginate(10);
-
-    //     return response()->json([
-    //         'data' => $articles->items(),
-    //         'links' => $articles->links()->render(),
-    //         'total' => $articles->total(),
-    //     ]);
-    // }
-
     public function versions(Article $article)
     {
         if ($article->author_id !== auth()->id()) {
@@ -1082,6 +1033,9 @@ class ArticleController extends Controller
         return view('author.articles.versions', compact('article', 'versions'));
     }
 
+    /**
+     * Hiển thị chi tiết một phiên bản cụ thể
+     */
     public function showVersion(Article $article, $versionId)
     {
         if ($article->author_id !== auth()->id()) {
