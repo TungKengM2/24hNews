@@ -2,12 +2,12 @@
 
 		namespace App\Services;
 
-use finfole;
-use CURLFileon;
-use Exceptionfo;
-use Illuminate\Support\Facades\Loghe;
-use Illuminate\Support\Facades\Cacheog;
-use Illuminate\Support\Facades\Storagege;
+use finfo;
+use CURLFile;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 		class ModerationService
 		{
