@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Author;
 
-use Exception;
-use DOMDocument;
+use App\Http\Controllers\Controller;
+use App\Models\Approval;
+use App\Models\Article;
+use App\Models\Category;
 use App\Models\Tag;
 use App\Models\User;
-use App\Models\Article;
-use App\Models\Approval;
-use App\Models\Category;
-use App\Helpers\CodeHelper;
-use Illuminate\Http\Request;
 use App\Models\ModerationLog;
-use App\Models\ArticleVersion;
-use App\Services\ModerationService;
-use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
 use App\Notifications\ArticleStatusUpdated;
-use Illuminate\Validation\ValidationException;
 use App\Notifications\PendingArticleNotification;
+use App\Services\ModerationService;
+use DOMDocument;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
+use App\Helpers\CodeHelper;
+use App\Models\ArticleVersion;
 
 class ArticleController extends Controller
 {
@@ -870,7 +870,10 @@ class ArticleController extends Controller
     {
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $path = $file->store('uploads', 'public');
+            $path = $file->store(
+                'uploads',
+                'public'
+            );
 
             return response()->json([
                 'location' => asset("storage/$path"),
@@ -957,6 +960,8 @@ class ArticleController extends Controller
         }
 
 
+
+
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -981,66 +986,33 @@ class ArticleController extends Controller
         ]);
     }
 
-
-
-
 //    public function updateStatus(Request $request, $id)
 //    {
 //        $article = Article::find($id);
-//
+
 //        if (!$article) {
 //            return response()->json(['message' => 'Bài viết không tồn tại'], 404);
 //        }
-//
+
 //        $article->status = $request->status;
 //        $article->save();
-//
+
 //        if (!$article->author) {
 //            Log::error("Không tìm thấy tác giả của bài viết ID: {$article->id}");
 //            return response()->json(['message' => 'Không tìm thấy tác giả'], 500);
 //        }
-//
+
 //        $message = "Bài viết '{$article->title}' của bạn đã được " .
 //            ($article->status === 'published' ? 'duyệt.' : 'từ chối.');
-//
+
 //        try {
 //            $article->author->notify(new ArticleStatusUpdated($article, $message));
 //        } catch (\Exception $e) {
 //            Log::error("Lỗi khi gửi thông báo: " . $e->getMessage());
 //        }
-//
+
 //        return response()->json(['message' => 'Trạng thái bài viết đã được cập nhật.']);
-//    }
-
-    public function writingGuidelines()
-    {
-        return view('author.writing-guidelines');
-    }
-
-    // public function search(Request $request)
-    // {
-    //     $query = $request->input('query');
-
-    //     $articlesQuery = Article::with(['category', 'tags'])
-    //         ->where('author_id', auth()->id())
-    //         ->orderBy('created_at', 'desc');
-
-    //     if ($query) {
-    //         $articlesQuery->where(function ($q) use ($query) {
-    //             $q->where('title', 'like', "%{$query}%")
-    //                 ->orWhere('content', 'like', "%{$query}%");
-    //         });
-    //     }
-
-    //     $articles = $articlesQuery->paginate(10);
-
-    //     return response()->json([
-    //         'data' => $articles->items(),
-    //         'links' => $articles->links()->render(),
-    //         'total' => $articles->total(),
-    //     ]);
-    // }
-
+//      }
 
     /**
      * Hiển thị danh sách các phiên bản của bài viết
@@ -1061,6 +1033,9 @@ class ArticleController extends Controller
         return view('author.articles.versions', compact('article', 'versions'));
     }
 
+    /**
+     * Hiển thị chi tiết một phiên bản cụ thể
+     */
     public function showVersion(Article $article, $versionId)
     {
         if ($article->author_id !== auth()->id()) {
@@ -1077,6 +1052,3 @@ class ArticleController extends Controller
         return view('author.articles.version-detail', compact('article', 'version'));
     }
 }
-
-
-

@@ -53,9 +53,6 @@ class User extends Authenticatable implements CanResetPasswordContract
         'banned_until' => 'datetime',
     ];
 
-
-
-
     /**
      * Quan hệ với bảng roles
      */

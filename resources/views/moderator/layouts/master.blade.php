@@ -20,6 +20,99 @@
         #loader {
             transition: opacity 0.3s ease; /* Adjusts the opacity transition duration */
         }
+
+        .user-panel .image {
+            width: 128px;
+            height: 128px;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin: 0 auto;
+        }
+
+        .user-panel .image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .user-panel .info {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .user-panel .info p {
+            margin: 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* Style cho phần preview ảnh khi upload */
+        .widget-user-image {
+            position: relative;
+            width: 128px;
+            height: 128px;
+            margin: -64px auto 0;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .widget-user-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        #avatarPreview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Style cho input file */
+        #avatarUpload {
+            display: none;
+        }
+
+        .profile-pic {
+            width: 128px;
+            height: 128px;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin: 0 auto;
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .profile-info {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .profile-info h4 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
     </style>
 
 </head>
@@ -204,6 +297,26 @@
 
     <!-- Vendor JS -->
     @include('moderator.layouts.partials.js')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const avatarUpload = document.getElementById('avatarUpload');
+            const avatarPreview = document.getElementById('avatarPreview');
+
+            if (avatarUpload && avatarPreview) {
+                avatarUpload.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            avatarPreview.src = e.target.result;
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+    </script>
 
 </body>
 

@@ -95,15 +95,15 @@
                         <li><a href="{{ route('admin.comments.index') }}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Quản Lý Bình Luận</a>
                         </li>
-                        <li>
-                            <a href="{{ route('admin.edit-requests.index') }}" style="position: relative;">
-                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Duyệt Yêu Cầu Chỉnh Sửa
-                                @if($pendingEditRequestsCount > 0)
-                                    <x-notification-badge :count="$pendingEditRequestsCount" />
-                                @endif
-                            </a>
-                        </li>
+{{--                        <li>--}}
+{{--                            <a href="{{ route('admin.edit-requests.index') }}" style="position: relative;">--}}
+{{--                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>--}}
+{{--                                Duyệt Yêu Cầu Chỉnh Sửa--}}
+{{--                                @if($pendingEditRequestsCount > 0)--}}
+{{--                                    <x-notification-badge :count="$pendingEditRequestsCount" />--}}
+{{--                                @endif--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
                         <li><a href="{{ route('admin.violations.approves') }}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Duyệt Report</a>
                         </li>

@@ -66,7 +66,7 @@
                                             Quay lại
                                         </a>
                                     </button>
-                                    <button type="button" class="waves-effect waves-light btn btn-primary mb-5">
+                                    <button type="button" class="waves-effect waves-light btn btn-primary mb-5 h-40">
                                         <a href="{{ route('categories.create') }}">
                                             <i class="si-plus si"></i>
                                         </a>
@@ -159,7 +159,7 @@
                                                     @endif
                                                 </td>
                                                 <td class="d-flex">
-                                                    <a class="btn btn-warning me-2"
+                                                    <a class="btn btn-warning me-2 h-40"
                                                         href="{{ route('categories.edit', $parentCategory) }}">
                                                         <i class="si-pencil si"></i>
                                                     </a>
@@ -167,7 +167,7 @@
                                                         method="POST">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button class="btn btn-danger"
+                                                        <button class="btn btn-danger h-40"
                                                             onclick="return confirm('Bạn có chắc chắn muốn xoá không?')"
                                                             type="submit">
                                                             <i class="si-trash si"></i>
@@ -211,7 +211,7 @@
                                                         @endif
                                                     </td>
                                                     <td class="d-flex">
-                                                        <a class="btn btn-warning me-2"
+                                                        <a class="btn btn-warning me-2 h-40"
                                                             href="{{ route('categories.edit', $childCategory) }}">
                                                             <i class="si-pencil si"></i>
                                                         </a>
@@ -219,7 +219,7 @@
                                                             method="POST">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button class="btn btn-danger"
+                                                            <button class="btn btn-danger h-40"
                                                                 onclick="return confirm('Bạn có chắc chắn muốn xoá không?')"
                                                                 type="submit">
                                                                 <i class="si-trash si"></i>

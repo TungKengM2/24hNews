@@ -74,8 +74,8 @@ class ArticleSaveController extends Controller
             ->with('article') // Load thông tin bài viết
             ->latest()
             ->paginate(10);
-
-        return view('user.saved', compact('savedArticles'));
+        // dat them
+        return view('website.profiles.users.saved', compact('savedArticles', 'user'));
     }
 
     public function removeSavedArticle($id)

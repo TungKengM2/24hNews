@@ -49,6 +49,8 @@ use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorAr
 
 use App\Http\Controllers\EditRequestController;
 
+use App\Http\Controllers\Client\UserProfileController;
+
 // 🌟 Trang chủ & bài viết chi tiết
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -61,7 +63,8 @@ Route::get('/search', [HomeController::class, 'search'])->name('search');
 // profile trang chủ dat them
 
 // // User Profile
-// Route::get('/profiles/user/{id}', [ProfileAuthorProfileController::class, 'showUser'])->name('website.profileUser')->middleware('auth');
+// dat them
+Route::get('/profiles/user/{id}', [ProfileAuthorProfileController::class, 'showUser'])->name('website.profileUser')->middleware('auth');
 
 // Author Profile
 Route::get('/profiles/author/{id}', [ProfileAuthorProfileController::class, 'showAuth'])->name('website.profileAuth')->middleware('auth');
@@ -78,20 +81,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])->name('articles.article');
 
     Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
-        Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
-        Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
-        Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
-        Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
-        Route::post('/comments/{comment}/like', [ArticleUserController::class, 'toggleLike'])->name('comments.toggleLike');
-        Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
-
-
+    Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
+    Route::post('/articles/{article_id}/report', [ArticleUserController::class, 'reportArticle']);
+    Route::post('/articles/{article_id}/comments/{comment_id}/report', [ArticleUserController::class, 'reportComment']);
+    Route::delete('/comments/{comment}', [ArticleUserController::class, 'destroy'])->name('comments.destroy');
+    Route::post('/comments/{comment}/like', [ArticleUserController::class, 'toggleLike'])->name('comments.toggleLike');
+    Route::post('/articles/{article_id}/like', [ArticleUserController::class, 'likeArticle'])->name('articles.like');
 
 
 
 
     // Route::middleware(['check.violations'])->group(function () {
-
 
 
     // });
@@ -170,6 +170,8 @@ Route::middleware(['auth'])->group(function () {
     // )->name('profile.change-password');
 
     Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
+
+    Route::post('/profile/update-avatar', [UserProfileController::class, 'updateAvatar'])->name('profile.update.avatar');
 
     Route::post('/profile/upload-avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.upload-avatar');
 });
@@ -445,7 +447,7 @@ Route::middleware(['auth', 'role:4'])->prefix('/user')->group(function () {
     Route::post('/upgrade-request', [ProfileController::class, 'requestAuthorRole'])->name('user.upgrade.request');
 
     Route::get('/upgrade-result', function () {
-        return view('user.upgrade-result');
+        return view('website.profiles.users.upgrade-result');
     })
         ->name('user.upgrade.result');
 
@@ -633,6 +635,7 @@ Route::get('/tinymce/clear-blocked-images', [TinyMCEUploadController::class, 'cl
 // TinyMCE routes cho admin
 Route::post('/admin/tinymce/upload', [TinyMCEUploadController::class, 'uploadImage'])->name('admin.tinymce.upload');
 
+Route::get('/admin/tinymce/clear-blocked-images', [TinyMCEUploadController::class, 'clearBlockedImages'])->name('admin.tinymce.clear-blocked-images');
 Route::get('/admin/tinymce/clear-blocked-images', [TinyMCEUploadController::class, 'clearBlockedImages'])->name('admin.tinymce.clear-blocked-images');
 
 // Article routes

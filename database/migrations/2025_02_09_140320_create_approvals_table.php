@@ -15,7 +15,9 @@ return new class extends Migration
         Schema::create('approvals', function (Blueprint $table) {
             $table->id('approval_id');
             $table->string('type')->default('role_upgrade');
+            $table->foreignId('article_id')->nullable()->constrained('articles', 'article_id')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users', 'user_id')->onDelete('cascade');
+            $table->foreignId('approved_by')->nullable()->constrained('users', 'user_id')->onDelete('set null');
             $table->string('cccd_number')->nullable();
             $table->string('cccd_front')->nullable();
             $table->string('cccd_back')->nullable();

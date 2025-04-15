@@ -9,6 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="/admin/main/../images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <title>@yield('title')</title>
 
@@ -29,14 +30,14 @@
         <div id="loader"></div>
 
         <header class="main-header">
-            @include('user.layouts.partials.header-logo')
+            {{-- @include('user.layouts.partials.header-logo')
             <!-- Header Navbar -->
-            @include('user.layouts.partials.header-top')
+            @include('user.layouts.partials.header-top') --}}
         </header>
 
         <aside class="main-sidebar">
-            <!-- sidebar-->
-            @include('user.layouts.partials.aside-sidebar')
+            {{-- <!-- sidebar-->
+            @include('user.layouts.partials.aside-sidebar') --}}
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
@@ -45,10 +46,10 @@
 
         <!-- /.content-wrapper -->
 
-        @include('user.layouts.partials.footer')
+        {{-- @include('user.layouts.partials.footer') --}}
 
         <!-- Control Sidebar -->
-        @include('user.layouts.partials.control-sidebar')
+        {{-- @include('user.layouts.partials.control-sidebar') --}}
         <!-- /.control-sidebar -->
 
         <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
