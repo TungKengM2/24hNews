@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         .criteria-item.passed #current-title-length,
@@ -20,14 +21,14 @@
         .criteria-item.failed #current-word-count {
             color: #dc3545 !important;
         }
-        
+
         /* CSS cho hiệu ứng loading */
         .image-upload-loading {
             display: none;
             text-align: center;
             margin-top: 10px;
         }
-        
+
         .spinner {
             display: inline-block;
             width: 40px;
@@ -37,9 +38,36 @@
             border-top-color: #007bff;
             animation: spin 1s ease-in-out infinite;
         }
-        
+
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        #moderation-result {
+            margin-top: 10px;
+        }
+
+        .moderation-loading {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .violation-high {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .violation-medium {
+            color: #fd7e14;
+            font-weight: bold;
+        }
+
+        .violation-low {
+            color: #ffc107;
+        }
+
+        .violation-none {
+            color: #28a745;
         }
     </style>
 @endsection
@@ -136,266 +164,269 @@
                                     @endforeach
                                 </select>
                             </div>
-            <div class="box">
-                <div class="box-header with-border">
-                    <h4 class="box-title">Chỉnh sửa bài viết</h4>
-                    <div class="box-tools">
-                        <div class="btn-group">
-                            <a href="{{ route('author.articles.versions', $article) }}" class="btn btn-info btn-sm me-2">
-                                <i class="si-history si"></i> Lịch sử phiên bản
-                            </a>
-                            <a href="{{ route('author.articles.index') }}" class="btn btn-default btn-sm">
-                                <i class="mdi mdi-arrow-left"></i> Quay lại
-                            </a>
                         </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Main content -->
-            <div class="container-fluid mt-5">
-                <div class="row no-gutters align-items-start">
-                    <div class="col-md-9">
-                        <div class="card p-4">
-                            <!-- Error messages -->
-                            @if ($errors->any())
-                                <div class="alert alert-danger error_message">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">Chỉnh sửa bài viết</h4>
+                                <div class="box-tools">
+                                    <div class="btn-group">
+                                        <a href="{{ route('author.articles.versions', $article) }}" class="btn btn-info btn-sm me-2">
+                                            <i class="si-history si"></i> Lịch sử phiên bản
+                                        </a>
+                                        <a href="{{ route('author.articles.index') }}" class="btn btn-default btn-sm">
+                                            <i class="mdi mdi-arrow-left"></i> Quay lại
+                                        </a>
+                                    </div>
                                 </div>
-                            @endif
+                            </div>
+                        </div>
 
-                            <!-- Violation reasons -->
-                            @if (session('violation_reasons'))
-                                <div class="alert alert-warning error_message">
-                                    <strong>Lý do vi phạm:</strong>
-                                    <ul>
-                                        @if (is_array(session('violation_reasons')))
-                                            @foreach (session('violation_reasons') as $word => $reason)
-                                                <li><strong>{{ $word }}:</strong> {{ $reason }}</li>
-                                            @endforeach
-                                        @else
-                                            <li>{{ session('violation_reasons') }}</li>
+                        <!-- Main content -->
+                        <div class="container-fluid mt-5">
+                            <div class="row no-gutters align-items-start">
+                                <div class="col-md-9">
+                                    <div class="card p-4">
+                                        <!-- Error messages -->
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger error_message">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
                                         @endif
-                                    </ul>
-                                </div>
-                            @endif
 
-                            <form action="{{ route('author.articles.update', $article) }}" method="POST"
-                                enctype="multipart/form-data" id="articleForm">
-                                @csrf
-                                @method('PUT')
-
-                                <!-- Basic Information Section -->
-                                <div class="form-section">
-                                    <h5 class="form-section-title">Thông Tin Cơ Bản</h5>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="title" class="form-label">Tiêu đề:</label>
-                                            <input type="text" class="form-control" id="title" name="title"
-                                                value="{{ $article->title }}" required>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="slug" class="form-label">Đường dẫn:</label>
-                                            <input type="text" class="form-control" id="slug" name="slug"
-                                                value="{{ $article->slug }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Danh mục chính</label>
-                                            <select name="category_id" id="parent_category"
-                                                class="form-control select2-categories">
-                                                <option value="">-- Chọn danh mục chính --</option>
-                                                @foreach ($parentCategories as $category)
-                                                    @if ($category->is_active || $article->category_id == $category->category_id)
-                                                        <option value="{{ $category->category_id }}"
-                                                            {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
-                                                            {{ $category->name }} @if (!$category->is_active)
-                                                                (Đã vô hiệu hóa)
-                                                            @endif
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
-                                            <select name="tags[]" id="tags" class="form-control select2-tags"
-                                                multiple="multiple" data-placeholder="Chọn hoặc nhập thẻ mới">
-                                                @foreach ($tags as $tag)
-                                                    <option value="{{ $tag->name }}"
-                                                        @if (in_array($tag->name, $selectedTags)) selected @endif>
-                                                        {{ $tag->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới
-                                                (chấp nhận cả chữ và số).</small>
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Danh mục phụ</label>
-                                            <select name="subcategory_id" id="child_category"
-                                                class="form-control select2-subcategories"
-                                                {{ empty($article->category_id) ? 'disabled' : '' }}>
-                                                <option value="">-- Chọn danh mục phụ --</option>
-                                                @if ($article->subcategory_id)
-                                                    <option value="{{ $article->subcategory_id }}" selected>
-                                                        {{ $article->subcategory->name }}</option>
-                                                @endif
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Thumbnail Section -->
-                                <div class="form-section">
-                                    <h5 class="form-section-title">Ảnh Đại Diện</h5>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <input type="file"
-                                                class="form-control @error('thumbnail_url') is-invalid @enderror"
-                                                id="thumbnail_url" name="thumbnail_url" accept="image/*">
-                                            @error('thumbnail_url')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                            @if (session('thumbnail_reasons'))
-                                                <div class="alert alert-warning mt-2">
-                                                    <strong>Ảnh đại diện vi phạm quy định!</strong>
-                                                    <ul>
-                                                        @foreach (session('thumbnail_reasons') as $reason)
-                                                            <li>{{ $reason }}</li>
+                                        <!-- Violation reasons -->
+                                        @if (session('violation_reasons'))
+                                            <div class="alert alert-warning error_message">
+                                                <strong>Lý do vi phạm:</strong>
+                                                <ul>
+                                                    @if (is_array(session('violation_reasons')))
+                                                        @foreach (session('violation_reasons') as $word => $reason)
+                                                            <li><strong>{{ $word }}:</strong> {{ $reason }}</li>
                                                         @endforeach
-                                                    </ul>
-                                                    <p>Vui lòng chọn ảnh đại diện khác.</p>
-                                                </div>
-                                            @endif
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mt-2" id="current-image-container">
-                                                @if ($article->thumbnail_url)
-                                                    <p><strong>Ảnh đại diện hiện tại:</strong></p>
-                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                        alt="Ảnh đại diện" class="img-thumbnail"
-                                                        style="max-width: 200px; max-height: 150px;">
-                                                @endif
+                                                    @else
+                                                        <li>{{ session('violation_reasons') }}</li>
+                                                    @endif
+                                                </ul>
                                             </div>
-                                            <div id="image-preview-container" style="display: none;">
-                                                <p class="mt-2"><strong>Ảnh xem trước:</strong></p>
-                                                <img id="image-preview" src="#" alt="Xem trước"
-                                                    class="img-fluid mb-2">
-                                            </div>
-                                            <div id="moderation-result" style="display: none;">
-                                                <div id="moderation-loading" class="moderation-loading"
-                                                    style="display: none;">
-                                                    <div class="spinner-border text-primary" role="status">
-                                                        <span class="visually-hidden">Đang kiểm duyệt...</span>
+                                        @endif
+
+                                        <form action="{{ route('author.articles.update', $article) }}" method="POST"
+                                            enctype="multipart/form-data" id="articleForm">
+                                            @csrf
+                                            @method('PUT')
+
+                                            <!-- Basic Information Section -->
+                                            <div class="form-section">
+                                                <h5 class="form-section-title">Thông Tin Cơ Bản</h5>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="title" class="form-label">Tiêu đề:</label>
+                                                        <input type="text" class="form-control" id="title" name="title"
+                                                            value="{{ $article->title }}" required>
                                                     </div>
-                                                    <p>Đang kiểm duyệt ảnh...</p>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="slug" class="form-label">Đường dẫn:</label>
+                                                        <input type="text" class="form-control" id="slug" name="slug"
+                                                            value="{{ $article->slug }}" required>
+                                                    </div>
                                                 </div>
-                                                <div id="moderation-error" class="alert alert-danger"
-                                                    style="display: none;">
-                                                    <strong>Lỗi!</strong> <span id="error-message"></span>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Danh mục chính</label>
+                                                        <select name="category_id" id="parent_category"
+                                                            class="form-control select2-categories">
+                                                            <option value="">-- Chọn danh mục chính --</option>
+                                                            @foreach ($parentCategories as $category)
+                                                                @if ($category->is_active || $article->category_id == $category->category_id)
+                                                                    <option value="{{ $category->category_id }}"
+                                                                        {{ $article->category_id == $category->category_id ? 'selected' : '' }}>
+                                                                        {{ $category->name }} @if (!$category->is_active)
+                                                                            (Đã vô hiệu hóa)
+                                                                        @endif
+                                                                    </option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="tags" class="form-label">Chọn hoặc thêm thẻ:</label>
+                                                        <select name="tags[]" id="tags" class="form-control select2-tags"
+                                                            multiple="multiple" data-placeholder="Chọn hoặc nhập thẻ mới">
+                                                            @foreach ($tags as $tag)
+                                                                <option value="{{ $tag->name }}"
+                                                                    @if (in_array($tag->name, $selectedTags)) selected @endif>
+                                                                    {{ $tag->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                        <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới
+                                                            (chấp nhận cả chữ và số).</small>
+                                                    </div>
+
+                                                    <div class="col-md-6 mb-3">
+                                                        <label class="form-label">Danh mục phụ</label>
+                                                        <select name="subcategory_id" id="child_category"
+                                                            class="form-control select2-subcategories"
+                                                            {{ empty($article->category_id) ? 'disabled' : '' }}>
+                                                            <option value="">-- Chọn danh mục phụ --</option>
+                                                            @if ($article->subcategory_id)
+                                                                <option value="{{ $article->subcategory_id }}" selected>
+                                                                    {{ $article->subcategory->name }}</option>
+                                                            @endif
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Thumbnail Section -->
+                                            <div class="form-section">
+                                                <h5 class="form-section-title">Ảnh Đại Diện</h5>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input type="file"
+                                                            class="form-control @error('thumbnail_url') is-invalid @enderror"
+                                                            id="thumbnail_url" name="thumbnail_url" accept="image/*">
+                                                        @error('thumbnail_url')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                        @if (session('thumbnail_reasons'))
+                                                            <div class="alert alert-warning mt-2">
+                                                                <strong>Ảnh đại diện vi phạm quy định!</strong>
+                                                                <ul>
+                                                                    @foreach (session('thumbnail_reasons') as $reason)
+                                                                        <li>{{ $reason }}</li>
+                                                                    @endforeach
+                                                                </ul>
+                                                                <p>Vui lòng chọn ảnh đại diện khác.</p>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mt-2" id="current-image-container">
+                                                            @if ($article->thumbnail_url)
+                                                                <p><strong>Ảnh đại diện hiện tại:</strong></p>
+                                                                <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                                                    alt="Ảnh đại diện" class="img-thumbnail"
+                                                                    style="max-width: 200px; max-height: 150px;">
+                                                            @endif
+                                                        </div>
+                                                        <div id="image-preview-container" style="display: none;">
+                                                            <p class="mt-2"><strong>Ảnh xem trước:</strong></p>
+                                                            <img id="image-preview" src="#" alt="Xem trước"
+                                                                class="img-fluid mb-2">
+                                                        </div>
+                                                        <div id="moderation-result" style="display: none;">
+                                                            <div id="moderation-loading" class="alert alert-info" style="display: none;">
+                                                                <strong><i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...</strong> Vui lòng đợi trong giây lát.
+                                                            </div>
+                                                            <div id="moderation-error" class="alert alert-danger" style="display: none;">
+                                                                <strong>Lỗi!</strong> <span id="error-message"></span>
+                                                            </div>
+                                                            <div id="moderation-success" class="alert alert-success" style="display: none;">
+                                                                <strong><i class="fas fa-check-circle"></i> Thành công!</strong> Ảnh đã được kiểm duyệt và không vi phạm quy định.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Content Section -->
+                                            @php
+                                                $content = str_replace('src="../../storage', 'src="/storage', $article->content);
+                                            @endphp
+                                            <div class="form-group">
+                                                <label for="content" class="form-label">Nội dung</label>
+                                                @if (session('violations'))
+                                                    <textarea id="full-featured" name="content"
+                                                        style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
+                                                        {!! highlightWords(old('content'), session('violations')) !!}
+                                                    </textarea>
+                                                @else
+                                                    <textarea id="full-featured" name="content" style="height: 800px;">
+                                                        {!! $content !!}
+                                                    </textarea>
+                                                @endif
+
+                                                <!-- Thêm phần loading -->
+                                                <div class="image-upload-loading" id="image-upload-loading">
+                                                    <div class="spinner"></div>
+                                                    <p class="mt-2">Đang tải lên và kiểm duyệt hình ảnh...</p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Hidden fields and buttons -->
+                                            <input type="hidden" name="status" id="articleStatus" value="pending">
+                                            <input type="hidden" name="author_id" value="{{ $article->author_id }}">
+                                            <div class="action-buttons">
+                                                <button type="submit" class="btn btn-primary" id="submitButton">Cập nhật</button>
+                                                <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Verification Criteria -->
+                                <div class="col-md-3">
+                                    <div class="verification-criteria">
+                                        <h4 class="verification-criteria-title">Tiêu chí xuất bản</h4>
+                                        <div class="criteria-content">
+                                            <ul class="criteria-list" id="criteria-list">
+                                                <li class="criteria-item failed" id="criteria-title" data-target="title">
+                                                    <div class="criteria-icon failed">✗</div>
+                                                    <div class="criteria-text criteria-tooltip">
+                                                        Tiêu đề từ 50-60 ký tự <span id="current-title-length">(0 ký tự)</span>
+                                                        <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy đủ
+                                                            trên Google và tối ưu cho SEO</span>
+                                                    </div>
+                                                </li>
+                                                <li class="criteria-item failed" id="criteria-category"
+                                                    data-target="parent_category">
+                                                    <div class="criteria-icon failed">✗</div>
+                                                    <div class="criteria-text criteria-tooltip">
+                                                        Chọn danh mục chính và phụ
+                                                        <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ phù
+                                                            hợp với nội dung bài viết</span>
+                                                    </div>
+                                                </li>
+                                                <li class="criteria-item failed" id="criteria-tags" data-target="tags">
+                                                    <div class="criteria-icon failed">✗</div>
+                                                    <div class="criteria-text criteria-tooltip">
+                                                        Chọn 2-5 thẻ tag liên quan <span id="current-tag-count">(0 thẻ)</span>
+                                                        <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và tăng khả
+                                                            năng xuất hiện trong tìm kiếm</span>
+                                                    </div>
+                                                </li>
+                                                <li class="criteria-item failed" id="criteria-thumbnail" data-target="thumbnail_url">
+                                                    <div class="criteria-icon failed">✗</div>
+                                                    <div class="criteria-text criteria-tooltip">
+                                                        Ảnh đại diện chất lượng cao
+                                                        <span class="tooltip-text">Ảnh đại diện tối thiểu 1200x630px, rõ nét và vượt
+                                                            qua kiểm duyệt</span>
+                                                    </div>
+                                                </li>
+                                                <li class="criteria-item failed" id="criteria-content" data-target="content">
+                                                    <div class="criteria-icon failed">✗</div>
+                                                    <div class="criteria-text criteria-tooltip">
+                                                        Nội dung từ 800-1500 từ <span id="current-word-count">(0 từ)</span>
+                                                        <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn trong
+                                                            kết quả tìm kiếm và tối ưu cho người đọc</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <div class="progress-container">
+                                                <div class="criteria-progress">
+                                                    <div class="criteria-progress-bar" id="criteria-progress-bar"></div>
+                                                </div>
+                                                <div class="text-center mt-2">
+                                                    <small id="criteria-count">0/5 tiêu chí đạt</small>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <!-- Content Section -->
-                                @php
-                                    $content = str_replace('src="../../storage', 'src="/storage', $article->content);
-                                @endphp
-                                <div class="form-group">
-                                    <label for="content" class="form-label">Nội dung</label>
-                                    @if (session('violations'))
-                                        <textarea id="full-featured" name="content"
-                                            style="height: 800px; background: #ffe6e6; padding: 10px; border: 1px solid red;">
-                                            {!! highlightWords(old('content'), session('violations')) !!}
-                                        </textarea>
-                                    @else
-                                        <textarea id="full-featured" name="content" style="height: 800px;">
-                                            {!! $content !!}
-                                        </textarea>
-                                    @endif
-                                    
-                                    <!-- Thêm phần loading -->
-                                    <div class="image-upload-loading" id="image-upload-loading">
-                                        <div class="spinner"></div>
-                                        <p class="mt-2">Đang tải lên và kiểm duyệt hình ảnh...</p>
-                                    </div>
-                                </div>
-
-                                <!-- Hidden fields and buttons -->
-                                <input type="hidden" name="status" id="articleStatus" value="pending">
-                                <input type="hidden" name="author_id" value="{{ $article->author_id }}">
-                                <div class="action-buttons">
-                                    <button type="submit" class="btn btn-primary" id="submitButton">Cập nhật</button>
-                                    <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Verification Criteria -->
-                    <div class="col-md-3">
-                        <div class="verification-criteria">
-                            <h4 class="verification-criteria-title">Tiêu chí xuất bản</h4>
-                            <div class="criteria-content">
-                                <ul class="criteria-list" id="criteria-list">
-                                    <li class="criteria-item failed" id="criteria-title" data-target="title">
-                                        <div class="criteria-icon failed">✗</div>
-                                        <div class="criteria-text criteria-tooltip">
-                                            Tiêu đề từ 50-60 ký tự <span id="current-title-length">(0 ký tự)</span>
-                                            <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy đủ
-                                                trên Google và tối ưu cho SEO</span>
-                                        </div>
-                                    </li>
-                                    <li class="criteria-item failed" id="criteria-category"
-                                        data-target="parent_category">
-                                        <div class="criteria-icon failed">✗</div>
-                                        <div class="criteria-text criteria-tooltip">
-                                            Chọn danh mục chính và phụ
-                                            <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ phù
-                                                hợp với nội dung bài viết</span>
-                                        </div>
-                                    </li>
-                                    <li class="criteria-item failed" id="criteria-tags" data-target="tags">
-                                        <div class="criteria-icon failed">✗</div>
-                                        <div class="criteria-text criteria-tooltip">
-                                            Chọn 2-5 thẻ tag liên quan <span id="current-tag-count">(0 thẻ)</span>
-                                            <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và tăng khả
-                                                năng xuất hiện trong tìm kiếm</span>
-                                        </div>
-                                    </li>
-                                    <li class="criteria-item failed" id="criteria-thumbnail" data-target="thumbnail_url">
-                                        <div class="criteria-icon failed">✗</div>
-                                        <div class="criteria-text criteria-tooltip">
-                                            Ảnh đại diện chất lượng cao
-                                            <span class="tooltip-text">Ảnh đại diện tối thiểu 1200x630px, rõ nét và vượt
-                                                qua kiểm duyệt</span>
-                                        </div>
-                                    </li>
-                                    <li class="criteria-item failed" id="criteria-content" data-target="content">
-                                        <div class="criteria-icon failed">✗</div>
-                                        <div class="criteria-text criteria-tooltip">
-                                            Nội dung từ 800-1500 từ <span id="current-word-count">(0 từ)</span>
-                                            <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn trong
-                                                kết quả tìm kiếm và tối ưu cho người đọc</span>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <div class="progress-container">
-                                    <div class="criteria-progress">
-                                        <div class="criteria-progress-bar" id="criteria-progress-bar"></div>
-                                    </div>
-                                    <div class="text-center mt-2">
-                                        <small id="criteria-count">0/5 tiêu chí đạt</small>
                                     </div>
                                 </div>
                             </div>
@@ -674,6 +705,21 @@
                         window.isImageChanged = true;
                         window.isImageValid = false;
 
+                        // Ẩn ảnh hiện tại, hiển thị xem trước
+                        if (currentImageContainer) {
+                            currentImageContainer.style.display = 'none';
+                        }
+
+                        // Lấy tất cả các phần tử DOM cần thiết
+                        const loadingDiv = document.getElementById('moderation-loading');
+                        const successDiv = document.getElementById('moderation-success');
+                        
+                        // Hiển thị loading và ẩn các thông báo khác
+                        if (moderationResult) moderationResult.style.display = 'block';
+                        if (loadingDiv) loadingDiv.style.display = 'block';
+                        if (errorDiv) errorDiv.style.display = 'none';
+                        if (successDiv) successDiv.style.display = 'none';
+
                         // Hiển thị phần loading
                         if (imageUploadLoading) imageUploadLoading.style.display = 'block';
 
@@ -684,70 +730,110 @@
                         };
                         reader.readAsDataURL(file);
 
-                        moderationResult.style.display = 'block';
-                        errorDiv.style.display = 'none';
+                        // Hiển thị trạng thái kiểm duyệt
+                        if (moderationResult) moderationResult.style.display = 'block';
+                        if (errorDiv) errorDiv.style.display = 'none';
+
+                        // Tạm thời vô hiệu hóa nút submit cho đến khi kiểm duyệt hoàn tất
                         submitButton.disabled = true;
 
                         const formData = new FormData();
                         formData.append('image', file);
-                        formData.append('_token', document.querySelector('meta[name="csrf-token"]')
-                            .content);
+                        formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
 
                         fetch('/api/check-image-moderation', {
                                 method: 'POST',
                                 body: formData,
                                 headers: {
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                        .content,
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                                 },
                             })
                             .then(response => {
-                                if (!response.ok) throw new Error('Lỗi kết nối: ' + response.status);
+                                if (!response.ok) {
+                                    throw new Error('Lỗi kết nối: ' + response.status);
+                                }
                                 return response.json();
                             })
                             .then(result => {
-                                moderationLoading.style.display = 'none';
+                                // Ẩn loading
+                                if (imageUploadLoading) imageUploadLoading.style.display = 'none';
+                                if (loadingDiv) loadingDiv.style.display = 'none';
+
                                 if (result.status === 'error') {
-                                    errorDiv.style.display = 'block';
-                                    errorMessage.textContent = result.message ||
-                                        'Có lỗi khi kiểm duyệt hình ảnh';
-                                    submitButton.disabled = true;
-                                    window.isImageValid = false;
-                                } else if (result.violation_level !== 'none') {
-                                    errorDiv.style.display = 'block';
-                                    let violationMessages = [];
-                                    for (let violation in result.reason) {
-                                        violationMessages.push(result.reason[violation]);
+                                    // Hiển thị thông báo lỗi
+                                    if (errorDiv) {
+                                        errorDiv.style.display = 'block';
+                                        if (successDiv) successDiv.style.display = 'none';
+                                        if (errorMessage) errorMessage.textContent = result.message || 'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
                                     }
-                                    errorMessage.innerHTML = `Vi phạm: ${violationMessages.join(', ')}`;
-                                    submitButton.disabled = true;
                                     window.isImageValid = false;
-                                    window.updateCriteria();
+                                    submitButton.disabled = true;
+                                    if (window.updateCriteria) window.updateCriteria();
+                                } else if (result.violation_level !== 'none') {
+                                    // Hiển thị thông báo lỗi vi phạm
+                                    if (errorDiv) {
+                                        errorDiv.style.display = 'block';
+                                        if (successDiv) successDiv.style.display = 'none';
+                                        let violationMessages = [];
+
+                                        for (let violation in result.reason) {
+                                            violationMessages.push(result.reason[violation]);
+                                        }
+
+                                        if (errorMessage) errorMessage.innerHTML = `Vi phạm: ${violationMessages.join(', ')}`;
+                                    }
+                                    window.isImageValid = false;
+                                    submitButton.disabled = true;
+                                    if (window.updateCriteria) window.updateCriteria();
                                 } else {
-                                    errorDiv.style.display = 'none';
-                                    submitButton.disabled = false;
+                                    // Ẩn thông báo lỗi và hiển thị thông báo thành công
+                                    if (errorDiv) errorDiv.style.display = 'none';
+                                    if (successDiv) {
+                                        successDiv.style.display = 'block';
+                                        successDiv.style.opacity = '1';
+
+                                        // Tự động ẩn thông báo thành công sau 3 giây
+                                        setTimeout(function() {
+                                            const fadeEffect = setInterval(function() {
+                                                if (successDiv.style.opacity > 0) {
+                                                    successDiv.style.opacity -= 0.1;
+                                                } else {
+                                                    clearInterval(fadeEffect);
+                                                    successDiv.style.display = 'none';
+                                                }
+                                            }, 100);
+                                        }, 3000);
+                                    }
+
                                     window.isImageValid = true;
-                                    window.updateCriteria();
+                                    submitButton.disabled = false;
+                                    if (window.updateCriteria) window.updateCriteria();
                                 }
                             })
                             .catch(error => {
-                                moderationLoading.style.display = 'none';
-                                errorDiv.style.display = 'block';
-                                errorMessage.textContent = 'Có lỗi khi kiểm duyệt: ' + error.message;
+                                // Ẩn loading
+                                if (imageUploadLoading) imageUploadLoading.style.display = 'none';
+                                if (loadingDiv) loadingDiv.style.display = 'none';
+                                
+                                if (errorDiv && errorMessage) {
+                                    errorDiv.style.display = 'block';
+                                    errorMessage.textContent = 'Có lỗi khi kiểm duyệt: ' + error.message;
+                                }
                                 submitButton.disabled = true;
                                 window.isImageValid = false;
-                                window.updateCriteria();
+                                if (window.updateCriteria) window.updateCriteria();
                             });
                     } else {
+                        // Nếu không có file được chọn
                         window.isImageChanged = false;
                         if (currentImageContainer) currentImageContainer.style.display = 'block';
-                        previewContainer.style.display = 'none';
-                        moderationResult.style.display = 'none';
-                        errorDiv.style.display = 'none';
+                        if (previewContainer) previewContainer.style.display = 'none';
+                        if (moderationResult) moderationResult.style.display = 'none';
+                        if (errorDiv) errorDiv.style.display = 'none';
                         if (imageUploadLoading) imageUploadLoading.style.display = 'none';
                         submitButton.disabled = false;
                         window.isImageValid = true;
-                        window.updateCriteria();
+                        if (window.updateCriteria) window.updateCriteria();
                     }
                 });
             }
