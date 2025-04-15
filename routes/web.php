@@ -499,6 +499,9 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 
     Route::get('/following', [ProfileController::class, 'followingOfAdminList'])->name('admin.following');
 
+    // Thêm route cho yêu cầu nâng cấp tài khoản
+    Route::get('/approvals', [App\Http\Controllers\Admin\UserController::class, 'roleUpgradeRequests'])->name('admin.approvals.index');
+
     // Bookmark By TungKeng
     Route::get('/saved-articles', [AdminArticleSaveController::class, 'savedArticles'])->name('admin.saved');
     Route::get('/article/{slug}', [ArticleUserController::class, 'show'])->name('admin.article.detail');
