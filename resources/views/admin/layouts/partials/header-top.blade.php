@@ -67,13 +67,17 @@
                     @php
                     $pendingCount = \App\Models\Article::where('status', 'pending')->count();
                     $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
-                    $totalPending = $pendingCount + $pendingViolations;
+                    $pendingUpgradeRequests = \App\Models\Approval::where('type', 'role_upgrade')
+                        ->where('status', 'pending')
+                        ->count();
+                    $totalPending = $pendingCount + $pendingViolations + $pendingUpgradeRequests;
 
                     $longPendingArticles = \App\Models\Article::where('status', 'pending')
                     ->where('created_at', '<', now()->subMinutes(30))
                         ->count();
                     $totalNotifications = $pendingCount > 0 ? 1 : 0; // 1 thông báo nếu có bài pending
                     $totalNotifications += $longPendingArticles > 0 ? 1 : 0; // +1 nếu có bài chờ lâu
+                    $totalNotifications += $pendingUpgradeRequests > 0 ? 1 : 0; // +1 nếu có yêu cầu nâng cấp
                     @endphp
 
                     @if ($pendingCount > 0 || $pendingViolations > 0)
@@ -117,7 +121,16 @@
                             @if ($longPendingArticles > 0)
                                 <li>
                                     <a href="{{ route('admin.articles.approves') }}">
-                                        {{ "Cảnh báo: $longPendingArticles bài chờ duyệt quá 30 phút!" }}
+                                        {{ "$longPendingArticles bài chờ duyệt quá 30 phút!" }}
+                                    </a>
+                                </li>
+                            @endif
+
+                            <!-- Thông báo yêu cầu nâng cấp tài khoản -->
+                            @if($pendingUpgradeRequests > 0)
+                                <li>
+                                    <a href="{{ route('admin.approvals.index') }}">
+                                        {{ "Có $pendingUpgradeRequests người dùng yêu cầu lên tác giả" }}
                                     </a>
                                 </li>
                             @endif

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Log;
 use thiagoalessio\TesseractOCR\TesseractOCR;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use App\Notifications\AuthorUpgradeRequest;
 
 class ProfileController extends Controller
 {
@@ -107,14 +109,14 @@ class ProfileController extends Controller
                 Log::info('Người dùng đã có yêu cầu nâng cấp đang chờ duyệt', [
                     'user_id' => $user->user_id
                 ]);
-                
+
                 return redirect()->to('/user/upgrade-result')
                     ->with('error', 'Bạn đã gửi yêu cầu trước đó và đang chờ duyệt.');
             } elseif ($existingRequest->status === 'approved') {
                 Log::info('Người dùng đã được nâng cấp thành tác giả', [
                     'user_id' => $user->user_id
                 ]);
-                
+
                 return redirect()->to('/user/upgrade-result')
                     ->with('error', 'Bạn đã là tác giả của hệ thống.');
             }
@@ -213,7 +215,7 @@ class ProfileController extends Controller
                         'public/' . $cccdFrontPath,
                         'public/' . $cccdBackPath
                     ]);
-                    
+
                     return redirect()->back()->with('error', 'Ảnh CCCD bị mờ');
                 }
 
@@ -223,7 +225,7 @@ class ProfileController extends Controller
                         'public/' . $cccdFrontPath,
                         'public/' . $cccdBackPath
                     ]);
-                    
+
                     return redirect()->back()->with('error', 'Số CCCD không khớp');
                 }
             } catch (\Exception $e) {
@@ -270,6 +272,12 @@ class ProfileController extends Controller
             $approval->certificates = json_encode($certificatePaths);
             $approval->save();
 
+            // Gửi thông báo cho tất cả admin
+            $admins = User::where('role_id', 1)->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new AuthorUpgradeRequest($user));
+            }
+
             return redirect()->route('user.upgrade.result')
                 ->with('status', 'Yêu cầu nâng cấp tài khoản đã được gửi thành công.');
 
@@ -279,7 +287,7 @@ class ProfileController extends Controller
                 'trace' => $e->getTraceAsString(),
                 'user_id' => $user->user_id
             ]);
-            
+
             return redirect()->back()
                 ->with('error', 'Có lỗi xảy ra khi gửi yêu cầu: ' . $e->getMessage());
         }
