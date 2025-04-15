@@ -81,6 +81,7 @@ class HomeController extends Controller
 
 
         $topAuthors = $this->getTopAuthorsOfWeek();
+        // $topAuthors = 0;
         // dd($topAuthors);
 
         $sportsArticles = Article::whereHas('category', function ($query) {
@@ -147,8 +148,12 @@ class HomeController extends Controller
             ->whereDate('created_at', Carbon::today())
             ->latest() // Sắp xếp theo mới nhất
             ->get();
+        
+        
+           
 
         // Truyền dữ liệu bài viết tới view
+        
         return view('welcome', compact(
             'categories',
             'category2',
@@ -220,74 +225,54 @@ class HomeController extends Controller
 
     private function getTopAuthorsOfWeek()
     {
-        $startDate = now()->subDays(7);
-        $endDate = now();
+        // Lấy tất cả tác giả có ít nhất 3 bài viết đã xuất bản
+        $authors = User::withCount(['articles' => function ($query) {
+            $query->where('status', 'published');
+        }])
+        ->having('articles_count', '>=', 3)
+        ->get();
 
-        $authors = User::where('role_id', 2)
-            ->whereHas('articles', function ($query) use ($startDate, $endDate) {
-                $query->where('status', 'published')
-                    ->whereBetween('created_at', [$startDate, $endDate]);
-            })
-            ->with(['articles' => function ($query) use ($startDate, $endDate) {
-                $query->where('status', 'published')
-                    ->whereBetween('created_at', [$startDate, $endDate]);
-            }])
-            ->get();
-
-        $authorRatings = [];
-        $maxScore = 100;
-
-        foreach ($authors as $author) {
-            $articleIds = $author->articles->pluck('article_id');
-
-            if ($articleIds->isEmpty()) {
-                continue;
-            }
-
-            $likesCount = ArticleLike::whereIn('article_id', $articleIds)->count();
-            $commentsCount = Comment::whereIn('article_id', $articleIds)->count();
-            $totalViews = $author->articles->sum('views');
-
-            $totalInteractions = $totalViews + $likesCount + $commentsCount;
-            $totalArticles = $author->articles->count();
-
-            $avgRating = min(5, max(1, ($totalInteractions / ($totalArticles * $maxScore)) * 5));
-
-            $authorRatings[] = [
+        // Tính điểm trung bình cho mỗi tác giả
+        $ratedAuthors = $authors->map(function ($author) {
+            // Lấy bài viết đã xuất bản của tác giả
+            $articles = Article::where('author_id', $author->user_id)
+                ->where('status', 'published')
+                ->get();
+            
+            // Tính tổng điểm đánh giá
+            $totalStars = $articles->sum(function ($article) {
+                return $article->rating_star;
+            });
+            
+            // Tính điểm trung bình
+            $averageRating = number_format($totalStars / max($articles->count(), 1), 1);
+            
+            return [
                 'author' => $author,
-                'rating' => $avgRating,
-                'interactions' => $totalInteractions,
-                'articles_count' => $totalArticles,
+                'rating' => $averageRating,
+                'articles_count' => $articles->count(),
                 'specializes_in' => $this->getAuthorSpecialization($author)
             ];
-        }
+        })
+        ->sortByDesc('rating')
+        ->take(5)
+        ->values();
 
-        usort($authorRatings, function ($a, $b) {
-            return $b['rating'] <=> $a['rating'];
-        });
-
-        return array_slice($authorRatings, 0, 3);
+        return $ratedAuthors;
     }
 
 
     private function getAuthorSpecialization($author)
     {
-        $categoryCounts = [];
+        // Lấy danh mục mà tác giả viết nhiều bài nhất
+        $topCategory = Article::where('author_id', $author->user_id)
+            ->where('status', 'published')
+            ->join('categories', 'articles.category_id', '=', 'categories.category_id')
+            ->select('categories.name')
+            ->groupBy('categories.name')
+            ->orderByRaw('COUNT(*) DESC')
+            ->first();
 
-        foreach ($author->articles as $article) {
-            if (!$article->category) continue;
-
-            $categoryName = $article->category->name;
-            if (!isset($categoryCounts[$categoryName])) {
-                $categoryCounts[$categoryName] = 0;
-            }
-            $categoryCounts[$categoryName]++;
-        }
-
-        arsort($categoryCounts);
-
-        $topCategories = array_slice(array_keys($categoryCounts), 0, 3);
-
-        return implode(', ', $topCategories);
+        return $topCategory ? $topCategory->name : 'Chưa xác định';
     }
 }
