@@ -9,6 +9,56 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        /* CSS cho hiệu ứng loading */
+        .image-upload-loading {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #007bff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #moderation-result {
+            margin-top: 10px;
+        }
+
+        .moderation-loading {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .violation-high {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .violation-medium {
+            color: #fd7e14;
+            font-weight: bold;
+        }
+
+        .violation-low {
+            color: #ffc107;
+        }
+
+        .violation-none {
+            color: #28a745;
+        }
+    </style>
 @endsection
 
 @section('title')
@@ -200,17 +250,21 @@
                                             </div>
 
                                             <div id="moderation-result" style="display: none;">
-                                                <div id="moderation-loading" class="moderation-loading"
-                                                    style="display: none;">
-                                                    <div class="spinner-border text-primary" role="status">
-                                                        <span class="visually-hidden">Đang kiểm duyệt...</span>
-                                                    </div>
-                                                    <p>Đang kiểm duyệt ảnh...</p>
+                                                <div id="moderation-loading" class="alert alert-info" style="display: none;">
+                                                    <strong><i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...</strong> Vui lòng đợi trong giây lát.
                                                 </div>
-                                                <div id="moderation-error" class="alert alert-danger"
-                                                    style="display: none;">
+                                                <div id="moderation-error" class="alert alert-danger" style="display: none;">
                                                     <strong>Lỗi!</strong> <span id="error-message"></span>
                                                 </div>
+                                                <div id="moderation-success" class="alert alert-success" style="display: none;">
+                                                    <strong><i class="fas fa-check-circle"></i> Thành công!</strong> Ảnh đã được kiểm duyệt và không vi phạm quy định.
+                                                </div>
+                                            </div>
+
+                                            <!-- Thêm phần loading -->
+                                            <div class="image-upload-loading" id="image-upload-loading">
+                                                <div class="spinner"></div>
+                                                <p class="mt-2">Đang tải lên và kiểm duyệt hình ảnh...</p>
                                             </div>
                                         </div>
                                     </div>
@@ -667,106 +721,138 @@
 
                             // Chỉ xử lý khi có file được chọn
                             if (file) {
-                                window.isImageChanged = true; // Người dùng đã thay đổi ảnh
-                                window.isImageValid = false; // Đặt lại trạng thái khi có ảnh mới
+                                window.isImageChanged = true;
+                                window.isImageValid = false;
 
                                 // Ẩn ảnh hiện tại, hiển thị xem trước
                                 if (currentImageContainer) {
                                     currentImageContainer.style.display = 'none';
                                 }
+
+                                // Lấy tất cả các phần tử DOM cần thiết
+                                const moderationResult = document.getElementById('moderation-result');
+                                const loadingDiv = document.getElementById('moderation-loading');
+                                const errorDiv = document.getElementById('moderation-error');
+                                const errorMessage = document.getElementById('error-message');
+                                const successDiv = document.getElementById('moderation-success');
+                                const imageUploadLoading = document.getElementById('image-upload-loading');
                                 
-                                // Hiển thị phần loading
+                                // Hiển thị loading và ẩn các thông báo khác
+                                if (moderationResult) moderationResult.style.display = 'block';
+                                if (loadingDiv) loadingDiv.style.display = 'block';
+                                if (errorDiv) errorDiv.style.display = 'none';
+                                if (successDiv) successDiv.style.display = 'none';
                                 if (imageUploadLoading) imageUploadLoading.style.display = 'block';
 
                                 const reader = new FileReader();
                                 reader.onload = function(e) {
-                                    imagePreview.src = e.target.result;
-                                    previewContainer.style.display = 'block';
+                                    const imagePreview = document.getElementById('image-preview');
+                                    const previewContainer = document.getElementById('image-preview-container');
+                                    if (imagePreview) imagePreview.src = e.target.result;
+                                    if (previewContainer) previewContainer.style.display = 'block';
                                 };
                                 reader.readAsDataURL(file);
 
                                 // Hiển thị trạng thái kiểm duyệt
-                                moderationResult.style.display = 'block';
-                                errorDiv.style.display = 'none';
+                                if (moderationResult) moderationResult.style.display = 'block';
+                                if (errorDiv) errorDiv.style.display = 'none';
 
                                 // Tạm thời vô hiệu hóa nút submit cho đến khi kiểm duyệt hoàn tất
                                 submitButton.disabled = true;
 
-                                // Gửi request kiểm duyệt ảnh
-                                if (document.querySelector('meta[name="csrf-token"]')) {
-                                    const formData = new FormData();
-                                    formData.append('image', file);
-                                    formData.append('_token', document.querySelector('meta[name="csrf-token"]')
-                                        .content);
+                                const formData = new FormData();
+                                formData.append('image', file);
+                                formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
 
-                                    // Gửi API kiểm duyệt
-                                    fetch('/api/check-image-moderation', {
-                                            method: 'POST',
-                                            body: formData,
-                                            headers: {
-                                                'X-CSRF-TOKEN': document.querySelector(
-                                                    'meta[name="csrf-token"]').content,
-                                            },
-                                        })
-                                        .then(response => {
-                                            if (!response.ok) {
-                                                throw new Error('Lỗi kết nối: ' + response.status);
+                                fetch('/api/check-image-moderation', {
+                                        method: 'POST',
+                                        body: formData,
+                                        headers: {
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                        },
+                                    })
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error('Lỗi kết nối: ' + response.status);
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(result => {
+                                        // Ẩn loading
+                                        if (imageUploadLoading) imageUploadLoading.style.display = 'none';
+                                        if (loadingDiv) loadingDiv.style.display = 'none';
+
+                                        if (result.status === 'error') {
+                                            // Hiển thị thông báo lỗi
+                                            if (errorDiv) {
+                                                errorDiv.style.display = 'block';
+                                                if (successDiv) successDiv.style.display = 'none';
+                                                if (errorMessage) errorMessage.textContent = result.message || 'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
                                             }
-                                            return response.json();
-                                        })
-                                        .then(result => {
-                                            // Ẩn loading
-                                            if (imageUploadLoading) imageUploadLoading.style.display = 'none';
-
-                                            if (result.status === 'error') {
+                                            window.isImageValid = false;
+                                            submitButton.disabled = true;
+                                            if (window.updateCriteria) window.updateCriteria();
+                                        } else if (result.violation_level !== 'none') {
+                                            // Hiển thị thông báo lỗi vi phạm
+                                            if (errorDiv) {
                                                 errorDiv.style.display = 'block';
-                                                errorMessage.textContent = result.message ||
-                                                    'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
-                                                submitButton.disabled = true;
-                                                window.isImageValid = false;
-                                                if (window.updateCriteria) window.updateCriteria();
-                                            } else if (result.violation_level !== 'none') {
-                                                errorDiv.style.display = 'block';
+                                                if (successDiv) successDiv.style.display = 'none';
                                                 let violationMessages = [];
 
                                                 for (let violation in result.reason) {
                                                     violationMessages.push(result.reason[violation]);
                                                 }
 
-                                                errorMessage.innerHTML =
-                                                    `Vi phạm: ${violationMessages.join(', ')}`;
-                                                submitButton.disabled = true;
-                                                window.isImageValid = false;
-                                                if (window.updateCriteria) window.updateCriteria();
-                                            } else {
-                                                errorDiv.style.display = 'none';
-                                                submitButton.disabled = false;
-                                                window.isImageValid = true;
-                                                if (window.updateCriteria) window.updateCriteria();
+                                                if (errorMessage) errorMessage.innerHTML = `Vi phạm: ${violationMessages.join(', ')}`;
                                             }
-                                        })
-                                        .catch(error => {
-                                            console.error('Lỗi kiểm duyệt:', error);
-                                            // Ẩn loading khi có lỗi
-                                            if (imageUploadLoading) imageUploadLoading.style.display = 'none';
-                                            
-                                            errorDiv.style.display = 'block';
-                                            errorMessage.textContent =
-                                                'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
-                                            submitButton.disabled = true;
                                             window.isImageValid = false;
+                                            submitButton.disabled = true;
                                             if (window.updateCriteria) window.updateCriteria();
-                                        });
-                                }
+                                        } else {
+                                            // Ẩn thông báo lỗi và hiển thị thông báo thành công
+                                            if (errorDiv) errorDiv.style.display = 'none';
+                                            if (successDiv) {
+                                                successDiv.style.display = 'block';
+                                                successDiv.style.opacity = '1';
+
+                                                // Tự động ẩn thông báo thành công sau 3 giây
+                                                setTimeout(function() {
+                                                    const fadeEffect = setInterval(function() {
+                                                        if (successDiv.style.opacity > 0) {
+                                                            successDiv.style.opacity -= 0.1;
+                                                        } else {
+                                                            clearInterval(fadeEffect);
+                                                            successDiv.style.display = 'none';
+                                                        }
+                                                    }, 100);
+                                                }, 3000);
+                                            }
+
+                                            window.isImageValid = true;
+                                            submitButton.disabled = false;
+                                            if (window.updateCriteria) window.updateCriteria();
+                                        }
+                                    })
+                                    .catch(error => {
+                                        // Ẩn loading
+                                        if (imageUploadLoading) imageUploadLoading.style.display = 'none';
+                                        if (loadingDiv) loadingDiv.style.display = 'none';
+                                        
+                                        if (errorDiv && errorMessage) {
+                                            errorDiv.style.display = 'block';
+                                            errorMessage.textContent = 'Có lỗi khi kiểm duyệt: ' + error.message;
+                                        }
+                                        submitButton.disabled = true;
+                                        window.isImageValid = false;
+                                        if (window.updateCriteria) window.updateCriteria();
+                                    });
                             } else {
-                                // Nếu người dùng hủy chọn ảnh
+                                // Nếu không có file được chọn
                                 window.isImageChanged = false;
-                                if (currentImageContainer) {
-                                    currentImageContainer.style.display = 'block';
-                                }
-                                previewContainer.style.display = 'none';
-                                moderationResult.style.display = 'none';
-                                errorDiv.style.display = 'none';
+                                if (currentImageContainer) currentImageContainer.style.display = 'block';
+                                if (previewContainer) previewContainer.style.display = 'none';
+                                if (moderationResult) moderationResult.style.display = 'none';
+                                if (errorDiv) errorDiv.style.display = 'none';
                                 if (imageUploadLoading) imageUploadLoading.style.display = 'none';
                                 submitButton.disabled = false;
                                 window.isImageValid = true;
@@ -839,3 +925,4 @@
 
         @section('scripts')
         @endsection
+
