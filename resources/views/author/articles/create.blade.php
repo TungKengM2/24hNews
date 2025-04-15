@@ -2,9 +2,57 @@
 
 @section('head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Style -->
+    <style>
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #c3bebe;
+            color: white;
+            border: 1px solid #c2c2c2;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
 
+        #image-preview-container {
+            margin-top: 10px;
+            text-align: center;
+            max-width: 300px;
+        }
 
+        #image-preview {
+            max-height: 150px;
+            width: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
+
+        #moderation-result {
+            margin-top: 10px;
+        }
+
+        .moderation-loading {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .violation-high {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .violation-medium {
+            color: #fd7e14;
+            font-weight: bold;
+        }
+
+        .violation-low {
+            color: #ffc107;
+            font-weight: bold;
+        }
+    </style>
 @endsection
 
 @section('title')
@@ -174,12 +222,8 @@
                                         @if (old('thumbnail_url'))
                                             <p>File đã chọn trước đó: {{ old('thumbnail_url') }}</p>
                                         @endif
-                                        
-                                        <!-- Thêm phần loading -->
-                                        <div class="image-upload-loading" id="image-upload-loading">
-                                            <div class="spinner"></div>
-                                            <p class="mt-2">Đang tải lên và kiểm duyệt hình ảnh...</p>
-                                        </div>
+
+
                                     </div>
 
                                     <div class="col-md-6">
@@ -228,7 +272,7 @@
                             </div>
                                 </form>
                             </div>
-                        
+
                             <div class="col-md-3">
                                 <div class="verification-criteria">
                                     <h4 class="verification-criteria-title">Tiêu chí xuất bản</h4>
@@ -433,10 +477,7 @@
                                     thumbnailInput.addEventListener('change', function(e) {
                                         const file = e.target.files[0];
                                         if (file) {
-                                            isImageValid = false;
-                                            
-                                            // Hiển thị loading
-                                            document.getElementById('image-upload-loading').style.display = 'block';
+                                            window.isImageValid = false;
 
                                             // Hiển thị thông báo đang kiểm tra và ẩn các thông báo khác
                                             const moderationResult = document.getElementById('moderation-result');
@@ -478,29 +519,33 @@
                                                 })
                                                 .then(result => {
                                                     // Ẩn loading
-                                                    document.getElementById('image-upload-loading').style.display = 'none';
-                                                    
+                                                    if (document.getElementById('moderation-loading')) {
+                                                        document.getElementById('moderation-loading').style.display = 'none';
+                                                    }
+
                                                     const moderationResult = document.getElementById('moderation-result');
                                                     const loadingDiv = document.getElementById('moderation-loading');
                                                     const errorDiv = document.getElementById('moderation-error');
                                                     const errorMessage = document.getElementById('error-message');
+                                                    const successDiv = document.getElementById('moderation-success');
 
                                                     // Ẩn thông báo đang kiểm tra
                                                     if (loadingDiv) loadingDiv.style.display = 'none';
                                                     moderationResult.style.display = 'block';
 
                                                     if (result.status === 'error') {
+                                                        // Hiển thị thông báo lỗi
                                                         errorDiv.style.display = 'block';
+                                                        successDiv.style.display = 'none';
                                                         errorMessage.textContent = result.message ||
                                                             'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
                                                         window.isImageValid = false;
                                                         submitButton.disabled = true;
-                                                        // Update verification criteria if function exists
-                                                        if (typeof updateCriteria === 'function') {
-                                                            updateCriteria();
-                                                        }
+                                                        if (window.updateCriteria) window.updateCriteria();
                                                     } else if (result.violation_level !== 'none') {
+                                                        // Hiển thị thông báo lỗi vi phạm
                                                         errorDiv.style.display = 'block';
+                                                        successDiv.style.display = 'none';
                                                         let violationMessages = [];
 
                                                         for (let violation in result.reason) {
@@ -510,16 +555,12 @@
                                                         errorMessage.innerHTML = `Vi phạm: ${violationMessages.join(', ')}`;
                                                         window.isImageValid = false;
                                                         submitButton.disabled = true;
-                                                        // Update verification criteria if function exists
-                                                        if (typeof updateCriteria === 'function') {
-                                                            updateCriteria();
-                                                        }
+                                                        if (window.updateCriteria) window.updateCriteria();
                                                     } else {
                                                         // Ẩn thông báo lỗi
                                                         errorDiv.style.display = 'none';
 
                                                         // Hiển thị thông báo thành công
-                                                        const successDiv = document.getElementById('moderation-success');
                                                         successDiv.style.display = 'block';
                                                         successDiv.style.opacity = '1';
 
@@ -528,9 +569,7 @@
                                                         submitButton.disabled = false;
 
                                                         // Cập nhật tiêu chí kiểm tra
-                                                        if (typeof updateCriteria === 'function') {
-                                                            updateCriteria();
-                                                        }
+                                                        if (window.updateCriteria) window.updateCriteria();
 
                                                         // Tự động ẩn thông báo thành công sau 3 giây
                                                         setTimeout(function() {
@@ -547,28 +586,24 @@
                                                     }
                                                 })
                                                 .catch(error => {
-                                                    // Ẩn loading khi có lỗi
-                                                    document.getElementById('image-upload-loading').style.display = 'none';
-                                                    
                                                     console.error('Lỗi kiểm duyệt:', error);
                                                     const moderationResult = document.getElementById('moderation-result');
                                                     const loadingDiv = document.getElementById('moderation-loading');
                                                     const errorDiv = document.getElementById('moderation-error');
                                                     const errorMessage = document.getElementById('error-message');
+                                                    const successDiv = document.getElementById('moderation-success');
 
                                                     // Ẩn thông báo đang kiểm tra
                                                     if (loadingDiv) loadingDiv.style.display = 'none';
                                                     moderationResult.style.display = 'block';
                                                     errorDiv.style.display = 'block';
+                                                    successDiv.style.display = 'none';
 
                                                     errorMessage.textContent = 'Có lỗi xảy ra khi kiểm duyệt hình ảnh: ' + error.message;
                                                     window.isImageValid = false;
 
                                                     submitButton.disabled = true;
-                                                    // Update verification criteria if function exists
-                                                    if (typeof updateCriteria === 'function') {
-                                                        updateCriteria();
-                                                    }
+                                                    if (window.updateCriteria) window.updateCriteria();
                                                 });
 
                                             // Nếu cần xử lý mammoth (chuyển đổi .docx)
