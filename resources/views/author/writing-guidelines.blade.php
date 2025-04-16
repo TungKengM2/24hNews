@@ -128,23 +128,6 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                        <div class="mb-3">
-                                            <h5>Mức độ vi phạm:</h5>
-                                            <ul class="list-group list-group-flush">
-                                                <li class="list-group-item">
-                                                    <span class="badge bg-success">None</span> - Không vi phạm
-                                                </li>
-                                                <li class="list-group-item">
-                                                    <span class="badge bg-warning">Low</span> - Vi phạm nhẹ
-                                                </li>
-                                                <li class="list-group-item">
-                                                    <span class="badge bg-danger">Medium</span> - Vi phạm trung bình
-                                                </li>
-                                                <li class="list-group-item">
-                                                    <span class="badge bg-dark">High</span> - Vi phạm nghiêm trọng
-                                                </li>
-                                            </ul>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
