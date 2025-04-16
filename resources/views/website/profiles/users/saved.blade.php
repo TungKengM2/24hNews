@@ -49,7 +49,8 @@
                                                 <div class="col-12">
                                                     <div class="box">
                                                         @if (session('success'))
-                                                            <div class="alert alert-success alert-dismissible" role="alert">
+                                                            <div class="alert alert-success alert-dismissible"
+                                                                role="alert">
                                                                 {{ session('success') }}
 
                                                             </div>
@@ -64,7 +65,8 @@
                                                         <h4 class="page-title">Danh Sách Bài Viết Đã Lưu</h4>
                                                         <div class="box-body">
                                                             <div class="table-responsive">
-                                                                <table class="table table-bordered table-light mb-0" style="width:100%">
+                                                                <table class="table table-bordered table-light mb-0"
+                                                                    style="width:100%">
                                                                     <thead>
                                                                         <tr>
                                                                             <th>STT</th>
@@ -81,39 +83,46 @@
                                                                                 {{ $loop->iteration + ($savedArticles->currentPage() - 1) * $savedArticles->perPage() }}
                                                                             </td>
                                                                             <td>
-                                                                                <a href="{{ route('articles.show', $savedArticle->article->article_id) }}">
+                                                                                <a
+                                                                                    href="{{ route('articles.show', $savedArticle->article->article_id) }}">
                                                                                     <img src="{{ asset('storage/' . $savedArticle->article->thumbnail_url) }}"
                                                                                         width="100px" height="100px">
                                                                                 </a>
                                                                             </td>
                                                                             <td>
-                                                                                <h5 class="card-title">{{ $savedArticle->article->title }}</h5>
+                                                                                <h5 class="card-title">
+                                                                                    {{ $savedArticle->article->title }}</h5>
                                                                             </td>
                                                                             <td>
                                                                                 {!! Str::limit(strip_tags($savedArticle->article->content), 100, '...') !!}
                                                                             </td>
                                                                             <td>
-                                                                                <h5 class="card-title">{{ $savedArticle->created_at->diffForHumans() }}
+                                                                                <h5 class="card-title">
+                                                                                    {{ $savedArticle->created_at->diffForHumans() }}
                                                                                 </h5>
                                                                             </td>
                                                                             <td>
                                                                                 <a href="{{ route('article.detail', ['slug' => $savedArticle->article->slug]) }}"
-                                                                                    class="btn btn-primary btn-sm"><i class="fas fa-eye"></i>
+                                                                                    class="btn btn-primary btn-sm"><i
+                                                                                        class="fas fa-eye"></i>
                                                                                 </a>
-                                                                                <form action="{{ route('user.remove.saved', $savedArticle->id) }}"
+                                                                                <form
+                                                                                    action="{{ route('user.remove.saved', $savedArticle->id) }}"
                                                                                     method="POST" class="d-inline">
                                                                                     @csrf
                                                                                     @method('DELETE')
-                                                                                  <button class="btn btn-danger btn-sm mt-2"
-                                                                                      onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
-                                                                                      <i class="fas fa-trash-alt"></i>
-                                                                                  </button>
+                                                                                    <button
+                                                                                        class="btn btn-danger btn-sm"
+                                                                                        onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
+                                                                                        <i class="fas fa-trash-alt"></i>
+                                                                                    </button>
                                                                                 </form>
                                                                             </td>
                                                                         </tbody>
                                                                     @endforeach
                                                                 </table>
-                                                                <div id="pagination-wrapper" class="d-flex justify-content-end mt-5">
+                                                                <div id="pagination-wrapper"
+                                                                    class="d-flex justify-content-end mt-5">
                                                                     <nav>
                                                                         <ul class="pagination pagination-sm">
                                                                             {{ $savedArticles->links('pagination::bootstrap-5') }}
