@@ -989,30 +989,30 @@ class ArticleController extends Controller
 //    public function updateStatus(Request $request, $id)
 //    {
 //        $article = Article::find($id);
-//
+
 //        if (!$article) {
 //            return response()->json(['message' => 'Bài viết không tồn tại'], 404);
 //        }
-//
+
 //        $article->status = $request->status;
 //        $article->save();
-//
+
 //        if (!$article->author) {
 //            Log::error("Không tìm thấy tác giả của bài viết ID: {$article->id}");
 //            return response()->json(['message' => 'Không tìm thấy tác giả'], 500);
 //        }
-//
+
 //        $message = "Bài viết '{$article->title}' của bạn đã được " .
 //            ($article->status === 'published' ? 'duyệt.' : 'từ chối.');
-//
+
 //        try {
 //            $article->author->notify(new ArticleStatusUpdated($article, $message));
 //        } catch (\Exception $e) {
 //            Log::error("Lỗi khi gửi thông báo: " . $e->getMessage());
 //        }
-//
+
 //        return response()->json(['message' => 'Trạng thái bài viết đã được cập nhật.']);
-//    }
+//      }
 
     /**
      * Hiển thị danh sách các phiên bản của bài viết

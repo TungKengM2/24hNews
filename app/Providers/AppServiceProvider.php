@@ -81,7 +81,13 @@ class AppServiceProvider extends ServiceProvider
                 // dat them
                 $view->with('categories', Category::where('is_active', 1)->get());
                 $view->with('category2', Category::where('is_active', 1)->get());
-
+                
+                // Thêm biến parentCategories cho top-nav.blade.php
+                $parentCategories = Category::whereNull('parent_id')
+                    ->where('is_active', 1)
+                    ->get();
+                    
+                $view->with('parentCategories', $parentCategories);
                 // dat them
             }
 

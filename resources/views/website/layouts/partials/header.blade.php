@@ -152,13 +152,13 @@
                                 <li><a class="dropdown-item" href="rtl-home-sport.html">home sport RTL</a></li>
                             </ul>
                         </li>
-                        @foreach ($categories as $category)
+                        {{-- @foreach ($categories as $category)
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('client.category.show', $category->id) }}">
                                     {{ $category->name }}
                                 </a>
                             </li>
-                        @endforeach
+                        @endforeach --}}
 
                         <li class="nav-item">
                             <a class="nav-link" href="page-contact.html">
