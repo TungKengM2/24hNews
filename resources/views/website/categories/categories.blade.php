@@ -3,26 +3,50 @@
 @section('content')
     <main>
         <!-- ====== start category header ====== -->
+
         <section class="tc-category-header py-4 bg-light border-bottom">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-8">
                         <h1 class="mb-2">{{ $category->name }}</h1>
-                        <p class="text-muted mb-0">{{ $category->description ?? 'Khám phá các bài viết trong danh mục này' }}
+        
+                        <p class="text-muted mb-0">
+                            {{ $category->description 
+                                ?? ($category->parent->description ?? 'Khám phá các bài viết trong danh mục này') }}
                         </p>
                     </div>
+        
                     <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb justify-content-lg-end mb-0">
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Trang chủ</a></li>
                                 <li class="breadcrumb-item"><a href="#">Danh mục</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">{{ $category->name }}</li>
+        
+                                @if ($category->parent)
+                                <!-- Nếu là danh mục con thì hiển thị cate cha -->
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('client.category.show', $category->parent->slug) }}">
+                                        {{ $category->parent->name }}
+                                    </a>
+                                </li>
+                                <!-- Sau đó hiển thị cate con (hiện tại) -->
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{ $category->name }}
+                                </li>
+                            @else
+                                
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{ $category->name }}
+                                </li>
+                            @endif
                             </ol>
                         </nav>
                     </div>
                 </div>
             </div>
         </section>
+        
+        
         <!-- ====== end category header ====== -->
 
         <!-- ====== start articles by views ====== -->
