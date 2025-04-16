@@ -69,4 +69,68 @@ class AuthorProfileController extends Controller
         
         return view('website.profiles.user', compact('user'));
     }
+
+    public function getTopAuthors($limit = 5)
+    {
+        // Lấy tất cả tác giả có ít nhất 3 bài viết đã xuất bản
+        $authors = User::withCount(['articles' => function ($query) {
+            $query->where('status', 'published');
+        }])
+        ->having('articles_count', '>=', 3)
+        ->get();
+
+        // Tính điểm trung bình cho mỗi tác giả
+        $ratedAuthors = $authors->map(function ($author) {
+            // Lấy bài viết đã xuất bản của tác giả
+            $articles = Article::where('author_id', $author->user_id)
+                ->where('status', 'published')
+                ->get();
+            
+            // Tính tổng điểm đánh giá
+            $totalStars = $articles->sum(function ($article) {
+                return $article->rating_star;
+            });
+            
+            // Tính điểm trung bình
+            $averageRating = number_format($totalStars / max($articles->count(), 1), 1);
+            
+            return [
+                'author' => $author,
+                'rating' => $averageRating,
+                'articles_count' => $articles->count(),
+                'specializes_in' => $this->getAuthorSpecialization($author->user_id)
+            ];
+        })
+        ->sortByDesc('rating')
+        ->take($limit)
+        ->values();
+
+        return $ratedAuthors;
+    }
+
+    // Hàm phụ để xác định chuyên môn của tác giả
+    private function getAuthorSpecialization($authorId)
+    {
+        // Lấy danh mục mà tác giả viết nhiều bài nhất
+        $topCategory = Article::where('author_id', $authorId)
+            ->where('status', 'published')
+            ->join('categories', 'articles.category_id', '=', 'categories.id')
+            ->select('categories.name')
+            ->groupBy('categories.name')
+            ->orderByRaw('COUNT(*) DESC')
+            ->first();
+
+        return $topCategory ? $topCategory->name : 'Chưa xác định';
+    }
+
+    // Sửa lại HomeController để hiển thị tác giả nổi bật
+    public function index()
+    {
+        // ... code khác ...
+
+        // Lấy top tác giả
+        $topAuthors = $this->getTopAuthors(5);
+
+        return view('welcome', compact('topAuthors', /* các biến khác */));
+    }
 }

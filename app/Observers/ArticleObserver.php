@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Observers;
 
@@ -9,10 +9,7 @@ use App\Notifications\ArticleStatusChangedNotification;
 
 class ArticleObserver
 {
-    public function updatedd(Article $article)
-    {
-        
-    }
+    public function updatedd(Article $article) {}
 
     /**
      * Handle the Article "created" event.
@@ -38,16 +35,13 @@ class ArticleObserver
                 });
             } else {
                 // Gửi thông báo cho chính tác giả nếu không phải published (giả sử là draft)
-                $article->author->notify(new ArticleStatusChangedNotification($article));
+                $detectedWord = 'Bài viết của bạn đã bị tố cáo và đưa về dạng nháp';
+                $article->author->notify(new ArticleStatusChangedNotification($article, $detectedWord));
             }
         }
-        
-        
-        
-        
     }
 
-    
+
     /**
      * Handle the Article "deleted" event.
      */
@@ -71,5 +65,4 @@ class ArticleObserver
     {
         //
     }
-
 }

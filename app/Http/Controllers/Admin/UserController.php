@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\AuthorUpgradeRequest;
 
 class UserController extends Controller
 {
@@ -34,21 +35,21 @@ class UserController extends Controller
     {
         $approval = Approval::with('user')->findOrFail($id);
         $user = $approval->user;
-    
+
         // Tính số ngày hoạt động
         $accountAge = now()->diffInDays($user->created_at);
-    
+
         // Kiểm tra tình trạng cấm tài khoản
         $isBanned = $user->banned_until !== null && now()->lessThan($user->banned_until);
         $banMessage = $isBanned ? "Bị cấm đến " . $user->banned_until->format('d/m/Y') : "Không bị cấm";
-    
+
         // Lấy danh sách chứng chỉ
         $certificates = json_decode($approval->certificates, true) ?? [];
-    
+
         return view('admin.users.show', compact('approval', 'user', 'accountAge', 'isBanned', 'banMessage', 'certificates'));
     }
-    
-    
+
+
 
     public function roleUpgradeRequests(Request $request)
     {
@@ -112,6 +113,12 @@ class UserController extends Controller
                 'updated_at' => now()
             ]);
 
+            // Xóa thông báo liên quan
+            auth()->user()->notifications()
+                ->where('type', 'App\Notifications\AuthorUpgradeRequest')
+                ->where('data->user_id', $user->id)
+                ->delete();
+
             return redirect()
                 ->back()
                 ->with('success', 'Duyệt yêu cầu thành công!');
@@ -163,6 +170,12 @@ class UserController extends Controller
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
+
+            // Xóa thông báo liên quan
+            auth()->user()->notifications()
+                ->where('type', 'App\Notifications\AuthorUpgradeRequest')
+                ->where('data->user_id', $user->id)
+                ->delete();
 
             return redirect()
                 ->back()
