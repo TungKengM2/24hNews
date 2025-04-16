@@ -33,20 +33,32 @@
                     <div class="box-tools">
                         <div class="btn-group">
                             @if ($article->status === 'pending')
-                                <form action="{{ route('moderator.articles.approve', $article) }}" method="POST"
-                                    class="d-inline">
+                                <form action="{{ route('moderator.articles.approve', $article) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
                                     <button type="submit" class="btn btn-success btn-sm" title="Duyệt bài viết"
                                         onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
                                         <i class="fa fa-check"></i> Duyệt bài viết
                                     </button>
-                                </form>
 
-                                <button type="button" class="btn btn-danger btn-sm" title="Từ chối bài viết"
+                                    <button type="button" class="btn btn-danger btn-sm" title="Từ chối bài viết"
                                     data-bs-toggle="modal" data-bs-target="#rejectModal">
                                     <i class="fa fa-times"></i> Từ chối
-                                </button>
+                                    </button>
+
+                                    <a href="{{ route('moderator.articles.versions', $article) }}" class="btn btn-info btn-sm m-5">
+                                        <i class="fa fa-history"></i> Lịch sử phiên bản
+                                    </a>
+                                    <a href="{{ route('moderator.articles.moderation-history', $article) }}"
+                                        class="btn btn-info btn-sm me-2">
+                                        <i class="fa fa-history"></i> Lịch sử kiểm duyệt
+                                    </a>
+                                    <a href="{{ route('moderator.articles.index') }}" class="btn btn-default btn-sm">
+                                        <i class="mdi mdi-arrow-left"></i> Quay lại
+                                    </a>
+                                </form>
+
+                              
 
                                 <!-- Modal Từ chối bài viết -->
                                 <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel"
@@ -78,16 +90,7 @@
                                     </div>
                                 </div>
                             @endif
-                            <a href="{{ route('moderator.articles.versions', $article) }}" class="btn btn-info btn-sm m-5">
-                                <i class="fas fa-history"></i> Lịch sử phiên bản
-                            </a>
-                            <a href="{{ route('moderator.articles.moderation-history', $article) }}"
-                                class="btn btn-info btn-sm me-2">
-                                <i class="fas fa-history"></i> Lịch sử kiểm duyệt
-                            </a>
-                            <a href="{{ route('moderator.articles.index') }}" class="btn btn-default btn-sm">
-                                <i class="mdi mdi-arrow-left"></i> Quay lại
-                            </a>
+                          
                         </div>
                     </div>
                 </div>

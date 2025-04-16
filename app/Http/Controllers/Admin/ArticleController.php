@@ -1004,4 +1004,12 @@ class ArticleController extends Controller
 
         return view('admin.articles.version-detail', compact('article', 'version'));
     }
+
+    /**
+     * Hiển thị trang hướng dẫn viết bài cho admin
+     */
+    public function writingGuidelines()
+    {
+        return view('admin.writing-guidelines');
+    }
 }

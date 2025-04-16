@@ -134,7 +134,7 @@ class RandomDataSeeder extends Seeder
             // Lấy ngẫu nhiên 5 bài viết để lưu
             $randomArticles = $articles->random(5);
             $saveData = [];
-            
+
             foreach ($randomArticles as $article) {
                 $saveData[] = [
                     'article_id' => $article->article_id,
@@ -143,7 +143,7 @@ class RandomDataSeeder extends Seeder
                     'updated_at' => now()
                 ];
             }
-            
+
             if (!empty($saveData)) {
                 DB::table('article_saves')->insertOrIgnore($saveData);
             }

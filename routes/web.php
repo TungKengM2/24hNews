@@ -91,10 +91,7 @@ Route::middleware('auth')->group(function () {
 
 
 
-
-
     // Route::middleware(['check.violations'])->group(function () {
-
 
 
     // });
@@ -443,7 +440,7 @@ Route::post('/notifications/clear', function () {
 // 🚀 Khu vực dành riêng cho User (role_id = 4)
 Route::middleware(['auth', 'role:4'])->prefix('/user')->group(function () {
 
-    Route::get('/dashboard', [ProfileController::class, 'dashboard'])->name('user.dashboard');
+    // Route::get('/dashboard', [ProfileController::class, 'dashboard'])->name('user.dashboard');
 
 
     // Yêu cầu nâng cấp vai trò lên Author
@@ -504,6 +501,9 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 
     Route::get('/following', [ProfileController::class, 'followingOfAdminList'])->name('admin.following');
+
+    // Thêm route cho yêu cầu nâng cấp tài khoản
+    Route::get('/approvals', [App\Http\Controllers\Admin\UserController::class, 'roleUpgradeRequests'])->name('admin.approvals.index');
 
     // Bookmark By TungKeng
     Route::get('/saved-articles', [AdminArticleSaveController::class, 'savedArticles'])->name('admin.saved');
