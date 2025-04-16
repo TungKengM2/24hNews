@@ -312,7 +312,7 @@
                         <div class="box">
                             <div class="box-header with-border d-flex align-items-center justify-content-between">
                                 <h4 class="box-title">Thống kê tương tác</h4>
-                                <form method="GET" action="{{ route('moderator.dashboard') }}"
+                                <form method="GET" action="{{ route('admin.dashboard') }}"
                                     class="d-flex align-items-center">
                                     <label for="interaction_type" class="me-2">Hiển thị:</label>
                                     <select class="form-select w-auto" id="interaction_type" name="interaction_type"
