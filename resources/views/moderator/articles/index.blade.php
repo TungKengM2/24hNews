@@ -208,7 +208,7 @@
                                                         </a>
                                                         <a href="{{ route('moderator.articles.moderation-history', $article) }}"
                                                             class="btn btn-secondary btn-sm" title="Lịch sử kiểm duyệt">
-                                                            <i class="fas fa-history"></i>
+                                                            <i class="fa fa-history"></i>
                                                         </a>
                                                         @if ($article->status === 'pending')
                                                             <form
