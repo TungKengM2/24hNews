@@ -59,86 +59,67 @@
                 </a>
             </li> --}}
             <!-- Notifications -->
-            <li class="dropdown notifications-menu" style="position: relative;">
-                <a href="#"
-                    class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white"
-                    data-bs-toggle="dropdown" title="Notifications" style="position: relative; display: inline-block;">
+            <li class="dropdown notifications-menu">
+                <a href="#" class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white position-relative"
+                    data-bs-toggle="dropdown" title="Notifications">
                     <i data-feather="bell"></i>
                     @php
-                    $pendingCount = \App\Models\Article::where('status', 'pending')->count();
-                    $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
-                    $pendingUpgradeRequests = \App\Models\Approval::where('type', 'role_upgrade')
-                        ->where('status', 'pending')
-                        ->count();
-                    $totalPending = $pendingCount + $pendingViolations + $pendingUpgradeRequests;
+                        $pendingCount = \App\Models\Article::where('status', 'pending')->count();
+                        $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
+                        $pendingUpgradeRequests = \App\Models\Approval::where('type', 'role_upgrade')
+                            ->where('status', 'pending')
+                            ->count();
+                        $totalPending = $pendingCount + $pendingViolations + $pendingUpgradeRequests;
 
-                    $longPendingArticles = \App\Models\Article::where('status', 'pending')
-                    ->where('created_at', '<', now()->subMinutes(30))
-                        ->count();
-                    $totalNotifications = $pendingCount > 0 ? 1 : 0; // 1 thông báo nếu có bài pending
-                    $totalNotifications += $longPendingArticles > 0 ? 1 : 0; // +1 nếu có bài chờ lâu
-                    $totalNotifications += $pendingUpgradeRequests > 0 ? 1 : 0; // +1 nếu có yêu cầu nâng cấp
+                        $longPendingArticles = \App\Models\Article::where('status', 'pending')
+                            ->where('created_at', '<', now()->subMinutes(30))
+                            ->count();
                     @endphp
 
-                    @if ($pendingCount > 0 || $pendingViolations > 0)
-                        <span class="badge badge-danger"
-                            style="position: absolute; top: 6px; right: 5px; font-size: 10px; padding: 2px 5px; border-radius: 50%; line-height: 1; background: red; color: white;">
+                    @if ($totalPending > 0)
+                        <span class="badge bg-danger rounded-circle position-absolute"
+                              style="top: 0px; right: 0px; font-size: 10px; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">
                             {{ $totalPending }}
                         </span>
                     @endif
                 </a>
-                <ul class="dropdown-menu animated bounceIn">
-                    <li class="header">
-                        <div class="p-20">
-                            <div class="flexbox">
-                                <div>
-                                    <h4 class="mb-0 mt-0">Notifications</h4>
-                                </div>
+                <ul class="dropdown-menu shadow border-0" style="width: 280px; right: 0; left: auto; padding: 0; margin-top: 10px;">
+                    <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
+                        <span class="fw-medium" style="font-size: 14px;">Thông báo mới</span>
+                        <a href="#" class="text-danger text-decoration-none" style="font-size: 13px;">Xóa tất cả</a>
+                    </div>
+
+                    @if ($totalPending > 0)
+                        @if ($pendingCount > 0)
+                            <div class="border-bottom">
+                                <a href="{{ route('admin.articles.approves') }}" class="d-block px-3 py-2 text-decoration-none text-dark">
+                                    <div class="text-secondary" style="font-size: 12px;">1 giây trước</div>
+                                    <div class="fw-medium mb-1">Bài viết chờ duyệt</div>
+                                    <div class="text-secondary" style="font-size: 13px;">Có {{ $pendingCount }} bài viết đang chờ duyệt</div>
+                                </a>
                             </div>
+                        @endif
+
+                        @if ($longPendingArticles > 0)
+                            <div class="border-bottom">
+                                <a href="{{ route('admin.articles.approves') }}" class="d-block px-3 py-2 text-decoration-none text-dark">
+                                    <div class="text-secondary" style="font-size: 12px;">1 giây trước</div>
+                                    <div class="fw-medium mb-1">Bài viết chờ lâu</div>
+                                    <div class="text-secondary" style="font-size: 13px;">{{ $longPendingArticles }} bài viết chờ duyệt quá 30 phút</div>
+                                </a>
+                            </div>
+                        @endif
+                    @else
+                        <div class="text-center py-4">
+                            <i class="fas fa-bell-slash text-secondary opacity-25" style="font-size: 24px;"></i>
+                            <div class="text-secondary mt-2" style="font-size: 13px;">Không có thông báo mới</div>
                         </div>
-                    </li>
-                    <li>
-                        <ul class="menu sm-scrol">
-                            <!-- Thông báo bài viết chờ duyệt -->
-                            @if ($pendingCount > 0)
-                                <li>
-                                    <a href="{{ route('admin.articles.approves') }}">
-                                        {{ "Có $pendingCount bài viết đang chờ duyệt!" }}
-                                    </a>
-                                </li>
-                            @endif
-
-                            <!-- Thông báo vi phạm chờ duyệt -->
-                            @if ($pendingViolations > 0)
-                                <li>
-                                    <a href="{{ route('admin.violations.approves') }}">
-                                        {{ "Có $pendingViolations vi phạm đang chờ duyệt!" }}
-                                    </a>
-                                </li>
-                            @endif
-
-                            <!-- Thông báo bài viết chờ lâu hơn 30 phút -->
-                            @if ($longPendingArticles > 0)
-                                <li>
-                                    <a href="{{ route('admin.articles.approves') }}">
-                                        {{ "$longPendingArticles bài chờ duyệt quá 30 phút!" }}
-                                    </a>
-                                </li>
-                            @endif
-
-                            <!-- Thông báo yêu cầu nâng cấp tài khoản -->
-                            @if($pendingUpgradeRequests > 0)
-                                <li>
-                                    <a href="{{ route('admin.approvals.index') }}">
-                                        {{ "Có $pendingUpgradeRequests người dùng yêu cầu lên tác giả" }}
-                                    </a>
-                                </li>
-                            @endif
-                        </ul>
-                    </li>
-                    <li class="footer">
-                        <a href="{{ route('admin.articles.approves') }}">Xem danh sách bài viết</a>
-                    </li>
+                        <div class="border-top">
+                            <a href="#" class="d-block text-center text-primary text-decoration-none py-2" style="font-size: 13px;">
+                                Xem tất cả thông báo
+                            </a>
+                        </div>
+                    @endif
                 </ul>
             </li>
 
