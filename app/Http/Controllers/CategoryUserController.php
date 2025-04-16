@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers; // Đảm bảo namespace đúng
+namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use App\Models\Article;
@@ -8,27 +8,31 @@ use App\Models\Category;
 
 class CategoryUserController extends Controller
 {
-    public function index($categoryid)
+    public function index($slug)
     {
-        $category = Category::where('slug', $categoryid)->firstOrFail();
+        // Lấy danh mục hiện tại theo slug và load quan hệ parent, children (nếu đã định nghĩa quan hệ trong model)
+        $category = Category::with('parent', 'children')
+            ->where('slug', $slug)
+            ->firstOrFail();
 
+        // Vì bảng categories sử dụng category_id làm khóa chính nên thay $category->id bằng $category->category_id
 
+        // Lấy các bài viết mới trong danh mục (theo category_id)
         $articlesNews = Article::where('category_id', $category->category_id)
             ->where('status', 'published')
-            ->orderBy('created_at', 'desc') // Sắp xếp theo bài viết mới nhất
+            ->orderBy('created_at', 'desc')
             ->limit(4)
             ->whereHas('category', function ($query) {
-                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+                $query->where('is_active', 1);
             })
             ->get();
 
-
-        // Lấy bài viết thuộc danh mục
+        // Lấy bài viết trong danh mục
         $articles = Article::where('category_id', $category->category_id)
             ->where('status', 'published')
             ->orderBy('created_at', 'desc')
             ->whereHas('category', function ($query) {
-                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+                $query->where('is_active', 1);
             })
             ->paginate(10);
 
@@ -38,79 +42,70 @@ class CategoryUserController extends Controller
             ->orderBy('views', 'desc')
             ->orderBy('created_at', 'desc')
             ->whereHas('category', function ($query) {
-                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+                $query->where('is_active', 1);
             })
-            ->distinct() // Loại bỏ bản ghi trùng lặp
+            ->distinct()
             ->paginate(4);
 
-
-
-        $featuredArticle = Article::with('category') // Load cả danh mục
+        // Lấy bài viết nổi bật
+        $featuredArticle = Article::with('category')
             ->where('category_id', $category->category_id)
             ->where('status', 'published')
             ->whereHas('category', function ($query) {
-                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+                $query->where('is_active', 1);
             })
             ->limit(4)
             ->first();
 
-
-        // Lấy 5 bài viết phụ (không trùng bài nổi bật)
+        // Lấy bài viết phụ không trùng với bài nổi bật
         $recentArticles = Article::where('category_id', $category->category_id)
             ->where('status', 'published')
-            ->where('article_id', '!=', optional($featuredArticle)->article_id) // Đổi id thành article_id
+            ->where('article_id', '!=', optional($featuredArticle)->article_id)
             ->orderBy('views', 'desc')
             ->whereHas('category', function ($query) {
-                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+                $query->where('is_active', 1);
             })
             ->limit(4)
             ->get();
 
-        // Lấy các bài viết liên quan (không trùng bài trong $recentArticles)
+        // Lấy bài viết liên quan (không trùng với recentArticles và bài nổi bật)
         $relatedArticles = Article::where('category_id', $category->category_id)
             ->where('status', 'published')
-            ->whereNotIn('article_id', $recentArticles->pluck('article_id')->toArray()) // So sánh với các ID bài viết trong $recentArticles
-            ->where('article_id', '!=', optional($featuredArticle)->article_id) // Đảm bảo không trùng với bài viết nổi bật
+            ->whereNotIn('article_id', $recentArticles->pluck('article_id')->toArray())
+            ->where('article_id', '!=', optional($featuredArticle)->article_id)
             ->orderBy('views', 'desc')
             ->whereHas('category', function ($query) {
-                $query->where('is_active', 1); // Danh mục phải đang hoạt động
+                $query->where('is_active', 1);
             })
             ->limit(4)
             ->get();
 
-
-        // Lấy tất cả tags
+        // Lấy các tag có bài viết đã xuất bản
         $tags = Tag::withCount('publishedArticles')
-        ->has('publishedArticles') // chỉ lấy tag có bài viết đã xuất bản
-        ->orderByDesc('published_articles_count')
-        ->paginate(8);
+            ->has('publishedArticles')
+            ->orderByDesc('published_articles_count')
+            ->paginate(8);
 
+        // Lấy các danh mục (cho sidebar nếu cần)
         $categories = Category::withCount(['articles' => function ($query) {
-            $query->where('status', 'published'); // Đếm bài viết có trạng thái 'published'
+            $query->where('status', 'published');
         }])
-        ->where('is_active', 1)
-        ->orderByDesc('articles_count')  // Sắp xếp theo số lượng bài viết giảm dần
-        ->take(6)  // Giới hạn 6 danh mục
-        ->get();
-        
-        
+            ->where('is_active', 1)
+            ->orderByDesc('articles_count')
+            ->take(6)
+            ->get();
 
-            $category2 = Category::withCount(['articles' => function ($query) {
-                $query->where('status', 'published'); // Điều kiện bài viết có trạng thái 'published'
-            }])->where('is_active', 1)->get();
-             
-        
-        // Lấy tất cả danh mục cha (parent_id = null) với điều kiện is_active = 1
+        // Lấy danh mục cha (parent categories) cho menu, kiểu phân trang (nếu muốn)
         $parentCategories = Category::whereNull('parent_id')
             ->where('is_active', 1)
             ->withCount(['articles' => function ($query) {
                 // Chỉ đếm bài viết có is_active = 1
                 $query->where('is_active', 1);
             }])
-            ->orderBy('articles_count', 'desc') // Sắp xếp theo số lượng bài viết trực tiếp của cha giảm dần
+            ->orderByDesc('articles_count') // Sắp xếp theo số lượng bài viết trực tiếp của cha giảm dần
             ->paginate(10);
 
-        // Lấy ID của các danh mục cha trên trang hiện tại
+        // Lấy ID của các danh mục cha trên trang hiện tại dựa trên category_id
         $parentIds = $parentCategories->pluck('category_id')->toArray();
 
         // Lấy danh mục con của các danh mục cha vừa chọn với điều kiện is_active = 1
@@ -122,24 +117,34 @@ class CategoryUserController extends Controller
             ->get()
             ->groupBy('parent_id');
 
-        // Gắn danh mục con vào từng danh mục cha và tính tổng số bài viết (cha + con)
-        foreach ($parentCategories as $category) {
-            // Lấy danh sách danh mục con của danh mục cha hiện tại
-            $children = $childCategories[$category->category_id] ?? collect();
+        // Gắn danh mục con vào từng danh mục cha, tính tổng bài viết (cha + con)
+        foreach ($parentCategories as $parentCat) {
+            // Nếu không có danh mục con nào, ta lấy một collection rỗng
+            $children = $childCategories[$parentCat->category_id] ?? collect();
 
-            // Tính tổng số bài viết ở danh mục con
+            // Tính tổng số bài viết của tất cả các danh mục con
             $childArticlesCount = $children->sum('articles_count');
 
-            // Tạo thuộc tính mới total_articles_count = bài viết của cha + bài viết của con
-            $category->total_articles_count = $category->articles_count + $childArticlesCount;
+            // Cộng số bài viết của danh mục cha và các danh mục con
+            $parentCat->total_articles_count = $parentCat->articles_count + $childArticlesCount;
 
-            // Gán danh mục con vào thuộc tính children
-            $category->children = $children;
+            // Gán danh sách danh mục con cho danh mục cha
+            $parentCat->children = $children;
         }
-            
 
-
-
-        return view('website.categories.categories', compact('parentCategories','relatedArticles', 'recentArticles', 'tags', 'categories', 'articlesNews', 'category2', 'articles', 'articlesViews', 'category', 'featuredArticle'));
+        // Trả về view với các biến cần thiết
+        return view('website.categories.categories', [
+            'parentCategories' => $parentCategories,
+            'relatedArticles'  => $relatedArticles,
+            'recentArticles'   => $recentArticles,
+            'tags'             => $tags,
+            'categories'       => $categories,
+            'articlesNews'     => $articlesNews,
+            'category'         => $category,
+            'category2'        => Category::all(), // Ví dụ: lấy tất cả các danh mục
+            'articles'         => $articles,
+            'articlesViews'    => $articlesViews,
+            'featuredArticle'  => $featuredArticle
+        ]);
     }
 }

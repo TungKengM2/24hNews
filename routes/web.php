@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ArticleUserController;
+use App\Http\Controllers\EditRequestController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\CategoryUserController;
@@ -26,6 +27,7 @@ use App\Http\Controllers\User\ArticleTagController;
 use App\Http\Controllers\Admin\ViolationsController;
 use App\Http\Controllers\User\ArticleSaveController;
 use App\Http\Controllers\Admin\AdminProfileController;
+use App\Http\Controllers\Client\UserProfileController;
 use App\Http\Controllers\Moderator\ModeratorController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Author\AuthorProfileController;
@@ -40,16 +42,14 @@ use App\Http\Controllers\User\UserController as UserUserController;
 use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 use App\Http\Controllers\Admin\ArticleSaveController as AdminArticleSaveController;
+
 use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveController;
+
 use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
 
 use App\Http\Controllers\Profile\AuthorProfileController as ProfileAuthorProfileController;
 
 use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorArticleViewModeratorController;
-
-use App\Http\Controllers\EditRequestController;
-
-use App\Http\Controllers\Client\UserProfileController;
 
 // 🌟 Trang chủ & bài viết chi tiết
 
@@ -78,7 +78,7 @@ Route::middleware(['auth', 'check.violations'])->group(function () {
 
 // Client Articles
 Route::middleware('auth')->group(function () {
-    Route::get('/articles/{slug}', [ArticleUserController::class, 'show'])->name('articles.article');
+    Route::get('/bai-viet/{slug}', [ArticleUserController::class, 'show'])->name('articles.article');
 
     Route::post('/articles/{article_id}/comments', [ArticleUserController::class, 'storeComment'])->name('articles.comment');
     Route::post('/articles/{article_id}/comments/{comment_id}/reply', [ArticleUserController::class, 'storeReplyComment'])->name('articles.replyComment');
@@ -101,7 +101,8 @@ Route::middleware('auth')->group(function () {
 
 });
 // Client Category
-Route::get('/category/{category_id}', [CategoryUserController::class, 'index'])->name('client.category.show');
+Route::get('/danh-muc/{slug}', [CategoryUserController::class, 'index'])->name('client.category.show');
+
 Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.shows');
 
 
