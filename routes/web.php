@@ -439,7 +439,7 @@ Route::post('/notifications/clear', function () {
 // 🚀 Khu vực dành riêng cho User (role_id = 4)
 Route::middleware(['auth', 'role:4'])->prefix('/user')->group(function () {
 
-    Route::get('/dashboard', [ProfileController::class, 'dashboard'])->name('user.dashboard');
+    // Route::get('/dashboard', [ProfileController::class, 'dashboard'])->name('user.dashboard');
 
 
     // Yêu cầu nâng cấp vai trò lên Author

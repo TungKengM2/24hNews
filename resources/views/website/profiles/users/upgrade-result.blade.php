@@ -7,6 +7,9 @@
             <div class="container">
                 <div class="content">
                     <div class="title">
+                        @php
+                            $user = Auth::user();
+                        @endphp
                         @if ($user->role)
                             <p class="fsz-14px color-fff op-5 mb-2">{{ ucfirst($user->role->name) }}</p>
                         @endif
@@ -16,7 +19,7 @@
             </div>
         </section>
         <!-- ====== end author header ====== -->
-        
+
 
 
         <!-- ====== start author-details ====== -->
@@ -46,13 +49,14 @@
                                         <div class="row justify-content-center">
                                             <div class="col-md-6">
                                                 <div class="card">
-                                                    @if(session('status'))
+                                                    @if (session('status'))
                                                         <div class="card-header bg-success text-white text-center">
                                                             Thông báo thành công
                                                         </div>
                                                         <div class="card-body text-center">
                                                             <p>{{ session('status') }}</p>
-                                                            <a href="{{ route('user.dashboard') }}" class="btn btn-primary">Quay lại trang chủ</a>
+                                                            <a href="{{ route('website.profileUser', ['id' => auth()->id()]) }}"
+                                                                class="btn btn-primary">Quay lại trang chủ</a>
                                                         </div>
                                                     @elseif(session('error'))
                                                         <div class="card-header bg-danger text-white text-center">
@@ -60,7 +64,8 @@
                                                         </div>
                                                         <div class="card-body text-center">
                                                             <p>{{ session('error') }}</p>
-                                                            <a href="{{ route('user.dashboard') }}" class="btn btn-primary">Quay lại chỉnh sửa hồ sơ</a>
+                                                            <a href="{{ route('website.profileUser', ['id' => auth()->id()]) }}"
+                                                                class="btn btn-primary">Quay lại chỉnh sửa hồ sơ</a>
                                                         </div>
                                                     @else
                                                         <div class="card-header text-center">
