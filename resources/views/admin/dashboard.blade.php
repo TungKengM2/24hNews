@@ -284,7 +284,7 @@
                         <div class="box">
                             <div class="box-header with-border d-flex align-items-center justify-content-between">
                                 <h4 class="box-title">Thống kê bài viết</h4>
-                                <form method="GET" action="{{ route('moderator.dashboard') }}"
+                                <form method="GET" action="{{ route('admin.dashboard') }}"
                                     class="d-flex align-items-center">
                                     <label for="article_type" class="me-2">Hiển thị:</label>
                                     <select class="form-select w-auto" id="article_type" name="article_type"
