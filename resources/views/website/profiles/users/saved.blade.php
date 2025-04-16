@@ -97,18 +97,20 @@
                                                                                 </h5>
                                                                             </td>
                                                                             <td>
-                                                                                <a href="{{ route('article.detail', ['slug' => $savedArticle->article->slug]) }}"
-                                                                                    class="btn btn-primary btn-sm"><i class="fas fa-eye"></i>
-                                                                                </a>
-                                                                                <form action="{{ route('user.remove.saved', $savedArticle->id) }}"
-                                                                                    method="POST" class="d-inline">
-                                                                                    @csrf
-                                                                                    @method('DELETE')
-                                                                                  <button class="btn btn-danger btn-sm mt-2"
-                                                                                      onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
-                                                                                      <i class="fas fa-trash-alt"></i>
-                                                                                  </button>
-                                                                                </form>
+                                                                                <div class="d-flex flex-column" style="width: 80%;">
+                                                                                    <a href="{{ route('article.detail', ['slug' => $savedArticle->article->slug]) }}"
+                                                                                        class="btn btn-primary btn-sm mb-2 w-100"><i class="fas fa-eye"></i>
+                                                                                    </a>
+                                                                                    <form action="{{ route('user.remove.saved', $savedArticle->id) }}"
+                                                                                        method="POST" class="w-100">
+                                                                                        @csrf
+                                                                                        @method('DELETE')
+                                                                                        <button class="btn btn-danger btn-sm w-100"
+                                                                                            onclick="return confirm('Bạn có chắc chắn muốn xoá bài viết này không?')">
+                                                                                            <i class="fas fa-trash-alt"></i>
+                                                                                        </button>
+                                                                                    </form>
+                                                                                </div>
                                                                             </td>
                                                                         </tbody>
                                                                     @endforeach
