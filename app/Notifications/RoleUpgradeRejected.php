@@ -33,4 +33,4 @@ class RoleUpgradeRejected extends Notification implements ShouldQueue
             'type' => 'role_upgrade_rejected'
         ];
     }
-} 
+}
