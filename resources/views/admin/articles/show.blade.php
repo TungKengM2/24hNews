@@ -128,9 +128,14 @@
                                                 class="badge bg-primary rounded-pill">{{ $article->author->username ?? 'Không có' }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span><i class="mdi mdi-folder"></i> Danh mục:</span>
+                                            <span><i class="mdi mdi-folder"></i> Danh mục chính:</span>
                                             <span
                                                 class="badge bg-info rounded-pill">{{ $article->category->name ?? 'Không có' }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-folder-outline"></i> Danh mục phụ:</span>
+                                            <span
+                                                class="badge bg-secondary rounded-pill">{{ $article->subcategory->name ?? 'Không có' }}</span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><i class="mdi mdi-check-circle"></i> Trạng thái:</span>
@@ -174,9 +179,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="verification-criteria">
-                                        <!-- Hidden inputs for category information -->
-                                        <input type="hidden" id="has-parent-category" value="{{ $article->category_id ? 'true' : 'false' }}">
-                                        <input type="hidden" id="has-child-category" value="{{ $article->subcategory_id ? 'true' : 'false' }}">
+
                                         <div class="criteria-content">
                                             <ul class="criteria-list" id="criteria-list">
                                                 <li class="criteria-item failed" id="criteria-title" data-target="title">
@@ -400,8 +403,11 @@
 
         // Kiểm tra danh mục
         const categoryCriteria = document.getElementById('criteria-category');
-        const hasParentCategory = document.getElementById('has-parent-category').value === 'true';
-        const hasChildCategory = document.getElementById('has-child-category').value === 'true';
+        const parentCategoryBadge = document.querySelector('.list-group-item:nth-child(2) .badge.bg-info');
+        const childCategoryBadge = document.querySelector('.list-group-item:nth-child(3) .badge.bg-secondary');
+
+        const hasParentCategory = parentCategoryBadge && parentCategoryBadge.textContent !== 'Không có';
+        const hasChildCategory = childCategoryBadge && childCategoryBadge.textContent !== 'Không có';
         if (categoryCriteria) {
             // Chỉ hiển thị tích xanh khi cả hai danh mục đều có
             updateCriteriaStatus(categoryCriteria, hasParentCategory && hasChildCategory);
