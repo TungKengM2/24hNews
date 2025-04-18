@@ -8,12 +8,23 @@ use App\Models\Category;
 
 class CategoryUserController extends Controller
 {
-    public function index($slug)
+    public function index($slug, $childSlug = null)
     {
-        // Lấy danh mục hiện tại theo slug và load quan hệ parent, children (nếu đã định nghĩa quan hệ trong model)
-        $category = Category::with('parent', 'children')
-            ->where('slug', $slug)
-            ->firstOrFail();
+        if ($childSlug) {
+            // Đang truy cập danh mục con
+            $category = Category::with(['parent', 'children'])
+                ->where('slug', $childSlug)
+                ->whereHas('parent', function ($query) use ($slug) {
+                    $query->where('slug', $slug);
+                })
+                ->firstOrFail();
+        } else {
+            // Đang truy cập danh mục cha
+            $category = Category::with(['parent', 'children'])
+                ->where('slug', $slug)
+                ->whereNull('parent_id')
+                ->firstOrFail();
+        }
 
         // Vì bảng categories sử dụng category_id làm khóa chính nên thay $category->id bằng $category->category_id
 

@@ -26,36 +26,39 @@
 
                 {{-- dat them --}}
                 @foreach ($parentCategories as $category)
-                @if ($loop->iteration > 9)
-                    @break
-                @endif
-                <li class="nav-item dropdown">
-                    <a
-                        class="nav-link {{ $category->children->isNotEmpty() ? 'dropdown-toggle' : '' }}"
-                        href="{{ route('client.category.show', $category->slug) }}"
-                        @if ($category->children->isNotEmpty())
-                            id="navbarDropdown{{ $loop->iteration }}"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        @endif
-                        onclick="window.location.href='{{ route('client.category.show', $category->slug) }}'"
-                    >
-                        {{ $category->name }}
-                    </a>
-                    @if ($category->children->isNotEmpty())
-                        <ul class="dropdownMenu" aria-labelledby="navbarDropdown{{ $loop->iteration }}">
-                            @foreach ($category->children as $child)
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('client.category.show', $child->slug) }}">
-                                        {{ $child->name }}
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </li>
-            @endforeach
+    @if ($loop->iteration > 9)
+        @break
+    @endif
 
+    <li class="nav-item dropdown">
+        <a
+            class="nav-link {{ $category->children->isNotEmpty() ? 'dropdown-toggle' : '' }}"
+            href="{{ route('client.category.show', ['slug' => $category->slug]) }}"
+            @if ($category->children->isNotEmpty())
+                id="navbarDropdown{{ $loop->iteration }}"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            @endif
+            onclick="window.location.href='{{ route('client.category.show', ['slug' => $category->slug]) }}'"
+        >
+            {{ $category->name }}
+        </a>
+
+        @if ($category->children->isNotEmpty())
+            <ul class="dropdownMenu" aria-labelledby="navbarDropdown{{ $loop->iteration }}">
+                @foreach ($category->children as $child)
+                    <li>
+                        <a class="dropdown-item" href="{{ route('client.category.show', ['slug' => $category->slug, 'childSlug' => $child->slug]) }}">
+                            {{ $child->name }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+    </li>
+@endforeach
+
+            
 
 
                 {{-- dat them --}}
