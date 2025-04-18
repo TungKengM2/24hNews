@@ -129,12 +129,35 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Show the form for editing the specified resource.
      */
-    public function update(Request $request, string $id)
+    public function edit($id)
     {
-        //
+        $user = User::findOrFail($id);
+        $roles = Role::all();
+
+        return view('admin.users.edit', compact('user', 'roles'));
     }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'role_id' => 'required|exists:roles,role_id',
+        ]);
+
+        $user = User::findOrFail($id);
+
+        if ($user->role_id != $request->role_id) {
+            $user->role_id = $request->role_id;
+            $user->is_promoted = true;
+            $user->save();
+
+            return redirect()->route('admin.users.index')->with('success', 'Cập nhật vai trò người dùng thành công.');
+        }
+
+        return redirect()->route('admin.users.index')->with('info', 'Vai trò không thay đổi.');
+    }
+
 
     public function reject(Request $request, $id)
     {
@@ -205,18 +228,31 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($user_id)
     {
-        //
+        $user = User::findOrFail($user_id);
+        // Lấy thông tin từ bảng approval
+        $approval = Approval::where('user_id', $user_id)->first();
+        
+        $certificates = [];
+        if ($approval && $approval->certificates) {
+            $certificates = json_decode($approval->certificates, true);
+        }
+
+        // Tính toán thời gian hoạt động của tài khoản
+        $accountAge = now()->diffInDays($user->created_at);
+
+        // Kiểm tra tình trạng bị cấm (nếu có)
+        $isBanned = $user->is_banned; // Giả sử có trường is_banned
+        $banMessage = $user->ban_message; // Giả sử có trường ban_message
+
+        return view('admin.users.show', compact('user', 'approval', 'certificates', 'accountAge', 'isBanned', 'banMessage'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+
+
+
+
 
     /**
      * Remove the specified resource from storage.

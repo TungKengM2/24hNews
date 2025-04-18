@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    Hoạt Động Bình Luận
+    Danh sách người đã theo Dõi
 @endsection
 
 @section('content')
