@@ -9,19 +9,82 @@
         <div class="container-full">
             <div class="box container mb-4">
                 <div class="box-header with-border d-flex justify-content-between align-items-center">
-                    <h4 class="box-title">Danh sách người dùng</h4>
-                    <div>
-                        <label for="role-filter" class="text-white">Lọc theo vai trò:</label>
-                        <select id="role-filter" class="form-control">
-                            <option value="">Tất cả</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->role_id }}" {{ $role_id == $role->role_id ? 'selected' : '' }}>
-                                    {{ ucfirst($role->name) }}
-                                </option>
-                            @endforeach
-                        </select>
+                    <div class="title">
+                        <h4 class="box-title">Danh sách người dùng</h4>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="d-flex flex-grow-1 me-3">
+                            <div class="input-group">
+                                <input type="text" id="searchUser" class="form-control"
+                                    placeholder="Tìm kiếm người dùng..." value="{{ request('search') }}">
+                                <input type="text" id="searchEmail" class="form-control"
+                                    placeholder="Tìm kiếm email..." style="max-width: 200px;">
+                                <input type="text" id="searchPhone" class="form-control"
+                                    placeholder="Tìm kiếm số điện thoại..." style="max-width: 200px;">
+                                <button type="button" class="btn btn-primary" id="searchButton">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-white mb-2 d-block" style="min-width: 50px;">
+                            {{-- <label for="role-filter" class="text-white mb-2 d-block">Lọc theo vai trò:</label> --}}
+                            <select id="role-filter" class="form-control">
+                                <option value="">Tất cả</option>
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role->role_id }}" {{ $role_id == $role->role_id ? 'selected' : '' }}>
+                                        {{ ucfirst($role->name) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const searchUser = document.getElementById('searchUser');
+                        const searchEmail = document.getElementById('searchEmail');
+                        const searchPhone = document.getElementById('searchPhone');
+                        const searchButton = document.getElementById('searchButton');
+                        const userRows = document.querySelectorAll('tbody tr');
+
+                        function performSearch() {
+                            const searchTerm = searchUser.value.toLowerCase().trim();
+                            const emailSearchTerm = searchEmail.value.toLowerCase().trim();
+                            const phoneSearchTerm = searchPhone.value.toLowerCase().trim();
+
+                            userRows.forEach(row => {
+                                const username = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                                const email = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                                const phone = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+
+                                const matchesUsername = username.includes(searchTerm);
+                                const matchesEmail = !emailSearchTerm || email.includes(emailSearchTerm);
+                                const matchesPhone = !phoneSearchTerm || phone.includes(phoneSearchTerm);
+
+                                if (matchesUsername && matchesEmail && matchesPhone) {
+                                    row.style.display = '';
+                                } else {
+                                    row.style.display = 'none';
+                                }
+                            });
+                        }
+
+                        // Search on button click
+                        searchButton.addEventListener('click', performSearch);
+
+                        // Search on Enter key press
+                        [searchUser, searchEmail, searchPhone].forEach(input => {
+                            input.addEventListener('keyup', function(event) {
+                                if (event.key === 'Enter') {
+                                    performSearch();
+                                }
+                            });
+
+                            // Real-time search as user types
+                            input.addEventListener('input', performSearch);
+                        });
+                    });
+                </script>
 
                 <div class="box-body">
                     <div class="table-responsive">
