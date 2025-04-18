@@ -136,25 +136,11 @@
                                                 </td>
                                                 <td class="text-center">
                                                     @if ($article->category)
-                                                        @if (!$article->category->is_active)
-                                                            <span class="text-warning">{{ $article->category->name }} <i
-                                                                    class="fa fa-exclamation-triangle"></i></span>
-                                                        @else
-                                                            <span
-                                                                class="badge bg-info">{{ $article->category->name }}</span>
-                                                        @endif
+                                                        <span class="badge bg-info">{{ $article->category->name }}</span>
 
                                                         @if ($article->subcategory)
                                                             <div class="mt-1">
-
-                                                                @if (!$article->subcategory->is_active)
-                                                                    <span
-                                                                        class="text-warning">{{ $article->subcategory->name }}
-                                                                        <i class="fa fa-exclamation-triangle"></i></span>
-                                                                @else
-                                                                    <span
-                                                                        class="badge bg-secondary">{{ $article->subcategory->name }}</span>
-                                                                @endif
+                                                                <span class="badge bg-secondary">{{ $article->subcategory->name }}</span>
                                                             </div>
                                                         @endif
                                                     @else
