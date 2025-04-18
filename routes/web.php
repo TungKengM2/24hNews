@@ -563,6 +563,7 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::patch('/articles/{article}/reject', [ArticleController::class, 'reject'])->name('articles.reject');
 
     Route::get('/writing-guidelines', [ArticleController::class, 'writingGuidelines'])->name('admin.writing-guidelines');
+
     // Lịch sử kiểm duyệt bài viết
     Route::get('/articles/{article}/moderation-history', [App\Http\Controllers\Admin\ArticleModerationHistoryController::class, 'show'])->name('articles.moderation-history');
 
@@ -599,7 +600,13 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 
 
     // Quản lý người dùng
-    Route::resource('users', UserController::class)->names(['index' => 'admin.users.index',]);
+    Route::resource('users', UserController::class)
+        ->names([
+            'index' => 'admin.users.index',
+            'edit' => 'admin.users.edit',
+            'update' => 'admin.users.update',
+            'show' => 'admin.users.show',
+        ]);
 
     //Lịch sử phiên bản
     Route::get('/articles/{article}/versions', [ArticleController::class, 'versions'])->name('admin.articles.versions');

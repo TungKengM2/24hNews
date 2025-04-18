@@ -30,7 +30,7 @@ class AdminController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('moderator.comments', compact('user', 'comments'));
+        return view('admin.comments', compact('user', 'comments'));
     }
 
 
