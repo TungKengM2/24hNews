@@ -83,43 +83,54 @@
                             <h6 class="dropdown-header px-3">Thông báo mới</h6>
                         </li>
                         @auth
-                            @forelse(auth()->user()->unreadNotifications->where('type', 'App\Notifications\NewArticleFromFollowedAuthor')->take(5) as $notification)
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-start py-2 px-3"
-                                        href="/articles/{{ $notification->data['article_slug'] }}"
-                                        onclick="markNotificationAsRead('{{ $notification->id }}')">
-                                        <div class="flex-shrink-0 me-2">
-                                            <img src="{{ $notification->data['author_avatar'] ?? asset('images/default-avatar.png') }}"
-                                                width="30" class="rounded-circle">
-                                        </div>
-                                        <div class="flex-grow-1 overflow-hidden">
-                                            <div class="d-flex justify-content-between">
-                                                <span
-                                                    class="fw-bold text-truncate">{{ $notification->data['author_name'] }}</span>
-                                                <small
-                                                    class="text-muted ms-2">{{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}</small>
+                            @forelse(auth()->user()->unreadNotifications as $notification)
+                                @if($notification->type == 'App\Notifications\NewArticleFromFollowedAuthor')
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-start py-2 px-3"
+                                            href="/articles/{{ $notification->data['article_slug'] }}"
+                                            onclick="markNotificationAsRead('{{ $notification->id }}')">
+                                            <div class="flex-shrink-0 me-2">
+                                                <img src="{{ $notification->data['author_avatar'] ?? asset('images/default-avatar.png') }}"
+                                                    width="30" class="rounded-circle">
                                             </div>
-                                            <div class="text-truncate" style="max-width: 220px;">
-                                                {{ Str::limit($notification->data['message'], 50) }}
+                                            <div class="flex-grow-1 overflow-hidden">
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="fw-bold text-truncate">{{ $notification->data['author_name'] }}</span>
+                                                    <small class="text-muted ms-2">{{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}</small>
+                                                </div>
+                                                <div class="text-truncate" style="max-width: 220px;">
+                                                    {{ Str::limit($notification->data['message'], 50) }}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                </li>
+                                        </a>
+                                    </li>
+                                @elseif($notification->type === 'App\Notifications\RoleUpgradeRejected')
+                                    <li>
+                                        <a href="#" class="dropdown-item"
+                                           onclick="event.preventDefault();
+                                                    showRejectionReason('Yêu cầu nâng cấp tài khoản của bạn đã bị từ chối', '{{ $notification->data['reason'] }}');
+                                                    markNotificationAsRead('{{ $notification->id }}');">
+                                            <i class="fas fa-times-circle text-danger me-2"></i>
+                                            <span>Từ chối nâng cấp tài khoản</span>
+                                            <small class="text-muted d-block">{{ $notification->created_at->diffForHumans() }}</small>
+                                        </a>
+                                    </li>
+                                @endif
                             @empty
                                 <li>
                                     <div class="dropdown-item text-muted py-2 px-3">Không có thông báo mới</div>
                                 </li>
                             @endforelse
-                            <li>
+                            {{-- <li>
                                 <hr class="dropdown-divider my-1">
-                            </li>
-                            <li>
+                            </li> --}}
+                            {{-- <li>
                                 <div class="d-flex justify-content-between px-3 py-1">
                                     <a class="small" href="{{ route('notifications.index') }}">Xem tất cả</a>
                                     <a class="small" href="#"
                                         onclick="markAllNotificationsAsRead(); return false;">Đánh dấu đã đọc</a>
                                 </div>
-                            </li>
+                            </li> --}}
                         @else
                             <li><a class="dropdown-item py-2 px-3" href="{{ route('loginuser') }}">Đăng nhập để xem thông
                                     báo</a></li>
@@ -269,16 +280,60 @@
             </div>
 
             <script>
-                function markNotificationAsRead(notificationId) {
-                    fetch(`/notifications/${notificationId}/read`, {
+                function showRejectionReason(message, reason) {
+                    // Tạo và hiển thị modal
+                    const modal = document.createElement('div');
+                    modal.className = 'modal fade';
+                    modal.id = 'rejectionModal';
+                    modal.innerHTML = `
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Từ chối nâng cấp tài khoản</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>${message}</p>
+                                    <p class="text-danger"><strong>Lý do:</strong> ${reason}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+
+                    const modalInstance = new bootstrap.Modal(modal);
+                    modalInstance.show();
+
+                    // Xóa modal khi đóng
+                    modal.addEventListener('hidden.bs.modal', function () {
+                        document.body.removeChild(modal);
+                    });
+                }
+
+                function markNotificationAsRead(id) {
+                    fetch(`/notifications/${id}/read`, {
                         method: 'POST',
                         headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                             'Content-Type': 'application/json'
                         }
-                    }).then(response => {
-                        if (response.ok) {
-                            updateNotificationCount();
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Cập nhật UI sau khi đánh dấu đã đọc
+                            const notificationCount = document.querySelector('.badge');
+                            if (notificationCount) {
+                                const currentCount = parseInt(notificationCount.textContent);
+                                if (currentCount > 1) {
+                                    notificationCount.textContent = currentCount - 1;
+                                } else {
+                                    notificationCount.style.display = 'none';
+                                }
+                            }
                         }
                     });
                 }
