@@ -34,6 +34,8 @@
                                     <th>Số điện thoại</th>
                                     <th>Vai trò</th>
                                     <th>Ảnh đại diện</th>
+                                    <th>Chỉnh sửa vai trò</th>
+                                    <th>Thông tin tài khoản</th>
                                 </tr>
                             </thead>
                             <tbody id="user-table">
@@ -52,6 +54,25 @@
                                                 Không có ảnh
                                             @endif
                                         </td>
+                                        @if (in_array($user->role_id, [2, 3, 4]))
+                                            <td>
+                                                <a href="{{ route('admin.users.edit', $user->user_id) }}"
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i> Chỉnh sửa
+                                                </a>
+                                            </td>
+                                        @else
+                                            <td>
+                                                <span class="text-danger">Admin không thể thay đổi vai trò</span>
+                                            </td>
+                                        @endif
+                                        <td>
+                                            <a href="{{ route('admin.users.show', $user->user_id) }}"
+                                                class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i> Xem
+                                            </a>
+                                        </td>
+
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -107,4 +107,5 @@ class User extends Authenticatable implements CanResetPasswordContract
     {
         return $this->hasMany(Category::class, 'moderator_id', 'user_id');
     }
+    
 }
