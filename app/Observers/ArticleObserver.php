@@ -24,7 +24,7 @@ class ArticleObserver
      */
     public function updated(Article $article)
     {
-        if ($article->wasChanged('status')) {
+       
             if ($article->status === 'published') {
                 // Gửi thông báo cho followers
                 $author = $article->author;
@@ -33,12 +33,7 @@ class ArticleObserver
                         $follower->notify(new NewArticleFromFollowedAuthor($article, $author));
                     }
                 });
-            } else {
-                // Gửi thông báo cho chính tác giả nếu không phải published (giả sử là draft)
-                $detectedWord = 'Bài viết của bạn đã bị tố cáo và đưa về dạng nháp';
-                $article->author->notify(new ArticleStatusChangedNotification($article, $detectedWord));
             }
-        }
     }
 
 
