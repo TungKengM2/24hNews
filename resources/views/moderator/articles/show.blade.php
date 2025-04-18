@@ -193,7 +193,7 @@
                                                 <div class="progress">
                                                     <div class="progress-bar bg-success" id="criteria-progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
-                                                <div class="text-center mt-1">
+                                                <div class="text-center mt-1 bg-white">
                                                     <small id="criteria-count">0/5 tiêu chí đạt</small>
                                                 </div>
                                             </div>
@@ -384,6 +384,7 @@
     /* Progress bar styles */
     .criteria-progress {
         margin-top: 15px;
+        width: 100%;
     }
 
     .criteria-progress .progress {
@@ -392,11 +393,14 @@
         background-color: #e9ecef;
         margin-bottom: 5px;
         overflow: hidden;
+        width: 100%;
+        display: block;
     }
 
     .criteria-progress .progress-bar {
         height: 100%;
         transition: width 0.3s ease;
+        float: left;
     }
 </style>
 @endsection

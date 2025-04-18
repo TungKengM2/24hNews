@@ -353,16 +353,14 @@
                                                                                 </div>
                                                                             </li>
                                                                         </ul>
-{{--                                                                        <div class="criteria-progress mt-3">--}}
-{{--                                                                            <div class="progress">--}}
-{{--                                                                                <div class="progress-bar bg-success" id="criteria-progress-bar-{{ $article->article_id }}" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>--}}
-{{--                                                                            </div>--}}
-{{--                                                                            <div class="text-center mt-1">--}}
-{{--                                                                                <small--}}
-{{--                                                                                    id="criteria-count-{{ $article->article_id }}">0/5--}}
-{{--                                                                                    tiêu chí đạt</small>--}}
-{{--                                                                            </div>--}}
-{{--                                                                        </div>--}}
+                                                                        <div class="criteria-progress mt-3">
+                                                                            <div class="progress">
+                                                                                <div class="progress-bar bg-success" id="criteria-progress-bar-{{ $article->article_id }}" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                            </div>
+                                                                            <div class="criteria-count">
+                                                                                <small id="criteria-count-{{ $article->article_id }}">0/5 tiêu chí đạt</small>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -447,6 +445,8 @@
     .verification-criteria {
         background-color: #f8f9fa;
         border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .verification-criteria-title {
@@ -471,6 +471,7 @@
 
     .criteria-item:last-child {
         border-bottom: none;
+        margin-bottom: 0;
     }
 
     .criteria-icon {
@@ -524,6 +525,38 @@
     .criteria-tooltip:hover .tooltip-text {
         visibility: visible;
         opacity: 1;
+    }
+
+    /* Progress bar styles */
+    .criteria-progress {
+        margin-top: 15px;
+        width: 100%;
+    }
+
+    .criteria-progress .progress {
+        height: 10px;
+        border-radius: 5px 5px 0 0;
+        background-color: #e9ecef;
+        margin-bottom: 0;
+        overflow: hidden;
+        width: 100%;
+        display: block;
+    }
+
+    .criteria-progress .progress-bar {
+        height: 100%;
+        transition: width 0.3s ease;
+        float: left;
+    }
+    
+    .criteria-count {
+        background-color: #f8f9fa;
+        border-radius: 0 0 5px 5px;
+        padding: 5px;
+        text-align: center;
+        border: none;
+        font-size: 12px;
+        color: #495057;
     }
 </style>
 @endsection
