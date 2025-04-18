@@ -98,8 +98,9 @@ Route::middleware('auth')->group(function () {
 
 });
 // Client Category
-Route::get('/danh-muc/{slug}', [CategoryUserController::class, 'index'])->name('client.category.show');
-
+Route::get('/danh-muc/{slug}/{childSlug?}', [CategoryUserController::class, 'index'])
+    ->name('client.category.show');
+    
 Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.shows');
 
 
