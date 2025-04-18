@@ -174,6 +174,9 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="verification-criteria">
+                                        <!-- Hidden inputs for category information -->
+                                        <input type="hidden" id="has-parent-category" value="{{ $article->category_id ? 'true' : 'false' }}">
+                                        <input type="hidden" id="has-child-category" value="{{ $article->subcategory_id ? 'true' : 'false' }}">
                                         <div class="criteria-content">
                                             <ul class="criteria-list" id="criteria-list">
                                                 <li class="criteria-item failed" id="criteria-title" data-target="title">
@@ -212,14 +215,14 @@
                                                     </div>
                                                 </li>
                                             </ul>
-                                            <div class="criteria-progress mt-3">
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-success" id="criteria-progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <div class="text-center mt-1">
-                                                    <small id="criteria-count">0/5 tiêu chí đạt</small>
-                                                </div>
-                                            </div>
+{{--                                            <div class="criteria-progress mt-3">--}}
+{{--                                                <div class="progress">--}}
+{{--                                                    <div class="progress-bar bg-success" id="criteria-progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="text-center mt-1">--}}
+{{--                                                    <small id="criteria-count">0/5 tiêu chí đạt</small>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
                                         </div>
                                     </div>
                                 </div>
@@ -397,14 +400,11 @@
 
         // Kiểm tra danh mục
         const categoryCriteria = document.getElementById('criteria-category');
-        const hasParentCategory = {{ $article->category_id ? 'true' : 'false' }};
-        const hasChildCategory = {{ $article->subcategory_id ? 'true' : 'false' }};
+        const hasParentCategory = document.getElementById('has-parent-category').value === 'true';
+        const hasChildCategory = document.getElementById('has-child-category').value === 'true';
         if (categoryCriteria) {
-            if (hasParentCategory && hasChildCategory) {
-                updateCriteriaStatus(categoryCriteria, true);
-            } else {
-                updateCriteriaStatus(categoryCriteria, false);
-            }
+            // Chỉ hiển thị tích xanh khi cả hai danh mục đều có
+            updateCriteriaStatus(categoryCriteria, hasParentCategory && hasChildCategory);
         }
 
         // Kiểm tra tags

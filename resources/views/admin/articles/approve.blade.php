@@ -312,8 +312,11 @@
                                                             <div class="card-header">
                                                                 <h5 class="card-title mb-0">Tiêu chí xuất bản</h5>
                                                             </div>
-                                                            <div class="card-body">
+                                                            <div class="card-body p-0">
                                                                 <div class="verification-criteria">
+                                                                    <!-- Hidden inputs for category information -->
+                                                                    <input type="hidden" id="has-parent-category-{{ $article->article_id }}" value="{{ $article->category_id ? 'true' : 'false' }}">
+                                                                    <input type="hidden" id="has-child-category-{{ $article->article_id }}" value="{{ $article->subcategory_id ? 'true' : 'false' }}">
                                                                     <div class="criteria-content">
                                                                         <ul class="criteria-list" id="criteria-list-{{ $article->article_id }}">
                                                                             <li class="criteria-item failed" id="criteria-title-{{ $article->article_id }}" data-target="title">
@@ -352,14 +355,16 @@
                                                                                 </div>
                                                                             </li>
                                                                         </ul>
-                                                                        <div class="criteria-progress mt-3">
-                                                                            <div class="progress">
-                                                                                <div class="progress-bar bg-success" id="criteria-progress-bar-{{ $article->article_id }}" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                            </div>
-                                                                            <div class="text-center mt-1">
-                                                                                <small id="criteria-count-{{ $article->article_id }}">0/5 tiêu chí đạt</small>
-                                                                            </div>
-                                                                        </div>
+{{--                                                                        <div class="criteria-progress mt-3">--}}
+{{--                                                                            <div class="progress">--}}
+{{--                                                                                <div class="progress-bar bg-success" id="criteria-progress-bar-{{ $article->article_id }}" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>--}}
+{{--                                                                            </div>--}}
+{{--                                                                            <div class="text-center mt-1">--}}
+{{--                                                                                <small--}}
+{{--                                                                                    id="criteria-count-{{ $article->article_id }}">0/5--}}
+{{--                                                                                    tiêu chí đạt</small>--}}
+{{--                                                                            </div>--}}
+{{--                                                                        </div>--}}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -550,12 +555,14 @@
 
         // Kiểm tra danh mục
         const categoryCriteria = document.getElementById(`criteria-category-${articleId}`);
-        const categoryBadge = document.querySelector(`#articleDetailModal${articleId} .badge.bg-info`);
-        const hasParentCategory = categoryBadge && categoryBadge.textContent !== 'Không có';
-        // Giả định rằng nếu có danh mục chính thì cũng có danh mục phụ
-        // Trong thực tế, bạn có thể cần kiểm tra cụ thể hơn
+
+        // Lấy thông tin danh mục từ data attributes
+        const hasParentCategory = document.getElementById(`has-parent-category-${articleId}`).value === 'true';
+        const hasChildCategory = document.getElementById(`has-child-category-${articleId}`).value === 'true';
+
         if (categoryCriteria) {
-            updateCriteriaStatus(categoryCriteria, hasParentCategory);
+            // Chỉ hiển thị tích xanh khi cả hai danh mục đều có
+            updateCriteriaStatus(categoryCriteria, hasParentCategory && hasChildCategory);
         }
 
         // Kiểm tra tags
