@@ -276,14 +276,14 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Người theo dõi dat them --> 
+                    <!-- Người theo dõi dat them -->
                     <div class="col-xl-4 col-md-6 col-12">
                         <div class="box">
                             <div class="box-body">
                                 <div class="d-flex align-items-center">
                                     <div class="ms-15">
-                                        <h5 class="mb-0">Người theo dõi</h5>
-                                        <p class="mb-0 text-fade fs-12">Tổng số người theo dõi</p>
+                                        <h5 class="mb-0">Người theo dõi tôi</h5>
+                                        <p class="mb-0 text-fade fs-12">Tổng số người đang theo dõi tôi</p>
                                     </div>
                                 </div>
                                 <div class="mt-20 d-flex justify-content-between align-items-center">
