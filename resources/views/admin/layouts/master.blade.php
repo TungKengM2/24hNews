@@ -91,6 +91,9 @@
     <!-- Flash Messages with SweetAlert2 -->
     @include('admin.layouts.partials.flash-messages')
 
+    @yield('styles')
+    @yield('scripts')
+
 </body>
 
 </html>
