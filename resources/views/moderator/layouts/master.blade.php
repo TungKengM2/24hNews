@@ -298,6 +298,9 @@
     <!-- Vendor JS -->
     @include('moderator.layouts.partials.js')
 
+    @yield('styles')
+    @yield('scripts')
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const avatarUpload = document.getElementById('avatarUpload');
