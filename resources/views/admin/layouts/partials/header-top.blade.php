@@ -66,14 +66,29 @@
                     @php
                         $pendingCount = \App\Models\Article::where('status', 'pending')->count();
                         $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
+
+                        // Lấy danh sách yêu cầu nâng cấp với thời gian
                         $pendingUpgradeRequests = \App\Models\Approval::where('type', 'role_upgrade')
                             ->where('status', 'pending')
+                            ->first();
+                        $pendingUpgradeCount = \App\Models\Approval::where('type', 'role_upgrade')
+                            ->where('status', 'pending')
                             ->count();
-                        $totalPending = $pendingCount + $pendingViolations + $pendingUpgradeRequests;
 
+                        $totalPending = $pendingCount + $pendingViolations + ($pendingUpgradeCount ?? 0);
+
+                        // Lấy danh sách bài viết chờ lâu với thời gian
                         $longPendingArticles = \App\Models\Article::where('status', 'pending')
                             ->where('created_at', '<', now()->subMinutes(30))
+                            ->first();
+                        $longPendingCount = \App\Models\Article::where('status', 'pending')
+                            ->where('created_at', '<', now()->subMinutes(30))
                             ->count();
+
+                        // Lấy bài viết pending mới nhất
+                        $latestPendingArticle = \App\Models\Article::where('status', 'pending')
+                            ->latest()
+                            ->first();
                     @endphp
 
                     @if ($totalPending > 0)
@@ -90,32 +105,32 @@
                     </div>
 
                     @if ($totalPending > 0)
-                        @if ($pendingCount > 0)
+                        @if ($pendingCount > 0 && $latestPendingArticle)
                             <div class="border-bottom">
                                 <a href="{{ route('admin.articles.approves') }}" class="d-block px-3 py-2 text-decoration-none text-dark">
-                                    <div class="text-secondary" style="font-size: 12px;">1 giây trước</div>
+                                    <div class="text-secondary" style="font-size: 12px;">{{ $latestPendingArticle->created_at->diffForHumans() }}</div>
                                     <div class="fw-medium mb-1">Bài viết chờ duyệt</div>
                                     <div class="text-secondary" style="font-size: 13px;">Có {{ $pendingCount }} bài viết đang chờ duyệt</div>
                                 </a>
                             </div>
                         @endif
 
-                        @if ($longPendingArticles > 0)
+                        @if ($longPendingCount > 0 && $longPendingArticles)
                             <div class="border-bottom">
                                 <a href="{{ route('admin.articles.approves') }}" class="d-block px-3 py-2 text-decoration-none text-dark">
-                                    <div class="text-secondary" style="font-size: 12px;">1 giây trước</div>
+                                    <div class="text-secondary" style="font-size: 12px;">{{ $longPendingArticles->created_at->diffForHumans() }}</div>
                                     <div class="fw-medium mb-1">Bài viết chờ lâu</div>
-                                    <div class="text-secondary" style="font-size: 13px;">{{ $longPendingArticles }} bài viết chờ duyệt quá 30 phút</div>
+                                    <div class="text-secondary" style="font-size: 13px;">{{ $longPendingCount }} bài viết chờ duyệt quá 30 phút</div>
                                 </a>
                             </div>
                         @endif
 
-                        @if ($pendingUpgradeRequests > 0)
+                        @if ($pendingUpgradeCount > 0 && $pendingUpgradeRequests)
                             <div class="border-bottom">
                                 <a href="{{ route('admin.approvals.index') }}" class="d-block px-3 py-2 text-decoration-none text-dark">
-                                    <div class="text-secondary" style="font-size: 12px;">1 giây trước</div>
+                                    <div class="text-secondary" style="font-size: 12px;">{{ $pendingUpgradeRequests->created_at->diffForHumans() }}</div>
                                     <div class="fw-medium mb-1">Yêu cầu nâng cấp tài khoản</div>
-                                    <div class="text-secondary" style="font-size: 13px;">Có {{ $pendingUpgradeRequests }} yêu cầu nâng cấp mới</div>
+                                    <div class="text-secondary" style="font-size: 13px;">Có {{ $pendingUpgradeCount }} yêu cầu nâng cấp mới</div>
                                 </a>
                             </div>
                         @endif
