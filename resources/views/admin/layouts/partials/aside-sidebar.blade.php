@@ -92,9 +92,9 @@
                                     <x-notification-badge :count="$pendingArticlesCount" />
                                 @endif
                         </li>
-                        <li><a href="{{ route('admin.comments.index') }}"><i class="icon-Commit"><span
+                        {{-- <li><a href="{{ route('admin.comments.index') }}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Quản Lý Bình Luận</a>
-                        </li>
+                        </li> --}}
 {{--                        <li>--}}
 {{--                            <a href="{{ route('admin.edit-requests.index') }}" style="position: relative;">--}}
 {{--                                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>--}}
@@ -104,16 +104,16 @@
 {{--                                @endif--}}
 {{--                            </a>--}}
 {{--                        </li>--}}
-                        <li><a href="{{ route('admin.violations.approves') }}"><i class="icon-Commit"><span
+                        {{-- <li><a href="{{ route('admin.violations.approves') }}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Duyệt Report</a>
-                        </li>
+                        </li> --}}
                         <li><a href="{{ route('admin.moderation.history') }}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Lịch sử kiểm duyệt</a>
                         </li>
-                        <li><a href="{{ route('admin.user-role-requests') }}"><i class="icon-Commit"><span
+                        {{-- <li><a href="{{ route('admin.user-role-requests') }}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Nâng Cấp Tài Khoản
                             </a>
-                        </li>
+                        </li> --}}
                         <li>
                             <a href="{{ route('admin.violations.approves') }}" style="position: relative;">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
