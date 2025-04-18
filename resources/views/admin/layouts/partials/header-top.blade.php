@@ -109,6 +109,16 @@
                                 </a>
                             </div>
                         @endif
+
+                        @if ($pendingUpgradeRequests > 0)
+                            <div class="border-bottom">
+                                <a href="{{ route('admin.approvals.index') }}" class="d-block px-3 py-2 text-decoration-none text-dark">
+                                    <div class="text-secondary" style="font-size: 12px;">1 giây trước</div>
+                                    <div class="fw-medium mb-1">Yêu cầu nâng cấp tài khoản</div>
+                                    <div class="text-secondary" style="font-size: 13px;">Có {{ $pendingUpgradeRequests }} yêu cầu nâng cấp mới</div>
+                                </a>
+                            </div>
+                        @endif
                     @else
                         <div class="text-center py-4">
                             <i class="fas fa-bell-slash text-secondary opacity-25" style="font-size: 24px;"></i>
