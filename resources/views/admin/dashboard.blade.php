@@ -276,6 +276,27 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Người theo dõi dat them --> 
+                    <div class="col-xl-4 col-md-6 col-12">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="ms-15">
+                                        <h5 class="mb-0">Người theo dõi</h5>
+                                        <p class="mb-0 text-fade fs-12">Tổng số người theo dõi</p>
+                                    </div>
+                                </div>
+                                <div class="mt-20 d-flex justify-content-between align-items-center">
+                                    <h3 class="fw-600">{{ $totalFollowers }}</h3>
+                                    <div class="text-info">
+                                        <a href="{{ route('admin.followers') }}" class="btn btn-primary">
+                                            <i class="fa fa-eye "></i> Xem danh sách
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Thống kê bài viết -->
