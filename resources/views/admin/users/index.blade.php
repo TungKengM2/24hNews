@@ -25,7 +25,7 @@
 
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-dark mb-0">
+                        <table class="table table-bordered table-hover mb-0" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>ID</th>

@@ -27,7 +27,7 @@
                         <h4 class="page-title">Danh Sách Bài Viết Đã Lưu</h4>
                         <div class="box-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-dark mb-0" style="width:100%">
+                                <table class="table table-bordered mb-0" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th>STT</th>

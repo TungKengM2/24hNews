@@ -15,7 +15,7 @@
                             @if ($comments->isEmpty())
                                 <p>Người dùng này chưa có bình luận nào.</p>
                             @else
-                                <table class="table table-bordered table-dark mb-0" style="width:100%">
+                                <table class="table table-bordered mb-0" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th>STT</th>
