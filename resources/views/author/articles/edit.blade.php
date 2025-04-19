@@ -741,6 +741,23 @@
 
             document.getElementById('saveDraft').addEventListener('click', function() {
                 document.getElementById('articleStatus').value = 'draft';
+                
+                // Đặt isFormEdited = false để tránh cảnh báo rời trang
+                if (window.isFormEdited) window.isFormEdited = false;
+                
+                // Hiển thị thông báo đang xử lý
+                Swal.fire({
+                    title: 'Đang xử lý...',
+                    text: 'Đang lưu bản nháp, vui lòng đợi...',
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
                 document.getElementById('articleForm').submit();
             });
 
@@ -932,11 +949,52 @@
                         confirmButtonText: 'Vẫn cập nhật',
                         cancelButtonText: 'Chỉnh sửa thêm'
                     }).then((result) => {
-                        if (result.isConfirmed) document.getElementById('articleForm').submit();
+                        if (result.isConfirmed) {
+                            // Đặt isFormEdited = false để tránh cảnh báo rời trang
+                            if (window.isFormEdited) window.isFormEdited = false;
+                            
+                            // Hiển thị thông báo đang xử lý
+                            Swal.fire({
+                                title: 'Đang xử lý...',
+                                text: 'Đang cập nhật bài viết, vui lòng đợi...',
+                                icon: 'info',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                            
+                            document.getElementById('articleForm').submit();
+                        }
                     });
                     return false;
                 }
-                return true;
+                
+                // Khi đạt tất cả tiêu chí
+                // Đặt isFormEdited = false để tránh cảnh báo rời trang
+                if (window.isFormEdited) window.isFormEdited = false;
+                
+                // Hiển thị thông báo đang xử lý
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Đang xử lý...',
+                    text: 'Đang cập nhật bài viết, vui lòng đợi...',
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                setTimeout(() => {
+                    document.getElementById('articleForm').submit();
+                }, 100);
+                
+                return false;
             });
         });
     </script>
