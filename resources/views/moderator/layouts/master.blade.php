@@ -116,8 +116,8 @@
     </style>
 
 </head>
-
-<body class="hold-transition light-skin sidebar-mini theme-primary fixed">
+{{-- dat them --}}
+<body class="hold-transition light-skin sidebar-mini theme-primary fixed" id="moderator-body">
 
     <div class="wrapper">
         <div id="loader"></div>
@@ -315,6 +315,39 @@
                     }
                 });
             }
+        });
+    </script>
+{{-- dat them --}}
+    <!-- Theme Persistence Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if dark-skin preference is stored in localStorage
+            const darkModePreference = localStorage.getItem('moderator-dark-mode');
+            const body = document.getElementById('moderator-body');
+
+            // Apply dark-skin if preference exists
+            if (darkModePreference === 'true') {
+                body.classList.remove('light-skin');
+                body.classList.add('dark-skin');
+
+                // Update the toggle switch state if it exists
+                const toggleSwitch = document.getElementById('toggle_left_sidebar_skin');
+                if (toggleSwitch) {
+                    toggleSwitch.checked = true;
+                }
+            }
+
+            // Listen for changes to the dark mode toggle
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.getAttribute('data-mainsidebarskin') === 'toggle') {
+                    // Store the preference when toggle is clicked
+                    if (body.classList.contains('dark-skin')) {
+                        localStorage.setItem('moderator-dark-mode', 'true');
+                    } else {
+                        localStorage.setItem('moderator-dark-mode', 'false');
+                    }
+                }
+            });
         });
     </script>
 

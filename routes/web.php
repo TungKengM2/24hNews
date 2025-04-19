@@ -501,6 +501,8 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 
     Route::get('/following', [ProfileController::class, 'followingOfAdminList'])->name('admin.following');
+    // dat them
+    Route::get('/followers', [ProfileController::class, 'followersOfAdminList'])->name('admin.followers');
 
     // Thêm route cho yêu cầu nâng cấp tài khoản
     Route::get('/approvals', [App\Http\Controllers\Admin\UserController::class, 'roleUpgradeRequests'])->name('admin.approvals.index');
