@@ -60,58 +60,92 @@
             </li> --}}
             <!-- Notifications -->
             <li class="dropdown notifications-menu">
-                <a href="#" class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white position-relative"
+                <a href="#"
+                    class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white position-relative"
                     data-bs-toggle="dropdown" title="Notifications">
                     <i data-feather="bell"></i>
                     @php
-                    // Lấy danh mục mà kiểm duyệt viên quản lý
-                    $moderatorCategories = auth()->user()->categories()->pluck('category_id')->toArray();
+                        // Lấy danh mục mà kiểm duyệt viên quản lý
+                        $moderatorCategories = auth()->user()->categories()->pluck('category_id')->toArray();
 
-                    // Đếm số bài viết chờ duyệt thuộc danh mục của kiểm duyệt viên
-                    $pendingCount = \App\Models\Article::where('status', 'pending')
-                        ->whereIn('category_id', $moderatorCategories)
-                        ->count();
+                        $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
 
-                    $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
-                    $totalPending = $pendingCount + $pendingViolations;
+                        // Get the latest pending violation by detected_at
+                        $latestViolation = \App\Models\Violation::where('status', 'pending')
+                            ->orderBy('detected_at', 'desc') // Sorting by detected_at instead of created_at
+                            ->first();
+                        // Ensure detected_at is a Carbon instance
+                        if ($latestViolation) {
+                            $latestViolation->detected_at = \Carbon\Carbon::parse($latestViolation->detected_at);
+                        }
 
-                    // Đếm số bài viết chờ lâu hơn 30 phút thuộc danh mục của kiểm duyệt viên
-                    $longPendingArticles = \App\Models\Article::where('status', 'pending')
-                        ->whereIn('category_id', $moderatorCategories)
-                        ->where('created_at', '<', now()->subMinutes(30))
-                        ->count();
+                        // Đếm số bài viết chờ duyệt thuộc danh mục của kiểm duyệt viên
+                        $pendingCount = \App\Models\Article::where('status', 'pending')
+                            ->whereIn('category_id', $moderatorCategories)
+                            ->count();
+
+                        $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
+                        $totalPending = $pendingCount + $pendingViolations;
+
+                        // Đếm số bài viết chờ lâu hơn 30 phút thuộc danh mục của kiểm duyệt viên
+                        $longPendingArticles = \App\Models\Article::where('status', 'pending')
+                            ->whereIn('category_id', $moderatorCategories)
+                            ->where('created_at', '<', now()->subMinutes(30))
+                            ->count();
                     @endphp
 
                     @if ($totalPending > 0)
                         <span class="badge bg-danger rounded-circle position-absolute"
-                              style="top: 0px; right: 0px; font-size: 10px; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">
+                            style="top: 0px; right: 0px; font-size: 10px; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">
                             {{ $totalPending }}
                         </span>
                     @endif
                 </a>
-                <ul class="dropdown-menu shadow border-0" style="width: 280px; right: 0; left: auto; padding: 0; margin-top: 10px;">
+                <ul class="dropdown-menu shadow border-0"
+                    style="width: 280px; right: 0; left: auto; padding: 0; margin-top: 10px;">
                     <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
                         <span class="fw-medium" style="font-size: 14px;">Thông báo mới</span>
-                        <a href="#" class="text-danger text-decoration-none" style="font-size: 13px;">Xóa tất cả</a>
+                        <a href="#" class="text-danger text-decoration-none" style="font-size: 13px;">Xóa tất
+                            cả</a>
                     </div>
 
                     @if ($totalPending > 0)
                         @if ($pendingCount > 0)
                             <div class="border-bottom">
-                                <a href="{{ route('moderator.articles.index') }}" class="d-block px-3 py-2 text-decoration-none text-dark">
+                                <a href="{{ route('moderator.articles.index') }}"
+                                    class="d-block px-3 py-2 text-decoration-none text-dark">
                                     <div class="text-secondary" style="font-size: 12px;">1 giây trước</div>
                                     <div class="fw-medium mb-1">Bài viết chờ duyệt</div>
-                                    <div class="text-secondary" style="font-size: 13px;">Có {{ $pendingCount }} bài viết đang chờ duyệt</div>
+                                    <div class="text-secondary" style="font-size: 13px;">Có {{ $pendingCount }} bài viết
+                                        đang chờ duyệt</div>
+                                </a>
+                            </div>
+                        @endif
+                        @if ($pendingViolations > 0)
+                            <div class="border-bottom">
+                                <a href="{{ route('moderator.violations.approves') }}" class="d-block px-3 py-2 text-decoration-none text-dark">
+                                    @if ($latestViolation)
+                                        <div class="text-secondary" style="font-size: 12px;"
+                                            data-timestamp="{{ $latestViolation->detected_at->timestamp }}">
+                                            {{ $latestViolation->detected_at->diffForHumans() }}
+                                        </div>
+                                    @endif
+                                    <div class="fw-medium mb-1">Vi phạm chờ xử lý</div>
+                                    <div class="text-secondary" style="font-size: 13px;">
+                                        Có {{ $pendingViolations }} vi phạm đang chờ xử lý
+                                    </div>
                                 </a>
                             </div>
                         @endif
 
                         @if ($longPendingArticles > 0)
                             <div class="border-bottom">
-                                <a href="{{ route('moderator.articles.index') }}" class="d-block px-3 py-2 text-decoration-none text-dark">
+                                <a href="{{ route('moderator.articles.index') }}"
+                                    class="d-block px-3 py-2 text-decoration-none text-dark">
                                     <div class="text-secondary" style="font-size: 12px;">1 giây trước</div>
                                     <div class="fw-medium mb-1">Bài viết chờ lâu</div>
-                                    <div class="text-secondary" style="font-size: 13px;">{{ $longPendingArticles }} bài viết chờ duyệt quá 30 phút</div>
+                                    <div class="text-secondary" style="font-size: 13px;">{{ $longPendingArticles }} bài
+                                        viết chờ duyệt quá 30 phút</div>
                                 </a>
                             </div>
                         @endif
@@ -119,13 +153,15 @@
                         <div class="px-3 py-3">
                             <div class="d-flex align-items-center justify-content-center" style="height: 100px;">
                                 <div class="text-center">
-                                    <i data-feather="bell-off" class="mb-2 mx-auto text-secondary" style="opacity: 0.5; width: 24px; height: 24px;"></i>
+                                    <i data-feather="bell-off" class="mb-2 mx-auto text-secondary"
+                                        style="opacity: 0.5; width: 24px; height: 24px;"></i>
                                     <div class="text-secondary" style="font-size: 13px;">Không có thông báo mới</div>
                                 </div>
                             </div>
                         </div>
                         <div class="border-top">
-                            <a href="#" class="d-block text-center text-primary text-decoration-none py-2" style="font-size: 13px;">
+                            <a href="#" class="d-block text-center text-primary text-decoration-none py-2"
+                                style="font-size: 13px;">
                                 Xem tất cả thông báo
                             </a>
                         </div>
