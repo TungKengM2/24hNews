@@ -43,7 +43,7 @@
                         <li>
                             <a href="{{ route('moderator.violations.approves') }}" style="position: relative;">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Report
+                                Xử lý Vi Phạm
                                 @if($pendingViolationsCount > 0)
                                     <x-notification-badge :count="$pendingViolationsCount" />
                                 @endif
