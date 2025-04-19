@@ -163,78 +163,71 @@
                                     </style>
 
                                     <script>
-                                        document.addEventListener('DOMContentLoaded', function() {
-                                            const toggle = document.querySelector('.edit-profile-toggle');
-                                            const form = document.querySelector('.profile-form');
-                                            const chevron = toggle.querySelector('.fa-chevron-down');
-                                            const avatarInput = document.getElementById('avatarUpload');
-                                            const avatarPreview = document.getElementById('avatarPreview');
-                                            const widgetUserImage = document.querySelector('.widget-user-image');
-
-                                            // Toggle profile form
-                                            toggle.addEventListener('click', function() {
-                                                form.style.display = form.style.display === 'none' ? 'block' : 'none';
-                                                chevron.style.transform = form.style.display === 'none' ? 'rotate(0deg)' : 'rotate(180deg)';
-                                            });
-
-                                            // Hide form on successful submission
-                                            if (document.querySelector('.alert-success')) {
-                                                form.style.display = 'none';
-                                                chevron.style.transform = 'rotate(0deg)';
-                                            }
-
-                                            // Handle avatar upload
-                                            widgetUserImage.addEventListener('click', function() {
-                                                avatarInput.click();
-                                            });
-
-                                            avatarInput.addEventListener('change', function() {
-                                                if (this.files && this.files[0]) {
-                                                    const formData = new FormData();
-                                                    formData.append('image', this.files[0]);
-                                                    formData.append('_token', '{{ csrf_token() }}');
-                                                    
-                                                    // Show loading state
-                                                    avatarPreview.style.opacity = '0.5';
-                                                    
-                                                    fetch('{{ route("profile.update.avatar") }}', {
-                                                        method: 'POST',
-                                                        body: formData
-                                                    })
-                                                    .then(response => response.json())
-                                                    .then(data => {
-                                                        if (data.success) {
-                                                            // Update avatar preview
-                                                            avatarPreview.src = data.avatar_url;
-                                                            // Show success message
-                                                            const alertDiv = document.createElement('div');
-                                                            alertDiv.className = 'alert alert-success alert-dismissible fade show';
-                                                            alertDiv.innerHTML = `
-                                                                ${data.message}
-                                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                            `;
-                                                            document.querySelector('.box-body').insertBefore(alertDiv, document.querySelector('.edit-profile-toggle'));
-                                                        } else {
-                                                            throw new Error(data.message);
-                                                        }
-                                                    })
-                                                    .catch(error => {
-                                                        // Show error message
-                                                        const alertDiv = document.createElement('div');
-                                                        alertDiv.className = 'alert alert-danger alert-dismissible fade show';
-                                                        alertDiv.innerHTML = `
-                                                            ${error.message}
-                                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                        `;
-                                                        document.querySelector('.box-body').insertBefore(alertDiv, document.querySelector('.edit-profile-toggle'));
-                                                    })
-                                                    .finally(() => {
-                                                        // Reset loading state
-                                                        avatarPreview.style.opacity = '1';
-                                                    });
-                                                }
-                                            });
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const toggle = document.querySelector('.edit-profile-toggle');
+                                        const form = document.querySelector('.profile-form');
+                                        const chevron = toggle.querySelector('.fa-chevron-down');
+                                        const avatarInput = document.getElementById('avatarUpload');
+                                        const avatarPreview = document.getElementById('avatarPreview');
+                                        const widgetUserImage = document.querySelector('.widget-user-image');
+                                    
+                                        // Toggle profile form
+                                        toggle.addEventListener('click', function() {
+                                            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+                                            chevron.style.transform = form.style.display === 'none' ? 'rotate(0deg)' : 'rotate(180deg)';
                                         });
+                                    
+                                        // Hide form on successful submission
+                                        if (document.querySelector('.alert-success')) {
+                                            form.style.display = 'none';
+                                            chevron.style.transform = 'rotate(0deg)';
+                                        }
+                                    
+                                        // Handle avatar upload
+                                        widgetUserImage.addEventListener('click', function() {
+                                            avatarInput.click();
+                                        });
+                                    
+                                        avatarInput.addEventListener('change', function() {
+                                            if (this.files && this.files[0]) {
+                                                const formData = new FormData();
+                                                formData.append('image', this.files[0]);
+                                                formData.append('_token', '{{ csrf_token() }}');
+                                    
+                                                // Show loading state
+                                                avatarPreview.style.opacity = '0.5';
+                                    
+                                                fetch('{{ route("profile.upload-avatar") }}', {
+                                                    method: 'POST',
+                                                    body: formData
+                                                })
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    console.log(data); // Debugging the response
+                                    
+                                                    if (data.success) {
+                                                        avatarPreview.src = data.avatar_url; // Update the avatar with the new URL
+                                                    } else {
+                                                        throw new Error(data.message || 'Có lỗi xảy ra');
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Lỗi:', error); // Debugging the actual error
+                                                    const alertDiv = document.createElement('div');
+                                                    alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+                                                    alertDiv.innerHTML = `
+                                                        ${error.message || 'Đã xảy ra lỗi. Vui lòng thử lại sau.'}  <!-- Updated error message in Vietnamese -->
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    `;
+                                                    document.querySelector('.box-body').insertBefore(alertDiv, document.querySelector('.edit-profile-toggle'));
+                                                })
+                                                .finally(() => {
+                                                    // Reset loading state
+                                                    avatarPreview.style.opacity = '1';
+                                                });
+                                            }
+                                        });
+                                    });
                                     </script>
                                 </div>
                             </div>
@@ -247,5 +240,4 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/profile-avatar.js') }}"></script>
 @endpush
