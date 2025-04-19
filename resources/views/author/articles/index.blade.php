@@ -399,6 +399,38 @@
                     });
                 @endif
 
+                @if (session('warning'))
+                    showSweetAlert({
+                        icon: 'warning',
+                        title: 'Cảnh báo!',
+                        text: '{{ session('warning') }}',
+                        confirmButtonText: 'Đóng'
+                    });
+                @endif
+
+                @if (session('info'))
+                    showSweetAlert({
+                        icon: 'info',
+                        title: 'Thông tin!',
+                        text: '{{ session('info') }}',
+                        confirmButtonText: 'Đóng'
+                    });
+                @endif
+
+                @if ($errors->any())
+                    let errorMessages = '';
+                    @foreach ($errors->all() as $error)
+                        errorMessages += '- {{ $error }}<br>';
+                    @endforeach
+
+                    showSweetAlert({
+                        icon: 'error',
+                        title: 'Có lỗi xảy ra!',
+                        html: errorMessages,
+                        confirmButtonText: 'Đóng'
+                    });
+                @endif
+
                 // Hiển thị cảnh báo vi phạm nếu có
                 @if (auth()->user()->violation_count > 5)
                     showSweetAlert({
