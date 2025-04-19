@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Violation extends Model
 {
@@ -27,6 +27,7 @@ class Violation extends Model
         'status',
         'warning_sent'
     ];
+    protected $dates = ['detected_at'];
 
     // Quan hệ với bảng users (người xử lý)
     // Violation.php
