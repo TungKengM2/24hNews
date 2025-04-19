@@ -196,12 +196,11 @@
 
                                                     @if ($article->status === 'pending')
                                                         <form action="{{ route('articles.approve', $article) }}"
-                                                            method="POST" class="d-inline">
+                                                            method="POST" class="d-inline" id="approveForm{{ $article->article_id }}">
                                                             @csrf
                                                             @method('PATCH')
-                                                            <button type="submit" class="btn btn-success btn-sm"
-                                                                title="Duyệt bài viết"
-                                                                onclick="return confirm('Bạn có chắc chắn muốn duyệt bài viết này không?')">
+                                                            <button type="button" class="btn btn-success btn-sm approve-btn"
+                                                                title="Duyệt bài viết" data-id="{{ $article->article_id }}">
                                                                 <i class="fa fa-check"></i>
                                                             </button>
                                                         </form>
@@ -564,124 +563,30 @@
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Khi modal hiển thị, cập nhật tiêu chí
-        $('.modal').on('shown.bs.modal', function (e) {
-            const articleId = e.target.id.replace('articleDetailModal', '');
-            updateCriteria(articleId);
+        // Xử lý nút duyệt bài viết với SweetAlert2
+        const approveButtons = document.querySelectorAll('.approve-btn');
+        
+        approveButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const articleId = this.getAttribute('data-id');
+                const form = document.getElementById('approveForm' + articleId);
+                
+                Swal.fire({
+                    title: 'Xác nhận duyệt bài',
+                    text: 'Bạn có chắc chắn muốn duyệt bài viết này không?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Đồng ý, duyệt bài!',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
         });
     });
-
-    function updateCriteria(articleId) {
-        // Kiểm tra tiêu đề
-        const title = document.querySelector(`#articleDetailModal${articleId} h4`).innerText;
-        const titleLength = title.length;
-        const titleCriteria = document.getElementById(`criteria-title-${articleId}`);
-        const titleLengthSpan = document.getElementById(`current-title-length-${articleId}`);
-        if (titleLengthSpan) {
-            titleLengthSpan.textContent = `(${titleLength} ký tự)`;
-            if (titleLength >= 50 && titleLength <= 60) {
-                titleLengthSpan.style.color = '#28a745';
-                updateCriteriaStatus(titleCriteria, true);
-            } else {
-                titleLengthSpan.style.color = '#dc3545';
-                updateCriteriaStatus(titleCriteria, false);
-            }
-        }
-
-        // Kiểm tra danh mục
-        const categoryCriteria = document.getElementById(`criteria-category-${articleId}`);
-
-        // Lấy thông tin danh mục từ badges hoặc data attributes
-        const parentCategoryBadge = document.querySelector(`#articleDetailModal${articleId} li:nth-child(2) .badge.bg-info`);
-        const childCategoryBadge = document.querySelector(`#articleDetailModal${articleId} li:nth-child(3) .badge.bg-secondary`);
-
-        const hasParentCategory = parentCategoryBadge && parentCategoryBadge.textContent !== 'Không có';
-        const hasChildCategory = childCategoryBadge && childCategoryBadge.textContent !== 'Không có';
-
-        if (categoryCriteria) {
-            // Chỉ hiển thị tích xanh khi cả hai danh mục đều có
-            updateCriteriaStatus(categoryCriteria, hasParentCategory && hasChildCategory);
-        }
-
-        // Kiểm tra tags
-        const tagCriteria = document.getElementById(`criteria-tags-${articleId}`);
-        const tagCountSpan = document.getElementById(`current-tag-count-${articleId}`);
-        const tagBadges = document.querySelectorAll(`#articleDetailModal${articleId} .badge.bg-primary.m-1`);
-        const tagCount = tagBadges.length;
-        if (tagCountSpan) {
-            tagCountSpan.textContent = `(${tagCount} thẻ)`;
-            if (tagCount >= 2 && tagCount <= 5) {
-                tagCountSpan.style.color = '#28a745';
-                updateCriteriaStatus(tagCriteria, true);
-            } else {
-                tagCountSpan.style.color = '#dc3545';
-                updateCriteriaStatus(tagCriteria, false);
-            }
-        }
-
-        // Kiểm tra ảnh đại diện
-        const thumbnailCriteria = document.getElementById(`criteria-thumbnail-${articleId}`);
-        const thumbnailImg = document.querySelector(`#articleDetailModal${articleId} .img-fluid.rounded`);
-        if (thumbnailCriteria) {
-            updateCriteriaStatus(thumbnailCriteria, thumbnailImg !== null);
-        }
-
-        // Kiểm tra nội dung
-        const contentCriteria = document.getElementById(`criteria-content-${articleId}`);
-        const wordCountSpan = document.getElementById(`current-word-count-${articleId}`);
-        const content = document.querySelector(`.article-content-${articleId}`).innerText;
-        const wordCount = countWords(content);
-        if (wordCountSpan) {
-            wordCountSpan.textContent = `(${wordCount} từ)`;
-            if (wordCount >= 800 && wordCount <= 1500) {
-                wordCountSpan.style.color = '#28a745';
-                updateCriteriaStatus(contentCriteria, true);
-            } else {
-                wordCountSpan.style.color = '#dc3545';
-                updateCriteriaStatus(contentCriteria, false);
-            }
-        }
-
-        // Cập nhật thanh tiến trình
-        updateProgressBar(articleId);
-    }
-
-    function updateCriteriaStatus(criteriaElement, isPassed) {
-        if (!criteriaElement) return;
-
-        const iconElement = criteriaElement.querySelector('.criteria-icon');
-        if (isPassed) {
-            criteriaElement.classList.remove('failed');
-            criteriaElement.classList.add('passed');
-            iconElement.textContent = '✓';
-            iconElement.classList.remove('failed');
-            iconElement.classList.add('passed');
-        } else {
-            criteriaElement.classList.remove('passed');
-            criteriaElement.classList.add('failed');
-            iconElement.textContent = '✗';
-            iconElement.classList.remove('passed');
-            iconElement.classList.add('failed');
-        }
-    }
-
-    function updateProgressBar(articleId) {
-        const criteriaCount = document.querySelectorAll(`#criteria-list-${articleId} .criteria-item.passed`).length;
-        const progressBar = document.getElementById(`criteria-progress-bar-${articleId}`);
-        const criteriaCountSpan = document.getElementById(`criteria-count-${articleId}`);
-
-        if (progressBar) {
-            progressBar.style.width = `${criteriaCount * 20}%`;
-        }
-
-        if (criteriaCountSpan) {
-            criteriaCountSpan.textContent = `${criteriaCount}/5 tiêu chí đạt`;
-        }
-    }
-
-    function countWords(str) {
-        // Đếm số từ trong văn bản tiếng Việt
-        return str.trim().split(/\s+/).length;
-    }
 </script>
 @endsection
