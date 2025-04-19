@@ -84,6 +84,12 @@
                             ->whereIn('category_id', $moderatorCategories)
                             ->count();
 
+                        // Lấy bài viết chờ duyệt mới nhất trong danh mục của kiểm duyệt viên
+                        $latestPendingArticle = \App\Models\Article::where('status', 'pending')
+                            ->whereIn('category_id', $moderatorCategories)
+                            ->latest()
+                            ->first();
+
                         $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
                         $totalPending = $pendingCount + $pendingViolations;
 
@@ -114,7 +120,11 @@
                             <div class="border-bottom">
                                 <a href="{{ route('moderator.articles.index') }}"
                                     class="d-block px-3 py-2 text-decoration-none text-dark">
-                                    <div class="text-secondary" style="font-size: 12px;">1 giây trước</div>
+                                    @if ($latestPendingArticle)
+                                        <div class="text-secondary" style="font-size: 12px;" data-timestamp="{{ $latestPendingArticle->created_at->timestamp }}">
+                                            {{ $latestPendingArticle->created_at->diffForHumans() }}
+                                        </div>
+                                    @endif
                                     <div class="fw-medium mb-1">Bài viết chờ duyệt</div>
                                     <div class="text-secondary" style="font-size: 13px;">Có {{ $pendingCount }} bài viết
                                         đang chờ duyệt</div>
@@ -142,7 +152,6 @@
                             <div class="border-bottom">
                                 <a href="{{ route('moderator.articles.index') }}"
                                     class="d-block px-3 py-2 text-decoration-none text-dark">
-                                    <div class="text-secondary" style="font-size: 12px;">1 giây trước</div>
                                     <div class="fw-medium mb-1">Bài viết chờ lâu</div>
                                     <div class="text-secondary" style="font-size: 13px;">{{ $longPendingArticles }} bài
                                         viết chờ duyệt quá 30 phút</div>
@@ -171,11 +180,34 @@
 
 
             <script>
-                // Gọi hàm mỗi 60 giây
-                setInterval(refreshNotificationCount, 60000);
+                function updateTimestamps() {
+                    document.querySelectorAll('[data-timestamp]').forEach(element => {
+                        const timestamp = parseInt(element.getAttribute('data-timestamp'));
+                        const now = Math.floor(Date.now() / 1000);
+                        const diff = now - timestamp;
 
-                // Gọi ngay khi trang load
-                document.addEventListener('DOMContentLoaded', refreshNotificationCount);
+                        let timeAgo;
+                        if (diff < 60) {
+                            timeAgo = 'Vừa xong';
+                        } else if (diff < 3600) {
+                            const minutes = Math.floor(diff / 60);
+                            timeAgo = `${minutes} phút trước`;
+                        } else if (diff < 86400) {
+                            const hours = Math.floor(diff / 3600);
+                            timeAgo = `${hours} giờ trước`;
+                        } else {
+                            const days = Math.floor(diff / 86400);
+                            timeAgo = `${days} ngày trước`;
+                        }
+
+                        element.textContent = timeAgo;
+                    });
+                }
+
+                // Cập nhật thời gian mỗi phút
+                setInterval(updateTimestamps, 60000);
+                // Cập nhật ngay lập tức khi trang được tải
+                updateTimestamps();
             </script>
             <!-- User Account-->
             <li class="dropdown user user-menu">
