@@ -54,6 +54,6 @@ class NewArticleFromFollowedAuthor extends Notification implements ShouldQueue
 
             ->subject("Bài viết mới từ {$this->author->name}")
             ->line("{$this->author->name} vừa đăng bài: {$this->article->title}")
-            ->action('Xem ngay', url("/articles/{$this->article->slug}"));
+            ->action('Xem ngay', url("/bai-viet/{$this->article->slug}"));
     }
 }

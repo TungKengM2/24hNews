@@ -81,6 +81,22 @@ class ProfileController extends Controller
         return view('admin.following', compact('followingUsers'));
     }
 
+    //followers admin dat them
+    public function followersOfAdminList()
+    {
+        $user = auth()->user();
+
+        // Lấy người theo dõi với phân trang
+        $followers = DB::table('follows')
+            ->join('users', 'follows.follower_id', '=', 'users.user_id')
+            ->where('follows.following_id', $user->user_id)
+            ->select('users.*', 'follows.created_at as followed_at')
+            ->orderBy('follows.created_at', 'desc')
+            ->paginate(10);
+
+        return view('admin.followers', compact('followers'));
+    }
+
     public function upgradeToAuthor()
     {
         $user = auth()->user();
