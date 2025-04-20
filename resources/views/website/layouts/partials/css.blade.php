@@ -1,4 +1,4 @@
-    <link rel="shortcut icon" href="/client/assets/img/fav.png" title="Favicon" sizes="16x16" />
+    <link rel="shortcut icon" href="/images/logo1.png" title="Favicon" sizes="16x16" />
     <link rel="stylesheet" href="/client/assets/css/lib/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
