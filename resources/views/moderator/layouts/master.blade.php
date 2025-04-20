@@ -8,7 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="/admin/main/../images/favicon.ico">
+    {{-- <link rel="icon" href="/admin/main/../images/favicon.ico"> --}}
+    <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}?v={{ time() }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <title>@yield('title')</title>
