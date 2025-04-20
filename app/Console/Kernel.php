@@ -10,6 +10,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\GenerateSchemaDoc::class,
         Commands\GenerateProjectDoc::class,
+        Commands\ProcessPendingArticles::class,
     ];
 
     /**
@@ -18,6 +19,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+        
+        // Xử lý các bài viết chờ duyệt quá 30 phút
+        $schedule->command('app:process-pending-articles')->everyFiveMinutes();
     }
 
     /**
