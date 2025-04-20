@@ -9,7 +9,7 @@ class Kernel extends ConsoleKernel
 {
     protected $commands = [
         Commands\GenerateSchemaDoc::class,
-        Commands\GenerateProjectDoc::class,
+        // Commands\GenerateProjectDoc::class,
         Commands\ProcessPendingArticles::class,
     ];
 
