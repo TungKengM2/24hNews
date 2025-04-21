@@ -320,27 +320,27 @@
                                                         </a>
                                                     @endif
 
-                                                        @if (in_array($article->status, ['published', 'archived']))
-                                                        <form action="{{ route('articles.toggle-visibility', $article) }}" method="POST" class="d-inline">
+                                                    @if (in_array($article->status, ['published', 'archived']))
+                                                        <form action="{{ route('articles.toggle-visibility', $article) }}" method="POST" class="d-inline toggle-visibility-form">
                                                             @csrf
                                                             @method('PUT')
                                                             <input type="hidden" name="page" value="{{ request('page') }}">
                                                             <input type="hidden" name="filter" value="{{ request('filter') }}">
                                                             <input type="hidden" name="search" value="{{ request('search') }}">
-                                                            <button class="btn btn-secondary btn-sm"
+                                                            <button type="button" class="btn btn-secondary btn-sm toggle-visibility-btn"
                                                                 title="{{ $article->status === 'published' ? 'Ẩn bài viết' : 'Hiện bài viết' }}"
-                                                                onclick="return confirm('Bạn có chắc chắn muốn {{ $article->status === 'published' ? 'ẩn' : 'hiện' }} bài viết này không?')">
-                                                                <i
-                                                                    class="fa {{ $article->status === 'published' ? 'fa-eye-slash' : 'fa-eye' }}"></i>
+                                                                data-id="{{ $article->article_id }}"
+                                                                data-action="{{ $article->status === 'published' ? 'ẩn' : 'hiện' }}">
+                                                                <i class="fa {{ $article->status === 'published' ? 'fa-eye-slash' : 'fa-eye' }}"></i>
                                                             </button>
                                                         </form>
                                                     @endif
                                                     <form action="{{ route('articles.destroy', $article) }}"
-                                                        method="POST" class="d-inline">
+                                                        method="POST" class="d-inline delete-article-form">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button class="btn btn-danger btn-sm" title="Xóa"
-                                                            onclick="return confirm('Xác nhận xóa?')">
+                                                        <button type="button" class="btn btn-danger btn-sm delete-article-btn" 
+                                                            title="Xóa" data-id="{{ $article->article_id }}" data-title="{{ $article->title }}">
                                                             <i class="si-trash si"></i>
                                                         </button>
                                                     </form>
@@ -367,4 +367,121 @@
     @endsection
 
     @section('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Hiển thị thông báo thành công từ session
+                @if (session('success'))
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: '{{ session('success') }}',
+                        timer: 5000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    });
+                @endif
+
+                // Hiển thị thông báo lỗi từ session
+                @if (session('error'))
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: '{{ session('error') }}',
+                        confirmButtonText: 'Đóng'
+                    });
+                @endif
+
+                // Hiển thị thông báo cảnh báo từ session
+                @if (session('warning'))
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cảnh báo!',
+                        text: '{{ session('warning') }}',
+                        confirmButtonText: 'Đóng'
+                    });
+                @endif
+
+                // Hiển thị thông báo thông tin từ session
+                @if (session('info'))
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Thông tin!',
+                        text: '{{ session('info') }}',
+                        confirmButtonText: 'Đóng'
+                    });
+                @endif
+
+                // Xử lý nút xóa bài viết với SweetAlert2
+                document.querySelectorAll('.delete-article-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const articleId = this.getAttribute('data-id');
+                        const articleTitle = this.getAttribute('data-title');
+                        const form = this.closest('form');
+                        
+                        Swal.fire({
+                            title: 'Xác nhận xóa?',
+                            html: `Bạn có chắc chắn muốn xóa bài viết <strong>${articleTitle}</strong> không?<br>Hành động này không thể hoàn tác!`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Xóa',
+                            cancelButtonText: 'Hủy'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Hiển thị thông báo đang xử lý
+                                Swal.fire({
+                                    title: 'Đang xử lý...',
+                                    text: 'Đang xóa bài viết, vui lòng đợi...',
+                                    icon: 'info',
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    showConfirmButton: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    }
+                                });
+                                form.submit();
+                            }
+                        });
+                    });
+                });
+
+                // Xử lý nút ẩn/hiện bài viết với SweetAlert2
+                document.querySelectorAll('.toggle-visibility-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const action = this.getAttribute('data-action');
+                        const form = this.closest('form');
+                        
+                        Swal.fire({
+                            title: `${action.charAt(0).toUpperCase() + action.slice(1)} bài viết?`,
+                            text: `Bạn có chắc chắn muốn ${action} bài viết này không?`,
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Xác nhận',
+                            cancelButtonText: 'Hủy'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Hiển thị thông báo đang xử lý
+                                Swal.fire({
+                                    title: 'Đang xử lý...',
+                                    text: `Đang ${action} bài viết, vui lòng đợi...`,
+                                    icon: 'info',
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    showConfirmButton: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    }
+                                });
+                                form.submit();
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
     @endsection
