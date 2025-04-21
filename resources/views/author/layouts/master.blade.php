@@ -58,6 +58,8 @@
 
 @include('author.layouts.partials.js')
 
+@yield('scripts')
+
 </body>
 
 </html>

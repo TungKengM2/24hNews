@@ -17,7 +17,7 @@
                 <div class="row align-items-center">
                     <div class="col-lg-8">
                         <h4 class="mb-2">{{ $tag->name }}</h4>
-                        <p class="text-muted mb-0">{{ $tag->description ?? 'Khám phá các bài viết trong tag này' }}</p>
+                        <p class="text-muted mb-0">{{ 'Khám phá các bài viết trong thẻ này' }}</p>
                     </div>
                     <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
                         <nav aria-label="breadcrumb">
@@ -182,7 +182,7 @@
                             @else
                                 <p>Hiện tại không có bài viết nào</p>
                             @endif
-                        
+
 
 
                         </div>
@@ -241,7 +241,7 @@
     </section>
     <!-- ====== end tin tức có thể quan tâm ====== -->
 
-        
+
 
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
