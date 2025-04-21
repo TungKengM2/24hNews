@@ -58,7 +58,7 @@
     </li>
 @endforeach
 
-            
+
 
 
                 {{-- dat them --}}
@@ -90,7 +90,7 @@
                                 @if($notification->type == 'App\Notifications\NewArticleFromFollowedAuthor')
                                     <li>
                                         <a class="dropdown-item d-flex align-items-start py-2 px-3"
-                                            href="/articles/{{ $notification->data['article_slug'] }}"
+                                            href="/bai-viet/{{ $notification->data['article_slug'] }}"
                                             onclick="markNotificationAsRead('{{ $notification->id }}')">
                                             <div class="flex-shrink-0 me-2">
                                                 <img src="{{ $notification->data['author_avatar'] ?? asset('images/default-avatar.png') }}"
