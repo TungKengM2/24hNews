@@ -7,12 +7,13 @@ use App\Models\Article;
 use App\Models\ArticleView;
 use App\Models\Comment; // dat them
 use App\Models\User; // dat them
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth; // Ensure Auth is imported
 use Illuminate\Support\Facades\DB; // dat them
 use Carbon\Carbon; // dat them
 use Illuminate\Support\Facades\Schema; // dat them
 use Illuminate\Http\Request;
 use App\Models\Tag;
+use App\Models\Follow; // Thêm model Follow dat them
 
 class AdminController extends Controller
 {
@@ -74,6 +75,11 @@ class AdminController extends Controller
 
         // Tổng lượt thích
         $totalLikes = Schema::hasTable('article_likes') ? DB::table('article_likes')->count() : 0;
+
+        // Tổng số người theo dõi người dùng đang đăng nhập
+        $user = Auth::user();
+        $totalFollowers = $user->followers()->count(); // Đếm số người theo dõi admin
+
         //   // Lấy danh sách tag và số lượng bài viết theo từng tag
  // Lấy danh sách tag và số lượng bài viết đã xuất bản, sắp xếp từ lớn đến bé
 $tags = Tag::whereHas('publishedArticles') // Chỉ lấy các tag có ít nhất 1 bài viết xuất bản
@@ -90,6 +96,7 @@ $tags = Tag::whereHas('publishedArticles') // Chỉ lấy các tag có ít nhấ
             'totalViews',
             'totalComments',
             'totalLikes',
+            'totalFollowers', // Lấy tổng số người theo dõi dat them
             'type',
             'interactionType',
             'timeBasedArticleStats',

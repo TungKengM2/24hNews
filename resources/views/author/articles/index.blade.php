@@ -46,22 +46,6 @@
                                 @endif
                             </div>
 
-                            @if (session('success'))
-                                <div id="success-alert"
-                                    class="alert alert-success alert-dismissible fade show custom-alert m-0">
-                                    <div class="d-flex align-items-center">
-                                        <div class="alert-icon me-2">
-                                            <i class="fas fa-check-circle"></i>
-                                        </div>
-                                        <div class="alert-message">
-                                            <p class="mb-0"><strong>Thành công!</strong> {{ session('success') }}</p>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            @endif
-
                             <div class="d-flex">
                                 <div class="input-group me-2">
                                     <input type="text" id="searchInput" class="form-control"
@@ -117,50 +101,6 @@
                                 });
                             </script>
                         </div>
-
-                        <style>
-                            .custom-alert {
-                                position: relative;
-                                border-left: 4px solid #28a745;
-                                background-color: #fff;
-                                color: #333;
-                                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                                padding: 8px 15px;
-                                border-radius: 5px;
-                                max-width: 400px;
-                                animation: fadeInAlert 0.3s forwards;
-                                z-index: 100;
-                            }
-
-                            .alert-icon {
-                                color: #28a745;
-                            }
-
-                            @keyframes fadeInAlert {
-                                0% {
-                                    opacity: 0;
-                                }
-
-                                100% {
-                                    opacity: 1;
-                                }
-                            }
-
-                            @media (max-width: 992px) {
-                                .box-header {
-                                    flex-direction: column;
-                                    gap: 10px;
-                                }
-
-                                .custom-alert {
-                                    max-width: 100%;
-                                    width: 100%;
-                                    order: 3;
-                                }
-                            }
-                        </style>
-
-                        {{-- Script moved to @section('scripts') --}}
 
                         <div class="box-body">
                             <div class="row mb-3">
@@ -408,21 +348,41 @@
 
     @section('scripts')
         <script>
+           
+            function ensureSwalLoaded(callback) {
+                if (typeof Swal !== 'undefined') {
+                    callback();
+                } else {
+                    setTimeout(function() {
+                        ensureSwalLoaded(callback);
+                    }, 100);
+                }
+            }
+            
+           
+            function showSweetAlert(config) {
+                return new Promise((resolve) => {
+                    ensureSwalLoaded(function() {
+                        resolve(Swal.fire(config));
+                    });
+                });
+            }
+            
             document.addEventListener('DOMContentLoaded', function() {
-                // Hiển thị thông báo thành công nếu có
+                // Hiển thị thông báo từ session với cơ chế kiểm tra Swal đã tải chưa
                 @if (session('success'))
-                    Swal.fire({
+                    showSweetAlert({
                         icon: 'success',
                         title: 'Thành công!',
                         text: '{{ session('success') }}',
-                        timer: 3000,
+                        timer: 5000,
                         timerProgressBar: true,
                         showConfirmButton: false
                     });
                 @endif
 
                 @if (session('error'))
-                    Swal.fire({
+                    showSweetAlert({
                         icon: 'error',
                         title: 'Lỗi!',
                         text: '{{ session('error') }}',
@@ -431,7 +391,7 @@
                 @endif
 
                 @if (session('violation_error'))
-                    Swal.fire({
+                    showSweetAlert({
                         icon: 'error',
                         title: 'Vi phạm!',
                         text: '{{ session('violation_error') }}',
@@ -439,9 +399,41 @@
                     });
                 @endif
 
+                @if (session('warning'))
+                    showSweetAlert({
+                        icon: 'warning',
+                        title: 'Cảnh báo!',
+                        text: '{{ session('warning') }}',
+                        confirmButtonText: 'Đóng'
+                    });
+                @endif
+
+                @if (session('info'))
+                    showSweetAlert({
+                        icon: 'info',
+                        title: 'Thông tin!',
+                        text: '{{ session('info') }}',
+                        confirmButtonText: 'Đóng'
+                    });
+                @endif
+
+                @if ($errors->any())
+                    let errorMessages = '';
+                    @foreach ($errors->all() as $error)
+                        errorMessages += '- {{ $error }}<br>';
+                    @endforeach
+
+                    showSweetAlert({
+                        icon: 'error',
+                        title: 'Có lỗi xảy ra!',
+                        html: errorMessages,
+                        confirmButtonText: 'Đóng'
+                    });
+                @endif
+
                 // Hiển thị cảnh báo vi phạm nếu có
                 @if (auth()->user()->violation_count > 5)
-                    Swal.fire({
+                    showSweetAlert({
                         icon: 'warning',
                         title: 'Cảnh báo vi phạm!',
                         html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
@@ -462,7 +454,7 @@
 
                         // Kiểm tra vi phạm trước khi cho phép hành động
                         @if (auth()->user()->violation_count > 5)
-                            Swal.fire({
+                            showSweetAlert({
                                 icon: 'error',
                                 title: 'Không thể thực hiện!',
                                 html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
@@ -472,7 +464,7 @@
                                 confirmButtonColor: '#3085d6'
                             });
                         @else
-                            Swal.fire({
+                            showSweetAlert({
                                 title: 'Xóa bài viết?',
                                 html: `Bạn có chắc chắn muốn xóa bài viết <strong>${articleTitle}</strong> không?<br>Hành động này không thể hoàn tác!`,
                                 icon: 'warning',
@@ -484,7 +476,7 @@
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     // Hiển thị thông báo đang xử lý
-                                    Swal.fire({
+                                    showSweetAlert({
                                         title: 'Đang xử lý...',
                                         text: 'Đang xóa bài viết, vui lòng đợi...',
                                         icon: 'info',
@@ -511,7 +503,7 @@
 
                         // Kiểm tra vi phạm trước khi cho phép hành động
                         @if (auth()->user()->violation_count > 5)
-                            Swal.fire({
+                            showSweetAlert({
                                 icon: 'error',
                                 title: 'Không thể thực hiện!',
                                 html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
@@ -521,7 +513,7 @@
                                 confirmButtonColor: '#3085d6'
                             });
                         @else
-                            Swal.fire({
+                            showSweetAlert({
                                 title: `${action.charAt(0).toUpperCase() + action.slice(1)} bài viết?`,
                                 text: `Bạn có chắc chắn muốn ${action} bài viết này không?`,
                                 icon: 'question',
@@ -533,7 +525,7 @@
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     // Hiển thị thông báo đang xử lý
-                                    Swal.fire({
+                                    showSweetAlert({
                                         title: 'Đang xử lý...',
                                         text: `Đang ${action} bài viết, vui lòng đợi...`,
                                         icon: 'info',
@@ -560,7 +552,7 @@
 
                         // Kiểm tra vi phạm trước khi cho phép hành động
                         @if (auth()->user()->violation_count > 5)
-                            Swal.fire({
+                            showSweetAlert({
                                 icon: 'error',
                                 title: 'Không thể thực hiện!',
                                 html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
@@ -570,7 +562,7 @@
                                 confirmButtonColor: '#3085d6'
                             });
                         @else
-                            Swal.fire({
+                            showSweetAlert({
                                 title: 'Xin duyệt lại?',
                                 text: 'Bài viết sẽ được gửi lại để xin duyệt. Bạn có muốn tiếp tục không?',
                                 icon: 'question',
@@ -582,7 +574,7 @@
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     // Hiển thị thông báo đang xử lý
-                                    Swal.fire({
+                                    showSweetAlert({
                                         title: 'Đang xử lý...',
                                         text: 'Đang gửi lại bài viết để xin duyệt, vui lòng đợi...',
                                         icon: 'info',
@@ -606,7 +598,7 @@
                     if (addNewArticleBtn) {
                         addNewArticleBtn.addEventListener('click', function(e) {
                             e.preventDefault();
-                            Swal.fire({
+                            showSweetAlert({
                                 icon: 'error',
                                 title: 'Không thể thực hiện!',
                                 html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +

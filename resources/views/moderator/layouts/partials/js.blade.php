@@ -17,7 +17,7 @@
  <script src="/admin/main/js/demo.js"></script>
  <script src="/admin/main/js/pages/dashboard.js"></script>
  <script src="/admin/assets/vendor_components/select2/dist/js/select2.full.js"></script>
-
+{{--
  <script>
      document.addEventListener("DOMContentLoaded", function() {
          const imageUpload = document.getElementById("avatarUpload");
@@ -61,4 +61,10 @@
              }
          });
      });
+ </script> --}}
+ <script src="https://cdn.tiny.cloud/1/{{ env('TINYMCE_API_KEY') }}/tinymce/7/tinymce.min.js" referrerpolicy="origin">
  </script>
+
+  @include('shared.tiny')
+ @include('shared.processor')
+ 

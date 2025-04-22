@@ -30,6 +30,11 @@ class ArticleController extends Controller
         $this->moderationService = $moderationService;
     }
 
+    public function writingGuidelines()
+    {
+        return view('author.writing-guidelines');
+    }
+
     public function index(Request $request)
     {
         $filter = $request->input('filter', 'all');
