@@ -6,9 +6,11 @@
         ->count();
 
     // Đếm số report chưa được xử lý trong các danh mục của moderator
-    $pendingViolationsCount = \App\Models\Violation::whereHas('article', function($query) use ($moderatorCategories) {
+    $pendingViolationsCount = \App\Models\Violation::whereHas('article', function ($query) use ($moderatorCategories) {
         $query->whereIn('category_id', $moderatorCategories);
-    })->where('status', 'pending')->count();
+    })
+        ->where('status', 'pending')
+        ->count();
 @endphp
 
 <section class="sidebar position-relative">
@@ -17,6 +19,12 @@
             <!-- sidebar menu-->
             <ul class="sidebar-menu" data-widget="tree">
 
+                <li class="">
+                    <a href="{{ route('moderator.dashboard') }}">
+                        <i data-feather="monitor"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
                 <li class="header">Quản Lý</li>
 
                 <li class="treeview">
@@ -26,7 +34,7 @@
                         <span class="pull-right-container">
                             <i class="fa fa-angle-right pull-right"></i>
                         </span>
-                        @if($pendingArticlesCount + $pendingViolationsCount > 0)
+                        @if ($pendingArticlesCount + $pendingViolationsCount > 0)
                             <x-notification-badge :count="$pendingArticlesCount + $pendingViolationsCount" />
                         @endif
                     </a>
@@ -35,7 +43,7 @@
                             <a href="{{ route('moderator.articles.index') }}" style="position: relative;">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                 Bài Viết
-                                @if($pendingArticlesCount > 0)
+                                @if ($pendingArticlesCount > 0)
                                     <x-notification-badge :count="$pendingArticlesCount" />
                                 @endif
                             </a>
@@ -43,15 +51,16 @@
                         <li>
                             <a href="{{ route('moderator.violations.approves') }}" style="position: relative;">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Report
-                                @if($pendingViolationsCount > 0)
+                                Báo Cáo
+                                @if ($pendingViolationsCount > 0)
                                     <x-notification-badge :count="$pendingViolationsCount" />
                                 @endif
                             </a>
                         </li>
 
-                        <li><a href="{{ route('moderator.articles.moderation-history.index') }}"><i class="icon-Commit"><span
-                                        class="path1"></span><span class="path2"></span></i>Lịch Sử Duyệt</a>
+                        <li><a href="{{ route('moderator.articles.moderation-history.index') }}"><i
+                                    class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lịch
+                                Sử Duyệt</a>
                         </li>
                     </ul>
 
@@ -75,13 +84,13 @@
                         <li>
                             <a href="{{ route('moderator.saved') }}">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Tin Đã Lưu
+                                Bài Viết Đã Lưu
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('moderator.viewed.articles') }}">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Tin Đã Xem
+                                Bài Viết Đã Xem
                             </a>
                         </li>
                         <li>

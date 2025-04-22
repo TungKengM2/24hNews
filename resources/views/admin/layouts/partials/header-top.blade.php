@@ -164,14 +164,14 @@
                     <li class="user-body">
                         <a class="dropdown-item" href="{{ route('admin.profile') }}"><i
                                 class="ti-user text-muted me-2"></i>
-                            Profile</a>
+                            Trang Cá Nhân</a>
                         {{-- <a class="dropdown-item" href="index.html#"><i class="ti-wallet text-muted me-2"></i> My
                             Wallet</a>
                         <a class="dropdown-item" href="index.html#"><i class="ti-settings text-muted me-2"></i>
                             Settings</a> --}}
                         <a class="dropdown-item" href="#"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="ti-lock text-muted me-2"></i> Logout
+                            <i class="ti-lock text-muted me-2"></i> Đăng Xuất
                         </a>
 
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

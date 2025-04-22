@@ -388,16 +388,13 @@ class ProfileController extends Controller
     {
         // Validate file input
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:4096',
         ]);
 
         // Check if the file exists
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imagePath = $image->store(
-                'avatars',
-                'public'
-            ); // Store the image in the 'avatars' folder in the 'public' disk
+            $imagePath = $image->store('avatars', 'public'); // Store the image
 
             // Update the user's image path in the database
             $user = auth()->user();
@@ -407,14 +404,16 @@ class ProfileController extends Controller
             // Return the updated image URL
             return response()->json([
                 'success' => true,
-                'image_url' => asset('storage/' . $imagePath),
-                // Return the new image URL
+                'avatar_url' => asset('storage/' . $imagePath), // Return the new image URL
+                'message' => 'Ảnh đại diện đã được cập nhật thành công!',
+
             ]);
         }
 
+        // If no file uploaded, return error
         return response()->json([
             'success' => false,
-            'message' => 'No image file was uploaded.',
+            'message' => 'Không có tệp ảnh nào được tải lên.',
         ]);
     }
 
