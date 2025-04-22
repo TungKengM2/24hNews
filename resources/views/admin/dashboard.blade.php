@@ -276,6 +276,27 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Người theo dõi dat them -->
+                    <div class="col-xl-4 col-md-6 col-12">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="ms-15">
+                                        <h5 class="mb-0">Người theo dõi </h5>
+                                        <p class="mb-0 text-fade fs-12">Tổng số người đang theo dõi </p>
+                                    </div>
+                                </div>
+                                <div class="mt-20 d-flex justify-content-between align-items-center">
+                                    <h3 class="fw-600">{{ $totalFollowers }}</h3>
+                                    <div class="text-info">
+                                        <a href="{{ route('admin.followers') }}" class="btn btn-primary">
+                                            <i class="fa fa-eye "></i> Xem danh sách
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Thống kê bài viết -->
@@ -312,7 +333,7 @@
                         <div class="box">
                             <div class="box-header with-border d-flex align-items-center justify-content-between">
                                 <h4 class="box-title">Thống kê tương tác</h4>
-                                <form method="GET" action="{{ route('moderator.dashboard') }}"
+                                <form method="GET" action="{{ route('admin.dashboard') }}"
                                     class="d-flex align-items-center">
                                     <label for="interaction_type" class="me-2">Hiển thị:</label>
                                     <select class="form-select w-auto" id="interaction_type" name="interaction_type"

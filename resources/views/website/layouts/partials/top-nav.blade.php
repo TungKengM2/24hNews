@@ -52,7 +52,7 @@
             </div>
             <div class="col-lg-4">
                 <a href="{{ url('/') }}" class="logo-brand d-none d-lg-block">
-                    <h1>News24h</h1>
+                    <img src="{{ asset('images/logo1.png') }}" alt="logo" width="150px">
                 </a>
             </div>
             <div class="col-lg-4">
@@ -122,7 +122,7 @@
     <div class="offcanvas-header">
         <div class="col-lg-4">
             <a href="{{ url('/') }}" class="logo-brand d-none d-lg-block">
-                <h1>News24h</h1>
+                <img src="{{ asset('images/logo1.png') }}" alt="logo" width="100px">
             </a>
         </div>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>

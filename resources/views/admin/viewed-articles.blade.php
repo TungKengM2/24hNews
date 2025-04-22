@@ -15,7 +15,7 @@
                             @if ($viewedArticles->isEmpty())
                                 <p class="text-muted">Bạn chưa xem bài viết nào.</p>
                             @endif
-                            <table class="table table-bordered table-dark mb-0" style="width:100%">
+                            <table class="table table-bordered mb-0" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>STT</th>

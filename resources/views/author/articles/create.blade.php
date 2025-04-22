@@ -411,6 +411,21 @@
                             document.getElementById('saveDraft').addEventListener('click', function() {
                                 document.getElementById('articleStatus').value = 'draft';
                                 document.getElementById('articleForm').setAttribute('novalidate', 'novalidate'); // Bỏ qua required
+                                
+                                isFormEdited = false;
+                                
+                                Swal.fire({
+                                    title: 'Đang xử lý...',
+                                    text: 'Đang lưu bản nháp, vui lòng đợi...',
+                                    icon: 'info',
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    showConfirmButton: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    }
+                                });
+                                
                                 document.getElementById('articleForm').submit();
                             });
 
@@ -637,7 +652,6 @@
                                             return true;
                                         }
 
-
                                         // Kiểm tra ảnh có vi phạm không
                                         if (thumbnailInput && thumbnailInput.files && thumbnailInput.files[0] && !isImageValid) {
 
@@ -687,6 +701,20 @@
                                                 cancelButtonText: 'Chỉnh sửa thêm'
                                             }).then((result) => {
                                                 if (result.isConfirmed) {
+                                                    // Đặt isFormEdited = false để tránh cảnh báo rời trang
+                                                    isFormEdited = false;
+                                                    // Hiển thị thông báo đang xử lý trước khi submit form
+                                                    Swal.fire({
+                                                        title: 'Đang xử lý...',
+                                                        text: 'Đang gửi bài viết, vui lòng đợi...',
+                                                        icon: 'info',
+                                                        allowOutsideClick: false,
+                                                        allowEscapeKey: false,
+                                                        showConfirmButton: false,
+                                                        didOpen: () => {
+                                                            Swal.showLoading();
+                                                        }
+                                                    });
                                                     // Nếu người dùng xác nhận, submit form
                                                     document.getElementById('articleForm').submit();
                                                 }
@@ -695,7 +723,27 @@
                                             return false;
                                         }
 
-                                        return true;
+                                        // Nếu đạt tất cả tiêu chí, hiển thị thông báo đang xử lý
+                                        e.preventDefault();
+                                        // Đặt isFormEdited = false để tránh cảnh báo rời trang
+                                        isFormEdited = false;
+                                        Swal.fire({
+                                            title: 'Đang xử lý...',
+                                            text: 'Đang gửi bài viết, vui lòng đợi...',
+                                            icon: 'info',
+                                            allowOutsideClick: false,
+                                            allowEscapeKey: false,
+                                            showConfirmButton: false,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                            }
+                                        });
+                                        // Submit form sau khi hiển thị thông báo
+                                        setTimeout(() => {
+                                            document.getElementById('articleForm').submit();
+                                        }, 100);
+                                        
+                                        return false;
                                     });
                                 }
                             });
