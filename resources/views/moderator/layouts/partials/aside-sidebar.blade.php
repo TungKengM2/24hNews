@@ -43,7 +43,7 @@
                         <li>
                             <a href="{{ route('moderator.violations.approves') }}" style="position: relative;">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Report
+                                Báo Cáo
                                 @if($pendingViolationsCount > 0)
                                     <x-notification-badge :count="$pendingViolationsCount" />
                                 @endif
@@ -75,13 +75,13 @@
                         <li>
                             <a href="{{ route('moderator.saved') }}">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Tin Đã Lưu
+                                Bài Viết Đã Lưu
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('moderator.viewed.articles') }}">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Tin Đã Xem
+                                Bài Viết Đã Xem
                             </a>
                         </li>
                         <li>
