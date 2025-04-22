@@ -117,7 +117,7 @@
                         <li>
                             <a href="{{ route('admin.violations.approves') }}" style="position: relative;">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Duyệt Report
+                                Kiểm Duyệt Báo Cáo
                                 @if($pendingViolationsCount > 0)
                                     <x-notification-badge :count="$pendingViolationsCount" />
                                 @endif
@@ -153,13 +153,13 @@
                         <li>
                             <a href="{{ route('admin.saved') }}">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Tin Đã Lưu
+                                Bài Viết Đã Lưu
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('admin.viewed.articles') }}">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Tin Đã Xem
+                                Bài Viết Đã Xem
                             </a>
                         </li>
                         <li>
