@@ -16,7 +16,7 @@
             </div>
         </section>
         <!-- ====== end author header ====== -->
-        
+
 
 
         <!-- ====== start author-details ====== -->
@@ -42,7 +42,7 @@
                             </div>
                             <div class="info">
                                 <div class="description mt-20">
-                                    
+
                                     </p>
                                     {{-- dat them thông tin tài khoản --}}
                                     <div class="box w-100">
@@ -51,29 +51,29 @@
                                                 hãy nhấn để xem và sửa thông tin tài khoản
                                                 <i class="fas fa-chevron-down float-end"></i>
                                             </h4>
-        
+
                                             @if (session('success'))
                                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                                     {{ session('success') }}
                                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                                 </div>
                                             @endif
-        
+
                                             @if (session('error'))
                                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                                     {{ session('error') }}
                                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                                 </div>
                                             @endif
-        
+
                                             <form action="{{ route('profile.update') }}" method="POST" class="needs-validation profile-form" style="display: none;">
                                                 @csrf
-        
+
                                                 <div class="mb-4">
                                                     <label class="form-label fw-medium">Tên hiển thị</label>
                                                     <input type="text" name="username"
                                                         class="form-control form-control-lg @error('username') is-invalid @enderror"
-                                                        value="{{ old('username', auth()->user()->username) }}" 
+                                                        value="{{ old('username', auth()->user()->username) }}"
                                                         required>
                                                     @error('username')
                                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -82,8 +82,8 @@
 
                                                 <div class="mb-4">
                                                     <label class="form-label fw-medium">Mô Tả Trang Cá Nhân</label>
-                                                    <textarea name="description" 
-                                                        class="form-control form-control-lg @error('description') is-invalid @enderror" 
+                                                    <textarea name="description"
+                                                        class="form-control form-control-lg @error('description') is-invalid @enderror"
                                                         rows="3"
                                                         required>{{ old('description', auth()->user()->description) }}</textarea>
                                                     @error('description')
@@ -93,12 +93,12 @@
 
                                                 <div class="mb-4">
                                                     <label class="form-label fw-medium">Email</label>
-                                                    <input type="email" 
-                                                        class="form-control form-control-lg bg-light" 
+                                                    <input type="email"
+                                                        class="form-control form-control-lg bg-light"
                                                         value="{{ auth()->user()->email }}"
                                                         disabled>
                                                 </div>
-        
+
                                                 <div class="mb-4">
                                                     <label class="form-label fw-medium">Điện thoại</label>
                                                     <input type="text" name="phone"
@@ -108,7 +108,7 @@
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
                                                 </div>
-        
+
                                                 <div class="text-end">
                                                     <button type="submit" class="btn btn-primary btn-lg px-4">
                                                         <i class="fas fa-save me-2"></i>Lưu thay đổi
@@ -163,78 +163,71 @@
                                     </style>
 
                                     <script>
-                                        document.addEventListener('DOMContentLoaded', function() {
-                                            const toggle = document.querySelector('.edit-profile-toggle');
-                                            const form = document.querySelector('.profile-form');
-                                            const chevron = toggle.querySelector('.fa-chevron-down');
-                                            const avatarInput = document.getElementById('avatarUpload');
-                                            const avatarPreview = document.getElementById('avatarPreview');
-                                            const widgetUserImage = document.querySelector('.widget-user-image');
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const toggle = document.querySelector('.edit-profile-toggle');
+                                        const form = document.querySelector('.profile-form');
+                                        const chevron = toggle.querySelector('.fa-chevron-down');
+                                        const avatarInput = document.getElementById('avatarUpload');
+                                        const avatarPreview = document.getElementById('avatarPreview');
+                                        const widgetUserImage = document.querySelector('.widget-user-image');
 
-                                            // Toggle profile form
-                                            toggle.addEventListener('click', function() {
-                                                form.style.display = form.style.display === 'none' ? 'block' : 'none';
-                                                chevron.style.transform = form.style.display === 'none' ? 'rotate(0deg)' : 'rotate(180deg)';
-                                            });
-
-                                            // Hide form on successful submission
-                                            if (document.querySelector('.alert-success')) {
-                                                form.style.display = 'none';
-                                                chevron.style.transform = 'rotate(0deg)';
-                                            }
-
-                                            // Handle avatar upload
-                                            widgetUserImage.addEventListener('click', function() {
-                                                avatarInput.click();
-                                            });
-
-                                            avatarInput.addEventListener('change', function() {
-                                                if (this.files && this.files[0]) {
-                                                    const formData = new FormData();
-                                                    formData.append('image', this.files[0]);
-                                                    formData.append('_token', '{{ csrf_token() }}');
-                                                    
-                                                    // Show loading state
-                                                    avatarPreview.style.opacity = '0.5';
-                                                    
-                                                    fetch('{{ route("profile.update.avatar") }}', {
-                                                        method: 'POST',
-                                                        body: formData
-                                                    })
-                                                    .then(response => response.json())
-                                                    .then(data => {
-                                                        if (data.success) {
-                                                            // Update avatar preview
-                                                            avatarPreview.src = data.avatar_url;
-                                                            // Show success message
-                                                            const alertDiv = document.createElement('div');
-                                                            alertDiv.className = 'alert alert-success alert-dismissible fade show';
-                                                            alertDiv.innerHTML = `
-                                                                ${data.message}
-                                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                            `;
-                                                            document.querySelector('.box-body').insertBefore(alertDiv, document.querySelector('.edit-profile-toggle'));
-                                                        } else {
-                                                            throw new Error(data.message);
-                                                        }
-                                                    })
-                                                    .catch(error => {
-                                                        // Show error message
-                                                        const alertDiv = document.createElement('div');
-                                                        alertDiv.className = 'alert alert-danger alert-dismissible fade show';
-                                                        alertDiv.innerHTML = `
-                                                            ${error.message}
-                                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                        `;
-                                                        document.querySelector('.box-body').insertBefore(alertDiv, document.querySelector('.edit-profile-toggle'));
-                                                    })
-                                                    .finally(() => {
-                                                        // Reset loading state
-                                                        avatarPreview.style.opacity = '1';
-                                                    });
-                                                }
-                                            });
+                                        // Toggle profile form
+                                        toggle.addEventListener('click', function() {
+                                            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+                                            chevron.style.transform = form.style.display === 'none' ? 'rotate(0deg)' : 'rotate(180deg)';
                                         });
+
+                                        // Hide form on successful submission
+                                        if (document.querySelector('.alert-success')) {
+                                            form.style.display = 'none';
+                                            chevron.style.transform = 'rotate(0deg)';
+                                        }
+
+                                        // Handle avatar upload
+                                        widgetUserImage.addEventListener('click', function() {
+                                            avatarInput.click();
+                                        });
+
+                                        avatarInput.addEventListener('change', function() {
+                                            if (this.files && this.files[0]) {
+                                                const formData = new FormData();
+                                                formData.append('image', this.files[0]);
+                                                formData.append('_token', '{{ csrf_token() }}');
+
+                                                // Show loading state
+                                                avatarPreview.style.opacity = '0.5';
+
+                                                fetch('{{ route("profile.upload-avatar") }}', {
+                                                    method: 'POST',
+                                                    body: formData
+                                                })
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    console.log(data); // Debugging the response
+
+                                                    if (data.success) {
+                                                        avatarPreview.src = data.avatar_url; // Update the avatar with the new URL
+                                                    } else {
+                                                        throw new Error(data.message || 'Có lỗi xảy ra');
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Lỗi:', error); // Debugging the actual error
+                                                    const alertDiv = document.createElement('div');
+                                                    alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+                                                    alertDiv.innerHTML = `
+                                                        ${error.message || 'Đã xảy ra lỗi. Vui lòng thử lại sau.'}  <!-- Updated error message in Vietnamese -->
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    `;
+                                                    document.querySelector('.box-body').insertBefore(alertDiv, document.querySelector('.edit-profile-toggle'));
+                                                })
+                                                .finally(() => {
+                                                    // Reset loading state
+                                                    avatarPreview.style.opacity = '1';
+                                                });
+                                            }
+                                        });
+                                    });
                                     </script>
                                 </div>
                             </div>
@@ -247,5 +240,4 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/profile-avatar.js') }}"></script>
 @endpush
