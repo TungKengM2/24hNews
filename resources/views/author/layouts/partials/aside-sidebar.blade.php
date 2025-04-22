@@ -68,13 +68,13 @@
                         <li>
                             <a href="{{ route('author.saved') }}">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Tin Đã Lưu
+                                Bài Viết Đã Lưu
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('author.viewed.articles') }}">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                Tin Đã Xem
+                                Bài Viết Đã Xem
                             </a>
                         </li>
                         <li>
