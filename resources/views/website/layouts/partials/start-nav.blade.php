@@ -157,19 +157,19 @@
                                         <i class="la la-tv fs-4"></i> Dashboard
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('admin.viewed.articles') }}">
-                                        <i class="la la-eye fs-4"></i> Tin đã xem
+                                        <i class="la la-eye fs-4"></i> Bài Viết Đã Xem
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('admin.saved') }}">
-                                        <i class="la la-bookmark fs-4"></i> Tin đã lưu
+                                        <i class="la la-bookmark fs-4"></i> Bài Viết Đã Lưu
                                     </a></li>
 
                                 <li><a class="dropdown-item" href="{{ route('admin.following') }}">
-                                        <i class="la la-users fs-4"></i> Người đã theo dõi
+                                        <i class="la la-users fs-4"></i> Người Đã Theo Dõi
                                     </a></li>
                                 <li>
                                     <a class="dropdown-item"
                                         href="{{ route('admin.comments', ['user_id' => auth()->id()]) }}">
-                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
+                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình Luận
                                     </a>
                                 </li>
                             @elseif (Auth::user()->role_id == 2)
@@ -178,19 +178,19 @@
                                         <i class="la la-tv fs-4"></i> Dashboard
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('author.viewed.articles') }}">
-                                        <i class="la la-eye fs-4"></i> Tin đã xem
+                                        <i class="la la-eye fs-4"></i> Bài Viết Đã Xem
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('author.saved') }}">
-                                        <i class="la la-bookmark fs-4"></i> Tin đã lưu
+                                        <i class="la la-bookmark fs-4"></i> Bài Viết Đã Lưu
                                     </a></li>
 
                                 <li><a class="dropdown-item" href="{{ route('author.following') }}">
-                                        <i class="la la-users fs-4"></i> Người đã theo dõi
+                                        <i class="la la-users fs-4"></i> Người Đã Theo Dõi
                                     </a></li>
                                 <li>
                                     <a class="dropdown-item"
                                         href="{{ route('author.comments', ['user_id' => auth()->id()]) }}">
-                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
+                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình Luận
                                     </a>
                                 </li>
                             @elseif (Auth::user()->role_id == 3)
@@ -199,19 +199,19 @@
                                         <i class="la la-tv fs-4"></i> Dashboard
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('moderator.viewed.articles') }}">
-                                        <i class="la la-eye fs-4"></i> Tin đã xem
+                                        <i class="la la-eye fs-4"></i> Bài Viết Đã Xem
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('moderator.saved') }}">
-                                        <i class="la la-bookmark fs-4"></i> Tin đã lưu
+                                        <i class="la la-bookmark fs-4"></i> Bài Viết Đã Lưu
                                     </a></li>
 
                                 <li><a class="dropdown-item" href="{{ route('moderator.following') }}">
-                                        <i class="la la-users fs-4"></i> Người đã theo dõi
+                                        <i class="la la-users fs-4"></i> Người Đã Theo Dõi
                                     </a></li>
                                 <li>
                                     <a class="dropdown-item"
                                         href="{{ route('moderator.comments', ['user_id' => auth()->id()]) }}">
-                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
+                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình Luận
                                     </a>
                                 </li>
                             @elseif (Auth::user()->role_id == 4)
@@ -222,19 +222,19 @@
                                         <i class="la la-tv fs-4"></i> Thông Tin Tài Khoản
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('viewed.articles') }}">
-                                        <i class="la la-eye fs-4"></i> Tin đã xem
+                                        <i class="la la-eye fs-4"></i> Bài Viết Đã Xem
                                     </a></li>
                                 <li><a class="dropdown-item" href="{{ route('user.saved') }}">
-                                        <i class="la la-bookmark fs-4"></i> Tin đã lưu
+                                        <i class="la la-bookmark fs-4"></i> Bài Viết Đã Lưu
                                     </a></li>
 
                                 <li><a class="dropdown-item" href="{{ route('user.following') }}">
-                                        <i class="la la-users fs-4"></i> Người đã theo dõi
+                                        <i class="la la-users fs-4"></i> Người Đã Theo Dõi
                                     </a></li>
                                 <li>
                                     <a class="dropdown-item"
                                         href="{{ route('user.comments', ['user_id' => auth()->id()]) }}">
-                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình luận
+                                        <i class="la la-comments fs-4"></i> Hoạt Động Bình Luận
                                     </a>
                                 </li>
                                 {{-- dat them --}}
