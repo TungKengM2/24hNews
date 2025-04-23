@@ -263,12 +263,7 @@
                                 <div class="item">
                                     <div class="content">
                                         <div class="tags mb-20">
-                                            @if ($nugget->is_live ?? false)
-                                                <a href="#" class="live">
-                                                    <span class="icon-6 bg-gray1 rounded-circle"></span>
-                                                    live
-                                                </a>
-                                            @endif
+                                           
                                             @if ($nugget->category)
                                                 <a href="">
                                                     {{ $nugget->category->name }}
