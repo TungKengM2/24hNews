@@ -46,7 +46,7 @@
                                 <span class="badge bg-info">Tổng số: {{ $violations->total() }} vi phạm</span>
                             </div>
                         </div>
-                        <form method="GET" action="{{ route('admin.violations.approves') }}" class="mb-3"
+                        {{-- <form method="GET" action="{{ route('admin.violations.approves') }}" class="mb-3"
                             style="width: 150px;">
                             <div class="input-group">
                                 <select name="status" class="form-select" onchange="this.form.submit()">
@@ -57,7 +57,7 @@
                                         Lý</option>
                                 </select>
                             </div>
-                        </form>
+                        </form> --}}
 
                         <!-- Hiển thị thông báo nếu có -->
                         @if (request('status'))
@@ -112,7 +112,7 @@
                                                     @endif
                                                 </strong>
                                             </td>
-                                            
+
                                             <td class="text-center">
                                                 <button class="btn btn-info btn-sm" data-bs-toggle="modal"
                                                     data-bs-target="#violationDetailsModal{{ $violation->violation_id }}">
@@ -165,7 +165,7 @@
                                                                 <button type="submit" class="btn btn-success btn-sm"
                                                                     title="Giải quyết vi phạm"
                                                                     onclick="return confirm('Bạn có chắc chắn muốn giải quyết vi phạm này không?')">
-                                                                    <i class="fa fa-check"></i> 
+                                                                    <i class="fa fa-check"></i>
                                                                 </button>
                                                             </form>
 
@@ -176,7 +176,7 @@
                                                                 <button type="submit" class="btn btn-danger btn-sm"
                                                                     title="Từ chối vi phạm"
                                                                     onclick="return confirm('Bạn có chắc chắn muốn từ chối vi phạm này không?')">
-                                                                    <i class="fa fa-times"></i> 
+                                                                    <i class="fa fa-times"></i>
                                                                 </button>
                                                             </form>
                                                         @elseif ($violation->type === 'article')
@@ -188,7 +188,7 @@
                                                                 <button type="submit" class="btn btn-success btn-sm"
                                                                     title="Giải quyết vi phạm "
                                                                     onclick="return confirm('Bạn có chắc chắn muốn giải quyết vi phạm bài viết này không?')">
-                                                                    <i class="fa fa-check"></i> 
+                                                                    <i class="fa fa-check"></i>
                                                                 </button>
                                                             </form>
 
@@ -199,7 +199,7 @@
                                                                 <button type="submit" class="btn btn-danger btn-sm"
                                                                     title="Từ chối vi phạm "
                                                                     onclick="return confirm('Bạn có chắc chắn muốn từ chối vi phạm bài viết này không?')">
-                                                                    <i class="fa fa-times"></i> 
+                                                                    <i class="fa fa-times"></i>
                                                                 </button>
                                                             </form>
                                                         @endif
