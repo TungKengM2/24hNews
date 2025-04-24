@@ -2,10 +2,8 @@
     // Đếm số bài viết đang chờ duyệt
     $pendingArticlesCount = \App\Models\Article::where('status', 'pending')->count();
 
-    // Đếm số report chưa được xử lý từ bảng approvals
-    $pendingViolationsCount = \App\Models\Approval::where('type', 'violation')
-        ->where('status', 'pending')
-        ->count();
+    // Đếm số vi phạm chờ xử lý
+    $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
 
     // Đếm số yêu cầu nâng cấp tài khoản chưa được xử lý
     $pendingRoleRequestsCount = \App\Models\Approval::where('type', 'role_upgrade')
@@ -14,6 +12,9 @@
 
     // Đếm số yêu cầu chỉnh sửa đang chờ duyệt
     $pendingEditRequestsCount = \App\Models\EditRequest::where('status', 'pending')->count();
+
+    // Tính tổng số thông báo
+    $totalPendingCount = $pendingArticlesCount + $pendingViolations + $pendingRoleRequestsCount + $pendingEditRequestsCount;
 @endphp
 
 <section class="sidebar position-relative">
@@ -79,8 +80,8 @@
                         <span class="pull-right-container">
                             <i class="fa fa-angle-right pull-right"></i>
                         </span>
-                        @if($pendingArticlesCount + $pendingViolationsCount + $pendingRoleRequestsCount + $pendingEditRequestsCount > 0)
-                            <x-notification-badge :count="$pendingArticlesCount + $pendingViolationsCount + $pendingRoleRequestsCount + $pendingEditRequestsCount" />
+                        @if($totalPendingCount > 0)
+                            <x-notification-badge :count="$totalPendingCount" />
                         @endif
                     </a>
                     <ul class="treeview-menu">
@@ -118,8 +119,8 @@
                             <a href="{{ route('admin.violations.approves') }}" style="position: relative;">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                 Kiểm Duyệt Báo Cáo
-                                @if($pendingViolationsCount > 0)
-                                    <x-notification-badge :count="$pendingViolationsCount" />
+                                @if($pendingViolations > 0)
+                                    <x-notification-badge :count="$pendingViolations" />
                                 @endif
                             </a>
                         </li>

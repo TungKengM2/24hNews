@@ -98,7 +98,8 @@ Route::middleware('auth')->group(function () {
 
 });
 // Client Category
-Route::get('/danh-muc/{slug}', [CategoryUserController::class, 'index'])->name('client.category.show');
+Route::get('/danh-muc/{slug}/{childSlug?}', [CategoryUserController::class, 'index'])
+    ->name('client.category.show');
 
 Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.shows');
 
@@ -495,7 +496,7 @@ Route::middleware(['auth', 'check.violations'])->group(function () {
 
 Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     // 🏠 Admin Dashboard - Thay đổi route này để gọi đến AdminController
-    Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])
         ->name('admin.dashboard');
 
     Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
@@ -542,14 +543,18 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
 
 
     //Quản lý report
-    Route::get('/violations/approves', [ViolationsController::class, 'approves'])->name('admin.violations.approves');
 
-    Route::patch('violations/{violation}/resolve', [ViolationsController::class, 'resolve'])->name('violations.resolve');
+    Route::get('violations/approves', [ViolationsController::class, 'approves'])
+        ->name('admin.violations.approves');
 
-    Route::patch('violations/{violation}/resolves', [ViolationsController::class, 'resolves'])->name('violations.resolves');
+    Route::patch('violations/{violation}/resolve', [ViolationsController::class, 'resolve'])
+        ->name('violations.resolve');
 
-    Route::patch('violations/{violation}/reject', [ViolationsController::class, 'reject'])->name('violations.reject');
+    Route::patch('violations/{violation}/resolves', [ViolationsController::class, 'resolves'])
+        ->name('violations.resolves');
 
+    Route::patch('violations/{violation}/reject', [ViolationsController::class, 'reject'])
+        ->name('violations.reject');
 
 
     // Quản lý bài viết

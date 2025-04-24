@@ -60,12 +60,23 @@
             </li> --}}
             <!-- Notifications -->
             <li class="dropdown notifications-menu">
-                <a href="#" class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white position-relative"
+                <a href="#"
+                    class="waves-effect waves-light dropdown-toggle btn-outline no-border btn-info-light text-dark hover-white position-relative"
                     data-bs-toggle="dropdown" title="Notifications">
                     <i data-feather="bell"></i>
                     @php
                         $pendingCount = \App\Models\Article::where('status', 'pending')->count();
+                        // Get the count of pending violations
                         $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
+
+                        // Get the latest pending violation by detected_at
+                        $latestViolation = \App\Models\Violation::where('status', 'pending')
+                            ->orderBy('detected_at', 'desc') // Sorting by detected_at instead of created_at
+                            ->first();
+                        // Ensure detected_at is a Carbon instance
+                        if ($latestViolation) {
+                            $latestViolation->detected_at = \Carbon\Carbon::parse($latestViolation->detected_at);
+                        }
 
                         // Lấy danh sách yêu cầu nâng cấp với thời gian
                         $pendingUpgradeRequests = \App\Models\Approval::where('type', 'role_upgrade')
@@ -86,54 +97,79 @@
                             ->count();
 
                         // Lấy bài viết pending mới nhất
-                        $latestPendingArticle = \App\Models\Article::where('status', 'pending')
-                            ->latest()
-                            ->first();
+                        $latestPendingArticle = \App\Models\Article::where('status', 'pending')->latest()->first();
                     @endphp
 
                     @if ($totalPending > 0)
                         <span class="badge bg-danger rounded-circle position-absolute"
-                              style="top: 0px; right: 0px; font-size: 10px; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">
+                            style="top: 0px; right: 0px; font-size: 10px; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">
                             {{ $totalPending }}
                         </span>
                     @endif
                 </a>
-                <ul class="dropdown-menu shadow border-0" style="width: 280px; right: 0; left: auto; padding: 0; margin-top: 10px;">
+                <ul class="dropdown-menu shadow border-0"
+                    style="width: 280px; right: 0; left: auto; padding: 0; margin-top: 10px;">
                     <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
                         <span class="fw-medium" style="font-size: 14px;">Thông báo mới</span>
-                        <a href="#" class="text-danger text-decoration-none" style="font-size: 13px;">Xóa tất cả</a>
+                        <a href="#" class="text-danger text-decoration-none" style="font-size: 13px;">Xóa tất
+                            cả</a>
                     </div>
 
                     @if ($totalPending > 0)
+                        @if ($pendingViolations > 0)
+                            <div class="border-bottom">
+                                <a href="{{ route('admin.violations.approves') }}" class="d-block px-3 py-2 text-decoration-none text-dark">
+                                    @if ($latestViolation)
+                                        <div class="text-secondary" style="font-size: 12px;"
+                                            data-timestamp="{{ $latestViolation->detected_at->timestamp }}">
+                                            {{ $latestViolation->detected_at->diffForHumans() }}
+                                        </div>
+                                    @endif
+                                    <div class="fw-medium mb-1">Vi phạm chờ xử lý</div>
+                                    <div class="text-secondary" style="font-size: 13px;">
+                                        Có {{ $pendingViolations }} vi phạm đang chờ xử lý
+                                    </div>
+                                </a>
+                            </div>
+                        @endif
+
                         @if ($pendingCount > 0 && $latestPendingArticle)
                             <div class="border-bottom">
-                                <a href="{{ route('admin.articles.approves') }}" class="d-block px-3 py-2 text-decoration-none text-dark">
-                                    <div class="text-secondary" style="font-size: 12px;" data-timestamp="{{ $latestPendingArticle->created_at->timestamp }}">
+                                <a href="{{ route('admin.articles.approves') }}"
+                                    class="d-block px-3 py-2 text-decoration-none text-dark">
+                                    <div class="text-secondary" style="font-size: 12px;"
+                                        data-timestamp="{{ $latestPendingArticle->created_at->timestamp }}">
                                         {{ $latestPendingArticle->created_at->diffForHumans() }}
                                     </div>
                                     <div class="fw-medium mb-1">Bài viết chờ duyệt</div>
-                                    <div class="text-secondary" style="font-size: 13px;">Có {{ $pendingCount }} bài viết đang chờ duyệt</div>
+                                    <div class="text-secondary" style="font-size: 13px;">Có {{ $pendingCount }} bài viết
+                                        đang chờ duyệt</div>
                                 </a>
                             </div>
                         @endif
 
                         @if ($longPendingCount > 0)
                             <div class="border-bottom">
-                                <a href="{{ route('admin.articles.approves') }}" class="d-block px-3 py-2 text-decoration-none text-dark">
+                                <a href="{{ route('admin.articles.approves') }}"
+                                    class="d-block px-3 py-2 text-decoration-none text-dark">
                                     <div class="fw-medium mb-1">Bài viết chờ lâu</div>
-                                    <div class="text-secondary" style="font-size: 13px;">{{ $longPendingCount }} bài viết chờ duyệt quá 30 phút</div>
+                                    <div class="text-secondary" style="font-size: 13px;">{{ $longPendingCount }} bài
+                                        viết chờ duyệt quá 30 phút</div>
                                 </a>
                             </div>
                         @endif
 
                         @if ($pendingUpgradeCount > 0 && $pendingUpgradeRequests)
                             <div class="border-bottom">
-                                <a href="{{ route('admin.approvals.index') }}" class="d-block px-3 py-2 text-decoration-none text-dark">
-                                    <div class="text-secondary" style="font-size: 12px;" data-timestamp="{{ $pendingUpgradeRequests->created_at->timestamp }}">
+                                <a href="{{ route('admin.approvals.index') }}"
+                                    class="d-block px-3 py-2 text-decoration-none text-dark">
+                                    <div class="text-secondary" style="font-size: 12px;"
+                                        data-timestamp="{{ $pendingUpgradeRequests->created_at->timestamp }}">
                                         {{ $pendingUpgradeRequests->created_at->diffForHumans() }}
                                     </div>
                                     <div class="fw-medium mb-1">Yêu cầu nâng cấp tài khoản</div>
-                                    <div class="text-secondary" style="font-size: 13px;">Có {{ $pendingUpgradeCount }} yêu cầu nâng cấp mới</div>
+                                    <div class="text-secondary" style="font-size: 13px;">Có {{ $pendingUpgradeCount }}
+                                        yêu cầu nâng cấp mới</div>
                                 </a>
                             </div>
                         @endif
@@ -143,7 +179,8 @@
                             <div class="text-secondary mt-2" style="font-size: 13px;">Không có thông báo mới</div>
                         </div>
                         <div class="border-top">
-                            <a href="#" class="d-block text-center text-primary text-decoration-none py-2" style="font-size: 13px;">
+                            <a href="#" class="d-block text-center text-primary text-decoration-none py-2"
+                                style="font-size: 13px;">
                                 Xem tất cả thông báo
                             </a>
                         </div>
@@ -193,34 +230,34 @@
 </nav>
 
 @push('scripts')
-<script>
-    function updateTimestamps() {
-        document.querySelectorAll('[data-timestamp]').forEach(element => {
-            const timestamp = parseInt(element.getAttribute('data-timestamp'));
-            const now = Math.floor(Date.now() / 1000);
-            const diff = now - timestamp;
+    <script>
+        function updateTimestamps() {
+            document.querySelectorAll('[data-timestamp]').forEach(element => {
+                const timestamp = parseInt(element.getAttribute('data-timestamp'));
+                const now = Math.floor(Date.now() / 1000);
+                const diff = now - timestamp;
 
-            let timeAgo;
-            if (diff < 60) {
-                timeAgo = 'Vừa xong';
-            } else if (diff < 3600) {
-                const minutes = Math.floor(diff / 60);
-                timeAgo = `${minutes} phút trước`;
-            } else if (diff < 86400) {
-                const hours = Math.floor(diff / 3600);
-                timeAgo = `${hours} giờ trước`;
-            } else {
-                const days = Math.floor(diff / 86400);
-                timeAgo = `${days} ngày trước`;
-            }
+                let timeAgo;
+                if (diff < 60) {
+                    timeAgo = 'Vừa xong';
+                } else if (diff < 3600) {
+                    const minutes = Math.floor(diff / 60);
+                    timeAgo = `${minutes} phút trước`;
+                } else if (diff < 86400) {
+                    const hours = Math.floor(diff / 3600);
+                    timeAgo = `${hours} giờ trước`;
+                } else {
+                    const days = Math.floor(diff / 86400);
+                    timeAgo = `${days} ngày trước`;
+                }
 
-            element.textContent = timeAgo;
-        });
-    }
+                element.textContent = timeAgo;
+            });
+        }
 
-    // Cập nhật thời gian mỗi phút
-    setInterval(updateTimestamps, 60000);
-    // Cập nhật ngay lập tức khi trang được tải
-    updateTimestamps();
-</script>
+        // Cập nhật thời gian mỗi phút
+        setInterval(updateTimestamps, 60000);
+        // Cập nhật ngay lập tức khi trang được tải
+        updateTimestamps();
+    </script>
 @endpush

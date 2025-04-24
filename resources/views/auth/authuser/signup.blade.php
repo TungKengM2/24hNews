@@ -98,7 +98,7 @@
 
                         <div class="other-links social-with-title">
                             <div class="text">Hoặc đăng ký bằng</div>
-                            <a href="{{ url('auth/facebook') }}"><i class="fab fa-facebook-f"></i> Facebook</a>
+                            {{-- <a href="{{ url('auth/facebook') }}"><i class="fab fa-facebook-f"></i> Facebook</a> --}}
                             <a href="{{ url('auth/google') }}"><i class="fab fa-google"></i> Google</a>
                         </div>
 
