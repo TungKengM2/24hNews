@@ -2,6 +2,6 @@
 
     <a href="{{ url('/') }}" class="logo">
         <!-- logo-->
-        <img src="{{ asset('images/logo24news.png') }}" class="logo w-350 h-60 mx-60 img-cover img-fluid  " alt="logo"  >
+        <img src="{{ asset('images/logo24news.png') }}" class="logo w-300 h-60   " alt="logo"  >
     </a>
 </div>
