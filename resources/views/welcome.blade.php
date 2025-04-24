@@ -248,13 +248,13 @@
                         <div class="col-lg-4 h-110">
                             <div class="tc-post-list-style1 bg-white p-3 rounded shadow h-100">
                                 <div class="tc-post-title-style1 mb-3">
-                                    <h5 class="text-dark fw-bold">Top Bài Viết Thảo Luận</h5>
+                                    <h5 class=" fw-bold">Top Bài Viết Thảo Luận</h5>
                                 </div>
                                 {{-- // top 4 bài viết nhiều Bluan nhất 30 ngày trở lại  --}}
                                 @if ($trendingPosts->isNotEmpty())
                                     @foreach ($trendingPosts as $index => $post)
                                         <a href="{{ Auth::check() ? route('articles.article', $post->slug) : url('/login-user') }}"
-                                            class="item hover-main d-block p-2 text-dark border-bottom mb-2">
+                                            class="item hover-main d-block p-2  border-bottom mb-2">
                                             <h2 class="num">{{ $index + 1 }}</h2>
                                             <div class="content">
                                                 <span class="fsz-12px text-muted text-uppercase mb-2">

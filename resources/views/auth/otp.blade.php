@@ -8,6 +8,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/fontawesome-all.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/iofrm-style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/iofrm-theme21.css') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/24news.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/24news.png') }}?v={{ time() }}">
 
     <style>
         .countdown {
