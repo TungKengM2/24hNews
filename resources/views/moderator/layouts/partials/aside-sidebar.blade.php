@@ -11,6 +11,9 @@
     })
         ->where('status', 'pending')
         ->count();
+
+    // Đếm số vi phạm chờ xử lý
+    $pendingViolations = \App\Models\Violation::where('status', 'pending')->count();
 @endphp
 
 <section class="sidebar position-relative">
@@ -52,8 +55,8 @@
                             <a href="{{ route('moderator.violations.approves') }}" style="position: relative;">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                 Báo Cáo
-                                @if ($pendingViolationsCount > 0)
-                                    <x-notification-badge :count="$pendingViolationsCount" />
+                                @if ($pendingViolations > 0)
+                                    <x-notification-badge :count="$pendingViolations" />
                                 @endif
                             </a>
                         </li>

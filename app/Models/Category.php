@@ -43,6 +43,7 @@ class Category extends Model
     {
         return $this->belongsTo(Category::class, 'parent_id', 'category_id');
     }
+    
 
     /**
      * Quan hệ với danh mục con.
