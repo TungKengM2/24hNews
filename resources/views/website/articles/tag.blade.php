@@ -1941,19 +1941,49 @@
         <!-- ====== end tc-post-grid-style2 ====== -->
 
 =======
-         
-           
-            
-    
+
+
+
+
         <!-- ====== end ====== -->
 
 >>>>>>> aadf17a8 (giao dien tag new)
         <!-- ====== start Latest news ====== -->
-        <section class="tc-latest-news-style1">
-            <div class="container">
+        <section class=" tc-post-title-style1">
+            <div class="container tc-post-title-style1">
                 <div class="section-content pt-50 pb-50 border-bottom border-1 brd-gray">
                     <div class="row gx-5">
                         <div class="col-lg-9">
+                            <p class="color-000 text-uppercase mb-30 ltspc-1 fw-bold">Các bài viết yêu thích nhất</p>
+
+                            @if ($articlesViews->count() > 0)
+                                @php
+                                    // Lấy bài viết đầu tiên từ collection của paginator
+                                    $firstArticle = $articlesViews->getCollection()->first();
+                                @endphp
+
+                                <div class="row gx-5">
+                                    <!-- Bài viết lớn -->
+                                    <div class="col-lg-6 border-end brd-gray border-1">
+                                        <div class="tc-post-grid-style3">
+                                            <div class="item">
+                                                <a href="{{ route('articles.article', ['slug' => $firstArticle->slug]) }}">
+                                                    <div class="img img-cover th-300">
+                                                        <img src="{{ asset('storage/' . $firstArticle->thumbnail_url) }}"
+                                                            alt="{{ $firstArticle->title }}"
+                                                            class="w-100 h-100 object-fit-cover">
+                                                    </div>
+                                                </a>
+                                                <div class="content pt-30">
+                                                    <h2 class="title ltspc--1 mb-20 fw-normal">
+                                                        <a
+                                                            href="{{ route('articles.article', ['slug' => $firstArticle->slug]) }}">
+                                                            {{ $firstArticle->title }}
+                                                        </a>
+                                                    </h2>
+                                                    <div class="meta-bot mt-20 fsz-12px color-666 text-uppercase">
+                                                        {{ $firstArticle->category->name }}
+                                                    </div>
                             <p class="color-000 text-uppercase mb-30 ltspc-1 fw-bold">top favourite posts</p>
                             <div class="row gx-5">
                                 <div class="col-lg-6 border-end brd-gray border-1">
@@ -1974,7 +2004,6 @@
                                                 <div class="text mt-30">
                                                     As a rule of thumb, all spices and dried herbs should be stored in any cool, dark place. Is there a way to make a creamy, rich in taste [...]
                                                 </div>
-                                                <a href="home-food.html#" class="fsz-14px fw-bold color-000 mt-40">Continue</a>
                                             </div>
                                         </div>
                                     </div>
@@ -2127,29 +2156,14 @@
                                 </div>
                             </div>
                             <div class="tc-widget-tags-style3">
-                                <p class="color-000 text-uppercase mb-20 ltspc-1 fw-bold">hot tags</p>
+                                <p class="color-000 text-uppercase mb-20 ltspc-1 fw-bold">Thẻ nóng</p>
                                 <div class="content">
-                                    <a href="home-food.html#">Covid-19</a>
-                                    <a href="home-food.html#">Bitcoin</a>
-                                    <a href="home-food.html#">Wordpress</a>
-                                    <a href="home-food.html#">Elon Musk</a>
-                                    <a href="home-food.html#">Google Cloud</a>
-                                    <a href="home-food.html#">Figma</a>
-                                    <a href="home-food.html#">Crypto</a>
-                                    <a href="home-food.html#">Marketplace</a>
-                                    <a href="home-food.html#">Graphicriver</a>
-                                    <a href="home-food.html#">Game Consoles</a>
-                                    <a href="home-food.html#">Robotics</a>
-                                    <a href="home-food.html#">Psd</a>
-                                    <a href="home-food.html#">Hackers</a>
-                                    <a href="home-food.html#">Foody</a>
-                                    <a href="home-food.html#">Breakfast</a>
-                                    <a href="home-food.html#">Dessert</a>
-                                    <a href="home-food.html#">Soup</a>
-                                    <a href="home-food.html#">Cuisine</a>
-                                    <a href="home-food.html#">Vegan</a>
-                                    <a href="home-food.html#">Restaurant</a>
-                                    <a href="home-food.html#">Beef</a>
+                                    @foreach ($tags as $tag)
+                                        <a href="{{ route('tags.show', ['tag' => $tag->tag_id]) }}"
+                                            class="btn border border-1 mt-20 py-2 px-3">
+                                            {{ $tag->name }}
+                                        </a>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -2157,6 +2171,7 @@
                 </div>
             </div>
         </section>
+
         <!-- ====== end Latest news ====== -->
 
 
@@ -2190,57 +2205,59 @@
         <section class="tc-posts-tabs-style4 pt-60 pb-60">
             <div class="container">
                 <div class="tc-tabs-head">
-                    <a href="home-food.html#0" class="active" data-filter="all">All</a>
-                    <a href="home-food.html#0" data-filter=".latest">latest</a>
-                    <a href="home-food.html#0" data-filter=".breakfast">breakfast</a>
-                    <a href="home-food.html#0" data-filter=".dessert">dessert</a>
-                    <a href="home-food.html#0" data-filter=".fastfood">fast food</a>
-                    <a href="home-food.html#0" data-filter=".vegan">vegan</a>
-                    <a href="home-food.html#0" data-filter=".soup">soup</a>
-                    <a href="home-food.html#0" data-filter=".drink">drink</a>
-                    <a href="home-food.html#0" data-filter=".asia">asia</a>
-                    <a href="home-food.html#0" data-filter=".europe">europe</a>
-                    <a href="home-food.html#0" data-filter=".usa">usa</a>
-                    <a href="home-food.html#0" data-filter=".videos">videos</a>
-                    <a href="home-food.html#0" data-filter=".guide">guide</a>
+                    <a href="#" class="active" data-filter="all">All</a>
+                    <a href="#" data-filter="latest">latest</a>
+                    <a href="#" data-filter="breakfast">breakfast</a>
+                    <a href="#" data-filter="dessert">dessert</a>
+                    <a href="#" data-filter="fastfood">fast food</a>
+                    <a href="#" data-filter="vegan">vegan</a>
+                    <a href="#" data-filter="soup">soup</a>
+                    <a href="#" data-filter="drink">drink</a>
+                    <a href="#" data-filter="asia">asia</a>
+                    <a href="#" data-filter="europe">europe</a>
+                    <a href="#" data-filter="usa">usa</a>
+                    <a href="#" data-filter="videos">videos</a>
+                    <a href="#" data-filter="guide">guide</a>
                 </div>
                 <div class="tc-tabs-body tc-post-grid-style4 mt-50">
                     <div class="row gx-0">
-
+                        <!-- Cột 1 -->
                         <div class="col-lg-3 border-1 border-end brd-gray">
+                            <!-- Item 1 -->
                             <div class="item mix latest soup asia">
-                                <a href="https://newzin-html.themescamp.com/assets/img/tabs/12.png" class="img img-cover" data-fancybox="tabs">
+                                <a href="#" class="img img-cover" data-fancybox="tabs">
                                     <img src="https://newzin-html.themescamp.com/assets/img/tabs/12.png" alt="">
                                 </a>
                                 <div class="info">
                                     <h4 class="title">
-                                        <a href="page-single-post-creative.html">Pumpkin soup for a warm winter</a>
+                                        <a href="#">Pumpkin soup for a warm winter</a>
                                     </h4>
                                     <div class="tags">
-                                        <a href="home-food.html#">latest,</a>
-                                        <a href="home-food.html#">soup,</a>
-                                        <a href="home-food.html#">asia</a>
+                                        <a href="#">lateaduuuust,</a>
+                                        <a href="#">soup,</a>
+                                        <a href="#">asia</a>
                                     </div>
                                     <div class="text">
                                         As a rule of thumb, all spices and dried herbs should be stored in any cool, dark place [...]
                                     </div>
-                                    <a href="home-food.html#" class="more">Continue</a>
+                                    <a href="#" class="more">Continue</a>
                                 </div>
                             </div>
+                            <!-- Item 2 -->
                             <div class="item mix dessert vegan">
-                                <a href="https://newzin-html.themescamp.com/assets/img/tabs/13.png" class="img img-cover" data-fancybox="tabs">
+                                <a href="#" class="img img-cover" data-fancybox="tabs">
                                     <img src="https://newzin-html.themescamp.com/assets/img/tabs/13.png" alt="">
                                 </a>
                                 <div class="info">
                                     <h4 class="title">
-                                        <a href="page-single-post-creative.html">The wonderful effects of delicious dishes from coconut</a>
+                                        <a href="#">Delicious dessert from coconut</a>
                                     </h4>
                                     <div class="tags">
-                                        <a href="home-food.html#">dessert,</a>
-                                        <a href="home-food.html#">vegan</a>
+                                        <a href="#">dessert,</a>
+                                        <a href="#">vegan</a>
                                     </div>
                                     <div class="text">
-                                        Is there a way to make a creamy, rich in taste soup without adding a cre no cheese, nor any dairy? [...]
+                                        Discover how coconut can transform your dessert into something extraordinary [...]
                                     </div>
                                     <a href="home-food.html#" class="more">Continue</a>
                                 </div>
@@ -2279,72 +2296,77 @@
                             </div>
                         </div>
 
-
+                        <!-- Cột 2 -->
                         <div class="col-lg-3 border-1 border-end brd-gray">
+                            <!-- Item 1 -->
                             <div class="item mix latest europe">
-                                <a href="https://newzin-html.themescamp.com/assets/img/tabs/16.png" class="img img-cover" data-fancybox="tabs">
+                                <a href="#" class="img img-cover" data-fancybox="tabs">
                                     <img src="https://newzin-html.themescamp.com/assets/img/tabs/16.png" alt="">
                                 </a>
                                 <div class="info">
                                     <h4 class="title">
-                                        <a href="page-single-post-creative.html">25 Cafe Bar with street view in Boston, ready to chill?</a>
+                                        <a href="#">25 Cafe Bars in Boston</a>
                                     </h4>
                                     <div class="tags">
-                                        <a href="home-food.html#">latest,</a>
-                                        <a href="home-food.html#">europe</a>
+                                        <a href="#">latest,</a>
+                                        <a href="#">europe</a>
                                     </div>
                                     <div class="text">
-                                        Is there a way to make a creamy, rich in taste soup without adding a cre no cheese, nor any dairy? [...]
+                                        Check out these trendy cafe bars with an amazing street view in Boston [...]
                                     </div>
-                                    <a href="home-food.html#" class="more">Continue</a>
+                                    <a href="#" class="more">Continue</a>
                                 </div>
                             </div>
+                            <!-- Item 2 -->
                             <div class="item mix breakfast europe">
-                                <a href="https://newzin-html.themescamp.com/assets/img/tabs/17.png" class="img img-cover" data-fancybox="tabs">
+                                <a href="#" class="img img-cover" data-fancybox="tabs">
                                     <img src="https://newzin-html.themescamp.com/assets/img/tabs/17.png" alt="">
                                 </a>
                                 <div class="info">
                                     <h4 class="title">
-                                        <a href="page-single-post-creative.html">5 Benefits from Eggs</a>
+                                        <a href="#">5 Benefits from Eggs</a>
                                     </h4>
                                     <div class="tags">
                                         <a href="home-food.html#">Europe,</a>
                                         <a href="home-food.html#">breakfast</a>
                                     </div>
                                     <div class="text">
-                                        When I do, I usually turn to making the chocolate mounds. [...]
+                                        Eggs are not only nutritious but also versatile in many breakfast recipes [...]
                                     </div>
-                                    <a href="home-food.html#" class="more">Continue</a>
+                                    <a href="#" class="more">Continue</a>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Cột 3 -->
+                        <div class="col-lg-3 border-1 border-end brd-gray">
+                            <!-- Item 1 -->
                             <div class="item mix dessert asia">
-                                <a href="https://newzin-html.themescamp.com/assets/img/tabs/18.png" class="img img-cover" data-fancybox="tabs">
+                                <a href="#" class="img img-cover" data-fancybox="tabs">
                                     <img src="https://newzin-html.themescamp.com/assets/img/tabs/18.png" alt="">
                                 </a>
                                 <div class="info">
                                     <h4 class="title">
-                                        <a href="page-single-post-creative.html">How to make cheese ice cream with slices strawberries</a>
+                                        <a href="#">Cheese Ice Cream with Strawberries</a>
                                     </h4>
                                     <div class="tags">
                                         <a href="home-food.html#">dessert,</a>
                                         <a href="home-food.html#">asia</a>
                                     </div>
                                     <div class="text">
-                                        Is there a way to make a creamy, rich in taste soup without adding a cre no cheese, nor any dairy? [...]
+                                        A creative twist on ice cream that combines rich cheese flavors with fresh strawberries [...]
                                     </div>
-                                    <a href="home-food.html#" class="more">Continue</a>
+                                    <a href="#" class="more">Continue</a>
                                 </div>
                             </div>
+                            <!-- Item 2 -->
                             <div class="item mix europe videos guide">
-                                <a href="https://youtu.be/pGbIOC83-So?t=21" class="img img-cover" data-lity="tabs">
+                                <a href="#" class="img img-cover" data-fancybox="tabs">
                                     <img src="https://newzin-html.themescamp.com/assets/img/tabs/19.png" alt="">
-                                    <span class="video_icon icon-60">
-                                        <i class="ion-play"></i>
-                                    </span>
                                 </a>
                                 <div class="info">
                                     <h4 class="title">
-                                        <a href="page-single-post-features.html">Sapo Cake Tutorial</a>
+                                        <a href="#">Sapo Cake Tutorial</a>
                                     </h4>
                                     <div class="tags">
                                         <a href="home-food.html#">europe,</a>
@@ -2352,9 +2374,9 @@
                                         <a href="home-food.html#">guide</a>
                                     </div>
                                     <div class="text">
-                                        When I do, I usually turn to making the chocolate mounds. [...]
+                                        Learn how to create a stunning Sapo Cake with this easy-to-follow tutorial [...]
                                     </div>
-                                    <a href="home-food.html#" class="more">Continue</a>
+                                    <a href="#" class="more">Continue</a>
                                 </div>
                             </div>
                         </div>
@@ -2382,21 +2404,21 @@
                                 </div>
                             </div>
                             <div class="item mix fastfood drink">
-                                <a href="https://newzin-html.themescamp.com/assets/img/tabs/21.png" class="img img-cover" data-fancybox="tabs">
+                                <a href="#" class="img img-cover" data-fancybox="tabs">
                                     <img src="https://newzin-html.themescamp.com/assets/img/tabs/21.png" alt="">
                                 </a>
                                 <div class="info">
                                     <h4 class="title">
-                                        <a href="page-single-post-creative.html">Fastfood Party!</a>
+                                        <a href="#">Fastfood Party!</a>
                                     </h4>
                                     <div class="tags">
                                         <a href="home-food.html#">fastfood,</a>
                                         <a href="home-food.html#">drink</a>
                                     </div>
                                     <div class="text">
-                                        When I do, I usually turn to making the chocolate mounds. [...]
+                                        Get ready for a party with these fastfood favorites and refreshing drinks [...]
                                     </div>
-                                    <a href="home-food.html#" class="more">Continue</a>
+                                    <a href="#" class="more">Continue</a>
                                 </div>
                             </div>
                             <div class="item mix Europe breakfast">
@@ -2476,20 +2498,20 @@
                                 </a>
                             </div>
                             <div class="item mix asia">
-                                <a href="https://newzin-html.themescamp.com/assets/img/tabs/25.png" class="img img-cover" data-fancybox="tabs">
+                                <a href="#" class="img img-cover" data-fancybox="tabs">
                                     <img src="https://newzin-html.themescamp.com/assets/img/tabs/25.png" alt="">
                                 </a>
                                 <div class="info">
                                     <h4 class="title">
-                                        <a href="page-single-post-creative.html">Unpleasant taste but extremely wonderful benefits of durian fruit, did you know?</a>
+                                        <a href="#">Unusual Durian Benefits</a>
                                     </h4>
                                     <div class="tags">
-                                        <a href="home-food.html#">asia</a>
+                                        <a href="#">asia</a>
                                     </div>
                                     <div class="text">
-                                        Is there a way to make a creamy, rich in taste soup without adding a cre no cheese, nor any dairy? [...]
+                                        Discover the unexpected benefits of durian, a fruit known for its unique aroma [...]
                                     </div>
-                                    <a href="home-food.html#" class="more">Continue</a>
+                                    <a href="#" class="more">Continue</a>
                                 </div>
                             </div>
                         </div>
@@ -2497,12 +2519,34 @@
                 </div>
 
                 <div class="more mt-60">
-                    <a href="page-blog.html">
-                        Load more
-                    </a>
+                    <a href="page-blog.html">Load more</a>
                 </div>
             </div>
         </section>
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('.tc-tabs-head a').on('click', function(e){
+                    e.preventDefault();
+                    var filter = $(this).data('filter');
+
+                    // Cập nhật active cho các tab
+                    $('.tc-tabs-head a').removeClass('active');
+                    $(this).addClass('active');
+
+                    // Lọc các item dựa trên filter
+                    if (filter === 'all') {
+                        $('.tc-tabs-body .item').show();
+                    } else {
+                        $('.tc-tabs-body .item').hide().filter('.' + filter).show();
+                    }
+                });
+            });
+        </script>
+
+
         <!-- ====== end tabs ====== -->
 
 >>>>>>> dadf66f2 (có trang tag)
