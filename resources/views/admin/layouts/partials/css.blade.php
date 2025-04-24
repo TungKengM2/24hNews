@@ -37,9 +37,9 @@
     <style>
         /* Tags styling */
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: #c3bebe;
+            background-color: #5A8DEE;
             color: white;
-            border: 1px solid #c2c2c2;
+            border: 1px solid #5A8DEE;
             padding: 5px 20px;
             border-radius: 5px;
             font-size: 14px;

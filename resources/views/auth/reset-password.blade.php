@@ -8,6 +8,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('authadmin/css/fontawesome-all.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('authadmin/css/iofrm-style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('authadmin/css/iofrm-theme21.css') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo24news.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo24news.png') }}?v={{ time() }}">
+
 </head>
 <body>
     <div class="form-body">
@@ -30,7 +33,7 @@
                         <form action="{{ route('password.update') }}" method="POST">
                             @csrf
                             <input type="hidden" name="token" value="{{ $token }}">
-                            
+
                             <input class="form-control" type="email" name="email" placeholder="Nhập email" required>
                             <input class="form-control" type="password" name="password" placeholder="Mật khẩu mới" required>
                             <input class="form-control" type="password" name="password_confirmation" placeholder="Xác nhận mật khẩu" required>

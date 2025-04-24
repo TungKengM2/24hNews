@@ -9,8 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
     {{-- <link rel="icon" href="/admin/main/../images/favicon.ico"> --}}
-    <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}">
-    <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}?v={{ time() }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/24news.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/24news.png') }}?v={{ time() }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
 

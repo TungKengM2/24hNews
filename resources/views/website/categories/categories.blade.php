@@ -3,16 +3,19 @@
 @section('content')
     <main>
         <!-- ====== start category header ====== -->
-        <section class="tc-category-header py-4 bg-light border-bottom">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-8">
-                        <h1 class="mb-2">{{ $category->name }}</h1>
 
-                        <p class="text-muted mb-0">
-                            {{ $category->description ?? ($category->parent->description ?? 'Khám phá các bài viết trong danh mục này') }}
+        <section class="tc-post-list-style1 py-4  border-bottom">
+            <div class="container tc-post-list-style1">
+                <div class="row align-items-center tc-post-title-style1">
+                    <div class="col-lg-8">
+                        <h1 class=" fw-bold mb-2">{{ $category->name }}</h1>
+
+                        <p class="fw-semibold mb-0">
+                            {{ $category->description
+                                ?? ($category->parent->description ?? 'Khám phá các bài viết trong danh mục này') }}
                         </p>
                     </div>
+
 
                     <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
                         <nav aria-label="breadcrumb">
@@ -20,28 +23,32 @@
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Trang chủ</a></li>
                                 <li class="breadcrumb-item"><a href="#">Danh mục</a></li>
 
+
                                 @if ($category->parent)
-                                    <!-- Nếu là danh mục con thì hiển thị cate cha -->
-                                    <li class="breadcrumb-item">
-                                        <a href="{{ route('client.category.show', $category->parent->slug) }}">
-                                            {{ $category->parent->name }}
-                                        </a>
-                                    </li>
-                                    <!-- Sau đó hiển thị cate con (hiện tại) -->
-                                    <li class="breadcrumb-item active" aria-current="page">
-                                        {{ $category->name }}
-                                    </li>
-                                @else
-                                    <li class="breadcrumb-item active" aria-current="page">
-                                        {{ $category->name }}
-                                    </li>
-                                @endif
+                                <!-- Nếu là danh mục con thì hiển thị cate cha -->
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('client.category.show', $category->parent->slug) }}">
+                                        {{ $category->parent->name }}
+                                    </a>
+                                </li>
+                                <!-- Sau đó hiển thị cate con (hiện tại) -->
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{ $category->name }}
+                                </li>
+                            @else
+
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{ $category->name }}
+                                </li>
+                            @endif
                             </ol>
                         </nav>
                     </div>
                 </div>
             </div>
         </section>
+
+
         <!-- ====== end category header ====== -->
 
         {{-- <!-- ====== start articles by views ====== -->
@@ -439,7 +446,7 @@
                                                         <div class="col-md-6 mb-4">
                                                             <div class="card h-100 border-0 shadow-sm">
                                                                 <div class="item">
-                                                                    
+
                                                                         <div class="tags mb-20">
                                                                             <a href="">
                                                                                 @if ($secondaryArticle)
@@ -448,11 +455,11 @@
 
                                                                             </a>
                                                                         </div>
-                                                                    
+
                                                                 </div>
 
                                                                 <div class="position-relative">
-                                                                   
+
                                                                     <a
                                                                         href="{{ route('articles.article', ['slug' => $article->slug]) }}">
                                                                         <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
@@ -496,23 +503,21 @@
                                     </div>
                                 </div>
 
-                                <!-- Sidebar -->
-                                <div class="col-lg-4">
-                                    <div class="sidebar">
-                                        <!-- Popular tags -->
-                                        <div class="card border-0 shadow-sm mb-4">
-                                            <div class="card-header bg-white border-bottom border-primary border-3">
-                                                <h5 class="mb-0 fw-bold text-uppercase">Thẻ Phổ Biến</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="d-flex flex-wrap gap-2">
+                    <!-- Sidebar -->
+                    <div class="col-lg-4">
+                        <div class="sidebar">
+                            <!-- Popular tags -->
+                            <div class="tc-post-list-style1  border-0 shadow-sm mb-4">
+                                <div class="tc-post-list-style1  bg-white border-bottom border-primary border-3">
+                                    <h5 class="mb-0 fw-bold text-uppercase">Thẻ Phổ Biến</h5>
+                                </div>
+                                <div class="tc-post-list-style1 p-3">
+                                    <div class="tc-post-list-style1 d-flex flex-wrap gap-2">
 
-                                                    @foreach ($tags as $tag)
-                                                        <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}"
-                                                            class="btn btn-sm btn-outline-secondary">{{ $tag->name }}
-                                                            ({{ $tag->published_articles_count }})
-                                                        </a>
-                                                    @endforeach
+                                        @foreach ($tags as $tag)
+                                        <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}" class="  btn btn-sm btn-light btn-outline-secondary">{{ $tag->name }} ({{ $tag->published_articles_count }})</a>
+
+                                    @endforeach
 
                                                 </div>
                                             </div>
