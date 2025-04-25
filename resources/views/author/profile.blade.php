@@ -16,9 +16,10 @@
                     <div class="user-profile">
                         <div class="box box-widget widget-user">
                             <div class="widget-user-header bg-img bbsr-0 bber-0 justify-content-center align-items-center h-175 pl-[25px] flex-block  "
-                                style="background: url('../images/gallery/full/10.jpg') center center;" data-overlay="5">
-                                <h1 class="widget-user-username text-white">{{ $user->username }}</h1>
-                                <h4 class="widget-user-desc text-white mt-2 text-[36px] ">{{ $user->description ?? 'Chưa có mô tả' }}</h4>
+                                style="background: url('/admin/images/gallery/full/10.jpg') center center;" data-overlay="5">
+                                <h1 class="widget-user-username text-white" style="margin-right: 50px">{{ $user->username }}</h1>
+                                <h4 class="widget-user-desc text-white mt-2 text-[36px]" style="margin-right: 50px">
+                                    {{ $user->description ?? 'Chưa có mô tả' }}</h4>
                             </div>
                             <div class="author-img">
                                 <div class="widget-user-image">
@@ -28,7 +29,8 @@
                                     <label for="avatarUpload" class="avatar-edit">
                                         <i class="fa fa-camera" aria-hidden="true"></i>
                                     </label>
-                                    <input type="file" id="avatarUpload" name="image" accept="image/*" style="display: none;">
+                                    <input type="file" id="avatarUpload" name="image" accept="image/*"
+                                        style="display: none;">
                                 </div>
                             </div>
                             <div class="box-footer ">
