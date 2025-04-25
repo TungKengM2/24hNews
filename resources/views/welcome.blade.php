@@ -75,17 +75,40 @@
                                         </h6>
                                         <div class="rating mb-1">
                                             <span class="text-warning">
-                                                @for ($i = 0; $i < floor($authorData['rating']); $i++)
-                                                    <i class="la la-star" style="color: #ffc107;"></i>
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= floor($authorData['rating']))
+                                                        <i class="la la-star text-warning"></i>
+                                                        
+                                                    @elseif ($i == ceil($authorData['rating']) && $authorData['rating'] - floor($authorData['rating']) > 0)
+                                                        @if ($authorData['rating'] - floor($authorData['rating']) >= 0.75)
+                                                            <i class="la la-star text-warning"></i>
+                                                            
+                                                        @elseif ($authorData['rating'] - floor($authorData['rating']) >= 0.25)
+                                                            <i class="la la-star-half-alt text-warning"></i>
+                                                            
+                                                        @else
+                                                            <i class="la la-star-o text-secondary"></i>
+                                                           
+                                                        @endif
+                                                    @else
+                                                        <i class="la la-star-o text-secondary"></i>
+                    
+                                                    @endif
                                                 @endfor
-                                                @if ($authorData['rating'] - floor($authorData['rating']) >= 0.5)
-                                                    <i class="la la-star-half-alt" style="color: #ffc107;"></i>
-                                                @endif
+                                                <span class="text-muted ms-2">({{ number_format($authorData['rating'], 1) }})</span>
                                             </span>
                                         </div>
                                         <div class="jop-title">
-                                            <small class="fsz-13px color-999">Chuyên đề</small>
-                                            <p class="fsz-13px text-uppercase">{{ $authorData['specializes_in'] }}</p>
+                                            <small class="fsz-13px color-999">Lĩnh vực chính</small>
+                                            <p class="fsz-13px text-uppercase">
+                                                @if(isset($authorData['specializes_slug']) && $authorData['specializes_slug'])
+                                                    <a href="{{ route('client.category.author.show', ['categorySlug' => $authorData['specializes_slug'], 'authorId' => $authorData['author']->user_id]) }}" class="text-primary">
+                                                        {{ $authorData['specializes_in'] }}
+                                                    </a>
+                                                @else
+                                                    {{ $authorData['specializes_in'] }}
+                                                @endif
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
