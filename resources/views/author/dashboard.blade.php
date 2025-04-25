@@ -11,12 +11,12 @@
                         // Hiển thị thông báo SweetAlert2 trực tiếp
                         document.addEventListener('DOMContentLoaded', function() {
                             setTimeout(function() {
-                                @if (auth()->user()->violation_count > 5)
+                                @if (isset($isBanned) && $isBanned)
                                     Swal.fire({
                                         icon: 'warning',
-                                        title: 'Cảnh báo vi phạm!',
-                                        html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
-                                            '<p>Bạn không thể thực hiện các hành động liên quan đến bài viết cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                                        title: 'Tài khoản bị tạm khóa!',
+                                        html: '<div class="text-start"><p><strong>Tài khoản của bạn đã bị tạm khóa đến {{ $banEndTime }}.</strong></p>' +
+                                            '<p>Bạn không thể thực hiện các hành động liên quan đến bài viết trong thời gian này.</p>' +
                                             '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
                                         confirmButtonText: 'Tôi đã hiểu',
                                         confirmButtonColor: '#3085d6'

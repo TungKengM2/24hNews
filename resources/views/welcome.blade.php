@@ -91,7 +91,7 @@
                                                            
                                                         @endif
                                                     @else
-                                                        <i class="la la-star-o text-secondary"></i>
+                                                         <i class="la la-star-o text-secondary"></i>
                     
                                                     @endif
                                                 @endfor
