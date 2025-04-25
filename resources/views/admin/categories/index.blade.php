@@ -76,12 +76,12 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm danh mục...">
                                         <div class="input-group-append">
-                                            <select class="form-control" id="filterStatus">
+                                            <select class="form-control" style="width: auto;" id="filterStatus">
                                                 <option value="all">Tất cả trạng thái</option>
                                                 <option value="active">Hoạt động</option>
                                                 <option value="inactive">Không hoạt động</option>
                                             </select>
-                                            <select class="form-control" id="filterType">
+                                            <select class="form-control ml-2" style="width: auto;" id="filterType">
                                                 <option value="all">Tất cả loại</option>
                                                 <option value="parent">Danh mục cha</option>
                                                 <option value="child">Danh mục con</option>

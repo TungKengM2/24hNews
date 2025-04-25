@@ -513,10 +513,25 @@
                                 // Khởi tạo Select2 với tính năng tags
                                 $('.select2-tags').select2({
                                     tags: true,
-                                    tokenSeparators: [',', ' '],
+                                    tokenSeparators: [','],
                                     placeholder: 'Chọn hoặc nhập thẻ mới',
                                     allowClear: true,
                                     maximumSelectionLength: 5,
+                                    matcher: function(params, data) {
+                                        // Nếu người dùng đang nhập thẻ mới
+                                        if (params.term && !data.id) {
+                                            // Kiểm tra xem thẻ đã tồn tại trong danh sách chưa
+                                            var existingTags = $(this).find('option').map(function() {
+                                                return $(this).text().toLowerCase();
+                                            }).get();
+
+                                            // Nếu thẻ đã tồn tại => chọn thẻ cũ thay vì tạo mới
+                                            if (existingTags.includes(params.term.toLowerCase())) {
+                                                return null; // Không hiển thị trong dropdown
+                                            }
+                                        }
+                                        return data;
+                                    }
                                 }).on('change', function() {
                                     // Cập nhật tiêu chí khi thay đổi tag
                                     if (window.updateCriteria) {
@@ -950,7 +965,7 @@
                                                     // Ẩn loading
                                                     if (document.getElementById('moderation-loading')) {
                                                         document.getElementById('moderation-loading').style.display =
-                                                        'none';
+                                                            'none';
                                                     }
 
                                                     const moderationResult = document.getElementById('moderation-result');
