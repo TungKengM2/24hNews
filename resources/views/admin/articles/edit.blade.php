@@ -29,7 +29,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         #moderation-result {
@@ -250,14 +252,19 @@
                                             </div>
 
                                             <div id="moderation-result" style="display: none;">
-                                                <div id="moderation-loading" class="alert alert-info" style="display: none;">
-                                                    <strong><i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...</strong> Vui lòng đợi trong giây lát.
+                                                <div id="moderation-loading" class="alert alert-info"
+                                                    style="display: none;">
+                                                    <strong><i class="fas fa-spinner fa-spin"></i> Đang kiểm
+                                                        tra...</strong> Vui lòng đợi trong giây lát.
                                                 </div>
-                                                <div id="moderation-error" class="alert alert-danger" style="display: none;">
+                                                <div id="moderation-error" class="alert alert-danger"
+                                                    style="display: none;">
                                                     <strong>Lỗi!</strong> <span id="error-message"></span>
                                                 </div>
-                                                <div id="moderation-success" class="alert alert-success" style="display: none;">
-                                                    <strong><i class="fas fa-check-circle"></i> Thành công!</strong> Ảnh đã được kiểm duyệt và không vi phạm quy định.
+                                                <div id="moderation-success" class="alert alert-success"
+                                                    style="display: none;">
+                                                    <strong><i class="fas fa-check-circle"></i> Thành công!</strong> Ảnh đã
+                                                    được kiểm duyệt và không vi phạm quy định.
                                                 </div>
                                             </div>
 
@@ -370,10 +377,25 @@
                     // Khởi tạo Select2 với tính năng tags
                     $('.select2-tags').select2({
                         tags: true,
-                        tokenSeparators: [',', ' '],
+                        tokenSeparators: [','],
                         placeholder: 'Chọn hoặc nhập thẻ mới',
                         allowClear: true,
                         maximumSelectionLength: 5,
+                        matcher: function(params, data) {
+                            // Nếu người dùng đang nhập thẻ mới
+                            if (params.term && !data.id) {
+                                // Kiểm tra xem thẻ đã tồn tại trong danh sách chưa
+                                var existingTags = $(this).find('option').map(function() {
+                                    return $(this).text().toLowerCase();
+                                }).get();
+
+                                // Nếu thẻ đã tồn tại => chọn thẻ cũ thay vì tạo mới
+                                if (existingTags.includes(params.term.toLowerCase())) {
+                                    return null; // Không hiển thị trong dropdown
+                                }
+                            }
+                            return data;
+                        }
                     }).on('change', function() {
                         // Cập nhật tiêu chí khi thay đổi tag
                         if (window.updateCriteria) {
@@ -736,7 +758,7 @@
                                 const errorMessage = document.getElementById('error-message');
                                 const successDiv = document.getElementById('moderation-success');
                                 const imageUploadLoading = document.getElementById('image-upload-loading');
-                                
+
                                 // Hiển thị loading và ẩn các thông báo khác
                                 if (moderationResult) moderationResult.style.display = 'block';
                                 if (loadingDiv) loadingDiv.style.display = 'block';
@@ -762,13 +784,15 @@
 
                                 const formData = new FormData();
                                 formData.append('image', file);
-                                formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+                                formData.append('_token', document.querySelector('meta[name="csrf-token"]')
+                                .content);
 
                                 fetch('/api/check-image-moderation', {
                                         method: 'POST',
                                         body: formData,
                                         headers: {
-                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                                .content,
                                         },
                                     })
                                     .then(response => {
@@ -787,7 +811,8 @@
                                             if (errorDiv) {
                                                 errorDiv.style.display = 'block';
                                                 if (successDiv) successDiv.style.display = 'none';
-                                                if (errorMessage) errorMessage.textContent = result.message || 'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
+                                                if (errorMessage) errorMessage.textContent = result.message ||
+                                                    'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
                                             }
                                             window.isImageValid = false;
                                             submitButton.disabled = true;
@@ -803,7 +828,8 @@
                                                     violationMessages.push(result.reason[violation]);
                                                 }
 
-                                                if (errorMessage) errorMessage.innerHTML = `Vi phạm: ${violationMessages.join(', ')}`;
+                                                if (errorMessage) errorMessage.innerHTML =
+                                                    `Vi phạm: ${violationMessages.join(', ')}`;
                                             }
                                             window.isImageValid = false;
                                             submitButton.disabled = true;
@@ -837,10 +863,11 @@
                                         // Ẩn loading
                                         if (imageUploadLoading) imageUploadLoading.style.display = 'none';
                                         if (loadingDiv) loadingDiv.style.display = 'none';
-                                        
+
                                         if (errorDiv && errorMessage) {
                                             errorDiv.style.display = 'block';
-                                            errorMessage.textContent = 'Có lỗi khi kiểm duyệt: ' + error.message;
+                                            errorMessage.textContent = 'Có lỗi khi kiểm duyệt: ' + error
+                                            .message;
                                         }
                                         submitButton.disabled = true;
                                         window.isImageValid = false;
@@ -925,4 +952,3 @@
 
         @section('scripts')
         @endsection
-
