@@ -174,8 +174,9 @@
                                             <ul class="d-flex">
                                                 <li class="date me-5">
                                                     <i class="la la-calendar me-2"></i>
-                                                    {{ time_ago($highlightedArticle->created_at) }}
+                                                    {{ \Carbon\Carbon::parse($highlightedArticle->created_at)->translatedFormat('d \t\há\n\g m, Y') }}
                                                 </li>
+                                                
                                                 <li class="author me-5">
                                                     <i class="la la-user me-2"></i> by <span class="color-000">
                                                         {{ $highlightedArticle->author->name ?? 'Admin' }}
@@ -225,7 +226,8 @@
                                             <ul class="d-flex">
                                                 <li class="date me-5">
                                                     <i class="la la-calendar me-2"></i>
-                                                    {{ time_ago($secondaryArticle->created_at) }}
+                                                    {{ \Carbon\Carbon::parse($secondaryArticle->created_at)->translatedFormat('d \t\há\n\g m, Y') }}
+
                                                 </li>
                                                 <li class="author me-5">
                                                     <i class="la la-user me-2"></i> by <span class="color-000">
@@ -280,7 +282,9 @@
                                                 <li class="date me-5">
                                                     <a href="#">
                                                         <i class="la la-calendar me-2"></i>
-                                                        {{ $nugget->created_at->format('M d, Y') }}
+                                                        {{ \Carbon\Carbon::parse($nugget->created_at)->translatedFormat('d \t\há\n\g m, Y') }}
+
+                                                       
                                                     </a>
                                                 </li>
                                                 <li class="comment">
@@ -350,7 +354,9 @@
                                                                                             <li class="date me-4">
                                                                                                 <i
                                                                                                     class="la la-calendar me-2"></i>
-                                                                                                {{ $topMainArticles->created_at->format('M d, Y') }}
+                                                                                                    {{ \Carbon\Carbon::parse($topMainArticles->created_at)->translatedFormat('d \t\há\n\g m, Y') }}
+
+                                                                                              
                                                                                             </li>
                                                                                             <li class="author me-4">
                                                                                                 <i
@@ -473,7 +479,8 @@
                                                                     <div
                                                                         class="d-flex justify-content-between align-items-center text-muted small">
                                                                         <span><i class="la la-calendar me-1"></i>
-                                                                            {{ $article->created_at->format('d/m/Y') }}</span>
+                                                                            {{ \Carbon\Carbon::parse($article->created_at)->translatedFormat('d \t\há\n\g m, Y') }}
+                                                                            </span>
                                                                         <span><i class="la la-eye me-1"></i>
                                                                             {{ $article->views ?? 0 }}</span>
                                                                     </div>
