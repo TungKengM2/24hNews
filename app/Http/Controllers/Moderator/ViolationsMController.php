@@ -93,10 +93,10 @@ class ViolationsMController extends Controller
             }
         
 
-        $usersToNotify = User::whereIn('violation_count', [3, 5])->get();
-        foreach ($usersToNotify as $user) {
-            Notification::route('database', $user->id)->notify(new UserViolationAlert($user));
-        }
+            $usersToNotify = User::whereIn('violation_count', [3, 5])->get();
+            foreach ($usersToNotify as $user) {
+                $user->notify(new UserViolationAlert($user));
+            }
 
         // Xử lý các bình luận con
         $childComments = Comment::where('parent_id', $comment->comment_id)->get();
