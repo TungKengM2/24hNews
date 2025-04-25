@@ -35,7 +35,7 @@ class CategoryUserController extends Controller
         // 3. Breaking news (3 bài mới nhất)
         $breakingNews = Article::where('status', 'published')
             ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                                                ->whereIn('category_id', $categoryIds))
+                ->whereIn('category_id', $categoryIds))
             ->orderByDesc('created_at')
             ->limit(3)
             ->get();
@@ -44,7 +44,7 @@ class CategoryUserController extends Controller
         $selectTop = fn(array $exclude = []) => Article::withCount('comments')
             ->where('status', 'published')
             ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                                                ->whereIn('category_id', $categoryIds))
+                ->whereIn('category_id', $categoryIds))
             ->whereNotIn('article_id', collect($exclude)
                 ->merge($breakingNews->pluck('article_id')))
             ->orderByDesc('comments_count')
@@ -60,7 +60,7 @@ class CategoryUserController extends Controller
             $highlightedArticle = Article::withCount('comments')
                 ->where('status', 'published')
                 ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                                                    ->whereIn('category_id', $categoryIds))
+                    ->whereIn('category_id', $categoryIds))
                 ->whereNotIn('article_id', $breakingNews->pluck('article_id'))
                 ->orderByDesc('created_at')
                 ->limit(1)
@@ -76,7 +76,7 @@ class CategoryUserController extends Controller
             $secondaryArticle = Article::withCount('comments')
                 ->where('status', 'published')
                 ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                                                    ->whereIn('category_id', $categoryIds))
+                    ->whereIn('category_id', $categoryIds))
                 ->whereNotIn('article_id', array_filter([
                     $highlightedId,
                     ...$breakingNews->pluck('article_id')->toArray(),
@@ -91,13 +91,13 @@ class CategoryUserController extends Controller
             optional($highlightedArticle)->article_id,
             optional($secondaryArticle)->article_id,
         ])->merge($breakingNews->pluck('article_id'))
-          ->filter()
-          ->unique();
+            ->filter()
+            ->unique();
 
         $nebulaNuggets = Article::withCount('comments')
             ->where('status', 'published')
             ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                                                ->whereIn('category_id', $categoryIds))
+                ->whereIn('category_id', $categoryIds))
             ->whereNotIn('article_id', $excludedIds)
             ->orderByDesc('comments_count')
             ->orderByDesc('created_at')
@@ -108,7 +108,7 @@ class CategoryUserController extends Controller
         $mostViewedArticles = Article::where('status', 'published')
             ->whereNotIn('article_id', $excludedIds)
             ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                                                ->whereIn('category_id', $categoryIds))
+                ->whereIn('category_id', $categoryIds))
             ->orderByDesc('views')
             ->take(6)
             ->get();
@@ -145,12 +145,15 @@ class CategoryUserController extends Controller
             ->limit(4)
             ->first();
 
-        // Lấy danh mục sidebar
-        $categories = Category::withCount(['articles' => fn($q) => $q->where('status', 'published')])
+        $categories = Category::withCount([
+            'articles as articles_count'       => fn($q) => $q->where('status', 'published'),
+            'subArticles as sub_articles_count' => fn($q) => $q->where('status', 'published'),
+        ])
             ->where('is_active', 1)
-            ->orderByDesc('articles_count')
+            ->orderByRaw('articles_count + sub_articles_count DESC')
             ->take(6)
             ->get();
+
 
         // Lấy parent categories cho menu
         $parentCategories = Category::whereNull('parent_id')
@@ -183,25 +186,25 @@ class CategoryUserController extends Controller
         $userId = auth()->check() ? auth()->id() : null;
         $userIp = request()->ip();
         $viewedArticleIds = ArticleView::where(function ($q) use ($userId, $userIp) {
-                if ($userId) {
-                    $q->where('user_id', $userId);
-                } else {
-                    $q->whereNull('user_id')->where('anonymous', $userIp);
-                }
-            })
+            if ($userId) {
+                $q->where('user_id', $userId);
+            } else {
+                $q->whereNull('user_id')->where('anonymous', $userIp);
+            }
+        })
             ->orderByDesc('viewed_at')
             ->pluck('article_id');
 
         $recentArticles = Article::where('status', 'published')
             ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                                                ->whereIn('category_id', $categoryIds))
+                ->whereIn('category_id', $categoryIds))
             ->where('article_id', '!=', optional($highlightedArticle)->article_id)
             ->whereIn('article_id', function ($q) use ($userId, $userIp) {
                 $q->select('article_id')
-                  ->from('article_views')
-                  ->when($userId, fn($q2) => $q2->where('user_id', $userId))
-                  ->when(!$userId, fn($q2) => $q2->whereNull('user_id')->where('anonymous', $userIp))
-                  ->orderByDesc('viewed_at');
+                    ->from('article_views')
+                    ->when($userId, fn($q2) => $q2->where('user_id', $userId))
+                    ->when(!$userId, fn($q2) => $q2->whereNull('user_id')->where('anonymous', $userIp))
+                    ->orderByDesc('viewed_at');
             })
             ->limit(4)
             ->get();
