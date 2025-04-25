@@ -536,7 +536,7 @@
                                                                 <span>{{ $cat->name }}</span>
                                                             </div>
                                                             <span class="badge bg-light text-dark">
-                                                                {{ $cat->articles_count ?? 0 }} bài viết
+                                                                {{ $cat->total_articles_count ?? 0 }} bài viết
                                                             </span>
                                                         </a>
                                                     @endforeach
