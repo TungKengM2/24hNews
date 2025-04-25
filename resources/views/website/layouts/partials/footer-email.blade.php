@@ -1,4 +1,4 @@
-<div class="tc-subscribe-style1">
+{{-- <div class="tc-subscribe-style1">
     <div class="row justify-content-between align-items-center">
         <div class="col-lg-4">
             <div class="sub-info">
@@ -20,4 +20,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}

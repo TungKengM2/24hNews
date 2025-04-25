@@ -13,7 +13,7 @@
                 @if ($followingUsers->isEmpty())
                     <p>Bạn chưa theo dõi ai.</p>
                 @else
-                    <table class="table table-bordered table-dark mb-0">
+                    <table class="table table-bordered mb-0">
                         <thead>
                             <tr>
                                 <th>STT</th>

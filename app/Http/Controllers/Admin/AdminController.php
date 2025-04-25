@@ -7,12 +7,13 @@ use App\Models\Article;
 use App\Models\ArticleView;
 use App\Models\Comment; // dat them
 use App\Models\User; // dat them
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth; // Ensure Auth is imported
 use Illuminate\Support\Facades\DB; // dat them
 use Carbon\Carbon; // dat them
 use Illuminate\Support\Facades\Schema; // dat them
 use Illuminate\Http\Request;
 use App\Models\Tag;
+use App\Models\Follow; // Thêm model Follow dat them
 
 class AdminController extends Controller
 {
@@ -61,10 +62,10 @@ class AdminController extends Controller
         // Lấy số lượng người dùng theo vai trò
         $userCount = [
             'total' => User::where('role_id', '!=', 1)->count(), // Tổng số người dùng (không bao gồm admin)
-                'user' => User::where('role_id', 4)->count(), // Người dùng
-                'moderators' => User::where('role_id', 3)->count(), // Kiểm duyệt viên
-                'authors' => User::where('role_id', 2)->count(),    // Tác giả
-            ];
+            'user' => User::where('role_id', 4)->count(), // Người dùng
+            'moderators' => User::where('role_id', 3)->count(), // Kiểm duyệt viên
+            'authors' => User::where('role_id', 2)->count(),    // Tác giả
+        ];
 
         // Tổng lượt xem
         $totalViews = ArticleView::count();
@@ -74,12 +75,17 @@ class AdminController extends Controller
 
         // Tổng lượt thích
         $totalLikes = Schema::hasTable('article_likes') ? DB::table('article_likes')->count() : 0;
+
+        // Tổng số người theo dõi người dùng đang đăng nhập
+        $user = Auth::user();
+        $totalFollowers = $user->followers()->count(); // Đếm số người theo dõi admin
+
         //   // Lấy danh sách tag và số lượng bài viết theo từng tag
- // Lấy danh sách tag và số lượng bài viết đã xuất bản, sắp xếp từ lớn đến bé
-$tags = Tag::whereHas('publishedArticles') // Chỉ lấy các tag có ít nhất 1 bài viết xuất bản
-->withCount(['publishedArticles'])    // Đếm số lượng bài viết đã xuất bản
-->orderByDesc('published_articles_count') // Sắp xếp từ lớn đến bé theo số lượng bài viết
-->get();
+        // Lấy danh sách tag và số lượng bài viết đã xuất bản, sắp xếp từ lớn đến bé
+        $tags = Tag::whereHas('publishedArticles') // Chỉ lấy các tag có ít nhất 1 bài viết xuất bản
+            ->withCount(['publishedArticles'])    // Đếm số lượng bài viết đã xuất bản
+            ->orderByDesc('published_articles_count') // Sắp xếp từ lớn đến bé theo số lượng bài viết
+            ->get();
 
 
         return view('admin.dashboard', compact(
@@ -90,6 +96,7 @@ $tags = Tag::whereHas('publishedArticles') // Chỉ lấy các tag có ít nhấ
             'totalViews',
             'totalComments',
             'totalLikes',
+            'totalFollowers', // Lấy tổng số người theo dõi dat them
             'type',
             'interactionType',
             'timeBasedArticleStats',
