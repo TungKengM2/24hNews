@@ -256,6 +256,7 @@ class HomeController extends Controller
         if (!$user) {
             return view('welcome', [
                 'topCategoriesWithArticles' => $topCategoriesWithArticles ?? null,
+                'topCategories' => $topCategories ?? null,
                 'topTags' => $topTags ?? null,
                 'weeklyTrendingArticles' => $weeklyTrendingArticles ?? null,
                 'randomArticles' => $randomArticles ?? null,
@@ -313,7 +314,8 @@ class HomeController extends Controller
             'latestArticlesPerCategory',
             'randomArticles',
             'weeklyTrendingArticles',
-            'topCategoriesWithArticles'
+            'topCategoriesWithArticles',
+            'topCategories' 
         ));
     }
 
