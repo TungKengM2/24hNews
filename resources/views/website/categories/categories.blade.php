@@ -207,7 +207,7 @@
                         @else
                             <!-- Hiển thị thông báo nếu không có bài viết cho highlightedArticle -->
                             <div class="col-lg-6">
-                                <p>Chưa có bài viết nổi bật nào.</p>
+                                <p>Chưa có bài viết  nào.</p>
                             </div>
                         @endif
 
@@ -259,7 +259,7 @@
                         @else
                             <!-- Hiển thị thông báo nếu không có bài viết cho secondaryArticle -->
                             <div class="col-lg-6">
-                                <p>Chưa có bài viết phụ nào.</p>
+                                <p>Chưa có bài viết nào.</p>
                             </div>
                         @endif
                     </div>
@@ -424,11 +424,7 @@
                                                                     </div>
                                                                 </div>
                                                             @endforeach
-                                                            <a href="{{ route('articles.index') }}"
-                                                                class="fsz-13px text-capitalize color-666 mt-30">
-                                                                <span>Xem tất cả bài viết</span>
-                                                                <i class="las la-angle-right"></i>
-                                                            </a>
+                                                           
                                                         </div>
                                                     </div>
                                                 </div>
