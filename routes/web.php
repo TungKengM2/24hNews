@@ -173,7 +173,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
 
-    Route::post('/profile/update-avatar', [UserProfileController::class, 'updateAvatar'])->name('profile.update.avatar');
+    // Route::post('/profile/update-avatar', [UserProfileController::class, 'updateAvatar'])->name('profile.update.avatar');
 
     Route::post('/profile/upload-avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.upload-avatar');
 });
@@ -496,12 +496,14 @@ Route::middleware(['auth', 'check.violations'])->group(function () {
 
 Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     // 🏠 Admin Dashboard - Thay đổi route này để gọi đến AdminController
-    Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])
         ->name('admin.dashboard');
 
     Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 
     Route::get('/following', [ProfileController::class, 'followingOfAdminList'])->name('admin.following');
+    // dat them
+    Route::get('/followers', [ProfileController::class, 'followersOfAdminList'])->name('admin.followers');
 
     // Thêm route cho yêu cầu nâng cấp tài khoản
     Route::get('/approvals', [App\Http\Controllers\Admin\UserController::class, 'roleUpgradeRequests'])->name('admin.approvals.index');

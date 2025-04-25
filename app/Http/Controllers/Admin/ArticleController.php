@@ -113,6 +113,25 @@ class ArticleController extends Controller
             'approved_by' => auth()->id(),
         ]);
 
+        // Cập nhật hoặc tạo bản ghi Approval
+        $approval = Approval::where('article_id', $article->article_id)->first();
+        if ($approval) {
+            $approval->update([
+                'status' => 'approved',
+                'approved_by' => auth()->id(),
+                'remarks' => 'Bài viết đã được duyệt',
+            ]);
+        } else {
+            Approval::create([
+                'article_id' => $article->article_id,
+                'type' => 'article',
+                'user_id' => $article->author_id,
+                'status' => 'approved',
+                'approved_by' => auth()->id(),
+                'remarks' => 'Bài viết đã được duyệt',
+            ]);
+        }
+
         // Lưu trạng thái sau khi cập nhật
         $afterState = [
             'status' => 'published',
@@ -846,23 +865,48 @@ class ArticleController extends Controller
             return redirect()->back()->with('error', 'Bài viết không hợp lệ để từ chối.');
         }
 
+        // Xác thực dữ liệu nhập vào
+        $request->validate([
+            'rejection_reason' => 'required|string|max:1000',
+        ]);
+
         // Lưu trạng thái trước khi cập nhật
         $beforeState = [
-            'status' => $article->status
+            'status' => $article->status,
+            'approved_by' => $article->approved_by
         ];
 
         $article->update([
             'status' => 'rejected',
+            'approved_by' => auth()->id(),
+            'rejection_reason' => $request->rejection_reason,
         ]);
+
+        // Cập nhật hoặc tạo bản ghi Approval
+        $approval = Approval::where('article_id', $article->article_id)->first();
+        if ($approval) {
+            $approval->update([
+                'status' => 'rejected',
+                'approved_by' => auth()->id(),
+                'remarks' => $request->rejection_reason,
+            ]);
+        } else {
+            Approval::create([
+                'article_id' => $article->article_id,
+                'type' => 'article',
+                'user_id' => $article->author_id,
+                'status' => 'rejected',
+                'approved_by' => auth()->id(),
+                'remarks' => $request->rejection_reason,
+            ]);
+        }
 
         // Lưu trạng thái sau khi cập nhật
         $afterState = [
             'status' => 'rejected',
-            'rejected_at' => now()->toDateTimeString()
+            'approved_by' => auth()->id(),
+            'rejection_reason' => $request->rejection_reason
         ];
-
-        // Lấy lý do từ chối nếu có
-        $reason = $request->input('rejection_reason', 'Không đạt yêu cầu');
 
         // Tạo log kiểm duyệt
         try {
@@ -874,12 +918,11 @@ class ArticleController extends Controller
                     'title' => $article->title,
                     'author_id' => $article->author_id,
                     'category_id' => $article->category_id,
-                    'action' => 'Từ chối bài viết',
-                    'reason' => $reason
+                    'action' => 'Từ chối bài viết'
                 ],
                 $beforeState,
                 $afterState,
-                'medium'
+                $request->rejection_reason
             );
         } catch (\Exception $e) {
             // Ghi log lỗi nhưng không làm gián đoạn luồng

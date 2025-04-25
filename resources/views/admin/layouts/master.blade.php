@@ -13,7 +13,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <title>@yield('title')</title>
-
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -37,10 +36,11 @@
             transition: opacity 0.3s ease; /* Adjusts the opacity transition duration */
         }
     </style>
+   
 
 </head>
-
-<body class="hold-transition light-skin sidebar-mini theme-primary fixed">
+{{-- dat them --}}
+<body class="hold-transition light-skin sidebar-mini theme-primary fixed" id="admin-body">
 
     <div class="wrapper">
         <div id="loader"></div>
@@ -90,6 +90,41 @@
 
     <!-- Flash Messages with SweetAlert2 -->
     @include('admin.layouts.partials.flash-messages')
+{{-- dat them --}}
+    <!-- Theme Persistence Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if dark-skin preference is stored in localStorage
+            const darkModePreference = localStorage.getItem('admin-dark-mode');
+            const body = document.getElementById('admin-body');
+
+            // Apply dark-skin if preference exists
+            if (darkModePreference === 'true') {
+                body.classList.remove('light-skin');
+                body.classList.add('dark-skin');
+
+                // Update the toggle switch state if it exists
+                const toggleSwitch = document.getElementById('toggle_left_sidebar_skin');
+                if (toggleSwitch) {
+                    toggleSwitch.checked = true;
+                }
+            }
+
+            // Listen for changes to the dark mode toggle
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.getAttribute('data-mainsidebarskin') === 'toggle') {
+                    // Store the preference when toggle is clicked
+                    if (body.classList.contains('dark-skin')) {
+                        localStorage.setItem('admin-dark-mode', 'true');
+                    } else {
+                        localStorage.setItem('admin-dark-mode', 'false');
+                    }
+                }
+            });
+        });
+    </script>
+    @yield('styles')
+    @yield('scripts')
 
 </body>
 

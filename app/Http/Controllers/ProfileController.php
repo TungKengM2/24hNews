@@ -81,6 +81,22 @@ class ProfileController extends Controller
         return view('admin.following', compact('followingUsers'));
     }
 
+    //followers admin dat them
+    public function followersOfAdminList()
+    {
+        $user = auth()->user();
+
+        // Lấy người theo dõi với phân trang
+        $followers = DB::table('follows')
+            ->join('users', 'follows.follower_id', '=', 'users.user_id')
+            ->where('follows.following_id', $user->user_id)
+            ->select('users.*', 'follows.created_at as followed_at')
+            ->orderBy('follows.created_at', 'desc')
+            ->paginate(10);
+
+        return view('admin.followers', compact('followers'));
+    }
+
     public function upgradeToAuthor()
     {
         $user = auth()->user();
@@ -372,16 +388,13 @@ class ProfileController extends Controller
     {
         // Validate file input
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:4096',
         ]);
 
         // Check if the file exists
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imagePath = $image->store(
-                'avatars',
-                'public'
-            ); // Store the image in the 'avatars' folder in the 'public' disk
+            $imagePath = $image->store('avatars', 'public'); // Store the image
 
             // Update the user's image path in the database
             $user = auth()->user();
@@ -391,14 +404,16 @@ class ProfileController extends Controller
             // Return the updated image URL
             return response()->json([
                 'success' => true,
-                'image_url' => asset('storage/' . $imagePath),
-                // Return the new image URL
+                'avatar_url' => asset('storage/' . $imagePath), // Return the new image URL
+                'message' => 'Ảnh đại diện đã được cập nhật thành công!',
+
             ]);
         }
 
+        // If no file uploaded, return error
         return response()->json([
             'success' => false,
-            'message' => 'No image file was uploaded.',
+            'message' => 'Không có tệp ảnh nào được tải lên.',
         ]);
     }
 

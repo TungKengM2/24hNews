@@ -18,7 +18,7 @@
                                 <span class="badge bg-info">Tổng số: {{ $violations->total() }} vi phạm</span>
                             </div>
                         </div>
-                        <form method="GET" action="{{ route('admin.violations.approves') }}" class="mb-3"
+                        {{-- <form method="GET" action="{{ route('admin.violations.approves') }}" class="mb-3"
                             style="width: 150px;">
                             <div class="input-group">
                                 <select name="status" class="form-select" onchange="this.form.submit()">
@@ -29,7 +29,7 @@
                                         Lý</option>
                                 </select>
                             </div>
-                        </form>
+                        </form> --}}
 
                         <!-- Hiển thị thông báo nếu có -->
                         @if (request('status'))
