@@ -178,12 +178,12 @@
                             <i class="fas fa-bell-slash text-secondary opacity-25" style="font-size: 24px;"></i>
                             <div class="text-secondary mt-2" style="font-size: 13px;">Không có thông báo mới</div>
                         </div>
-                        <div class="border-top">
+                        {{-- <div class="border-top">
                             <a href="#" class="d-block text-center text-primary text-decoration-none py-2"
                                 style="font-size: 13px;">
                                 Xem tất cả thông báo
                             </a>
-                        </div>
+                        </div> --}}
                     @endif
                 </ul>
             </li>

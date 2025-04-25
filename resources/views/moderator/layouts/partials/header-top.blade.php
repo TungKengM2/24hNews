@@ -168,12 +168,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="border-top">
+                        {{-- <div class="border-top">
                             <a href="#" class="d-block text-center text-primary text-decoration-none py-2"
                                 style="font-size: 13px;">
                                 Xem tất cả thông báo
                             </a>
-                        </div>
+                        </div> --}}
                     @endif
                 </ul>
             </li>
