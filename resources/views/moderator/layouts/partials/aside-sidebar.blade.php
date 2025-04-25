@@ -63,7 +63,7 @@
 
                         <li><a href="{{ route('moderator.articles.moderation-history.index') }}"><i
                                     class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lịch
-                                Sử Duyệt</a>
+                                Sử Kiểm Duyệt</a>
                         </li>
                     </ul>
 
