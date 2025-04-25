@@ -12,12 +12,12 @@
 
 </style>
     <main>
-        <section class="tc-category-header py-4 bg-light border-bottom">
-            <div class="container">
-                <div class="row align-items-center">
+        <section class="tc-post-title-style1 py-4  border-bottom">
+            <div class="container tc-post-title-style1">
+                <div class="row align-items-center tc-post-title-style1">
                     <div class="col-lg-8">
-                        <h4 class="mb-2">{{ $tag->name }}</h4>
-                        <p class="text-muted mb-0">{{ 'Khám phá các bài viết trong thẻ này' }}</p>
+                        <h4 class="mb-2 fw-bold">{{ $tag->name }}</h4>
+                        <p class=" fw-semibold mb-0">{{ 'Khám phá các bài viết trong thẻ này' }}</p>
                     </div>
                     <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
                         <nav aria-label="breadcrumb">
@@ -100,8 +100,8 @@
         <!-- ====== end ====== -->
 
         <!-- ====== start Latest news ====== -->
-        <section class="hr-section">
-            <div class="container">
+        <section class=" tc-post-title-style1">
+            <div class="container tc-post-title-style1">
                 <div class="section-content pt-50 pb-50 border-bottom border-1 brd-gray">
                     <div class="row gx-5">
                         <div class="col-lg-9">
@@ -187,15 +187,25 @@
 
                         </div>
                         <div class="col-lg-3">
-                            <div class="tc-widget-tags-style3">
+                            <div class="">
                                 <p class="color-000 text-uppercase mb-20 ltspc-1 fw-bold">Thẻ phổ biến</p>
-                                <div class="content">
+                                {{-- <div class="content">
                                     @foreach ($tags as $tag)
                                         <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}"
                                             class="btn border border-1 mt-20 py-2 px-3">
                                             {{ $tag->name }} ({{ $tag->published_articles_count }})
                                         </a>
                                     @endforeach
+                                </div> --}}
+                                <div class="tc-post-list-style1 p-3">
+                                    <div class="tc-post-list-style1 d-flex flex-wrap gap-2">
+
+                                        @foreach ($tags as $tag)
+                                        <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}" class="  btn btn-sm btn-light btn-outline-secondary">{{ $tag->name }} ({{ $tag->published_articles_count }})</a>
+
+                                    @endforeach
+
+                                    </div>
                                 </div>
                             </div>
                         </div>

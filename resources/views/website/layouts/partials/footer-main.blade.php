@@ -5,7 +5,7 @@
                 <div class="row align-items-center mb-4">
                     <div class="col-lg-3">
                         <div class="foot-logo">
-                            <h1>News24h</h1>
+                            <img src="{{ asset('images/logo24news.png') }}" alt="logo" width="150px">
                         </div>
                     </div>
                     <div class="col-lg-9">

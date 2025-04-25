@@ -70,6 +70,25 @@ class ModeratorArticleController extends Controller
             'approved_by' => auth()->id(),
         ]);
 
+        // Cập nhật hoặc tạo bản ghi Approval
+        $approval = Approval::where('article_id', $article->article_id)->first();
+        if ($approval) {
+            $approval->update([
+                'status' => 'approved',
+                'approved_by' => auth()->id(),
+                'remarks' => 'Bài viết đã được duyệt',
+            ]);
+        } else {
+            Approval::create([
+                'article_id' => $article->article_id,
+                'type' => 'article',
+                'user_id' => $article->author_id,
+                'status' => 'approved',
+                'approved_by' => auth()->id(),
+                'remarks' => 'Bài viết đã được duyệt',
+            ]);
+        }
+
         // Lưu trạng thái sau khi cập nhật
         $afterState = [
             'status' => 'published',
@@ -186,8 +205,16 @@ class ModeratorArticleController extends Controller
             'rejection_reason' => 'required|string|max:500',
         ]);
 
+        // Lưu trạng thái trước khi cập nhật
+        $beforeState = [
+            'status' => $article->status,
+            'approved_by' => $article->approved_by
+        ];
+
         $article->update([
             'status' => 'rejected',
+            'approved_by' => auth()->id(),
+            'rejection_reason' => $request->rejection_reason,
         ]);
 
         // Cập nhật hoặc tạo bản ghi Approval
@@ -207,6 +234,34 @@ class ModeratorArticleController extends Controller
                 'approved_by' => auth()->id(),
                 'remarks' => $request->rejection_reason,
             ]);
+        }
+
+        // Lưu trạng thái sau khi cập nhật
+        $afterState = [
+            'status' => 'rejected',
+            'approved_by' => auth()->id(),
+            'rejection_reason' => $request->rejection_reason
+        ];
+
+        // Tạo log kiểm duyệt
+        try {
+            ModerationLog::createLog(
+                'reject',
+                'article',
+                $article->article_id,
+                [
+                    'title' => $article->title,
+                    'author_id' => $article->author_id,
+                    'category_id' => $article->category_id,
+                    'action' => 'Từ chối bài viết'
+                ],
+                $beforeState,
+                $afterState,
+                $request->rejection_reason
+            );
+        } catch (\Exception $e) {
+            // Ghi log lỗi nhưng không làm gián đoạn luồng
+            Log::error('Lỗi khi tạo log kiểm duyệt: ' . $e->getMessage());
         }
 
         // Gửi thông báo cho tác giả
