@@ -59,81 +59,60 @@
                         <p class="color-000 text-uppercase mb-40 ltspc-1 lh-1">Tác giả nổi bật </p>
                         <div class="row">
                             @foreach ($topAuthors as $authorData)
-                                <div class="col-lg-4 col-md-4 mb-4">
-                                    <div class="columnist-card d-flex align-items-center">
-                                        <div
-                                            class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
-                                            <a
-                                                href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
-                                                <img src="{{ $authorData['author']->image ? asset('storage/' . $authorData['author']->image) : asset('/images/default-avatar.png') }}"
-                                                    alt="{{ $authorData['author']->username }}">
-                                            </a>
-<<<<<<< HEAD
-                                        </div>
-                                        <div class="info">
-                                            <h6 class="name fsz-20px mb-10">
-                                                <a
-                                                    href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
-                                                    {{ $authorData['author']->name ?? $authorData['author']->username }}
-                                                </a>
-                                            </h6>
-                                            <div class="rating mb-1">
-                                                <span class="text-warning">
-                                                    @for ($i = 0; $i < floor($authorData['rating']); $i++)
-                                                        <i class="la la-star" style="color: #ffc107;"></i>
-                                                    @endfor
-                                                    @if ($authorData['rating'] - floor($authorData['rating']) >= 0.5)
-                                                        <i class="la la-star-half-alt" style="color: #ffc107;"></i>
-                                                    @endif
-                                                </span>
-                                            </div>
-                                            <div class="jop-title">
-                                                <small class="fsz-13px color-999">Chuyên đề</small>
-                                                <p class="fsz-13px text-uppercase">{{ $authorData['specializes_in'] }}</p>
-                                            </div>
-=======
-                                        </h6>
-                                        <div class="rating mb-1">
-                                            <span class="text-warning">
-                                                @for ($i = 1; $i <= 5; $i++)
-                                                    @if ($i <= floor($authorData['rating']))
-                                                        <i class="la la-star text-warning"></i>
-                                                        
-                                                    @elseif ($i == ceil($authorData['rating']) && $authorData['rating'] - floor($authorData['rating']) > 0)
-                                                        @if ($authorData['rating'] - floor($authorData['rating']) >= 0.75)
-                                                            <i class="la la-star text-warning"></i>
-                                                            
-                                                        @elseif ($authorData['rating'] - floor($authorData['rating']) >= 0.25)
-                                                            <i class="la la-star-half-alt text-warning"></i>
-                                                            
-                                                        @else
-                                                            <i class="la la-star-o text-secondary"></i>
-                                                           
-                                                        @endif
-                                                    @else
-                                                        <i class="la la-star-o text-secondary"></i>
-                    
-                                                    @endif
-                                                @endfor
-                                                <span class="text-muted ms-2">({{ number_format($authorData['rating'], 1) }})</span>
-                                            </span>
-                                        </div>
-                                        <div class="jop-title">
-                                            <small class="fsz-13px color-999">Lĩnh vực chính</small>
-                                            <p class="fsz-13px text-uppercase">
-                                                @if(isset($authorData['specializes_slug']) && $authorData['specializes_slug'])
-                                                    <a href="{{ route('client.category.author.show', ['categorySlug' => $authorData['specializes_slug'], 'authorId' => $authorData['author']->user_id]) }}" class="text-primary">
-                                                        {{ $authorData['specializes_in'] }}
-                                                    </a>
-                                                @else
-                                                    {{ $authorData['specializes_in'] }}
-                                                @endif
-                                            </p>
->>>>>>> tungkeng
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
+    <div class="col-lg-4 col-md-4 mb-4">
+        <div class="columnist-card d-flex align-items-center">
+            <div class="img img-cover icon-100 rounded-circle overflow-hidden flex-lg-shrink-0 me-4">
+                <a href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
+                    <img src="{{ $authorData['author']->image ? asset('storage/' . $authorData['author']->image) : asset('/images/default-avatar.png') }}"
+                         alt="{{ $authorData['author']->username }}">
+                </a>
+            </div>
+            <div class="info">
+                <h6 class="name fsz-20px mb-10">
+                    <a href="{{ route('website.profileAuth', ['id' => $authorData['author']->user_id]) }}">
+                        {{ $authorData['author']->name ?? $authorData['author']->username }}
+                    </a>
+                </h6>
+
+                {{-- Rating --}}
+                <div class="rating mb-2">
+                    @for ($i = 1; $i <= 5; $i++)
+                        @if ($i <= floor($authorData['rating']))
+                            <i class="la la-star text-warning"></i>
+                        @elseif ($i == ceil($authorData['rating']) && $authorData['rating'] - floor($authorData['rating']) > 0)
+                            @if ($authorData['rating'] - floor($authorData['rating']) >= 0.75)
+                                <i class="la la-star text-warning"></i>
+                            @elseif ($authorData['rating'] - floor($authorData['rating']) >= 0.25)
+                                <i class="la la-star-half-alt text-warning"></i>
+                            @else
+                                <i class="la la-star-o text-secondary"></i>
+                            @endif
+                        @else
+                            <i class="la la-star-o text-secondary"></i>
+                        @endif
+                    @endfor
+                    <span class="text-muted ms-2">({{ number_format($authorData['rating'], 1) }})</span>
+                </div>
+
+                {{-- Specialization --}}
+                <div class="jop-title">
+                    <small class="fsz-13px color-999">Chuyên đề</small>
+                    <p class="fsz-13px text-uppercase mb-0">
+                        @if (!empty($authorData['specializes_slug']))
+                            <a href="{{ route('client.category.author.show', ['categorySlug' => $authorData['specializes_slug'], 'authorId' => $authorData['author']->user_id]) }}"
+                               class="text-primary">
+                                {{ $authorData['specializes_in'] }}
+                            </a>
+                        @else
+                            {{ $authorData['specializes_in'] }}
+                        @endif
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+@endforeach
+
                         </div>
                     </div>
                 </div>

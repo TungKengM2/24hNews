@@ -78,10 +78,8 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-
-
-        // top 4 bài viết nhiều Bluan nhất 30 ngày trở lại
-        $trendingPosts = Article::withCount('comments')
+        //bai viet moi nhâts
+        $NewsArticle = Article::withCount('comments') // Đếm số bình luận
             ->where('status', 'published')
             ->where('created_at', '>=', Carbon::now()->subDays(30))
             ->whereHas('category', function ($query) {
@@ -113,6 +111,7 @@ class HomeController extends Controller
         // Gom ID các bài đã có để tránh trùng
         $excludeIds = collect()
             ->merge($D1Articles->pluck('id'))
+            ->push(optional($NewsArticle)->id)
             ->merge($latestArticlesPerCategory->pluck('id'))
             ->merge($trendingPosts->pluck('id'))
             ->filter()
@@ -266,7 +265,7 @@ class HomeController extends Controller
                 'parentCategories' => $parentCategories ?? null,
                 'sportsArticles' => $sportsArticles ?? null,
                 'newsData' => $newsData ?? null,
-                
+                'NewsArticle' => $NewsArticle ?? null,
                 'journalists' => $journalists ?? null,
                 'trendingPosts' => $trendingPosts ?? null,
                 'featuredArticles' => $featuredArticles ?? null,
@@ -310,7 +309,7 @@ class HomeController extends Controller
             'followMessage',
             'topAuthors',
             'topTags',
-            
+            'NewsArticle',
             'latestArticlesPerCategory',
             'randomArticles',
             'weeklyTrendingArticles',
