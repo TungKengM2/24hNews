@@ -17,6 +17,7 @@ use App\Http\Controllers\EditRequestController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\CategoryUserController;
+use App\Http\Controllers\CategoryAuthorController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Author\AuthorController;
@@ -100,6 +101,10 @@ Route::middleware('auth')->group(function () {
 // Client Category
 Route::get('/danh-muc/{slug}/{childSlug?}', [CategoryUserController::class, 'index'])
     ->name('client.category.show');
+
+// Category with Author
+Route::get('/danh-muc/{categorySlug}/tac-gia/{authorId}', [CategoryAuthorController::class, 'index'])
+    ->name('client.category.author.show');
 
 Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.shows');
 
