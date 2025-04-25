@@ -52,14 +52,14 @@
             </div>
             <div class="col-lg-4">
                 <a href="{{ url('/') }}" class="logo-brand d-none d-lg-block">
-                    <img src="{{ asset('images/logo1.png') }}" alt="logo" width="150px">
+                    <img src="{{ asset('images/logo24news.png') }}" alt="logo" width="150px">
                 </a>
             </div>
             <div class="col-lg-4">
                 <div class="sub-darkLight">
                     <div class="row text-end align-items-center">
                         <div class="col-6">
-                            
+
                         </div>
                         <div class="col-6">
                             <div class="darkLight-btn">
@@ -84,10 +84,10 @@
         const lightIcon = document.getElementById('light-icon');
         const darkIcon = document.getElementById('dark-icon');
         const body = document.body;
-        
+
         // Kiểm tra trạng thái đã lưu trong localStorage
         const savedTheme = localStorage.getItem('theme');
-        
+
         // Áp dụng theme từ localStorage nếu có
         if (savedTheme === 'dark') {
             lightIcon.classList.remove('active');
@@ -98,7 +98,7 @@
             darkIcon.classList.remove('active');
             body.classList.remove('dark-theme');
         }
-        
+
         // Xử lý sự kiện khi click vào icon light mode
         lightIcon.addEventListener('click', function() {
             lightIcon.classList.add('active');
@@ -106,7 +106,7 @@
             body.classList.remove('dark-theme');
             localStorage.setItem('theme', 'light');
         });
-        
+
         // Xử lý sự kiện khi click vào icon dark mode
         darkIcon.addEventListener('click', function() {
             darkIcon.classList.add('active');
@@ -122,7 +122,7 @@
     <div class="offcanvas-header">
         <div class="col-lg-4">
             <a href="{{ url('/') }}" class="logo-brand d-none d-lg-block">
-                <img src="{{ asset('images/logo1.png') }}" alt="logo" width="100px">
+                <img src="{{ asset('images/logo24news.png') }}" alt="logo" width="100px">
             </a>
         </div>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -225,5 +225,5 @@
             </div>
         </div>
     </div>
-    
+
 </div>

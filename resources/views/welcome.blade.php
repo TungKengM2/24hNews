@@ -68,6 +68,7 @@
                                                 <img src="{{ $authorData['author']->image ? asset('storage/' . $authorData['author']->image) : asset('/images/default-avatar.png') }}"
                                                     alt="{{ $authorData['author']->username }}">
                                             </a>
+<<<<<<< HEAD
                                         </div>
                                         <div class="info">
                                             <h6 class="name fsz-20px mb-10">
@@ -90,6 +91,45 @@
                                                 <small class="fsz-13px color-999">Chuyên đề</small>
                                                 <p class="fsz-13px text-uppercase">{{ $authorData['specializes_in'] }}</p>
                                             </div>
+=======
+                                        </h6>
+                                        <div class="rating mb-1">
+                                            <span class="text-warning">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= floor($authorData['rating']))
+                                                        <i class="la la-star text-warning"></i>
+                                                        
+                                                    @elseif ($i == ceil($authorData['rating']) && $authorData['rating'] - floor($authorData['rating']) > 0)
+                                                        @if ($authorData['rating'] - floor($authorData['rating']) >= 0.75)
+                                                            <i class="la la-star text-warning"></i>
+                                                            
+                                                        @elseif ($authorData['rating'] - floor($authorData['rating']) >= 0.25)
+                                                            <i class="la la-star-half-alt text-warning"></i>
+                                                            
+                                                        @else
+                                                            <i class="la la-star-o text-secondary"></i>
+                                                           
+                                                        @endif
+                                                    @else
+                                                        <i class="la la-star-o text-secondary"></i>
+                    
+                                                    @endif
+                                                @endfor
+                                                <span class="text-muted ms-2">({{ number_format($authorData['rating'], 1) }})</span>
+                                            </span>
+                                        </div>
+                                        <div class="jop-title">
+                                            <small class="fsz-13px color-999">Lĩnh vực chính</small>
+                                            <p class="fsz-13px text-uppercase">
+                                                @if(isset($authorData['specializes_slug']) && $authorData['specializes_slug'])
+                                                    <a href="{{ route('client.category.author.show', ['categorySlug' => $authorData['specializes_slug'], 'authorId' => $authorData['author']->user_id]) }}" class="text-primary">
+                                                        {{ $authorData['specializes_in'] }}
+                                                    </a>
+                                                @else
+                                                    {{ $authorData['specializes_in'] }}
+                                                @endif
+                                            </p>
+>>>>>>> tungkeng
                                         </div>
                                     </div>
                                 </div>
@@ -251,13 +291,13 @@
                         <div class="col-lg-4 h-110">
                             <div class="tc-post-list-style1 bg-white p-3 rounded shadow h-100">
                                 <div class="tc-post-title-style1 mb-3">
-                                    <h5 class="text-dark fw-bold">Top Bài Viết Thảo Luận</h5>
+                                    <h5 class=" fw-bold">Top Bài Viết Thảo Luận</h5>
                                 </div>
                                 {{-- // top 4 bài viết nhiều Bluan nhất 30 ngày trở lại  --}}
                                 @if ($trendingPosts->isNotEmpty())
                                     @foreach ($trendingPosts as $index => $post)
                                         <a href="{{ Auth::check() ? route('articles.article', $post->slug) : url('/login-user') }}"
-                                            class="item hover-main d-block p-2 text-dark border-bottom mb-2">
+                                            class="item hover-main d-block p-2  border-bottom mb-2">
                                             <h2 class="num">{{ $index + 1 }}</h2>
                                             <div class="content">
                                                 <span class="fsz-12px text-muted text-uppercase mb-2">

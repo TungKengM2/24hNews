@@ -11,8 +11,11 @@
 
     <meta name="author" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo24news.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo24news.png') }}?v={{ time() }}">
     @yield('title')
     @include('website.layouts.partials.css')
+
 </head>
 
 <body class="home-style1 tc-author-page tc-single-post-creative-page">

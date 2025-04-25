@@ -78,8 +78,10 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        //bai viet moi nhâts
-        $NewsArticle = Article::withCount('comments') // Đếm số bình luận
+
+
+        // top 4 bài viết nhiều Bluan nhất 30 ngày trở lại
+        $trendingPosts = Article::withCount('comments')
             ->where('status', 'published')
             ->where('created_at', '>=', Carbon::now()->subDays(30))
             ->whereHas('category', function ($query) {
@@ -111,7 +113,6 @@ class HomeController extends Controller
         // Gom ID các bài đã có để tránh trùng
         $excludeIds = collect()
             ->merge($D1Articles->pluck('id'))
-            ->push(optional($NewsArticle)->id)
             ->merge($latestArticlesPerCategory->pluck('id'))
             ->merge($trendingPosts->pluck('id'))
             ->filter()
@@ -265,7 +266,7 @@ class HomeController extends Controller
                 'parentCategories' => $parentCategories ?? null,
                 'sportsArticles' => $sportsArticles ?? null,
                 'newsData' => $newsData ?? null,
-                'NewsArticle' => $NewsArticle ?? null,
+                
                 'journalists' => $journalists ?? null,
                 'trendingPosts' => $trendingPosts ?? null,
                 'featuredArticles' => $featuredArticles ?? null,
@@ -309,7 +310,7 @@ class HomeController extends Controller
             'followMessage',
             'topAuthors',
             'topTags',
-            'NewsArticle',
+            
             'latestArticlesPerCategory',
             'randomArticles',
             'weeklyTrendingArticles',
@@ -393,32 +394,30 @@ class HomeController extends Controller
             // Tính điểm trung bình
             $averageRating = number_format($totalStars / max($articles->count(), 1), 1);
 
+            // Lấy thông tin chuyên môn của tác giả
+            $topCategory = Article::where('author_id', $author->user_id)
+                ->where('status', 'published')
+                ->join('categories', 'articles.category_id', '=', 'categories.category_id')
+                ->select('categories.name', 'categories.slug', 'categories.category_id')
+                ->groupBy('categories.name', 'categories.slug', 'categories.category_id')
+                ->orderByRaw('COUNT(*) DESC')
+                ->first();
+
             return [
                 'author' => $author,
                 'rating' => $averageRating,
                 'articles_count' => $articles->count(),
-                'specializes_in' => $this->getAuthorSpecialization($author)
+                'specializes_in' => $topCategory ? $topCategory->name : 'Chưa xác định',
+                'specializes_slug' => $topCategory ? $topCategory->slug : null,
+                'specializes_id' => $topCategory ? $topCategory->category_id : null
             ];
         })
-            ->sortByDesc('rating')
-            ->take(5)
-            ->values();
+        ->sortByDesc('rating')
+        ->take(3)
+        ->values();
 
         return $ratedAuthors;
     }
 
 
-    private function getAuthorSpecialization($author)
-    {
-        // Lấy danh mục mà tác giả viết nhiều bài nhất
-        $topCategory = Article::where('author_id', $author->user_id)
-            ->where('status', 'published')
-            ->join('categories', 'articles.category_id', '=', 'categories.category_id')
-            ->select('categories.name')
-            ->groupBy('categories.name')
-            ->orderByRaw('COUNT(*) DESC')
-            ->first();
-
-        return $topCategory ? $topCategory->name : 'Chưa xác định';
-    }
 }
