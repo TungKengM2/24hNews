@@ -40,7 +40,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         #moderation-result {
@@ -94,7 +96,8 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <a href="{{ route('author.articles.versions', $article) }}" class="btn btn-info btn-sm me-2">
+                                    <a href="{{ route('author.articles.versions', $article) }}"
+                                        class="btn btn-info btn-sm me-2">
                                         <i class="si-history si"></i> Lịch sử phiên bản
                                     </a>
                                     <a href="{{ route('author.articles.index') }}" class="btn btn-default btn-sm">
@@ -138,8 +141,8 @@
 
                         <div class="row">
                             <div class="col-md-9">
-                                <form action="{{ route('author.articles.update', $article) }}" method="POST" enctype="multipart/form-data"
-                                    id="articleForm">
+                                <form action="{{ route('author.articles.update', $article) }}" method="POST"
+                                    enctype="multipart/form-data" id="articleForm">
                                     @csrf
                                     @method('PUT')
 
@@ -151,7 +154,7 @@
                                                 <input type="text" class="form-control" id="title" name="title"
                                                     value="{{ $article->title }}" required>
                                             </div>
-                                            
+
                                             <div class="col-md-6 mb-3">
                                                 <label for="slug" class="form-label">Đường dẫn</label>
                                                 <input type="text" class="form-control" id="slug" name="slug"
@@ -177,7 +180,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            
+
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Danh mục phụ</label>
                                                 <select name="subcategory_id" id="child_category"
@@ -202,7 +205,8 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
-                                                <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ mới
+                                                <small class="form-text text-muted">Bạn có thể chọn thẻ có sẵn hoặc nhập thẻ
+                                                    mới
                                                     (chấp nhận cả chữ và số).</small>
                                             </div>
                                         </div>
@@ -220,7 +224,7 @@
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
-                                            
+
                                             <div class="col-md-6">
                                                 <div class="mt-2" id="current-image-container">
                                                     @if ($article->thumbnail_url)
@@ -237,23 +241,32 @@
                                                 </div>
 
                                                 <div id="moderation-result" style="display: none;">
-                                                    <div id="moderation-loading" class="alert alert-info" style="display: none;">
-                                                        <strong><i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...</strong> Vui lòng đợi trong giây lát.
+                                                    <div id="moderation-loading" class="alert alert-info"
+                                                        style="display: none;">
+                                                        <strong><i class="fas fa-spinner fa-spin"></i> Đang kiểm
+                                                            tra...</strong> Vui lòng đợi trong giây lát.
                                                     </div>
-                                                    <div id="moderation-error" class="alert alert-danger" style="display: none;">
+                                                    <div id="moderation-error" class="alert alert-danger"
+                                                        style="display: none;">
                                                         <strong>Lỗi!</strong> <span id="error-message"></span>
                                                     </div>
-                                                    <div id="moderation-success" class="alert alert-success" style="display: none;">
-                                                        <strong><i class="fas fa-check-circle"></i> Thành công!</strong> Ảnh đã được kiểm duyệt và không vi phạm quy định.
+                                                    <div id="moderation-success" class="alert alert-success"
+                                                        style="display: none;">
+                                                        <strong><i class="fas fa-check-circle"></i> Thành công!</strong>
+                                                        Ảnh đã được kiểm duyệt và không vi phạm quy định.
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Content Section -->
                                     @php
-                                        $content = str_replace('src="../../storage', 'src="/storage', $article->content);
+                                        $content = str_replace(
+                                            'src="../../storage',
+                                            'src="/storage',
+                                            $article->content,
+                                        );
                                     @endphp
                                     <div class="form-section">
                                         <h4 class="form-section-title">Nội dung bài viết</h4>
@@ -282,12 +295,13 @@
                                     <input type="hidden" name="status" id="articleStatus" value="pending">
                                     <input type="hidden" name="author_id" value="{{ $article->author_id }}">
                                     <div class="action-buttons">
-                                        <button type="submit" class="btn btn-primary" id="submitButton">Cập nhật</button>
+                                        <button type="submit" class="btn btn-primary" id="submitButton">Cập
+                                            nhật</button>
                                         <button type="button" class="btn btn-secondary" id="saveDraft">Lưu nháp</button>
                                     </div>
                                 </form>
                             </div>
-                            
+
                             <div class="col-md-3">
                                 <div class="verification-criteria">
                                     <h4 class="verification-criteria-title">Tiêu chí xuất bản</h4>
@@ -297,7 +311,8 @@
                                                 <div class="criteria-icon failed">✗</div>
                                                 <div class="criteria-text criteria-tooltip">
                                                     Tiêu đề từ 50-60 ký tự <span id="current-title-length">(0 ký tự)</span>
-                                                    <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy đủ
+                                                    <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị
+                                                        đầy đủ
                                                         trên Google và tối ưu cho SEO</span>
                                                 </div>
                                             </li>
@@ -306,7 +321,8 @@
                                                 <div class="criteria-icon failed">✗</div>
                                                 <div class="criteria-text criteria-tooltip">
                                                     Chọn danh mục chính và phụ
-                                                    <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ phù
+                                                    <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục
+                                                        phụ phù
                                                         hợp với nội dung bài viết</span>
                                                 </div>
                                             </li>
@@ -314,15 +330,18 @@
                                                 <div class="criteria-icon failed">✗</div>
                                                 <div class="criteria-text criteria-tooltip">
                                                     Chọn 2-5 thẻ tag liên quan <span id="current-tag-count">(0 thẻ)</span>
-                                                    <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và tăng khả
+                                                    <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và
+                                                        tăng khả
                                                         năng xuất hiện trong tìm kiếm</span>
                                                 </div>
                                             </li>
-                                            <li class="criteria-item failed" id="criteria-thumbnail" data-target="thumbnail_url">
+                                            <li class="criteria-item failed" id="criteria-thumbnail"
+                                                data-target="thumbnail_url">
                                                 <div class="criteria-icon failed">✗</div>
                                                 <div class="criteria-text criteria-tooltip">
                                                     Ảnh đại diện chất lượng cao
-                                                    <span class="tooltip-text">Ảnh đại diện tối thiểu 1200x630px, rõ nét và vượt
+                                                    <span class="tooltip-text">Ảnh đại diện tối thiểu 1200x630px, rõ nét và
+                                                        vượt
                                                         qua kiểm duyệt</span>
                                                 </div>
                                             </li>
@@ -330,7 +349,8 @@
                                                 <div class="criteria-icon failed">✗</div>
                                                 <div class="criteria-text criteria-tooltip">
                                                     Nội dung từ 800-1500 từ <span id="current-word-count">(0 từ)</span>
-                                                    <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao hơn trong
+                                                    <span class="tooltip-text">Bài viết dài 800-1500 từ được đánh giá cao
+                                                        hơn trong
                                                         kết quả tìm kiếm và tối ưu cho người đọc</span>
                                                 </div>
                                             </li>
@@ -358,10 +378,25 @@
             // Khởi tạo Select2 với tính năng tags
             $('.select2-tags').select2({
                 tags: true,
-                tokenSeparators: [',', ' '],
+                tokenSeparators: [','],
                 placeholder: 'Chọn hoặc nhập thẻ mới',
                 allowClear: true,
                 maximumSelectionLength: 5,
+                matcher: function(params, data) {
+                    // Nếu người dùng đang nhập thẻ mới
+                    if (params.term && !data.id) {
+                        // Kiểm tra xem thẻ đã tồn tại trong danh sách chưa
+                        var existingTags = $(this).find('option').map(function() {
+                            return $(this).text().toLowerCase();
+                        }).get();
+
+                        // Nếu thẻ đã tồn tại => chọn thẻ cũ thay vì tạo mới
+                        if (existingTags.includes(params.term.toLowerCase())) {
+                            return null; // Không hiển thị trong dropdown
+                        }
+                    }
+                    return data;
+                }
             });
 
             // Khởi tạo Select2 cho danh mục cha
@@ -403,7 +438,7 @@
 
                     // Gọi AJAX để lấy danh sách danh mục con
                     $.ajax({
-                        url: '{{ route("author.ajax.subcategories") }}',
+                        url: '{{ route('author.ajax.subcategories') }}',
                         type: 'GET',
                         data: {
                             parent_id: parentId
@@ -612,7 +647,8 @@
 
             window.addEventListener('beforeunload', function(e) {
                 if (window.isFormEdited) {
-                    const confirmationMessage = 'Bạn có chắc chắn muốn rời khỏi trang? Những thay đổi chưa được lưu sẽ bị mất.';
+                    const confirmationMessage =
+                        'Bạn có chắc chắn muốn rời khỏi trang? Những thay đổi chưa được lưu sẽ bị mất.';
                     e.returnValue = confirmationMessage;
                     return confirmationMessage;
                 }
@@ -629,10 +665,10 @@
 
             document.getElementById('saveDraft').addEventListener('click', function() {
                 document.getElementById('articleStatus').value = 'draft';
-                
+
                 // Đặt isFormEdited = false để tránh cảnh báo rời trang
                 window.isFormEdited = false;
-                
+
                 // Hiển thị thông báo đang xử lý
                 Swal.fire({
                     title: 'Đang xử lý...',
@@ -645,7 +681,7 @@
                         Swal.showLoading();
                     }
                 });
-                
+
                 document.getElementById('articleForm').submit();
             });
 
@@ -690,13 +726,15 @@
 
                         const formData = new FormData();
                         formData.append('image', file);
-                        formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+                        formData.append('_token', document.querySelector('meta[name="csrf-token"]')
+                            .content);
 
                         fetch('/api/check-image-moderation', {
                                 method: 'POST',
                                 body: formData,
                                 headers: {
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                        .content,
                                 },
                             })
                             .then(response => {
@@ -715,7 +753,8 @@
                                     if (errorDiv) {
                                         errorDiv.style.display = 'block';
                                         if (successDiv) successDiv.style.display = 'none';
-                                        if (errorMessage) errorMessage.textContent = result.message || 'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
+                                        if (errorMessage) errorMessage.textContent = result.message ||
+                                            'Có lỗi xảy ra khi kiểm duyệt hình ảnh';
                                     }
                                     window.isImageValid = false;
                                     submitButton.disabled = true;
@@ -731,7 +770,8 @@
                                             violationMessages.push(result.reason[violation]);
                                         }
 
-                                        if (errorMessage) errorMessage.innerHTML = `Vi phạm: ${violationMessages.join(', ')}`;
+                                        if (errorMessage) errorMessage.innerHTML =
+                                            `Vi phạm: ${violationMessages.join(', ')}`;
                                     }
                                     window.isImageValid = false;
                                     submitButton.disabled = true;
@@ -768,7 +808,8 @@
 
                                 if (errorDiv && errorMessage) {
                                     errorDiv.style.display = 'block';
-                                    errorMessage.textContent = 'Có lỗi khi kiểm duyệt: ' + error.message;
+                                    errorMessage.textContent = 'Có lỗi khi kiểm duyệt: ' + error
+                                        .message;
                                 }
                                 submitButton.disabled = true;
                                 window.isImageValid = false;
@@ -850,7 +891,7 @@
                         if (result.isConfirmed) {
                             // Đặt isFormEdited = false để tránh cảnh báo rời trang
                             window.isFormEdited = false;
-                            
+
                             // Hiển thị thông báo đang xử lý
                             Swal.fire({
                                 title: 'Đang xử lý...',
@@ -863,17 +904,17 @@
                                     Swal.showLoading();
                                 }
                             });
-                            
+
                             document.getElementById('articleForm').submit();
                         }
                     });
                     return false;
                 }
-                
+
                 // Khi đạt tất cả tiêu chí
                 // Đặt isFormEdited = false để tránh cảnh báo rời trang
                 window.isFormEdited = false;
-                
+
                 // Hiển thị thông báo đang xử lý
                 e.preventDefault();
                 Swal.fire({
@@ -887,21 +928,21 @@
                         Swal.showLoading();
                     }
                 });
-                
+
                 setTimeout(() => {
                     document.getElementById('articleForm').submit();
                 }, 100);
-                
+
                 return false;
             });
-            
+
             // Hiển thị thông báo lỗi bằng SweetAlert2
             @if ($errors->any())
                 let errorMessages = '';
                 @foreach ($errors->all() as $error)
                     errorMessages += '- {{ $error }}<br>';
                 @endforeach
-                
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Có lỗi xảy ra!',
@@ -909,14 +950,14 @@
                     confirmButtonText: 'Đóng'
                 });
             @endif
-            
+
             // Hiển thị thông báo cảnh báo
             @if (session('warnings'))
                 let warningMessages = '';
                 @foreach (session('warnings') as $warning)
                     warningMessages += '- {{ $warning }}<br>';
                 @endforeach
-                
+
                 Swal.fire({
                     icon: 'warning',
                     title: 'Cảnh báo!',
@@ -924,7 +965,7 @@
                     confirmButtonText: 'Đóng'
                 });
             @endif
-            
+
             // Hiển thị thông báo thành công
             @if (session('success'))
                 Swal.fire({

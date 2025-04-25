@@ -489,82 +489,103 @@
                 <div class="content">
                     <div class="row">
                         @foreach ($topCategoriesWithArticles as $data)
+                            @php
+                                $category = $data['category'];
+                                $main = $data['main_article'] ?? null;
+                                $subs = $data['sub_articles'] ?? [];
+                            @endphp
+
                             <div class="col-lg-4">
                                 <p class="color-000 text-uppercase mb-30 ltspc-1">
-                                    <a
-                                        href="{{ route('categories.show', $data['category']->slug) }}">{{ $data['category']->name }}</a>
+                                    <a href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a>
                                     <i class="la la-angle-right ms-1"></i>
                                 </p>
 
                                 <div class="row">
                                     <div class="col-12 {{ !$loop->last ? 'border-1 border-end brd-gray' : '' }}">
-                                        <div class="tc-post-grid-default">
-                                            <div class="item">
-                                                <div class="img img-cover th-250">
-                                                    <img src="{{ asset('storage/' . $data['main_article']->thumbnail_url) }}"
-                                                        alt="{{ $data['main_article']->title }}">
-                                                </div>
-                                                <div class="content pt-20">
-                                                    <a href="{{ route('categories.show', $data['category']->slug) }}"
-                                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">
-                                                        {{ $data['category']->name }}
-                                                    </a>
-                                                    <h4 class="title ltspc--1 mb-10">
-                                                        <a
-                                                            href="{{ route('articles.article', $data['main_article']->slug) }}">
-                                                            {{ $data['main_article']->title }}
+                                        {{-- Main article --}}
+                                        @if ($main)
+                                            <div class="tc-post-grid-default">
+                                                <div class="item">
+                                                    <div class="img img-cover th-250">
+                                                        @if ($main->thumbnail_url)
+                                                            <img src="{{ asset('storage/' . $main->thumbnail_url) }}"
+                                                                alt="{{ $main->title }}">
+                                                        @endif
+                                                    </div>
+                                                    <div class="content pt-20">
+                                                        <a href="{{ route('categories.show', $category->slug) }}"
+                                                            class="news-cat color-999 fsz-13px text-uppercase mb-10">
+                                                            {{ $category->name }}
                                                         </a>
-                                                    </h4>
-                                                    <div class="text color-666">
-                                                        {{ \Illuminate\Support\Str::limit(strip_tags($data['main_article']->content), 100) }}
-                                                    </div>
-                                                    <div class="meta-bot lh-1 mt-20">
-                                                        <ul class="d-flex">
-                                                            <li class="date me-5">
-                                                                <a><i class="la la-calendar me-2"></i>
-                                                                    {{ $data['main_article']->created_at->format('M d, Y') }}</a>
-                                                            </li>
-                                                            <li class="comment">
-                                                                <a><i class="la la-comment me-2"></i>
-                                                                    {{ $data['main_article']->comments_count ?? 0 }}</a>
-                                                            </li>
-                                                        </ul>
+
+                                                        <h4 class="title ltspc--1 mb-10">
+                                                            <a
+                                                                href="{{ route('articles.article', $main->slug) }}">{{ $main->title }}</a>
+                                                        </h4>
+
+                                                        @if ($main->content)
+                                                            <div class="text color-666">
+                                                                {{ \Illuminate\Support\Str::limit(strip_tags($main->content), 100, '...') }}
+                                                            </div>
+                                                        @endif
+
+                                                        <div class="meta-bot lh-1 mt-20">
+                                                            <ul class="d-flex">
+                                                                <li class="date me-5">
+                                                                    <a><i class="la la-calendar me-2"></i>
+                                                                        {{ $main->created_at->format('M d, Y') }}</a>
+                                                                </li>
+                                                                <li class="comment">
+                                                                    <a><i class="la la-comment me-2"></i>
+                                                                        {{ $main->comments_count ?? 0 }}</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @endif
 
-                                        {{-- 2 bài phụ --}}
-                                        <div class="tc-post-list-style2">
-                                            <div class="items">
-                                                @foreach ($data['sub_articles'] as $article)
-                                                    <a href="{{ route('articles.article', $article->slug) }}"
-                                                        class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 {{ !$loop->last ? 'mt-15' : '' }}">
-                                                        <div class="row gx-3 align-items-center">
-                                                            <div class="col-4">
-                                                                <div class="img th-70 img-cover">
-                                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                                        alt="{{ $article->title }}">
+                                        {{-- Sub articles --}}
+                                        @if (count($subs))
+                                            <div class="tc-post-list-style2 mt-30">
+                                                <div class="items">
+                                                    @foreach ($subs as $article)
+                                                        <a href="{{ route('articles.article', $article->slug) }}"
+                                                            class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 {{ !$loop->last ? 'mt-15' : '' }}">
+                                                            <div class="row gx-3 align-items-center">
+                                                                <div class="col-4">
+                                                                    <div class="img th-70 img-cover">
+                                                                        @if ($article->thumbnail_url)
+                                                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                                                                alt="{{ $article->title }}">
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-8">
+                                                                    <div class="content">
+                                                                        <small
+                                                                            class="news-cat color-999 fsz-13px text-uppercase mb-10">
+                                                                            {{ $category->name }}
+                                                                        </small>
+                                                                        <h5 class="title ltspc--1">
+                                                                            {{ $article->title }}
+                                                                        </h5>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-8">
-                                                                <div class="content">
-                                                                    <small
-                                                                        class="news-cat color-999 fsz-13px text-uppercase mb-10">{{ $data['category']->name }}</small>
-                                                                    <h5 class="title ltspc--1">
-                                                                        {{ $article->title }}
-                                                                    </h5>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                @endforeach
+                                                        </a>
+                                                    @endforeach
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>
                         @endforeach
+
                     </div>
                 </div>
             </div>
