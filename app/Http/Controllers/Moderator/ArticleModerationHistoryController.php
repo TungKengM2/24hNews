@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Moderator;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\Category;
 use App\Models\ModerationLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,15 +41,15 @@ class ArticleModerationHistoryController extends Controller
         try {
             // Lấy ID của moderator hiện tại
             $currentModeratorId = Auth::id();
-            $moderator = Auth::user();
 
             // Lấy danh sách danh mục mà moderator này quản lý
-            $categoryIds = $moderator->categories()->pluck('category_id');
+            $categoryIds = Category::where('moderator_id', $currentModeratorId)->pluck('category_id');
 
             // 1. Lấy lịch sử kiểm duyệt
             $query = ModerationLog::query()
                 ->where('content_type', 'article')
                 ->where('moderator_id', $currentModeratorId) // Chỉ lấy lịch sử của moderator hiện tại
+                ->whereIn('action_type', ['approve', 'reject']) // Chỉ lấy các hành động phê duyệt và từ chối
                 ->with(['moderator']);
 
             // Lọc theo loại hành động
@@ -76,9 +77,10 @@ class ArticleModerationHistoryController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-            // 3. Lấy thông tin bài viết cho mỗi log
+            // 3. Lấy thông tin bài viết cho mỗi log (chỉ lấy bài viết có status published hoặc pending)
             $articleIds = $logs->pluck('content_id')->unique()->toArray();
             $articles = Article::whereIn('article_id', $articleIds)
+                ->whereIn('status', ['published', 'pending'])
                 ->get()
                 ->keyBy('article_id');
 

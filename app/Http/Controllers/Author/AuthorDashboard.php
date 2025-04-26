@@ -103,6 +103,10 @@
                ->count();
        }
 
+       // Kiểm tra xem tác giả có bị cấm không
+       $isBanned = $user->banned_until && now()->lessThan($user->banned_until);
+       $banEndTime = $isBanned ? $user->banned_until->format('H:i d/m/Y') : null;
+
        return view('author.dashboard', compact(
            'articleStats',
            'followerCount',
@@ -113,7 +117,9 @@
            'type',
            'interactionType',
            'timeBasedArticleStats',
-           'timeBasedInteractionStats'
+           'timeBasedInteractionStats',
+           'isBanned',
+           'banEndTime'
        ));
    }
 

@@ -91,7 +91,8 @@
                                                             <i class="la la-star-o text-secondary"></i>
                                                         @endif
                                                     @else
-                                                        <i class="la la-star-o text-secondary"></i>
+                                                         <i class="la la-star-o text-secondary"></i>
+
                                                     @endif
                                                 @endfor
                                                 <span
@@ -334,7 +335,7 @@
                                             </h2>
 
                                             <div class="text color-666">
-                                                {{ Str::limit(strip_tags($NewsArticle->preview_content ?? $NewsArticle->content), 100, '...') }}
+                                                {!! Str::limit(strip_tags($NewsArticle->preview_content ?? $NewsArticle->content), 100, '...') !!}
                                             </div>
 
                                             <div class="meta-bot lh-1 mt-40">
@@ -438,8 +439,8 @@
                                     <div class="swiper-slide">
                                         <div class="card-item">
                                             <div class="img img-cover">
-                                                <img src="{{ asset($article->thumbnail_url) }}"
-                                                    alt="{{ $article->title }}">
+                                                <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                                            alt="{{ $article->title }}">
                                                 <span class="num">{{ $index + 1 }}</span>
                                             </div>
                                             <div class="info">
@@ -459,7 +460,7 @@
                                                     <ul class="d-flex">
                                                         <li class="date me-4">
                                                             <i class="la la-calendar me-1"></i>
-                                                            {{ $article->created_at->format('M d, Y') }}
+                                                            {{ $NewsArticle->created_at->diffForHumans() }}
                                                         </li>
 
                                                         <li class="views">
@@ -526,7 +527,7 @@
 
                                                         @if ($main->content)
                                                             <div class="text color-666">
-                                                                {{ \Illuminate\Support\Str::limit(strip_tags($main->content), 100, '...') }}
+                                                                {!! \Illuminate\Support\Str::limit(strip_tags($main->content), 100, '...') !!}
                                                             </div>
                                                         @endif
 
@@ -534,7 +535,7 @@
                                                             <ul class="d-flex">
                                                                 <li class="date me-5">
                                                                     <a><i class="la la-calendar me-2"></i>
-                                                                        {{ $main->created_at->format('M d, Y') }}</a>
+                                                                        {{ $NewsArticle->created_at->diffForHumans() }}</a>
                                                                 </li>
                                                                 <li class="comment">
                                                                     <a><i class="la la-comment me-2"></i>
