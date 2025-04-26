@@ -56,6 +56,9 @@ use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorAr
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
+Route::get('/suggestions', [HomeController::class, 'suggestions'])->name('suggestions');
+Route::get('/category-suggestions', [HomeController::class, 'categorySuggestions'])->name('category.suggestions');
+Route::get('/tag-suggestions', [HomeController::class, 'tagSuggestions'])->name('tag.suggestions');
 // dat them
 
 
