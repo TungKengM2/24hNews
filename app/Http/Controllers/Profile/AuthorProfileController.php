@@ -66,7 +66,7 @@ class AuthorProfileController extends Controller
     public function showUser($id)
     {
         $user = User::findOrFail($id);
-        
+
         return view('website.profiles.user', compact('user'));
     }
 
@@ -85,15 +85,15 @@ class AuthorProfileController extends Controller
             $articles = Article::where('author_id', $author->user_id)
                 ->where('status', 'published')
                 ->get();
-            
+
             // Tính tổng điểm đánh giá
             $totalStars = $articles->sum(function ($article) {
                 return $article->rating_star;
             });
-            
+
             // Tính điểm trung bình
             $averageRating = number_format($totalStars / max($articles->count(), 1), 1);
-            
+
             return [
                 'author' => $author,
                 'rating' => $averageRating,
@@ -114,7 +114,7 @@ class AuthorProfileController extends Controller
         // Lấy danh mục mà tác giả viết nhiều bài nhất
         $topCategory = Article::where('author_id', $authorId)
             ->where('status', 'published')
-            ->join('categories', 'articles.category_id', '=', 'categories.id')
+            ->join('categories', 'articles.category_id', '=', 'categories.category_id')
             ->select('categories.name')
             ->groupBy('categories.name')
             ->orderByRaw('COUNT(*) DESC')

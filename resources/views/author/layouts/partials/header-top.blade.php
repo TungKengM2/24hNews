@@ -81,11 +81,11 @@
                     </ul>
                 </li>
 
-                <li class="footer p-3 text-center">
+                {{-- <li class="footer p-3 text-center">
                     <a href="{{ route('notifications.index') }}" class="text-primary" style="font-size: 14px;">
                         Xem tất cả thông báo
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </li>
 

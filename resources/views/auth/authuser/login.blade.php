@@ -10,6 +10,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/iofrm-theme21.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo24news.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo24news.png') }}?v={{ time() }}">
 </head>
 <body>
     <div class="form-body without-side">
@@ -61,7 +63,7 @@
                         </form>
                         <div class="other-links social-with-title">
                             <div class="text">Hoặc đăng nhập bằng</div>
-                            <a href="{{ url('auth/facebook') }}"><i class="fab fa-facebook-f"></i> Facebook</a>
+                            {{-- <a href="{{ url('auth/facebook') }}"><i class="fab fa-facebook-f"></i> Facebook</a> --}}
                             <a href="{{ url('auth/google') }}"><i class="fab fa-google"></i> Google</a>
                         </div>
 

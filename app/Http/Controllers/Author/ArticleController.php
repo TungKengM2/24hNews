@@ -63,7 +63,12 @@ class ArticleController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('author.articles.index', compact('articles', 'filter'));
+        // Kiểm tra xem tác giả có bị cấm không
+        $user = auth()->user();
+        $isBanned = $user->banned_until && now()->lessThan($user->banned_until);
+        $banEndTime = $isBanned ? $user->banned_until->format('H:i d/m/Y') : null;
+
+        return view('author.articles.index', compact('articles', 'filter', 'isBanned', 'banEndTime'));
     }
 
     public function update(Request $request, Article $article)
@@ -742,9 +747,14 @@ class ArticleController extends Controller
             ->get();
         $tags = Tag::all();
 
+        // Kiểm tra xem tác giả có bị cấm không
+        $user = auth()->user();
+        $isBanned = $user->banned_until && now()->lessThan($user->banned_until);
+        $banEndTime = $isBanned ? $user->banned_until->format('H:i d/m/Y') : null;
+
         return view(
             'author.articles.create',
-            compact('parentCategories', 'childCategories', 'authors', 'approvers', 'tags')
+            compact('parentCategories', 'childCategories', 'authors', 'approvers', 'tags', 'isBanned', 'banEndTime')
         );
     }
 
@@ -812,6 +822,11 @@ class ArticleController extends Controller
                 ->get();
         }
 
+        // Kiểm tra xem tác giả có bị cấm không
+        $user = auth()->user();
+        $isBanned = $user->banned_until && now()->lessThan($user->banned_until);
+        $banEndTime = $isBanned ? $user->banned_until->format('H:i d/m/Y') : null;
+
         return view(
             'author.articles.edit',
             compact(
@@ -822,7 +837,9 @@ class ArticleController extends Controller
                 'authors',
                 'approvers',
                 'tags',
-                'selectedTags'
+                'selectedTags',
+                'isBanned',
+                'banEndTime'
             )
         );
     }
@@ -861,6 +878,8 @@ class ArticleController extends Controller
         if ($article->thumbnail_url) {
             Storage::disk('public')->delete($article->thumbnail_url);
         }
+
+        $article->comments()->delete();
 
         $article->tags()->detach();
 

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Tag;
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\ArticleView;
 
 class CategoryUserController extends Controller
 {
@@ -26,7 +28,88 @@ class CategoryUserController extends Controller
                 ->firstOrFail();
         }
 
-        // Vì bảng categories sử dụng category_id làm khóa chính nên thay $category->id bằng $category->category_id
+        $categoryIds = $category->children->pluck('category_id')->push($category->category_id); // Lấy các category_id của danh mục hiện tại và các danh mục con
+
+         // 3. Breaking news (3 bài mới nhất)
+    $breakingNews = Article::where('status', 'published')
+    ->whereHas('category', fn($q) => $q->where('is_active', 1)->whereIn('category_id', $categoryIds))
+    ->orderByDesc('created_at')
+    ->limit(3)
+    ->get();
+
+// 4. Hàm chọn bài nổi bật trong 7 ngày gần nhất
+$selectTop = fn($exclude = []) => Article::withCount('comments')
+    ->where('status', 'published')
+    ->whereHas('category', fn($q) => $q->where('is_active', 1)->whereIn('category_id', $categoryIds))
+    ->whereNotIn('article_id', collect($exclude)->merge($breakingNews->pluck('article_id')))
+    ->where('created_at', '>=', Carbon::now()->subDays(7))
+    ->orderByDesc('comments_count')
+    ->orderByDesc('created_at')
+    ->limit(1)
+    ->first();
+
+// 5. Highlighted article
+$highlightedArticle = $selectTop();
+
+// Fallback nếu không có bài nào trong 7 ngày
+if (! $highlightedArticle) {
+    $highlightedArticle = Article::withCount('comments')
+        ->where('status', 'published')
+        ->whereHas('category', fn($q) => $q->where('is_active', 1)->whereIn('category_id', $categoryIds))
+        ->whereNotIn('article_id', $breakingNews->pluck('article_id'))
+        ->orderByDesc('created_at')
+        ->limit(1)
+        ->first();
+}
+
+// 6. Secondary article
+$highlightedId = optional($highlightedArticle)->article_id;
+
+$secondaryArticle = $selectTop([$highlightedId]);
+
+// Fallback nếu không có
+if (! $secondaryArticle) {
+    $secondaryArticle = Article::withCount('comments')
+        ->where('status', 'published')
+        ->whereHas('category', fn($q) => $q->where('is_active', 1)->whereIn('category_id', $categoryIds))
+        ->whereNotIn('article_id', array_filter([
+            $highlightedId,
+            ...$breakingNews->pluck('article_id')->toArray(),
+        ]))
+        ->orderByDesc('created_at')
+        ->limit(1)
+        ->first();
+}
+
+// 7. 3 bài khác (nebula nuggets)
+$excludedIds = collect([
+    optional($highlightedArticle)->article_id,
+    optional($secondaryArticle)->article_id,
+])->merge($breakingNews->pluck('article_id'))->filter()->unique();
+
+$nebulaNuggets = Article::withCount('comments')
+    ->where('status', 'published')
+    ->whereHas('category', fn($q) => $q->where('is_active', 1)->whereIn('category_id', $categoryIds))
+    ->whereNotIn('article_id', $excludedIds)
+    ->orderByDesc('comments_count')
+    ->orderByDesc('created_at')
+    ->limit(3)
+    ->get();
+
+// 8. 5 bài xem nhiều nhất (most viewed)
+$mostViewedArticles = Article::where('status', 'published')
+    ->whereNotIn('article_id', $excludedIds)
+    ->whereHas('category', fn($q) => $q->where('is_active', 1)->whereIn('category_id', $categoryIds))
+    ->orderByDesc('views')
+    ->take(6)
+    ->get();
+
+    $topMainArticle = $mostViewedArticles->take(2);    // 2 bài đầu
+$topSideArticles = $mostViewedArticles->slice(2);
+
+
+
+
 
         // Lấy các bài viết mới trong danh mục (theo category_id)
         $articlesNews = Article::where('category_id', $category->category_id)
@@ -68,16 +151,38 @@ class CategoryUserController extends Controller
             ->limit(4)
             ->first();
 
-        // Lấy bài viết phụ không trùng với bài nổi bật
-        $recentArticles = Article::where('category_id', $category->category_id)
-            ->where('status', 'published')
-            ->where('article_id', '!=', optional($featuredArticle)->article_id)
-            ->orderBy('views', 'desc')
-            ->whereHas('category', function ($query) {
-                $query->where('is_active', 1);
+        $userId = auth()->check() ? auth()->id() : null;
+        $userIp = request()->ip();
+
+        $viewedArticleIds = ArticleView::where(function ($query) use ($userId, $userIp) {
+            if ($userId) {
+                $query->where('user_id', $userId);
+            } else {
+                $query->whereNull('user_id')->where('anonymous', $userIp);
+            }
+        })
+            ->orderByDesc('viewed_at') // ← chính xác ở đây
+            ->pluck('article_id');
+
+
+        // Lấy bài viết đã xem, thuộc danh mục đang truy cập (bao gồm cả con nếu có)
+        $recentArticles = Article::where('status', 'published')
+            ->whereHas('category', function ($query) use ($category) {
+                $query->where('is_active', 1)
+                    ->where('category_id', $category->category_id);
+            })
+            ->where('article_id', '!=', optional($highlightedArticle)->article_id)
+            ->whereIn('article_id', function ($query) use ($userId, $userIp) {
+                $query->select('article_id')
+                    ->from('article_views')
+                    ->when($userId, fn($q) => $q->where('user_id', $userId))
+                    ->when(!$userId, fn($q) => $q->whereNull('user_id')->where('anonymous', $userIp))
+                    ->orderByDesc('viewed_at');
             })
             ->limit(4)
             ->get();
+
+
 
         // Lấy bài viết liên quan (không trùng với recentArticles và bài nổi bật)
         $relatedArticles = Article::where('category_id', $category->category_id)
@@ -155,7 +260,13 @@ class CategoryUserController extends Controller
             'category2'        => Category::all(), // Ví dụ: lấy tất cả các danh mục
             'articles'         => $articles,
             'articlesViews'    => $articlesViews,
-            'featuredArticle'  => $featuredArticle
+            'featuredArticle'  => $featuredArticle,
+            'breakingNews'    => $breakingNews,
+            'highlightedArticle' => $highlightedArticle,
+            'secondaryArticle' => $secondaryArticle,
+            'nebulaNuggets' => $nebulaNuggets,
+            'topSideArticles' => $topSideArticles,
+            'topMainArticle' => $topMainArticle
         ]);
     }
 }

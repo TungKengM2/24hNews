@@ -52,14 +52,14 @@
             </div>
             <div class="col-lg-4">
                 <a href="{{ url('/') }}" class="logo-brand d-none d-lg-block">
-                    <img src="{{ asset('images/logo1.png') }}" alt="logo" width="150px">
+                    <img src="{{ asset('images/logo24news.png') }}" alt="logo" width="150px">
                 </a>
             </div>
             <div class="col-lg-4">
                 <div class="sub-darkLight">
                     <div class="row text-end align-items-center">
                         <div class="col-6">
-                            
+
                         </div>
                         <div class="col-6">
                             <div class="darkLight-btn">
@@ -84,10 +84,10 @@
         const lightIcon = document.getElementById('light-icon');
         const darkIcon = document.getElementById('dark-icon');
         const body = document.body;
-        
+
         // Kiểm tra trạng thái đã lưu trong localStorage
         const savedTheme = localStorage.getItem('theme');
-        
+
         // Áp dụng theme từ localStorage nếu có
         if (savedTheme === 'dark') {
             lightIcon.classList.remove('active');
@@ -98,7 +98,7 @@
             darkIcon.classList.remove('active');
             body.classList.remove('dark-theme');
         }
-        
+
         // Xử lý sự kiện khi click vào icon light mode
         lightIcon.addEventListener('click', function() {
             lightIcon.classList.add('active');
@@ -106,7 +106,7 @@
             body.classList.remove('dark-theme');
             localStorage.setItem('theme', 'light');
         });
-        
+
         // Xử lý sự kiện khi click vào icon dark mode
         darkIcon.addEventListener('click', function() {
             darkIcon.classList.add('active');
@@ -122,7 +122,7 @@
     <div class="offcanvas-header">
         <div class="col-lg-4">
             <a href="{{ url('/') }}" class="logo-brand d-none d-lg-block">
-                <img src="{{ asset('images/logo1.png') }}" alt="logo" width="100px">
+                <img src="{{ asset('images/logo24news.png') }}" alt="logo" width="100px">
             </a>
         </div>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -158,14 +158,14 @@
             <!-- Phần liên hệ (giữ nguyên như cũ) -->
             <div class="col-lg-3">
                 <h6 class="color-000 text-uppercase mb-15 ltspc-1 fw-bold">
-                    Giới Thiệu News24h <i class="la la-angle-right ms-1"></i>
+                    Giới Thiệu 24News <i class="la la-angle-right ms-1"></i>
                 </h6>
                 <div class="text mb-4">
-                    News24h là nền tảng tin tức hàng đầu Việt Nam, cung cấp thông tin chính xác, đa dạng và cập nhật 24/7.
+                    24News là nền tảng tin tức hàng đầu Việt Nam, cung cấp thông tin chính xác, đa dạng và cập nhật 24/7.
                     Chúng tôi cam kết mang đến cho độc giả những tin tức chất lượng và đáng tin cậy từ mọi lĩnh vực.
                 </div>
                 <div class="mt-4">
-                    <h6 class="color-000 mb-3 fw-bold">Tại sao chọn News24h?</h6>
+                    <h6 class="color-000 mb-3 fw-bold">Tại sao chọn 24News?</h6>
                     <div class="d-flex align-items-center mb-3">
                         <div class="icon-box me-3 bg-light rounded p-2" style="color: var(--bs-primary);">
                             <i class="la la-newspaper-o text-primary"></i>
@@ -225,5 +225,5 @@
             </div>
         </div>
     </div>
-    
+
 </div>

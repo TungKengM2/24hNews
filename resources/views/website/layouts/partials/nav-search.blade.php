@@ -2,7 +2,7 @@
     <div class="row justify-content-center align-items-center gx-lg-5">
         <div class="col-lg-4">
             <div class="info">
-                <h1>News24h</h1>
+                <h1>24News</h1>
                 <p>Kênh hóng chuyện hàng đầu Việt Nam .</p>
             </div>
         </div>
@@ -28,7 +28,7 @@
             document.getElementById('searchForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const keyword = this.querySelector('input[name="keyword"]').value.trim();
-                
+
                 if (!keyword) {
                     alert('Vui lòng nhập từ khóa để tìm kiếm');
                     keyword.focus();
@@ -45,7 +45,7 @@
                     .then(response => response.json())
                     .then(data => {
                         const resultsList = document.getElementById('searchResultsList');
-                        
+
                         if (data.results && data.results.length > 0) {
                             let html = '<ul>';
                             data.results.forEach(result => {

@@ -120,8 +120,8 @@
                             <a href="{{ route('admin.violations.approves') }}" style="position: relative;">
                                 <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                 Kiểm Duyệt Báo Cáo
-                                @if($pendingViolationsCount > 0)
-                                    <x-notification-badge :count="$pendingViolationsCount" />
+                                @if($pendingViolations > 0)
+                                    <x-notification-badge :count="$pendingViolations" />
                                 @endif
                             </a>
                         </li>
