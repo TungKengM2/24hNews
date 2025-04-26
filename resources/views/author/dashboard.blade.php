@@ -580,42 +580,32 @@
                 filterForm.submit();
             });
 
-            // Nút Hôm qua
-            document.getElementById('yesterdayFilter').addEventListener('click', function () {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-
-                const formattedDate = yesterday.toISOString().split('T')[0];
-                dateFromInput.value = formattedDate;
-                dateToInput.value = formattedDate;
-                filterForm.submit();
-            });
-
-            // Nút 7 ngày qua
-            document.getElementById('lastWeekFilter').addEventListener('click', function () {
+            // Xử lý thay đổi loại hiển thị (ngày, tháng, năm)
+            viewTypeSelect.addEventListener('change', function() {
                 const today = new Date();
-                const lastWeekStart = new Date();
-                lastWeekStart.setDate(today.getDate() - 7);
-                const lastWeekEnd = new Date();
-                lastWeekEnd.setDate(today.getDate() - 1);
+                const selectedValue = this.value;
 
-                dateFromInput.value = lastWeekStart.toISOString().split('T')[0];
-                dateToInput.value = lastWeekEnd.toISOString().split('T')[0];
-                filterForm.submit();
+                // Tự động điều chỉnh khoảng thời gian dựa trên loại hiển thị
+                if (selectedValue === 'daily') {
+                    // Nếu chọn theo ngày, chỉ hiển thị ngày hôm nay
+                    dateFromInput.value = today.toISOString().split('T')[0];
+                    dateToInput.value = today.toISOString().split('T')[0];
+                } else if (selectedValue === 'monthly') {
+                    // Nếu chọn theo tháng, hiển thị 30 ngày gần nhất
+                    const startDate = new Date();
+                    startDate.setDate(today.getDate() - 30);
+                    dateFromInput.value = startDate.toISOString().split('T')[0];
+                    dateToInput.value = today.toISOString().split('T')[0];
+                } else if (selectedValue === 'yearly') {
+                    // Nếu chọn theo năm, hiển thị 12 tháng gần nhất
+                    const startDate = new Date();
+                    startDate.setMonth(today.getMonth() - 12);
+                    dateFromInput.value = startDate.toISOString().split('T')[0];
+                    dateToInput.value = today.toISOString().split('T')[0];
+                }
             });
 
-            // Nút 30 ngày qua
-            document.getElementById('lastMonthFilter').addEventListener('click', function () {
-                const today = new Date();
-                const lastMonthStart = new Date();
-                lastMonthStart.setDate(today.getDate() - 30);
-                const lastMonthEnd = new Date();
-                lastMonthEnd.setDate(today.getDate() - 1);
 
-                dateFromInput.value = lastMonthStart.toISOString().split('T')[0];
-                dateToInput.value = lastMonthEnd.toISOString().split('T')[0];
-                filterForm.submit();
-            });
 
             // Xử lý thông báo
             @if (session('error'))
