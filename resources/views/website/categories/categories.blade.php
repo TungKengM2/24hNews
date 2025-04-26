@@ -175,7 +175,7 @@
                                             </a>
                                         </h2>
                                         <div class="text color-666 mb-20">
-                                            {{ Str::limit($highlightedArticle->preview_content ?? strip_tags($highlightedArticle->content), 180) }}
+                                            {!! Str::limit($highlightedArticle->preview_content ?? strip_tags($highlightedArticle->content), 180) !!}
                                         </div>
                                         <div class="meta-bot fsz-13px color-666 mb-40">
                                             <ul class="d-flex">
@@ -183,7 +183,7 @@
                                                     <i class="la la-calendar me-2"></i>
                                                     {{ \Carbon\Carbon::parse($highlightedArticle->created_at)->translatedFormat('d \t\há\n\g m, Y') }}
                                                 </li>
-                                                
+
                                                 <li class="author me-5">
                                                     <i class="la la-user me-2"></i> by <span class="color-000">
                                                         {{ $highlightedArticle->author->name ?? 'Admin' }}
@@ -227,7 +227,7 @@
                                             </a>
                                         </h2>
                                         <div class="text color-666 mb-20">
-                                            {{ Str::limit($secondaryArticle->preview_content ?? strip_tags($secondaryArticle->content), 180) }}
+                                            {!! Str::limit($secondaryArticle->preview_content ?? strip_tags($secondaryArticle->content), 180) !!}
                                         </div>
                                         <div class="meta-bot fsz-13px color-666 mb-40">
                                             <ul class="d-flex">
@@ -272,7 +272,7 @@
                                 <div class="item">
                                     <div class="content">
                                         <div class="tags mb-20">
-                                           
+
                                             @if ($nugget->category)
                                                 <a href="">
                                                     {{ $nugget->category->name }}
@@ -291,7 +291,7 @@
                                                         <i class="la la-calendar me-2"></i>
                                                         {{ \Carbon\Carbon::parse($nugget->created_at)->translatedFormat('d \t\há\n\g m, Y') }}
 
-                                                       
+
                                                     </a>
                                                 </li>
                                                 <li class="comment">
@@ -363,7 +363,7 @@
                                                                                                     class="la la-calendar me-2"></i>
                                                                                                     {{ \Carbon\Carbon::parse($topMainArticles->created_at)->translatedFormat('d \t\há\n\g m, Y') }}
 
-                                                                                              
+
                                                                                             </li>
                                                                                             <li class="author me-4">
                                                                                                 <i
@@ -424,7 +424,7 @@
                                                                     </div>
                                                                 </div>
                                                             @endforeach
-                                                           
+
                                                         </div>
                                                     </div>
                                                 </div>
