@@ -152,25 +152,70 @@
 
                 </div>
 
+                <!-- Bộ lọc thống kê -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">Bộ lọc thống kê</h4>
+                            </div>
+                            <div class="box-body">
+                                <form action="{{ route('author.dashboard') }}" method="GET" id="filterForm">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label for="date_from">Từ ngày</label>
+                                            <input type="date" class="form-control" id="date_from" name="date_from"
+                                                value="{{ request('date_from') }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="date_to">Đến ngày</label>
+                                            <input type="date" class="form-control" id="date_to" name="date_to"
+                                                value="{{ request('date_to') }}">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="view_type">Hiển thị theo</label>
+                                            <select class="form-control" id="view_type" name="view_type">
+                                                <option value="daily" {{ request('view_type', 'daily') === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                                <option value="monthly" {{ request('view_type') === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                                <option value="yearly" {{ request('view_type') === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>&nbsp;</label>
+                                            <div class="d-flex">
+                                                <button type="submit" class="btn btn-primary me-2">Lọc</button>
+                                                <button type="button" class="btn btn-secondary me-2" id="resetFilter">Đặt lại</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hiển thị ngày bắt đầu và ngày kết thúc -->
+                @if(request('date_from') || request('date_to'))
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <p class="mb-0">
+                                    <strong>Khoảng thời gian:</strong>
+                                    {{ request('date_from') ? \Carbon\Carbon::parse(request('date_from'))->format('d/m/Y') : 'Không có' }}
+                                    đến
+                                    {{ request('date_to') ? \Carbon\Carbon::parse(request('date_to'))->format('d/m/Y') : 'Không có' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Time-based statistics section -->
                 <div class="row">
                     <div class="col-12 col-xl-6">
                         <div class="box">
-                            <div class="box-header with-border d-flex align-items-center justify-content-between">
+                            <div class="box-header with-border">
                                 <h4 class="box-title">Thống kê bài viết</h4>
-                                <form method="GET" action="{{ route('author.dashboard') }}"
-                                    class="d-flex align-items-center">
-                                    <label for="article_type" class="me-2">Hiển thị:</label>
-                                    <select class="form-select w-auto" id="article_type" name="article_type"
-                                        onchange="this.form.submit()">
-                                        <option value="daily" {{ ($type ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo
-                                            ngày</option>
-                                        <option value="monthly" {{ ($type ?? 'daily') === 'monthly' ? 'selected' : '' }}>
-                                            Theo tháng</option>
-                                        <option value="yearly" {{ ($type ?? 'daily') === 'yearly' ? 'selected' : '' }}>Theo
-                                            năm</option>
-                                    </select>
-                                </form>
                             </div>
                             <div class="box-body">
                                 <canvas id="articleStatsChart" width="400" height="200"></canvas>
@@ -183,24 +228,8 @@
 
                     <div class="col-12 col-xl-6">
                         <div class="box">
-                            <div class="box-header with-border d-flex align-items-center justify-content-between">
+                            <div class="box-header with-border">
                                 <h4 class="box-title">Thống kê tương tác</h4>
-                                <form method="GET" action="{{ route('author.dashboard') }}"
-                                    class="d-flex align-items-center">
-                                    <label for="interaction_type" class="me-2">Hiển thị:</label>
-                                    <select class="form-select w-auto" id="interaction_type" name="interaction_type"
-                                        onchange="this.form.submit()">
-                                        <option value="daily"
-                                            {{ ($interactionType ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo ngày
-                                        </option>
-                                        <option value="monthly"
-                                            {{ ($interactionType ?? 'daily') === 'monthly' ? 'selected' : '' }}>Theo tháng
-                                        </option>
-                                        <option value="yearly"
-                                            {{ ($interactionType ?? 'daily') === 'yearly' ? 'selected' : '' }}>Theo năm
-                                        </option>
-                                    </select>
-                                </form>
                             </div>
                             <div class="box-body">
                                 <canvas id="interactionStatsChart" width="400" height="200"></canvas>
@@ -535,13 +564,60 @@
                 likes: likesData,
                 comments: commentsData
             };
-        });
-    </script>
-@endsection
 
-@section('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+            // Xử lý bộ lọc
+            const filterForm = document.getElementById('filterForm');
+            const dateFromInput = document.getElementById('date_from');
+            const dateToInput = document.getElementById('date_to');
+            const viewTypeSelect = document.getElementById('view_type');
+            const resetButton = document.getElementById('resetFilter');
+
+            // Xử lý nút Đặt lại
+            resetButton.addEventListener('click', function () {
+                dateFromInput.value = '';
+                dateToInput.value = '';
+                viewTypeSelect.value = 'daily'; // Mặc định về "Theo ngày"
+                filterForm.submit();
+            });
+
+            // Nút Hôm qua
+            document.getElementById('yesterdayFilter').addEventListener('click', function () {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+
+                const formattedDate = yesterday.toISOString().split('T')[0];
+                dateFromInput.value = formattedDate;
+                dateToInput.value = formattedDate;
+                filterForm.submit();
+            });
+
+            // Nút 7 ngày qua
+            document.getElementById('lastWeekFilter').addEventListener('click', function () {
+                const today = new Date();
+                const lastWeekStart = new Date();
+                lastWeekStart.setDate(today.getDate() - 7);
+                const lastWeekEnd = new Date();
+                lastWeekEnd.setDate(today.getDate() - 1);
+
+                dateFromInput.value = lastWeekStart.toISOString().split('T')[0];
+                dateToInput.value = lastWeekEnd.toISOString().split('T')[0];
+                filterForm.submit();
+            });
+
+            // Nút 30 ngày qua
+            document.getElementById('lastMonthFilter').addEventListener('click', function () {
+                const today = new Date();
+                const lastMonthStart = new Date();
+                lastMonthStart.setDate(today.getDate() - 30);
+                const lastMonthEnd = new Date();
+                lastMonthEnd.setDate(today.getDate() - 1);
+
+                dateFromInput.value = lastMonthStart.toISOString().split('T')[0];
+                dateToInput.value = lastMonthEnd.toISOString().split('T')[0];
+                filterForm.submit();
+            });
+
+            // Xử lý thông báo
             @if (session('error'))
                 Swal.fire({
                     icon: 'error',
