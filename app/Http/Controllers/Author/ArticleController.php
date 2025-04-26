@@ -879,6 +879,8 @@ class ArticleController extends Controller
             Storage::disk('public')->delete($article->thumbnail_url);
         }
 
+        $article->comments()->delete();
+
         $article->tags()->detach();
 
         $article->delete();
