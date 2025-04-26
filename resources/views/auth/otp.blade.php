@@ -8,6 +8,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/fontawesome-all.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/iofrm-style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('authuser/css/iofrm-theme21.css') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/24news.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/24news.png') }}?v={{ time() }}">
+
     <style>
         .countdown {
             font-size: 1.2em;
@@ -75,24 +78,24 @@
                     <div class="form-items">
                         <h3>Xác nhận OTP</h3>
                         <p>Vui lòng nhập mã OTP đã được gửi đến email của bạn.</p>
-                        
+
                         @if (session('status'))
                             <div class="alert alert-success">{{ session('status') }}</div>
                         @endif
-                    
-                       
-                        
+
+
+
                         <form action="{{ route('otp.verify.process') }}" method="POST">
                             @csrf
-                            <input class="form-control @error('otp') is-invalid @enderror" 
-                                   type="text" 
-                                   name="otp" 
-                                   id="otp" 
-                                   inputmode="numeric" 
-                                   pattern="\d{6}" 
+                            <input class="form-control @error('otp') is-invalid @enderror"
+                                   type="text"
+                                   name="otp"
+                                   id="otp"
+                                   inputmode="numeric"
+                                   pattern="\d{6}"
                                    maxlength="6"
-                                   required 
-                                   placeholder="Nhập 6 chữ số OTP" 
+                                   required
+                                   placeholder="Nhập 6 chữ số OTP"
                                    autofocus
                                    value="{{ old('otp') }}">
                             @error('otp')
@@ -100,13 +103,13 @@
                                     {{ $message }}
                                 </div>
                             @enderror
-                            
+
                             <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Xác nhận OTP</button>
                                 <a href="{{ route('loginuser') }}">Quay lại đăng nhập</a>
                             </div>
                         </form>
-                        
+
                         <div class="other-links">
                             <span>Bạn chưa nhận được mã?</span>
                             <div class="countdown" id="countdown">60</div>
@@ -126,11 +129,11 @@
         let timeLeft = 60;
         const countdownEl = document.getElementById('countdown');
         const resendBtn = document.getElementById('resendBtn');
-        
+
         const countdown = setInterval(() => {
             timeLeft--;
             countdownEl.textContent = timeLeft;
-            
+
             if (timeLeft <= 0) {
                 clearInterval(countdown);
                 countdownEl.style.display = 'none';
@@ -156,7 +159,7 @@
                     countdownEl.style.display = 'block';
                     countdownEl.textContent = timeLeft;
                     resendBtn.disabled = true;
-                    
+
                     // Hiển thị thông báo thành công
                     alert('Mã OTP mới đã được gửi đến email của bạn.');
                 } else {

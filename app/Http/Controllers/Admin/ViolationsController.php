@@ -73,30 +73,29 @@ class ViolationsController extends Controller
 
         // Tăng số lần vi phạm của người dùng (theo cách động)
         $user = User::find($comment->user_id);
-        
 
-            if ($user) {
-                $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
-                $realViolation = max(0, $user->violation_count - $daysSinceLast);
-                $realViolation += 1;
 
-                $user->violation_count = $realViolation;
-                $user->last_violation_at = now();
+        if ($user) {
+            $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
+            $realViolation = max(0, $user->violation_count - $daysSinceLast);
+            $realViolation += 1;
 
-                if ($realViolation >= 5) {
-                    $user->banned_until = now()->addDays(3);
-                } elseif ($realViolation >= 3) {
-                    $user->banned_until = now()->addHours(24);
-                }
-                $user->save();
+            $user->violation_count = $realViolation;
+            $user->last_violation_at = now();
+
+            if ($realViolation >= 5) {
+                $user->banned_until = now()->addDays(3);
+            } elseif ($realViolation >= 3) {
+                $user->banned_until = now()->addHours(24);
             }
-        
+            $user->save();
+        }
+
 
         $usersToNotify = User::whereIn('violation_count', [3, 5])->get();
         foreach ($usersToNotify as $user) {
-            Notification::route('database', $user->id)->notify(new UserViolationAlert($user));
+            $user->notify(new UserViolationAlert($user));
         }
-
         // Xử lý các bình luận con
         $childComments = Comment::where('parent_id', $comment->comment_id)->get();
         if ($childComments->isNotEmpty()) {
@@ -116,20 +115,24 @@ class ViolationsController extends Controller
 
 
 
-    public function resolves(Violation $violation)
+    public function resolves(Request $request, Violation $violation)
     {
+        // Validate input lý do
+        $request->validate(['reason' => 'required|string|max:1000']);
+
+        // Kiểm tra trạng thái
         if ($violation->status !== 'pending') {
             return back()->with('error', 'Vi phạm không còn trong trạng thái chờ duyệt!');
         }
 
+        // Tìm bài viết theo reference_id
         $article = Article::where('article_id', $violation->reference_id)->first();
         if (!$article) {
             return back()->with('error', 'Không tìm thấy bài viết!');
         }
 
-        $user = User::find($article->user_id);
-
-
+        // Cập nhật số lần vi phạm và thời gian của user
+        $user = User::find($article->author_id);
         if ($user) {
             $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
             $realViolation = max(0, $user->violation_count - $daysSinceLast);
@@ -143,24 +146,24 @@ class ViolationsController extends Controller
             } elseif ($realViolation >= 3) {
                 $user->banned_until = now()->addHours(24);
             }
+
             $user->save();
         }
-
         // Đổi bài viết thành bản nháp
-        $article->status = 'draft';
-        $article->save();
+        $article->update(['status' => 'draft']);
 
-        // Gửi thông báo cho tác giả
-        $detectedWord = $violation->detected_word;
+        // Gửi thông báo cho tác giả với lý do
         $author = $article->author;
-        $author->notify(new ArticleStatusChangedNotification($article, $detectedWord));
+        $author->notify(new ArticleStatusChangedNotification(
+            $article,
+            $violation->detected_word,
+            $request->reason
+        ));
 
-        // Xóa vi phạm
+        // Xóa violation sau khi xử lý
         $violation->delete();
 
-        $finalMessage = 'Vi phạm đã được giải quyết.';
-
-
-        return back()->with('success', $finalMessage);
+        // Trả về thông báo thành công
+        return back()->with('success', 'Vi phạm đã được giải quyết với lý do: ' . $request->reason);
     }
 }

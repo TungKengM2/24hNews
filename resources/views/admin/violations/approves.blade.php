@@ -46,7 +46,7 @@
                                 <span class="badge bg-info">Tổng số: {{ $violations->total() }} vi phạm</span>
                             </div>
                         </div>
-                        <form method="GET" action="{{ route('admin.violations.approves') }}" class="mb-3"
+                        {{-- <form method="GET" action="{{ route('admin.violations.approves') }}" class="mb-3"
                             style="width: 150px;">
                             <div class="input-group">
                                 <select name="status" class="form-select" onchange="this.form.submit()">
@@ -57,7 +57,7 @@
                                         Lý</option>
                                 </select>
                             </div>
-                        </form>
+                        </form> --}}
 
                         <!-- Hiển thị thông báo nếu có -->
                         @if (request('status'))
@@ -102,8 +102,17 @@
                                         <tr>
                                             <td>{{ $violation->violation_id }}</td>
                                             <td>
-                                                <strong>{{ $violation->type }}</strong>
+                                                <strong>
+                                                    @if ($violation->type === 'comment')
+                                                        Bình luận
+                                                    @elseif ($violation->type === 'article')
+                                                        Bài viết
+                                                    @else
+                                                        {{ $violation->type }}
+                                                    @endif
+                                                </strong>
                                             </td>
+
                                             <td class="text-center">
                                                 <button class="btn btn-info btn-sm" data-bs-toggle="modal"
                                                     data-bs-target="#violationDetailsModal{{ $violation->violation_id }}">
@@ -156,7 +165,7 @@
                                                                 <button type="submit" class="btn btn-success btn-sm"
                                                                     title="Giải quyết vi phạm"
                                                                     onclick="return confirm('Bạn có chắc chắn muốn giải quyết vi phạm này không?')">
-                                                                    <i class="fa fa-check"></i> Giải quyết vi phạm
+                                                                    <i class="fa fa-check"></i>
                                                                 </button>
                                                             </form>
 
@@ -167,7 +176,7 @@
                                                                 <button type="submit" class="btn btn-danger btn-sm"
                                                                     title="Từ chối vi phạm"
                                                                     onclick="return confirm('Bạn có chắc chắn muốn từ chối vi phạm này không?')">
-                                                                    <i class="fa fa-times"></i> Từ chối vi phạm
+                                                                    <i class="fa fa-times"></i>
                                                                 </button>
                                                             </form>
                                                         @elseif ($violation->type === 'article')
@@ -176,21 +185,22 @@
                                                                 method="POST" class="d-inline">
                                                                 @csrf
                                                                 @method('PATCH')
-                                                                <button type="submit" class="btn btn-primary btn-sm"
-                                                                    title="Giải quyết vi phạm "
-                                                                    onclick="return confirm('Bạn có chắc chắn muốn giải quyết vi phạm bài viết này không?')">
-                                                                    <i class="fa fa-check"></i> Giải quyết vi phạm
-                                                                </button>
+                                                                <button type="button" class="btn btn-success btn-sm"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#resolveModal"
+                                                                data-route="{{ route('violations.resolves', $violation) }}">
+                                                            <i class="fa fa-check"></i>
+                                                        </button>
                                                             </form>
 
                                                             <form action="{{ route('violations.reject', $violation) }}"
                                                                 method="POST" class="d-inline">
                                                                 @csrf
                                                                 @method('PATCH')
-                                                                <button type="submit" class="btn btn-warning btn-sm"
+                                                                <button type="submit" class="btn btn-danger btn-sm"
                                                                     title="Từ chối vi phạm "
                                                                     onclick="return confirm('Bạn có chắc chắn muốn từ chối vi phạm bài viết này không?')">
-                                                                    <i class="fa fa-times"></i> Từ chối vi phạm
+                                                                    <i class="fa fa-times"></i>
                                                                 </button>
                                                             </form>
                                                         @endif
@@ -314,4 +324,49 @@
                 });
             });
         </script>
+
+<div class="modal fade" id="resolveModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="resolveForm" method="POST">
+            @csrf
+            @method('PATCH')
+            <div class="modal-content">
+                <div class="modal-header" >
+                    <h5 class="modal-title">Giải quyết vi phạm bài viết</h5>
+                    <button type="button" class="btn-close "  data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="reason" class="form-label">Lý do</label>
+                        <textarea name="reason" id="reason" class="form-control" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Inline scripts for modal -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const resolveModal = document.getElementById('resolveModal');
+        resolveModal.addEventListener('show.bs.modal', function (e) {
+            const trigger = e.relatedTarget;
+            const form = this.querySelector('#resolveForm');
+            form.setAttribute('action', trigger.getAttribute('data-route'));
+        });
+        document.querySelectorAll('.pagination a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
+            });
+        });
+    });
+</script>
+
+
+
     @endsection

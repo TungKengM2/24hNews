@@ -35,7 +35,7 @@
                                 <a href="{{ route('author.dashboard') }}" class="btn btn-default">
                                     <i class="fa fa-arrow-left me-1"></i> Quay Lại
                                 </a>
-                                @if (auth()->user()->violation_count > 5)
+                                @if (isset($isBanned) && $isBanned)
                                     <button type="button" class="btn btn-primary ms-2 disabled" id="addNewArticleBtn">
                                         <i class="si-plus si me-1"></i> Thêm Bài Viết Mới
                                     </button>
@@ -348,7 +348,7 @@
 
     @section('scripts')
         <script>
-           
+
             function ensureSwalLoaded(callback) {
                 if (typeof Swal !== 'undefined') {
                     callback();
@@ -358,8 +358,8 @@
                     }, 100);
                 }
             }
-            
-           
+
+
             function showSweetAlert(config) {
                 return new Promise((resolve) => {
                     ensureSwalLoaded(function() {
@@ -367,7 +367,7 @@
                     });
                 });
             }
-            
+
             document.addEventListener('DOMContentLoaded', function() {
                 // Hiển thị thông báo từ session với cơ chế kiểm tra Swal đã tải chưa
                 @if (session('success'))
@@ -431,13 +431,13 @@
                     });
                 @endif
 
-                // Hiển thị cảnh báo vi phạm nếu có
-                @if (auth()->user()->violation_count > 5)
+                // Hiển thị cảnh báo tài khoản bị khóa
+                @if (isset($isBanned) && $isBanned)
                     showSweetAlert({
                         icon: 'warning',
-                        title: 'Cảnh báo vi phạm!',
-                        html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
-                            '<p>Bạn không thể thực hiện các hành động liên quan đến bài viết cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                        title: 'Tài khoản bị tạm khóa!',
+                        html: '<div class="text-start"><p><strong>Tài khoản của bạn đã bị tạm khóa đến {{ $banEndTime }}.</strong></p>' +
+                            '<p>Bạn không thể thực hiện các hành động liên quan đến bài viết trong thời gian này.</p>' +
                             '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
                         confirmButtonText: 'Tôi đã hiểu',
                         confirmButtonColor: '#3085d6'
@@ -452,13 +452,13 @@
                         const articleTitle = this.getAttribute('data-article-title');
                         const form = this.closest('form');
 
-                        // Kiểm tra vi phạm trước khi cho phép hành động
-                        @if (auth()->user()->violation_count > 5)
+                        // Kiểm tra tài khoản bị khóa
+                        @if (isset($isBanned) && $isBanned)
                             showSweetAlert({
                                 icon: 'error',
                                 title: 'Không thể thực hiện!',
-                                html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
-                                    '<p>Bạn không thể xóa bài viết cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                                html: '<div class="text-start"><p><strong>Tài khoản của bạn đã bị tạm khóa đến {{ $banEndTime }}.</strong></p>' +
+                                    '<p>Bạn không thể xóa bài viết trong thời gian này.</p>' +
                                     '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
                                 confirmButtonText: 'Tôi đã hiểu',
                                 confirmButtonColor: '#3085d6'
@@ -501,13 +501,13 @@
                         const action = this.getAttribute('data-action');
                         const form = this.closest('form');
 
-                        // Kiểm tra vi phạm trước khi cho phép hành động
-                        @if (auth()->user()->violation_count > 5)
+                        // Kiểm tra tài khoản bị khóa
+                        @if (isset($isBanned) && $isBanned)
                             showSweetAlert({
                                 icon: 'error',
                                 title: 'Không thể thực hiện!',
-                                html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
-                                    '<p>Bạn không thể ẩn/hiện bài viết cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                                html: '<div class="text-start"><p><strong>Tài khoản của bạn đã bị tạm khóa đến {{ $banEndTime }}.</strong></p>' +
+                                    '<p>Bạn không thể ẩn/hiện bài viết trong thời gian này.</p>' +
                                     '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
                                 confirmButtonText: 'Tôi đã hiểu',
                                 confirmButtonColor: '#3085d6'
@@ -550,13 +550,13 @@
                         const form = this.closest('form');
                         const articleId = this.getAttribute('data-article-id');
 
-                        // Kiểm tra vi phạm trước khi cho phép hành động
-                        @if (auth()->user()->violation_count > 5)
+                        // Kiểm tra tài khoản bị khóa
+                        @if (isset($isBanned) && $isBanned)
                             showSweetAlert({
                                 icon: 'error',
                                 title: 'Không thể thực hiện!',
-                                html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
-                                    '<p>Bạn không thể gửi lại bài viết để xin duyệt cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                                html: '<div class="text-start"><p><strong>Tài khoản của bạn đã bị tạm khóa đến {{ $banEndTime }}.</strong></p>' +
+                                    '<p>Bạn không thể gửi lại bài viết để xin duyệt trong thời gian này.</p>' +
                                     '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
                                 confirmButtonText: 'Tôi đã hiểu',
                                 confirmButtonColor: '#3085d6'
@@ -592,8 +592,8 @@
                     });
                 });
 
-                // Xử lý nút thêm bài viết mới khi có vi phạm
-                @if (auth()->user()->violation_count > 5)
+                // Xử lý nút thêm bài viết mới khi tài khoản bị khóa
+                @if (isset($isBanned) && $isBanned)
                     const addNewArticleBtn = document.getElementById('addNewArticleBtn');
                     if (addNewArticleBtn) {
                         addNewArticleBtn.addEventListener('click', function(e) {
@@ -601,8 +601,8 @@
                             showSweetAlert({
                                 icon: 'error',
                                 title: 'Không thể thực hiện!',
-                                html: '<div class="text-start"><p><strong>Tài khoản của bạn hiện có {{ auth()->user()->violation_count }} vi phạm.</strong></p>' +
-                                    '<p>Bạn không thể thêm bài viết mới cho đến khi số vi phạm giảm xuống dưới 5.</p>' +
+                                html: '<div class="text-start"><p><strong>Tài khoản của bạn đã bị tạm khóa đến {{ $banEndTime }}.</strong></p>' +
+                                    '<p>Bạn không thể thêm bài viết mới trong thời gian này.</p>' +
                                     '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
                                 confirmButtonText: 'Tôi đã hiểu',
                                 confirmButtonColor: '#3085d6'

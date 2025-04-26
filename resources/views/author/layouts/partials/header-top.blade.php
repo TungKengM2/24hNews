@@ -81,11 +81,11 @@
                     </ul>
                 </li>
 
-                <li class="footer p-3 text-center">
+                {{-- <li class="footer p-3 text-center">
                     <a href="{{ route('notifications.index') }}" class="text-primary" style="font-size: 14px;">
                         Xem tất cả thông báo
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </li>
 
@@ -185,14 +185,14 @@
                 <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
                         <a class="dropdown-item" href="{{ route('author.profile') }}">
-                            <i class="ti-user text-muted me-2"></i> Profile
+                            <i class="ti-user text-muted me-2"></i> Trang Cá Nhân
                         </a>
                         <a class="dropdown-item" href="{{ route('author.change-password') }}">
-                            <i class="ti-settings text-muted me-2"></i> Settings
+                            <i class="ti-settings text-muted me-2"></i> Đổi Mật Khẩu
                         </a>
                         <a class="dropdown-item" href="#"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="ti-lock text-muted me-2"></i> Logout
+                            <i class="ti-lock text-muted me-2"></i> Đăng Xuất
                         </a>
 
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
