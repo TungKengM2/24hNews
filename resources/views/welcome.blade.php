@@ -335,7 +335,7 @@
                                             </h2>
 
                                             <div class="text color-666">
-                                                {{ Str::limit(strip_tags($NewsArticle->preview_content ?? $NewsArticle->content), 100, '...') }}
+                                                {!! Str::limit(strip_tags($NewsArticle->preview_content ?? $NewsArticle->content), 100, '...') !!}
                                             </div>
 
                                             <div class="meta-bot lh-1 mt-40">
@@ -527,7 +527,7 @@
 
                                                         @if ($main->content)
                                                             <div class="text color-666">
-                                                                {{ \Illuminate\Support\Str::limit(strip_tags($main->content), 100, '...') }}
+                                                                {!! \Illuminate\Support\Str::limit(strip_tags($main->content), 100, '...') !!}
                                                             </div>
                                                         @endif
 
