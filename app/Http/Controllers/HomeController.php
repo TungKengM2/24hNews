@@ -33,7 +33,6 @@ class HomeController extends Controller
                     ->orWhere('users.violation_count', '<', 3);
             })
             ->whereNull('users.banned_until')
-            ->whereNotNull('users.email_verified_at')
             ->orderByDesc('articles.views')
             ->take(7)
             ->get();
@@ -87,7 +86,7 @@ class HomeController extends Controller
             })
             ->orderByDesc('created_at')
             ->first();
-        // lấy bài viết mới nhất của 6dmuc  
+        // lấy bài viết mới nhất của 6dmuc
         $latestArticlesPerCategory = Article::with('category')
             ->where('status', 'published')
             ->whereHas('category', fn($q) => $q->where('is_active', 1))
@@ -96,7 +95,7 @@ class HomeController extends Controller
             ->unique('category_id') // loại trùng theo danh mục
             ->take(6);
 
-        //top blan trong 30ngay 
+        //top blan trong 30ngay
         $trendingPosts = Article::withCount(['comments as recent_comments_count' => function ($query) {
             $query->where('created_at', '>=', Carbon::now()->subDays(30)); // Chỉ tính bình luận trong 30 ngày qua
         }])
@@ -158,7 +157,7 @@ class HomeController extends Controller
 
 
 
-        //4 tag có nhiều bài viết nhất 
+        //4 tag có nhiều bài viết nhất
         $topTags = Tag::withCount('articles')
             ->orderByDesc('articles_count')
             ->take(4)
