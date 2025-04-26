@@ -172,10 +172,15 @@ $tags = Tag::whereHas('publishedArticles') // Chỉ lấy các tag có ít nhấ
 ->withCount(['publishedArticles'])    // Đếm số lượng bài viết đã xuất bản
 ->orderByDesc('published_articles_count') // Sắp xếp từ lớn đến bé theo số lượng bài viết
 ->get();
+  // Tổng số người theo dõi người dùng đang đăng nhập
+  $user = Auth::user();
+  $totalFollowers = $user->followers()->count(); // Đếm số người theo dõi admin
 
         return view('admin.dashboard', compact(
             'tags',
             'userCount',
+
+'totalFollowers',
             'articleStats',
             'timeBasedArticleStats',
             'timeBasedInteractionStats',
