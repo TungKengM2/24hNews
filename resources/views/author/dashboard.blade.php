@@ -199,8 +199,8 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="alert alert-info">
-                                <p class="mb-0">
-                                    <strong>Khoảng thời gian:</strong>
+                                <p class="mb-0 text-primary">
+                                    <strong class="text-primary">Khoảng thời gian:</strong>
                                     {{ request('date_from') ? \Carbon\Carbon::parse(request('date_from'))->format('d/m/Y') : 'Không có' }}
                                     đến
                                     {{ request('date_to') ? \Carbon\Carbon::parse(request('date_to'))->format('d/m/Y') : 'Không có' }}
