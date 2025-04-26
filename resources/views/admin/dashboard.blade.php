@@ -6,6 +6,7 @@
             <!-- Main content -->
             <section class="content">
                 <div class="row">
+
                     <h1>Tổng Quan Bài Viết </h1>
                     <!-- Tổng số bài viết -->
                     <div class="col-xl-3 col-md-6 col-12  ">
@@ -176,6 +177,7 @@
                         </div>
                     </div>
 
+
                     <!-- Kiểm duyệt viên -->
                     <div class="col-xl-3 col-md-6 col-12">
                         <div class="box">
@@ -299,67 +301,94 @@
                     </div>
                 </div>
 
-                <!-- Thống kê bài viết -->
+                <div class="col-12">
+                    <!-- Bộ lọc -->
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h4 class="box-title">Bộ lọc</h4>
+                        </div>
+                        <div class="box-body" id="filterCollapse">
+                            <form action="{{ route('admin.dashboard') }}" method="GET">
+                                <div class="row">
+                                    <!-- Từ ngày -->
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="date_from">Từ ngày</label>
+                                            <input type="date" class="form-control" id="date_from" name="date_from"
+                                                value="{{ request('date_from') }}">
+                                        </div>
+                                    </div>
+                                    <!-- Đến ngày -->
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="date_to">Đến ngày</label>
+                                            <input type="date" class="form-control" id="date_to" name="date_to"
+                                                value="{{ request('date_to') }}">
+                                        </div>
+                                    </div>
+                                    <!-- Nút hành động -->
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>&nbsp;</label>
+                                            <div>
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fa fa-search"></i> Tìm kiếm
+                                                </button>
+                                                <a href="{{ route('admin.dashboard') }}" class="btn btn-default">
+                                                    <i class="fa fa-refresh"></i> Đặt lại
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hiển thị ngày bắt đầu và ngày kết thúc -->
+                @if(request('date_from') || request('date_to'))
+                    <div class="col-12 mt-3">
+                        <div class="alert alert-info">
+                            <p>
+                                <strong>Ngày bắt đầu:</strong> {{ request('date_from') ? request('date_from') : 'Không có' }}
+                            </p>
+                            <p>
+                                <strong>Ngày kết thúc:</strong> {{ request('date_to') ? request('date_to') : 'Không có' }}
+                            </p>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Thống kê -->
                 <div class="row mt-2">
+                    <!-- Biểu đồ thống kê bài viết -->
                     <div class="col-12 col-xl-6">
                         <div class="box">
-                            <div class="box-header with-border d-flex align-items-center justify-content-between">
+                            <div class="box-header with-border">
                                 <h4 class="box-title">Thống kê bài viết</h4>
-                                <form method="GET" action="{{ route('admin.dashboard') }}"
-                                    class="d-flex align-items-center">
-                                    <label for="article_type" class="me-2">Hiển thị:</label>
-                                    <select class="form-select w-auto" id="article_type" name="article_type"
-                                        onchange="this.form.submit()">
-                                        <option value="daily" {{ ($type ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo
-                                            ngày</option>
-                                        <option value="monthly" {{ ($type ?? 'daily') === 'monthly' ? 'selected' : '' }}>
-                                            Theo tháng</option>
-                                        <option value="yearly" {{ ($type ?? 'daily') === 'yearly' ? 'selected' : '' }}>
-                                            Theo
-                                            năm</option>
-                                    </select>
-                                </form>
                             </div>
                             <div class="box-body">
                                 <canvas id="articleStatsChart" width="400" height="200"></canvas>
-                                <div id="noArticleDataMessage" class="text-center p-4" style="display: none;">
-                                    <p>Không có dữ liệu để hiển thị</p>
-                                </div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Biểu đồ thống kê tương tác -->
                     <div class="col-12 col-xl-6">
                         <div class="box">
-                            <div class="box-header with-border d-flex align-items-center justify-content-between">
+                            <div class="box-header with-border">
                                 <h4 class="box-title">Thống kê tương tác</h4>
-                                <form method="GET" action="{{ route('admin.dashboard') }}"
-                                    class="d-flex align-items-center">
-                                    <label for="interaction_type" class="me-2">Hiển thị:</label>
-                                    <select class="form-select w-auto" id="interaction_type" name="interaction_type"
-                                        onchange="this.form.submit()">
-                                        <option value="daily"
-                                            {{ ($interactionType ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo ngày
-                                        </option>
-                                        <option value="monthly"
-                                            {{ ($interactionType ?? 'daily') === 'monthly' ? 'selected' : '' }}>Theo tháng
-                                        </option>
-                                        <option value="yearly"
-                                            {{ ($interactionType ?? 'daily') === 'yearly' ? 'selected' : '' }}>Theo năm
-                                        </option>
-                                    </select>
-                                </form>
                             </div>
                             <div class="box-body">
                                 <canvas id="interactionStatsChart" width="400" height="200"></canvas>
-                                <div id="noInteractionDataMessage" class="text-center p-4" style="display: none;">
-                                    <p>Không có dữ liệu để hiển thị</p>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="row">
+
                     {{-- <div class="col-6">
                         <div class="box">
                             <div class="box-header">
@@ -423,8 +452,123 @@
     </div>
 
 
+    <script id="articleStatsData" type="application/json">
+        @json($articleStats)
+    </script>
+    <script id="interactionStatsData" type="application/json">
+        {
+            "totalViews": {{ $totalViews }},
+            "totalComments": {{ $totalComments }},
+            "totalLikes": {{ $totalLikes }},
+            "totalFollowers": {{ $totalFollowers }}
+        }
+    </script>
 
+    @section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ asset('js/dashboard.js') }}"></script>
+    @endsection
     <script>
+        //
+        document.addEventListener('DOMContentLoaded', function() {
+            // Kiểm tra và xử lý bộ lọc ngày
+            const filterForm = document.querySelector('form[action*="admin.dashboard"]');
+            if (filterForm) {
+                filterForm.addEventListener('submit', function(event) {
+                    const dateFrom = document.getElementById('date_from').value;
+                    const dateTo = document.getElementById('date_to').value;
+
+                    if (dateFrom && dateTo && new Date(dateFrom) > new Date(dateTo)) {
+                        event.preventDefault();
+                        alert('Ngày bắt đầu không được lớn hơn ngày kết thúc.');
+                    }
+                });
+            }
+
+            // Dữ liệu thống kê bài viết
+            const articleStats = JSON.parse(document.getElementById('articleStatsData').textContent);
+            const articleStatsLabels = ['Tổng bài viết', 'Lưu trữ', 'Chờ duyệt', 'Xuất bản', 'Từ chối', 'Nháp'];
+            const articleStatsData = [
+                articleStats.total,
+                articleStats.archived,
+                articleStats.pending,
+                articleStats.published,
+                articleStats.reject,
+                articleStats.draft
+            ];
+
+            // Biểu đồ Thống kê bài viết (Line Chart)
+            const articleStatsChartCtx = document.getElementById('articleStatsChart').getContext('2d');
+            new Chart(articleStatsChartCtx, {
+                type: 'line', // Biểu đồ dạng đường
+                data: {
+                    labels: articleStatsLabels,
+                    datasets: [{
+                        label: 'Thống kê bài viết',
+                        data: articleStatsData,
+                        borderColor: '#4caf50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.2)', // Màu nền mờ
+                        borderWidth: 2,
+                        fill: true, // Tô màu dưới đường
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true, // Bắt đầu trục y từ 0
+                        },
+                    },
+                },
+            });
+
+            // Dữ liệu thống kê tương tác
+            const interactionStats = JSON.parse(document.getElementById('interactionStatsData').textContent);
+            const interactionStatsLabels = ['Lượt xem', 'Bình luận', 'Lượt thích', 'Người theo dõi'];
+            const interactionStatsData = [
+                interactionStats.totalViews,
+                interactionStats.totalComments,
+                interactionStats.totalLikes,
+                interactionStats.totalFollowers
+            ];
+
+            // Biểu đồ Thống kê tương tác (Line Chart)
+            const interactionStatsChartCtx = document.getElementById('interactionStatsChart').getContext('2d');
+            new Chart(interactionStatsChartCtx, {
+                type: 'line', // Biểu đồ dạng đường
+                data: {
+                    labels: interactionStatsLabels,
+                    datasets: [{
+                        label: 'Thống kê tương tác',
+                        data: interactionStatsData,
+                        borderColor: '#03a9f4',
+                        backgroundColor: 'rgba(3, 169, 244, 0.2)', // Màu nền mờ
+                        borderWidth: 2,
+                        fill: true, // Tô màu dưới đường
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true, // Bắt đầu trục y từ 0
+                        },
+                    },
+                },
+            });
+        });
         // Thống kê số lượng bài viết theo Tag
         // Biểu đồ thống kê tag theo số lượng bài viết
         document.addEventListener('DOMContentLoaded', function() {
@@ -481,140 +625,6 @@
                     }
                 }
             });
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            // Article statistics chart
-            const articleStats = @json($timeBasedArticleStats ?? []);
-            const type = "{{ $type ?? 'daily' }}";
-
-            let articleLabels = [];
-            let articleData = [];
-
-            if (type === 'daily') {
-                articleLabels = articleStats.map(stat => stat.date || '');
-                articleData = articleStats.map(stat => stat.count || 0);
-            } else if (type === 'monthly') {
-                articleLabels = articleStats.map(stat =>
-                    `${stat.year || ''}-${String(stat.month || '').padStart(2, '0')}`);
-                articleData = articleStats.map(stat => stat.count || 0);
-            } else { // yearly
-                articleLabels = articleStats.map(stat => stat.year || '');
-                articleData = articleStats.map(stat => stat.count || 0);
-            }
-
-            if (articleLabels.length > 0) {
-                document.getElementById('noArticleDataMessage').style.display = 'none';
-                const articleCtx = document.getElementById('articleStatsChart').getContext('2d');
-                new Chart(articleCtx, {
-                    type: 'line',
-                    data: {
-                        labels: articleLabels,
-                        datasets: [{
-                            label: 'Số bài viết',
-                            data: articleData,
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    stepSize: 1
-                                }
-                            }
-                        }
-                    }
-                });
-            } else {
-                document.getElementById('articleStatsChart').style.display = 'none';
-                document.getElementById('noArticleDataMessage').style.display = 'block';
-            }
-
-            // Interaction statistics chart
-            const interactionStats = @json($timeBasedInteractionStats ?? []);
-            const interactionType = "{{ $interactionType ?? 'daily' }}";
-
-            let interactionLabels = [];
-            let viewsData = [];
-            let likesData = [];
-            let commentsData = [];
-
-            if (interactionType === 'daily') {
-                interactionLabels = interactionStats.map(stat => stat.date || '');
-                viewsData = interactionStats.map(stat => stat.views || 0);
-                likesData = interactionStats.map(stat => stat.likes || 0);
-                commentsData = interactionStats.map(stat => stat.comments || 0);
-            } else if (interactionType === 'monthly') {
-                interactionLabels = interactionStats.map(stat =>
-                    `${stat.year || ''}-${String(stat.month || '').padStart(2, '0')}`);
-                viewsData = interactionStats.map(stat => stat.views || 0);
-                likesData = interactionStats.map(stat => stat.likes || 0);
-                commentsData = interactionStats.map(stat => stat.comments || 0);
-            } else { // yearly
-                interactionLabels = interactionStats.map(stat => stat.year || '');
-                viewsData = interactionStats.map(stat => stat.views || 0);
-                likesData = interactionStats.map(stat => stat.likes || 0);
-                commentsData = interactionStats.map(stat => stat.comments || 0);
-            }
-
-            if (interactionLabels.length > 0) {
-                document.getElementById('noInteractionDataMessage').style.display = 'none';
-                const interactionCtx = document.getElementById('interactionStatsChart').getContext('2d');
-                new Chart(interactionCtx, {
-                    type: 'line',
-                    data: {
-                        labels: interactionLabels,
-                        datasets: [{
-                                label: 'Lượt xem',
-                                data: viewsData,
-                                borderColor: 'rgba(54, 162, 235, 1)',
-                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                borderWidth: 2,
-                                tension: 0.3,
-                                fill: true
-                            },
-                            {
-                                label: 'Lượt thích',
-                                data: likesData,
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                borderWidth: 2,
-                                tension: 0.3,
-                                fill: true
-                            },
-                            {
-                                label: 'Bình luận',
-                                data: commentsData,
-                                borderColor: 'rgba(255, 206, 86, 1)',
-                                backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                                borderWidth: 3,
-                                tension: 0.3,
-                                fill: true
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    stepSize: 1
-                                }
-                            }
-                        }
-                    }
-                });
-            } else {
-                document.getElementById('interactionStatsChart').style.display = 'none';
-                document.getElementById('noInteractionDataMessage').style.display = 'block';
-            }
         });
     </script>
 @endsection
