@@ -28,7 +28,7 @@
                     <div class="row">
                         <h3>Tổng Quan Bài Viết </h3>
                         <!-- Tổng số bài viết -->
-                        <div class="col-xl-3 col-md-4 col-12  ">
+                        <div class="col-xl-2 col-md-4 col-12  ">
                             <div class="box ">
                                 <div class="box-body">
                                     <div class="d-flex align-items-center">
@@ -37,7 +37,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="mt-20 d-flex justify-content-between align-items-center">
+                                    <div class="mt-40 d-flex justify-content-between align-items-center">
                                         <h3 class="fw-600">{{ $articleStats['total'] }}</h3>
                                         <div class="text-primary">
                                             <i class="fa fa-file-text fa-2x"></i>
@@ -47,7 +47,7 @@
                             </div>
                         </div>
                          <!-- Published -->
-                         <div class="col-xl-3 col-md-4 col-12 ">
+                         <div class="col-xl-2 col-md-4 col-12 ">
                             <div class="box">
                                 <div class="box-body">
                                     <div class="d-flex align-items-center">
@@ -68,7 +68,7 @@
 
 
                         <!-- Pending -->
-                        <div class="col-xl-3 col-md-4 col-12 ">
+                        <div class="col-xl-2 col-md-4 col-12 ">
                             <div class="box">
                                 <div class="box-body">
                                     <div class="d-flex align-items-center">
@@ -90,7 +90,7 @@
 
 
                         <!-- Rejected -->
-                        <div class="col-xl-3 col-md-4 col-12 ">
+                        <div class="col-xl-2 col-md-4 col-12 ">
                             <div class="box">
                                 <div class="box-body">
                                     <div class="d-flex align-items-center">
@@ -109,7 +109,7 @@
                             </div>
                         </div>
                         <!-- Archived -->
-                        {{-- <div class="col-xl-3 col-md-4 col-12 ">
+                        <div class="col-xl-2 col-md-4 col-12 ">
                             <div class="box">
                                 <div class="box-body">
                                     <div class="d-flex align-items-center">
@@ -126,10 +126,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
 
                         <!-- Draft -->
-                        {{-- <div class="col-xl-3 col-md-4 col-12 ">
+                        <div class="col-xl-2 col-md-4 col-12 ">
                             <div class="box">
                                 <div class="box-body">
                                     <div class="d-flex align-items-center">
@@ -138,7 +138,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="mt-40 d-flex justify-content-between align-items-center">
+                                    <div class="mt-20 d-flex justify-content-between align-items-center">
                                         <h3 class="fw-600">{{ $articleStats['draft'] }}</h3>
                                         <div class="text-info">
                                             <i class="fa fa-pencil-square fa-2x"></i>
@@ -146,7 +146,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
 
                     </div>
 
