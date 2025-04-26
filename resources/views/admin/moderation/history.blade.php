@@ -57,7 +57,7 @@
                                         <option value="reject" {{ request('action_type') == 'reject' ? 'selected' : '' }}>Từ chối</option>
                                     </select>
                                 </div>
-                                <div class="col-md-2">
+                                <div style="visibility: hidden;" class="col-md-2">
                                     <label for="moderator_id" class="form-label">Người kiểm duyệt</label>
                                     <select name="moderator_id" id="moderator_id" class="form-select">
                                         <option value="">Tất cả</option>
@@ -72,7 +72,7 @@
                                     <label for="content_id" class="form-label">ID nội dung</label>
                                     <input type="number" name="content_id" id="content_id" class="form-control" value="{{ request('content_id') }}" placeholder="Nhập ID">
                                 </div>
-                               
+
                                 <div class="col-md-2">
                                     <label for="date_from" class="form-label">Từ ngày</label>
                                     <input type="date" name="date_from" id="date_from" class="form-control" value="{{ request('date_from') }}">
