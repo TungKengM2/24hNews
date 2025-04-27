@@ -515,30 +515,7 @@
                                 <!-- end widget tags -->
 
                                 <!-- widget webStories -->
-                                <div class="tc-widget-webStories-style5">
-                                    <div class="card-header bg-white border-bottom border-primary border-3">
-                                        <p class="color-000 text-uppercase mb-30">Bài Viết Đã Xem </p>
-                                    </div>
-                                    <div class=" list-group-flush">
-                                        @if (isset($recentArticles) && $recentArticles->count() > 0)
-                                            @foreach ($recentArticles as $recentArticle)
-                                                <a href="{{ route('articles.article', $recentArticle->slug) }}"
-                                                    class="list-group-item list-group-item-action d-flex align-items-center p-3">
-                                                    <div>
-                                                        <h6 class="mb-1">
-                                                            {{ Str::limit($recentArticle->title, 100) }}</h6>
-                                                        <small class="text-muted">
-                                                            <i class="la la-calendar me-1"></i>
-                                                            {{ $recentArticle->created_at->format('d/m/Y') }}
-                                                        </small>
-                                                    </div>
-                                                </a>
-                                            @endforeach
-                                        @else
-                                            <div class="list-group-item">Không có bài viết gần đây.</div>
-                                        @endif
-                                    </div>
-                                </div>
+                               
                             </div>
                         </div>
                     </div>
