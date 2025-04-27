@@ -443,7 +443,7 @@
                                                             <a href="page-blog.html#"
                                                                 class="color-999 fsz-13px text-uppercase mb-10">{{ $article->category->name }}</a>
                                                             <h4 class="title fw-bold">
-                                                                <a href="{{ route('articles.show', $article->slug) }}"
+                                                                <a href="{{ route('articles.article', $article->slug) }}"
                                                                     class="hover-underline">
                                                                     {{ $article->title }}
                                                                 </a>
