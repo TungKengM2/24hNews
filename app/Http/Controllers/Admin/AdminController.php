@@ -5,15 +5,16 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\ArticleView;
-use App\Models\Comment; // dat them
-use App\Models\User; // dat them
-use Illuminate\Support\Facades\Auth; // Ensure Auth is imported
-use Illuminate\Support\Facades\DB; // dat them
-use Carbon\Carbon; // dat them
-use Illuminate\Support\Facades\Schema; // dat them
+use App\Models\Comment;
+use App\Models\User;
+use App\Models\ArticleLike; // Add this line to import the ArticleLike model
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
 use App\Models\Tag;
-use App\Models\Follow; // Thêm model Follow dat them
+use App\Models\Follow;
 
 class AdminController extends Controller
 {
@@ -98,13 +99,17 @@ class AdminController extends Controller
             ->get()
             ->keyBy('date');
 
-        $timeBasedInteractionStats = [];
-        foreach ($allDates as $date) {
-            $timeBasedInteractionStats[] = [
-                'date' => $date,
-                'views' => $rawInteractionStats[$date]->views ?? 0,
-            ];
-        }
+       // Tính timeBasedInteractionStats gộp 3 loại
+$timeBasedInteractionStats = [];
+foreach ($allDates as $date) {
+    $timeBasedInteractionStats[] = [
+        'date' => $date,
+        'views' => $rawInteractionStats[$date]->views ?? 0,
+        'comments' => $rawCommentsStats[$date]->comments ?? 0,
+        'likes' => $rawLikesStats[$date]->likes ?? 0,
+    ];
+}
+
 
         // Lấy dữ liệu bình luận theo thời gian
         $rawCommentsStats = Comment::whereBetween('created_at', [$dateFrom, $dateTo])
@@ -123,13 +128,16 @@ class AdminController extends Controller
         }
 
         // Lấy dữ liệu lượt thích theo thời gian
-        $rawLikesStats = Schema::hasTable('article_likes') ? DB::table('article_likes')
-            ->selectRaw(($viewType === 'daily' ? 'DATE(liked_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(liked_at, "%Y-%m")' : 'YEAR(liked_at)')) . ' as date, COUNT(*) as likes')
-            ->whereBetween('liked_at', [$dateFrom, $dateTo])
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get()
-            ->keyBy('date') : collect();
+        if (Schema::hasTable('article_likes')) {
+            $rawLikesStats = ArticleLike::whereBetween('liked_at', [$dateFrom, $dateTo])
+                ->selectRaw(($viewType === 'daily' ? 'DATE(liked_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(liked_at, "%Y-%m")' : 'YEAR(liked_at)')) . ' as date, COUNT(*) as likes')
+                ->groupBy('date')
+                ->orderBy('date')
+                ->get()
+                ->keyBy('date');
+        } else {
+            $rawLikesStats = collect();
+        }
 
         $timeBasedLikesStats = [];
         foreach ($allDates as $date) {
@@ -139,6 +147,34 @@ class AdminController extends Controller
             ];
         }
 
+        // Tổng quan bài viết
+        $articleStatsSummary = [
+            'total' => Article::count(),
+            'archived' => Article::where('status', 'archived')->count(),
+            'pending' => Article::where('status', 'pending')->count(),
+            'published' => Article::where('status', 'published')->count(),
+            'rejected' => Article::where('status', 'rejected')->count(),
+            'draft' => Article::where('status', 'draft')->count(),
+        ];
+
+        // Tổng quan người dùng
+        $userCount = [
+            'total' => User::where('role_id', '!=', 1)->count(), // Exclude admin
+            'user' => User::where('role_id', 4)->count(), // Regular users
+            'moderators' => User::where('role_id', 3)->count(), // Moderators
+            'authors' => User::where('role_id', 2)->count(), // Authors
+        ];
+
+        // Tổng số người theo dõi admin
+        $user = Auth::user();
+        $totalFollowers = $user->followers()->count(); // Count followers of the logged-in admin
+
+        // Lấy danh sách tag và số lượng bài viết đã xuất bản
+        $tags = Tag::whereHas('publishedArticles') // Only tags with published articles
+            ->withCount(['publishedArticles']) // Count published articles
+            ->orderByDesc('published_articles_count') // Sort by count descending
+            ->get();
+
         // Nếu là AJAX request, trả về JSON
         if ($request->ajax()) {
             return response()->json([
@@ -146,42 +182,18 @@ class AdminController extends Controller
                 'timeBasedInteractionStats' => $timeBasedInteractionStats,
                 'timeBasedCommentsStats' => $timeBasedCommentsStats,
                 'timeBasedLikesStats' => $timeBasedLikesStats,
+                'articleStatsSummary' => $articleStatsSummary,
+                'userCount' => $userCount,
+                'totalFollowers' => $totalFollowers,
             ]);
         }
 
         // Nếu không phải AJAX, trả về view
-        // tổng quan
-         // // Tổng quan bài viết
-         $articleStats = [
-            'total' => Article::count(),
-            'archived' => Article::where('status', 'archived')->count(),
-            'pending' => Article::where('status', 'pending')->count(),
-            'published' => Article::where('status', 'published')->count(),
-            'reject' => Article::where('status', 'rejected')->count(),
-            'draft' => Article::where('status', 'draft')->count(),
-        ];
-            // Lấy số lượng người dùng theo vai trò
-            $userCount = [
-                'total' => User::where('role_id', '!=', 1)->count(), // Tổng số người dùng (không bao gồm admin)
-                    'user' => User::where('role_id', 4)->count(), // Người dùng
-                    'moderators' => User::where('role_id', 3)->count(), // Kiểm duyệt viên
-                    'authors' => User::where('role_id', 2)->count(),    // Tác giả
-                ];
-                // Lấy danh sách tag và số lượng bài viết đã xuất bản, sắp xếp từ lớn đến bé
-$tags = Tag::whereHas('publishedArticles') // Chỉ lấy các tag có ít nhất 1 bài viết xuất bản
-->withCount(['publishedArticles'])    // Đếm số lượng bài viết đã xuất bản
-->orderByDesc('published_articles_count') // Sắp xếp từ lớn đến bé theo số lượng bài viết
-->get();
-  // Tổng số người theo dõi người dùng đang đăng nhập
-  $user = Auth::user();
-  $totalFollowers = $user->followers()->count(); // Đếm số người theo dõi admin
-
         return view('admin.dashboard', compact(
-            'tags',
+            'articleStatsSummary', // Renamed to avoid conflict
             'userCount',
-
-'totalFollowers',
-            'articleStats',
+            'totalFollowers',
+            'tags',
             'timeBasedArticleStats',
             'timeBasedInteractionStats',
             'timeBasedCommentsStats',
