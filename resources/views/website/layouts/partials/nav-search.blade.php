@@ -16,8 +16,8 @@
                     </span>
                     <input type="text" name="keyword" id="searchInput" class="form-control" placeholder="Elon Musk ..." required>
                     <button type="submit">Tìm Kiếm </button>
+                    <div id="suggestionsList" class="suggestions-list" style="display: none;"></div>
                 </div>
-                <div id="suggestionsList" class="suggestions-list" style="display: none;"></div>
             </form>
 
             <div id="searchResults" class="search-results mt-4" style="display: none;">
