@@ -74,7 +74,7 @@
 
                                 </div>
                             </div>
-                            <div class="mt-20 d-flex justify-content-between align-items-center">
+                            <div class="mt-40 d-flex justify-content-between align-items-center">
                                 <h3 class="fw-600">{{ $articleStatsSummary['published'] }}</h3>
                                 <div class="text-success">
                                     <i class="fa fa-check-circle fa-2x"></i>
@@ -232,10 +232,10 @@
             <!-- Bộ lọc -->
             <div class="box">
                 <div class="box-header with-border">
-                    <h4 class="box-title">Bộ lọc</h4>
+                    <h4 class="box-title">Bộ lọc thống kê</h4>
                 </div>
                 <div class="box-body">
-                    <form action="{{ route('admin.dashboard') }}" method="GET" id="filterForm">
+                    <form id="filterForm">
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="date_from">Từ ngày</label>
@@ -257,10 +257,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label>&nbsp;</label>
-                                <div class="d-flex">
-                                    <button type="submit" class="btn btn-primary mr-2">Lọc</button>
-                                    <button type="button" class="btn btn-secondary" id="resetFilter">Đặt lại</button>
-                                </div>
+                                <button type="button" class="btn btn-secondary w-100 py-2 mt-25" id="resetFilter">Đặt lại</button>
                             </div>
                         </div>
                     </form>
@@ -289,7 +286,9 @@
                             <h4 class="box-title">Thống kê bài viết</h4>
                         </div>
                         <div class="box-body">
-                            <canvas id="articleStatsChart" width="400" height="200"></canvas>
+                            <div class="chart-container" style="position: relative; height: 400px;">
+                                <canvas id="articleStatsChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -299,7 +298,9 @@
                             <h4 class="box-title">Thống kê tương tác</h4>
                         </div>
                         <div class="box-body">
-                            <canvas id="interactionStatsChart" width="400" height="200"></canvas>
+                            <div class="chart-container" style="position: relative; height: 400px;">
+                                <canvas id="interactionStatsChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -336,182 +337,382 @@
     <script id="likesStatsData" type="application/json">
         @json($timeBasedLikesStats)
     </script>
+    <script id="tagsStatsData" type="application/json">
+        @json($tags)
+    </script>
 @endsection
 
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-    let articleChart = null;
-    let interactionChart = null;
-    let tagsChart = null;
+        // Biểu đồ thống kê bài viết và tương tác
+        document.addEventListener('DOMContentLoaded', function () {
+            let articleChart = null;
+            let interactionChart = null;
 
-    function renderArticleChart(stats) {
-        const labels = stats.map(stat => stat.date);
-        const publishedData = stats.map(stat => stat.published);
-        const pendingData = stats.map(stat => stat.pending);
-        const rejectedData = stats.map(stat => stat.rejected);
-        const draftData = stats.map(stat => stat.draft);
-        const archivedData = stats.map(stat => stat.archived);
+            function renderArticleChart(stats) {
+                const labels = stats.map(stat => stat.date);
+                const publishedData = stats.map(stat => stat.published);
+                const pendingData = stats.map(stat => stat.pending);
+                const rejectedData = stats.map(stat => stat.rejected);
+                const draftData = stats.map(stat => stat.draft);
+                const archivedData = stats.map(stat => stat.archived);
 
-        if (articleChart) {
-            articleChart.destroy();
-        }
+                if (articleChart) {
+                    articleChart.destroy();
+                }
 
-        const ctx = document.getElementById('articleStatsChart').getContext('2d');
-        articleChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: 'Đã xuất bản', data: publishedData, borderColor: '#4CAF50', backgroundColor: 'rgba(76, 175, 80, 0.2)', fill: true },
-                    { label: 'Đang chờ', data: pendingData, borderColor: '#FFC107', backgroundColor: 'rgba(255, 193, 7, 0.2)', fill: true },
-                    { label: 'Bị từ chối', data: rejectedData, borderColor: '#F44336', backgroundColor: 'rgba(244, 67, 54, 0.2)', fill: true },
-                    { label: 'Lưu nháp', data: draftData, borderColor: '#2196F3', backgroundColor: 'rgba(33, 150, 243, 0.2)', fill: true },
-                    { label: 'Đã lưu trữ', data: archivedData, borderColor: '#9C27B0', backgroundColor: 'rgba(156, 39, 176, 0.2)', fill: true },
-                ],
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: true, position: 'top' } },
-                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
-            },
-        });
-    }
-
-    function renderInteractionChart(stats) {
-        const labels = stats.map(stat => stat.date);
-        const viewsData = stats.map(stat => stat.views);
-        const commentsData = stats.map(stat => stat.comments);
-        const likesData = stats.map(stat => stat.likes);
-
-        if (interactionChart) {
-            interactionChart.destroy();
-        }
-
-        const ctx = document.getElementById('interactionStatsChart').getContext('2d');
-        interactionChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: 'Lượt xem', data: viewsData, borderColor: '#36A2EB', backgroundColor: 'rgba(54, 162, 235, 0.2)', fill: true },
-                    { label: 'Bình luận', data: commentsData, borderColor: '#FFCE56', backgroundColor: 'rgba(255, 206, 86, 0.2)', fill: true },
-                    { label: 'Lượt thích', data: likesData, borderColor: '#4BC0C0', backgroundColor: 'rgba(75, 192, 192, 0.2)', fill: true },
-                ],
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: true, position: 'top' } },
-                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
-            },
-        });
-    }
-
-    function renderTagsChart(tags) {
-        const labels = tags.map(tag => tag.name.length > 15 ? tag.name.substring(0, 15) + '...' : tag.name); // Truncate long tag names
-        const data = tags.map(tag => tag.published_articles_count);
-
-        if (tagsChart) {
-            tagsChart.destroy();
-        }
-
-        const ctx = document.getElementById('tagsChart').getContext('2d');
-        const canvasWidth = Math.max(1000, labels.length * 50); // Dynamically adjust canvas width based on the number of tags
-        const canvasHeight = 300; // Set the height of the chart
-        const canvasElement = document.getElementById('tagsChart');
-        canvasElement.style.width = `${canvasWidth}px`;
-        canvasElement.style.height = `${canvasHeight}px`;
-
-        tagsChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Số lượng bài viết',
-                    data: data,
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }],
-            },
-            options: {
-                responsive: false, // Disable responsiveness to allow horizontal scrolling
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false // Hide the default legend
-                    }
-                },
-                layout: {
-                    padding: {
-                        left: 0, // Remove left padding
-                        right: 0 // Remove right padding
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            autoSkip: false, // Show all labels
-                            maxRotation: 45, // Rotate labels for better readability
-                            minRotation: 0,
-                            callback: function(value) {
-                                return this.getLabelForValue(value); // Ensure truncated labels are displayed
+                const ctx = document.getElementById('articleStatsChart').getContext('2d');
+                articleChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Đã xuất bản',
+                                data: publishedData,
+                                borderColor: '#2ECC71',
+                                backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                                fill: true,
+                                borderWidth: 1,
+                                pointRadius: 1,
+                                pointHoverRadius: 3,
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Đang chờ',
+                                data: pendingData,
+                                borderColor: '#F1C40F',
+                                backgroundColor: 'rgba(241, 196, 15, 0.1)',
+                                fill: true,
+                                borderWidth: 1,
+                                pointRadius: 1,
+                                pointHoverRadius: 3,
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Bị từ chối',
+                                data: rejectedData,
+                                borderColor: '#E74C3C',
+                                backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                                fill: true,
+                                borderWidth: 1,
+                                pointRadius: 1,
+                                pointHoverRadius: 3,
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Lưu nháp',
+                                data: draftData,
+                                borderColor: '#3498DB',
+                                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                                fill: true,
+                                borderWidth: 1,
+                                pointRadius: 1,
+                                pointHoverRadius: 3,
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Đã lưu trữ',
+                                data: archivedData,
+                                borderColor: '#9B59B6',
+                                backgroundColor: 'rgba(155, 89, 182, 0.1)',
+                                fill: true,
+                                borderWidth: 1,
+                                pointRadius: 1,
+                                pointHoverRadius: 3,
+                                tension: 0.3
+                            }
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: false,
+                                    padding: 20,
+                                    font: {
+                                        size: 12
+                                    }
+                                }
                             }
                         },
-                        grid: {
-                            display: false // Remove grid lines for x-axis
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    precision: 0,
+                                    font: {
+                                        size: 11
+                                    }
+                                },
+                                grid: {
+                                    display: true,
+                                    drawBorder: true,
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 11
+                                    }
+                                }
+                            }
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
                         }
                     },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1 // Set step size for the y-axis
-                        },
-                        grid: {
-                            drawBorder: true // Ensure the y-axis border is visible
-                        }
-                    }
+                });
+            }
+
+            function renderInteractionChart(stats) {
+                const labels = stats.map(stat => stat.date);
+                const viewsData = stats.map(stat => stat.views);
+                const commentsData = stats.map(stat => stat.comments);
+                const likesData = stats.map(stat => stat.likes);
+
+                if (interactionChart) {
+                    interactionChart.destroy();
                 }
+
+                const ctx = document.getElementById('interactionStatsChart').getContext('2d');
+                interactionChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Lượt xem',
+                                data: viewsData,
+                                borderColor: '#3498DB',
+                                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                                fill: true,
+                                borderWidth: 1,
+                                pointRadius: 1,
+                                pointHoverRadius: 3,
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Bình luận',
+                                data: commentsData,
+                                borderColor: '#F1C40F',
+                                backgroundColor: 'rgba(241, 196, 15, 0.1)',
+                                fill: true,
+                                borderWidth: 1,
+                                pointRadius: 1,
+                                pointHoverRadius: 3,
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Lượt thích',
+                                data: likesData,
+                                borderColor: '#E74C3C',
+                                backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                                fill: true,
+                                borderWidth: 1,
+                                pointRadius: 1,
+                                pointHoverRadius: 3,
+                                tension: 0.3
+                            }
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: false,
+                                    padding: 20,
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    precision: 0,
+                                    font: {
+                                        size: 11
+                                    }
+                                },
+                                grid: {
+                                    display: true,
+                                    drawBorder: true,
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 11
+                                    }
+                                }
+                            }
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        }
+                    },
+                });
+            }
+
+            function fetchFilteredData() {
+                const dateFrom = document.getElementById('date_from').value;
+                const dateTo = document.getElementById('date_to').value;
+                const viewType = document.getElementById('view_type').value;
+
+                // Log để debug
+                console.log('Fetching data with:', { dateFrom, dateTo, viewType });
+
+                fetch(`{{ route('admin.dashboard') }}?date_from=${dateFrom}&date_to=${dateTo}&view_type=${viewType}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Received data:', data);
+                        if (data.timeBasedArticleStats) {
+                            renderArticleChart(data.timeBasedArticleStats);
+                        }
+                        if (data.timeBasedInteractionStats) {
+                            renderInteractionChart(data.timeBasedInteractionStats);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+            }
+
+            // Tự động cập nhật khi thay đổi
+            document.getElementById('date_from').addEventListener('change', fetchFilteredData);
+            document.getElementById('date_to').addEventListener('change', fetchFilteredData);
+            document.getElementById('view_type').addEventListener('change', fetchFilteredData);
+
+            // Reset form
+            document.getElementById('resetFilter').addEventListener('click', function () {
+                document.getElementById('date_from').value = '';
+                document.getElementById('date_to').value = '';
+                document.getElementById('view_type').value = 'daily';
+                fetchFilteredData();
+            });
+
+            // Render initial charts
+            const initialArticleStats = JSON.parse(document.getElementById('articleStatsData').textContent);
+            const initialInteractionStats = JSON.parse(document.getElementById('interactionStatsData').textContent);
+
+            if (initialArticleStats) {
+                renderArticleChart(initialArticleStats);
+            }
+            if (initialInteractionStats) {
+                renderInteractionChart(initialInteractionStats);
             }
         });
-    }
 
-    function fetchFilteredData() {
-        const dateFrom = document.getElementById('date_from').value;
-        const dateTo = document.getElementById('date_to').value;
-        const viewType = document.getElementById('view_type').value;
+        // Biểu đồ thống kê thẻ tag
+        document.addEventListener('DOMContentLoaded', function () {
+            let tagsChart = null;
 
-        fetch(`{{ route('admin.dashboard') }}?date_from=${dateFrom}&date_to=${dateTo}&view_type=${viewType}`, {
-            method: 'GET',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        })
-            .then(response => response.json())
-            .then(data => {
-                renderArticleChart(data.timeBasedArticleStats);
-                renderInteractionChart(data.timeBasedInteractionStats);
-                renderTagsChart(data.tags);
-            })
-            .catch(error => console.error('Lỗi:', error));
-    }
+            function renderTagsChart(tags) {
+                const labels = tags.map(tag => tag.name.length > 15 ? tag.name.substring(0, 15) + '...' : tag.name);
+                const data = tags.map(tag => tag.published_articles_count);
 
-    document.getElementById('view_type').addEventListener('change', fetchFilteredData);
-    document.getElementById('filterForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        fetchFilteredData();
-    });
+                if (tagsChart) {
+                    tagsChart.destroy();
+                }
 
-    document.getElementById('resetFilter').addEventListener('click', function () {
-        document.getElementById('date_from').value = '';
-        document.getElementById('date_to').value = '';
-        document.getElementById('view_type').value = 'daily';
-        fetchFilteredData();
-    });
+                const ctx = document.getElementById('tagsChart').getContext('2d');
+                const canvasWidth = Math.max(1000, labels.length * 50);
+                const canvasHeight = 300;
+                const canvasElement = document.getElementById('tagsChart');
+                canvasElement.style.width = `${canvasWidth}px`;
+                canvasElement.style.height = `${canvasHeight}px`;
 
-    // Render initial charts
-    renderArticleChart(JSON.parse(document.getElementById('articleStatsData').textContent));
-    renderInteractionChart(@json($timeBasedInteractionStats));
-    renderTagsChart(@json($tags));
-});
+                tagsChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Số lượng bài viết',
+                            data: data,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }],
+                    },
+                    options: {
+                        responsive: false,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        layout: {
+                            padding: {
+                                left: 0,
+                                right: 0
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    autoSkip: false,
+                                    maxRotation: 45,
+                                    minRotation: 0,
+                                    callback: function(value) {
+                                        return this.getLabelForValue(value);
+                                    }
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                },
+                                grid: {
+                                    drawBorder: true
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Render initial tags chart
+            renderTagsChart(JSON.parse(document.getElementById('tagsStatsData').textContent));
+        });
     </script>
 @endsection
