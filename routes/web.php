@@ -321,6 +321,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::get('/dashboard', [AuthorDashboard::class, 'index'])->name('author.dashboard');
+    Route::get('/dashboard/filter', [AuthorDashboard::class, 'filterData'])->name('author.dashboard.filter');
 
     Route::get('/profile-setting', function () {
         return view('author.profile-setting');

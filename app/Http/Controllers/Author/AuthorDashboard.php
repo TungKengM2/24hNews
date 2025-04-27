@@ -144,6 +144,38 @@
    }
 
    /**
+    * Xử lý yêu cầu AJAX để lọc dữ liệu biểu đồ
+    *
+    * @param Request $request
+    * @return \Illuminate\Http\JsonResponse
+    */
+   public function filterData(Request $request)
+   {
+       // Lấy ngày bắt đầu, ngày kết thúc và kiểu hiển thị
+       $dateFrom = $request->input('date_from') ? Carbon::parse($request->input('date_from'))->startOfDay() : now()->subDays(30)->startOfDay();
+       $dateTo = $request->input('date_to') ? Carbon::parse($request->input('date_to'))->endOfDay() : now()->endOfDay();
+       $viewType = $request->input('view_type', 'daily'); // daily, monthly, yearly
+
+       $user = Auth::user();
+
+       // Lấy thống kê bài viết theo thời gian
+       $timeBasedArticleStats = $this->getTimeBasedArticleStats($user->user_id, $viewType, $dateFrom, $dateTo);
+
+       // Lấy thống kê tương tác theo thời gian
+       $timeBasedInteractionStats = $this->getTimeBasedInteractionStats($user->user_id, $viewType, $dateFrom, $dateTo);
+
+       // Trả về dữ liệu dưới dạng JSON
+       return response()->json([
+           'success' => true,
+           'timeBasedArticleStats' => $timeBasedArticleStats,
+           'timeBasedInteractionStats' => $timeBasedInteractionStats,
+           'type' => $viewType,
+           'dateFrom' => $dateFrom->format('Y-m-d'),
+           'dateTo' => $dateTo->format('Y-m-d')
+       ]);
+   }
+
+   /**
     * Get time-based article statistics
     *
     * @param int $userId
