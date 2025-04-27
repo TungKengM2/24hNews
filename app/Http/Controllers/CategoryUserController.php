@@ -12,150 +12,155 @@ class CategoryUserController extends Controller
 {
     public function index($slug, $childSlug = null)
     {
-        // 1. Xác định category (cha hoặc con)
+        // 1. Xác định category hiện tại
         if ($childSlug) {
-            // Đang truy cập danh mục con
             $category = Category::with(['parent', 'children'])
                 ->where('slug', $childSlug)
-                ->whereHas('parent', function ($q) use ($slug) {
-                    $q->where('slug', $slug);
-                })
+                ->whereHas('parent', fn($q) => $q->where('slug', $slug))
                 ->firstOrFail();
         } else {
-            // Đang truy cập danh mục cha
             $category = Category::with(['parent', 'children'])
                 ->where('slug', $slug)
                 ->whereNull('parent_id')
                 ->firstOrFail();
         }
 
-        // 2. Tập hợp ID của category hiện tại và các con
+        // 2. Lấy IDs của category hiện tại và các con
         $categoryIds = $category->children->pluck('category_id')->push($category->category_id);
 
-        // 3. Breaking news (3 bài mới nhất)
-        $breakingNews = Article::where('status', 'published')
-            ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                ->whereIn('category_id', $categoryIds))
-            ->orderByDesc('created_at')
-            ->limit(3)
+        // 3. Viết 1 hàm để filter đúng theo cha/con
+        $whereCategory = function ($query) use ($categoryIds, $childSlug) {
+            if ($childSlug) {
+                $query->whereIn('subcategory_id', $categoryIds);
+            } else {
+                $query->whereIn('category_id', $categoryIds);
+            }
+        };
+
+        // Danh sách ID bài viết đã lấy, để loại trừ
+        $excludedIds = [];
+
+        // 1. Top bài viết nổi bật (nhiều comment nhất trong 7 ngày)
+        $highlightedArticle = Article::withCount('comments')
+            ->where('status', 'published')
+            ->where(function ($q) use ($whereCategory) {
+                $whereCategory($q);
+            })
+            ->where('created_at', '>=', now()->subDays(7))
+            ->orderByDesc('comments_count')
+            ->limit(2)
             ->get();
 
-        // 4. Closure chọn bài nổi bật (không phân biệt 7 ngày)
-        $selectTop = fn(array $exclude = []) => Article::withCount('comments')
+        // Lưu các ID bài viết đã lấy vào danh sách loại trừ
+        $excludedIds = array_merge($excludedIds, $highlightedArticle->pluck('article_id')->toArray());
+
+        // 2. Top bài viết theo views (loại trừ những bài đã lấy ở trên)
+        $highlightedArticleByViews = Article::withCount('comments')
             ->where('status', 'published')
-            ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                ->whereIn('category_id', $categoryIds))
-            ->whereNotIn('article_id', collect($exclude)
-                ->merge($breakingNews->pluck('article_id')))
-            ->orderByDesc('comments_count')
-            ->orderByDesc('created_at')
+            ->where(function ($q) use ($whereCategory) {
+                $whereCategory($q);
+            })
+            ->where('created_at', '>=', now()->subDays(7))
+            ->whereNotIn('article_id', $excludedIds)
+            ->orderByDesc('views')
+            ->limit(5)
+            ->get();
+
+        // Lưu các ID bài viết đã lấy vào danh sách loại trừ
+        $excludedIds = array_merge($excludedIds, $highlightedArticleByViews->pluck('article_id')->toArray());
+
+        // 3. Top bài viết nổi bật (nhiều comment nhất và views cao nhất trong 30 ngày)
+        $highlightedArticleLast30Days = Article::withCount('comments')
+            ->where('status', 'published')
+            ->where(function ($q) use ($whereCategory) {
+                $whereCategory($q);
+            })
+            ->where('created_at', '>=', now()->subDays(30)) // 30 ngày
+            ->orderByDesc('comments_count') // Sắp xếp theo bình luận
+            ->orderByDesc('views') // Sắp xếp theo views
+            ->limit(5) // Giới hạn số lượng bài viết
+            ->get();
+
+        // Lưu các ID bài viết đã lấy vào danh sách loại trừ
+        $excludedIds = array_merge($excludedIds, $highlightedArticleLast30Days->pluck('article_id')->toArray());
+
+
+        // 4. Bài viết mới nhất (loại trừ tiếp)
+        $latestArticles = Article::withCount('comments')
+            ->where('status', 'published')
+            ->where(function ($q) use ($whereCategory) {
+                $whereCategory($q);
+            })
+            ->whereNotIn('article_id', $excludedIds)
+            ->orderByDesc('created_at') // Sắp xếp theo thời gian tạo
+            ->limit(2)
+            ->get();
+
+        // Lưu các ID bài viết đã lấy vào danh sách loại trừ
+        $excludedIds = array_merge($excludedIds, $latestArticles->pluck('article_id')->toArray());
+
+        // 4. 1 bài mới nhất còn lại (loại trừ tiếp)
+        $singleLatestArticle = Article::withCount('comments')
+            ->where('status', 'published')
+            ->where(function ($q) use ($whereCategory) {
+                $whereCategory($q);
+            })
+            ->whereNotIn('article_id', $excludedIds)
+            ->orderByDesc('created_at') // Sắp xếp theo thời gian tạo
             ->limit(1)
-            ->first();
-
-        // 5. Highlighted article
-        $highlightedArticle = $selectTop();
-
-        // Fallback nếu không có
-        if (! $highlightedArticle) {
-            $highlightedArticle = Article::withCount('comments')
-                ->where('status', 'published')
-                ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                    ->whereIn('category_id', $categoryIds))
-                ->whereNotIn('article_id', $breakingNews->pluck('article_id'))
-                ->orderByDesc('created_at')
-                ->limit(1)
-                ->first();
-        }
-
-        // 6. Secondary article
-        $highlightedId = optional($highlightedArticle)->article_id;
-        $secondaryArticle = $selectTop([$highlightedId]);
-
-        // Fallback nếu không có
-        if (! $secondaryArticle) {
-            $secondaryArticle = Article::withCount('comments')
-                ->where('status', 'published')
-                ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                    ->whereIn('category_id', $categoryIds))
-                ->whereNotIn('article_id', array_filter([
-                    $highlightedId,
-                    ...$breakingNews->pluck('article_id')->toArray(),
-                ]))
-                ->orderByDesc('created_at')
-                ->limit(1)
-                ->first();
-        }
-
-        // 7. Ba bài Nebula Nuggets
-        $excludedIds = collect([
-            optional($highlightedArticle)->article_id,
-            optional($secondaryArticle)->article_id,
-        ])->merge($breakingNews->pluck('article_id'))
-            ->filter()
-            ->unique();
-
-        $nebulaNuggets = Article::withCount('comments')
-            ->where('status', 'published')
-            ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                ->whereIn('category_id', $categoryIds))
-            ->whereNotIn('article_id', $excludedIds)
-            ->orderByDesc('comments_count')
-            ->orderByDesc('created_at')
-            ->limit(3)
             ->get();
 
-        // 8. Năm bài xem nhiều nhất
-        $mostViewedArticles = Article::where('status', 'published')
-            ->whereNotIn('article_id', $excludedIds)
-            ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                ->whereIn('category_id', $categoryIds))
-            ->orderByDesc('views')
-            ->take(6)
+        // Lưu các ID bài viết đã lấy vào danh sách loại trừ
+        $excludedIds = array_merge($excludedIds, $singleLatestArticle->pluck('article_id')->toArray());
+
+
+        // 1. Tính toán phân trang các bài viết chưa hiển thị
+
+        $perPage = 4; // Số bài viết mỗi trang
+        $currentPage = request()->get('page', 1); // Trang hiện tại từ request
+
+        // Lấy ra tất cả các bài viết chưa hiển thị (như trong các bước trước)
+        $remainingArticles = Article::withCount('comments')
+            ->where('status', 'published')
+            ->where(function ($q) use ($whereCategory) {
+                $whereCategory($q);
+            })
+            ->whereNotIn('article_id', $excludedIds) // Loại trừ các bài viết đã lấy
+            ->orderByDesc('created_at') // Sắp xếp theo thời gian tạo hoặc tiêu chí bạn muốn
             ->get();
 
-        $topMainArticle = $mostViewedArticles->take(2);
-        $topSideArticles = $mostViewedArticles->slice(2);
+        // 2. Tính toán tổng số bài viết
+        $totalArticles = $remainingArticles->count();
 
-        // 9. Các query khác giữ nguyên
-        $articlesNews = Article::where('category_id', $category->category_id)
-            ->where('status', 'published')
-            ->whereHas('category', fn($q) => $q->where('is_active', 1))
-            ->orderByDesc('created_at')
-            ->limit(4)
-            ->get();
+        // 3. Phân trang các bài viết
+        $paginatedArticles = new \Illuminate\Pagination\LengthAwarePaginator(
+            $remainingArticles->forPage($currentPage, $perPage), // Các bài viết phân trang
+            $totalArticles, // Tổng số bài viết
+            $perPage, // Số lượng bài viết mỗi trang
+            $currentPage, // Trang hiện tại
+            ['path' => request()->url()] // Giữ lại query params
+        );
 
-        $articles = Article::where('category_id', $category->category_id)
-            ->where('status', 'published')
-            ->whereHas('category', fn($q) => $q->where('is_active', 1))
-            ->orderByDesc('created_at')
-            ->paginate(10);
+        // Trả về $paginatedArticles cho view hoặc xử lý tiếp
 
-        $articlesViews = Article::where('category_id', $category->category_id)
-            ->where('status', 'published')
-            ->whereHas('category', fn($q) => $q->where('is_active', 1))
-            ->orderByDesc('views')
-            ->orderByDesc('created_at')
-            ->distinct()
-            ->paginate(4);
 
-        $featuredArticle = Article::with('category')
-            ->where('category_id', $category->category_id)
-            ->where('status', 'published')
-            ->whereHas('category', fn($q) => $q->where('is_active', 1))
-            ->limit(4)
-            ->first();
+
+
+
+
+
+
+        // 5. Các dữ liệu khác (categories, tags, history, related)
 
         $categories = Category::withCount([
-            'articles as articles_count'       => fn($q) => $q->where('status', 'published'),
-            'subArticles as sub_articles_count' => fn($q) => $q->where('status', 'published'),
+            'articles as articles_count' => fn($q) => $q->where('status', 'published'),
+            'subArticles as sub_articles_count' => fn($q) => $q->where('status', 'published')
         ])
             ->where('is_active', 1)
             ->orderByRaw('articles_count + sub_articles_count DESC')
             ->take(6)
             ->get();
 
-
-        // Lấy parent categories cho menu
         $parentCategories = Category::whereNull('parent_id')
             ->where('is_active', 1)
             ->withCount(['articles' => fn($q) => $q->where('status', 'published')])
@@ -171,34 +176,22 @@ class CategoryUserController extends Controller
 
         foreach ($parentCategories as $parentCat) {
             $children = $childCategories[$parentCat->category_id] ?? collect();
-            $childArticlesCount = $children->sum('articles_count');
-            $parentCat->total_articles_count = $parentCat->articles_count + $childArticlesCount;
+            $parentCat->total_articles_count = $parentCat->articles_count + $children->sum('articles_count');
             $parentCat->children = $children;
         }
 
-        // Tags
         $tags = Tag::withCount('publishedArticles')
             ->has('publishedArticles')
             ->orderByDesc('published_articles_count')
             ->paginate(8);
 
-        // View history
         $userId = auth()->check() ? auth()->id() : null;
         $userIp = request()->ip();
-        $viewedArticleIds = ArticleView::where(function ($q) use ($userId, $userIp) {
-            if ($userId) {
-                $q->where('user_id', $userId);
-            } else {
-                $q->whereNull('user_id')->where('anonymous', $userIp);
-            }
-        })
-            ->orderByDesc('viewed_at')
-            ->pluck('article_id');
 
         $recentArticles = Article::where('status', 'published')
-            ->whereHas('category', fn($q) => $q->where('is_active', 1)
-                ->whereIn('category_id', $categoryIds))
-            ->where('article_id', '!=', optional($highlightedArticle)->article_id)
+            ->where(function ($q) use ($whereCategory) {
+                $whereCategory($q);
+            })
             ->whereIn('article_id', function ($q) use ($userId, $userIp) {
                 $q->select('article_id')
                     ->from('article_views')
@@ -209,34 +202,29 @@ class CategoryUserController extends Controller
             ->limit(4)
             ->get();
 
-        $relatedArticles = Article::where('category_id', $category->category_id)
+        $relatedArticles = Article::where(function ($q) use ($whereCategory) {
+            $whereCategory($q);
+        })
             ->where('status', 'published')
             ->whereNotIn('article_id', $recentArticles->pluck('article_id')->toArray())
-            ->where('article_id', '!=', optional($featuredArticle)->article_id)
-            ->whereHas('category', fn($q) => $q->where('is_active', 1))
             ->orderByDesc('views')
             ->limit(4)
             ->get();
 
-        // Trả về view
         return view('website.categories.categories', [
-            'parentCategories'    => $parentCategories,
-            'relatedArticles'     => $relatedArticles,
-            'recentArticles'      => $recentArticles,
-            'tags'                => $tags,
-            'categories'          => $categories,
-            'articlesNews'        => $articlesNews,
-            'category'            => $category,
-            'category2'           => Category::all(),
-            'articles'            => $articles,
-            'articlesViews'       => $articlesViews,
-            'featuredArticle'     => $featuredArticle,
-            'breakingNews'        => $breakingNews,
-            'highlightedArticle'  => $highlightedArticle,
-            'secondaryArticle'    => $secondaryArticle,
-            'nebulaNuggets'       => $nebulaNuggets,
-            'topSideArticles'     => $topSideArticles,
-            'topMainArticle'      => $topMainArticle,
+            'parentCategories' => $parentCategories,
+            'relatedArticles' => $relatedArticles,
+            'recentArticles' => $recentArticles,
+            'tags' => $tags,
+            'categories' => $categories,
+            'category' => $category,
+            'category2' => Category::all(),
+            'highlightedArticle' => $highlightedArticle,
+            'highlightedArticleByViews' => $highlightedArticleByViews,
+            'latestArticles' => $latestArticles,
+            'singleLatestArticle' => $singleLatestArticle,
+            'paginatedArticles' => $paginatedArticles,
+            'highlightedArticleLast30Days' => $highlightedArticleLast30Days
         ]);
     }
 }
