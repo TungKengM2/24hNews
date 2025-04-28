@@ -85,63 +85,13 @@ class CategoryUserController extends Controller
         $excludedIds = array_merge($excludedIds, $highlightedArticleLast30Days->pluck('article_id')->toArray());
 
 
-        // 4. Bài viết mới nhất (loại trừ tiếp)
-        $latestArticles = Article::withCount('comments')
+        $articles = Article::with('category', 'author', 'comments')
+            ->withCount('comments')
             ->where('status', 'published')
-            ->where(function ($q) use ($whereCategory) {
-                $whereCategory($q);
-            })
-            ->whereNotIn('article_id', $excludedIds)
-            ->orderByDesc('created_at') // Sắp xếp theo thời gian tạo
-            ->limit(2)
+            ->orderByDesc('created_at')
             ->get();
 
-        // Lưu các ID bài viết đã lấy vào danh sách loại trừ
-        $excludedIds = array_merge($excludedIds, $latestArticles->pluck('article_id')->toArray());
 
-        // 4. 1 bài mới nhất còn lại (loại trừ tiếp)
-        $singleLatestArticle = Article::withCount('comments')
-            ->where('status', 'published')
-            ->where(function ($q) use ($whereCategory) {
-                $whereCategory($q);
-            })
-            ->whereNotIn('article_id', $excludedIds)
-            ->orderByDesc('created_at') // Sắp xếp theo thời gian tạo
-            ->limit(1)
-            ->get();
-
-        // Lưu các ID bài viết đã lấy vào danh sách loại trừ
-        $excludedIds = array_merge($excludedIds, $singleLatestArticle->pluck('article_id')->toArray());
-
-
-        // 1. Tính toán phân trang các bài viết chưa hiển thị
-
-        $perPage = 4; // Số bài viết mỗi trang
-        $currentPage = request()->get('page', 1); // Trang hiện tại từ request
-
-        // Lấy ra tất cả các bài viết chưa hiển thị (như trong các bước trước)
-        $remainingArticles = Article::withCount('comments')
-            ->where('status', 'published')
-            ->where(function ($q) use ($whereCategory) {
-                $whereCategory($q);
-            })
-            ->whereNotIn('article_id', $excludedIds) // Loại trừ các bài viết đã lấy
-            ->orderByDesc('created_at') // Sắp xếp theo thời gian tạo hoặc tiêu chí bạn muốn
-            ->get();
-
-        // 2. Tính toán tổng số bài viết
-        $totalArticles = $remainingArticles->count();
-
-        // 3. Phân trang các bài viết
-        $paginatedArticles = new \Illuminate\Pagination\LengthAwarePaginator(
-            $remainingArticles->forPage($currentPage, $perPage), // Các bài viết phân trang
-            $totalArticles, // Tổng số bài viết
-            $perPage, // Số lượng bài viết mỗi trang
-            $currentPage, // Trang hiện tại
-            ['path' => request()->url()] // Giữ lại query params
-        );
-
-        // Trả về $paginatedArticles cho view hoặc xử lý tiếp
 
 
 
@@ -161,11 +111,12 @@ class CategoryUserController extends Controller
             ->take(6)
             ->get();
 
-        $parentCategories = Category::whereNull('parent_id')
-            ->where('is_active', 1)
-            ->withCount(['articles' => fn($q) => $q->where('status', 'published')])
-            ->orderByDesc('articles_count')
-            ->paginate(10);
+         // phân trang parentCategories
+         $parentCategories = Category::whereNull('parent_id')
+         ->where('is_active', 1)
+         ->withCount(['articles' => fn($q) => $q->where('status', 'published')])
+         ->orderByDesc('articles_count')
+         ->paginate(10, ['*'], 'categories_page');
 
         $parentIds = $parentCategories->pluck('category_id')->toArray();
         $childCategories = Category::whereIn('parent_id', $parentIds)
@@ -180,10 +131,13 @@ class CategoryUserController extends Controller
             $parentCat->children = $children;
         }
 
+        // phân trang tags
         $tags = Tag::withCount('publishedArticles')
             ->has('publishedArticles')
             ->orderByDesc('published_articles_count')
-            ->paginate(8);
+            ->paginate(8, ['*'], 'tags_page');
+
+       
 
         $userId = auth()->check() ? auth()->id() : null;
         $userIp = request()->ip();
@@ -213,6 +167,7 @@ class CategoryUserController extends Controller
 
         return view('website.categories.categories', [
             'parentCategories' => $parentCategories,
+            'articles'  => $articles,
             'relatedArticles' => $relatedArticles,
             'recentArticles' => $recentArticles,
             'tags' => $tags,
@@ -221,9 +176,7 @@ class CategoryUserController extends Controller
             'category2' => Category::all(),
             'highlightedArticle' => $highlightedArticle,
             'highlightedArticleByViews' => $highlightedArticleByViews,
-            'latestArticles' => $latestArticles,
-            'singleLatestArticle' => $singleLatestArticle,
-            'paginatedArticles' => $paginatedArticles,
+
             'highlightedArticleLast30Days' => $highlightedArticleLast30Days
         ]);
     }
