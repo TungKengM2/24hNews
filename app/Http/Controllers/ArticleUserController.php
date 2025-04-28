@@ -407,7 +407,6 @@ class ArticleUserController extends Controller
 
 
 
-
 public function storeReplyComment(Request $request, CommentModerationService $moderationService)
 {
     $request->validate([
@@ -441,15 +440,15 @@ public function storeReplyComment(Request $request, CommentModerationService $mo
     $parentComment = Comment::find($parentId);
     $depth         = $parentComment ? min($parentComment->depth + 1, 2) : 0;
 
-    // Kiểm duyệt nội dung bình luận trả lời
-    if (!$moderationService->checkComment($content, null, $userId, $articleId)) {
-        Log::warning("🚫 Bình luận trả lời bị từ chối: " . $content);
+    // // Kiểm duyệt nội dung bình luận trả lời
+    // if (!$moderationService->checkComment($content, null, $userId, $articleId)) {
+    //     Log::warning("🚫 Bình luận trả lời bị từ chối: " . $content);
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.',
-        ], 403);
-    }
+    //     return response()->json([
+    //         'success' => false,
+    //         'message' => 'Bình luận không được chấp nhận vì chứa từ ngữ không phù hợp.',
+    //     ], 403);
+    // }
 
     // Nếu được duyệt, tạo bình luận trả lời mới
     Comment::create([
@@ -466,6 +465,7 @@ public function storeReplyComment(Request $request, CommentModerationService $mo
         'message' => 'Bạn đã trả lời bình luận thành công!',
     ]);
 }
+
 
 
     public function reportComment(Request $request, $article_id, $comment_id)
