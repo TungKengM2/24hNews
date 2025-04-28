@@ -254,7 +254,7 @@
                 <div class="tc-whatsnew-news-style8 bg-white p-30 mb-10">
                     <div class="section-title-style2 mb-30 align-items-center justify-content-between">
                         <h4 class="me-30 color-000">Bài Viết Mới Nhất</h4>
-                        <a href="#" class="fsz-14px color-666 text-uppercase">See all <i
+                        <a href="{{ route('article.news') }}" class="fsz-14px color-666 text-uppercase">Xem Thêm <i
                                 class="la la-angle-right"></i></a>
                     </div>
 
