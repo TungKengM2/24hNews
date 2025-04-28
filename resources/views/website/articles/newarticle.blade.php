@@ -12,6 +12,37 @@
 </style>
   
     <main>
+         <!-- ====== start nav search ====== -->
+         <div class="tc-blog-nav-search py-4 border-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-7">
+                        <div class="info">
+                            <h1 class="fw-bold mb-2">Bài viết mới</h1>
+                            <p class="fw-semibold mb-3">
+                              Khám phá các bài viết trong trang này
+                            </p>
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-lg-end mb-0">
+                                <li class="breadcrumb-item"><a href="{{ route('home') }}">Trang chủ</a></li>
+                                <li class="breadcrumb-item"><a href="#">Bài viết mới</a></li>
+
+                              
+                            </ol>
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- ====== end nav search ====== -->
+
 
      
         <section class="tc-posts-tabs-style4 pt-60 pb-60">
