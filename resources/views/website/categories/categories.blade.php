@@ -24,7 +24,6 @@
         .tc-blog-nav-search .links a:hover::after {
             width: 100%;
         }
-        
     </style>
     <main>
 
@@ -271,17 +270,21 @@
                 <div class="content-widgets pt-50 pb-50">
                     <div class="row">
                         <div class="col-lg-9">
+                            {{-- resources/views/articles/index.blade.php --}}
+
+                            {{-- ====== 2 bài viết mới nhất ====== --}}
                             <div class="tc-post-list-style3">
                                 <div class="items">
-                                    <!-- Hiển thị 2 bài viết mới nhất -->
-                                    @forelse ($latestArticles as $article)
+                                    @php
+                                        $firstTwo = $articles->take(2);
+                                    @endphp
+
+                                    @forelse ($firstTwo as $article)
                                         <div class="item">
                                             <div class="row">
                                                 <div class="col-lg-5">
                                                     <div class="img th-230 img-cover overflow-hidden">
-                                                        <img src="{{ $article->thumbnail_url
-                                                            ? asset('storage/' . $article->thumbnail_url)
-                                                            : asset('images/default-thumbnail.jpg') }}"
+                                                        <img src="{{ $article->thumbnail_url ? asset('storage/' . $article->thumbnail_url) : asset('images/default-thumbnail.jpg') }}"
                                                             alt="{{ $article->title }}">
                                                     </div>
                                                 </div>
@@ -330,160 +333,176 @@
                                         <section class="features-posts pt-50 pb-50 bg-gray1">
                                             <div class="container">
                                                 <div class="row">
-                                                    <div class="col-12">
-                                                        <p class="text-center">Hiện tại không có bài viết hiển thị.</p>
+                                                    <div class="col-12 text-center">
+                                                        <p>Hiện tại không có bài viết hiển thị.</p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </section>
                                     @endforelse
                                 </div>
-
                             </div>
+
+                            {{-- ====== Bài viết thứ 3 ====== --}}
                             <div class="tc-post-grid-default pb-40">
-                                @forelse($singleLatestArticle as $article)
+                                @php
+                                    $third = $articles->skip(2)->first();
+                                @endphp
+
+                                @if ($third)
                                     <div class="item pt-30">
                                         <div class="img img-cover th-575">
-                                            <img src="{{ $article->thumbnail_url
-                                                ? asset('storage/' . $article->thumbnail_url)
-                                                : asset('images/default-thumbnail.jpg') }}"
-                                                alt="">
+                                            <img src="{{ $third->thumbnail_url ? asset('storage/' . $third->thumbnail_url) : asset('images/default-thumbnail.jpg') }}"
+                                                alt="{{ $third->title }}">
                                         </div>
                                         <div class="content pt-30">
-                                            <a href="{{ route('articles.article', $article->slug) }}"
+                                            <a href="{{ route('articles.article', $third->slug) }}"
                                                 class="news-cat color-999 fsz-13px text-uppercase mb-10">
-                                                {{ $article->category->name ?? 'Uncategorized' }}
+                                                {{ $third->category->name ?? 'Uncategorized' }}
                                             </a>
                                             <h2 class="title mb-20">
-                                                <a href="{{ route('articles.article', $article->slug) }}"
-                                                    class="fsz-35px lh-3">
-                                                    {{ $article->title }}
-                                                </a>
+                                                <a href="{{ route('articles.article', $third->slug) }}"
+                                                    class="fsz-35px lh-3">{{ $third->title }}</a>
                                             </h2>
                                             <div class="text color-666">
-                                                {{ Str::limit($article->excerpt, 150, '...') }}
+                                                {{ Str::limit($third->excerpt, 150, '...') }}
                                             </div>
                                             <div class="meta-bot lh-1 mt-40">
                                                 <ul class="d-flex">
                                                     <li class="date me-5">
-                                                        <a href="{{ route('articles.article', $article->slug) }}">
+                                                        <a href="{{ route('articles.article', $third->slug) }}">
                                                             <i class="la la-calendar me-2"></i>
-                                                            {{ optional($article->created_at)->translatedFormat('d \t\há\n\g m, Y') ?? '' }}
-
+                                                            {{ $third->created_at->translatedFormat('d \t\há\n\g m, Y') }}
                                                         </a>
                                                     </li>
                                                     <li class="author me-5">
                                                         <a
-                                                            href="{{ route('website.profileAuth', ['id' => $article->author->user_id]) }}">
+                                                            href="{{ route('website.profileAuth', ['id' => $third->author->user_id]) }}">
                                                             <i class="la la-user me-2"></i> by <span
-                                                                class="color-000">{{ $article->author->username }}</span>
+                                                                class="color-000">{{ $third->author->username ?? 'Unknown' }}</span>
                                                         </a>
                                                     </li>
                                                     <li class="comment me-5">
-                                                        <a href="{{ route('articles.article', $article->slug) }}">
+                                                        <a href="{{ route('articles.article', $third->slug) }}">
                                                             <i class="la la-comment me-2"></i>
-                                                            {{ $article->comments_count }} Bình Luận
+                                                            {{ $third->comments_count }} Bình Luận
                                                         </a>
                                                     </li>
                                                     <li class="views">
-                                                        <a href="{{ route('articles.article', $article->slug) }}">
-                                                            <i class="la la-eye me-2"></i> {{ $article->views ?? 0 }}
-                                                            Lượt Xem
+                                                        <a href="{{ route('articles.article', $third->slug) }}">
+                                                            <i class="la la-eye me-2"></i> {{ $third->views ?? 0 }} Lượt
+                                                            Xem
                                                         </a>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
-                                @empty
+                                @else
                                     <br>
                                     <section class="features-posts pt-50 pb-50 bg-gray1">
                                         <div class="container">
                                             <div class="row">
-                                                <div class="col-12">
-                                                    <p class="text-center">Hiện tại không có bài viết hiển thị.</p>
+                                                <div class="col-12 text-center">
+                                                    <p>Hiện tại không có bài viết hiển thị.</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </section>
-                                @endforelse
+                                @endif
                             </div>
 
-                            <!-- ====== start banner20 ====== -->
-                            <div class="banner20 border-1  border-bottom brd-gray pt-20 pb-20">
-
+                            {{-- ====== Banner (tuỳ chọn) ====== --}}
+                            <div class="banner20 border-1 border-bottom brd-gray pt-20 pb-20">
+                                {{-- Nội dung banner ở đây --}}
                             </div>
 
+                            {{-- ====== Danh sách bài viết còn lại + phân trang ====== --}}
                             <div class="tc-post-list-style3">
                                 <div class="items">
-                                    @if ($paginatedArticles->isEmpty())
+                                    @php
+                                        $remaining = $articles->skip(3)->values(); // reset key
+                                        $perPage = 4;
+                                        $currentPage = Illuminate\Pagination\Paginator::resolveCurrentPage('page');
+                                        $paginatedArticles = new Illuminate\Pagination\LengthAwarePaginator(
+                                            $remaining->forPage($currentPage, $perPage),
+                                            $remaining->count(),
+                                            $perPage,
+                                            $currentPage,
+                                            ['path' => Illuminate\Pagination\Paginator::resolveCurrentPath()],
+                                        );
+                                    @endphp
+
+                                    @forelse ($paginatedArticles as $article)
+                                        <div class="item mt-30">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <div class="img th-230 img-cover overflow-hidden">
+                                                        <img src="{{ $article->thumbnail_url ? asset('storage/' . $article->thumbnail_url) : asset('images/default-thumbnail.jpg') }}"
+                                                            alt="{{ $article->title }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    <div class="content mt-20 mt-lg-0">
+                                                        <a href="{{ route('articles.article', $article->slug) }}"
+                                                            class="color-999 fsz-13px text-uppercase mb-10">{{ $article->category->name ?? 'Uncategorized' }}</a>
+                                                        <h4 class="title fw-bold">
+                                                            <a href="{{ route('articles.article', $article->slug) }}"
+                                                                class="hover-underline">{{ $article->title }}</a>
+                                                        </h4>
+                                                        <div class="text color-666 mt-20">
+                                                            {{ Str::limit($article->description, 150) }}
+                                                        </div>
+                                                        <div class="meta-bot fsz-13px color-666">
+                                                            <ul class="d-flex">
+                                                                <li class="date me-5">
+                                                                    <a
+                                                                        href="{{ route('articles.article', $article->slug) }}">
+                                                                        <i
+                                                                            class="la la-calendar me-2"></i>{{ $article->created_at->translatedFormat('d \t\há\n\g m, Y') }}
+                                                                    </a>
+                                                                </li>
+                                                                <li class="author me-5">
+                                                                    <a
+                                                                        href="{{ route('website.profileAuth', ['id' => $article->author->user_id]) }}">
+                                                                        <i class="la la-user me-2"></i> by <span
+                                                                            class="color-000">{{ $article->author->username ?? 'Unknown' }}</span>
+                                                                    </a>
+                                                                </li>
+                                                                <li class="comment">
+                                                                    <a
+                                                                        href="{{ route('articles.article', $article->slug) }}">
+                                                                        <i
+                                                                            class="la la-comment me-2"></i>{{ $article->comments_count }}
+                                                                        Bình Luận
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <br>
                                         <section class="features-posts pt-50 pb-50 bg-gray1">
                                             <div class="container">
                                                 <div class="row">
-                                                    <div class="col-12">
-                                                        <p class="text-center">Hiện tại không có bài viết hiển thị.</p>
+                                                    <div class="col-12 text-center">
+                                                        <p>Hiện tại không có bài viết hiển thị.</p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </section>
-                                    @else
-                                        @foreach ($paginatedArticles as $article)
-                                            <div class="item mt-30">
-                                                <div class="row">
-                                                    <div class="col-lg-5">
-                                                        <div class="img th-230 img-cover overflow-hidden">
-                                                            <img src="{{ $article->thumbnail_url
-                                                                ? asset('storage/' . $article->thumbnail_url)
-                                                                : asset('images/default-thumbnail.jpg') }}"
-                                                                alt="">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-7">
-                                                        <div class="content mt-20 mt-lg-0">
-                                                            <a href="page-blog.html#"
-                                                                class="color-999 fsz-13px text-uppercase mb-10">{{ $article->category->name }}</a>
-                                                            <h4 class="title fw-bold">
-                                                                <a href="{{ route('articles.article', $article->slug) }}"
-                                                                    class="hover-underline">
-                                                                    {{ $article->title }}
-                                                                </a>
-                                                            </h4>
-                                                            <div class="text color-666 mt-20">
-                                                                {{ Str::limit($article->description, 150) }}
-                                                            </div>
-                                                            <div class="meta-bot fsz-13px color-666">
-                                                                <ul class="d-flex">
-                                                                    <li class="date me-5">
-                                                                        <a href="page-blog.html#"><i
-                                                                                class="la la-calendar me-2"></i>
-                                                                            {{ optional($article->created_at)->translatedFormat('d \t\há\n\g m, Y') ?? '' }}
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="author me-5">
-                                                                        <a href="page-blog.html#"><i
-                                                                                class="la la-user me-2"></i> by <span
-                                                                                class="color-000">{{ $article->author->username }}</span></a>
-                                                                    </li>
-                                                                    <li class="comment">
-                                                                        <a href="page-blog.html#"><i
-                                                                                class="la la-comment me-2"></i>
-                                                                            {{ $article->comments_count }} Bình Luận</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
+                                    @endforelse
 
-                                </div>
-                                <!-- Phân trang -->
-                                <div class="pagination style-1 color-main justify-content-center mt-60">
-                                    {{ $paginatedArticles->links() }} <!-- Laravel tự động hiển thị phân trang -->
+                                    {{-- Phân trang --}}
+                                    <div class="pagination style-1 color-main justify-content-center mt-60">
+                                        {{ $paginatedArticles->links() }}
+                                    </div>
                                 </div>
                             </div>
+
 
                         </div>
                         <div class="col-lg-3">
@@ -554,12 +573,12 @@
                                     <p class="color-000 text-uppercase mb-30">Tags Nổi Bật </p>
                                     <div class="tags-content">
                                         @foreach ($tags as $tag)
-                                        <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}"
-                                            class="  btn btn-sm ">{{ $tag->name }}
-                                            ({{ $tag->published_articles_count }})
-                                        </a>
-                                    @endforeach
-                                    
+                                            <a href="{{ route('tags.shows', ['tag' => $tag->tag_id]) }}"
+                                                class="  btn btn-sm ">{{ $tag->name }}
+                                                ({{ $tag->published_articles_count }})
+                                            </a>
+                                        @endforeach
+
                                     </div>
                                 </div>
                                 <!-- end widget tags -->
@@ -567,16 +586,17 @@
                                 <!-- widget webStories -->
                                 <div class="tc-widget-webStories-style5">
                                     <div class="card-header bg-white border-bottom border-primary border-3">
-                                        <p class="color-000 text-uppercase mb-30">Bài Viết Đã Xem </p>
+                                        <p class="color-000 text-uppercase mb-30">Bài Viết Đã Xem</p>
                                     </div>
-                                    <div class=" list-group-flush">
+                                    <div class="list-group-flush">
                                         @if (isset($recentArticles) && $recentArticles->count() > 0)
                                             @foreach ($recentArticles as $recentArticle)
                                                 <a href="{{ route('articles.article', $recentArticle->slug) }}"
                                                     class="list-group-item list-group-item-action d-flex align-items-center p-3">
                                                     <div>
                                                         <h6 class="mb-1">
-                                                            {{ Str::limit($recentArticle->title, 100) }}</h6>
+                                                            {{ Str::limit($recentArticle->title, 100) }}
+                                                        </h6>
                                                         <small class="text-muted">
                                                             <i class="la la-calendar me-1"></i>
                                                             {{ $recentArticle->created_at->format('d/m/Y') }}
@@ -589,6 +609,8 @@
                                         @endif
                                     </div>
                                 </div>
+                                
+                                
                             </div>
                         </div>
                     </div>
