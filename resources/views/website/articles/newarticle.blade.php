@@ -75,23 +75,16 @@
                         @endforeach
                     </div>
                 </div>
-                <hr>
+            
         
                 <!-- Phân trang -->
-                <div class="pagination mt-60 text-center">
+                <div class="pagination mt-30 text-center">
                     {!! $articles->links() !!}
                 </div>
                 
             </div>
         </section>
-        
-
-
-
-
-
-
-        
+    
         <!-- ====== start another-news ====== -->
         @if ($topCategoriesWithArticles->isNotEmpty())
             <!-- Kiểm tra nếu có dữ liệu trong topCategoriesWithArticles -->
