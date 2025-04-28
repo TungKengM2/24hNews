@@ -56,6 +56,9 @@ use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorAr
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
+Route::get('/suggestions', [HomeController::class, 'suggestions'])->name('suggestions');
+Route::get('/category-suggestions', [HomeController::class, 'categorySuggestions'])->name('category.suggestions');
+Route::get('/tag-suggestions', [HomeController::class, 'tagSuggestions'])->name('tag.suggestions');
 // dat them
 
 
@@ -318,6 +321,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::get('/dashboard', [AuthorDashboard::class, 'index'])->name('author.dashboard');
+    Route::get('/dashboard/filter', [AuthorDashboard::class, 'filterData'])->name('author.dashboard.filter');
 
     Route::get('/profile-setting', function () {
         return view('author.profile-setting');

@@ -680,7 +680,7 @@
                                             </a>
                                         </h2>
                                         <div class="text color-666 mb-20">
-                                            {{ Str::limit($highlightedArticle->preview_content ?? strip_tags($highlightedArticle->content), 180) }}
+                                            {!! Str::limit($highlightedArticle->preview_content ?? strip_tags($highlightedArticle->content), 180) !!}
                                         </div>
                                         <div class="meta-bot fsz-13px color-666 mb-40">
                                             <ul class="d-flex">
@@ -732,7 +732,7 @@
                                             </a>
                                         </h2>
                                         <div class="text color-666 mb-20">
-                                            {{ Str::limit($secondaryArticle->preview_content ?? strip_tags($secondaryArticle->content), 180) }}
+                                            {!! Str::limit($secondaryArticle->preview_content ?? strip_tags($secondaryArticle->content), 180) !!}
                                         </div>
                                         <div class="meta-bot fsz-13px color-666 mb-40">
                                             <ul class="d-flex">
