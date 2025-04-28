@@ -3,431 +3,556 @@
 @section('content')
     <div class="content-wrapper">
         <div class="container-full">
-            <!-- Main content -->
-            <section class="content">
-                <div class="row">
-                    <h1>Tổng Quan Bài Viết </h1>
-                    <!-- Tổng số bài viết -->
-                    <div class="col-xl-3 col-md-6 col-12  ">
-                        <div class="box ">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Tổng bài viết</h5>
-                                        <p class="mb-0 text-fade fs-12">Tất cả trạng thái</p>
+            <div class="row mt-20">
+               <h3>Tổng Quan Bài Viết</h3>
+                <!-- Tổng số bài viết -->
+                <div class="col-xl-2 col-md-6 col-12  ">
+                    <div class="box ">
+                        <div class="box-body">
+                            <div class="d-flex align-items-center">
+                                <div class="ms-15">
+                                    <h5 class="mb-0">Tổng bài viết</h5>
 
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['total'] }}</h3>
-                                    <div class="text-primary">
-                                        <i class="fa fa-file-text fa-2x"></i>
-                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- Published -->
-                    <div class="col-xl-3 col-md-6 col-12 ">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Bài viết đã xuất bản</h5>
-                                        <p class="mb-0 text-fade fs-12">Trạng thái: Đã xuất bản</p>
-
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['published'] }}</h3>
-                                    <div class="text-success">
-                                        <i class="fa fa-check-circle fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Archived -->
-                    {{-- <div class="col-xl-3 col-md-6 col-12 ">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Bài viết đã lưu trữ</h5>
-                                        <p class="mb-0 text-fade fs-12">Trạng thái: Đã lưu trữ</p>
-
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['archived'] }}</h3>
-                                    <div class="text-secondary">
-                                        <i class="fa fa-archive fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
-
-                    <!-- Pending -->
-                    <div class="col-xl-3 col-md-6 col-12 ">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Bài viết đang chờ</h5>
-                                        <p class="mb-0 text-fade fs-12">Trạng thái: Đang chờ</p>
-
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['pending'] }}</h3>
-                                    <div class="text-warning">
-                                        <i class="fa fa-hourglass-half fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <!-- Rejected -->
-                    <div class="col-xl-3 col-md-6 col-12 ">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Bài viết bị từ chối</h5>
-                                        <p class="mb-0 text-fade fs-12">Trạng thái: Bị từ chối</p>
-
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['reject'] }}</h3>
-                                    <div class="text-danger">
-                                        <i class="fa fa-times-circle fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- <!-- Draft -->
-                    <div class="col-xl-3 col-md-6 col-12 ">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Bài viết lưu nháp</h5>
-
-                                    </div>
-                                </div>
-                                <div class="mt-40 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $articleStats['draft'] }}</h3>
-                                    <div class="text-info">
-                                        <i class="fa fa-pencil-square fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
-
-                </div>
-                <!-- Thống kê người dùng -->
-                <div class="row">
-                    <!-- Tổng số người dùng -->
-                    <h1>Tổng Quan Người Dùng</h1>
-                    <div class="col-xl-3 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Tổng số người dùng</h5>
-                                        <p class="mb-0 text-fade fs-12">Tất cả vai trò</p>
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $userCount['total'] }}</h3>
-                                    <div class="text-primary">
-                                        <i class="fa fa-users fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Người dùng -->
-                    <div class="col-xl-3 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Người dùng</h5>
-                                        <p class="mb-0 text-fade fs-12">Vai trò: Người dùng</p>
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $userCount['user'] }}</h3>
-                                    <div class="text-info">
-                                        <i class="fa fa-user fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kiểm duyệt viên -->
-                    <div class="col-xl-3 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Kiểm duyệt viên</h5>
-                                        <p class="mb-0 text-fade fs-12">Vai trò: Kiểm duyệt viên</p>
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $userCount['moderators'] }}</h3>
-                                    <div class="text-success">
-                                        <i class="fas fa-user-shield fa-2x"></i> <!-- Cập nhật class -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tác giả -->
-                    <div class="col-xl-3 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Tác giả</h5>
-                                        <p class="mb-0 text-fade fs-12">Vai trò: Tác giả</p>
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $userCount['authors'] }}</h3>
-                                    <div class="text-warning">
-                                        <i class="fas fa-user-edit fa-2x"></i> <!-- Cập nhật class -->
-                                    </div>
+                            <div class="mt-40 d-flex justify-content-between align-items-center">
+                                <h3 class="fw-600">{{ $articleStats['total'] }}</h3>
+                                <div class="text-primary">
+                                    <i class="fa fa-file-text fa-2x"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <h1>Tổng Quan Tương Tác</h1>
-                    <!-- Lượt thích -->
-                    <div class="col-xl-4 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Lượt thích</h5>
-                                        <p class="mb-0 text-fade fs-12">Tổng lượt thích bài viết</p>
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $totalLikes }}</h3>
-                                    <div class="text-danger">
-                                        <i class="fa fa-thumbs-up fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Lượt xem -->
-                    <div class="col-xl-4 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Lượt xem</h5>
-                                        <p class="mb-0 text-fade fs-12">Tổng lượt xem bài viết</p>
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $totalViews }}</h3>
-                                    <div class="text-success">
-                                        <i class="fa fa-eye fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Bình luận -->
-                    <div class="col-xl-4 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Bình luận</h5>
-                                        <p class="mb-0 text-fade fs-12">Tất cả bình luận</p>
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $totalComments }}</h3>
-                                    <div class="text-warning">
-                                        <i class="fa fa-comments fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Người theo dõi dat them -->
-                    <div class="col-xl-4 col-md-6 col-12">
-                        <div class="box">
-                            <div class="box-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="ms-15">
-                                        <h5 class="mb-0">Người theo dõi </h5>
-                                        <p class="mb-0 text-fade fs-12">Tổng số người đang theo dõi </p>
-                                    </div>
-                                </div>
-                                <div class="mt-20 d-flex justify-content-between align-items-center">
-                                    <h3 class="fw-600">{{ $totalFollowers }}</h3>
-                                    <div class="text-info">
-                                        <a href="{{ route('admin.followers') }}" class="btn btn-primary">
-                                            <i class="fa fa-eye "></i> Xem danh sách
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Thống kê bài viết -->
-                <div class="row mt-2">
-                    <div class="col-12 col-xl-6">
-                        <div class="box">
-                            <div class="box-header with-border d-flex align-items-center justify-content-between">
-                                <h4 class="box-title">Thống kê bài viết</h4>
-                                <form method="GET" action="{{ route('admin.dashboard') }}"
-                                    class="d-flex align-items-center">
-                                    <label for="article_type" class="me-2">Hiển thị:</label>
-                                    <select class="form-select w-auto" id="article_type" name="article_type"
-                                        onchange="this.form.submit()">
-                                        <option value="daily" {{ ($type ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo
-                                            ngày</option>
-                                        <option value="monthly" {{ ($type ?? 'daily') === 'monthly' ? 'selected' : '' }}>
-                                            Theo tháng</option>
-                                        <option value="yearly" {{ ($type ?? 'daily') === 'yearly' ? 'selected' : '' }}>
-                                            Theo
-                                            năm</option>
-                                    </select>
-                                </form>
-                            </div>
-                            <div class="box-body">
-                                <canvas id="articleStatsChart" width="400" height="200"></canvas>
-                                <div id="noArticleDataMessage" class="text-center p-4" style="display: none;">
-                                    <p>Không có dữ liệu để hiển thị</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-xl-6">
-                        <div class="box">
-                            <div class="box-header with-border d-flex align-items-center justify-content-between">
-                                <h4 class="box-title">Thống kê tương tác</h4>
-                                <form method="GET" action="{{ route('admin.dashboard') }}"
-                                    class="d-flex align-items-center">
-                                    <label for="interaction_type" class="me-2">Hiển thị:</label>
-                                    <select class="form-select w-auto" id="interaction_type" name="interaction_type"
-                                        onchange="this.form.submit()">
-                                        <option value="daily"
-                                            {{ ($interactionType ?? 'daily') === 'daily' ? 'selected' : '' }}>Theo ngày
-                                        </option>
-                                        <option value="monthly"
-                                            {{ ($interactionType ?? 'daily') === 'monthly' ? 'selected' : '' }}>Theo tháng
-                                        </option>
-                                        <option value="yearly"
-                                            {{ ($interactionType ?? 'daily') === 'yearly' ? 'selected' : '' }}>Theo năm
-                                        </option>
-                                    </select>
-                                </form>
-                            </div>
-                            <div class="box-body">
-                                <canvas id="interactionStatsChart" width="400" height="200"></canvas>
-                                <div id="noInteractionDataMessage" class="text-center p-4" style="display: none;">
-                                    <p>Không có dữ liệu để hiển thị</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    {{-- <div class="col-6">
-                        <div class="box">
-                            <div class="box-header">
-                                <h4>Thống kê Người Dùng Theo Vai Trò (<span id="selectedType">{{ ucfirst($type) }}</span>)</h4>
-                            </div>
-                            <div class="box-body">
-                                <!-- Dropdown chọn loại thời gian -->
-                                <div style="margin-bottom: 15px; text-align: center;">
-                                    <label for="timeType">Xem theo: </label>
-                                    <select id="timeType" class="form-control" style="display: inline-block; width: auto;">
-                                        <option value="daily" {{ $type === 'daily' ? 'selected' : '' }}>Ngày</option>
-                                        <option value="monthly" {{ $type === 'monthly' ? 'selected' : '' }}>Tháng</option>
-                                        <option value="yearly" {{ $type === 'yearly' ? 'selected' : '' }}>Năm</option>
-                                    </select>
-                                </div>
-
-                                <!-- Chú thích -->
-                                <div id="chartLegendUser" style="text-align: center; margin-bottom: 10px; font-weight: bold;">
-                                    Số lượng Người Dùng Theo Vai Trò
-                                </div>
-
-                                <!-- Biểu đồ -->
-                                <div style="overflow-x: auto;" id="chartContainerUser">
-                                    <canvas id="usersChart" width="800" height="400"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
-                    <div class="col-6">
-                        <div class="box">
-                            <div class="box-header">
-                                <h4>Thống kê Tag Theo Số Lượng Bài Viết</h4>
-                            </div>
-                            <div class="box-body">
-                                <!-- Chú thích cố định -->
-                                <div id="chartLegend" style="text-align: center; margin-bottom: 10px; font-weight: bold;">
-                                    Số lượng Tag Theo Số Lượng Bài Viết Đã Xuất Bản
-                                </div>
-                                <!-- Biểu đồ có cuộn ngang -->
-                                <div style="overflow-x: auto; white-space: nowrap;" id="chartContainer">
-                                    <canvas id="tagsChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {{-- <div class="col-6">
+                <!-- Archived -->
+                <div class="col-xl-2 col-md-6 col-12 ">
                     <div class="box">
-                        <div style="width: 80%; margin: auto;">
-                            <h1>Thống kê số lượng bài viết theo Tag</h1>
-                            <canvas id="tagsChart" width="800" height="400"></canvas>
-                            <p id="noTagDataMessage" style="color: red; display: none;">Không có dữ liệu để hiển thị.</p>
+                        <div class="box-body">
+                            <div class="d-flex align-items-center">
+                                <div class="ms-15">
+                                    <h5 class="mb-0">Bài viết đã lưu trữ</h5>
+
+                                </div>
+                            </div>
+                            <div class="mt-40 d-flex justify-content-between align-items-center">
+                                <h3 class="fw-600">{{ $articleStats['archived'] }}</h3>
+                                <div class="text-secondary">
+                                    <i class="fa fa-archive fa-2x"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                   </div> --}}
                 </div>
 
+                <!-- Pending -->
+                <div class="col-xl-2 col-md-6 col-12 ">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="d-flex align-items-center">
+                                <div class="ms-15">
+                                    <h5 class="mb-0">Bài viết đang chờ</h5>
 
+                                </div>
+                            </div>
+                            <div class="mt-40 d-flex justify-content-between align-items-center">
+                                <h3 class="fw-600">{{ $articleStats['pending'] }}</h3>
+                                <div class="text-warning">
+                                    <i class="fa fa-hourglass-half fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            </section>
+                <!-- Published -->
+                <div class="col-xl-2 col-md-6 col-12 ">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="d-flex align-items-center">
+                                <div class="ms-15">
+                                    <h5 class="mb-0">Bài viết đã xuất bản</h5>
+
+                                </div>
+                            </div>
+                            <div class="mt-20 d-flex justify-content-between align-items-center">
+                                <h3 class="fw-600">{{ $articleStats['published'] }}</h3>
+                                <div class="text-success">
+                                    <i class="fa fa-check-circle fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rejected -->
+                <div class="col-xl-2 col-md-6 col-12 ">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="d-flex align-items-center">
+                                <div class="ms-15">
+                                    <h5 class="mb-0">Bài viết bị từ chối</h5>
+
+                                </div>
+                            </div>
+                            <div class="mt-40 d-flex justify-content-between align-items-center">
+                                <h3 class="fw-600">{{ $articleStats['reject'] }}</h3>
+                                <div class="text-danger">
+                                    <i class="fa fa-times-circle fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Draft -->
+                <div class="col-xl-2 col-md-6 col-12 ">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="d-flex align-items-center">
+                                <div class="ms-15">
+                                    <h5 class="mb-0">Bài viết lưu nháp</h5>
+
+                                </div>
+                            </div>
+                            <div class="mt-40 d-flex justify-content-between align-items-center">
+                                <h3 class="fw-600">{{ $articleStats['draft'] }}</h3>
+                                <div class="text-info">
+                                    <i class="fa fa-pencil-square fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Thống kê người dùng -->
+            <div class="row">
+                <!-- Tổng số người dùng -->
+                <h3>Tổng Quan Người Dùng</h3>
+                <div class="col-xl-3 col-md-6 col-12">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="d-flex align-items-center">
+                                <div class="ms-15">
+                                    <h5 class="mb-0">Tổng số người dùng</h5>
+                                    <p class="mb-0 text-fade fs-12">Tất cả vai trò</p>
+                                </div>
+                            </div>
+                            <div class="mt-20 d-flex justify-content-between align-items-center">
+                                <h3 class="fw-600">{{ $userCount['total'] }}</h3>
+                                <div class="text-primary">
+                                    <i class="fa fa-users fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Người dùng -->
+                <div class="col-xl-3 col-md-6 col-12">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="d-flex align-items-center">
+                                <div class="ms-15">
+                                    <h5 class="mb-0">Người dùng</h5>
+                                    <p class="mb-0 text-fade fs-12">Vai trò: Người dùng</p>
+                                </div>
+                            </div>
+                            <div class="mt-20 d-flex justify-content-between align-items-center">
+                                <h3 class="fw-600">{{ $userCount['user'] }}</h3>
+                                <div class="text-info">
+                                    <i class="fa fa-user fa-2x"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kiểm duyệt viên -->
+                <div class="col-xl-3 col-md-6 col-12">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="d-flex align-items-center">
+                                <div class="ms-15">
+                                    <h5 class="mb-0">Kiểm duyệt viên</h5>
+                                    <p class="mb-0 text-fade fs-12">Vai trò: Kiểm duyệt viên</p>
+                                </div>
+                            </div>
+                            <div class="mt-20 d-flex justify-content-between align-items-center">
+                                <h3 class="fw-600">{{ $userCount['moderators'] }}</h3>
+                                <div class="text-success">
+                                    <i class="fas fa-user-shield fa-2x"></i> <!-- Cập nhật class -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tác giả -->
+                <div class="col-xl-3 col-md-6 col-12">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="d-flex align-items-center">
+                                <div class="ms-15">
+                                    <h5 class="mb-0">Tác giả</h5>
+                                    <p class="mb-0 text-fade fs-12">Vai trò: Tác giả</p>
+                                </div>
+                            </div>
+                            <div class="mt-20 d-flex justify-content-between align-items-center">
+                                <h3 class="fw-600">{{ $userCount['authors'] }}</h3>
+                                <div class="text-warning">
+                                    <i class="fas fa-user-edit fa-2x"></i> <!-- Cập nhật class -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6 col-12">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="d-flex align-items-center">
+                                <div class="ms-15">
+                                    <h5 class="mb-0">Người theo dõi </h5>
+                                    <p class="mb-0 text-fade fs-12">Tổng số người đang theo dõi </p>
+                                </div>
+                            </div>
+                            <div class="mt-20 d-flex justify-content-between align-items-center">
+                                <h3 class="fw-600">{{ $totalFollowers }}</h3>
+                                <div class="text-info">
+                                    <a href="{{ route('admin.followers') }}" class="btn btn-primary">
+                                        <i class="fa fa-eye "></i> Xem danh sách
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <!-- Bộ lọc -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h4 class="box-title">Bộ lọc</h4>
+                </div>
+                <div class="box-body">
+                    <form action="{{ route('admin.dashboard') }}" method="GET" id="filterForm">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="date_from">Từ ngày</label>
+                                <input type="date" class="form-control" id="date_from" name="date_from"
+                                    value="{{ request('date_from') }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="date_to">Đến ngày</label>
+                                <input type="date" class="form-control" id="date_to" name="date_to"
+                                    value="{{ request('date_to') }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="view_type">Hiển thị theo</label>
+                                <select class="form-control" id="view_type" name="view_type">
+                                    <option value="daily" {{ request('view_type', 'daily') === 'daily' ? 'selected' : '' }}>Theo ngày</option>
+                                    <option value="monthly" {{ request('view_type') === 'monthly' ? 'selected' : '' }}>Theo tháng</option>
+                                    <option value="yearly" {{ request('view_type') === 'yearly' ? 'selected' : '' }}>Theo năm</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label>&nbsp;</label>
+                                <div class="d-flex">
+                                    <button type="submit" class="btn btn-primary mr-2">Lọc</button>
+                                    <button type="button" class="btn btn-secondary" id="resetFilter">Đặt lại</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Hiển thị ngày bắt đầu và ngày kết thúc -->
+            @if(request('date_from') || request('date_to'))
+                <div class="col-12 mt-3">
+                    <div class="alert alert-info">
+                        <p>
+                            <strong>Ngày bắt đầu:</strong> {{ request('date_from') ? request('date_from') : 'Không có' }}
+                        </p>
+                        <p>
+                            <strong>Ngày kết thúc:</strong> {{ request('date_to') ? request('date_to') : 'Không có' }}
+                        </p>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Biểu đồ -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h4 class="box-title">Thống kê bài viết</h4>
+                        </div>
+                        <div class="box-body">
+                            <canvas id="articleStatsChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h4 class="box-title">Thống kê tương tác</h4>
+                        </div>
+                        <div class="box-body">
+                            <canvas id="interactionStatsChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="box">
+                        <div class="box-header">
+                            <h4>Thống kê Tag Theo Số Lượng Bài Viết</h4>
+                        </div>
+                        <div class="box-body">
+                            <!-- Chú thích cố định -->
+                            <div id="chartLegend" style="text-align: center; margin-bottom: 10px; font-weight: bold;">
+                                Số lượng Tag Theo Số Lượng Bài Viết Đã Xuất Bản
+                            </div>
+                            <!-- Biểu đồ có cuộn ngang -->
+                            <div style="overflow-x: auto; white-space: nowrap;" id="chartContainer">
+                                <canvas id="tagsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <script id="articleStatsData" type="application/json">
+        @json($timeBasedArticleStats)
+    </script>
+    <script id="interactionStatsData" type="application/json">
+        @json($timeBasedInteractionStats)
+    </script>
+    <script id="commentsStatsData" type="application/json">
+        @json($timeBasedCommentsStats)
+    </script>
+    <script id="likesStatsData" type="application/json">
+        @json($timeBasedLikesStats)
+    </script>
+@endsection
 
-
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Thống kê số lượng bài viết theo Tag
-        // Biểu đồ thống kê tag theo số lượng bài viết
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            // Dữ liệu bài viết
+            const articleStatsData = JSON.parse(document.getElementById('articleStatsData').textContent);
+            const articleLabels = articleStatsData.map(stat => stat.date);
+            const publishedData = articleStatsData.map(stat => stat.published);
+            const pendingData = articleStatsData.map(stat => stat.pending);
+            const rejectedData = articleStatsData.map(stat => stat.rejected);
+            const draftData = articleStatsData.map(stat => stat.draft);
+            const archivedData = articleStatsData.map(stat => stat.archived);
+
+            // Biểu đồ bài viết
+            const articleStatsChartCtx = document.getElementById('articleStatsChart').getContext('2d');
+            new Chart(articleStatsChartCtx, {
+                type: 'line',
+                data: {
+                    labels: articleLabels,
+                    datasets: [
+                        {
+                            label: 'Đã xuất bản',
+                            data: publishedData,
+                            borderColor: '#4CAF50', // Màu xanh lá cây đậm
+                            backgroundColor: 'rgba(76, 175, 80, 0.2)', // Màu nền mờ
+                            borderWidth: 1, // Đường mỏng hơn
+                            tension: 0.3, // Đường cong mượt hơn
+                            fill: true
+                        },
+                        {
+                            label: 'Đang chờ',
+                            data: pendingData,
+                            borderColor: '#FFC107', // Màu vàng
+                            backgroundColor: 'rgba(255, 193, 7, 0.2)',
+                            borderWidth: 1,
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Bị từ chối',
+                            data: rejectedData,
+                            borderColor: '#F44336', // Màu đỏ
+                            backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                            borderWidth: 1,
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Lưu nháp',
+                            data: draftData,
+                            borderColor: '#2196F3', // Màu xanh dương
+                            backgroundColor: 'rgba(33, 150, 243, 0.2)',
+                            borderWidth: 1,
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Đã lưu trữ',
+                            data: archivedData,
+                            borderColor: '#9C27B0', // Màu tím
+                            backgroundColor: 'rgba(156, 39, 176, 0.2)',
+                            borderWidth: 1,
+                            tension: 0.3,
+                            fill: true
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true, position: 'top' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1, callback: value => Number.isInteger(value) ? value : null }
+                        }
+                    }
+                },
+            });
+
+            // Dữ liệu tương tác
+            const interactionStatsData = JSON.parse(document.getElementById('interactionStatsData').textContent);
+            const commentsStatsData = JSON.parse(document.getElementById('commentsStatsData').textContent);
+            const likesStatsData = JSON.parse(document.getElementById('likesStatsData').textContent);
+
+            const interactionLabels = interactionStatsData.map(stat => stat.date);
+            const viewsData = interactionStatsData.map(stat => stat.views);
+            const commentsData = commentsStatsData.map(stat => stat.comments);
+            const likesData = likesStatsData.map(stat => stat.likes);
+
+            // Biểu đồ tương tác
+            const interactionStatsChartCtx = document.getElementById('interactionStatsChart').getContext('2d');
+            new Chart(interactionStatsChartCtx, {
+                type: 'line',
+                data: {
+                    labels: interactionLabels,
+                    datasets: [
+                        {
+                            label: 'Lượt xem',
+                            data: viewsData,
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderWidth: 1,
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Bình luận',
+                            data: commentsData,
+                            borderColor: 'rgba(255, 206, 86, 1)',
+                            backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                            borderWidth: 1,
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Lượt thích',
+                            data: likesData,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderWidth: 1,
+                            tension: 0.3,
+                            fill: true
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true, position: 'top' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1, callback: value => Number.isInteger(value) ? value : null }
+                        }
+                    }
+                },
+            });
+        });
+        // select theo
+        document.addEventListener('DOMContentLoaded', function () {
+        const filterForm = document.getElementById('filterForm');
+        const dateFromInput = document.getElementById('date_from');
+        const dateToInput = document.getElementById('date_to');
+
+        // Nút Đặt lại
+        document.getElementById('resetFilter').addEventListener('click', function () {
+            dateFromInput.value = '';
+            dateToInput.value = '';
+            filterForm.submit();
+        });
+
+        // Nút Ngày trước
+        document.getElementById('yesterdayFilter').addEventListener('click', function () {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            const formattedDate = yesterday.toISOString().split('T')[0];
+            dateFromInput.value = formattedDate;
+            dateToInput.value = formattedDate;
+            filterForm.submit();
+        });
+
+        // Nút Tuần trước
+        document.getElementById('lastWeekFilter').addEventListener('click', function () {
+            const today = new Date();
+            const lastWeekStart = new Date();
+            lastWeekStart.setDate(today.getDate() - 7);
+            const lastWeekEnd = new Date();
+            lastWeekEnd.setDate(today.getDate() - 1);
+
+            dateFromInput.value = lastWeekStart.toISOString().split('T')[0];
+            dateToInput.value = lastWeekEnd.toISOString().split('T')[0];
+            filterForm.submit();
+        });
+
+        // Nút Tháng trước
+        document.getElementById('lastMonthFilter').addEventListener('click', function () {
+            const today = new Date();
+            const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+
+            dateFromInput.value = lastMonthStart.toISOString().split('T')[0];
+            dateToInput.value = lastMonthEnd.toISOString().split('T')[0];
+            filterForm.submit();
+        });
+    });
+    </script>
+    <script>
+         document.addEventListener('DOMContentLoaded', function () {
+        const filterForm = document.getElementById('filterForm');
+        const dateFromInput = document.getElementById('date_from');
+        const dateToInput = document.getElementById('date_to');
+        const viewTypeSelect = document.getElementById('view_type');
+        const resetButton = document.getElementById('resetFilter');
+
+        // Xử lý nút Đặt lại
+        resetButton.addEventListener('click', function () {
+            dateFromInput.value = '';
+            dateToInput.value = '';
+            viewTypeSelect.value = 'daily'; // Mặc định về "Theo ngày"
+            filterForm.submit();
+        });
+
+        // Xử lý thay đổi dropdown "Hiển thị theo"
+        viewTypeSelect.addEventListener('change', function () {
+            filterForm.submit();
+        });
+    });
+    </script>
+    <script>
+          // tag   // Biểu đồ thống kê tag theo số lượng bài viết
+          document.addEventListener('DOMContentLoaded', function() {
             const tagsData = @json($tags);
 
             // Lấy tên tag và số lượng bài viết
@@ -481,140 +606,6 @@
                     }
                 }
             });
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            // Article statistics chart
-            const articleStats = @json($timeBasedArticleStats ?? []);
-            const type = "{{ $type ?? 'daily' }}";
-
-            let articleLabels = [];
-            let articleData = [];
-
-            if (type === 'daily') {
-                articleLabels = articleStats.map(stat => stat.date || '');
-                articleData = articleStats.map(stat => stat.count || 0);
-            } else if (type === 'monthly') {
-                articleLabels = articleStats.map(stat =>
-                    `${stat.year || ''}-${String(stat.month || '').padStart(2, '0')}`);
-                articleData = articleStats.map(stat => stat.count || 0);
-            } else { // yearly
-                articleLabels = articleStats.map(stat => stat.year || '');
-                articleData = articleStats.map(stat => stat.count || 0);
-            }
-
-            if (articleLabels.length > 0) {
-                document.getElementById('noArticleDataMessage').style.display = 'none';
-                const articleCtx = document.getElementById('articleStatsChart').getContext('2d');
-                new Chart(articleCtx, {
-                    type: 'line',
-                    data: {
-                        labels: articleLabels,
-                        datasets: [{
-                            label: 'Số bài viết',
-                            data: articleData,
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    stepSize: 1
-                                }
-                            }
-                        }
-                    }
-                });
-            } else {
-                document.getElementById('articleStatsChart').style.display = 'none';
-                document.getElementById('noArticleDataMessage').style.display = 'block';
-            }
-
-            // Interaction statistics chart
-            const interactionStats = @json($timeBasedInteractionStats ?? []);
-            const interactionType = "{{ $interactionType ?? 'daily' }}";
-
-            let interactionLabels = [];
-            let viewsData = [];
-            let likesData = [];
-            let commentsData = [];
-
-            if (interactionType === 'daily') {
-                interactionLabels = interactionStats.map(stat => stat.date || '');
-                viewsData = interactionStats.map(stat => stat.views || 0);
-                likesData = interactionStats.map(stat => stat.likes || 0);
-                commentsData = interactionStats.map(stat => stat.comments || 0);
-            } else if (interactionType === 'monthly') {
-                interactionLabels = interactionStats.map(stat =>
-                    `${stat.year || ''}-${String(stat.month || '').padStart(2, '0')}`);
-                viewsData = interactionStats.map(stat => stat.views || 0);
-                likesData = interactionStats.map(stat => stat.likes || 0);
-                commentsData = interactionStats.map(stat => stat.comments || 0);
-            } else { // yearly
-                interactionLabels = interactionStats.map(stat => stat.year || '');
-                viewsData = interactionStats.map(stat => stat.views || 0);
-                likesData = interactionStats.map(stat => stat.likes || 0);
-                commentsData = interactionStats.map(stat => stat.comments || 0);
-            }
-
-            if (interactionLabels.length > 0) {
-                document.getElementById('noInteractionDataMessage').style.display = 'none';
-                const interactionCtx = document.getElementById('interactionStatsChart').getContext('2d');
-                new Chart(interactionCtx, {
-                    type: 'line',
-                    data: {
-                        labels: interactionLabels,
-                        datasets: [{
-                                label: 'Lượt xem',
-                                data: viewsData,
-                                borderColor: 'rgba(54, 162, 235, 1)',
-                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                borderWidth: 2,
-                                tension: 0.3,
-                                fill: true
-                            },
-                            {
-                                label: 'Lượt thích',
-                                data: likesData,
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                borderWidth: 2,
-                                tension: 0.3,
-                                fill: true
-                            },
-                            {
-                                label: 'Bình luận',
-                                data: commentsData,
-                                borderColor: 'rgba(255, 206, 86, 1)',
-                                backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                                borderWidth: 3,
-                                tension: 0.3,
-                                fill: true
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    stepSize: 1
-                                }
-                            }
-                        }
-                    }
-                });
-            } else {
-                document.getElementById('interactionStatsChart').style.display = 'none';
-                document.getElementById('noInteractionDataMessage').style.display = 'block';
-            }
         });
     </script>
 @endsection

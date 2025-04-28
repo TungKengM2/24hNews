@@ -34,15 +34,8 @@
                         <div class="box">
                             <div class="box-header with-border">
                                 <h4 class="box-title">Bộ lọc</h4>
-                                <div class="box-controls pull-right">
-                                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#filterCollapse" aria-expanded="false"
-                                        aria-controls="filterCollapse" style="margin-top: -10px">
-                                        <i class="fa fa-filter"></i> Hiển thị bộ lọc
-                                    </button>
-                                </div>
                             </div>
-                            <div class="box-body collapse" id="filterCollapse">
+                            <div class="box-body">
                                 <form action="{{ route('moderator.articles.moderation-history.index') }}" method="GET">
                                     <div class="row">
                                         <div class="col-md-3">
@@ -168,34 +161,7 @@
                                                     </tr>
                                                 @endforeach
 
-                                                <!-- Hiển thị các bài viết đang chờ duyệt -->
-                                                @foreach ($paginatedPendingArticles as $article)
-                                                    <tr class="table-warning">
-                                                        <td>{{ $article->article_id }}</td>
-                                                        <td>
-                                                            <a href="{{ route('moderator.articles.show', $article->article_id) }}"
-                                                                title="{{ $article->title }}">
-                                                                {{ Str::limit($article->title, 30) }}
-                                                            </a>
-                                                        </td>
-                                                        <td>
-                                                            <span class="badge badge-warning">Chờ duyệt</span>
-                                                        </td>
-                                                        <td>
-                                                            <strong>Danh mục:</strong>
-                                                            {{ $article->category->name ?? 'Không có' }}<br>
-                                                            <strong>Tác giả:</strong>
-                                                            {{ $article->author->username ?? 'Không có' }}
-                                                        </td>
-                                                        <td>{{ $article->created_at->format('d/m/Y H:i:s') }}</td>
-                                                        <td>
-                                                            <a href="{{ route('moderator.articles.show', $article->article_id) }}"
-                                                                class="btn btn-primary btn-sm">
-                                                                <i class="fa fa-eye"></i> Xem & duyệt
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                               
                                             </tbody>
                                         </table>
                                     </div>
