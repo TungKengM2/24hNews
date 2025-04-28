@@ -2,22 +2,21 @@
     <div class="row justify-content-center align-items-center gx-lg-5">
         <div class="col-lg-4">
             <div class="info">
-                <h1>24News</h1>
-                <p>Kênh hóng chuyện hàng đầu Việt Nam .</p>
+                <div class="foot-logo mx-5">
+                    <img src="{{ asset('images/logo24news.png') }}" alt="logo" class="w-75 h-80" >
+                </div>
             </div>
         </div>
         <div class="col-lg-6">
             <form class="form" id="searchForm" method="GET">
                 @csrf
-                <span class="color-777 fst-italic text-capitalize mb-2 fsz-13px">Nhập Từ Khóa </span>
                 <div class="form-group">
                     <span class="icon">
                         <i class="la la-search"></i>
                     </span>
-                    <input type="text" name="keyword" id="searchInput" class="form-control" placeholder="Elon Musk ..." required>
-                    <button type="submit">Tìm Kiếm </button>
+                    <input type="text" name="keyword" id="searchInput" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." required>
+                    <div id="suggestionsList" class="suggestions-list" style="display: none;"></div>
                 </div>
-                <div id="suggestionsList" class="suggestions-list" style="display: none;"></div>
             </form>
 
             <div id="searchResults" class="search-results mt-4" style="display: none;">
@@ -140,9 +139,10 @@
 
                         // Thêm gợi ý tiêu đề bài viết
                         if (titleData.suggestions && titleData.suggestions.length > 0) {
-                            titleData.suggestions.forEach(title => {
+                            titleData.suggestions.forEach(suggestion => {
                                 titleSuggestions.push({
-                                    text: title,
+                                    text: suggestion.title || suggestion,
+                                    slug: suggestion.slug || '',
                                     type: 'title',
                                 });
                             });
@@ -193,7 +193,7 @@
 
                                 titleSuggestions.forEach(suggestion => {
                                     const highlightedText = highlightKeyword(suggestion.text, keyword);
-                                    html += `<div class="suggestion-item title" data-type="title">${highlightedText}</div>`;
+                                    html += `<div class="suggestion-item title" data-type="title" data-slug="${suggestion.slug}">${highlightedText}</div>`;
                                 });
                             }
 
@@ -235,10 +235,16 @@
                                         const tagId = this.getAttribute('data-tag-id');
                                         window.location.href = `/tags/${tagId}`;
                                     } else if (type === 'title') {
-                                        // Nếu là tiêu đề bài viết, thực hiện tìm kiếm
-                                        searchInput.value = this.textContent;
-                                        suggestionsList.style.display = 'none';
-                                        document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+                                        // Nếu là tiêu đề bài viết, chuyển hướng đến trang bài viết
+                                        const slug = this.getAttribute('data-slug');
+                                        if (slug) {
+                                            window.location.href = `/bai-viet/${slug}`;
+                                        } else {
+                                            // Fallback nếu không có slug
+                                            searchInput.value = this.textContent;
+                                            suggestionsList.style.display = 'none';
+                                            document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+                                        }
                                     }
                                 });
                             });

@@ -506,6 +506,7 @@ class HomeController extends Controller
                 // Thêm vào mảng kết quả có xếp hạng
                 $rankedSuggestions[] = [
                     'title' => $title,
+                    'slug' => $article->slug,
                     'relevance' => $relevance
                 ];
             }
@@ -516,18 +517,24 @@ class HomeController extends Controller
             });
 
             // Lấy 5 kết quả phù hợp nhất và loại bỏ trùng lặp
+            $uniqueSuggestions = [];
             $uniqueTitles = [];
+
             foreach ($rankedSuggestions as $suggestion) {
                 $title = $suggestion['title'];
                 if (!in_array($title, $uniqueTitles)) {
                     $uniqueTitles[] = $title;
-                    if (count($uniqueTitles) >= 5) {
+                    $uniqueSuggestions[] = [
+                        'title' => $title,
+                        'slug' => $suggestion['slug']
+                    ];
+                    if (count($uniqueSuggestions) >= 5) {
                         break;
                     }
                 }
             }
 
-            $suggestions = $uniqueTitles;
+            $suggestions = $uniqueSuggestions;
         }
 
         return response()->json(['suggestions' => $suggestions]);

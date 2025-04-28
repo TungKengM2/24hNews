@@ -5,15 +5,16 @@ namespace App\Http\Controllers\Moderator;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\ArticleView;
-use App\Models\Comment; // dat them
-use App\Models\User; // dat them
-use Illuminate\Support\Facades\Auth; // Ensure Auth is imported
-use Illuminate\Support\Facades\DB; // dat them
-use Carbon\Carbon; // dat them
-use Illuminate\Support\Facades\Schema; // dat them
+use App\Models\Comment;
+use App\Models\User;
+use App\Models\ArticleLike; // Add this line to import the ArticleLike model
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
 use App\Models\Tag;
-use App\Models\Follow; // Thêm model Follow dat them
+use App\Models\Follow;
 
 class ModeratorDashboardController extends Controller
 {
@@ -52,32 +53,78 @@ class ModeratorDashboardController extends Controller
                 $currentDate->addDay();
             }
         } elseif ($viewType === 'monthly') {
-            // Lấy 12 tháng gần nhất
-            $currentDate = now()->startOfMonth()->subMonths(11); // Bắt đầu từ 11 tháng trước
-            while ($currentDate->lte(now()->endOfMonth())) {
+            // Lấy các tháng trong khoảng thời gian được chọn
+            $currentDate = $dateFrom->copy()->startOfMonth();
+            $endDate = $dateTo->copy()->endOfMonth();
+            while ($currentDate->lte($endDate)) {
                 $allDates[] = $currentDate->format('Y-m');
                 $currentDate->addMonth();
             }
         } elseif ($viewType === 'yearly') {
-            while ($currentDate->lte($dateTo)) {
-                $allDates[] = $currentDate->format('Y');
-                $currentDate->addYear();
+            // Lấy các năm trong khoảng thời gian được chọn
+            $currentYear = $dateFrom->year;
+            $endYear = $dateTo->year;
+            while ($currentYear <= $endYear) {
+                $allDates[] = (string)$currentYear;
+                $currentYear++;
             }
         }
 
         // Lấy dữ liệu bài viết theo thời gian
         $rawArticleStats = Article::whereBetween('created_at', [$dateFrom, $dateTo])
             ->selectRaw(($viewType === 'daily' ? 'DATE(created_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(created_at, "%Y-%m")' : 'YEAR(created_at)')) . ' as date,
-                SUM(CASE WHEN status = "published" THEN 1 ELSE 0 END) as published,
-                SUM(CASE WHEN status = "pending" THEN 1 ELSE 0 END) as pending,
-                SUM(CASE WHEN status = "rejected" THEN 1 ELSE 0 END) as rejected,
-                SUM(CASE WHEN status = "draft" THEN 1 ELSE 0 END) as draft,
-                SUM(CASE WHEN status = "archived" THEN 1 ELSE 0 END) as archived')
+                COUNT(CASE WHEN status = "published" THEN 1 END) as published,
+                COUNT(CASE WHEN status = "pending" THEN 1 END) as pending,
+                COUNT(CASE WHEN status = "rejected" THEN 1 END) as rejected,
+                COUNT(CASE WHEN status = "draft" THEN 1 END) as draft,
+                COUNT(CASE WHEN status = "archived" THEN 1 END) as archived')
             ->groupBy('date')
             ->orderBy('date')
             ->get()
             ->keyBy('date');
 
+        // Log dữ liệu bài viết
+        \Log::info('Raw Article Stats:', ['data' => $rawArticleStats->toArray()]);
+        \Log::info('All Dates:', ['dates' => $allDates]);
+
+        // Lấy dữ liệu bình luận theo thời gian
+        $rawCommentsStats = Comment::whereBetween('created_at', [$dateFrom, $dateTo])
+            ->selectRaw(($viewType === 'daily' ? 'DATE(created_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(created_at, "%Y-%m")' : 'YEAR(created_at)')) . ' as date, COUNT(*) as comments')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+
+        // Log dữ liệu bình luận
+        \Log::info('Raw Comments Stats:', ['data' => $rawCommentsStats->toArray()]);
+
+        // Lấy dữ liệu lượt thích theo thời gian
+        if (Schema::hasTable('article_likes')) {
+            $rawLikesStats = ArticleLike::whereBetween('liked_at', [$dateFrom, $dateTo])
+                ->selectRaw(($viewType === 'daily' ? 'DATE(liked_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(liked_at, "%Y-%m")' : 'YEAR(liked_at)')) . ' as date, COUNT(*) as likes')
+                ->groupBy('date')
+                ->orderBy('date')
+                ->get()
+                ->keyBy('date');
+        } else {
+            $rawLikesStats = collect();
+        }
+
+        // Log dữ liệu lượt thích
+        \Log::info('Raw Likes Stats:', ['data' => $rawLikesStats->toArray()]);
+
+        // Lấy dữ liệu tương tác theo thời gian
+        $rawInteractionStats = ArticleView::whereBetween('viewed_at', [$dateFrom, $dateTo])
+            ->selectRaw(($viewType === 'daily' ? 'DATE(viewed_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(viewed_at, "%Y-%m")' : 'YEAR(viewed_at)')) . ' as date, COUNT(*) as views')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+
+        // Log dữ liệu tương tác
+        \Log::info('Raw Interaction Stats:', ['data' => $rawInteractionStats->toArray()]);
+
+        // Tính toán thống kê bài viết
         $timeBasedArticleStats = [];
         foreach ($allDates as $date) {
             $timeBasedArticleStats[] = [
@@ -90,30 +137,24 @@ class ModeratorDashboardController extends Controller
             ];
         }
 
-        // Lấy dữ liệu tương tác theo thời gian
-        $rawInteractionStats = ArticleView::whereBetween('viewed_at', [$dateFrom, $dateTo])
-            ->selectRaw(($viewType === 'daily' ? 'DATE(viewed_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(viewed_at, "%Y-%m")' : 'YEAR(viewed_at)')) . ' as date, COUNT(*) as views')
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get()
-            ->keyBy('date');
+        // Log thống kê bài viết
+        \Log::info('Time Based Article Stats:', ['data' => $timeBasedArticleStats]);
 
+        // Tính toán thống kê tương tác
         $timeBasedInteractionStats = [];
         foreach ($allDates as $date) {
             $timeBasedInteractionStats[] = [
                 'date' => $date,
                 'views' => $rawInteractionStats[$date]->views ?? 0,
+                'comments' => $rawCommentsStats[$date]->comments ?? 0,
+                'likes' => $rawLikesStats[$date]->likes ?? 0,
             ];
         }
 
-        // Lấy dữ liệu bình luận theo thời gian
-        $rawCommentsStats = Comment::whereBetween('created_at', [$dateFrom, $dateTo])
-            ->selectRaw(($viewType === 'daily' ? 'DATE(created_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(created_at, "%Y-%m")' : 'YEAR(created_at)')) . ' as date, COUNT(*) as comments')
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get()
-            ->keyBy('date');
+        // Log thống kê tương tác
+        \Log::info('Time Based Interaction Stats:', ['data' => $timeBasedInteractionStats]);
 
+        // Tính toán thống kê bình luận
         $timeBasedCommentsStats = [];
         foreach ($allDates as $date) {
             $timeBasedCommentsStats[] = [
@@ -122,15 +163,7 @@ class ModeratorDashboardController extends Controller
             ];
         }
 
-        // Lấy dữ liệu lượt thích theo thời gian
-        $rawLikesStats = Schema::hasTable('article_likes') ? DB::table('article_likes')
-            ->selectRaw(($viewType === 'daily' ? 'DATE(liked_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(liked_at, "%Y-%m")' : 'YEAR(liked_at)')) . ' as date, COUNT(*) as likes')
-            ->whereBetween('liked_at', [$dateFrom, $dateTo])
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get()
-            ->keyBy('date') : collect();
-
+        // Tính toán thống kê lượt thích
         $timeBasedLikesStats = [];
         foreach ($allDates as $date) {
             $timeBasedLikesStats[] = [
@@ -139,6 +172,34 @@ class ModeratorDashboardController extends Controller
             ];
         }
 
+        // Tổng quan bài viết
+        $articleStatsSummary = [
+            'total' => Article::count(),
+            'archived' => Article::where('status', 'archived')->count(),
+            'pending' => Article::where('status', 'pending')->count(),
+            'published' => Article::where('status', 'published')->count(),
+            'rejected' => Article::where('status', 'rejected')->count(),
+            'draft' => Article::where('status', 'draft')->count(),
+        ];
+
+        // Tổng quan người dùng
+        $userCount = [
+            'total' => User::where('role_id', '!=', 1)->count(), // Exclude admin
+            'user' => User::where('role_id', 4)->count(), // Regular users
+            'moderators' => User::where('role_id', 3)->count(), // Moderators
+            'authors' => User::where('role_id', 2)->count(), // Authors
+        ];
+
+        // Tổng số người theo dõi admin
+        $user = Auth::user();
+        $totalFollowers = $user->followers()->count(); // Count followers of the logged-in admin
+
+        // Lấy danh sách tag và số lượng bài viết đã xuất bản
+        $tags = Tag::whereHas('publishedArticles') // Only tags with published articles
+            ->withCount(['publishedArticles']) // Count published articles
+            ->orderByDesc('published_articles_count') // Sort by count descending
+            ->get();
+
         // Nếu là AJAX request, trả về JSON
         if ($request->ajax()) {
             return response()->json([
@@ -146,37 +207,19 @@ class ModeratorDashboardController extends Controller
                 'timeBasedInteractionStats' => $timeBasedInteractionStats,
                 'timeBasedCommentsStats' => $timeBasedCommentsStats,
                 'timeBasedLikesStats' => $timeBasedLikesStats,
+                'articleStatsSummary' => $articleStatsSummary,
+                'userCount' => $userCount,
+                'totalFollowers' => $totalFollowers,
+                'tags' => $tags,
             ]);
         }
 
         // Nếu không phải AJAX, trả về view
-        // tổng quan
-         // // Tổng quan bài viết
-         $articleStats = [
-            'total' => Article::count(),
-            'archived' => Article::where('status', 'archived')->count(),
-            'pending' => Article::where('status', 'pending')->count(),
-            'published' => Article::where('status', 'published')->count(),
-            'reject' => Article::where('status', 'rejected')->count(),
-            'draft' => Article::where('status', 'draft')->count(),
-        ];
-            // Lấy số lượng người dùng theo vai trò
-            $userCount = [
-                'total' => User::where('role_id', '!=', 1)->count(), // Tổng số người dùng (không bao gồm admin)
-                    'user' => User::where('role_id', 4)->count(), // Người dùng
-                    'moderators' => User::where('role_id', 3)->count(), // Kiểm duyệt viên
-                    'authors' => User::where('role_id', 2)->count(),    // Tác giả
-                ];
-                // Lấy danh sách tag và số lượng bài viết đã xuất bản, sắp xếp từ lớn đến bé
-$tags = Tag::whereHas('publishedArticles') // Chỉ lấy các tag có ít nhất 1 bài viết xuất bản
-->withCount(['publishedArticles'])    // Đếm số lượng bài viết đã xuất bản
-->orderByDesc('published_articles_count') // Sắp xếp từ lớn đến bé theo số lượng bài viết
-->get();
-
         return view('moderator.dashboard', compact(
-            'tags',
+            'articleStatsSummary', // Renamed to avoid conflict
             'userCount',
-            'articleStats',
+            'totalFollowers',
+            'tags',
             'timeBasedArticleStats',
             'timeBasedInteractionStats',
             'timeBasedCommentsStats',
