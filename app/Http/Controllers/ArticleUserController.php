@@ -407,7 +407,6 @@ class ArticleUserController extends Controller
 
 
 
-
 public function storeReplyComment(Request $request, CommentModerationService $moderationService)
 {
     $request->validate([
@@ -466,6 +465,7 @@ public function storeReplyComment(Request $request, CommentModerationService $mo
         'message' => 'Bạn đã trả lời bình luận thành công!',
     ]);
 }
+
 
 
     public function reportComment(Request $request, $article_id, $comment_id)
