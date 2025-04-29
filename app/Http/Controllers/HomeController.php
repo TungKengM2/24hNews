@@ -15,46 +15,49 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
+
+
 {
+
+    protected function collectCategoryIds(int $parentId): array
+    {
+        $ids = [$parentId];
+    
+        // Lọc danh mục con chỉ với is_active = 1
+        $children = Category::where('parent_id', $parentId)
+            ->where('is_active', 1)  // Thêm điều kiện chỉ lấy danh mục hoạt động
+            ->pluck('category_id')
+            ->toArray();
+    
+        foreach ($children as $childId) {
+            // Tái gọi phương thức để lấy danh mục con của các danh mục con
+            $ids = array_merge($ids, $this->collectCategoryIds($childId));
+        }
+    
+        return $ids;
+    }
+    
+
     public function index(Request $request)
     {
-        // Truy vấn bài viết trong 7 ngày gần nhất
-        $recentArticles = Article::select('articles.*')
-            ->join('users', 'users.user_id', '=', 'articles.author_id')
-            ->where('articles.status', 'published')
-            ->where(function ($query) {
-                $query->where('articles.contains_sensitive_content', 0)
-                    ->orWhereNull('articles.contains_sensitive_content');
-            })
-            ->where('articles.created_at', '>=', now()->subDays(7))
-            ->whereHas('category', fn($q) => $q->where('is_active', 1))
-            ->where(function ($q) {
-                $q->where('users.is_promoted', 1)
-                    ->orWhere('users.violation_count', '<', 3);
-            })
-            ->whereNull('users.banned_until')
-            ->orderByDesc('articles.views')
+        // Bài viết nổi bật
+        $recentArticles = Article::withCount(['likes', 'comments']) // Đếm cả like và comment
+            ->where('status', 'published')
+            ->where('created_at', '>=', now()->subDays(7))
+            ->activeCategory()
+            ->orderByDesc('likes_count')    // Ưu tiên like nhiều
+            ->orderByDesc('comments_count') // rồi comment nhiều
+            ->orderByDesc('views')          // rồi view nhiều
             ->take(7)
             ->get();
-
-        // Nếu chưa đủ 7 bài, lấy thêm các bài cũ hơn
         if ($recentArticles->count() < 7) {
-            $additionalArticles = Article::select('articles.*')
-                ->join('users', 'users.user_id', '=', 'articles.author_id')
-                ->where('articles.status', 'published')
-                ->where(function ($query) {
-                    $query->where('articles.contains_sensitive_content', 0)
-                        ->orWhereNull('articles.contains_sensitive_content');
-                })
-                ->where('articles.created_at', '<', now()->subDays(7))
-                ->whereHas('category', fn($q) => $q->where('is_active', 1))
-                ->where(function ($q) {
-                    $q->where('users.is_promoted', 1)
-                        ->orWhere('users.violation_count', '<', 3);
-                })
-                ->whereNull('users.banned_until')
-                ->whereNotNull('users.email_verified_at')
-                ->orderByDesc('articles.views')
+            $additionalArticles = Article::withCount(['likes', 'comments'])
+                ->where('status', 'published')
+                ->where('created_at', '<', now()->subDays(7))
+                ->activeCategory()
+                ->orderByDesc('likes_count')
+                ->orderByDesc('comments_count')
+                ->orderByDesc('views')
                 ->take(7 - $recentArticles->count())
                 ->get();
 
@@ -62,9 +65,6 @@ class HomeController extends Controller
         } else {
             $featuredArticles = $recentArticles;
         }
-
-
-
 
 
         // top 3 bài viết nhiều lượt xem
@@ -77,24 +77,6 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        //bai viet moi nhâts
-        $NewsArticle = Article::withCount('comments') // Đếm số bình luận
-            ->where('status', 'published')
-            ->where('created_at', '>=', Carbon::now()->subDays(30))
-            ->whereHas('category', function ($query) {
-                $query->where('is_active', 1);
-            })
-            ->orderByDesc('created_at')
-            ->first();
-        // lấy bài viết mới nhất của 6dmuc
-        $latestArticlesPerCategory = Article::with('category')
-            ->where('status', 'published')
-            ->whereHas('category', fn($q) => $q->where('is_active', 1))
-            ->orderByDesc('created_at')
-            ->get()
-            ->unique('category_id') // loại trùng theo danh mục
-            ->take(6);
-
         //top blan trong 30ngay
         $trendingPosts = Article::withCount(['comments as recent_comments_count' => function ($query) {
             $query->where('created_at', '>=', Carbon::now()->subDays(30)); // Chỉ tính bình luận trong 30 ngày qua
@@ -104,26 +86,97 @@ class HomeController extends Controller
                 $query->where('is_active', 1); // Danh mục phải hoạt động
             })
             ->orderByDesc('recent_comments_count') // Sắp xếp theo số bình luận trong 30 ngày qua
-            ->limit(4)
+            ->limit(5)
             ->get();
 
-        // Gom ID các bài đã có để tránh trùng
-        $excludeIds = collect()
-            ->merge($D1Articles->pluck('id'))
+        // Lấy 12 bài mới nhất (publish, trong 30 ngày, category active)
+        $latestPosts = Article::withCount('comments')
+            ->where('status', 'published')
+            ->where('created_at', '>=', Carbon::now()->subDays(30))
+            ->whereHas('category', fn($q) => $q->where('is_active', 1))
+            ->orderByDesc('created_at')
+            ->take(11)
+            ->get();
+
+      // Xử lý "Thời Sự"
+      $root = Category::where('name', 'Thời Sự')->first();
+      if ($root) {
+          $catIds = $this->collectCategoryIds($root->category_id);
+
+          $posts = Article::with('category', 'author')
+              ->where('status', 'published')
+              ->whereIn('category_id', $catIds)
+              ->orderByDesc('views')
+              ->take(10)
+              ->get();
+
+          $mainPost   = $posts->shift();        // 1 bài lớn
+          $listPosts  = $posts->splice(0, 5);   // 5 bài list
+          $gridPost   = $posts->shift();        // 1 bài grid
+          $linkPosts  = $posts;                 // 3 bài link text
+      } else {
+          $mainPost = $listPosts = $gridPost = $linkPosts = null;
+      }
+
+      // Xử lý "Kinh Doanh"
+      $businessRoot = Category::where('name', 'Kinh Doanh')->first();
+      if ($businessRoot) {
+          $businessCatIds = $this->collectCategoryIds($businessRoot->category_id);
+
+          $businessPosts = Article::with('category', 'author')
+              ->where('status', 'published')
+              ->whereIn('category_id', $businessCatIds)
+              ->orderByDesc('views')
+              ->take(10)
+              ->get();
+
+          $businessMainPost   = $businessPosts->shift();       // 1 bài lớn
+          $businessListPosts  = $businessPosts->splice(0, 5);  // 5 bài list
+          $businessGridPost   = $businessPosts->shift();       // 1 bài grid
+          $businessLinkPosts  = $businessPosts;                // 3 bài link text
+      } else {
+          $businessMainPost = $businessListPosts = $businessGridPost = $businessLinkPosts = null;
+      }
+
+
+        // 1. Bài viết nổi bật (NewsArticle)
+        $NewsArticle = Article::withCount('comments')
+            ->where('status', 'published')
+            ->where('created_at', '>=', Carbon::now()->subDays(30))
+            ->whereHas('category', fn($q) => $q->where('is_active', 1))
+            ->orderByDesc('created_at')
+            ->first();
+
+        // 2. Lấy 6 bài mới nhất, mỗi bài 1 danh mục
+        $latestArticlesPerCategory = Article::with('category')
+            ->where('status', 'published')
+            ->whereHas('category', fn($q) => $q->where('is_active', 1))
+            ->orderByDesc('created_at')
+            ->get()
+            ->unique('category_id')  // lọc trùng theo danh mục
+            ->take(6);
+
+        // 3. Gom tất cả ID đã hiện rồi vào 1 mảng $skip
+        $skip = collect()
+            // thêm ID bài nổi bật (nếu có)
             ->push(optional($NewsArticle)->id)
+            // thêm ID các bài mới theo danh mục
             ->merge($latestArticlesPerCategory->pluck('id'))
-            ->merge($trendingPosts->pluck('id'))
-            ->filter()
-            ->unique()
+            // nếu còn mảng nào khác (ví dụ $trendingPosts, $D1Articles), cứ merge thêm
+            // ->merge($trendingPosts->pluck('id'))
+            // ->merge($D1Articles->pluck('id'))
+            ->filter()   // bỏ null
+            ->unique()   // bỏ trùng
             ->toArray();
 
-        // Random 2 bài viết khác
+        // 4. Lấy 2 bài random, skip hết các ID trong $skip
         $randomArticles = Article::where('status', 'published')
             ->whereHas('category', fn($q) => $q->where('is_active', 1))
-            ->whereNotIn('id', $excludeIds)
+            ->whereNotIn('id', $skip)
             ->inRandomOrder()
             ->take(2)
             ->get();
+
 
         $weeklyTrendingArticles = Article::with(['category'])
             ->where('status', 'published')
@@ -134,21 +187,28 @@ class HomeController extends Controller
             ->get();
 
         // Lấy 3 danh mục có nhiều bài viết nhất
-        $topCategories = Category::withCount('articles')
+
+        // 1) Lấy 3 category hoạt động nhiều bài published nhất
+        $topCategories = Category::where('is_active', 1)
+            ->withCount(['articles' => function ($q) {
+                $q->where('status', 'published');
+            }])
             ->orderByDesc('articles_count')
             ->take(3)
             ->get();
 
+        // 2) Với mỗi category, chỉ lấy 3 bài published mới nhất
         $topCategoriesWithArticles = $topCategories->map(function ($category) {
             $articles = $category->articles()
-                ->latest()
+                ->where('status', 'published')
+                ->latest()      // thường là orderBy('created_at','desc')
                 ->take(3)
                 ->get();
 
             return [
-                'category' => $category,
-                'main_article' => $articles->first(),
-                'sub_articles' => $articles->slice(1),
+                'category'     => $category,
+                'main_article' => $articles->first(),     // bài đầu làm nổi bật
+                'sub_articles' => $articles->slice(1),    // 2 bài còn lại
             ];
         });
 
@@ -157,10 +217,10 @@ class HomeController extends Controller
 
 
 
-        //4 tag có nhiều bài viết nhất
+        //8 tag có nhiều bài viết nhất
         $topTags = Tag::withCount('articles')
             ->orderByDesc('articles_count')
-            ->take(4)
+            ->take(8)
             ->get();
 
 
@@ -254,6 +314,15 @@ class HomeController extends Controller
 
         if (!$user) {
             return view('welcome', [
+                'businessMainPost' => $businessMainPost ?? null,
+                'businessListPosts' => $businessListPosts ?? null,
+                'businessGridPost' => $businessGridPost ?? null,
+                'businessLinkPosts' => $businessLinkPosts ?? null,
+                'mainPost' => $mainPost ?? null,
+                'listPosts' => $listPosts ?? null,
+                'gridPost' => $gridPost ?? null,
+                'linkPosts' => $linkPosts ?? null,
+                'latestPosts' => $latestPosts ?? null,
                 'topCategoriesWithArticles' => $topCategoriesWithArticles ?? null,
                 'topCategories' => $topCategories ?? null,
                 'topTags' => $topTags ?? null,
@@ -314,7 +383,16 @@ class HomeController extends Controller
             'randomArticles',
             'weeklyTrendingArticles',
             'topCategoriesWithArticles',
-            'topCategories' 
+            'topCategories',
+            'latestPosts',
+            'mainPost',
+            'listPosts',
+            'gridPost',
+            'linkPosts',
+            'businessMainPost',
+            'businessListPosts',
+            'businessGridPost',
+            'businessLinkPosts'
         ));
     }
 
@@ -380,11 +458,11 @@ class HomeController extends Controller
         if ($keyword && strlen($keyword) >= 2) {
             // Tìm kiếm bài viết có tiêu đề chứa từ khóa
             $articles = Article::where('status', 'published')
-                ->where(function($query) use ($keyword) {
+                ->where(function ($query) use ($keyword) {
                     // Tìm kiếm chính xác hơn với nhiều điều kiện
                     $query->where('title', 'LIKE', "{$keyword}%") // Bắt đầu bằng từ khóa (ưu tiên cao nhất)
-                          ->orWhere('title', 'LIKE', "% {$keyword}%") // Từ khóa xuất hiện sau khoảng trắng
-                          ->orWhere('title', 'LIKE', "%{$keyword}%"); // Chứa từ khóa ở bất kỳ đâu (ưu tiên thấp nhất)
+                        ->orWhere('title', 'LIKE', "% {$keyword}%") // Từ khóa xuất hiện sau khoảng trắng
+                        ->orWhere('title', 'LIKE', "%{$keyword}%"); // Chứa từ khóa ở bất kỳ đâu (ưu tiên thấp nhất)
                 })
                 ->orderBy('views', 'desc') // Ưu tiên bài viết có nhiều lượt xem
                 ->limit(15) // Lấy 15 bài để xử lý và lọc ra 5 bài phù hợp nhất
@@ -432,7 +510,7 @@ class HomeController extends Controller
             }
 
             // Sắp xếp theo độ phù hợp giảm dần
-            usort($rankedSuggestions, function($a, $b) {
+            usort($rankedSuggestions, function ($a, $b) {
                 return $b['relevance'] - $a['relevance'];
             });
 
@@ -471,11 +549,11 @@ class HomeController extends Controller
         if ($keyword && strlen($keyword) >= 2) {
             // Tìm kiếm danh mục có tên chứa từ khóa
             $categories = Category::where('is_active', 1)
-                ->where(function($query) use ($keyword) {
+                ->where(function ($query) use ($keyword) {
                     // Tìm kiếm chính xác hơn với nhiều điều kiện
                     $query->where('name', 'LIKE', "{$keyword}%") // Bắt đầu bằng từ khóa (ưu tiên cao nhất)
-                          ->orWhere('name', 'LIKE', "% {$keyword}%") // Từ khóa xuất hiện sau khoảng trắng
-                          ->orWhere('name', 'LIKE', "%{$keyword}%"); // Chứa từ khóa ở bất kỳ đâu (ưu tiên thấp nhất)
+                        ->orWhere('name', 'LIKE', "% {$keyword}%") // Từ khóa xuất hiện sau khoảng trắng
+                        ->orWhere('name', 'LIKE', "%{$keyword}%"); // Chứa từ khóa ở bất kỳ đâu (ưu tiên thấp nhất)
                 })
                 ->withCount('articles') // Đếm số bài viết trong danh mục
                 ->orderByDesc('articles_count') // Ưu tiên danh mục có nhiều bài viết
@@ -525,7 +603,7 @@ class HomeController extends Controller
             }
 
             // Sắp xếp theo độ phù hợp giảm dần
-            usort($rankedSuggestions, function($a, $b) {
+            usort($rankedSuggestions, function ($a, $b) {
                 return $b['relevance'] - $a['relevance'];
             });
 
@@ -557,12 +635,12 @@ class HomeController extends Controller
 
         if ($keyword && strlen($keyword) >= 2) {
             // Tìm kiếm tag có tên chứa từ khóa
-            $tags = Tag::where(function($query) use ($keyword) {
-                    // Tìm kiếm chính xác hơn với nhiều điều kiện
-                    $query->where('name', 'LIKE', "{$keyword}%") // Bắt đầu bằng từ khóa (ưu tiên cao nhất)
-                          ->orWhere('name', 'LIKE', "% {$keyword}%") // Từ khóa xuất hiện sau khoảng trắng
-                          ->orWhere('name', 'LIKE', "%{$keyword}%"); // Chứa từ khóa ở bất kỳ đâu (ưu tiên thấp nhất)
-                })
+            $tags = Tag::where(function ($query) use ($keyword) {
+                // Tìm kiếm chính xác hơn với nhiều điều kiện
+                $query->where('name', 'LIKE', "{$keyword}%") // Bắt đầu bằng từ khóa (ưu tiên cao nhất)
+                    ->orWhere('name', 'LIKE', "% {$keyword}%") // Từ khóa xuất hiện sau khoảng trắng
+                    ->orWhere('name', 'LIKE', "%{$keyword}%"); // Chứa từ khóa ở bất kỳ đâu (ưu tiên thấp nhất)
+            })
                 ->withCount('publishedArticles') // Đếm số bài viết đã xuất bản có tag này
                 ->has('publishedArticles') // Chỉ lấy tag có bài viết đã xuất bản
                 ->orderByDesc('published_articles_count') // Ưu tiên tag có nhiều bài viết
@@ -612,7 +690,7 @@ class HomeController extends Controller
             }
 
             // Sắp xếp theo độ phù hợp giảm dần
-            usort($rankedSuggestions, function($a, $b) {
+            usort($rankedSuggestions, function ($a, $b) {
                 return $b['relevance'] - $a['relevance'];
             });
 
@@ -677,12 +755,10 @@ class HomeController extends Controller
                 'specializes_id' => $topCategory ? $topCategory->category_id : null
             ];
         })
-        ->sortByDesc('rating')
-        ->take(3)
-        ->values();
+            ->sortByDesc('rating')
+            ->take(3)
+            ->values();
 
         return $ratedAuthors;
     }
-
-
 }

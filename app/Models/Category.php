@@ -43,7 +43,7 @@ class Category extends Model
     {
         return $this->belongsTo(Category::class, 'parent_id', 'category_id');
     }
-    
+
 
     /**
      * Quan hệ với danh mục con.
@@ -68,6 +68,14 @@ class Category extends Model
     {
         return $this->hasMany(Article::class, 'subcategory_id', 'category_id');
     }
+
+
+    // Tính tổng cả articles và subArticles
+    public function getTotalArticlesCountAttribute()
+    {
+        return ($this->articles_count ?? 0) + ($this->sub_articles_count ?? 0);
+    }
+
 
     /**
      * Lấy kiểm duyệt viên cho danh mục.
