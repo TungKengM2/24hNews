@@ -5,14 +5,16 @@ namespace App\Http\Controllers\Moderator;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\ArticleView;
-use App\Models\Comment; // dat them
-use App\Models\User; // dat them
+use App\Models\Comment;
+use App\Models\User;
+use App\Models\ArticleLike; // Add this line to import the ArticleLike model
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB; // dat them
-use Carbon\Carbon; // dat them
-use Illuminate\Support\Facades\Schema; // dat them
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
 use App\Models\Tag;
+use App\Models\Follow;
 
 class ModeratorDashboardController extends Controller
 {
@@ -36,159 +38,199 @@ class ModeratorDashboardController extends Controller
 
     public function index(Request $request)
     {
+        // Lấy ngày bắt đầu, ngày kết thúc và kiểu hiển thị
+        $dateFrom = $request->input('date_from') ? Carbon::parse($request->input('date_from'))->startOfDay() : now()->subDays(30)->startOfDay();
+        $dateTo = $request->input('date_to') ? Carbon::parse($request->input('date_to'))->endOfDay() : now()->endOfDay();
+        $viewType = $request->input('view_type', 'daily'); // daily, monthly, yearly
 
-        $type = $request->input('article_type', 'daily');
-        $interactionType = $request->input('interaction_type', $type);
+        // Tạo danh sách khoảng thời gian
+        $allDates = [];
+        $currentDate = $dateFrom->copy();
 
-        // // Tổng quan bài viết
-        $articleStats = [
+        if ($viewType === 'daily') {
+            while ($currentDate->lte($dateTo)) {
+                $allDates[] = $currentDate->format('Y-m-d');
+                $currentDate->addDay();
+            }
+        } elseif ($viewType === 'monthly') {
+            // Lấy các tháng trong khoảng thời gian được chọn
+            $currentDate = $dateFrom->copy()->startOfMonth();
+            $endDate = $dateTo->copy()->endOfMonth();
+            while ($currentDate->lte($endDate)) {
+                $allDates[] = $currentDate->format('Y-m');
+                $currentDate->addMonth();
+            }
+        } elseif ($viewType === 'yearly') {
+            // Lấy các năm trong khoảng thời gian được chọn
+            $currentYear = $dateFrom->year;
+            $endYear = $dateTo->year;
+            while ($currentYear <= $endYear) {
+                $allDates[] = (string)$currentYear;
+                $currentYear++;
+            }
+        }
+
+        // Lấy dữ liệu bài viết theo thời gian
+        $rawArticleStats = Article::whereBetween('created_at', [$dateFrom, $dateTo])
+            ->selectRaw(($viewType === 'daily' ? 'DATE(created_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(created_at, "%Y-%m")' : 'YEAR(created_at)')) . ' as date,
+                COUNT(CASE WHEN status = "published" THEN 1 END) as published,
+                COUNT(CASE WHEN status = "pending" THEN 1 END) as pending,
+                COUNT(CASE WHEN status = "rejected" THEN 1 END) as rejected,
+                COUNT(CASE WHEN status = "draft" THEN 1 END) as draft,
+                COUNT(CASE WHEN status = "archived" THEN 1 END) as archived')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+
+        // Log dữ liệu bài viết
+        \Log::info('Raw Article Stats:', ['data' => $rawArticleStats->toArray()]);
+        \Log::info('All Dates:', ['dates' => $allDates]);
+
+        // Lấy dữ liệu bình luận theo thời gian
+        $rawCommentsStats = Comment::whereBetween('created_at', [$dateFrom, $dateTo])
+            ->selectRaw(($viewType === 'daily' ? 'DATE(created_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(created_at, "%Y-%m")' : 'YEAR(created_at)')) . ' as date, COUNT(*) as comments')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+
+        // Log dữ liệu bình luận
+        \Log::info('Raw Comments Stats:', ['data' => $rawCommentsStats->toArray()]);
+
+        // Lấy dữ liệu lượt thích theo thời gian
+        if (Schema::hasTable('article_likes')) {
+            $rawLikesStats = ArticleLike::whereBetween('liked_at', [$dateFrom, $dateTo])
+                ->selectRaw(($viewType === 'daily' ? 'DATE(liked_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(liked_at, "%Y-%m")' : 'YEAR(liked_at)')) . ' as date, COUNT(*) as likes')
+                ->groupBy('date')
+                ->orderBy('date')
+                ->get()
+                ->keyBy('date');
+        } else {
+            $rawLikesStats = collect();
+        }
+
+        // Log dữ liệu lượt thích
+        \Log::info('Raw Likes Stats:', ['data' => $rawLikesStats->toArray()]);
+
+        // Lấy dữ liệu tương tác theo thời gian
+        $rawInteractionStats = ArticleView::whereBetween('viewed_at', [$dateFrom, $dateTo])
+            ->selectRaw(($viewType === 'daily' ? 'DATE(viewed_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(viewed_at, "%Y-%m")' : 'YEAR(viewed_at)')) . ' as date, COUNT(*) as views')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+
+        // Log dữ liệu tương tác
+        \Log::info('Raw Interaction Stats:', ['data' => $rawInteractionStats->toArray()]);
+
+        // Tính toán thống kê bài viết
+        $timeBasedArticleStats = [];
+        foreach ($allDates as $date) {
+            $timeBasedArticleStats[] = [
+                'date' => $date,
+                'published' => $rawArticleStats[$date]->published ?? 0,
+                'pending' => $rawArticleStats[$date]->pending ?? 0,
+                'rejected' => $rawArticleStats[$date]->rejected ?? 0,
+                'draft' => $rawArticleStats[$date]->draft ?? 0,
+                'archived' => $rawArticleStats[$date]->archived ?? 0,
+            ];
+        }
+
+        // Log thống kê bài viết
+        \Log::info('Time Based Article Stats:', ['data' => $timeBasedArticleStats]);
+
+        // Tính toán thống kê tương tác
+        $timeBasedInteractionStats = [];
+        foreach ($allDates as $date) {
+            $timeBasedInteractionStats[] = [
+                'date' => $date,
+                'views' => $rawInteractionStats[$date]->views ?? 0,
+                'comments' => $rawCommentsStats[$date]->comments ?? 0,
+                'likes' => $rawLikesStats[$date]->likes ?? 0,
+            ];
+        }
+
+        // Log thống kê tương tác
+        \Log::info('Time Based Interaction Stats:', ['data' => $timeBasedInteractionStats]);
+
+        // Tính toán thống kê bình luận
+        $timeBasedCommentsStats = [];
+        foreach ($allDates as $date) {
+            $timeBasedCommentsStats[] = [
+                'date' => $date,
+                'comments' => $rawCommentsStats[$date]->comments ?? 0,
+            ];
+        }
+
+        // Tính toán thống kê lượt thích
+        $timeBasedLikesStats = [];
+        foreach ($allDates as $date) {
+            $timeBasedLikesStats[] = [
+                'date' => $date,
+                'likes' => $rawLikesStats[$date]->likes ?? 0,
+            ];
+        }
+
+        // Tổng quan bài viết
+        $articleStatsSummary = [
             'total' => Article::count(),
             'archived' => Article::where('status', 'archived')->count(),
             'pending' => Article::where('status', 'pending')->count(),
             'published' => Article::where('status', 'published')->count(),
-            'reject' => Article::where('status', 'rejected')->count(),
+            'rejected' => Article::where('status', 'rejected')->count(),
             'draft' => Article::where('status', 'draft')->count(),
         ];
 
-        // Thống kê bài viết theo thời gian
-        $timeBasedArticleStats = $this->getTimeBasedArticleStats($type);
-
-        // Thống kê tương tác theo thời gian
-        $timeBasedInteractionStats = $this->getTimeBasedInteractionStats($interactionType);
-
-        // // Tổng số người dùng
-        // $userCount = User::count();
-        // Lấy số lượng người dùng theo vai trò
+        // Tổng quan người dùng
         $userCount = [
-            'total' => User::where('role_id', '!=', 1)->count(), // Tổng số người dùng (không bao gồm admin)
-                'user' => User::where('role_id', 4)->count(), // Người dùng
-                'moderators' => User::where('role_id', 3)->count(), // Kiểm duyệt viên
-                'authors' => User::where('role_id', 2)->count(),    // Tác giả
-            ];
+            'total' => User::where('role_id', '!=', 1)->count(), // Exclude admin
+            'user' => User::where('role_id', 4)->count(), // Regular users
+            'moderators' => User::where('role_id', 3)->count(), // Moderators
+            'authors' => User::where('role_id', 2)->count(), // Authors
+        ];
 
-        // Tổng lượt xem
-        $totalViews = ArticleView::count();
+        // Tổng số người theo dõi admin
+        $user = Auth::user();
+        $totalFollowers = $user->followers()->count(); // Count followers of the logged-in admin
 
-        // Tổng lượt bình luận
-        $totalComments = Comment::count();
+        // Lấy danh sách tag và số lượng bài viết đã xuất bản
+        $tags = Tag::whereHas('publishedArticles') // Only tags with published articles
+            ->withCount(['publishedArticles']) // Count published articles
+            ->orderByDesc('published_articles_count') // Sort by count descending
+            ->get();
 
-        // Tổng lượt thích
-        $totalLikes = Schema::hasTable('article_likes') ? DB::table('article_likes')->count() : 0;
-        //   // Lấy danh sách tag và số lượng bài viết theo từng tag
- // Lấy danh sách tag và số lượng bài viết đã xuất bản, sắp xếp từ lớn đến bé
-// $tags = Tag::whereHas('publishedArticles') // Chỉ lấy các tag có ít nhất 1 bài viết xuất bản
-// ->withCount(['publishedArticles'])    // Đếm số lượng bài viết đã xuất bản
-// ->orderByDesc('published_articles_count') // Sắp xếp từ lớn đến bé theo số lượng bài viết
-// ->get();
+        // Nếu là AJAX request, trả về JSON
+        if ($request->ajax()) {
+            return response()->json([
+                'timeBasedArticleStats' => $timeBasedArticleStats,
+                'timeBasedInteractionStats' => $timeBasedInteractionStats,
+                'timeBasedCommentsStats' => $timeBasedCommentsStats,
+                'timeBasedLikesStats' => $timeBasedLikesStats,
+                'articleStatsSummary' => $articleStatsSummary,
+                'userCount' => $userCount,
+                'totalFollowers' => $totalFollowers,
+                'tags' => $tags,
+            ]);
+        }
 
-
+        // Nếu không phải AJAX, trả về view
         return view('moderator.dashboard', compact(
-            // 'stats',
-            // 'tags',
-            'articleStats',
+            'articleStatsSummary', // Renamed to avoid conflict
             'userCount',
-            'totalViews',
-            'totalComments',
-            'totalLikes',
-            'type',
-            'interactionType',
+            'totalFollowers',
+            'tags',
             'timeBasedArticleStats',
-            'timeBasedInteractionStats'
+            'timeBasedInteractionStats',
+            'timeBasedCommentsStats',
+            'timeBasedLikesStats',
+            'dateFrom',
+            'dateTo',
+            'viewType'
         ));
     }
 
-    private function getTimeBasedArticleStats($type)
-    {
-        $query = Article::query();
 
-        if ($type === 'daily') {
-            return $query->selectRaw('DATE(created_at) as date, COUNT(*) as count')
-                ->whereDate('created_at', '>=', now()->subDays(30))
-                ->groupBy('date')
-                ->orderBy('date')
-                ->get()
-                ->toArray();
-        } elseif ($type === 'monthly') {
-            return $query->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count')
-                ->whereDate('created_at', '>=', now()->subMonths(12))
-                ->groupBy('year', 'month')
-                ->orderBy('year')
-                ->orderBy('month')
-                ->get()
-                ->toArray();
-        } else {
-            return $query->selectRaw('YEAR(created_at) as year, COUNT(*) as count')
-                ->groupBy('year')
-                ->orderBy('year')
-                ->get()
-                ->toArray();
-        }
-    }
 
-    private function getTimeBasedInteractionStats($type)
-    {
-        $articleIds = Article::pluck('article_id');
 
-        if ($type === 'daily') {
-            return $this->getInteractionStats($articleIds, now()->subDays(30), 'daily');
-        } elseif ($type === 'monthly') {
-            return $this->getInteractionStats($articleIds, now()->subMonths(12), 'monthly');
-        } else {
-            return $this->getInteractionStats($articleIds, now()->subYears(5), 'yearly');
-        }
-    }
-
-    private function getInteractionStats($articleIds, $period, $type)
-    {
-        $stats = [];
-
-        if ($type === 'daily') {
-            $dates = $period->daysUntil(now());
-            foreach ($dates as $date) {
-                $stats[] = $this->getDailyStats($date, $articleIds);
-            }
-        } elseif ($type === 'monthly') {
-            $months = $period->monthsUntil(now());
-            foreach ($months as $month) {
-                $stats[] = $this->getMonthlyStats($month, $articleIds);
-            }
-        } else {
-            $years = $period->yearsUntil(now());
-            foreach ($years as $year) {
-                $stats[] = $this->getYearlyStats($year, $articleIds);
-            }
-        }
-
-        return $stats;
-    }
-
-    private function getDailyStats($date, $articleIds)
-    {
-        return [
-            'date' => $date->format('Y-m-d'),
-            'views' => ArticleView::whereIn('article_id', $articleIds)->whereDate('viewed_at', $date)->count(),
-            'likes' => DB::table('article_likes')->whereIn('article_id', $articleIds)->whereDate('liked_at', $date)->count(),
-            'comments' => Comment::whereIn('article_id', $articleIds)->whereDate('created_at', $date)->count(),
-        ];
-    }
-
-    private function getMonthlyStats($month, $articleIds)
-    {
-        return [
-            'month' => $month->format('Y-m'),
-            'views' => ArticleView::whereIn('article_id', $articleIds)->whereYear('viewed_at', $month->year)->whereMonth('viewed_at', $month->month)->count(),
-            'likes' => DB::table('article_likes')->whereIn('article_id', $articleIds)->whereYear('liked_at', $month->year)->whereMonth('liked_at', $month->month)->count(),
-            'comments' => Comment::whereIn('article_id', $articleIds)->whereYear('created_at', $month->year)->whereMonth('created_at', $month->month)->count(),
-        ];
-    }
-
-    private function getYearlyStats($year, $articleIds)
-    {
-        return [
-            'year' => $year->format('Y'),
-            'views' => ArticleView::whereIn('article_id', $articleIds)->whereYear('viewed_at', $year)->count(),
-            'likes' => DB::table('article_likes')->whereIn('article_id', $articleIds)->whereYear('liked_at', $year)->count(),
-            'comments' => Comment::whereIn('article_id', $articleIds)->whereYear('created_at', $year)->count(),
-        ];
-    }
 }

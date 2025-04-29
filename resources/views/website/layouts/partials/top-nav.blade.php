@@ -158,14 +158,14 @@
             <!-- Phần liên hệ (giữ nguyên như cũ) -->
             <div class="col-lg-3">
                 <h6 class="color-000 text-uppercase mb-15 ltspc-1 fw-bold">
-                    Giới Thiệu News24h <i class="la la-angle-right ms-1"></i>
+                    Giới Thiệu 24News <i class="la la-angle-right ms-1"></i>
                 </h6>
                 <div class="text mb-4">
-                    News24h là nền tảng tin tức hàng đầu Việt Nam, cung cấp thông tin chính xác, đa dạng và cập nhật 24/7.
+                    24News là nền tảng tin tức hàng đầu Việt Nam, cung cấp thông tin chính xác, đa dạng và cập nhật 24/7.
                     Chúng tôi cam kết mang đến cho độc giả những tin tức chất lượng và đáng tin cậy từ mọi lĩnh vực.
                 </div>
                 <div class="mt-4">
-                    <h6 class="color-000 mb-3 fw-bold">Tại sao chọn News24h?</h6>
+                    <h6 class="color-000 mb-3 fw-bold">Tại sao chọn 24News?</h6>
                     <div class="d-flex align-items-center mb-3">
                         <div class="icon-box me-3 bg-light rounded p-2" style="color: var(--bs-primary);">
                             <i class="la la-newspaper-o text-primary"></i>

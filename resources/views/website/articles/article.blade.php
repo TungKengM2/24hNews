@@ -371,10 +371,10 @@ body.dark-theme .content1 * {
                                     data-liked="{{ $isLiked ? 'true' : 'false' }}"
                                     style="outline: none; box-shadow: none; cursor: pointer;">
                                     <i id="likeIcon" class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-heart"
-                                        style="font-size: 28px; {{ $isLiked ? 'color: #e60023;' : 'color: black;' }}">
+                                        style="font-size: 28px; {{ $isLiked ? 'color: #e60023;' : 'color: #777777;' }}">
                                     </i>
                                     <span id="likeCount"
-                                        style="font-size: 14px; font-weight: bold; color: {{ $isLiked ? '#e60023' : 'black' }};">
+                                        style="font-size: 14px; font-weight: bold; color: {{ $isLiked ? '#e60023' : '#777777' }};">
                                         {{ $likeCount }}
                                     </span>
                                 </button>

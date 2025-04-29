@@ -140,7 +140,7 @@
                                                         foreach($childCategories->where('parent_id', $parentCategory->category_id) as $child) {
                                                             $subArticleCount += $child->subArticles->count();
                                                         }
-                                                        $totalArticles = $articleCount + $subArticleCount;
+                                                        $totalArticles =  $subArticleCount;
                                                     @endphp
                                                     <span class="badge badge-pill badge-info">{{ $totalArticles }}</span>
                                                 </td>

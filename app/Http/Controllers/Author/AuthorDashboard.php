@@ -22,9 +22,10 @@
      //        }
      public function index(Request $request)
      {
-         // Get the type parameter from the request, default to 'daily'
-         $type = $request->input('article_type', 'daily');
-         $interactionType = $request->input('interaction_type', $type);
+         // Lấy ngày bắt đầu, ngày kết thúc và kiểu hiển thị
+         $dateFrom = $request->input('date_from') ? Carbon::parse($request->input('date_from'))->startOfDay() : now()->subDays(30)->startOfDay();
+         $dateTo = $request->input('date_to') ? Carbon::parse($request->input('date_to'))->endOfDay() : now()->endOfDay();
+         $viewType = $request->input('view_type', 'daily'); // daily, monthly, yearly
 
          $user = Auth::user();
          $articleStats = [
@@ -46,10 +47,10 @@
                  ->count(),
          ];
           // Get time-based article statistics
-          $timeBasedArticleStats = $this->getTimeBasedArticleStats($user->user_id, $type);
+          $timeBasedArticleStats = $this->getTimeBasedArticleStats($user->user_id, $viewType, $dateFrom, $dateTo);
 
           // Get time-based interaction statistics
-          $timeBasedInteractionStats = $this->getTimeBasedInteractionStats($user->user_id, $interactionType);
+          $timeBasedInteractionStats = $this->getTimeBasedInteractionStats($user->user_id, $viewType, $dateFrom, $dateTo);
           // Lấy số lượng người theo dõi
          $followerCount = DB::table('follows')
          ->where('following_id', $user->user_id)
@@ -103,6 +104,10 @@
                ->count();
        }
 
+       // Kiểm tra xem tác giả có bị cấm không
+       $isBanned = $user->banned_until && now()->lessThan($user->banned_until);
+       $banEndTime = $isBanned ? $user->banned_until->format('H:i d/m/Y') : null;
+
        return view('author.dashboard', compact(
            'articleStats',
            'followerCount',
@@ -110,10 +115,13 @@
            'totalViews',
            'totalComments',
            'totalLikes',
-           'type',
-           'interactionType',
+           'viewType',
+           'dateFrom',
+           'dateTo',
            'timeBasedArticleStats',
-           'timeBasedInteractionStats'
+           'timeBasedInteractionStats',
+           'isBanned',
+           'banEndTime'
        ));
    }
 
@@ -136,29 +144,62 @@
    }
 
    /**
+    * Xử lý yêu cầu AJAX để lọc dữ liệu biểu đồ
+    *
+    * @param Request $request
+    * @return \Illuminate\Http\JsonResponse
+    */
+   public function filterData(Request $request)
+   {
+       // Lấy ngày bắt đầu, ngày kết thúc và kiểu hiển thị
+       $dateFrom = $request->input('date_from') ? Carbon::parse($request->input('date_from'))->startOfDay() : now()->subDays(30)->startOfDay();
+       $dateTo = $request->input('date_to') ? Carbon::parse($request->input('date_to'))->endOfDay() : now()->endOfDay();
+       $viewType = $request->input('view_type', 'daily'); // daily, monthly, yearly
+
+       $user = Auth::user();
+
+       // Lấy thống kê bài viết theo thời gian
+       $timeBasedArticleStats = $this->getTimeBasedArticleStats($user->user_id, $viewType, $dateFrom, $dateTo);
+
+       // Lấy thống kê tương tác theo thời gian
+       $timeBasedInteractionStats = $this->getTimeBasedInteractionStats($user->user_id, $viewType, $dateFrom, $dateTo);
+
+       // Trả về dữ liệu dưới dạng JSON
+       return response()->json([
+           'success' => true,
+           'timeBasedArticleStats' => $timeBasedArticleStats,
+           'timeBasedInteractionStats' => $timeBasedInteractionStats,
+           'type' => $viewType,
+           'dateFrom' => $dateFrom->format('Y-m-d'),
+           'dateTo' => $dateTo->format('Y-m-d')
+       ]);
+   }
+
+   /**
     * Get time-based article statistics
     *
     * @param int $userId
     * @param string $type
+    * @param Carbon $dateFrom
+    * @param Carbon $dateTo
     * @return array
     */
-   private function getTimeBasedArticleStats($userId, $type)
+   private function getTimeBasedArticleStats($userId, $type, $dateFrom, $dateTo)
    {
        // Using author_id instead of user_id
-       $query = Article::where('author_id', $userId);
+       $query = Article::where('author_id', $userId)
+           ->whereBetween('created_at', [$dateFrom, $dateTo]);
 
        if ($type === 'daily') {
-           // Get daily stats for the last 30 days
+           // Get daily stats
            return $query->selectRaw('DATE(created_at) as date, COUNT(*) as count')
-               ->whereDate('created_at', '>=', now()->subDays(30))
                ->groupBy('date')
                ->orderBy('date')
                ->get()
                ->toArray();
        } else if ($type === 'monthly') {
-           // Get monthly stats for the last 12 months
+           // Get monthly stats
            return $query->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count')
-               ->whereDate('created_at', '>=', now()->subMonths(12))
                ->groupBy('year', 'month')
                ->orderBy('year')
                ->orderBy('month')
@@ -179,9 +220,11 @@
     *
     * @param int $userId
     * @param string $type
+    * @param Carbon $dateFrom
+    * @param Carbon $dateTo
     * @return array
     */
-   private function getTimeBasedInteractionStats($userId, $type)
+   private function getTimeBasedInteractionStats($userId, $type, $dateFrom, $dateTo)
    {
        // Using author_id instead of user_id
        $articleIds = Article::where('author_id', $userId)->pluck('article_id');
@@ -259,8 +302,8 @@
        }
 
        if ($type === 'daily') {
-           // Get daily stats for the last 30 days
-           $period = now()->subDays(30)->daysUntil(now());
+           // Get daily stats for the selected date range
+           $period = $dateFrom->daysUntil($dateTo);
            $stats = [];
 
            foreach ($period as $date) {
@@ -325,8 +368,8 @@
 
            return $stats;
        } else if ($type === 'monthly') {
-           // Get monthly stats for the last 12 months
-           $period = now()->subMonths(12)->monthsUntil(now());
+           // Get monthly stats for the selected date range
+           $period = $dateFrom->monthsUntil($dateTo);
            $stats = [];
 
            foreach ($period as $date) {
@@ -394,9 +437,9 @@
 
            return $stats;
        } else {
-           // Get yearly stats
-           $startYear = Article::where('author_id', $userId)->min(DB::raw('YEAR(created_at)')) ?: now()->year;
-           $endYear = now()->year;
+           // Get yearly stats for the selected date range
+           $startYear = max($dateFrom->year, Article::where('author_id', $userId)->min(DB::raw('YEAR(created_at)')) ?: $dateFrom->year);
+           $endYear = $dateTo->year;
            $stats = [];
 
            for ($year = $startYear; $year <= $endYear; $year++) {
