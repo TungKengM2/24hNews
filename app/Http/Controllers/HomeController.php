@@ -98,47 +98,45 @@ class HomeController extends Controller
             ->take(11)
             ->get();
 
-        // 1) Lấy category gốc “Thời Sự”
-        $root = Category::where('name', 'Thời Sự')->firstOrFail();
+      // Xử lý "Thời Sự"
+      $root = Category::where('name', 'Thời Sự')->first();
+      if ($root) {
+          $catIds = $this->collectCategoryIds($root->category_id);
 
-        // 2) Lấy tất cả ID của nó và descendants
-        $catIds = $this->collectCategoryIds($root->category_id);
+          $posts = Article::with('category', 'author')
+              ->where('status', 'published')
+              ->whereIn('category_id', $catIds)
+              ->orderByDesc('views')
+              ->take(10)
+              ->get();
 
-        // 3) Lấy 10 bài nhiều view nhất trong các category đó
-        $posts = Article::with('category', 'author')
-            ->where('status', 'published')
-            ->whereIn('category_id', $catIds)
-            ->orderByDesc('views')
-            ->take(10)
-            ->get();
+          $mainPost   = $posts->shift();        // 1 bài lớn
+          $listPosts  = $posts->splice(0, 5);   // 5 bài list
+          $gridPost   = $posts->shift();        // 1 bài grid
+          $linkPosts  = $posts;                 // 3 bài link text
+      } else {
+          $mainPost = $listPosts = $gridPost = $linkPosts = null;
+      }
 
-        // 4) Chia thành 4 phần
-        $mainPost   = $posts->shift();        // 1 bài lớn
-        $listPosts  = $posts->splice(0, 5);   // 5 bài list
-        $gridPost   = $posts->shift();        // 1 bài grid
-        $linkPosts  = $posts;                 // 3 bài link text
+      // Xử lý "Kinh Doanh"
+      $businessRoot = Category::where('name', 'Kinh Doanh')->first();
+      if ($businessRoot) {
+          $businessCatIds = $this->collectCategoryIds($businessRoot->category_id);
 
+          $businessPosts = Article::with('category', 'author')
+              ->where('status', 'published')
+              ->whereIn('category_id', $businessCatIds)
+              ->orderByDesc('views')
+              ->take(10)
+              ->get();
 
-        // 1) Lấy category gốc “Kinh Doanh”
-        $businessRoot = Category::where('name', 'Kinh Doanh')->firstOrFail();
-
-        // 2) Lấy tất cả ID của nó và descendants
-        $businessCatIds = $this->collectCategoryIds($businessRoot->category_id);
-
-        // 3) Lấy 10 bài nhiều view nhất trong các category đó
-        $businessPosts = Article::with('category', 'author')
-            ->where('status', 'published')
-            ->whereIn('category_id', $businessCatIds)
-            ->orderByDesc('views')
-            ->take(10)
-            ->get();
-
-        // 4) Chia thành 4 phần
-        $businessMainPost   = $businessPosts->shift();       // 1 bài lớn
-        $businessListPosts  = $businessPosts->splice(0, 5);  // 5 bài list
-        $businessGridPost   = $businessPosts->shift();       // 1 bài grid
-        $businessLinkPosts  = $businessPosts;                // 3 bài link text
-
+          $businessMainPost   = $businessPosts->shift();       // 1 bài lớn
+          $businessListPosts  = $businessPosts->splice(0, 5);  // 5 bài list
+          $businessGridPost   = $businessPosts->shift();       // 1 bài grid
+          $businessLinkPosts  = $businessPosts;                // 3 bài link text
+      } else {
+          $businessMainPost = $businessListPosts = $businessGridPost = $businessLinkPosts = null;
+      }
 
 
         // 1. Bài viết nổi bật (NewsArticle)
