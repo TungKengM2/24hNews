@@ -22,21 +22,21 @@ class HomeController extends Controller
     protected function collectCategoryIds(int $parentId): array
     {
         $ids = [$parentId];
-    
+
         // Lọc danh mục con chỉ với is_active = 1
         $children = Category::where('parent_id', $parentId)
             ->where('is_active', 1)  // Thêm điều kiện chỉ lấy danh mục hoạt động
             ->pluck('category_id')
             ->toArray();
-    
+
         foreach ($children as $childId) {
             // Tái gọi phương thức để lấy danh mục con của các danh mục con
             $ids = array_merge($ids, $this->collectCategoryIds($childId));
         }
-    
+
         return $ids;
     }
-    
+
 
     public function index(Request $request)
     {
@@ -456,83 +456,54 @@ class HomeController extends Controller
         $suggestions = [];
 
         if ($keyword && strlen($keyword) >= 2) {
-            // Tìm kiếm bài viết có tiêu đề chứa từ khóa
+            $lowerKeyword = mb_strtolower($keyword);
+
+            // Tìm kiếm bài viết đã xuất bản có tiêu đề chứa từ khóa
             $articles = Article::where('status', 'published')
                 ->where(function ($query) use ($keyword) {
-                    // Tìm kiếm chính xác hơn với nhiều điều kiện
-                    $query->where('title', 'LIKE', "{$keyword}%") // Bắt đầu bằng từ khóa (ưu tiên cao nhất)
-                        ->orWhere('title', 'LIKE', "% {$keyword}%") // Từ khóa xuất hiện sau khoảng trắng
-                        ->orWhere('title', 'LIKE', "%{$keyword}%"); // Chứa từ khóa ở bất kỳ đâu (ưu tiên thấp nhất)
+                    $query->where('title', 'LIKE', "{$keyword}%")
+                        ->orWhere('title', 'LIKE', "% {$keyword}%")
+                        ->orWhere('title', 'LIKE', "%{$keyword}%");
                 })
-                ->orderBy('views', 'desc') // Ưu tiên bài viết có nhiều lượt xem
-                ->limit(15) // Lấy 15 bài để xử lý và lọc ra 5 bài phù hợp nhất
-                ->get();
+                ->orderBy('views', 'desc')
+                ->limit(10)
+                ->get()
+                ->map(function ($article) use ($lowerKeyword) {
+                    $lowerTitle = mb_strtolower($article->title);
 
-            // Mảng để lưu kết quả có xếp hạng
-            $rankedSuggestions = [];
-
-            foreach ($articles as $article) {
-                $title = $article->title;
-                $lowerTitle = mb_strtolower($title);
-                $lowerKeyword = mb_strtolower($keyword);
-
-                // Tính điểm phù hợp
-                $relevance = 0;
-
-                // Nếu tiêu đề bắt đầu bằng từ khóa (ưu tiên cao nhất)
-                if (mb_strpos($lowerTitle, $lowerKeyword) === 0) {
-                    $relevance += 10;
-                }
-                // Nếu từ khóa xuất hiện sau khoảng trắng (ưu tiên trung bình)
-                elseif (mb_strpos($lowerTitle, ' ' . $lowerKeyword) !== false) {
-                    $relevance += 5;
-                }
-                // Nếu từ khóa xuất hiện ở bất kỳ đâu (ưu tiên thấp)
-                elseif (mb_strpos($lowerTitle, $lowerKeyword) !== false) {
-                    $relevance += 2;
-                }
-
-                // Cộng thêm điểm dựa trên lượt xem (tối đa 3 điểm)
-                $viewPoints = min(3, $article->views / 1000);
-                $relevance += $viewPoints;
-
-                // Cộng thêm điểm nếu tiêu đề ngắn gọn (dễ đọc hơn)
-                if (mb_strlen($title) < 50) {
-                    $relevance += 1;
-                }
-
-                // Thêm vào mảng kết quả có xếp hạng
-                $rankedSuggestions[] = [
-                    'title' => $title,
-                    'slug' => $article->slug,
-                    'relevance' => $relevance
-                ];
-            }
-
-            // Sắp xếp theo độ phù hợp giảm dần
-            usort($rankedSuggestions, function ($a, $b) {
-                return $b['relevance'] - $a['relevance'];
-            });
-
-            // Lấy 5 kết quả phù hợp nhất và loại bỏ trùng lặp
-            $uniqueSuggestions = [];
-            $uniqueTitles = [];
-
-            foreach ($rankedSuggestions as $suggestion) {
-                $title = $suggestion['title'];
-                if (!in_array($title, $uniqueTitles)) {
-                    $uniqueTitles[] = $title;
-                    $uniqueSuggestions[] = [
-                        'title' => $title,
-                        'slug' => $suggestion['slug']
-                    ];
-                    if (count($uniqueSuggestions) >= 5) {
-                        break;
+                    // Tính điểm phù hợp
+                    $relevance = 0;
+                    if (mb_strpos($lowerTitle, $lowerKeyword) === 0) {
+                        $relevance = 10; // Bắt đầu bằng từ khóa
+                    } elseif (mb_strpos($lowerTitle, ' ' . $lowerKeyword) !== false) {
+                        $relevance = 5;  // Từ khóa xuất hiện sau khoảng trắng
+                    } elseif (mb_strpos($lowerTitle, $lowerKeyword) !== false) {
+                        $relevance = 2;  // Chứa từ khóa ở bất kỳ đâu
                     }
-                }
-            }
 
-            $suggestions = $uniqueSuggestions;
+                    // Cộng điểm từ lượt xem và độ dài tiêu đề
+                    $relevance += min(3, $article->views / 1000);
+                    $relevance += (mb_strlen($article->title) < 50) ? 1 : 0;
+
+                    return [
+                        'title' => $article->title,
+                        'slug' => $article->slug,
+                        'relevance' => $relevance
+                    ];
+                })
+                ->sortByDesc('relevance')
+                ->unique('title')
+                ->take(5)
+                ->values()
+                ->map(function ($item) {
+                    return [
+                        'title' => $item['title'],
+                        'slug' => $item['slug']
+                    ];
+                })
+                ->toArray();
+
+            $suggestions = $articles;
         }
 
         return response()->json(['suggestions' => $suggestions]);
@@ -547,79 +518,47 @@ class HomeController extends Controller
         $suggestions = [];
 
         if ($keyword && strlen($keyword) >= 2) {
+            $lowerKeyword = mb_strtolower($keyword);
+
             // Tìm kiếm danh mục có tên chứa từ khóa
-            $categories = Category::where('is_active', 1)
+            $suggestions = Category::where('is_active', 1)
                 ->where(function ($query) use ($keyword) {
-                    // Tìm kiếm chính xác hơn với nhiều điều kiện
-                    $query->where('name', 'LIKE', "{$keyword}%") // Bắt đầu bằng từ khóa (ưu tiên cao nhất)
-                        ->orWhere('name', 'LIKE', "% {$keyword}%") // Từ khóa xuất hiện sau khoảng trắng
-                        ->orWhere('name', 'LIKE', "%{$keyword}%"); // Chứa từ khóa ở bất kỳ đâu (ưu tiên thấp nhất)
+                    $query->where('name', 'LIKE', "{$keyword}%")
+                        ->orWhere('name', 'LIKE', "% {$keyword}%")
+                        ->orWhere('name', 'LIKE', "%{$keyword}%");
                 })
-                ->withCount('articles') // Đếm số bài viết trong danh mục
-                ->orderByDesc('articles_count') // Ưu tiên danh mục có nhiều bài viết
-                ->limit(15) // Lấy 15 danh mục để xử lý và lọc ra 5 danh mục phù hợp nhất
-                ->get();
+                ->withCount('articles')
+                ->orderByDesc('articles_count')
+                ->limit(10)
+                ->get()
+                ->map(function ($category) use ($lowerKeyword) {
+                    $lowerName = mb_strtolower($category->name);
 
-            // Mảng để lưu kết quả có xếp hạng
-            $rankedSuggestions = [];
-
-            foreach ($categories as $category) {
-                $name = $category->name;
-                $lowerName = mb_strtolower($name);
-                $lowerKeyword = mb_strtolower($keyword);
-
-                // Tính điểm phù hợp
-                $relevance = 0;
-
-                // Nếu tên danh mục bắt đầu bằng từ khóa (ưu tiên cao nhất)
-                if (mb_strpos($lowerName, $lowerKeyword) === 0) {
-                    $relevance += 10;
-                }
-                // Nếu từ khóa xuất hiện sau khoảng trắng (ưu tiên trung bình)
-                elseif (mb_strpos($lowerName, ' ' . $lowerKeyword) !== false) {
-                    $relevance += 5;
-                }
-                // Nếu từ khóa xuất hiện ở bất kỳ đâu (ưu tiên thấp)
-                elseif (mb_strpos($lowerName, $lowerKeyword) !== false) {
-                    $relevance += 2;
-                }
-
-                // Cộng thêm điểm dựa trên số lượng bài viết (tối đa 3 điểm)
-                $articlesPoints = min(3, $category->articles_count / 10);
-                $relevance += $articlesPoints;
-
-                // Cộng thêm điểm nếu tên danh mục ngắn gọn (dễ đọc hơn)
-                if (mb_strlen($name) < 20) {
-                    $relevance += 1;
-                }
-
-                // Thêm vào mảng kết quả có xếp hạng
-                $rankedSuggestions[] = [
-                    'name' => $name,
-                    'slug' => $category->slug,
-                    'relevance' => $relevance,
-                    'type' => 'category' // Đánh dấu đây là danh mục
-                ];
-            }
-
-            // Sắp xếp theo độ phù hợp giảm dần
-            usort($rankedSuggestions, function ($a, $b) {
-                return $b['relevance'] - $a['relevance'];
-            });
-
-            // Lấy 5 kết quả phù hợp nhất và loại bỏ trùng lặp
-            $uniqueCategories = [];
-            foreach ($rankedSuggestions as $suggestion) {
-                $name = $suggestion['name'];
-                if (!in_array($name, $uniqueCategories)) {
-                    $uniqueCategories[] = $suggestion;
-                    if (count($uniqueCategories) >= 5) {
-                        break;
+                    // Tính điểm phù hợp
+                    $relevance = 0;
+                    if (mb_strpos($lowerName, $lowerKeyword) === 0) {
+                        $relevance = 10; // Bắt đầu bằng từ khóa
+                    } elseif (mb_strpos($lowerName, ' ' . $lowerKeyword) !== false) {
+                        $relevance = 5;  // Từ khóa xuất hiện sau khoảng trắng
+                    } elseif (mb_strpos($lowerName, $lowerKeyword) !== false) {
+                        $relevance = 2;  // Chứa từ khóa ở bất kỳ đâu
                     }
-                }
-            }
 
-            $suggestions = $uniqueCategories;
+                    // Cộng điểm từ số lượng bài viết và độ dài tên
+                    $relevance += min(3, $category->articles_count / 10);
+                    $relevance += (mb_strlen($category->name) < 20) ? 1 : 0;
+
+                    return [
+                        'name' => $category->name,
+                        'slug' => $category->slug,
+                        'relevance' => $relevance,
+                        'type' => 'category'
+                    ];
+                })
+                ->sortByDesc('relevance')
+                ->take(5)
+                ->values()
+                ->toArray();
         }
 
         return response()->json(['suggestions' => $suggestions]);
