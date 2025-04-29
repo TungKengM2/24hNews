@@ -52,7 +52,7 @@ class CategoryUserController extends Controller
             ->where($whereCategory)
             ->where('created_at', '>=', now()->subDays(7))
             ->orderByDesc('views')
-            ->limit(5)
+            ->limit(4)
             ->get();
 
         // 3. Top bài viết nổi bật trong 30 ngày (bình luận + views)
@@ -68,15 +68,12 @@ class CategoryUserController extends Controller
 
 
 
-        $articles = Article::with('category', 'author', 'comments')
+            $articles = Article::with('category', 'comments')
             ->withCount('comments')
             ->where('status', 'published')
-            ->where(function ($query) use ($categoryIds) {
-                // Check if articles belong to the current category (or its children if applicable)
-                $query->whereIn('category_id', $categoryIds);
-            })
+            ->where($whereCategory)
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(10); // hoặc get() nếu bạn không cần phân trang
 
 
 

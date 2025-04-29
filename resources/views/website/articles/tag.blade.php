@@ -69,7 +69,13 @@
                                                 </a>
                                             </h2>
                                             <div class="text">
-                                                {{ Str::limit($highlightedArticles->preview_content ?? strip_tags($highlightedArticles->content), 180) }}
+                                                <div class="text">
+                                                    {!! Str::limit(html_entity_decode(strip_tags(
+                                                            $highlightedArticles->preview_content 
+                                                            ?? $highlightedArticles->content
+                                                        )), 180, '...') !!}
+                                                </div>
+                                                
                                             </div>
                                             <div class="meta-bot lh-1 mt-40">
                                                 <ul class="d-flex">
@@ -128,95 +134,7 @@
         <!-- ====== start popular posts ====== -->
         <section class="tc-popular-posts-blog">
             <div class="container">
-                <div class="content pt-50 pb-50 border-1 border-bottom brd-gray">
-                    <p class="color-000 text-uppercase mb-30 ltspc-1"> Bài Viết Nổi Bật </p>
-                    <!-- Kiểm tra nếu có bài viết -->
-                    @if ($highlightedArticleByViews->isNotEmpty())
-                        <div class="tc-post-grid-default">
-                            <div class="tc-popular-posts-blog-slider9 tc-slider-style1">
-                                <div class="swiper-container">
-                                    <div class="swiper-wrapper">
-                                        @foreach ($highlightedArticleByViews as $article)
-                                            <div class="swiper-slide">
-                                                <div class="item">
-                                                    <div class="img img-cover th-180">
-                                                        <img src="{{ $article->thumbnail_url ? asset('storage/' . $article->thumbnail_url) : asset('images/default-thumbnail.jpg') }}"
-                                                            alt="{{ $article->title ?? 'Ảnh bài viết' }}"
-                                                            class="img-fluid">
-                                                        @if (!empty($article->is_video) && $article->is_video)
-                                                            <a href="{{ $article->video_url }}" data-lity=""
-                                                                class="video_icon icon-50 border-2">
-                                                                <i class="ion-play fsz-20px"></i>
-                                                            </a>
-                                                        @endif
-                                                    </div>
-                                                    <div class="content pt-20">
-                                                        @if (!empty($article->category))
-                                                            <a href="#"
-                                                                class="news-cat color-999 fsz-13px text-uppercase mb-10">
-                                                                {{ $article->category->name }}
-                                                            </a>
-                                                        @endif
-                                                        <h4 class="title ltspc--1 mb-10">
-                                                            <a
-                                                                href="{{ !empty($article->slug) ? route('articles.article', $article->slug) : '#' }}">
-                                                                {{ $article->title ?? 'Không có tiêu đề' }}
-                                                            </a>
-                                                        </h4>
-                                                        <div class="text color-666">
-                                                            {{ Str::limit($article->description ?? '', 100) }}
-                                                        </div>
-                                                        <div class="meta-bot lh-1 mt-20">
-                                                            <ul class="d-flex">
-                                                                <li class="date me-5">
-                                                                    <a
-                                                                        href="{{ !empty($article->slug) ? route('articles.article', $article->slug) : '#' }}">
-                                                                        <i class="la la-calendar me-2"></i>
-                                                                        {{ optional($article->created_at)->translatedFormat('d \t\há\n\g m, Y') ?? '' }}
-                                                                    </a>
-                                                                </li>
-                                                                <li class="comment">
-                                                                    <a
-                                                                        href="{{ !empty($article->slug) ? route('articles.article', $article->slug) : '#' }}">
-                                                                        <i class="la la-comment me-2"></i>
-                                                                        {{ $article->comments_count ?? 0 }}
-                                                                    </a>
-                                                                </li>
-                                                                <li class="views ms-5">
-                                                                    <!-- Thêm ms-5 để tạo khoảng cách bên trái -->
-                                                                    <a
-                                                                        href="{{ !empty($article->slug) ? route('articles.article', $article->slug) : '#' }}">
-                                                                        <i class="la la-eye me-2"></i>
-                                                                        {{ $article->views ?? 0 }} Lượt xem
-                                                                    </a>
-                                                                </li>
-
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                                <div class="swiper-button-next"></div>
-                                <div class="swiper-button-prev"></div>
-                            </div>
-                        </div>
-                    @else
-                        <section class="features-posts pt-50 pb-50 bg-gray1">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <p class="text-center">Hiện tại không có bài viết nổi bật.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    @endif
-
-
-                </div>
+                
 
                 <div class="content-widgets pt-50 pb-50">
                     <div class="row">
