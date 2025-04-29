@@ -5,18 +5,22 @@
     <meta name="article-id" content="{{ $article->article_id }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Thêm Toastify vào head của trang -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.11.2/toastify.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.11.2/toastify.min.js"></script>
+
 
     <!-- CSS Tùy chỉnh -->
     <style>
         /* Áp dụng cho cả hai chế độ: reset nền trắng của TinyMCE */
-.content1 * {
-    background-color: transparent !important;
-}
+        .content1 * {
+            background-color: transparent !important;
+        }
 
-/* Chỉ khi nền dark: ép màu chữ trắng để dễ đọc */
-body.dark-theme .content1 * {
-    color: #ffffff !important;
-}
+        /* Chỉ khi nền dark: ép màu chữ trắng để dễ đọc */
+        body.dark-theme .content1 * {
+            color: #ffffff !important;
+        }
 
 
 
@@ -262,15 +266,6 @@ body.dark-theme .content1 * {
 
         }
     </style>
-
-
-
-
-
-    {{-- include_once 'app/helpers/helpers.php'; --}}
-
-
-
 
 
     <!--Contents-->
@@ -688,12 +683,40 @@ body.dark-theme .content1 * {
                                                         <?php endforeach; ?>
 
                                                         <?php if ($replyCount > $visibleReplies): ?>
-                                                        <button
-                                                            class="btn btn-link p-0 text-primary fw-bold show-more-replies-btn mt-2"
-                                                            onclick="toggleReplies(this)" data-collapsed="true">
-                                                            Xem thêm
-                                                        </button>
-                                                        <?php endif; ?>
+    <button
+        class="btn btn-link p-0 text-primary fw-bold show-more-replies-btn mt-2"
+        onclick="toggleReplies(this)" 
+        data-collapsed="true"
+        data-replies-container-id="replies-container-{{ $comment->comment_id }}">
+        Xem thêm
+    </button>
+<?php endif; ?>
+
+<script>
+    function toggleReplies(button) {
+        const repliesContainer = button.closest('.replies');
+        const allReplies = repliesContainer.querySelectorAll('.reply-item');
+        const isCollapsed = button.getAttribute('data-collapsed') === 'true';
+        const visibleCount = 0; // Set this to the number of replies you want visible initially (0 hides all)
+
+        if (isCollapsed) {
+            // Show all replies
+            allReplies.forEach(reply => reply.classList.remove('d-none'));
+            button.innerText = 'Thu gọn'; // Change button text to "Collapse"
+            button.setAttribute('data-collapsed', 'false'); // Update the collapsed state
+        } else {
+            // Hide extra replies
+            allReplies.forEach((reply, index) => {
+                if (index >= visibleCount) {
+                    reply.classList.add('d-none'); // Hide replies exceeding the visibleCount
+                }
+            });
+            button.innerText = 'Xem thêm'; // Change button text to "Show more"
+            button.setAttribute('data-collapsed', 'true'); // Update the collapsed state
+        }
+    }
+</script>
+ 
 
                                                     </div>
                                                     <!-- End danh sách replies -->
@@ -703,30 +726,7 @@ body.dark-theme .content1 * {
                                         <?php endif; ?>
                                         <?php endforeach; ?>
 
-                                        <script>
-                                            function toggleReplies(button) {
-                                                const repliesContainer = button.closest('.replies');
-                                                const allReplies = repliesContainer.querySelectorAll('.reply-item');
-                                                const isCollapsed = button.getAttribute('data-collapsed') === 'true';
-                                                const visibleCount = 0; // Số reply muốn hiển thị ban đầu
-
-                                                if (isCollapsed) {
-                                                    // Hiển thị tất cả
-                                                    allReplies.forEach(reply => reply.classList.remove('d-none'));
-                                                    button.innerText = 'Thu gọn';
-                                                    button.setAttribute('data-collapsed', 'false');
-                                                } else {
-                                                    // Ẩn lại những reply vượt quá visibleCount
-                                                    allReplies.forEach((reply, index) => {
-                                                        if (index >= visibleCount) {
-                                                            reply.classList.add('d-none');
-                                                        }
-                                                    });
-                                                    button.innerText = 'Xem thêm';
-                                                    button.setAttribute('data-collapsed', 'true');
-                                                }
-                                            }
-                                        </script>
+                                       
 
 
 
@@ -885,6 +885,11 @@ body.dark-theme .content1 * {
                             return;
                         }
 
+                        // Disable button và hiển thị loading
+                        sendReplyBtn.disabled = true;
+                        sendReplyBtn.textContent = "Đang gửi...";
+                        showLoading(true);
+
                         // Gửi dữ liệu qua fetch
                         fetch(`/articles/${articleId}/comments/${commentId}/reply`, {
                                 method: "POST",
@@ -904,23 +909,65 @@ body.dark-theme .content1 * {
                             })
                             .then(data => {
                                 console.log("Server data:", data);
+                                showLoading(false);
+                                
                                 if (data.success) {
-                                    // Nếu gửi thành công, đóng modal và reload trang
+                                    // Hiển thị thông báo thành công với Toastify
+                                    Toastify({
+                                        text: data.message || "Trả lời của bạn đã được đăng!",
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: "center",
+                                        backgroundColor: "#4CAF50", // Màu xanh cho thành công
+                                    }).showToast();
+                                    
+                                    // Đóng modal
                                     const replyModalEl = document.getElementById('replyModal');
                                     const modalInstance = bootstrap.Modal.getInstance(replyModalEl);
                                     modalInstance.hide();
-                                    location.reload();
+                                    
+                                    // Reload page sau 1 giây
+                                    setTimeout(function() {
+                                        location.reload();
+                                    }, 1000);
                                 } else {
-                                    alert(data.message || "Có lỗi xảy ra, vui lòng thử lại!");
+                                    // Hiển thị thông báo lỗi
+                                    Toastify({
+                                        text: data.message || "Có lỗi xảy ra, vui lòng thử lại!",
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: "center",
+                                        backgroundColor: "#F44336", // Màu đỏ cho lỗi
+                                    }).showToast();
+                                    
+                                    // Enable lại button
+                                    sendReplyBtn.disabled = false;
+                                    sendReplyBtn.textContent = "Gửi trả lời";
                                 }
                             })
                             .catch(error => {
                                 console.error("Lỗi khi gửi bình luận:", error);
-                                alert("Lỗi khi gửi bình luận!");
+                                
+                                // Hiển thị thông báo lỗi
+                                Toastify({
+                                    text: "Đã xảy ra lỗi khi gửi trả lời (network / server).",
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "center",
+                                    backgroundColor: "#F44336",
+                                }).showToast();
+                                
+                                // Ẩn loading, enable lại button
+                                showLoading(false);
+                                sendReplyBtn.disabled = false;
+                                sendReplyBtn.textContent = "Gửi trả lời";
                             });
                     });
                 }
             });
+            
+            // Make openReplyModal global
+            window.openReplyModal = openReplyModal;
         </script>
 
 
@@ -1392,90 +1439,7 @@ body.dark-theme .content1 * {
             });
         </script>
 
-
-        <!-- ====== end Related products ====== -->
     </main>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let likeButton = document.getElementById("likeButton");
-            let likeCount = document.getElementById("likeCount");
-            let likeIcon = document.getElementById("likeIcon");
-
-            likeButton.addEventListener("click", function() {
-                let articleId = likeButton.getAttribute("data-article-id");
-                let isLiked = likeButton.getAttribute("data-liked") === "true";
-
-                fetch(`/articles/${articleId}/like`, {
-                        method: "POST",
-                        headers: {
-                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute("content"),
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({})
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            likeButton.setAttribute("data-liked", data.liked ? "true" : "false");
-                            likeCount.textContent = data.likeCount;
-
-                            if (data.liked) {
-                                likeIcon.classList.remove("fa-regular");
-                                likeIcon.classList.add("fa-solid");
-                                likeIcon.style.color = "#e60023";
-                            } else {
-                                likeIcon.classList.remove("fa-solid");
-                                likeIcon.classList.add("fa-regular");
-                                likeIcon.style.color = "black";
-                            }
-                        }
-                    })
-                    .catch(error => console.error("Lỗi:", error));
-            });
-        });
-    </script>
-
-
-    <!-- 🔔 Thêm vào trong Blade để có chỗ hiển thị thông báo -->
-    <div id="messageBox"></div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const commentForm = document.querySelector(".comment-form");
-
-            if (commentForm) {
-                commentForm.addEventListener("submit", function(e) {
-                    e.preventDefault();
-
-                    const formData = new FormData(this);
-                    const url = this.getAttribute("action");
-
-                    fetch(url, {
-                            method: "POST",
-                            body: formData
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // ✅ Trường hợp bình luận thành công
-                                alert(data.message || "Bình luận của bạn đã được đăng!");
-                                window.location.reload(); // Nếu muốn reload
-                            } else {
-                                // ❌ Trường hợp gặp lỗi (chưa đăng nhập, bị khóa, từ ngữ cấm, ...)
-                                alert(data.message || "Có lỗi xảy ra khi gửi bình luận.");
-                            }
-                        })
-                        .catch(error => {
-                            // ❌ Lỗi kết nối, lỗi server không trả JSON
-                            console.error("Error:", error);
-                            alert("Đã xảy ra lỗi khi gửi bình luận (network / server).");
-                        });
-                });
-            }
-        });
-    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -1527,6 +1491,7 @@ body.dark-theme .content1 * {
             }
         });
     </script>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -1640,6 +1605,7 @@ body.dark-theme .content1 * {
             });
         });
     </script>
+
     {{-- like cmt nhé --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1705,6 +1671,229 @@ body.dark-theme .content1 * {
 
 
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let likeButton = document.getElementById("likeButton");
+            let likeCount = document.getElementById("likeCount");
+            let likeIcon = document.getElementById("likeIcon");
+
+            likeButton.addEventListener("click", function() {
+                let articleId = likeButton.getAttribute("data-article-id");
+                let isLiked = likeButton.getAttribute("data-liked") === "true";
+
+                fetch(`/articles/${articleId}/like`, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute("content"),
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            likeButton.setAttribute("data-liked", data.liked ? "true" : "false");
+                            likeCount.textContent = data.likeCount;
+
+                            if (data.liked) {
+                                likeIcon.classList.remove("fa-regular");
+                                likeIcon.classList.add("fa-solid");
+                                likeIcon.style.color = "#e60023";
+                            } else {
+                                likeIcon.classList.remove("fa-solid");
+                                likeIcon.classList.add("fa-regular");
+                                likeIcon.style.color = "black";
+                            }
+                        }
+                    })
+                    .catch(error => console.error("Lỗi:", error));
+            });
+
+            const commentForm = document.querySelector(".comment-form");
+
+            if (commentForm) {
+                commentForm.addEventListener("submit", function(e) {
+                    e.preventDefault();
+
+                    const submitButton = commentForm.querySelector("button[type='submit']");
+
+                    // Disable the button to prevent multiple clicks
+                    submitButton.disabled = true;
+                    submitButton.textContent =
+                        "Đang gửi..."; // Change text to indicate the form is being submitted
+
+                    // Show loading spinner
+                    showLoading(true);
+
+                    const formData = new FormData(this);
+                    const url = this.getAttribute("action");
+
+                    // Send AJAX request
+                    fetch(url, {
+                            method: "POST",
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Handle success or error
+                            if (data.success) {
+                                // Success Toast
+                                Toastify({
+                                    text: data.message || "Bình luận của bạn đã được đăng!",
+                                    duration: 3000, // Duration in ms
+                                    gravity: "top", // Top or Bottom
+                                    position: "center", // Left, Right, Center
+                                    backgroundColor: "#4CAF50", // Green for success
+                                }).showToast();
+                            } else {
+                                // Error Toast
+                                Toastify({
+                                    text: data.message || "Có lỗi xảy ra khi gửi bình luận.",
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "center",
+                                    backgroundColor: "#F44336", // Red for error
+                                }).showToast();
+                            }
+
+                            // Reload the page to show updated content
+                            setTimeout(function() {
+                                location.reload(); // Reload the page to show the new comment
+                            }, 1000); // Delay for 1 second before reloading the page
+
+                            // Hide loading spinner
+                            showLoading(false);
+
+                            // Enable the button again
+                            submitButton.disabled = false;
+                            submitButton.textContent = "Gửi Bình Luận"; // Reset button text
+                        })
+                        .catch(error => {
+                            // Handle network or server error
+                            console.error("Error:", error);
+
+                            // Error Toast
+                            Toastify({
+                                text: "Đã xảy ra lỗi khi gửi bình luận (network / server).",
+                                duration: 3000,
+                                gravity: "top",
+                                position: "center",
+                                backgroundColor: "#F44336", // Red for error
+                            }).showToast();
+
+                            // Hide loading spinner
+                            showLoading(false);
+
+                            // Enable the button again
+                            submitButton.disabled = false;
+                            submitButton.textContent = "Gửi Bình Luận"; // Reset button text
+                        });
+                });
+            }
+
+        });
+
+        // Function to show or hide loading spinner
+        function showLoading(isLoading) {
+            const loadingSpinner = document.querySelector(".loading-spinner");
+            if (isLoading) {
+                loadingSpinner.style.display = "flex";
+            } else {
+                loadingSpinner.style.display = "none";
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Toast Styles */
+        .custom-toast {
+            position: fixed;
+            top: 50%;
+            /* Center vertically */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* Center horizontally */
+            padding: 20px 40px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 30px;
+            opacity: 0;
+            /* Initially hidden */
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            z-index: 9999;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            background-color: #4CAF50;
+            /* Default green background */
+            transform: translateY(-30px);
+            /* Start off the screen */
+        }
+
+        /* Class for showing the notification */
+        .custom-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+            /* Slide down into view */
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+        }
+
+        /* Spinner itself */
+        .loading-spinner .spinner {
+            border: 4px solid transparent;
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Styling for submit button when disabled */
+        button[type='submit']:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+    </style>
+
+    <!-- Loading Spinner HTML -->
+    <div class="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+
+
+    <!-- Toastify CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js"></script>
+
+
+
+
 
 
 
@@ -1716,13 +1905,20 @@ body.dark-theme .content1 * {
                     const commentId = this.getAttribute("data-comment-id");
                     const articleId = this.getAttribute("data-article-id");
                     const replyForm = document.querySelector(
-                    `#reply-form-${commentId} .reply-form`);
+                        `#reply-form-${commentId} .reply-form`);
                     const content = replyForm.querySelector(".reply-content").value.trim();
                     const csrfToken = document.querySelector("meta[name='csrf-token']")
                         .getAttribute("content");
 
+                    // Kiểm tra nếu nội dung bình luận rỗng
                     if (content === "") {
-                        alert("Vui lòng nhập nội dung bình luận!");
+                        Toastify({
+                            text: "Vui lòng nhập nội dung bình luận!",
+                            duration: 3000,
+                            gravity: "top", // Vị trí ở trên cùng
+                            position: "center", // Vị trí giữa màn hình
+                            backgroundColor: "#F44336", // Màu nền đỏ cho lỗi
+                        }).showToast();
                         return;
                     }
 
@@ -1741,16 +1937,40 @@ body.dark-theme .content1 * {
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                // Hiển thị alert thành công, chờ người dùng nhấn OK rồi reload trang
-                                alert(data.message || 'Trả lời thành công!');
-                                location.reload();
+                                // Thông báo trả lời thành công
+                                Toastify({
+                                    text: data.message || 'Trả lời thành công!',
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "center",
+                                    backgroundColor: "#4CAF50", // Màu nền xanh lá cho thành công
+                                }).showToast();
+
+                                // Reload lại trang sau khi trả lời thành công
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1000);
                             } else {
-                                alert(data.message || 'Có lỗi xảy ra!');
+                                // Thông báo khi có lỗi
+                                Toastify({
+                                    text: data.message || 'Có lỗi xảy ra!',
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "center",
+                                    backgroundColor: "#F44336", // Màu nền đỏ cho lỗi
+                                }).showToast();
                             }
                         })
                         .catch(error => {
                             console.error("Lỗi:", error);
-                            alert("Lỗi kết nối, vui lòng thử lại!");
+                            // Thông báo lỗi khi có sự cố kết nối
+                            Toastify({
+                                text: "Lỗi kết nối, vui lòng thử lại!",
+                                duration: 3000,
+                                gravity: "top",
+                                position: "center",
+                                backgroundColor: "#F44336",
+                            }).showToast();
                         });
                 });
             });
