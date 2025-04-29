@@ -316,56 +316,56 @@ class HomeController extends Controller
         ));
     }
 
-    public function search(Request $request)
-    {
-        $keyword = $request->input('keyword');
-        $results = [];
+    // public function search(Request $request)
+    // {
+    //     $keyword = $request->input('keyword');
+    //     $results = [];
 
-        if ($keyword) {
-            // Tìm kiếm chính xác theo từng ký tự trong tiêu đề
-            $articles = Article::where('status', 'published')
-                ->where(function ($query) use ($keyword) {
-                    $query->where('title', 'LIKE', "%{$keyword}%");
-                })
-                ->orderBy('views', 'desc')
-                ->get();
+    //     if ($keyword) {
+    //         // Tìm kiếm chính xác theo từng ký tự trong tiêu đề
+    //         $articles = Article::where('status', 'published')
+    //             ->where(function ($query) use ($keyword) {
+    //                 $query->where('title', 'LIKE', "%{$keyword}%");
+    //             })
+    //             ->orderBy('views', 'desc')
+    //             ->get();
 
-            foreach ($articles as $article) {
-                // Tính độ phù hợp dựa trên vị trí xuất hiện của từ khóa trong tiêu đề
-                $relevance = 0;
-                $title = mb_strtolower($article->title);
-                $keyword = mb_strtolower($keyword);
+    //         foreach ($articles as $article) {
+    //             // Tính độ phù hợp dựa trên vị trí xuất hiện của từ khóa trong tiêu đề
+    //             $relevance = 0;
+    //             $title = mb_strtolower($article->title);
+    //             $keyword = mb_strtolower($keyword);
 
-                // Tăng điểm nếu từ khóa xuất hiện ở đầu tiêu đề
-                if (mb_strpos($title, $keyword) === 0) {
-                    $relevance += 3;
-                }
-                // Tăng điểm nếu từ khóa xuất hiện trong tiêu đề
-                elseif (mb_strpos($title, $keyword) !== false) {
-                    $relevance += 2;
-                }
+    //             // Tăng điểm nếu từ khóa xuất hiện ở đầu tiêu đề
+    //             if (mb_strpos($title, $keyword) === 0) {
+    //                 $relevance += 3;
+    //             }
+    //             // Tăng điểm nếu từ khóa xuất hiện trong tiêu đề
+    //             elseif (mb_strpos($title, $keyword) !== false) {
+    //                 $relevance += 2;
+    //             }
 
-                // Chỉ thêm kết quả có độ phù hợp > 0
-                if ($relevance > 0) {
-                    $results[] = [
-                        'title' => $article->title,
-                        'url' => Auth::check() ? route('articles.article', $article->slug) : url('/login-user'),
-                        'relevance' => $relevance
-                    ];
-                }
-            }
+    //             // Chỉ thêm kết quả có độ phù hợp > 0
+    //             if ($relevance > 0) {
+    //                 $results[] = [
+    //                     'title' => $article->title,
+    //                     'url' => Auth::check() ? route('articles.article', $article->slug) : url('/login-user'),
+    //                     'relevance' => $relevance
+    //                 ];
+    //             }
+    //         }
 
-            // Sắp xếp kết quả theo độ phù hợp
-            usort($results, function ($a, $b) {
-                return $b['relevance'] - $a['relevance'];
-            });
+    //         // Sắp xếp kết quả theo độ phù hợp
+    //         usort($results, function ($a, $b) {
+    //             return $b['relevance'] - $a['relevance'];
+    //         });
 
-            // Chỉ trả về 10 kết quả phù hợp nhất
-            $results = array_slice($results, 0, 10);
-        }
+    //         // Chỉ trả về 10 kết quả phù hợp nhất
+    //         $results = array_slice($results, 0, 10);
+    //     }
 
-        return response()->json(['results' => $results]);
-    }
+    //     return response()->json(['results' => $results]);
+    // }
 
     /**
      * Trả về gợi ý tên bài viết khi nhập từ khóa với độ chính xác cao
