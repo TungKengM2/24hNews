@@ -44,14 +44,15 @@
                             @foreach ($highlightedArticle as $key => $highlightedArticles)
                                 <div class="col-lg-6 {{ $key == 0 ? 'border-1 border-end brd-gray mb-5 mb-lg-0' : '' }}">
                                     <div class="tc-post-overlay-default mb-30 mb-lg-0">
-                                        <div class="img th-600 img-cover">
+                                        <div class="img th-500 img-cover mt-15">
                                             <a
-                                                href="{{ route('articles.article', ['slug' => $highlightedArticles->slug]) }}">
+                                                href="{{ route('articles.article', ['slug' => $highlightedArticles->slug]) }}"
+                                                class="img-cover img-fluid w-100 h-100">
                                                 <img src="{{ $highlightedArticles->thumbnail_url
                                                     ? asset('storage/' . $highlightedArticles->thumbnail_url)
                                                     : asset('images/default-thumbnail.jpg') }}"
                                                     alt="{{ $highlightedArticles->title ?? 'Ảnh bài viết' }}"
-                                                    class="img-fluid">
+                                                    class="img-fluid img-cover">
                                             </a>
                                             @if (!empty($highlightedArticles->category))
                                                 <div class="tags">
@@ -71,11 +72,11 @@
                                             <div class="text">
                                                 <div class="text">
                                                     {!! Str::limit(html_entity_decode(strip_tags(
-                                                            $highlightedArticles->preview_content 
+                                                            $highlightedArticles->preview_content
                                                             ?? $highlightedArticles->content
                                                         )), 180, '...') !!}
                                                 </div>
-                                                
+
                                             </div>
                                             <div class="meta-bot lh-1 mt-40">
                                                 <ul class="d-flex">
@@ -134,7 +135,7 @@
         <!-- ====== start popular posts ====== -->
         <section class="tc-popular-posts-blog">
             <div class="container">
-                
+
 
                 <div class="content-widgets pt-50 pb-50">
                     <div class="row">

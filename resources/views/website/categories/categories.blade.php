@@ -84,21 +84,22 @@
 
         @if ($highlightedArticle->count())
             <!-- ====== start features posts ====== -->
-            <section class="features-posts pt-50 pb-50 bg-gray1">
+            <section class="features-posts pt-30 pb-30 bg-gray1">
                 <div class="container">
                     <div class="">
                         <div class="row">
                             @foreach ($highlightedArticle as $key => $highlightedArticles)
                                 <div class="col-lg-6 {{ $key == 0 ? 'border-1 border-end brd-gray mb-5 mb-lg-0' : '' }}">
                                     <div class="tc-post-overlay-default mb-30 mb-lg-0">
-                                        <div class="img th-600 img-cover">
+                                        <div class="img th-500 img-cover mt-15">
                                             <a
-                                                href="{{ route('articles.article', ['slug' => $highlightedArticles->slug]) }}">
+                                                href="{{ route('articles.article', ['slug' => $highlightedArticles->slug]) }}"
+                                                class="img-cover img-fluid w-100 h-100">
                                                 <img src="{{ $highlightedArticles->thumbnail_url
                                                     ? asset('storage/' . $highlightedArticles->thumbnail_url)
                                                     : asset('images/default-thumbnail.jpg') }}"
                                                     alt="{{ $highlightedArticles->title ?? 'Ảnh bài viết' }}"
-                                                    class="img-fluid">
+                                                    class="img-fluid img-cover">
                                             </a>
                                             @if (!empty($highlightedArticles->category))
                                                 <div class="tags">
@@ -664,7 +665,7 @@
         <!-- ====== end breaking news ====== --> --}}
 
 
-        {{-- 
+        {{--
         <!-- ====== start trends news ====== -->
         <section class="tc-post-grid-style5 overflow-hidden">
             <div class="container">
