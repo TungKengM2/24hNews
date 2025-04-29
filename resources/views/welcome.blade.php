@@ -609,18 +609,22 @@
 
 
         <!-- ====== start Latest news ====== -->
-        @if ($businessMainPost || $businessListPosts->isNotEmpty() || $businessGridPost || $businessLinkPosts->isNotEmpty())
+        @if ($businessMainPost)
             <section class="tc-latest-news-style1">
                 <div class="container">
                     <div class="section-content pt-50 pb-50 border-bottom border-1 brd-gray">
+
+                        <!-- Section title -->
                         <p class="color-000 text-uppercase mb-30 ltspc-1">
-                            <a href="{{ route('categories.show', 'kinh-doanh') }}"> Kinh Doanh </a> <i
-                                class="la la-angle-right ms-1"></i>
+                            <a href="{{ route('categories.show', 'kinh-doanh') }}">Kinh Doanh</a>
+                            <i class="la la-angle-right ms-1"></i>
                         </p>
+
                         <div class="row">
+
                             <!-- Main big post -->
                             <div class="col-lg-5 border-end brd-gray border-1">
-                                @if (!is_null($businessMainPost))
+                                @if ($businessMainPost)
                                     <div class="tc-post-grid-default">
                                         <div class="item">
                                             <div class="img img-cover th-330 position-relative">
@@ -630,7 +634,7 @@
                                                 </a>
                                             </div>
                                             <div class="content pt-30">
-                                                @if (!is_null($businessMainPost->category))
+                                                @if ($businessMainPost->category)
                                                     <a href="{{ route('categories.show', $businessMainPost->category->slug) }}"
                                                         class="news-cat color-999 fsz-13px text-uppercase mb-10">
                                                         {{ $businessMainPost->category->name }}
@@ -649,8 +653,6 @@
                                                         <li class="date me-5">
                                                             <i class="la la-calendar me-2"></i>
                                                             {{ $businessMainPost->created_at->locale('vi')->isoFormat('dddd, D [tháng] M, YYYY') }}
-
-
                                                         </li>
                                                         <li class="author me-5">
                                                             @if ($businessMainPost->author)
@@ -710,9 +712,9 @@
                                 @endif
                             </div>
 
-                            <!-- 1 grid post + 3 links -->
+                            <!-- 1 grid post + 3 link posts -->
                             <div class="col-lg-3">
-                                @if (!is_null($businessGridPost))
+                                @if ($businessGridPost)
                                     <div class="tc-post-grid-default border-1 border-bottom brd-gray pb-10">
                                         <div class="item">
                                             <div class="img img-cover th-200">
@@ -755,15 +757,12 @@
 
                                 @if ($businessLinkPosts->isNotEmpty())
                                     <div class="pt-15">
-
                                         @foreach ($businessLinkPosts as $linkPost)
                                             <a href="{{ route('articles.article', $linkPost->slug) }}"
                                                 class="d-flex my-3">
                                                 <span
                                                     class="icon-6 rounded-circle bg-dark me-3 flex-shrink-0 op-4 mt-10"></span>
-                                                <h6 class="fsz-16px">
-                                                    {{ $linkPost->title }}
-                                                </h6>
+                                                <h6 class="fsz-16px">{{ $linkPost->title }}</h6>
                                             </a>
                                         @endforeach
                                     </div>
@@ -776,6 +775,7 @@
             </section>
         @endif
         <!-- ====== end Latest news ====== -->
+
 
 
         <!-- ====== start columnist ====== -->
