@@ -270,7 +270,7 @@
                 <div class="content-widgets pt-50 pb-50">
                     <div class="row">
                         <div class="col-lg-9">
-                            {{-- resources/views/articles/index.blade.php --}}
+                            
 
                             {{-- ====== 2 bài viết mới nhất ====== --}}
                             <div class="tc-post-list-style3">

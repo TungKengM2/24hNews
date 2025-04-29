@@ -97,22 +97,5 @@ class ArticleNewController extends Controller
         ]);
     }
 
-    public function loadMore(Request $request)
-    {
-        $page = $request->input('page', 1);
-        $perPage = 8; // số bài viết mỗi lần load
-        $articles = Article::with('category')
-            ->orderBy('created_at', 'desc')
-            ->skip(($page - 1) * $perPage)
-            ->take($perPage)
-            ->get();
-
-        // Xử lý content trước khi trả về JSON
-        $articles->transform(function ($article) {
-            $article->content = Str::limit(strip_tags(html_entity_decode($article->content)), 100);
-            return $article;
-        });
-
-        return response()->json($articles);
-    }
+  
 }

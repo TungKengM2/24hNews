@@ -37,57 +37,44 @@ class CategoryUserController extends Controller
             }
         };
 
-        // Danh sách ID bài viết đã lấy, để loại trừ
-        $excludedIds = [];
-
         // 1. Top bài viết nổi bật (nhiều comment nhất trong 7 ngày)
         $highlightedArticle = Article::withCount('comments')
             ->where('status', 'published')
-            ->where(function ($q) use ($whereCategory) {
-                $whereCategory($q);
-            })
+            ->where($whereCategory)
             ->where('created_at', '>=', now()->subDays(7))
             ->orderByDesc('comments_count')
             ->limit(2)
             ->get();
 
-        // Lưu các ID bài viết đã lấy vào danh sách loại trừ
-        $excludedIds = array_merge($excludedIds, $highlightedArticle->pluck('article_id')->toArray());
-
-        // 2. Top bài viết theo views (loại trừ những bài đã lấy ở trên)
+        // 2. Top bài viết theo views (vẫn trong 7 ngày)
         $highlightedArticleByViews = Article::withCount('comments')
             ->where('status', 'published')
-            ->where(function ($q) use ($whereCategory) {
-                $whereCategory($q);
-            })
+            ->where($whereCategory)
             ->where('created_at', '>=', now()->subDays(7))
-            ->whereNotIn('article_id', $excludedIds)
             ->orderByDesc('views')
             ->limit(5)
             ->get();
 
-        // Lưu các ID bài viết đã lấy vào danh sách loại trừ
-        $excludedIds = array_merge($excludedIds, $highlightedArticleByViews->pluck('article_id')->toArray());
-
-        // 3. Top bài viết nổi bật (nhiều comment nhất và views cao nhất trong 30 ngày)
+        // 3. Top bài viết nổi bật trong 30 ngày (bình luận + views)
         $highlightedArticleLast30Days = Article::withCount('comments')
             ->where('status', 'published')
-            ->where(function ($q) use ($whereCategory) {
-                $whereCategory($q);
-            })
-            ->where('created_at', '>=', now()->subDays(30)) // 30 ngày
-            ->orderByDesc('comments_count') // Sắp xếp theo bình luận
-            ->orderByDesc('views') // Sắp xếp theo views
-            ->limit(5) // Giới hạn số lượng bài viết
+            ->where($whereCategory)
+            ->where('created_at', '>=', now()->subDays(30))
+            ->orderByDesc('comments_count')
+            ->orderByDesc('views')
+            ->limit(5)
             ->get();
 
-        // Lưu các ID bài viết đã lấy vào danh sách loại trừ
-        $excludedIds = array_merge($excludedIds, $highlightedArticleLast30Days->pluck('article_id')->toArray());
+
 
 
         $articles = Article::with('category', 'author', 'comments')
             ->withCount('comments')
             ->where('status', 'published')
+            ->where(function ($query) use ($categoryIds) {
+                // Check if articles belong to the current category (or its children if applicable)
+                $query->whereIn('category_id', $categoryIds);
+            })
             ->orderByDesc('created_at')
             ->get();
 
@@ -111,12 +98,12 @@ class CategoryUserController extends Controller
             ->take(6)
             ->get();
 
-         // phân trang parentCategories
-         $parentCategories = Category::whereNull('parent_id')
-         ->where('is_active', 1)
-         ->withCount(['articles' => fn($q) => $q->where('status', 'published')])
-         ->orderByDesc('articles_count')
-         ->paginate(10, ['*'], 'categories_page');
+        // phân trang parentCategories
+        $parentCategories = Category::whereNull('parent_id')
+            ->where('is_active', 1)
+            ->withCount(['articles' => fn($q) => $q->where('status', 'published')])
+            ->orderByDesc('articles_count')
+            ->paginate(10, ['*'], 'categories_page');
 
         $parentIds = $parentCategories->pluck('category_id')->toArray();
         $childCategories = Category::whereIn('parent_id', $parentIds)
@@ -137,7 +124,7 @@ class CategoryUserController extends Controller
             ->orderByDesc('published_articles_count')
             ->paginate(8, ['*'], 'tags_page');
 
-       
+
 
         $userId = auth()->check() ? auth()->id() : null;
         $userIp = request()->ip();
