@@ -885,6 +885,11 @@
                             return;
                         }
 
+                        // Disable button và hiển thị loading
+                        sendReplyBtn.disabled = true;
+                        sendReplyBtn.textContent = "Đang gửi...";
+                        showLoading(true);
+
                         // Gửi dữ liệu qua fetch
                         fetch(`/articles/${articleId}/comments/${commentId}/reply`, {
                                 method: "POST",
@@ -904,23 +909,65 @@
                             })
                             .then(data => {
                                 console.log("Server data:", data);
+                                showLoading(false);
+                                
                                 if (data.success) {
-                                    // Nếu gửi thành công, đóng modal và reload trang
+                                    // Hiển thị thông báo thành công với Toastify
+                                    Toastify({
+                                        text: data.message || "Trả lời của bạn đã được đăng!",
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: "center",
+                                        backgroundColor: "#4CAF50", // Màu xanh cho thành công
+                                    }).showToast();
+                                    
+                                    // Đóng modal
                                     const replyModalEl = document.getElementById('replyModal');
                                     const modalInstance = bootstrap.Modal.getInstance(replyModalEl);
                                     modalInstance.hide();
-                                    location.reload();
+                                    
+                                    // Reload page sau 1 giây
+                                    setTimeout(function() {
+                                        location.reload();
+                                    }, 1000);
                                 } else {
-                                    alert(data.message || "Có lỗi xảy ra, vui lòng thử lại!");
+                                    // Hiển thị thông báo lỗi
+                                    Toastify({
+                                        text: data.message || "Có lỗi xảy ra, vui lòng thử lại!",
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: "center",
+                                        backgroundColor: "#F44336", // Màu đỏ cho lỗi
+                                    }).showToast();
+                                    
+                                    // Enable lại button
+                                    sendReplyBtn.disabled = false;
+                                    sendReplyBtn.textContent = "Gửi trả lời";
                                 }
                             })
                             .catch(error => {
                                 console.error("Lỗi khi gửi bình luận:", error);
-                                alert("Lỗi khi gửi bình luận!");
+                                
+                                // Hiển thị thông báo lỗi
+                                Toastify({
+                                    text: "Đã xảy ra lỗi khi gửi trả lời (network / server).",
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "center",
+                                    backgroundColor: "#F44336",
+                                }).showToast();
+                                
+                                // Ẩn loading, enable lại button
+                                showLoading(false);
+                                sendReplyBtn.disabled = false;
+                                sendReplyBtn.textContent = "Gửi trả lời";
                             });
                     });
                 }
             });
+            
+            // Make openReplyModal global
+            window.openReplyModal = openReplyModal;
         </script>
 
 
