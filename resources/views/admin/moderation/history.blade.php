@@ -57,6 +57,22 @@
                                         <option value="reject" {{ request('action_type') == 'reject' ? 'selected' : '' }}>Từ chối</option>
                                     </select>
                                 </div>
+                                <div style="visibility: hidden;" class="col-md-2">
+                                    <label for="moderator_id" class="form-label">Người kiểm duyệt</label>
+                                    <select name="moderator_id" id="moderator_id" class="form-select">
+                                        <option value="">Tất cả</option>
+                                        @foreach($users as $user)
+                                            <option value="{{ $user->user_id }}" {{ request('moderator_id') == $user->user_id ? 'selected' : '' }}>
+                                                {{ $user->username }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-2" style="visibility: hidden;">
+                                    <label for="content_id" class="form-label">ID nội dung</label>
+                                    <input type="number" name="content_id" id="content_id" class="form-control" value="{{ request('content_id') }}" placeholder="Nhập ID">
+                                </div>
+
                                 <div class="col-md-2">
                                     <label for="date_from" class="form-label">Từ ngày</label>
                                     <input type="date" name="date_from" id="date_from" class="form-control" value="{{ request('date_from') }}">
@@ -65,7 +81,7 @@
                                     <label for="date_to" class="form-label">Đến ngày</label>
                                     <input type="date" name="date_to" id="date_to" class="form-control" value="{{ request('date_to') }}">
                                 </div>
-                                <div class="col-md-2 d-flex align-items-end">
+                                <div class="col-md-12 d-flex justify-content-end mt-3">
                                     <button type="submit" class="btn btn-primary">Lọc</button>
                                     <a href="{{ route('admin.moderation.history') }}" class="btn btn-default ms-2">Đặt lại</a>
                                 </div>
@@ -195,11 +211,11 @@
                             </div>
 
                             <div class="mt-3">
-                                {{ $logs->links() }}
+                                {{ $logs->appends(request()->except('page'))->links() }}
                             </div>
                         @else
                             <div class="alert alert-info">
-                                Không có dữ liệu lịch sử kiểm duyệt nào.
+                                Không có dữ liệu lịch sử kiểm duyệt nào phù hợp với bộ lọc.
                             </div>
                         @endif
                     </div>
@@ -213,11 +229,25 @@
 @section('scripts')
 <script>
     $(document).ready(function() {
-        // Sử dụng Select2 cho dropdown bài viết
-        $('#article_id').select2({
-            placeholder: 'Chọn bài viết',
+        // Sử dụng Select2 cho dropdown người kiểm duyệt
+        $('#moderator_id').select2({
+            placeholder: 'Chọn người kiểm duyệt',
             allowClear: true
         });
+
+        // Xử lý khi thay đổi loại nội dung
+        $('#content_type').change(function() {
+            if ($(this).val() === 'article') {
+                $('#content_id').attr('placeholder', 'Nhập ID bài viết');
+            } else if ($(this).val() === 'role_upgrade') {
+                $('#content_id').attr('placeholder', 'Nhập ID người dùng');
+            } else {
+                $('#content_id').attr('placeholder', 'Nhập ID nội dung');
+            }
+        });
+
+        // Kích hoạt sự kiện change khi trang tải
+        $('#content_type').trigger('change');
     });
 </script>
 @endsection

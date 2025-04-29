@@ -122,7 +122,7 @@
                     </button>
                     <div class="col-lg-4">
                         <a href="{{ url('/') }}" class="logo-brand d-none d-lg-block">
-                            <h1>News24h</h1>
+                            <h1>24News</h1>
                         </a>
                     </div>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

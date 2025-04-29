@@ -1,0 +1,19 @@
+@startuml
+|Người dùng|
+start
+:Nhập từ khóa tìm kiếm;
+|Hệ thống|
+:Kiểm tra từ khóa hợp lệ;
+if (Từ khóa hợp lệ?) then (Có)
+  :Tìm kiếm bài viết trong cơ sở dữ liệu;
+  if (Tìm thấy bài viết?) then (Có)
+    :Hiển thị danh sách bài viết;
+  else (Không)
+    :Hiển thị thông báo "Không tìm thấy bài viết";
+  endif
+else (Không)
+  :Hiển thị lỗi "Từ khóa không hợp lệ";
+endif
+|Người dùng|
+stop
+@enduml

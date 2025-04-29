@@ -31,9 +31,9 @@
                     <div class="box-header with-border d-flex justify-content-between align-items-center">
                         <h3 class="box-title">Lịch sử kiểm duyệt bài viết: {{ $article->title }}</h3>
                         <div>
-                            <a href="{{ route('articles.edit', $article) }}" class="btn btn-sm btn-primary">
+                            {{-- <a href="{{ route('articles.edit', $article) }}" class="btn btn-sm btn-primary">
                                 <i class="fas fa-edit"></i> Chỉnh sửa bài viết
-                            </a>
+                            </a> --}}
                             <a href="{{ route('articles.index') }}" class="btn btn-sm btn-default ms-2">
                                 <i class="fa fa-arrow-left"></i> Quay lại
                             </a>

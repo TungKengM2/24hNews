@@ -6,8 +6,8 @@
                 <span></span>
                 <span></span>
             </button>
-            <a href="home-default.html#" class="logo-brand d-block d-lg-none w-50 my-4">
-                <h1>News24h</h1>
+            <a href="{{ url('/') }}" class="logo-brand d-block d-lg-none w-50 my-4">
+                <img src="{{ asset('images/logo24news.png') }}" alt="logo" width="150px">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -26,37 +26,34 @@
 
                 {{-- dat them --}}
                 @foreach ($parentCategories as $category)
-    @if ($loop->iteration > 9)
-        @break
-    @endif
+                    @if ($loop->iteration > 9)
+                        @break
+                    @endif
 
-    <li class="nav-item dropdown">
-        <a
-            class="nav-link {{ $category->children->isNotEmpty() ? 'dropdown-toggle' : '' }}"
-            href="{{ route('client.category.show', ['slug' => $category->slug]) }}"
-            @if ($category->children->isNotEmpty())
-                id="navbarDropdown{{ $loop->iteration }}"
+                    <li class="nav-item dropdown">
+                        <a class="nav-link {{ $category->children->isNotEmpty() ? 'dropdown-toggle' : '' }}"
+                            href="{{ route('client.category.show', ['slug' => $category->slug]) }}"
+                            @if ($category->children->isNotEmpty()) id="navbarDropdown{{ $loop->iteration }}"
                 data-bs-toggle="dropdown"
-                aria-expanded="false"
-            @endif
-            onclick="window.location.href='{{ route('client.category.show', ['slug' => $category->slug]) }}'"
-        >
-            {{ $category->name }}
-        </a>
-
-        @if ($category->children->isNotEmpty())
-            <ul class="dropdownMenu" aria-labelledby="navbarDropdown{{ $loop->iteration }}">
-                @foreach ($category->children as $child)
-                    <li>
-                        <a class="dropdown-item" href="{{ route('client.category.show', ['slug' => $category->slug, 'childSlug' => $child->slug]) }}">
-                            {{ $child->name }}
+                aria-expanded="false" @endif
+                            onclick="window.location.href='{{ route('client.category.show', ['slug' => $category->slug]) }}'">
+                            {{ $category->name }}
                         </a>
+
+                        @if ($category->children->isNotEmpty())
+                            <ul class="dropdownMenu" aria-labelledby="navbarDropdown{{ $loop->iteration }}">
+                                @foreach ($category->children as $child)
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('client.category.show', ['slug' => $category->slug, 'childSlug' => $child->slug]) }}">
+                                            {{ $child->name }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
                     </li>
                 @endforeach
-            </ul>
-        @endif
-    </li>
-@endforeach
 
 
 
@@ -87,7 +84,7 @@
                         </li>
                         @auth
                             @forelse(auth()->user()->unreadNotifications as $notification)
-                                @if($notification->type == 'App\Notifications\NewArticleFromFollowedAuthor')
+                                @if ($notification->type == 'App\Notifications\NewArticleFromFollowedAuthor')
                                     <li>
                                         <a class="dropdown-item d-flex align-items-start py-2 px-3"
                                             href="/bai-viet/{{ $notification->data['article_slug'] }}"
@@ -98,8 +95,10 @@
                                             </div>
                                             <div class="flex-grow-1 overflow-hidden">
                                                 <div class="d-flex justify-content-between">
-                                                    <span class="fw-bold text-truncate">{{ $notification->data['author_name'] }}</span>
-                                                    <small class="text-muted ms-2">{{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}</small>
+                                                    <span
+                                                        class="fw-bold text-truncate">{{ $notification->data['author_name'] }}</span>
+                                                    <small
+                                                        class="text-muted ms-2">{{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}</small>
                                                 </div>
                                                 <div class="text-truncate" style="max-width: 220px;">
                                                     {{ Str::limit($notification->data['message'], 50) }}
@@ -110,12 +109,13 @@
                                 @elseif($notification->type === 'App\Notifications\RoleUpgradeRejected')
                                     <li>
                                         <a href="#" class="dropdown-item"
-                                           onclick="event.preventDefault();
+                                            onclick="event.preventDefault();
                                                     showRejectionReason('Yêu cầu nâng cấp tài khoản của bạn đã bị từ chối', '{{ $notification->data['reason'] }}');
                                                     markNotificationAsRead('{{ $notification->id }}');">
                                             <i class="fas fa-times-circle text-danger me-2"></i>
                                             <span>Từ chối nâng cấp tài khoản</span>
-                                            <small class="text-muted d-block">{{ $notification->created_at->diffForHumans() }}</small>
+                                            <small
+                                                class="text-muted d-block">{{ $notification->created_at->diffForHumans() }}</small>
                                         </a>
                                     </li>
                                 @endif
@@ -311,34 +311,34 @@
                     modalInstance.show();
 
                     // Xóa modal khi đóng
-                    modal.addEventListener('hidden.bs.modal', function () {
+                    modal.addEventListener('hidden.bs.modal', function() {
                         document.body.removeChild(modal);
                     });
                 }
 
                 function markNotificationAsRead(id) {
                     fetch(`/notifications/${id}/read`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Cập nhật UI sau khi đánh dấu đã đọc
-                            const notificationCount = document.querySelector('.badge');
-                            if (notificationCount) {
-                                const currentCount = parseInt(notificationCount.textContent);
-                                if (currentCount > 1) {
-                                    notificationCount.textContent = currentCount - 1;
-                                } else {
-                                    notificationCount.style.display = 'none';
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Cập nhật UI sau khi đánh dấu đã đọc
+                                const notificationCount = document.querySelector('.badge');
+                                if (notificationCount) {
+                                    const currentCount = parseInt(notificationCount.textContent);
+                                    if (currentCount > 1) {
+                                        notificationCount.textContent = currentCount - 1;
+                                    } else {
+                                        notificationCount.style.display = 'none';
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
                 }
 
                 function markAllNotificationsAsRead() {
