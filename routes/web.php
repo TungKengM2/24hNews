@@ -11,17 +11,18 @@ use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ArticleNewController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\EditRequestController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\CategoryUserController;
-use App\Http\Controllers\CategoryAuthorController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Author\AuthorController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\CategoryAuthorController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\User\ArticleTagController;
@@ -43,7 +44,6 @@ use App\Http\Controllers\User\UserController as UserUserController;
 use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 use App\Http\Controllers\Admin\ArticleSaveController as AdminArticleSaveController;
-
 use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveController;
 
 use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
@@ -111,6 +111,7 @@ Route::get('/danh-muc/{categorySlug}/tac-gia/{authorId}', [CategoryAuthorControl
 
 Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.shows');
 
+Route::get('/bai-viet-moi-nhat', [ArticleNewController::class, 'index'])->name('article.news');
 
 
 
