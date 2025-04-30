@@ -39,30 +39,28 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $filter = $request->input('filter', 'all'); // Mặc định hiển thị tất cả bài viết
+        $articleFilter = $request->input('article_filter', 'all');
+        $categoryFilter = $request->input('category_filter', 'all');
 
         $query = Article::with(['author', 'category', 'approver', 'tags'])
-            // ->where('author_id', auth()->id()) // Chỉ lấy bài viết của admin đang đăng nhập
             ->orderBy('created_at', 'desc');
 
-        if ($filter === 'inactive') {
-            $query->whereHas('category', function ($q) {
-                $q->where('is_active', false);
-            });
-        } elseif ($filter === 'active') {
+        // Lọc theo trạng thái bài viết
+        if ($articleFilter !== 'all') {
+            $query->where('status', $articleFilter);
+        }
+
+        // Lọc theo trạng thái danh mục
+        if ($categoryFilter === 'active') {
             $query->whereHas('category', function ($q) {
                 $q->where('is_active', true);
             });
-        } elseif ($filter === 'no_category') {
+        } elseif ($categoryFilter === 'inactive') {
+            $query->whereHas('category', function ($q) {
+                $q->where('is_active', false);
+            });
+        } elseif ($categoryFilter === 'no_category') {
             $query->whereNull('category_id');
-        } elseif ($filter === 'archived') {
-            $query->where('status', 'archived');
-        } elseif ($filter === 'published') {
-            $query->where('status', 'published');
-        } elseif ($filter === 'draft') {
-            $query->where('status', 'draft');
-        } elseif ($filter === 'pending') {
-            $query->where('status', 'pending');
         }
 
         // Xử lý tìm kiếm theo từ khóa nếu có
@@ -74,9 +72,22 @@ class ArticleController extends Controller
             });
         }
 
+        // Xử lý lọc theo khoảng thời gian
+        if ($request->has('start_date') && !empty($request->start_date)) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+        if ($request->has('end_date') && !empty($request->end_date)) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
         $articles = $query->paginate(10);
 
-        return view('admin.articles.index', compact('articles', 'filter'));
+        if ($request->ajax()) {
+            $view = view('admin.articles.index', compact('articles'))->render();
+            return response()->json(['html' => $view]);
+        }
+
+        return view('admin.articles.index', compact('articles', 'articleFilter', 'categoryFilter'));
     }
 
     /**

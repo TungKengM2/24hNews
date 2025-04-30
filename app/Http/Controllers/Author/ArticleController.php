@@ -37,38 +37,59 @@ class ArticleController extends Controller
 
     public function index(Request $request)
     {
-        $filter = $request->input('filter', 'all');
+        // Lấy thông tin tài khoản bị cấm
+        $isBanned = auth()->user()->is_banned;
+        $banEndTime = auth()->user()->ban_end_time;
 
-        $articles = Article::with([
-            'author',
-            'category',
-            'approver',
-            'tags',
-        ])
+        // Lấy các tham số lọc
+        $articleFilter = $request->input('article_filter', 'all');
+        $categoryFilter = $request->input('category_filter', 'all');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Xây dựng query cơ bản
+        $query = Article::with(['author', 'category', 'tags'])
             ->where('author_id', auth()->id())
-            ->when($filter !== 'all', function ($query) use ($filter) {
-                if (in_array($filter, ['active', 'inactive'])) {
-                    $query->whereHas(
-                        'category',
-                        function ($q) use ($filter) {
-                            $q->where('is_active', $filter === 'active');
-                        }
-                    );
-                } elseif ($filter === 'no_category') {
-                    $query->whereNull('category_id');
-                } elseif ($filter === 'archived') {
-                    $query->where('status', 'archived');
-                }
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->orderBy('created_at', 'desc');
 
-        // Kiểm tra xem tác giả có bị cấm không
-        $user = auth()->user();
-        $isBanned = $user->banned_until && now()->lessThan($user->banned_until);
-        $banEndTime = $isBanned ? $user->banned_until->format('H:i d/m/Y') : null;
+        // Lọc theo trạng thái bài viết
+        if ($articleFilter !== 'all') {
+            $query->where('status', $articleFilter);
+        }
 
-        return view('author.articles.index', compact('articles', 'filter', 'isBanned', 'banEndTime'));
+        // Lọc theo trạng thái danh mục
+        if ($categoryFilter !== 'all') {
+            if ($categoryFilter === 'active') {
+                $query->whereHas('category', function ($q) {
+                    $q->where('is_active', true);
+                });
+            } elseif ($categoryFilter === 'inactive') {
+                $query->whereHas('category', function ($q) {
+                    $q->where('is_active', false);
+                });
+            } elseif ($categoryFilter === 'no_category') {
+                $query->whereNull('category_id');
+            }
+        }
+
+        // Lọc theo khoảng thời gian
+        if ($startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
+        }
+
+        // Phân trang
+        $articles = $query->paginate(10);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('author.articles.index', compact('articles', 'isBanned', 'banEndTime'))->render()
+            ]);
+        }
+
+        return view('author.articles.index', compact('articles', 'isBanned', 'banEndTime'));
     }
 
     public function update(Request $request, Article $article)
