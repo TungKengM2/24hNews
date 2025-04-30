@@ -71,22 +71,22 @@ class ArticleController extends Controller
         // Xử lý tìm kiếm theo từ khóa nếu có
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('content', 'like', "%{$search}%");
+                $q->where('title', 'like', $search . '%')
+                    ->orWhere('title', 'like', '% ' . $search . '%');
             });
         }
 
         // Xử lý tìm kiếm theo danh mục nếu có
         if ($category) {
             $query->whereHas('category', function ($q) use ($category) {
-                $q->where('name', 'like', "%{$category}%");
+                $q->where('name', 'like', $category . '%');
             });
         }
 
         // Xử lý tìm kiếm theo tác giả nếu có
         if ($author) {
             $query->whereHas('author', function ($q) use ($author) {
-                $q->where('username', 'like', "%{$author}%");
+                $q->where('username', 'like', $author . '%');
             });
         }
 
@@ -101,7 +101,8 @@ class ArticleController extends Controller
         $articles = $query->paginate(10);
 
         if ($request->ajax()) {
-            return view('admin.articles.index', compact('articles', 'articleFilter', 'categoryFilter'));
+            $view = view('admin.articles.index', compact('articles', 'articleFilter', 'categoryFilter'))->render();
+            return response()->json(['html' => $view]);
         }
 
         return view('admin.articles.index', compact('articles', 'articleFilter', 'categoryFilter'));

@@ -69,52 +69,7 @@
                                 </div>
                             </div>
 
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    const searchInput = document.getElementById('searchInput');
-                                    const categoryFilter = document.getElementById('categoryFilter');
-                                    const authorFilter = document.getElementById('authorFilter');
-                                    const searchButton = document.getElementById('searchButton');
-                                    const articleRows = document.querySelectorAll('tbody tr');
 
-                                    function performSearch() {
-                                        const searchTerm = searchInput.value.toLowerCase().trim();
-                                        const categorySearchTerm = categoryFilter.value.toLowerCase().trim();
-                                        const authorSearchTerm = authorFilter.value.toLowerCase().trim();
-
-                                        articleRows.forEach(row => {
-                                            const title = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                                            const category = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
-                                            const author = row.querySelector('td:nth-child(6)').textContent.toLowerCase();
-
-                                            const matchesTitle = title.includes(searchTerm);
-                                            const matchesCategory = !categorySearchTerm || category.includes(categorySearchTerm);
-                                            const matchesAuthor = !authorSearchTerm || author.includes(authorSearchTerm);
-
-                                            if (matchesTitle && matchesCategory && matchesAuthor) {
-                                                row.style.display = '';
-                                            } else {
-                                                row.style.display = 'none';
-                                            }
-                                        });
-                                    }
-
-                                    // Search on button click
-                                    searchButton.addEventListener('click', performSearch);
-
-                                    // Search on Enter key press
-                                    [searchInput, categoryFilter, authorFilter].forEach(input => {
-                                        input.addEventListener('keyup', function(event) {
-                                            if (event.key === 'Enter') {
-                                                performSearch();
-                                            }
-                                        });
-
-                                        // Real-time search as user types
-                                        input.addEventListener('input', performSearch);
-                                    });
-                                });
-                            </script>
                         </div>
 
                         <style>
@@ -512,13 +467,13 @@
                 }
 
                 function updateTable(data) {
-                    if (!data) {
+                    if (!data || !data.html) {
                         console.error('Invalid response data');
                         return;
                     }
 
                     const parser = new DOMParser();
-                    const doc = parser.parseFromString(data, 'text/html');
+                    const doc = parser.parseFromString(data.html, 'text/html');
 
                     const newTableBody = doc.querySelector('#articles-table-body');
                     const newPagination = doc.querySelector('#pagination-links');
@@ -580,10 +535,10 @@
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
                         }
-                        return response.text();
+                        return response.json();
                     })
                     .then(data => {
-                        if (data) {
+                        if (data && data.html) {
                             searchCache.set(cacheKey, data);
                             updateTable(data);
                         } else {
@@ -670,10 +625,10 @@
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
                         }
-                        return response.text();
+                        return response.json();
                     })
                     .then(data => {
-                        if (data) {
+                        if (data && data.html) {
                             searchCache.set(cacheKey, data);
                             updateTable(data);
                         } else {
