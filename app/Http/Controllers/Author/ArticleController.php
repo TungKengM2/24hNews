@@ -46,11 +46,25 @@ class ArticleController extends Controller
         $categoryFilter = $request->input('category_filter', 'all');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $searchTerm = $request->input('search');
+        $categorySearchTerm = $request->input('category');
 
         // Xây dựng query cơ bản
-        $query = Article::with(['author', 'category', 'tags'])
+        $query = Article::with(['author', 'category', 'subcategory', 'tags'])
             ->where('author_id', auth()->id())
             ->orderBy('created_at', 'desc');
+
+        // Tìm kiếm theo tiêu đề
+        if ($searchTerm) {
+            $query->where('title', 'like', $searchTerm . '%');
+        }
+
+        // Tìm kiếm theo danh mục
+        if ($categorySearchTerm) {
+            $query->whereHas('category', function ($q) use ($categorySearchTerm) {
+                $q->where('name', 'like', $categorySearchTerm . '%');
+            });
+        }
 
         // Lọc theo trạng thái bài viết
         if ($articleFilter !== 'all') {
@@ -1010,25 +1024,36 @@ class ArticleController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('query');
+        $categoryQuery = $request->input('category');
 
-        $articlesQuery = Article::with(['category', 'tags'])
+        $articlesQuery = Article::with(['category', 'subcategory', 'tags'])
             ->where('author_id', auth()->id())
             ->orderBy('created_at', 'desc');
 
         if ($query) {
-            $articlesQuery->where(function ($q) use ($query) {
-                $q->where('title', 'like', "%{$query}%")
-                    ->orWhere('content', 'like', "%{$query}%");
+            // Ưu tiên tìm kiếm từ đầu chuỗi để tăng độ chính xác
+            $articlesQuery->where('title', 'like', $query . '%');
+        }
+
+        if ($categoryQuery) {
+            $articlesQuery->whereHas('category', function ($q) use ($categoryQuery) {
+                $q->where('name', 'like', $categoryQuery . '%');
             });
         }
-        //            dd($articlesQuery);
+
         $articles = $articlesQuery->paginate(10);
 
-        return response()->json([
-            'data' => $articles->items(),
-            'links' => $articles->links()->render(),
-            'total' => $articles->total(),
-        ]);
+        // Trả về kết quả dạng JSON cho AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'data' => $articles->items(),
+                'links' => $articles->links()->render(),
+                'total' => $articles->total(),
+            ]);
+        }
+
+        // Trả về view nếu không phải AJAX request
+        return view('author.articles.index', compact('articles'));
     }
 
 //    public function updateStatus(Request $request, $id)

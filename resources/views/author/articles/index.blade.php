@@ -57,106 +57,7 @@
                                 </div>
                             </div>
 
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    const searchInput = document.getElementById('searchInput');
-                                    const categoryFilter = document.getElementById('categoryFilter');
-                                    const searchButton = document.getElementById('searchButton');
-                                    const articleRows = document.querySelectorAll('tbody tr');
 
-                                    function performSearch() {
-                                        const searchTerm = searchInput.value.toLowerCase().trim();
-                                        const categorySearchTerm = categoryFilter.value.toLowerCase().trim();
-
-                                        let hasVisibleRows = false;
-
-                                        articleRows.forEach(row => {
-                                            // Bỏ qua hàng thông báo không có dữ liệu
-                                            if (row.querySelector('td[colspan]')) {
-                                                row.style.display = 'none';
-                                                return;
-                                            }
-
-                                            // Lấy nội dung tiêu đề và danh mục
-                                            const titleCell = row.querySelector('td:nth-child(2)');
-                                            const categoryCell = row.querySelector('td:nth-child(4)');
-
-                                            if (!titleCell || !categoryCell) {
-                                                row.style.display = 'none';
-                                                return;
-                                            }
-
-                                            // Lấy text từ các phần tử con
-                                            const title = Array.from(titleCell.querySelectorAll('*'))
-                                                .map(el => el.textContent)
-                                                .join(' ')
-                                                .toLowerCase()
-                                                .trim();
-
-                                            const category = Array.from(categoryCell.querySelectorAll('*'))
-                                                .map(el => el.textContent)
-                                                .join(' ')
-                                                .toLowerCase()
-                                                .trim();
-
-                                            // Kiểm tra điều kiện tìm kiếm
-                                            const matchesTitle = !searchTerm || title.includes(searchTerm);
-                                            const matchesCategory = !categorySearchTerm || category.includes(categorySearchTerm);
-
-                                            if (matchesTitle && matchesCategory) {
-                                                row.style.display = '';
-                                                hasVisibleRows = true;
-                                            } else {
-                                                row.style.display = 'none';
-                                            }
-                                        });
-
-                                        // Hiển thị thông báo nếu không có kết quả
-                                        const existingNoResults = document.querySelector('tr td[colspan="9"]');
-                                        if (!hasVisibleRows) {
-                                            if (!existingNoResults) {
-                                                const noResultsRow = document.createElement('tr');
-                                                noResultsRow.innerHTML = '<td colspan="9" class="text-center">Không tìm thấy bài viết nào phù hợp</td>';
-                                                document.querySelector('tbody').appendChild(noResultsRow);
-                                            }
-                                        } else if (existingNoResults) {
-                                            existingNoResults.parentElement.remove();
-                                        }
-                                    }
-
-                                    // Search on button click
-                                    searchButton.addEventListener('click', performSearch);
-
-                                    // Search on Enter key press
-                                    [searchInput, categoryFilter].forEach(input => {
-                                        input.addEventListener('keyup', function(event) {
-                                            if (event.key === 'Enter') {
-                                                performSearch();
-                                            }
-                                        });
-
-                                        // Real-time search as user types with debounce
-                                        let timeout;
-                                        input.addEventListener('input', function() {
-                                            clearTimeout(timeout);
-                                            timeout = setTimeout(performSearch, 300);
-                                        });
-                                    });
-
-                                    // Reset search when clicking reset button
-                                    document.getElementById('reset-button').addEventListener('click', function() {
-                                        searchInput.value = '';
-                                        categoryFilter.value = '';
-                                        articleRows.forEach(row => {
-                                            row.style.display = '';
-                                        });
-                                        const existingNoResults = document.querySelector('tr td[colspan="9"]');
-                                        if (existingNoResults) {
-                                            existingNoResults.parentElement.remove();
-                                        }
-                                    });
-                                });
-                            </script>
                         </div>
 
                         <div class="box-body">
@@ -428,10 +329,10 @@
                 const newPagination = doc.querySelector('#pagination-links');
 
                 if (newTableBody) {
-                    articlesTableBody.replaceChildren(...newTableBody.children);
+                    articlesTableBody.innerHTML = newTableBody.innerHTML;
                 }
                 if (newPagination) {
-                    paginationLinks.replaceChildren(...newPagination.children);
+                    paginationLinks.innerHTML = newPagination.innerHTML;
                 }
 
                 initializeTableEventListeners();
@@ -506,7 +407,7 @@
                 });
             }
 
-            // Debounce function với thời gian ngắn hơn
+            // Debounce function để tránh gọi API quá nhiều
             function debounce(func, wait) {
                 let timeout;
                 return function executedFunction(...args) {
@@ -519,9 +420,10 @@
                 };
             }
 
-            // Sử dụng debounce với thời gian ngắn hơn (100ms)
-            const debouncedFetchArticles = debounce(fetchArticles, 100);
+            // Sử dụng debounce với thời gian 300ms
+            const debouncedFetchArticles = debounce(fetchArticles, 300);
 
+            // Thêm event listener cho các bộ lọc
             [articleFilter, categoryFilter, startDate, endDate].forEach(element => {
                 element.addEventListener('change', debouncedFetchArticles);
             });
@@ -529,10 +431,11 @@
             // Thêm event listener cho nút tìm kiếm
             searchButton.addEventListener('click', fetchArticles);
 
-            // Thêm event listener cho các ô tìm kiếm
+            // Thêm event listener cho các ô tìm kiếm với real-time search
             searchInput.addEventListener('input', debouncedFetchArticles);
             categorySearchInput.addEventListener('input', debouncedFetchArticles);
 
+            // Xử lý nút reset
             resetButton.addEventListener('click', function() {
                 filterForm.reset();
                 searchInput.value = '';
@@ -541,14 +444,14 @@
                 fetchArticles();
             });
 
-            // Tối ưu sự kiện phân trang
+            // Xử lý phân trang
             document.addEventListener('click', function(e) {
                 const paginationLink = e.target.closest('.pagination a');
                 if (!paginationLink) return;
 
                 e.preventDefault();
                 const url = paginationLink.href;
-                const cacheKey = new URL(url).search;
+                const cacheKey = new URL(url).search.substring(1); // Bỏ dấu ? ở đầu
 
                 if (searchCache.has(cacheKey)) {
                     updateTable(searchCache.get(cacheKey));
@@ -575,7 +478,7 @@
                 });
             });
 
-            // Tối ưu event listeners cho bảng
+            // Xử lý các nút thao tác trong bảng
             function initializeTableEventListeners() {
                 const handleAction = (button, action, message) => {
                     button.addEventListener('click', function(e) {
@@ -644,7 +547,13 @@
                 });
             }
 
+            // Khởi tạo event listeners khi trang được tải
             initializeTableEventListeners();
+
+            // Tự động tìm kiếm khi trang được tải (nếu có tham số tìm kiếm)
+            if (searchInput.value.trim() || categorySearchInput.value.trim()) {
+                fetchArticles();
+            }
         });
     </script>
 @endsection
