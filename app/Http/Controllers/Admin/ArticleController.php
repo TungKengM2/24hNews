@@ -41,6 +41,11 @@ class ArticleController extends Controller
     {
         $articleFilter = $request->input('article_filter', 'all');
         $categoryFilter = $request->input('category_filter', 'all');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $search = $request->input('search');
+        $category = $request->input('category');
+        $author = $request->input('author');
 
         $query = Article::with(['author', 'category', 'approver', 'tags'])
             ->orderBy('created_at', 'desc');
@@ -64,27 +69,39 @@ class ArticleController extends Controller
         }
 
         // Xử lý tìm kiếm theo từ khóa nếu có
-        if ($request->has('search') && !empty($request->search)) {
-            $searchTerm = $request->search;
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('title', 'like', "%{$searchTerm}%")
-                    ->orWhere('content', 'like', "%{$searchTerm}%");
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+
+        // Xử lý tìm kiếm theo danh mục nếu có
+        if ($category) {
+            $query->whereHas('category', function ($q) use ($category) {
+                $q->where('name', 'like', "%{$category}%");
+            });
+        }
+
+        // Xử lý tìm kiếm theo tác giả nếu có
+        if ($author) {
+            $query->whereHas('author', function ($q) use ($author) {
+                $q->where('username', 'like', "%{$author}%");
             });
         }
 
         // Xử lý lọc theo khoảng thời gian
-        if ($request->has('start_date') && !empty($request->start_date)) {
-            $query->whereDate('created_at', '>=', $request->start_date);
+        if ($startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
         }
-        if ($request->has('end_date') && !empty($request->end_date)) {
-            $query->whereDate('created_at', '<=', $request->end_date);
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
         }
 
         $articles = $query->paginate(10);
 
         if ($request->ajax()) {
-            $view = view('admin.articles.index', compact('articles'))->render();
-            return response()->json(['html' => $view]);
+            return view('admin.articles.index', compact('articles', 'articleFilter', 'categoryFilter'));
         }
 
         return view('admin.articles.index', compact('articles', 'articleFilter', 'categoryFilter'));
