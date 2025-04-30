@@ -606,7 +606,7 @@
 
                     e.preventDefault();
                     const url = paginationLink.href;
-                    const cacheKey = new URL(url).search;
+                    const cacheKey = new URL(url).search.substring(1); // Remove the leading '?'
 
                     if (searchCache.has(cacheKey)) {
                         updateTable(searchCache.get(cacheKey));
@@ -713,6 +713,11 @@
                 }
 
                 initializeTableEventListeners();
+
+                // Tự động tìm kiếm khi trang được tải (nếu có tham số tìm kiếm)
+                if (searchInput.value.trim() || categorySearchInput.value.trim() || authorSearchInput.value.trim()) {
+                    fetchArticles();
+                }
             });
         </script>
     @endsection
