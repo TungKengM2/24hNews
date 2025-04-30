@@ -490,6 +490,14 @@
                 const startDate = document.getElementById('start_date');
                 const endDate = document.getElementById('end_date');
                 const resetButton = document.getElementById('reset-button');
+                const searchInput = document.getElementById('searchInput');
+                const categorySearchInput = document.getElementById('categoryFilter');
+                const authorSearchInput = document.getElementById('authorFilter');
+                const searchButton = document.getElementById('searchButton');
+
+                // Cache cho kết quả tìm kiếm
+                const searchCache = new Map();
+                let currentRequest = null;
 
                 function showLoading() {
                     articlesTableBody.innerHTML = `
@@ -504,15 +512,16 @@
                 }
 
                 function updateTable(data) {
-                    if (!data || !data.html) {
+                    if (!data) {
                         console.error('Invalid response data');
                         return;
                     }
 
                     const parser = new DOMParser();
-                    const doc = parser.parseFromString(data.html, 'text/html');
-                    const newTableBody = doc.getElementById('articles-table-body');
-                    const newPagination = doc.getElementById('pagination-links');
+                    const doc = parser.parseFromString(data, 'text/html');
+
+                    const newTableBody = doc.querySelector('#articles-table-body');
+                    const newPagination = doc.querySelector('#pagination-links');
 
                     if (newTableBody) {
                         articlesTableBody.innerHTML = newTableBody.innerHTML;
@@ -520,6 +529,8 @@
                     if (newPagination) {
                         paginationLinks.innerHTML = newPagination.innerHTML;
                     }
+
+                    initializeTableEventListeners();
                 }
 
                 function fetchArticles() {
@@ -527,13 +538,35 @@
                     const params = new URLSearchParams(formData);
 
                     // Thêm các tham số tìm kiếm vào URL
-                    const searchInput = document.getElementById('searchInput');
-                    const categoryFilter = document.getElementById('categoryFilter');
-                    const authorFilter = document.getElementById('authorFilter');
+                    const searchTerm = searchInput.value.trim();
+                    const categoryTerm = categorySearchInput.value.trim();
+                    const authorTerm = authorSearchInput.value.trim();
 
-                    if (searchInput.value) params.append('search', searchInput.value);
-                    if (categoryFilter.value) params.append('category', categoryFilter.value);
-                    if (authorFilter.value) params.append('author', authorFilter.value);
+                    if (searchTerm) {
+                        params.set('search', searchTerm);
+                    } else {
+                        params.delete('search');
+                    }
+
+                    if (categoryTerm) {
+                        params.set('category', categoryTerm);
+                    } else {
+                        params.delete('category');
+                    }
+
+                    if (authorTerm) {
+                        params.set('author', authorTerm);
+                    } else {
+                        params.delete('author');
+                    }
+
+                    const cacheKey = params.toString();
+
+                    // Kiểm tra cache
+                    if (searchCache.has(cacheKey)) {
+                        updateTable(searchCache.get(cacheKey));
+                        return;
+                    }
 
                     // Hiển thị loading
                     showLoading();
@@ -547,10 +580,11 @@
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
                         }
-                        return response.json();
+                        return response.text();
                     })
                     .then(data => {
-                        if (data && data.html) {
+                        if (data) {
+                            searchCache.set(cacheKey, data);
                             updateTable(data);
                         } else {
                             throw new Error('Invalid response format');
@@ -558,86 +592,172 @@
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        if (error.message !== 'Network response was not ok') {
+                        if (!searchCache.has(cacheKey)) {
                             articlesTableBody.innerHTML = '<tr><td colspan="10" class="text-center text-danger">Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại.</td></tr>';
                         }
                     });
                 }
 
-                // Handle filter select changes
-                articleFilter.addEventListener('change', fetchArticles);
-                categoryFilter.addEventListener('change', fetchArticles);
+                // Debounce function với thời gian ngắn hơn
+                function debounce(func, wait) {
+                    let timeout;
+                    return function executedFunction(...args) {
+                        const later = () => {
+                            clearTimeout(timeout);
+                            func(...args);
+                        };
+                        clearTimeout(timeout);
+                        timeout = setTimeout(later, wait);
+                    };
+                }
 
-                // Handle date input changes
-                startDate.addEventListener('change', fetchArticles);
-                endDate.addEventListener('change', fetchArticles);
+                // Sử dụng debounce với thời gian ngắn hơn (300ms)
+                const debouncedFetchArticles = debounce(fetchArticles, 300);
 
-                // Handle reset button click
-                resetButton.addEventListener('click', function() {
-                    // Reset all form inputs
-                    articleFilter.value = 'all';
-                    categoryFilter.value = 'all';
-                    startDate.value = '';
-                    endDate.value = '';
-                    document.getElementById('searchInput').value = '';
-                    document.getElementById('categoryFilter').value = '';
-                    document.getElementById('authorFilter').value = '';
+                // Xử lý các bộ lọc chính
+                [articleFilter, categoryFilter, startDate, endDate].forEach(element => {
+                    element.addEventListener('change', function() {
+                        showLoading();
+                        debouncedFetchArticles();
+                    });
+                });
 
-                    // Submit form to reset all filters
+                // Xử lý tìm kiếm nội dung
+                searchInput.addEventListener('input', debouncedFetchArticles);
+                categorySearchInput.addEventListener('input', debouncedFetchArticles);
+                authorSearchInput.addEventListener('input', debouncedFetchArticles);
+
+                // Xử lý nút tìm kiếm
+                searchButton.addEventListener('click', function() {
+                    showLoading();
                     fetchArticles();
                 });
 
-                // Handle search input changes
-                document.getElementById('searchInput').addEventListener('input', function() {
-                    clearTimeout(this.timer);
-                    this.timer = setTimeout(fetchArticles, 500);
+                // Xử lý nút reset
+                resetButton.addEventListener('click', function() {
+                    filterForm.reset();
+                    searchInput.value = '';
+                    categorySearchInput.value = '';
+                    authorSearchInput.value = '';
+                    searchCache.clear(); // Xóa cache khi reset
+                    showLoading();
+                    fetchArticles();
                 });
 
-                document.getElementById('categoryFilter').addEventListener('input', function() {
-                    clearTimeout(this.timer);
-                    this.timer = setTimeout(fetchArticles, 500);
-                });
-
-                document.getElementById('authorFilter').addEventListener('input', function() {
-                    clearTimeout(this.timer);
-                    this.timer = setTimeout(fetchArticles, 500);
-                });
-
-                // Handle pagination clicks
+                // Tối ưu sự kiện phân trang
                 document.addEventListener('click', function(e) {
-                    if (e.target.closest('.pagination a')) {
-                        e.preventDefault();
-                        const url = e.target.closest('a').href;
+                    const paginationLink = e.target.closest('.pagination a');
+                    if (!paginationLink) return;
 
-                        // Hiển thị loading khi chuyển trang
-                        showLoading();
+                    e.preventDefault();
+                    const url = paginationLink.href;
+                    const cacheKey = new URL(url).search;
 
-                        fetch(url, {
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data && data.html) {
-                                updateTable(data);
-                            } else {
-                                throw new Error('Invalid response format');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            if (error.message !== 'Network response was not ok') {
-                                articlesTableBody.innerHTML = '<tr><td colspan="10" class="text-center text-danger">Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại.</td></tr>';
-                            }
-                        });
+                    if (searchCache.has(cacheKey)) {
+                        updateTable(searchCache.get(cacheKey));
+                        return;
                     }
+
+                    // Hiển thị loading khi chuyển trang
+                    showLoading();
+
+                    fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        if (data) {
+                            searchCache.set(cacheKey, data);
+                            updateTable(data);
+                        } else {
+                            throw new Error('Invalid response format');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        if (!searchCache.has(cacheKey)) {
+                            articlesTableBody.innerHTML = '<tr><td colspan="10" class="text-center text-danger">Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại.</td></tr>';
+                        }
+                    });
                 });
+
+                // Tối ưu event listeners cho bảng
+                function initializeTableEventListeners() {
+                    const handleAction = (button, action, message) => {
+                        button.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const form = this.closest('form');
+                            const articleTitle = this.dataset.articleTitle;
+
+                            Swal.fire({
+                                title: 'Xác nhận',
+                                text: message,
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Đồng ý',
+                                cancelButtonText: 'Hủy'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Hiển thị loading khi thực hiện hành động
+                                    showLoading();
+
+                                    fetch(form.action, {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        },
+                                        body: new FormData(form)
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Thành công!',
+                                                text: data.message,
+                                                confirmButtonText: 'Đóng'
+                                            }).then(() => {
+                                                searchCache.clear(); // Xóa cache sau khi thay đổi
+                                                fetchArticles();
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Lỗi!',
+                                            text: 'Đã xảy ra lỗi khi thực hiện thao tác. Vui lòng thử lại.',
+                                            confirmButtonText: 'Đóng'
+                                        });
+                                    });
+                                }
+                            });
+                        });
+                    };
+
+                    document.querySelectorAll('.toggle-visibility-btn').forEach(button => {
+                        handleAction(button, 'toggle', `Bạn có chắc chắn muốn ${button.dataset.action} bài viết này?`);
+                    });
+
+                    document.querySelectorAll('.delete-article-btn').forEach(button => {
+                        handleAction(button, 'delete', `Bạn có chắc chắn muốn xóa bài viết "${button.dataset.articleTitle}"?`);
+                    });
+
+                    document.querySelectorAll('.request-review-btn').forEach(button => {
+                        handleAction(button, 'review', 'Bạn có chắc chắn muốn gửi yêu cầu duyệt lại bài viết này?');
+                    });
+                }
+
+                initializeTableEventListeners();
             });
         </script>
     @endsection
