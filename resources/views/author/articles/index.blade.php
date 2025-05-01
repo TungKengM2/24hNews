@@ -45,7 +45,6 @@
                                     </a>
                                 @endif
                             </div>
-
                             <div class="d-flex">
                                 <div class="input-group me-2">
                                     <input type="text" id="searchInput" class="form-control"
@@ -58,48 +57,7 @@
                                 </div>
                             </div>
 
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    const searchInput = document.getElementById('searchInput');
-                                    const categoryFilter = document.getElementById('categoryFilter');
-                                    const searchButton = document.getElementById('searchButton');
-                                    const articleRows = document.querySelectorAll('tbody tr');
 
-                                    function performSearch() {
-                                        const searchTerm = searchInput.value.toLowerCase().trim();
-                                        const categorySearchTerm = categoryFilter.value.toLowerCase().trim();
-
-                                        articleRows.forEach(row => {
-                                            const title = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                                            const category = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
-
-                                            const matchesTitle = title.includes(searchTerm);
-                                            const matchesCategory = !categorySearchTerm || category.includes(categorySearchTerm);
-
-                                            if (matchesTitle && matchesCategory) {
-                                                row.style.display = '';
-                                            } else {
-                                                row.style.display = 'none';
-                                            }
-                                        });
-                                    }
-
-                                    // Search on button click
-                                    searchButton.addEventListener('click', performSearch);
-
-                                    // Search on Enter key press
-                                    [searchInput, categoryFilter].forEach(input => {
-                                        input.addEventListener('keyup', function(event) {
-                                            if (event.key === 'Enter') {
-                                                performSearch();
-                                            }
-                                        });
-
-                                        // Real-time search as user types
-                                        input.addEventListener('input', performSearch);
-                                    });
-                                });
-                            </script>
                         </div>
 
                         <div class="box-body">
@@ -107,24 +65,42 @@
                                 <div class="col-md-6">
                                     <form method="GET" action="{{ route('author.articles.index') }}" id="filter-form">
                                         <div class="d-flex align-items-center">
-                                            <label for="filter" class="me-2 fw-bold">Lọc bài viết:</label>
-                                            <select name="filter" class="form-select w-auto"
-                                                onchange="document.getElementById('filter-form').submit()">
-                                                <option value="all" {{ request('filter') == 'all' ? 'selected' : '' }}>
+                                            <label for="article_filter" class="me-2 fw-bold">Lọc bài viết:</label>
+                                            <select name="article_filter" class="form-select w-auto me-3" id="article_filter">
+                                                <option value="all" {{ request('article_filter') == 'all' ? 'selected' : '' }}>
                                                     Tất cả bài viết</option>
-                                                <option value="active"
-                                                    {{ request('filter') == 'active' ? 'selected' : '' }}>Bài viết có danh
-                                                    mục hoạt động</option>
-                                                <option value="inactive"
-                                                    {{ request('filter') == 'inactive' ? 'selected' : '' }}>Bài viết có danh
-                                                    mục bị vô hiệu hóa</option>
-                                                {{-- <option value="no_category"
-                                                    {{ request('filter') == 'no_category' ? 'selected' : '' }}>Bài viết
-                                                    không có danh mục</option> --}}
-                                                <option value="archived"
-                                                    {{ request('filter') == 'archived' ? 'selected' : '' }}>Bài viết
-                                                    đã ẩn</option>
+                                                <option value="draft" {{ request('article_filter') == 'draft' ? 'selected' : '' }}>
+                                                    Bản nháp</option>
+                                                <option value="pending" {{ request('article_filter') == 'pending' ? 'selected' : '' }}>
+                                                    Chờ duyệt</option>
+                                                <option value="published" {{ request('article_filter') == 'published' ? 'selected' : '' }}>
+                                                    Đã đăng</option>
+                                                <option value="rejected" {{ request('article_filter') == 'rejected' ? 'selected' : '' }}>
+                                                    Từ chối</option>
+                                                <option value="archived" {{ request('article_filter') == 'archived' ? 'selected' : '' }}>
+                                                    Đã lưu trữ</option>
                                             </select>
+
+                                            <label for="category_filter" class="me-2 fw-bold">Lọc danh mục:</label>
+                                            <select name="category_filter" class="form-select w-auto" id="category_filter">
+                                                <option value="all" {{ request('category_filter') == 'all' ? 'selected' : '' }}>
+                                                    Tất cả danh mục</option>
+                                                <option value="active" {{ request('category_filter') == 'active' ? 'selected' : '' }}>
+                                                    Danh mục hoạt động</option>
+                                                <option value="inactive" {{ request('category_filter') == 'inactive' ? 'selected' : '' }}>
+                                                    Danh mục bị vô hiệu hóa</option>
+                                                <option value="no_category" {{ request('category_filter') == 'no_category' ? 'selected' : '' }}>
+                                                    Chưa có danh mục</option>
+                                            </select>
+                                        </div>
+                                        <div class="d-flex align-items-center mt-2">
+                                            <label for="start_date" class="me-2 fw-bold">Từ ngày:</label>
+                                            <input type="date" name="start_date" id="start_date" class="form-control w-auto me-2"
+                                                value="{{ request('start_date') }}">
+                                            <label for="end_date" class="me-2 fw-bold">Đến ngày:</label>
+                                            <input type="date" name="end_date" id="end_date" class="form-control w-auto me-2"
+                                                value="{{ request('end_date') }}">
+                                            <button type="button" class="btn btn-secondary" id="reset-button">Reset</button>
                                         </div>
                                     </form>
                                 </div>
@@ -133,210 +109,172 @@
                                 </div>
                             </div>
 
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-hover mb-0" style="width:100%">
-                                    <thead class="bg-primary text-white">
-                                        <tr>
-                                            <th class="text-center" width="5%">ID</th>
-                                            <th class="text-center" width="15%">Tiêu Đề</th>
-                                            <th class="text-center" width="10%">Hình Ảnh</th>
-                                            <th class="text-center" width="10%">Danh Mục</th>
-                                            <th class="text-center" width="10%">Trạng Thái</th>
-                                            <th class="text-center" width="10%">Lượt Xem</th>
-                                            {{-- <th width="10%">Nội Dung Nhạy Cảm</th> --}}
-                                            <th class="text-center" width="10%">Tags</th>
-                                            <th class="text-center" width="20%">Thao Tác</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse ($articles as $article)
+                            <div class="card-body">
+                                @if($isBanned)
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        Tài khoản của bạn đã bị cấm đăng bài. Thời gian cấm kết thúc vào: {{ $banEndTime }}
+                                    </div>
+                                @endif
+
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover mb-0" style="width:100%">
+                                        <thead class="bg-primary text-white">
                                             <tr>
-                                                <td class="text-center">{{ $article->article_id }}</td>
-                                                <td class="text-center">
-                                                    <strong>{{ $article->title }}</strong>
-                                                    <div class="small text-muted">{{ Str::limit($article->slug, 30) }}
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
-                                                        alt="Hình ảnh" class="img-thumbnail" width="80"
-                                                        height="80">
-                                                </td>
-                                                <td class="text-center">
-                                                    @if ($article->category)
-                                                        @if (!$article->category->is_active)
-                                                            <span class="text-warning">{{ $article->category->name }} <i
-                                                                    class="fa fa-exclamation-triangle"></i></span>
-                                                        @else
-                                                            <span
-                                                                class="badge bg-info">{{ $article->category->name }}</span>
-                                                        @endif
-
-                                                        @if ($article->subcategory)
-                                                            <div class="mt-1">
-
-                                                                @if (!$article->subcategory->is_active)
-                                                                    <span
-                                                                        class="text-warning">{{ $article->subcategory->name }}
-                                                                        <i class="fa fa-exclamation-triangle"></i></span>
-                                                                @else
-                                                                    <span
-                                                                        class="badge bg-secondary">{{ $article->subcategory->name }}</span>
-                                                                @endif
-                                                            </div>
-                                                        @endif
-                                                    @else
-                                                        <span class="text-danger">Không có danh mục</span>
-                                                    @endif
-                                                </td>
-                                                <td class="text-center">
-                                                    @switch($article->status)
-                                                        @case('draft')
-                                                            <span class="badge bg-secondary">Bản Nháp</span>
-                                                        @break
-
-                                                        @case('pending')
-                                                            <span class="badge bg-warning">Chờ Duyệt</span>
-                                                        @break
-
-                                                        @case('published')
-                                                            <span class="badge bg-success">Đã Đăng</span>
-                                                        @break
-
-                                                        @case('archived')
-                                                            <span class="badge bg-info">Đã Lưu Trữ</span>
-                                                        @break
-
-                                                        @case('rejected')
-                                                            <span class="badge bg-danger">Từ Chối</span>
-                                                        @break
-                                                    @endswitch
-                                                </td>
-                                                <td class="text-center">{{ number_format($article->views) }}</td>
-                                                {{-- <td class="text-center">
-                                                @if ($article->contains_sensitive_content)
-                                                    <span class="badge bg-danger">Có</span>
-                                                @else
-                                                    <span class="badge bg-success">Không</span>
-                                                @endif
-                                            {{-- </td> --}}
-                                                <td class="text-center">
-                                                    <div>
-                                                        @if ($article->tags->isNotEmpty())
-                                                            @foreach ($article->tags as $tag)
-                                                                <span class="badge bg-primary">{{ $tag->name }}</span>
-                                                            @endforeach
-                                                        @else
-                                                            <small class="text-muted">Không có thẻ</small>
-                                                        @endif
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="d-flex flex-wrap gap-1 mb-2">
-                                                        <a href="{{ route('author.articles.show', $article) }}"
-                                                            class="btn btn-info btn-sm" title="Xem chi tiết">
-                                                            <i class="si-eye si"></i>
-                                                        </a>
-
-{{--                                                        @if (in_array($article->status, ['pending', 'published']))--}}
-{{--                                                            <button class="btn btn-warning btn-sm" title="Xin phép chỉnh sửa">--}}
-{{--                                                                <i class="si-pencil si"></i> Xin phép chỉnh sửa--}}
-{{--                                                            </button>--}}
-{{--                                                        @else--}}
-{{--                                                            <a href="{{ route('author.articles.edit', $article) }}"--}}
-{{--                                                                class="btn btn-warning btn-sm" title="Chỉnh sửa">--}}
-{{--                                                                <i class="si-pencil si"></i> Chỉnh sửa--}}
-{{--                                                            </a>--}}
-{{--                                                        @endif--}}
-                                                        @if ($article->status !== 'published')
-                                                            <a href="{{ route('author.articles.edit', $article) }}"
-                                                               class="btn btn-warning btn-sm" title="Chỉnh sửa">
-                                                                <i class="si-pencil si"></i>
-                                                            </a>
-                                                        @else
-                                                            <button type="button" class="btn btn-secondary btn-sm" style="display: none" title="Không thể chỉnh sửa bài viết đã xuất bản">
-                                                                <i class="si-pencil si"></i>
-                                                            </button>
-                                                        @endif
-
-                                                        @if (in_array($article->status, ['published', 'archived']))
-                                                            <form
-                                                                action="{{ route('author.articles.toggle-visibility', $article) }}"
-                                                                method="POST" class="d-inline">
-                                                                @csrf
-                                                                @method('PUT')
-                                                                @if (request()->has('page'))
-                                                                    <input type="hidden" name="page"
-                                                                        value="{{ request('page') }}">
-                                                                @endif
-                                                                @if (request()->has('filter'))
-                                                                    <input type="hidden" name="filter"
-                                                                        value="{{ request('filter') }}">
-                                                                @endif
-                                                                @if (request()->has('search'))
-                                                                    <input type="hidden" name="search"
-                                                                        value="{{ request('search') }}">
-                                                                @endif
-                                                                <button
-                                                                    class="btn btn-secondary btn-sm toggle-visibility-btn"
-                                                                    title="{{ $article->status === 'published' ? 'Ẩn bài viết' : 'Hiện bài viết' }}"
-                                                                    data-action="{{ $article->status === 'published' ? 'ẩn' : 'hiện' }}">
-                                                                    <i
-                                                                        class="fa {{ $article->status === 'published' ? 'fa-eye-slash' : 'fa-eye' }}"></i>
-                                                                </button>
-                                                            </form>
-                                                        @endif
-
-                                                        @if ($article->status === 'rejected')
-                                                            <form
-                                                                action="{{ route('author.articles.request-review', $article) }}"
-                                                                method="POST" class="d-inline">
-                                                                @csrf
-                                                                @method('PUT')
-                                                                @if (request()->has('page'))
-                                                                    <input type="hidden" name="page"
-                                                                        value="{{ request('page') }}">
-                                                                @endif
-                                                                @if (request()->has('filter'))
-                                                                    <input type="hidden" name="filter"
-                                                                        value="{{ request('filter') }}">
-                                                                @endif
-                                                                @if (request()->has('search'))
-                                                                    <input type="hidden" name="search"
-                                                                        value="{{ request('search') }}">
-                                                                @endif
-                                                                <button class="btn btn-primary btn-sm request-review-btn"
-                                                                    title="Xin duyệt lại"
-                                                                    data-article-id="{{ $article->article_id }}">
-                                                                    <i class="fa fa-paper-plane"></i>
-                                                                </button>
-                                                            </form>
-                                                        @endif
-
-                                                        <form action="{{ route('author.articles.destroy', $article) }}"
-                                                            method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="btn btn-danger btn-sm delete-article-btn"
-                                                                title="Xóa bài viết"
-                                                                data-article-id="{{ $article->article_id }}"
-                                                                data-article-title="{{ $article->title }}">
-                                                                <i class="si-trash si"></i>
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </td>
+                                                <th class="text-center" width="5%">ID</th>
+                                                <th class="text-center" width="15%">Tiêu Đề</th>
+                                                <th class="text-center" width="10%">Hình Ảnh</th>
+                                                <th class="text-center" width="10%">Danh Mục</th>
+                                                <th class="text-center" width="10%">Trạng Thái</th>
+                                                <th class="text-center" width="10%">Lượt Xem</th>
+                                                <th class="text-center" width="10%">Tags</th>
+                                                <th class="text-center" width="10%">Thời Gian Tạo</th>
+                                                <th class="text-center" width="20%">Thao Tác</th>
                                             </tr>
+                                        </thead>
+                                        <tbody id="articles-table-body">
+                                            @forelse ($articles as $article)
+                                                <tr>
+                                                    <td class="text-center">{{ $article->article_id }}</td>
+                                                    <td class="text-center">
+                                                        <strong>{{ $article->title }}</strong>
+                                                        <div class="small text-muted">{{ Str::limit($article->slug, 30) }}</div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Hình ảnh" class="img-thumbnail" width="80" height="80">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if ($article->category)
+                                                            @if (!$article->category->is_active)
+                                                                <span class="text-warning">{{ $article->category->name }} <i class="fa fa-exclamation-triangle"></i></span>
+                                                            @else
+                                                                <span class="badge bg-info">{{ $article->category->name }}</span>
+                                                            @endif
+
+                                                            @if ($article->subcategory)
+                                                                <div class="mt-1">
+                                                                    @if (!$article->subcategory->is_active)
+                                                                        <span class="text-warning">{{ $article->subcategory->name }} <i class="fa fa-exclamation-triangle"></i></span>
+                                                                    @else
+                                                                        <span class="badge bg-secondary">{{ $article->subcategory->name }}</span>
+                                                                    @endif
+                                                                </div>
+                                                            @endif
+                                                        @else
+                                                            <span class="text-danger">Không có danh mục</span>
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @switch($article->status)
+                                                            @case('draft')
+                                                                <span class="badge bg-secondary">Bản Nháp</span>
+                                                            @break
+
+                                                            @case('pending')
+                                                                <span class="badge bg-warning">Chờ Duyệt</span>
+                                                            @break
+
+                                                            @case('published')
+                                                                <span class="badge bg-success">Đã Đăng</span>
+                                                            @break
+
+                                                            @case('archived')
+                                                                <span class="badge bg-info">Đã Lưu Trữ</span>
+                                                            @break
+
+                                                            @case('rejected')
+                                                                <span class="badge bg-danger">Từ Chối</span>
+                                                            @break
+                                                        @endswitch
+                                                    </td>
+                                                    <td class="text-center">{{ number_format($article->views) }}</td>
+                                                    <td class="text-center">
+                                                        <div>
+                                                            @if ($article->tags->isNotEmpty())
+                                                                @foreach ($article->tags as $tag)
+                                                                    <span class="badge bg-primary">{{ $tag->name }}</span>
+                                                                @endforeach
+                                                            @else
+                                                                <small class="text-muted">Không có thẻ</small>
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">{{ $article->created_at->format('d/m/Y H:i') }}</td>
+                                                    <td class="text-center">
+                                                        <div class="d-flex flex-wrap gap-1 mb-2">
+                                                            <a href="{{ route('author.articles.show', $article) }}" class="btn btn-info btn-sm" title="Xem chi tiết">
+                                                                <i class="si-eye si"></i>
+                                                            </a>
+
+                                                            @if ($article->status !== 'published')
+                                                                <a href="{{ route('author.articles.edit', $article) }}" class="btn btn-warning btn-sm" title="Chỉnh sửa">
+                                                                    <i class="si-pencil si"></i>
+                                                                </a>
+                                                            @else
+                                                                <button type="button" class="btn btn-secondary btn-sm" style="display: none" title="Không thể chỉnh sửa bài viết đã xuất bản">
+                                                                    <i class="si-pencil si"></i>
+                                                                </button>
+                                                            @endif
+
+                                                            @if (in_array($article->status, ['published', 'archived']))
+                                                                <form action="{{ route('author.articles.toggle-visibility', $article) }}" method="POST" class="d-inline">
+                                                                    @csrf
+                                                                    @method('PUT')
+                                                                    @if (request()->has('page'))
+                                                                        <input type="hidden" name="page" value="{{ request('page') }}">
+                                                                    @endif
+                                                                    @if (request()->has('filter'))
+                                                                        <input type="hidden" name="filter" value="{{ request('filter') }}">
+                                                                    @endif
+                                                                    @if (request()->has('search'))
+                                                                        <input type="hidden" name="search" value="{{ request('search') }}">
+                                                                    @endif
+                                                                    <button class="btn btn-secondary btn-sm toggle-visibility-btn" title="{{ $article->status === 'published' ? 'Ẩn bài viết' : 'Hiện bài viết' }}" data-action="{{ $article->status === 'published' ? 'ẩn' : 'hiện' }}">
+                                                                        <i class="fa {{ $article->status === 'published' ? 'fa-eye-slash' : 'fa-eye' }}"></i>
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+
+                                                            @if ($article->status === 'rejected')
+                                                                <form action="{{ route('author.articles.request-review', $article) }}" method="POST" class="d-inline">
+                                                                    @csrf
+                                                                    @method('PUT')
+                                                                    @if (request()->has('page'))
+                                                                        <input type="hidden" name="page" value="{{ request('page') }}">
+                                                                    @endif
+                                                                    @if (request()->has('filter'))
+                                                                        <input type="hidden" name="filter" value="{{ request('filter') }}">
+                                                                    @endif
+                                                                    @if (request()->has('search'))
+                                                                        <input type="hidden" name="search" value="{{ request('search') }}">
+                                                                    @endif
+                                                                    <button class="btn btn-primary btn-sm request-review-btn" title="Xin duyệt lại" data-article-id="{{ $article->article_id }}">
+                                                                        <i class="fa fa-paper-plane"></i>
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+
+                                                            <form action="{{ route('author.articles.destroy', $article) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button class="btn btn-danger btn-sm delete-article-btn" title="Xóa bài viết" data-article-id="{{ $article->article_id }}" data-article-title="{{ $article->title }}">
+                                                                    <i class="si-trash si"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="8" class="text-center">Không có bài viết nào</td>
+                                                    <td colspan="9" class="text-center">Không có bài viết nào</td>
                                                 </tr>
                                             @endforelse
                                         </tbody>
                                     </table>
-                                    <div class="d-flex justify-content-end mt-4">
-                                        {{ $articles->appends(request()->query())->links('pagination::bootstrap-5') }}
-                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end mt-4" id="pagination-links">
+                                    {{ $articles->appends(request()->query())->links('pagination::bootstrap-5') }}
                                 </div>
                             </div>
                         </div>
@@ -344,272 +282,278 @@
                 </div>
             </div>
         </div>
-    @endsection
+    </div>
+@endsection
 
-    @section('scripts')
-        <script>
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterForm = document.getElementById('filter-form');
+            const articlesTableBody = document.getElementById('articles-table-body');
+            const paginationLinks = document.getElementById('pagination-links');
+            const articleFilter = document.getElementById('article_filter');
+            const categoryFilter = document.getElementById('category_filter');
+            const startDate = document.getElementById('start_date');
+            const endDate = document.getElementById('end_date');
+            const resetButton = document.getElementById('reset-button');
+            const searchInput = document.getElementById('searchInput');
+            const categorySearchInput = document.getElementById('categoryFilter');
+            const searchButton = document.getElementById('searchButton');
 
-            function ensureSwalLoaded(callback) {
-                if (typeof Swal !== 'undefined') {
-                    callback();
-                } else {
-                    setTimeout(function() {
-                        ensureSwalLoaded(callback);
-                    }, 100);
+            // Cache cho kết quả tìm kiếm
+            const searchCache = new Map();
+            let currentRequest = null;
+
+            function showLoading() {
+                articlesTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="text-center">
+                            <div class="spinner-border text-primary" role="status" style="width: 2rem; height: 2rem;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+
+            function updateTable(data) {
+                if (!data || !data.html) {
+                    console.error('Invalid response data');
+                    return;
                 }
+
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.html, 'text/html');
+
+                const newTableBody = doc.querySelector('#articles-table-body');
+                const newPagination = doc.querySelector('#pagination-links');
+
+                if (newTableBody) {
+                    articlesTableBody.innerHTML = newTableBody.innerHTML;
+                }
+                if (newPagination) {
+                    paginationLinks.innerHTML = newPagination.innerHTML;
+                }
+
+                initializeTableEventListeners();
             }
 
+            function fetchArticles() {
+                const formData = new FormData(filterForm);
+                const params = new URLSearchParams(formData);
 
-            function showSweetAlert(config) {
-                return new Promise((resolve) => {
-                    ensureSwalLoaded(function() {
-                        resolve(Swal.fire(config));
-                    });
-                });
-            }
+                // Thêm các tham số tìm kiếm vào URL
+                const searchTerm = searchInput.value.trim();
+                const categoryTerm = categorySearchInput.value.trim();
 
-            document.addEventListener('DOMContentLoaded', function() {
-                // Hiển thị thông báo từ session với cơ chế kiểm tra Swal đã tải chưa
-                @if (session('success'))
-                    showSweetAlert({
-                        icon: 'success',
-                        title: 'Thành công!',
-                        text: '{{ session('success') }}',
-                        timer: 5000,
-                        timerProgressBar: true,
-                        showConfirmButton: false
-                    });
-                @endif
+                if (searchTerm) {
+                    params.set('search', searchTerm);
+                } else {
+                    params.delete('search');
+                }
 
-                @if (session('error'))
-                    showSweetAlert({
-                        icon: 'error',
-                        title: 'Lỗi!',
-                        text: '{{ session('error') }}',
-                        confirmButtonText: 'Đóng'
-                    });
-                @endif
+                if (categoryTerm) {
+                    params.set('category', categoryTerm);
+                } else {
+                    params.delete('category');
+                }
 
-                @if (session('violation_error'))
-                    showSweetAlert({
-                        icon: 'error',
-                        title: 'Vi phạm!',
-                        text: '{{ session('violation_error') }}',
-                        confirmButtonText: 'Đóng'
-                    });
-                @endif
+                const cacheKey = params.toString();
 
-                @if (session('warning'))
-                    showSweetAlert({
-                        icon: 'warning',
-                        title: 'Cảnh báo!',
-                        text: '{{ session('warning') }}',
-                        confirmButtonText: 'Đóng'
-                    });
-                @endif
+                // Kiểm tra cache
+                if (searchCache.has(cacheKey)) {
+                    updateTable(searchCache.get(cacheKey));
+                    return;
+                }
 
-                @if (session('info'))
-                    showSweetAlert({
-                        icon: 'info',
-                        title: 'Thông tin!',
-                        text: '{{ session('info') }}',
-                        confirmButtonText: 'Đóng'
-                    });
-                @endif
+                // Hiển thị loading
+                showLoading();
 
-                @if ($errors->any())
-                    let errorMessages = '';
-                    @foreach ($errors->all() as $error)
-                        errorMessages += '- {{ $error }}<br>';
-                    @endforeach
+                // Hủy request đang chạy nếu có
+                if (currentRequest) {
+                    currentRequest.abort();
+                }
 
-                    showSweetAlert({
-                        icon: 'error',
-                        title: 'Có lỗi xảy ra!',
-                        html: errorMessages,
-                        confirmButtonText: 'Đóng'
-                    });
-                @endif
+                // Tạo AbortController cho request mới
+                const controller = new AbortController();
+                currentRequest = controller;
 
-                // Hiển thị cảnh báo tài khoản bị khóa
-                @if (isset($isBanned) && $isBanned)
-                    showSweetAlert({
-                        icon: 'warning',
-                        title: 'Tài khoản bị tạm khóa!',
-                        html: '<div class="text-start"><p><strong>Tài khoản của bạn đã bị tạm khóa đến {{ $banEndTime }}.</strong></p>' +
-                            '<p>Bạn không thể thực hiện các hành động liên quan đến bài viết trong thời gian này.</p>' +
-                            '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
-                        confirmButtonText: 'Tôi đã hiểu',
-                        confirmButtonColor: '#3085d6'
-                    });
-                @endif
-
-                // Xử lý nút xóa bài viết
-                document.querySelectorAll('.delete-article-btn').forEach(button => {
-                    button.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const articleId = this.getAttribute('data-article-id');
-                        const articleTitle = this.getAttribute('data-article-title');
-                        const form = this.closest('form');
-
-                        // Kiểm tra tài khoản bị khóa
-                        @if (isset($isBanned) && $isBanned)
-                            showSweetAlert({
-                                icon: 'error',
-                                title: 'Không thể thực hiện!',
-                                html: '<div class="text-start"><p><strong>Tài khoản của bạn đã bị tạm khóa đến {{ $banEndTime }}.</strong></p>' +
-                                    '<p>Bạn không thể xóa bài viết trong thời gian này.</p>' +
-                                    '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
-                                confirmButtonText: 'Tôi đã hiểu',
-                                confirmButtonColor: '#3085d6'
-                            });
-                        @else
-                            showSweetAlert({
-                                title: 'Xóa bài viết?',
-                                html: `Bạn có chắc chắn muốn xóa bài viết <strong>${articleTitle}</strong> không?<br>Hành động này không thể hoàn tác!`,
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#d33',
-                                cancelButtonColor: '#3085d6',
-                                confirmButtonText: 'Xóa',
-                                cancelButtonText: 'Hủy'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // Hiển thị thông báo đang xử lý
-                                    showSweetAlert({
-                                        title: 'Đang xử lý...',
-                                        text: 'Đang xóa bài viết, vui lòng đợi...',
-                                        icon: 'info',
-                                        allowOutsideClick: false,
-                                        allowEscapeKey: false,
-                                        showConfirmButton: false,
-                                        didOpen: () => {
-                                            Swal.showLoading();
-                                        }
-                                    });
-                                    form.submit();
-                                }
-                            });
-                        @endif
-                    });
-                });
-
-                // Xử lý nút ẩn/hiện bài viết
-                document.querySelectorAll('.toggle-visibility-btn').forEach(button => {
-                    button.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const action = this.getAttribute('data-action');
-                        const form = this.closest('form');
-
-                        // Kiểm tra tài khoản bị khóa
-                        @if (isset($isBanned) && $isBanned)
-                            showSweetAlert({
-                                icon: 'error',
-                                title: 'Không thể thực hiện!',
-                                html: '<div class="text-start"><p><strong>Tài khoản của bạn đã bị tạm khóa đến {{ $banEndTime }}.</strong></p>' +
-                                    '<p>Bạn không thể ẩn/hiện bài viết trong thời gian này.</p>' +
-                                    '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
-                                confirmButtonText: 'Tôi đã hiểu',
-                                confirmButtonColor: '#3085d6'
-                            });
-                        @else
-                            showSweetAlert({
-                                title: `${action.charAt(0).toUpperCase() + action.slice(1)} bài viết?`,
-                                text: `Bạn có chắc chắn muốn ${action} bài viết này không?`,
-                                icon: 'question',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Xác nhận',
-                                cancelButtonText: 'Hủy'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // Hiển thị thông báo đang xử lý
-                                    showSweetAlert({
-                                        title: 'Đang xử lý...',
-                                        text: `Đang ${action} bài viết, vui lòng đợi...`,
-                                        icon: 'info',
-                                        allowOutsideClick: false,
-                                        allowEscapeKey: false,
-                                        showConfirmButton: false,
-                                        didOpen: () => {
-                                            Swal.showLoading();
-                                        }
-                                    });
-                                    form.submit();
-                                }
-                            });
-                        @endif
-                    });
-                });
-
-                // Xử lý nút xin duyệt lại
-                document.querySelectorAll('.request-review-btn').forEach(button => {
-                    button.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const form = this.closest('form');
-                        const articleId = this.getAttribute('data-article-id');
-
-                        // Kiểm tra tài khoản bị khóa
-                        @if (isset($isBanned) && $isBanned)
-                            showSweetAlert({
-                                icon: 'error',
-                                title: 'Không thể thực hiện!',
-                                html: '<div class="text-start"><p><strong>Tài khoản của bạn đã bị tạm khóa đến {{ $banEndTime }}.</strong></p>' +
-                                    '<p>Bạn không thể gửi lại bài viết để xin duyệt trong thời gian này.</p>' +
-                                    '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
-                                confirmButtonText: 'Tôi đã hiểu',
-                                confirmButtonColor: '#3085d6'
-                            });
-                        @else
-                            showSweetAlert({
-                                title: 'Xin duyệt lại?',
-                                text: 'Bài viết sẽ được gửi lại để xin duyệt. Bạn có muốn tiếp tục không?',
-                                icon: 'question',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Gửi lại',
-                                cancelButtonText: 'Hủy'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // Hiển thị thông báo đang xử lý
-                                    showSweetAlert({
-                                        title: 'Đang xử lý...',
-                                        text: 'Đang gửi lại bài viết để xin duyệt, vui lòng đợi...',
-                                        icon: 'info',
-                                        allowOutsideClick: false,
-                                        allowEscapeKey: false,
-                                        showConfirmButton: false,
-                                        didOpen: () => {
-                                            Swal.showLoading();
-                                        }
-                                    });
-                                    form.submit();
-                                }
-                            });
-                        @endif
-                    });
-                });
-
-                // Xử lý nút thêm bài viết mới khi tài khoản bị khóa
-                @if (isset($isBanned) && $isBanned)
-                    const addNewArticleBtn = document.getElementById('addNewArticleBtn');
-                    if (addNewArticleBtn) {
-                        addNewArticleBtn.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            showSweetAlert({
-                                icon: 'error',
-                                title: 'Không thể thực hiện!',
-                                html: '<div class="text-start"><p><strong>Tài khoản của bạn đã bị tạm khóa đến {{ $banEndTime }}.</strong></p>' +
-                                    '<p>Bạn không thể thêm bài viết mới trong thời gian này.</p>' +
-                                    '<p>Vui lòng liên hệ quản trị viên để được hỗ trợ.</p></div>',
-                                confirmButtonText: 'Tôi đã hiểu',
-                                confirmButtonColor: '#3085d6'
-                            });
-                        });
+                fetch(`{{ route('author.articles.index') }}?${cacheKey}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    signal: controller.signal
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
-                @endif
+                    return response.json();
+                })
+                .then(data => {
+                    // Lưu vào cache
+                    searchCache.set(cacheKey, data);
+                    updateTable(data);
+                    currentRequest = null;
+                })
+                .catch(error => {
+                    if (error.name === 'AbortError') {
+                        return;
+                    }
+                    console.error('Error:', error);
+                    articlesTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-danger">Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại.</td></tr>';
+                    currentRequest = null;
+                });
+            }
+
+            // Debounce function để tránh gọi API quá nhiều
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            // Sử dụng debounce với thời gian 300ms
+            const debouncedFetchArticles = debounce(fetchArticles, 300);
+
+            // Thêm event listener cho các bộ lọc
+            [articleFilter, categoryFilter, startDate, endDate].forEach(element => {
+                element.addEventListener('change', debouncedFetchArticles);
             });
-        </script>
-    @endsection
+
+            // Thêm event listener cho nút tìm kiếm
+            searchButton.addEventListener('click', fetchArticles);
+
+            // Thêm event listener cho các ô tìm kiếm với real-time search
+            searchInput.addEventListener('input', debouncedFetchArticles);
+            categorySearchInput.addEventListener('input', debouncedFetchArticles);
+
+            // Xử lý nút reset
+            resetButton.addEventListener('click', function() {
+                filterForm.reset();
+                searchInput.value = '';
+                categorySearchInput.value = '';
+                searchCache.clear(); // Xóa cache khi reset
+                fetchArticles();
+            });
+
+            // Xử lý phân trang
+            document.addEventListener('click', function(e) {
+                const paginationLink = e.target.closest('.pagination a');
+                if (!paginationLink) return;
+
+                e.preventDefault();
+                const url = paginationLink.href;
+                const cacheKey = new URL(url).search.substring(1); // Bỏ dấu ? ở đầu
+
+                if (searchCache.has(cacheKey)) {
+                    updateTable(searchCache.get(cacheKey));
+                    return;
+                }
+
+                // Hiển thị loading khi chuyển trang
+                showLoading();
+
+                fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    searchCache.set(cacheKey, data);
+                    updateTable(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    articlesTableBody.innerHTML = '<tr><td colspan="9" class="text-center text-danger">Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại.</td></tr>';
+                });
+            });
+
+            // Xử lý các nút thao tác trong bảng
+            function initializeTableEventListeners() {
+                const handleAction = (button, action, message) => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const form = this.closest('form');
+                        const articleTitle = this.dataset.articleTitle;
+
+                        Swal.fire({
+                            title: 'Xác nhận',
+                            text: message,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Đồng ý',
+                            cancelButtonText: 'Hủy'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Hiển thị loading khi thực hiện hành động
+                                showLoading();
+
+                                fetch(form.action, {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    },
+                                    body: new FormData(form)
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Thành công!',
+                                            text: data.message,
+                                            confirmButtonText: 'Đóng'
+                                        }).then(() => {
+                                            searchCache.clear(); // Xóa cache sau khi thay đổi
+                                            fetchArticles();
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Lỗi!',
+                                        text: 'Đã xảy ra lỗi khi thực hiện thao tác. Vui lòng thử lại.',
+                                        confirmButtonText: 'Đóng'
+                                    });
+                                });
+                            }
+                        });
+                    });
+                };
+
+                document.querySelectorAll('.toggle-visibility-btn').forEach(button => {
+                    handleAction(button, 'toggle', `Bạn có chắc chắn muốn ${button.dataset.action} bài viết này?`);
+                });
+
+                document.querySelectorAll('.delete-article-btn').forEach(button => {
+                    handleAction(button, 'delete', `Bạn có chắc chắn muốn xóa bài viết "${button.dataset.articleTitle}"?`);
+                });
+
+                document.querySelectorAll('.request-review-btn').forEach(button => {
+                    handleAction(button, 'review', 'Bạn có chắc chắn muốn gửi yêu cầu duyệt lại bài viết này?');
+                });
+            }
+
+            // Khởi tạo event listeners khi trang được tải
+            initializeTableEventListeners();
+
+            // Tự động tìm kiếm khi trang được tải (nếu có tham số tìm kiếm)
+            if (searchInput.value.trim() || categorySearchInput.value.trim()) {
+                fetchArticles();
+            }
+        });
+    </script>
+@endsection

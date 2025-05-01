@@ -11,17 +11,18 @@ use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ArticleNewController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ArticleUserController;
 use App\Http\Controllers\EditRequestController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Author\AuthorDashboard;
 use App\Http\Controllers\CategoryUserController;
-use App\Http\Controllers\CategoryAuthorController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Author\AuthorController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\CategoryAuthorController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\User\ArticleTagController;
@@ -43,7 +44,6 @@ use App\Http\Controllers\User\UserController as UserUserController;
 use App\Http\Controllers\Moderator\ModeratorDashboardController;
 use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
 use App\Http\Controllers\Admin\ArticleSaveController as AdminArticleSaveController;
-
 use App\Http\Controllers\Author\ArticleSaveController as AuthorArticleSaveController;
 
 use App\Http\Controllers\Moderator\ArticleSaveController as ModeratorArticleSaveController;
@@ -56,6 +56,9 @@ use App\Http\Controllers\Moderator\ArticleViewModeratorController as ModeratorAr
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
+Route::get('/suggestions', [HomeController::class, 'suggestions'])->name('suggestions');
+Route::get('/category-suggestions', [HomeController::class, 'categorySuggestions'])->name('category.suggestions');
+Route::get('/tag-suggestions', [HomeController::class, 'tagSuggestions'])->name('tag.suggestions');
 // dat them
 
 
@@ -108,6 +111,7 @@ Route::get('/danh-muc/{categorySlug}/tac-gia/{authorId}', [CategoryAuthorControl
 
 Route::get('/tags/{tag}', [ArticleTagController::class, 'index'])->name('tags.shows');
 
+Route::get('/bai-viet-moi-nhat', [ArticleNewController::class, 'index'])->name('article.news');
 
 
 
@@ -318,6 +322,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:2'])->prefix('author')->group(function () {
 
     Route::get('/dashboard', [AuthorDashboard::class, 'index'])->name('author.dashboard');
+    Route::get('/dashboard/filter', [AuthorDashboard::class, 'filterData'])->name('author.dashboard.filter');
 
     Route::get('/profile-setting', function () {
         return view('author.profile-setting');
@@ -503,6 +508,8 @@ Route::middleware(['auth', 'role:1'])->prefix('admin')->group(function () {
     // 🏠 Admin Dashboard - Thay đổi route này để gọi đến AdminController
     Route::get('/dashboard', [AdminController::class, 'dashboard'])
         ->name('admin.dashboard');
+        // Admin Dashboard filter route (for AJAX requests)
+     Route::post('/admin/dashboard/filter', [App\Http\Controllers\Admin\AdminController::class, 'filterData'])->name('admin.dashboard.filter');
 
     Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile');
 
