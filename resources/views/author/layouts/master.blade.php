@@ -57,6 +57,25 @@
 </div>
 
 @include('author.layouts.partials.js')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const avatarUpload = document.getElementById('avatarUpload');
+        const avatarPreview = document.getElementById('avatarPreview');
+
+        if (avatarUpload && avatarPreview) {
+            avatarUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        avatarPreview.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    });
+</script>
 
 @yield('scripts')
 

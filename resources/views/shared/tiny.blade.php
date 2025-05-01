@@ -381,7 +381,11 @@
                                                     'X-CSRF-TOKEN': document
                                                         .querySelector(
                                                             'meta[name="csrf-token"]'
+<<<<<<< HEAD
                                                             ).getAttribute(
+=======
+                                                        ).getAttribute(
+>>>>>>> 222f9abf2b4ff93daa12201b35094085be9e8e14
                                                             'content')
                                                 },
                                                 body: formData
@@ -396,7 +400,11 @@
                                                     .activeEditor.getBody()
                                                     .querySelectorAll(
                                                         `img[data-paste-id="${imgId}"]`
+<<<<<<< HEAD
                                                         );
+=======
+                                                    );
+>>>>>>> 222f9abf2b4ff93daa12201b35094085be9e8e14
                                                 placeholders.forEach(placeholder => {
                                                     // Lưu lại các thuộc tính kích thước và style
                                                     const width = placeholder
@@ -421,7 +429,11 @@
                                                     placeholder.classList
                                                         .remove(
                                                             'waiting-moderation'
+<<<<<<< HEAD
                                                             );
+=======
+                                                        );
+>>>>>>> 222f9abf2b4ff93daa12201b35094085be9e8e14
 
                                                     // Khôi phục các thuộc tính kích thước và style
                                                     if (width) placeholder
@@ -457,7 +469,11 @@
                                                     .activeEditor.getBody()
                                                     .querySelectorAll(
                                                         `img[data-paste-id="${imgId}"]`
+<<<<<<< HEAD
                                                         );
+=======
+                                                    );
+>>>>>>> 222f9abf2b4ff93daa12201b35094085be9e8e14
                                                 placeholders.forEach(placeholder => {
                                                     if (placeholder
                                                         .parentNode) {
@@ -821,7 +837,11 @@
                     if (window.disableAutoImageModeration && !window.userInitiatedImageScan) {
                         console.log(
                             'Tự động kiểm duyệt bị vô hiệu hóa và không phải do người dùng khởi tạo, bỏ qua việc quét ảnh'
+<<<<<<< HEAD
                             );
+=======
+                        );
+>>>>>>> 222f9abf2b4ff93daa12201b35094085be9e8e14
                         return;
                     }
 
@@ -839,7 +859,11 @@
                     // Nếu đang có ảnh đang tải lên qua upload handler, bỏ qua việc quét
                     if (window.uploadingImages && window.uploadingImages > 0) {
                         console.log('Đang có ' + window.uploadingImages +
+<<<<<<< HEAD
                         ' ảnh đang tải lên, bỏ qua việc quét');
+=======
+                            ' ảnh đang tải lên, bỏ qua việc quét');
+>>>>>>> 222f9abf2b4ff93daa12201b35094085be9e8e14
                         return;
                     }
 
@@ -1070,7 +1094,11 @@
                                                                 .location);
                                                             sameImg.setAttribute(
                                                                 'data-moderated', 'true'
+<<<<<<< HEAD
                                                                 );
+=======
+                                                            );
+>>>>>>> 222f9abf2b4ff93daa12201b35094085be9e8e14
                                                             sameImg.setAttribute(
                                                                 'data-no-remoderation',
                                                                 'true');
@@ -1359,7 +1387,11 @@
                                         // Đánh dấu ảnh đã được tải lên
                                         img.setAttribute('data-moderated', 'true');
                                         img.setAttribute('data-no-remoderation',
+<<<<<<< HEAD
                                         'true');
+=======
+                                            'true');
+>>>>>>> 222f9abf2b4ff93daa12201b35094085be9e8e14
                                         img.setAttribute('moderated', 'true');
                                         img.classList.add('pasted-from-word');
                                         img.classList.remove('waiting-moderation');
@@ -1697,7 +1729,11 @@
                             .userInitiatedImageScan) {
                             console.log(
                                 'Tự động kiểm duyệt bị vô hiệu hóa (trang edit) và không phải do người dùng khởi tạo, bỏ qua quét ảnh'
+<<<<<<< HEAD
                                 );
+=======
+                            );
+>>>>>>> 222f9abf2b4ff93daa12201b35094085be9e8e14
                         }
                     }, timeoutDuration);
                 });
@@ -2572,7 +2608,7 @@
                     // Hiển thị loading state
                     avatarPreview.style.opacity = '0.5';
 
-                    fetch('{{ route("profile.update.avatar") }}', {
+                    fetch('{{ route("profile.upload-avatar") }}', {
                         method: 'POST',
                         body: formData
                     })
@@ -2612,7 +2648,6 @@
         }
     });
 </script> --}}
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const avatarInput = document.getElementById('avatarUpload');
@@ -2667,7 +2702,7 @@
                             alertDiv.innerHTML = `
                                     ${error.message}
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                        `;
+                                    `;                                                                      
                             document.querySelector('.box-body').prepend(alertDiv);
                         })
                         .finally(() => {
@@ -2680,6 +2715,7 @@
         }
     });
 </script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -170,33 +170,33 @@
                                         const avatarInput = document.getElementById('avatarUpload');
                                         const avatarPreview = document.getElementById('avatarPreview');
                                         const widgetUserImage = document.querySelector('.widget-user-image');
-
+                                    
                                         // Toggle profile form
                                         toggle.addEventListener('click', function() {
                                             form.style.display = form.style.display === 'none' ? 'block' : 'none';
                                             chevron.style.transform = form.style.display === 'none' ? 'rotate(0deg)' : 'rotate(180deg)';
                                         });
-
+                                    
                                         // Hide form on successful submission
                                         if (document.querySelector('.alert-success')) {
                                             form.style.display = 'none';
                                             chevron.style.transform = 'rotate(0deg)';
                                         }
-
+                                    
                                         // Handle avatar upload
                                         widgetUserImage.addEventListener('click', function() {
                                             avatarInput.click();
                                         });
-
+                                    
                                         avatarInput.addEventListener('change', function() {
                                             if (this.files && this.files[0]) {
                                                 const formData = new FormData();
                                                 formData.append('image', this.files[0]);
                                                 formData.append('_token', '{{ csrf_token() }}');
-
+                                    
                                                 // Show loading state
                                                 avatarPreview.style.opacity = '0.5';
-
+                                    
                                                 fetch('{{ route("profile.upload-avatar") }}', {
                                                     method: 'POST',
                                                     body: formData
@@ -204,7 +204,7 @@
                                                 .then(response => response.json())
                                                 .then(data => {
                                                     console.log(data); // Debugging the response
-
+                                    
                                                     if (data.success) {
                                                         avatarPreview.src = data.avatar_url; // Update the avatar with the new URL
                                                     } else {

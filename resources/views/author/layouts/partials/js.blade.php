@@ -36,10 +36,53 @@
         }
     }
 </script>
+{{-- <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const imageUpload = document.getElementById("avatarUpload");
+        const imagePreview = document.getElementById("avatarPreview");
 
+        document.querySelector(".avatar-edit").addEventListener("click", function() {
+            imageUpload.click();
+        });
 
-<script src="https://cdn.tiny.cloud/1/{{ env('TINYMCE_API_KEY') }}/tinymce/7/tinymce.min.js"
-    referrerpolicy="origin"></script>
+        imageUpload.addEventListener("change", function() {
+            if (this.files && this.files[0]) {
+                const formData = new FormData();
+                formData.append("image", this.files[0]); // Attach the image to the FormData
+                formData.append("_token", "{{ csrf_token() }}"); // Add the CSRF token for security
 
-    @include('shared.tiny')
-    @include('shared.processor')
+                // Send the request to the server to upload the image
+                fetch("{{ route('profile.upload-avatar') }}", {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Error uploading the image!");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            // Update the avatar preview with the new image URL
+                            imagePreview.src = data.image_url;
+                        } else {
+                            alert("Error uploading the image.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("An error occurred while uploading the image.");
+                    });
+
+                this.value = ""; // Reset input to allow re-uploading the same file
+            }
+        });
+    });
+</script> --}}
+
+<script src="https://cdn.tiny.cloud/1/{{ env('TINYMCE_API_KEY') }}/tinymce/7/tinymce.min.js" referrerpolicy="origin">
+</script>
+
+ @include('shared.tiny')
+@include('shared.processor')
