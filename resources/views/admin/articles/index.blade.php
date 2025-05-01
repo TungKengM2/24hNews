@@ -132,50 +132,61 @@
 
                         <div class="box-body">
                             <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <form method="GET" action="{{ route('articles.index') }}" id="filter-form">
-                                        <div class="d-flex align-items-center">
-                                            <label for="article_filter" class="me-2 fw-bold">Lọc bài viết:</label>
-                                            <select name="article_filter" class="form-select w-auto me-3" id="article_filter">
-                                                <option value="all" {{ request('article_filter') == 'all' ? 'selected' : '' }}>
-                                                    Tất cả bài viết</option>
-                                                <option value="draft" {{ request('article_filter') == 'draft' ? 'selected' : '' }}>
-                                                    Bản nháp</option>
-                                                <option value="pending" {{ request('article_filter') == 'pending' ? 'selected' : '' }}>
-                                                    Chờ duyệt</option>
-                                                <option value="published" {{ request('article_filter') == 'published' ? 'selected' : '' }}>
-                                                    Đã đăng</option>
-                                                <option value="rejected" {{ request('article_filter') == 'rejected' ? 'selected' : '' }}>
-                                                    Từ chối</option>
-                                                <option value="archived" {{ request('article_filter') == 'archived' ? 'selected' : '' }}>
-                                                    Đã lưu trữ</option>
-                                            </select>
-
-                                            <label for="category_filter" class="me-2 fw-bold">Lọc danh mục:</label>
-                                            <select name="category_filter" class="form-select w-auto" id="category_filter">
-                                                <option value="all" {{ request('category_filter') == 'all' ? 'selected' : '' }}>
-                                                    Tất cả danh mục</option>
-                                                <option value="active" {{ request('category_filter') == 'active' ? 'selected' : '' }}>
-                                                    Danh mục hoạt động</option>
-                                                <option value="inactive" {{ request('category_filter') == 'inactive' ? 'selected' : '' }}>
-                                                    Danh mục bị vô hiệu hóa</option>
-                                                <option value="no_category" {{ request('category_filter') == 'no_category' ? 'selected' : '' }}>
-                                                    Chưa có danh mục</option>
-                                            </select>
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <form method="GET" action="{{ route('articles.index') }}" id="filter-form">
+                                                <div class="row mb-2">
+                                                    <div class="col-md-3">
+                                                        <label for="article_filter" class="form-label fw-bold">Lọc bài viết:</label>
+                                                        <select name="article_filter" class="form-select" id="article_filter">
+                                                            <option value="all" {{ request('article_filter') == 'all' ? 'selected' : '' }}>
+                                                                Tất cả bài viết</option>
+                                                            <option value="draft" {{ request('article_filter') == 'draft' ? 'selected' : '' }}>
+                                                                Bản nháp</option>
+                                                            <option value="pending" {{ request('article_filter') == 'pending' ? 'selected' : '' }}>
+                                                                Chờ duyệt</option>
+                                                            <option value="published" {{ request('article_filter') == 'published' ? 'selected' : '' }}>
+                                                                Đã đăng</option>
+                                                            <option value="rejected" {{ request('article_filter') == 'rejected' ? 'selected' : '' }}>
+                                                                Từ chối</option>
+                                                            <option value="archived" {{ request('article_filter') == 'archived' ? 'selected' : '' }}>
+                                                                Đã lưu trữ</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label for="category_filter" class="form-label fw-bold">Lọc danh mục:</label>
+                                                        <select name="category_filter" class="form-select" id="category_filter">
+                                                            <option value="all" {{ request('category_filter') == 'all' ? 'selected' : '' }}>
+                                                                Tất cả danh mục</option>
+                                                            <option value="active" {{ request('category_filter') == 'active' ? 'selected' : '' }}>
+                                                                Danh mục hoạt động</option>
+                                                            <option value="inactive" {{ request('category_filter') == 'inactive' ? 'selected' : '' }}>
+                                                                Danh mục bị vô hiệu hóa</option>
+                                                            <option value="no_category" {{ request('category_filter') == 'no_category' ? 'selected' : '' }}>
+                                                                Chưa có danh mục</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="start_date" class="form-label fw-bold">Từ ngày:</label>
+                                                        <input type="date" name="start_date" id="start_date" class="form-control"
+                                                            value="{{ request('start_date') }}">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="end_date" class="form-label fw-bold">Đến ngày:</label>
+                                                        <input type="date" name="end_date" id="end_date" class="form-control"
+                                                            value="{{ request('end_date') }}">
+                                                    </div>
+                                                    <div class="col-md-2 d-flex align-items-end">
+                                                        <div class="d-flex justify-content-between w-100">
+                                                            <button type="button" class="btn btn-secondary" id="reset-button">Reset</button>
+                                                            <span class="badge bg-info p-2 fs-6 d-flex align-items-center">Tổng số bài viết: {{ $articles->total() }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
-                                        <div class="d-flex align-items-center mt-2">
-                                            <label for="start_date" class="me-2 fw-bold">Từ ngày:</label>
-                                            <input type="date" name="start_date" id="start_date" class="form-control w-auto me-2"
-                                                value="{{ request('start_date') }}">
-                                            <label for="end_date" class="me-2 fw-bold">Đến ngày:</label>
-                                            <input type="date" name="end_date" id="end_date" class="form-control w-auto me-2"
-                                                value="{{ request('end_date') }}">
-                                            <button type="button" class="btn btn-secondary" id="reset-button">Reset</button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="col-md-6 text-end">
-                                    <span class="badge bg-info">Tổng số: {{ $articles->total() }} bài viết</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -191,7 +202,7 @@
                                             <th class="text-center" width="10%">Tác Giả</th>
                                             <th class="text-center" width="10%">Lượt Xem</th>
                                             <th class="text-center" width="10%">Tags</th>
-                                            <th class="text-center" width="10%">Thời Gian Tạo</th>
+                                            <th class="text-center" width="10%">Thời Gian</th>
                                             {{-- <th width="10%">Nội Dung Nhạy Cảm</th> --}}
                                             <th class="text-center" width="20%">Thao Tác</th>
                                         </tr>
