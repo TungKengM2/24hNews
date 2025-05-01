@@ -1,4 +1,3 @@
-
 @php
     // Đếm số bài viết đang chờ duyệt
     $pendingArticlesCount = \App\Models\Article::where('status', 'pending')->count();

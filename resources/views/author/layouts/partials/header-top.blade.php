@@ -52,12 +52,16 @@
                                     'default' => ['fa-info-circle', 'text-info', $notification->data['message'] ?? ''],
                                 ];
                                 [$icon, $color, $message] = $icons[$type] ?? $icons['default'];
+
+                                // Lấy article_id từ notification data
+                                $articleId = isset($notification->data['article_id']) ? $notification->data['article_id'] : null;
+                                $articleUrl = $articleId ? url("/articles/{$articleId}") : '';
                             @endphp
 
                             <li class="notification-item p-3" id="notification-{{ $notification->id }}"
                                 style="border-bottom: 1px solid #f0f0f0;">
                                 <a href="#"
-                                    onclick="openNotification('{{ $notification->id }}', '{{ addslashes($message) }}'); return false;"
+                                    onclick="openNotification('{{ $notification->id }}', '{{ addslashes($message) }}', '{{ $articleUrl }}', {{ $articleId ? 'true' : 'false' }}); return false;"
                                     style="font-size: 14px; display: block; padding: 10px; color: #333; text-decoration: none;">
                                     <div class="d-flex align-items-start">
                                         <div class="flex-shrink-0 me-3">
@@ -168,8 +172,10 @@
                         <!-- Nội dung thông báo sẽ được thêm vào đây -->
                     </div>
                     <div style="padding: 15px; border-top: 1px solid #dee2e6; text-align: right;">
-                        <button onclick="closePopup()"
-                            style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Đóng</button>
+                        <button id="viewArticleButton" onclick="handleAction()" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px; display: none;">Xem bài viết</button>
+                        <button onclick="closePopup()" style="padding: 8px 16px; background: #0088ff; color: white; border: none; border-radius: 4px; cursor: pointer;">Xem bài viết</button>
+                        <button onclick="closePopup()" style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Đóng</button>
+
                     </div>
                 </div>
             </div>
@@ -218,9 +224,18 @@
 <script>
     feather.replace();
 
-    function openNotification(id, message) {
+    let currentArticleUrl = null;
+
+    function openNotification(id, message, articleUrl, hasArticle) {
         document.getElementById("customPopupContent").innerHTML = message;
         document.getElementById("customPopup").style.display = "block";
+        currentArticleUrl = articleUrl;
+
+        // Ẩn/hiện nút "Xem bài viết" dựa vào hasArticle
+        const viewButton = document.getElementById("viewArticleButton");
+        if (viewButton) {
+            viewButton.style.display = hasArticle ? "inline-block" : "none";
+        }
 
         fetch(`/notifications/${id}/read`, {
                 method: "POST",
@@ -233,20 +248,18 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Xóa thông báo khỏi danh sách
                     let notificationItem = document.getElementById(`notification-${id}`);
                     if (notificationItem) {
                         notificationItem.remove();
                     }
 
-                    // Cập nhật số lượng thông báo
                     let countElement = document.getElementById("notificationCount");
                     if (countElement) {
                         let count = parseInt(countElement.innerText, 10) || 0;
                         if (count > 1) {
                             countElement.innerText = count - 1;
                         } else {
-                            countElement.remove(); // Nếu hết thông báo thì ẩn badge
+                            countElement.remove();
                         }
                     }
                 } else {
@@ -258,5 +271,11 @@
 
     function closePopup() {
         document.getElementById("customPopup").style.display = "none";
+    }
+
+    function handleAction() {
+        if (currentArticleUrl) {
+            window.location.href = currentArticleUrl;
+        }
     }
 </script>
