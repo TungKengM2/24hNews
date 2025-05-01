@@ -156,6 +156,10 @@
                                             <span
                                                 class="badge bg-dark rounded-pill">{{ $article->approver->username ?? 'Chưa được duyệt' }}</span>
                                         </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><i class="mdi mdi-clock-outline"></i> Thời gian tạo:</span>
+                                            <span class="badge bg-info rounded-pill">{{ $article->created_at->format('d/m/Y H:i') }}</span>
+                                        </li>
                                         <li class="list-group-item">
                                             <span><i class="mdi mdi-tag-multiple"></i> Thẻ:</span>
                                             <div class="mt-2">
@@ -399,7 +403,7 @@
         transition: width 0.3s ease;
         float: left;
     }
-    
+
     .criteria-count {
         background-color: #f8f9fa;
         border-radius: 0 0 5px 5px;

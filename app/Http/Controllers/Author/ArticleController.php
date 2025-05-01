@@ -37,38 +37,73 @@ class ArticleController extends Controller
 
     public function index(Request $request)
     {
-        $filter = $request->input('filter', 'all');
+        // Lấy thông tin tài khoản bị cấm
+        $isBanned = auth()->user()->is_banned;
+        $banEndTime = auth()->user()->ban_end_time;
 
-        $articles = Article::with([
-            'author',
-            'category',
-            'approver',
-            'tags',
-        ])
+        // Lấy các tham số lọc
+        $articleFilter = $request->input('article_filter', 'all');
+        $categoryFilter = $request->input('category_filter', 'all');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $searchTerm = $request->input('search');
+        $categorySearchTerm = $request->input('category');
+
+        // Xây dựng query cơ bản
+        $query = Article::with(['author', 'category', 'subcategory', 'tags'])
             ->where('author_id', auth()->id())
-            ->when($filter !== 'all', function ($query) use ($filter) {
-                if (in_array($filter, ['active', 'inactive'])) {
-                    $query->whereHas(
-                        'category',
-                        function ($q) use ($filter) {
-                            $q->where('is_active', $filter === 'active');
-                        }
-                    );
-                } elseif ($filter === 'no_category') {
-                    $query->whereNull('category_id');
-                } elseif ($filter === 'archived') {
-                    $query->where('status', 'archived');
-                }
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->orderBy('created_at', 'desc');
 
-        // Kiểm tra xem tác giả có bị cấm không
-        $user = auth()->user();
-        $isBanned = $user->banned_until && now()->lessThan($user->banned_until);
-        $banEndTime = $isBanned ? $user->banned_until->format('H:i d/m/Y') : null;
+        // Tìm kiếm theo tiêu đề
+        if ($searchTerm) {
+            $query->where('title', 'like', $searchTerm . '%');
+        }
 
-        return view('author.articles.index', compact('articles', 'filter', 'isBanned', 'banEndTime'));
+        // Tìm kiếm theo danh mục
+        if ($categorySearchTerm) {
+            $query->whereHas('category', function ($q) use ($categorySearchTerm) {
+                $q->where('name', 'like', $categorySearchTerm . '%');
+            });
+        }
+
+        // Lọc theo trạng thái bài viết
+        if ($articleFilter !== 'all') {
+            $query->where('status', $articleFilter);
+        }
+
+        // Lọc theo trạng thái danh mục
+        if ($categoryFilter !== 'all') {
+            if ($categoryFilter === 'active') {
+                $query->whereHas('category', function ($q) {
+                    $q->where('is_active', true);
+                });
+            } elseif ($categoryFilter === 'inactive') {
+                $query->whereHas('category', function ($q) {
+                    $q->where('is_active', false);
+                });
+            } elseif ($categoryFilter === 'no_category') {
+                $query->whereNull('category_id');
+            }
+        }
+
+        // Lọc theo khoảng thời gian
+        if ($startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
+        }
+
+        // Phân trang
+        $articles = $query->paginate(10);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('author.articles.index', compact('articles', 'isBanned', 'banEndTime'))->render()
+            ]);
+        }
+
+        return view('author.articles.index', compact('articles', 'isBanned', 'banEndTime'));
     }
 
     public function update(Request $request, Article $article)
@@ -989,25 +1024,36 @@ class ArticleController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('query');
+        $categoryQuery = $request->input('category');
 
-        $articlesQuery = Article::with(['category', 'tags'])
+        $articlesQuery = Article::with(['category', 'subcategory', 'tags'])
             ->where('author_id', auth()->id())
             ->orderBy('created_at', 'desc');
 
         if ($query) {
-            $articlesQuery->where(function ($q) use ($query) {
-                $q->where('title', 'like', "%{$query}%")
-                    ->orWhere('content', 'like', "%{$query}%");
+            // Ưu tiên tìm kiếm từ đầu chuỗi để tăng độ chính xác
+            $articlesQuery->where('title', 'like', $query . '%');
+        }
+
+        if ($categoryQuery) {
+            $articlesQuery->whereHas('category', function ($q) use ($categoryQuery) {
+                $q->where('name', 'like', $categoryQuery . '%');
             });
         }
-        //            dd($articlesQuery);
+
         $articles = $articlesQuery->paginate(10);
 
-        return response()->json([
-            'data' => $articles->items(),
-            'links' => $articles->links()->render(),
-            'total' => $articles->total(),
-        ]);
+        // Trả về kết quả dạng JSON cho AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'data' => $articles->items(),
+                'links' => $articles->links()->render(),
+                'total' => $articles->total(),
+            ]);
+        }
+
+        // Trả về view nếu không phải AJAX request
+        return view('author.articles.index', compact('articles'));
     }
 
 //    public function updateStatus(Request $request, $id)

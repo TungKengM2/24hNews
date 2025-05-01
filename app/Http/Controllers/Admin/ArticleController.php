@@ -39,44 +39,73 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $filter = $request->input('filter', 'all'); // Mặc định hiển thị tất cả bài viết
+        $articleFilter = $request->input('article_filter', 'all');
+        $categoryFilter = $request->input('category_filter', 'all');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $search = $request->input('search');
+        $category = $request->input('category');
+        $author = $request->input('author');
 
         $query = Article::with(['author', 'category', 'approver', 'tags'])
-            // ->where('author_id', auth()->id()) // Chỉ lấy bài viết của admin đang đăng nhập
             ->orderBy('created_at', 'desc');
 
-        if ($filter === 'inactive') {
-            $query->whereHas('category', function ($q) {
-                $q->where('is_active', false);
-            });
-        } elseif ($filter === 'active') {
+        // Lọc theo trạng thái bài viết
+        if ($articleFilter !== 'all') {
+            $query->where('status', $articleFilter);
+        }
+
+        // Lọc theo trạng thái danh mục
+        if ($categoryFilter === 'active') {
             $query->whereHas('category', function ($q) {
                 $q->where('is_active', true);
             });
-        } elseif ($filter === 'no_category') {
+        } elseif ($categoryFilter === 'inactive') {
+            $query->whereHas('category', function ($q) {
+                $q->where('is_active', false);
+            });
+        } elseif ($categoryFilter === 'no_category') {
             $query->whereNull('category_id');
-        } elseif ($filter === 'archived') {
-            $query->where('status', 'archived');
-        } elseif ($filter === 'published') {
-            $query->where('status', 'published');
-        } elseif ($filter === 'draft') {
-            $query->where('status', 'draft');
-        } elseif ($filter === 'pending') {
-            $query->where('status', 'pending');
         }
 
         // Xử lý tìm kiếm theo từ khóa nếu có
-        if ($request->has('search') && !empty($request->search)) {
-            $searchTerm = $request->search;
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('title', 'like', "%{$searchTerm}%")
-                    ->orWhere('content', 'like', "%{$searchTerm}%");
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', $search . '%')
+                    ->orWhere('title', 'like', '% ' . $search . '%');
             });
+        }
+
+        // Xử lý tìm kiếm theo danh mục nếu có
+        if ($category) {
+            $query->whereHas('category', function ($q) use ($category) {
+                $q->where('name', 'like', $category . '%');
+            });
+        }
+
+        // Xử lý tìm kiếm theo tác giả nếu có
+        if ($author) {
+            $query->whereHas('author', function ($q) use ($author) {
+                $q->where('username', 'like', $author . '%');
+            });
+        }
+
+        // Xử lý lọc theo khoảng thời gian
+        if ($startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
         }
 
         $articles = $query->paginate(10);
 
-        return view('admin.articles.index', compact('articles', 'filter'));
+        if ($request->ajax()) {
+            $view = view('admin.articles.index', compact('articles', 'articleFilter', 'categoryFilter'))->render();
+            return response()->json(['html' => $view]);
+        }
+
+        return view('admin.articles.index', compact('articles', 'articleFilter', 'categoryFilter'));
     }
 
     /**

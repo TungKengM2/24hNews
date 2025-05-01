@@ -59,9 +59,9 @@
                                 <div class="input-group me-2">
                                     <input type="text" id="searchInput" class="form-control"
                                         placeholder="Tìm kiếm bài viết..." value="{{ request('search') }}">
-                                    <input type="text" id="categoryFilter" class="form-control" 
+                                    <input type="text" id="categoryFilter" class="form-control"
                                         placeholder="Tìm kiếm danh mục..." style="max-width: 200px;">
-                                    <input type="text" id="authorFilter" class="form-control" 
+                                    <input type="text" id="authorFilter" class="form-control"
                                         placeholder="Tìm kiếm tác giả..." style="max-width: 200px;">
                                     <button type="button" class="btn btn-primary" id="searchButton">
                                         <i class="fa fa-search"></i>
@@ -69,52 +69,7 @@
                                 </div>
                             </div>
 
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    const searchInput = document.getElementById('searchInput');
-                                    const categoryFilter = document.getElementById('categoryFilter');
-                                    const authorFilter = document.getElementById('authorFilter');
-                                    const searchButton = document.getElementById('searchButton');
-                                    const articleRows = document.querySelectorAll('tbody tr');
 
-                                    function performSearch() {
-                                        const searchTerm = searchInput.value.toLowerCase().trim();
-                                        const categorySearchTerm = categoryFilter.value.toLowerCase().trim();
-                                        const authorSearchTerm = authorFilter.value.toLowerCase().trim();
-                                        
-                                        articleRows.forEach(row => {
-                                            const title = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                                            const category = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
-                                            const author = row.querySelector('td:nth-child(6)').textContent.toLowerCase();
-                                            
-                                            const matchesTitle = title.includes(searchTerm);
-                                            const matchesCategory = !categorySearchTerm || category.includes(categorySearchTerm);
-                                            const matchesAuthor = !authorSearchTerm || author.includes(authorSearchTerm);
-
-                                            if (matchesTitle && matchesCategory && matchesAuthor) {
-                                                row.style.display = '';
-                                            } else {
-                                                row.style.display = 'none';
-                                            }
-                                        });
-                                    }
-
-                                    // Search on button click
-                                    searchButton.addEventListener('click', performSearch);
-
-                                    // Search on Enter key press
-                                    [searchInput, categoryFilter, authorFilter].forEach(input => {
-                                        input.addEventListener('keyup', function(event) {
-                                            if (event.key === 'Enter') {
-                                                performSearch();
-                                            }
-                                        });
-                                        
-                                        // Real-time search as user types
-                                        input.addEventListener('input', performSearch);
-                                    });
-                                });
-                            </script>
                         </div>
 
                         <style>
@@ -180,24 +135,42 @@
                                 <div class="col-md-6">
                                     <form method="GET" action="{{ route('articles.index') }}" id="filter-form">
                                         <div class="d-flex align-items-center">
-                                            <label for="filter" class="me-2 fw-bold">Lọc bài viết:</label>
-                                            <select name="filter" class="form-select w-auto"
-                                                onchange="document.getElementById('filter-form').submit()">
-                                                <option value="all" {{ request('filter') == 'all' ? 'selected' : '' }}>
+                                            <label for="article_filter" class="me-2 fw-bold">Lọc bài viết:</label>
+                                            <select name="article_filter" class="form-select w-auto me-3" id="article_filter">
+                                                <option value="all" {{ request('article_filter') == 'all' ? 'selected' : '' }}>
                                                     Tất cả bài viết</option>
-                                                <option value="active"
-                                                    {{ request('filter') == 'active' ? 'selected' : '' }}>Bài viết có danh
-                                                    mục hoạt động</option>
-                                                <option value="inactive"
-                                                    {{ request('filter') == 'inactive' ? 'selected' : '' }}>Bài viết có
-                                                    danh
-                                                    mục bị vô hiệu hóa</option>
-
-
-                                                <option value="archived"
-                                                    {{ request('filter') == 'archived' ? 'selected' : '' }}>Bài viết
-                                                    đã ẩn</option>
+                                                <option value="draft" {{ request('article_filter') == 'draft' ? 'selected' : '' }}>
+                                                    Bản nháp</option>
+                                                <option value="pending" {{ request('article_filter') == 'pending' ? 'selected' : '' }}>
+                                                    Chờ duyệt</option>
+                                                <option value="published" {{ request('article_filter') == 'published' ? 'selected' : '' }}>
+                                                    Đã đăng</option>
+                                                <option value="rejected" {{ request('article_filter') == 'rejected' ? 'selected' : '' }}>
+                                                    Từ chối</option>
+                                                <option value="archived" {{ request('article_filter') == 'archived' ? 'selected' : '' }}>
+                                                    Đã lưu trữ</option>
                                             </select>
+
+                                            <label for="category_filter" class="me-2 fw-bold">Lọc danh mục:</label>
+                                            <select name="category_filter" class="form-select w-auto" id="category_filter">
+                                                <option value="all" {{ request('category_filter') == 'all' ? 'selected' : '' }}>
+                                                    Tất cả danh mục</option>
+                                                <option value="active" {{ request('category_filter') == 'active' ? 'selected' : '' }}>
+                                                    Danh mục hoạt động</option>
+                                                <option value="inactive" {{ request('category_filter') == 'inactive' ? 'selected' : '' }}>
+                                                    Danh mục bị vô hiệu hóa</option>
+                                                <option value="no_category" {{ request('category_filter') == 'no_category' ? 'selected' : '' }}>
+                                                    Chưa có danh mục</option>
+                                            </select>
+                                        </div>
+                                        <div class="d-flex align-items-center mt-2">
+                                            <label for="start_date" class="me-2 fw-bold">Từ ngày:</label>
+                                            <input type="date" name="start_date" id="start_date" class="form-control w-auto me-2"
+                                                value="{{ request('start_date') }}">
+                                            <label for="end_date" class="me-2 fw-bold">Đến ngày:</label>
+                                            <input type="date" name="end_date" id="end_date" class="form-control w-auto me-2"
+                                                value="{{ request('end_date') }}">
+                                            <button type="button" class="btn btn-secondary" id="reset-button">Reset</button>
                                         </div>
                                     </form>
                                 </div>
@@ -218,11 +191,12 @@
                                             <th class="text-center" width="10%">Tác Giả</th>
                                             <th class="text-center" width="10%">Lượt Xem</th>
                                             <th class="text-center" width="10%">Tags</th>
+                                            <th class="text-center" width="10%">Thời Gian Tạo</th>
                                             {{-- <th width="10%">Nội Dung Nhạy Cảm</th> --}}
                                             <th class="text-center" width="20%">Thao Tác</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="articles-table-body">
                                         @forelse ($articles as $article)
                                             <tr>
                                                 <td class="text-center">{{ $article->article_id }}</td>
@@ -305,6 +279,9 @@
                                                         @endif
                                                     </div>
                                                 </td>
+                                                <td class="text-center">
+                                                    {{ $article->created_at->format('d/m/Y H:i') }}
+                                                </td>
                                                 <td>
                                                     <a href="{{ route('articles.show', $article) }}"
                                                         class="btn btn-info btn-sm" title="Xem chi tiết"><i
@@ -339,7 +316,7 @@
                                                         method="POST" class="d-inline delete-article-form">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" class="btn btn-danger btn-sm delete-article-btn" 
+                                                        <button type="button" class="btn btn-danger btn-sm delete-article-btn"
                                                             title="Xóa" data-id="{{ $article->article_id }}" data-title="{{ $article->title }}">
                                                             <i class="si-trash si"></i>
                                                         </button>
@@ -354,7 +331,7 @@
                                             @endforelse
                                         </tbody>
                                     </table>
-                                    <div class="d-flex justify-content-end mt-4">
+                                    <div class="d-flex justify-content-end mt-4" id="pagination-links">
                                         {{ $articles->appends(request()->query())->links('pagination::bootstrap-5') }}
                                     </div>
                                 </div>
@@ -418,7 +395,7 @@
                         const articleId = this.getAttribute('data-id');
                         const articleTitle = this.getAttribute('data-title');
                         const form = this.closest('form');
-                        
+
                         Swal.fire({
                             title: 'Xác nhận xóa?',
                             html: `Bạn có chắc chắn muốn xóa bài viết <strong>${articleTitle}</strong> không?<br>Hành động này không thể hoàn tác!`,
@@ -430,18 +407,6 @@
                             cancelButtonText: 'Hủy'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // Hiển thị thông báo đang xử lý
-                                Swal.fire({
-                                    title: 'Đang xử lý...',
-                                    text: 'Đang xóa bài viết, vui lòng đợi...',
-                                    icon: 'info',
-                                    allowOutsideClick: false,
-                                    allowEscapeKey: false,
-                                    showConfirmButton: false,
-                                    didOpen: () => {
-                                        Swal.showLoading();
-                                    }
-                                });
                                 form.submit();
                             }
                         });
@@ -453,7 +418,7 @@
                     button.addEventListener('click', function() {
                         const action = this.getAttribute('data-action');
                         const form = this.closest('form');
-                        
+
                         Swal.fire({
                             title: `${action.charAt(0).toUpperCase() + action.slice(1)} bài viết?`,
                             text: `Bạn có chắc chắn muốn ${action} bài viết này không?`,
@@ -465,23 +430,294 @@
                             cancelButtonText: 'Hủy'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // Hiển thị thông báo đang xử lý
-                                Swal.fire({
-                                    title: 'Đang xử lý...',
-                                    text: `Đang ${action} bài viết, vui lòng đợi...`,
-                                    icon: 'info',
-                                    allowOutsideClick: false,
-                                    allowEscapeKey: false,
-                                    showConfirmButton: false,
-                                    didOpen: () => {
-                                        Swal.showLoading();
-                                    }
-                                });
                                 form.submit();
                             }
                         });
                     });
                 });
+
+                // Xử lý form lọc với AJAX
+                const filterForm = document.getElementById('filter-form');
+                const articlesTableBody = document.getElementById('articles-table-body');
+                const paginationLinks = document.getElementById('pagination-links');
+                const articleFilter = document.getElementById('article_filter');
+                const categoryFilter = document.getElementById('category_filter');
+                const startDate = document.getElementById('start_date');
+                const endDate = document.getElementById('end_date');
+                const resetButton = document.getElementById('reset-button');
+                const searchInput = document.getElementById('searchInput');
+                const categorySearchInput = document.getElementById('categoryFilter');
+                const authorSearchInput = document.getElementById('authorFilter');
+                const searchButton = document.getElementById('searchButton');
+
+                // Cache cho kết quả tìm kiếm
+                const searchCache = new Map();
+                let currentRequest = null;
+
+                function showLoading() {
+                    articlesTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="10" class="text-center">
+                                <div class="spinner-border text-primary" role="status" style="width: 2rem; height: 2rem;">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                function updateTable(data) {
+                    if (!data || !data.html) {
+                        console.error('Invalid response data');
+                        return;
+                    }
+
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data.html, 'text/html');
+
+                    const newTableBody = doc.querySelector('#articles-table-body');
+                    const newPagination = doc.querySelector('#pagination-links');
+
+                    if (newTableBody) {
+                        articlesTableBody.innerHTML = newTableBody.innerHTML;
+                    }
+                    if (newPagination) {
+                        paginationLinks.innerHTML = newPagination.innerHTML;
+                    }
+
+                    initializeTableEventListeners();
+                }
+
+                function fetchArticles() {
+                    const formData = new FormData(filterForm);
+                    const params = new URLSearchParams(formData);
+
+                    // Thêm các tham số tìm kiếm vào URL
+                    const searchTerm = searchInput.value.trim();
+                    const categoryTerm = categorySearchInput.value.trim();
+                    const authorTerm = authorSearchInput.value.trim();
+
+                    if (searchTerm) {
+                        params.set('search', searchTerm);
+                    } else {
+                        params.delete('search');
+                    }
+
+                    if (categoryTerm) {
+                        params.set('category', categoryTerm);
+                    } else {
+                        params.delete('category');
+                    }
+
+                    if (authorTerm) {
+                        params.set('author', authorTerm);
+                    } else {
+                        params.delete('author');
+                    }
+
+                    const cacheKey = params.toString();
+
+                    // Kiểm tra cache
+                    if (searchCache.has(cacheKey)) {
+                        updateTable(searchCache.get(cacheKey));
+                        return;
+                    }
+
+                    // Hiển thị loading
+                    showLoading();
+
+                    fetch(`{{ route('articles.index') }}?${params.toString()}`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && data.html) {
+                            searchCache.set(cacheKey, data);
+                            updateTable(data);
+                        } else {
+                            throw new Error('Invalid response format');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        if (!searchCache.has(cacheKey)) {
+                            articlesTableBody.innerHTML = '<tr><td colspan="10" class="text-center text-danger">Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại.</td></tr>';
+                        }
+                    });
+                }
+
+                // Debounce function với thời gian ngắn hơn
+                function debounce(func, wait) {
+                    let timeout;
+                    return function executedFunction(...args) {
+                        const later = () => {
+                            clearTimeout(timeout);
+                            func(...args);
+                        };
+                        clearTimeout(timeout);
+                        timeout = setTimeout(later, wait);
+                    };
+                }
+
+                // Sử dụng debounce với thời gian ngắn hơn (300ms)
+                const debouncedFetchArticles = debounce(fetchArticles, 300);
+
+                // Xử lý các bộ lọc chính
+                [articleFilter, categoryFilter, startDate, endDate].forEach(element => {
+                    element.addEventListener('change', function() {
+                        showLoading();
+                        debouncedFetchArticles();
+                    });
+                });
+
+                // Xử lý tìm kiếm nội dung
+                searchInput.addEventListener('input', debouncedFetchArticles);
+                categorySearchInput.addEventListener('input', debouncedFetchArticles);
+                authorSearchInput.addEventListener('input', debouncedFetchArticles);
+
+                // Xử lý nút tìm kiếm
+                searchButton.addEventListener('click', function() {
+                    showLoading();
+                    fetchArticles();
+                });
+
+                // Xử lý nút reset
+                resetButton.addEventListener('click', function() {
+                    filterForm.reset();
+                    searchInput.value = '';
+                    categorySearchInput.value = '';
+                    authorSearchInput.value = '';
+                    searchCache.clear(); // Xóa cache khi reset
+                    showLoading();
+                    fetchArticles();
+                });
+
+                // Tối ưu sự kiện phân trang
+                document.addEventListener('click', function(e) {
+                    const paginationLink = e.target.closest('.pagination a');
+                    if (!paginationLink) return;
+
+                    e.preventDefault();
+                    const url = paginationLink.href;
+                    const cacheKey = new URL(url).search.substring(1); // Remove the leading '?'
+
+                    if (searchCache.has(cacheKey)) {
+                        updateTable(searchCache.get(cacheKey));
+                        return;
+                    }
+
+                    // Hiển thị loading khi chuyển trang
+                    showLoading();
+
+                    fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && data.html) {
+                            searchCache.set(cacheKey, data);
+                            updateTable(data);
+                        } else {
+                            throw new Error('Invalid response format');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        if (!searchCache.has(cacheKey)) {
+                            articlesTableBody.innerHTML = '<tr><td colspan="10" class="text-center text-danger">Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại.</td></tr>';
+                        }
+                    });
+                });
+
+                // Tối ưu event listeners cho bảng
+                function initializeTableEventListeners() {
+                    const handleAction = (button, action, message) => {
+                        button.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const form = this.closest('form');
+                            const articleTitle = this.dataset.articleTitle;
+
+                            Swal.fire({
+                                title: 'Xác nhận',
+                                text: message,
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Đồng ý',
+                                cancelButtonText: 'Hủy'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Hiển thị loading khi thực hiện hành động
+                                    showLoading();
+
+                                    fetch(form.action, {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        },
+                                        body: new FormData(form)
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Thành công!',
+                                                text: data.message,
+                                                confirmButtonText: 'Đóng'
+                                            }).then(() => {
+                                                searchCache.clear(); // Xóa cache sau khi thay đổi
+                                                fetchArticles();
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Lỗi!',
+                                            text: 'Đã xảy ra lỗi khi thực hiện thao tác. Vui lòng thử lại.',
+                                            confirmButtonText: 'Đóng'
+                                        });
+                                    });
+                                }
+                            });
+                        });
+                    };
+
+                    document.querySelectorAll('.toggle-visibility-btn').forEach(button => {
+                        handleAction(button, 'toggle', `Bạn có chắc chắn muốn ${button.dataset.action} bài viết này?`);
+                    });
+
+                    document.querySelectorAll('.delete-article-btn').forEach(button => {
+                        handleAction(button, 'delete', `Bạn có chắc chắn muốn xóa bài viết "${button.dataset.articleTitle}"?`);
+                    });
+
+                    document.querySelectorAll('.request-review-btn').forEach(button => {
+                        handleAction(button, 'review', 'Bạn có chắc chắn muốn gửi yêu cầu duyệt lại bài viết này?');
+                    });
+                }
+
+                initializeTableEventListeners();
+
+                // Tự động tìm kiếm khi trang được tải (nếu có tham số tìm kiếm)
+                if (searchInput.value.trim() || categorySearchInput.value.trim() || authorSearchInput.value.trim()) {
+                    fetchArticles();
+                }
             });
         </script>
     @endsection
