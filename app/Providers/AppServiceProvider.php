@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\View;
 use App\Services\TinyMCEUploadService;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -41,6 +43,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (!Type::hasType('enum')) {
+            Type::addType('enum', 'Doctrine\DBAL\Types\StringType'); // Hoặc bạn có thể tạo class custom nếu cần
+        }
         Article::observe(ArticleObserver::class);
 
         Paginator::useBootstrap();
