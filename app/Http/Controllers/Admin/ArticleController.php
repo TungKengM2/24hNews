@@ -878,12 +878,28 @@ class ArticleController extends Controller
     }
 
     // duyệt bài viết
-    public function Approves()
+    public function Approves(Request $request)
     {
-        $articles = Article::with(['author', 'category', 'approver', 'tags'])
-            ->where('status', 'pending') // Lọc bài viết có trạng thái pending
-            ->orderBy('created_at', 'desc')
-            ->paginate(5);
+        $query = Article::with(['author', 'category', 'approver', 'tags'])
+            ->where('status', 'pending'); // Lọc bài viết có trạng thái pending
+
+        // Xử lý lọc theo thời gian tùy chỉnh
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        if ($startDate) {
+            $query->whereDate('updated_at', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $query->whereDate('updated_at', '<=', $endDate);
+        }
+
+        $articles = $query->orderBy('updated_at', 'desc')->paginate(5);
+
+        if ($request->ajax()) {
+            return view('admin.articles.approve', compact('articles'));
+        }
 
         return view('admin.articles.approve', compact('articles'));
     }

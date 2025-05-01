@@ -102,12 +102,25 @@
 
                     <div class="box-body">
                         <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <label class="form-label mb-0 me-2">Từ ngày:</label>
+                                    </div>
+                                    <div id="custom_date_range" class="d-flex align-items-center">
+                                        <input type="date" id="start_date" class="form-control form-control-sm me-2" value="{{ request('start_date') }}">
+                                        <span class="me-2">đến</span>
+                                        <input type="date" id="end_date" class="form-control form-control-sm me-2" value="{{ request('end_date') }}">
+                                        <button type="button" id="apply_date_filter" class="btn btn-sm btn-primary" >Áp dụng</button>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-6 text-end">
                                 <span class="badge bg-info">Tổng số: {{ $articles->total() }} bài viết</span>
                             </div>
                         </div>
 
-                        <div class="table-responsive">
+                        <div class="table-responsive" id="articles-container">
                             <table class="table table-bordered table-hover mb-0" style="width:100%">
                                 <thead class="bg-primary text-white">
                                     <tr>
@@ -116,10 +129,11 @@
                                         <th width="10%">Hình Ảnh</th>
                                         <th width="10%">Danh Mục</th>
                                         <th width="10%">Trạng Thái</th>
-                                        <th width="10%">Tác Giả</th>
+                                        <th width="8%">Tác Giả</th>
+                                        <th width="10%">Thời Gian</th>
                                         {{-- <th width="10%">Nội Dung Nhạy Cảm</th> --}}
-                                        <th width="10%">Thẻ</th>
-                                        <th width="20%">Thao Tác</th>
+                                        <th width="8%">Thẻ</th>
+                                        <th width="15%">Thao Tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -166,6 +180,7 @@
                                                 @endswitch
                                             </td>
                                             <td>{{ $article->author->username ?? 'Chưa xác định' }}</td>
+                                            <td>{{ $article->updated_at->format('d/m/Y H:i') }}</td>
                                             {{-- <td class="text-center">
                                                     @if ($article->contains_sensitive_content)
                                                         <span class="badge bg-danger">Có</span>
@@ -247,12 +262,12 @@
                                         </div>
                                         @empty
                                             <tr>
-                                                <td colspan="8" class="text-center">Không có bài viết nào</td>
+                                                <td colspan="9" class="text-center">Không có bài viết nào</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
-                                <div class="d-flex justify-content-end mt-4">
+                                <div class="d-flex justify-content-end mt-4" id="pagination-container">
                                     {{ $articles->links('pagination::bootstrap-5') }}
                                 </div>
 
@@ -440,6 +455,18 @@
 
 @section('styles')
 <style>
+    /* Styles for date filter */
+    #custom_date_range input[type="date"] {
+        height: 31px;
+        font-size: 13px;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.2rem;
+    }
+
+    #custom_date_range {
+        align-items: center;
+    }
+
     /* Styles for verification criteria */
     .verification-criteria {
         background-color: #f8f9fa;
@@ -563,40 +590,113 @@
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Xử lý nút duyệt bài viết với SweetAlert2
-        const approveButtons = document.querySelectorAll('.approve-btn');
+        // Xử lý bộ lọc thời gian
+        $('#apply_date_filter').on('click', function() {
+            fetchArticlesWithFilters(1);
+        });
 
-        approveButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const articleId = this.getAttribute('data-id');
-                const form = document.getElementById('approveForm' + articleId);
+        // Xử lý phân trang bằng Ajax
+        $(document).on('click', '#pagination-container .pagination a', function(e) {
+            e.preventDefault();
 
-                Swal.fire({
-                    title: 'Xác nhận duyệt bài',
-                    text: 'Bạn có chắc chắn muốn duyệt bài viết này không?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Đồng ý, duyệt bài!',
-                    cancelButtonText: 'Hủy'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
+            let page = $(this).attr('href').split('page=')[1];
+            fetchArticlesWithFilters(page);
+        });
+
+        function getFilterParams() {
+            let params = {};
+
+            // Lấy giá trị từ các trường ngày
+            params.start_date = $('#start_date').val();
+            params.end_date = $('#end_date').val();
+
+            return params;
+        }
+
+        function fetchArticlesWithFilters(page) {
+            const params = getFilterParams();
+            params.page = page;
+
+            // Tạo query string từ params
+            const queryString = Object.keys(params)
+                .filter(key => params[key] !== '')
+                .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+                .join('&');
+
+            $.ajax({
+                url: '{{ route("admin.articles.approves") }}?' + queryString,
+                type: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                beforeSend: function() {
+                    // Hiển thị loading nếu cần
+                    $('#articles-container').addClass('opacity-50');
+                },
+                success: function(response) {
+                    // Cập nhật nội dung bảng và phân trang
+                    $('#articles-container').html($(response).find('#articles-container').html());
+                    $('#pagination-container').html($(response).find('#pagination-container').html());
+
+                    // Khởi tạo lại các sự kiện cho các nút trong bảng mới
+                    initializeEvents();
+
+                    // Cập nhật URL trình duyệt mà không reload trang
+                    window.history.pushState({}, '', '{{ route("admin.articles.approves") }}?' + queryString);
+                },
+                complete: function() {
+                    // Ẩn loading
+                    $('#articles-container').removeClass('opacity-50');
+                },
+                error: function(xhr) {
+                    console.error('Lỗi khi tải dữ liệu:', xhr);
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại.',
+                        icon: 'error',
+                        confirmButtonText: 'Đóng'
+                    });
+                }
+            });
+        }
+
+        // Khởi tạo các sự kiện cho các nút trong bảng
+        function initializeEvents() {
+            // Xử lý nút duyệt bài viết với SweetAlert2
+            const approveButtons = document.querySelectorAll('.approve-btn');
+
+            approveButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const articleId = this.getAttribute('data-id');
+                    const form = document.getElementById('approveForm' + articleId);
+
+                    Swal.fire({
+                        title: 'Xác nhận duyệt bài',
+                        text: 'Bạn có chắc chắn muốn duyệt bài viết này không?',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Đồng ý, duyệt bài!',
+                        cancelButtonText: 'Hủy'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
                 });
             });
-        });
 
-        // Xử lý modal xem chi tiết bài viết
-        const detailModals = document.querySelectorAll('[id^="articleDetailModal"]');
+            // Xử lý modal xem chi tiết bài viết
+            const detailModals = document.querySelectorAll('[id^="articleDetailModal"]');
 
-        detailModals.forEach(modal => {
-            modal.addEventListener('shown.bs.modal', function() {
-                const articleId = this.id.replace('articleDetailModal', '');
-                updateCriteria(articleId);
+            detailModals.forEach(modal => {
+                modal.addEventListener('shown.bs.modal', function() {
+                    const articleId = this.id.replace('articleDetailModal', '');
+                    updateCriteria(articleId);
+                });
             });
-        });
+        }
 
         // Hàm cập nhật tiêu chí xuất bản
         function updateCriteria(articleId) {
@@ -709,6 +809,9 @@
             if (!str) return 0;
             return str.trim().split(/\s+/).filter(word => word.length > 0).length;
         }
+
+        // Khởi tạo sự kiện ban đầu
+        initializeEvents();
     });
 </script>
 @endsection
