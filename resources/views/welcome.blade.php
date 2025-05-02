@@ -629,8 +629,8 @@
                                 @if ($businessMainPost)
                                     <div class="tc-post-grid-default">
                                         <div class="item">
-                                            <div class="img img-cover th-330 position-relative">
-                                                <a href="{{ route('articles.article', $businessMainPost->slug) }}">
+                                            <div class="img img-cover w-100 h-full position-relative">
+                                                <a class="img img-cover h-100 w-100" href="{{ route('articles.article', $businessMainPost->slug) }}">
                                                     <img src="{{ asset('storage/' . $businessMainPost->thumbnail_url) }}"
                                                         alt="{{ $businessMainPost->title }}">
                                                 </a>
@@ -680,11 +680,11 @@
                                     <div class="tc-post-list-style2">
                                         <div class="items">
                                             @foreach ($businessListPosts as $item)
-                                                <div class="item">
-                                                    <div class="row gx-3 align-items-center">
+                                                <div class="item ">
+                                                    <div class="row gx-3 align-items-center mb-1">
                                                         <div class="col-4">
-                                                            <div class="img th-70 img-cover">
-                                                                <a href="{{ route('articles.article', $item->slug) }}">
+                                                            <div class="img th- img-cover">
+                                                                <a class="img img-cover h-100 w-100" href="{{ route('articles.article', $item->slug) }}">
                                                                     <img src="{{ asset('storage/' . $item->thumbnail_url) }}"
                                                                         alt="{{ $item->title }}">
                                                                 </a>
