@@ -10,7 +10,7 @@
 }
 
 </style>
-  
+
     <main>
          <!-- ====== start nav search ====== -->
          <div class="tc-blog-nav-search py-4 border-bottom">
@@ -33,7 +33,7 @@
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Trang chủ</a></li>
                                 <li class="breadcrumb-item"><a href="#">Bài viết mới</a></li>
 
-                              
+
                             </ol>
                         </nav>
                     </div>
@@ -44,7 +44,7 @@
         <!-- ====== end nav search ====== -->
 
 
-     
+
         <section class="tc-posts-tabs-style4 pt-60 pb-60">
             <div class="container">
                 <div class="tc-tabs-body tc-post-grid-style4 mt-50">
@@ -57,17 +57,17 @@
                                     </a>
                                     <div class="info p-3">
                                         <h4 class="title fs-6 mb-2">
-                                            <a href="{{ url('article', $article->slug) }}">{{ $article->title }}</a>
+                                            <a href="{{ route('articles.article', $article->slug) }}">{{ $article->title }}</a>
                                         </h4>
-        
+
                                         <div class="category text-muted small mb-2">
                                             {{ optional($article->category)->name ?? 'Chưa có danh mục' }}
                                         </div>
-        
+
                                         <div class="text small mb-2">
                                             {{ Str::limit(html_entity_decode(strip_tags($article->content)), 100) }}
                                         </div>
-        
+
                                         <a href="{{ route('articles.article', $article->slug) }}" class="btn btn-sm btn-outline-primary mt-2">Xem thêm</a>
                                     </div>
                                 </div>
@@ -75,16 +75,16 @@
                         @endforeach
                     </div>
                 </div>
-            
-        
+
+
                 <!-- Phân trang -->
                 <div class="pagination mt-30 text-center">
                     {!! $articles->links() !!}
                 </div>
-                
+
             </div>
         </section>
-    
+
         <!-- ====== start another-news ====== -->
         @if ($topCategoriesWithArticles->isNotEmpty())
             <!-- Kiểm tra nếu có dữ liệu trong topCategoriesWithArticles -->
@@ -105,7 +105,7 @@
                                 <div class="col-lg-4">
                                     <p class="color-000 text-uppercase mb-30 ltspc-1">
                                         <a
-                                            href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a>
+                                        href="{{ route('client.category.show', ['slug' => $category->slug]) }}">{{ $category->name }}</a>
                                         <i class="la la-angle-right ms-1"></i>
                                     </p>
 
@@ -122,7 +122,7 @@
                                                             @endif
                                                         </div>
                                                         <div class="content pt-20">
-                                                            <a href="{{ route('categories.show', $category->slug) }}"
+                                                            <a href="{{ route('client.category.show', ['slug' => $category->slug]) }}"
                                                                 class="news-cat color-999 fsz-13px text-uppercase mb-10">
                                                                 {{ $category->name }}
                                                             </a>
@@ -201,7 +201,7 @@
         @endif
         <!-- ====== end another-news ====== -->
     </main>
-  
+
 
 
 
