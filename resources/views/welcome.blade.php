@@ -633,7 +633,7 @@
                                                         alt="{{ $businessMainPost->title }}">
                                                 </a>
                                             </div>
-                                            <div class="content pt-30">
+                                            <div class="content pt-50">
                                                 @if ($businessMainPost->category)
                                                     <a href="{{ route('categories.show', $businessMainPost->category->slug) }}"
                                                         class="news-cat color-999 fsz-13px text-uppercase mb-10">
@@ -678,10 +678,10 @@
                                     <div class="tc-post-list-style2">
                                         <div class="items">
                                             @foreach ($businessListPosts as $item)
-                                                <div class="item">
-                                                    <div class="row gx-3 align-items-center">
+                                                <div class="item ">
+                                                    <div class="row gx-3 align-items-center mb-1">
                                                         <div class="col-4">
-                                                            <div class="img th-70 img-cover">
+                                                            <div class="img th- img-cover">
                                                                 <a href="{{ route('articles.article', $item->slug) }}">
                                                                     <img src="{{ asset('storage/' . $item->thumbnail_url) }}"
                                                                         alt="{{ $item->title }}">
@@ -723,7 +723,7 @@
                                                         alt="{{ $businessGridPost->title }}">
                                                 </a>
                                             </div>
-                                            <div class="content pt-20">
+                                            <div class="content pt-30">
                                                 @if ($businessGridPost->category)
                                                     <a href="{{ route('categories.show', $businessGridPost->category->slug) }}"
                                                         class="news-cat color-999 fsz-13px text-uppercase mb-10">

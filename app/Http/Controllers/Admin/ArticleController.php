@@ -78,8 +78,13 @@ class ArticleController extends Controller
 
         // Xử lý tìm kiếm theo danh mục nếu có
         if ($category) {
-            $query->whereHas('category', function ($q) use ($category) {
-                $q->where('name', 'like', $category . '%');
+            $query->where(function($q) use ($category) {
+                $q->whereHas('category', function ($q) use ($category) {
+                    $q->where('name', 'like', $category . '%');
+                })
+                ->orWhereHas('subcategory', function ($q) use ($category) {
+                    $q->where('name', 'like', $category . '%');
+                });
             });
         }
 
