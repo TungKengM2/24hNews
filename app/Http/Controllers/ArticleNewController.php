@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\ArticleView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+
 class ArticleNewController extends Controller
 {
     public function index()
@@ -16,16 +17,17 @@ class ArticleNewController extends Controller
     {
 
         $articles = Article::where('status', 'published')
-        ->whereHas('category', fn($q) => $q->where('is_active', 1))
-        ->orderBy('created_at', 'desc')
-        ->paginate(16); // mỗi trang 15 bài
-    
-
-  
+            ->whereHas('category', fn($q) => $q->where('is_active', 1))
+            ->orderBy('created_at', 'desc')
+            ->paginate(16); // mỗi trang 15 bài
 
 
-        // 1) Lấy 3 category hoạt động nhiều bài published nhất
+
+
+
+        // 1) Lấy 3 danh mục cha hoạt động có nhiều bài published nhất
         $topCategories = Category::where('is_active', 1)
+            ->whereNull('parent_id') // chỉ lấy danh mục cha
             ->withCount(['articles' => function ($q) {
                 $q->where('status', 'published');
             }])
@@ -37,14 +39,14 @@ class ArticleNewController extends Controller
         $topCategoriesWithArticles = $topCategories->map(function ($category) {
             $articles = $category->articles()
                 ->where('status', 'published')
-                ->latest()      // thường là orderBy('created_at','desc')
+                ->latest()
                 ->take(3)
                 ->get();
 
             return [
                 'category'     => $category,
-                'main_article' => $articles->first(),     // bài đầu làm nổi bật
-                'sub_articles' => $articles->slice(1),    // 2 bài còn lại
+                'main_article' => $articles->first(),
+                'sub_articles' => $articles->slice(1),
             ];
         });
 
@@ -96,6 +98,4 @@ class ArticleNewController extends Controller
             'category2' => Category::all()
         ]);
     }
-
-  
 }
