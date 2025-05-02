@@ -97,173 +97,218 @@
                                 });
                             });
                         </script>
+                    </div>
+                </div>
+
+                <div class="box-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <label class="form-label mb-0 me-2">Từ ngày:</label>
+                                </div>
+                                <div id="custom_date_range" class="d-flex align-items-center">
+                                    <input type="date" id="start_date" class="form-control form-control-sm me-2"
+                                        value="{{ request('start_date') }}">
+                                    <span class="me-2">đến</span>
+                                    <input type="date" id="end_date" class="form-control form-control-sm me-2"
+                                        value="{{ request('end_date') }}">
+                                    <button type="button" id="apply_date_filter" class="btn btn-sm btn-primary">Áp
+                                        dụng</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <span class="badge bg-info">Tổng số: {{ $articles->total() }} bài viết</span>
                         </div>
                     </div>
 
-                    <div class="box-body">
-                        <div class="row mb-3">
-                            <div class="col-md-6 text-end">
-                                <span class="badge bg-info">Tổng số: {{ $articles->total() }} bài viết</span>
-                            </div>
-                        </div>
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover mb-0" style="width:100%">
-                                <thead class="bg-primary text-white">
+                    <div class="table-responsive" id="articles-container">
+                        <table class="table table-bordered table-hover mb-0" style="width:100%">
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th width="5%">ID</th>
+                                    <th width="15%">Tiêu Đề</th>
+                                    <th width="10%">Hình Ảnh</th>
+                                    <th width="10%">Danh Mục</th>
+                                    <th width="10%">Trạng Thái</th>
+                                    <th width="8%">Tác Giả</th>
+                                    <th width="10%">Thời Gian</th>
+                                    {{-- <th width="10%">Nội Dung Nhạy Cảm</th> --}}
+                                    <th width="8%">Thẻ</th>
+                                    <th width="15%">Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($articles as $article)
                                     <tr>
-                                        <th width="5%">ID</th>
-                                        <th width="15%">Tiêu Đề</th>
-                                        <th width="10%">Hình Ảnh</th>
-                                        <th width="10%">Danh Mục</th>
-                                        <th width="10%">Trạng Thái</th>
-                                        <th width="10%">Tác Giả</th>
-                                        {{-- <th width="10%">Nội Dung Nhạy Cảm</th> --}}
-                                        <th width="10%">Thẻ</th>
-                                        <th width="20%">Thao Tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($articles as $article)
-                                        <tr>
-                                            <td>{{ $article->article_id }}</td>
-                                            <td>
-                                                <strong>{{ $article->title }}</strong>
-                                                <div class="small text-muted">{{ Str::limit($article->slug, 30) }}</div>
-                                            </td>
-                                            <td class="text-center">
-                                                <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Hình ảnh"
-                                                    class="img-thumbnail" width="80" height="80">
-                                            </td>
-                                            <td>
-                                                @if ($article->category)
-                                                    @if (!$article->category->is_active)
-                                                        <span class="text-warning">{{ $article->category->name }} <i
-                                                                class="fa fa-exclamation-triangle"></i></span>
-                                                    @else
-                                                        <span class="badge bg-info">{{ $article->category->name }}</span>
-                                                    @endif
+                                        <td>{{ $article->article_id }}</td>
+                                        <td>
+                                            <strong>{{ $article->title }}</strong>
+                                            <div class="small text-muted">{{ Str::limit($article->slug, 30) }}</div>
+                                        </td>
+                                        <td class="text-center">
+                                            <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Hình ảnh"
+                                                class="img-thumbnail" width="80" height="80">
+                                        </td>
+                                        <td>
+                                            @if ($article->category)
+                                                @if (!$article->category->is_active)
+                                                    <span class="text-warning">{{ $article->category->name }} <i
+                                                            class="fa fa-exclamation-triangle"></i></span>
                                                 @else
-                                                    <span class="text-danger">Không có danh mục</span>
+                                                    <span class="badge bg-info">{{ $article->category->name }}</span>
                                                 @endif
-                                            </td>
-                                            <td class="text-center">
-                                                @switch($article->status)
-                                                    @case('draft')
-                                                        <span class="badge bg-secondary">Bản Nháp</span>
-                                                    @break
 
-                                                    @case('pending')
-                                                        <span class="badge bg-warning">Chờ Duyệt</span>
-                                                    @break
+                                                @if ($article->subcategory)
+                                                    <div class="mt-1">
 
-                                                    @case('published')
-                                                        <span class="badge bg-success">Đã Đăng</span>
-                                                    @break
+                                                        @if (!$article->subcategory->is_active)
+                                                            <span class="text-warning">{{ $article->subcategory->name }}
+                                                                <i class="fa fa-exclamation-triangle"></i></span>
+                                                        @else
+                                                            <span
+                                                                class="badge bg-secondary">{{ $article->subcategory->name }}</span>
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @else
+                                                <span class="text-danger">Không có danh mục</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            @switch($article->status)
+                                                @case('draft')
+                                                    <span class="badge bg-secondary">Bản Nháp</span>
+                                                @break
 
-                                                    @case('archived')
-                                                        <span class="badge bg-danger">Đã Lưu Trữ</span>
-                                                    @break
-                                                @endswitch
-                                            </td>
-                                            <td>{{ $article->author->username ?? 'Chưa xác định' }}</td>
-                                            {{-- <td class="text-center">
+                                                @case('pending')
+                                                    <span class="badge bg-warning">Chờ Duyệt</span>
+                                                @break
+
+                                                @case('published')
+                                                    <span class="badge bg-success">Đã Đăng</span>
+                                                @break
+
+                                                @case('archived')
+                                                    <span class="badge bg-danger">Đã Lưu Trữ</span>
+                                                @break
+                                            @endswitch
+                                        </td>
+                                        <td>{{ $article->author->username ?? 'Chưa xác định' }}</td>
+                                        <td>{{ $article->updated_at->format('d/m/Y H:i') }}</td>
+                                        {{-- <td class="text-center">
                                                     @if ($article->contains_sensitive_content)
                                                         <span class="badge bg-danger">Có</span>
                                                     @else
                                                         <span class="badge bg-success">Không</span>
                                                     @endif
                                                 </td> --}}
-                                            <td class="text-center">
-                                                @if ($article->tags->isNotEmpty())
-                                                    @foreach ($article->tags as $tag)
-                                                        <span class="badge bg-primary">{{ $tag->name }}</span>
-                                                    @endforeach
-                                                @else
-                                                    <small class="text-muted">Không có thẻ</small>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <div class="d-flex flex-wrap gap-1 mb-2">
-                                                    <button type="button" class="btn btn-info btn-sm" title="Xem chi tiết"
-                                                        data-bs-toggle="modal" data-bs-target="#articleDetailModal{{ $article->article_id }}">
-                                                        <i class="si-eye si"></i>
-                                                    </button>
+                                        <td class="text-center">
+                                            @if ($article->tags->isNotEmpty())
+                                                @foreach ($article->tags as $tag)
+                                                    <span class="badge bg-primary">{{ $tag->name }}</span>
+                                                @endforeach
+                                            @else
+                                                <small class="text-muted">Không có thẻ</small>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="d-flex flex-wrap gap-1 mb-2">
+                                                <button type="button" class="btn btn-info btn-sm" title="Xem chi tiết"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#articleDetailModal{{ $article->article_id }}">
+                                                    <i class="si-eye si"></i>
+                                                </button>
 
-                                                    <a href="{{ route('articles.moderation-history', $article) }}"
-                                                        class="btn btn-secondary btn-sm" title="Lịch sử kiểm duyệt">
-                                                        <i class="fas fa-history"></i>
-                                                    </a>
+                                                <a href="{{ route('articles.moderation-history', $article) }}"
+                                                    class="btn btn-secondary btn-sm" title="Lịch sử kiểm duyệt">
+                                                    <i class="fas fa-history"></i>
+                                                </a>
 
-                                                    @if ($article->status === 'pending')
-                                                        <form action="{{ route('articles.approve', $article) }}"
-                                                            method="POST" class="d-inline" id="approveForm{{ $article->article_id }}">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="button" class="btn btn-success btn-sm approve-btn"
-                                                                title="Duyệt bài viết" data-id="{{ $article->article_id }}">
-                                                                <i class="fa fa-check"></i>
-                                                            </button>
-                                                        </form>
-
-                                                        <form action="{{ route('articles.reject', $article) }}"
-                                                            method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="button" class="btn btn-danger btn-sm"
-                                                                title="Từ chối bài viết"
-                                                                data-bs-toggle="modal" data-bs-target="#rejectModal{{ $article->article_id }}">
-                                                                <i class="fa fa-times"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endif
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <!-- Modal Từ chối bài viết -->
-                                        <div class="modal fade" id="rejectModal{{ $article->article_id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ $article->article_id }}" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="rejectModalLabel{{ $article->article_id }}">Từ chối bài viết</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <form action="{{ route('articles.reject', $article) }}" method="POST">
+                                                @if ($article->status === 'pending')
+                                                    <form action="{{ route('articles.approve', $article) }}"
+                                                        method="POST" class="d-inline"
+                                                        id="approveForm{{ $article->article_id }}">
                                                         @csrf
                                                         @method('PATCH')
-                                                        <div class="modal-body">
-                                                            <div class="mb-3">
-                                                                <label for="rejection_reason{{ $article->article_id }}" class="form-label">Lý do từ chối</label>
-                                                                <textarea class="form-control" id="rejection_reason{{ $article->article_id }}" name="rejection_reason" rows="3" required></textarea>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                            <button type="submit" class="btn btn-danger">Xác nhận từ chối</button>
-                                                        </div>
+                                                        <button type="button" class="btn btn-success btn-sm approve-btn"
+                                                            title="Duyệt bài viết" data-id="{{ $article->article_id }}">
+                                                            <i class="fa fa-check"></i>
+                                                        </button>
                                                     </form>
+
+                                                    <form action="{{ route('articles.reject', $article) }}"
+                                                        method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="button" class="btn btn-danger btn-sm"
+                                                            title="Từ chối bài viết" data-bs-toggle="modal"
+                                                            data-bs-target="#rejectModal{{ $article->article_id }}">
+                                                            <i class="fa fa-times"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Modal Từ chối bài viết -->
+                                    <div class="modal fade" id="rejectModal{{ $article->article_id }}" tabindex="-1"
+                                        aria-labelledby="rejectModalLabel{{ $article->article_id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title"
+                                                        id="rejectModalLabel{{ $article->article_id }}">Từ chối bài viết
+                                                    </h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
                                                 </div>
+                                                <form action="{{ route('articles.reject', $article) }}" method="POST">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label for="rejection_reason{{ $article->article_id }}"
+                                                                class="form-label">Lý do từ chối</label>
+                                                            <textarea class="form-control" id="rejection_reason{{ $article->article_id }}" name="rejection_reason"
+                                                                rows="3" required></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Hủy</button>
+                                                        <button type="submit" class="btn btn-danger">Xác nhận từ
+                                                            chối</button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
-                                        @empty
-                                            <tr>
-                                                <td colspan="8" class="text-center">Không có bài viết nào</td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                                <div class="d-flex justify-content-end mt-4">
-                                    {{ $articles->links('pagination::bootstrap-5') }}
-                                </div>
+                                    </div>
+                                    @empty
+                                        <tr>
+                                            <td colspan="9" class="text-center">Không có bài viết nào</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-end mt-4" id="pagination-container">
+                                {{ $articles->links('pagination::bootstrap-5') }}
+                            </div>
 
-                                <!-- Article Detail Modals -->
-                                @foreach ($articles as $article)
-                                <div class="modal fade" id="articleDetailModal{{ $article->article_id }}" tabindex="-1" aria-labelledby="articleDetailModalLabel{{ $article->article_id }}" aria-hidden="true">
+                            <!-- Article Detail Modals -->
+                            @foreach ($articles as $article)
+                                <div class="modal fade" id="articleDetailModal{{ $article->article_id }}" tabindex="-1"
+                                    aria-labelledby="articleDetailModalLabel{{ $article->article_id }}" aria-hidden="true">
                                     <div class="modal-dialog modal-xl modal-dialog-scrollable">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="articleDetailModalLabel{{ $article->article_id }}">Chi tiết bài viết: {{ $article->title }}</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <h5 class="modal-title"
+                                                    id="articleDetailModalLabel{{ $article->article_id }}">Chi tiết bài viết:
+                                                    {{ $article->title }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="row">
@@ -276,15 +321,19 @@
                                                             <div class="card-body">
                                                                 <div class="row mb-3">
                                                                     <div class="col-md-12">
-                                                                        <h4><i class="mdi mdi-title"></i> {{ $article->title }}</h4>
-                                                                        <p class="text-muted"><i class="mdi mdi-link-variant"></i> {{ $article->slug }}</p>
+                                                                        <h4><i class="mdi mdi-title"></i>
+                                                                            {{ $article->title }}</h4>
+                                                                        <p class="text-muted"><i
+                                                                                class="mdi mdi-link-variant"></i>
+                                                                            {{ $article->slug }}</p>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <h5>Nội dung chi tiết:</h5>
-                                                                        <div class="bg-light p-3 rounded article-content-{{ $article->article_id }}">
+                                                                        <div
+                                                                            class="bg-light p-3 rounded article-content-{{ $article->article_id }}">
                                                                             {!! $article->content !!}
                                                                         </div>
                                                                     </div>
@@ -301,7 +350,9 @@
                                                                     <h5 class="card-title mb-0">Ảnh đại diện</h5>
                                                                 </div>
                                                                 <div class="card-body text-center">
-                                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}" alt="Ảnh đại diện" class="img-fluid rounded" style="max-height: 200px;">
+                                                                    <img src="{{ asset('storage/' . $article->thumbnail_url) }}"
+                                                                        alt="Ảnh đại diện" class="img-fluid rounded"
+                                                                        style="max-height: 200px;">
                                                                 </div>
                                                             </div>
                                                         @endif
@@ -315,49 +366,82 @@
                                                                 <div class="verification-criteria">
 
                                                                     <div class="criteria-content">
-                                                                        <ul class="criteria-list" id="criteria-list-{{ $article->article_id }}">
-                                                                            <li class="criteria-item failed" id="criteria-title-{{ $article->article_id }}" data-target="title">
+                                                                        <ul class="criteria-list"
+                                                                            id="criteria-list-{{ $article->article_id }}">
+                                                                            <li class="criteria-item failed"
+                                                                                id="criteria-title-{{ $article->article_id }}"
+                                                                                data-target="title">
                                                                                 <div class="criteria-icon failed">✗</div>
                                                                                 <div class="criteria-text criteria-tooltip">
-                                                                                    Tiêu đề từ 50-60 ký tự <span id="current-title-length-{{ $article->article_id }}">(0 ký tự)</span>
-                                                                                    <span class="tooltip-text">Tiêu đề trong khoảng 50-60 ký tự sẽ hiển thị đầy đủ trên Google và tối ưu cho SEO</span>
+                                                                                    Tiêu đề từ 50-60 ký tự <span
+                                                                                        id="current-title-length-{{ $article->article_id }}">(0
+                                                                                        ký tự)</span>
+                                                                                    <span class="tooltip-text">Tiêu đề trong
+                                                                                        khoảng 50-60 ký tự sẽ hiển thị đầy đủ
+                                                                                        trên Google và tối ưu cho SEO</span>
                                                                                 </div>
                                                                             </li>
-                                                                            <li class="criteria-item failed" id="criteria-category-{{ $article->article_id }}" data-target="parent_category">
+                                                                            <li class="criteria-item failed"
+                                                                                id="criteria-category-{{ $article->article_id }}"
+                                                                                data-target="parent_category">
                                                                                 <div class="criteria-icon failed">✗</div>
                                                                                 <div class="criteria-text criteria-tooltip">
                                                                                     Chọn danh mục chính và phụ
-                                                                                    <span class="tooltip-text">Bắt buộc chọn cả danh mục chính và danh mục phụ phù hợp với nội dung bài viết</span>
+                                                                                    <span class="tooltip-text">Bắt buộc chọn cả
+                                                                                        danh mục chính và danh mục phụ phù hợp
+                                                                                        với nội dung bài viết</span>
                                                                                 </div>
                                                                             </li>
-                                                                            <li class="criteria-item failed" id="criteria-tags-{{ $article->article_id }}" data-target="tags">
+                                                                            <li class="criteria-item failed"
+                                                                                id="criteria-tags-{{ $article->article_id }}"
+                                                                                data-target="tags">
                                                                                 <div class="criteria-icon failed">✗</div>
                                                                                 <div class="criteria-text criteria-tooltip">
-                                                                                    Chọn 2-5 thẻ tag liên quan <span id="current-tag-count-{{ $article->article_id }}">(0 thẻ)</span>
-                                                                                    <span class="tooltip-text">Thẻ tag phù hợp giúp phân loại bài viết và tăng khả năng xuất hiện trong tìm kiếm</span>
+                                                                                    Chọn 2-5 thẻ tag liên quan <span
+                                                                                        id="current-tag-count-{{ $article->article_id }}">(0
+                                                                                        thẻ)</span>
+                                                                                    <span class="tooltip-text">Thẻ tag phù hợp
+                                                                                        giúp phân loại bài viết và tăng khả năng
+                                                                                        xuất hiện trong tìm kiếm</span>
                                                                                 </div>
                                                                             </li>
-                                                                            <li class="criteria-item failed" id="criteria-thumbnail-{{ $article->article_id }}" data-target="thumbnail_url">
+                                                                            <li class="criteria-item failed"
+                                                                                id="criteria-thumbnail-{{ $article->article_id }}"
+                                                                                data-target="thumbnail_url">
                                                                                 <div class="criteria-icon failed">✗</div>
                                                                                 <div class="criteria-text criteria-tooltip">
                                                                                     Ảnh đại diện chất lượng cao
-                                                                                    <span class="tooltip-text">Ảnh đại diện rõ nét, liên quan đến nội dung bài viết và không vi phạm bản quyền</span>
+                                                                                    <span class="tooltip-text">Ảnh đại diện rõ
+                                                                                        nét, liên quan đến nội dung bài viết và
+                                                                                        không vi phạm bản quyền</span>
                                                                                 </div>
                                                                             </li>
-                                                                            <li class="criteria-item failed" id="criteria-content-{{ $article->article_id }}" data-target="content">
+                                                                            <li class="criteria-item failed"
+                                                                                id="criteria-content-{{ $article->article_id }}"
+                                                                                data-target="content">
                                                                                 <div class="criteria-icon failed">✗</div>
                                                                                 <div class="criteria-text criteria-tooltip">
-                                                                                    Nội dung từ 800-1500 từ <span id="current-word-count-{{ $article->article_id }}">(0 từ)</span>
-                                                                                    <span class="tooltip-text">Nội dung đủ dài để cung cấp thông tin đầy đủ nhưng không quá dài gây mất tập trung</span>
+                                                                                    Nội dung từ 800-1500 từ <span
+                                                                                        id="current-word-count-{{ $article->article_id }}">(0
+                                                                                        từ)</span>
+                                                                                    <span class="tooltip-text">Nội dung đủ dài
+                                                                                        để cung cấp thông tin đầy đủ nhưng không
+                                                                                        quá dài gây mất tập trung</span>
                                                                                 </div>
                                                                             </li>
                                                                         </ul>
                                                                         <div class="criteria-progress mt-3">
                                                                             <div class="progress">
-                                                                                <div class="progress-bar bg-success" id="criteria-progress-bar-{{ $article->article_id }}" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                <div class="progress-bar bg-success"
+                                                                                    id="criteria-progress-bar-{{ $article->article_id }}"
+                                                                                    role="progressbar" style="width: 0%"
+                                                                                    aria-valuenow="0" aria-valuemin="0"
+                                                                                    aria-valuemax="100"></div>
                                                                             </div>
                                                                             <div class="criteria-count">
-                                                                                <small id="criteria-count-{{ $article->article_id }}">0/5 tiêu chí đạt</small>
+                                                                                <small
+                                                                                    id="criteria-count-{{ $article->article_id }}">0/5
+                                                                                    tiêu chí đạt</small>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -371,21 +455,32 @@
                                                             </div>
                                                             <div class="card-body">
                                                                 <ul class="list-group list-group-flush">
-                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center">
                                                                         <span><i class="mdi mdi-account"></i> Tác giả:</span>
-                                                                        <span class="badge bg-primary rounded-pill">{{ $article->author->username ?? 'Không có' }}</span>
+                                                                        <span
+                                                                            class="badge bg-primary rounded-pill">{{ $article->author->username ?? 'Không có' }}</span>
                                                                     </li>
-                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                                        <span><i class="mdi mdi-folder"></i> Danh mục chính:</span>
-                                                                        <span class="badge bg-info rounded-pill">{{ $article->category->name ?? 'Không có' }}</span>
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        <span><i class="mdi mdi-folder"></i> Danh mục
+                                                                            chính:</span>
+                                                                        <span
+                                                                            class="badge bg-info rounded-pill">{{ $article->category->name ?? 'Không có' }}</span>
                                                                     </li>
-                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                                        <span><i class="mdi mdi-folder-outline"></i> Danh mục phụ:</span>
-                                                                        <span class="badge bg-secondary rounded-pill">{{ $article->subcategory->name ?? 'Không có' }}</span>
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        <span><i class="mdi mdi-folder-outline"></i> Danh mục
+                                                                            phụ:</span>
+                                                                        <span
+                                                                            class="badge bg-secondary rounded-pill">{{ $article->subcategory->name ?? 'Không có' }}</span>
                                                                     </li>
-                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                                        <span><i class="mdi mdi-check-circle"></i> Trạng thái:</span>
-                                                                        <span class="badge bg-{{ $article->status == 'published' ? 'success' : 'warning' }} rounded-pill">
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        <span><i class="mdi mdi-check-circle"></i> Trạng
+                                                                            thái:</span>
+                                                                        <span
+                                                                            class="badge bg-{{ $article->status == 'published' ? 'success' : 'warning' }} rounded-pill">
                                                                             {{ ucfirst($article->status) }}
                                                                         </span>
                                                                     </li>
@@ -394,7 +489,8 @@
                                                                         <div class="mt-2">
                                                                             @if ($article->tags->isNotEmpty())
                                                                                 @foreach ($article->tags as $tag)
-                                                                                    <span class="badge bg-primary m-1">{{ $tag->name }}</span>
+                                                                                    <span
+                                                                                        class="badge bg-primary m-1">{{ $tag->name }}</span>
                                                                                 @endforeach
                                                                             @else
                                                                                 <span class="text-muted">Không có thẻ</span>
@@ -409,7 +505,8 @@
                                             </div>
                                             <div class="modal-footer">
                                                 @if ($article->status === 'pending')
-                                                    <form action="{{ route('articles.approve', $article) }}" method="POST" class="d-inline">
+                                                    <form action="{{ route('articles.approve', $article) }}" method="POST"
+                                                        class="d-inline">
                                                         @csrf
                                                         @method('PATCH')
                                                         <button type="submit" class="btn btn-success" title="Duyệt bài viết"
@@ -419,296 +516,394 @@
                                                     </form>
 
                                                     <button type="button" class="btn btn-danger" title="Từ chối bài viết"
-                                                        data-bs-toggle="modal" data-bs-target="#rejectModal{{ $article->article_id }}" data-bs-dismiss="modal">
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#rejectModal{{ $article->article_id }}"
+                                                        data-bs-dismiss="modal">
                                                         <i class="fa fa-times me-1"></i> Từ chối bài viết
                                                     </button>
                                                 @endif
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Đóng</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                @endforeach
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         </div>
+        </div>
     @endsection
 
-@section('styles')
-<style>
-    /* Styles for verification criteria */
-    .verification-criteria {
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        padding: 15px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
+    @section('styles')
+        <style>
+            /* Styles for date filter */
+            #custom_date_range input[type="date"] {
+                height: 31px;
+                font-size: 13px;
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.2rem;
+            }
 
-    .verification-criteria-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 15px;
-    }
+            #custom_date_range {
+                align-items: center;
+            }
 
-    .criteria-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+            /* Styles for verification criteria */
+            .verification-criteria {
+                background-color: #f8f9fa;
+                border-radius: 8px;
+                padding: 15px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
 
-    .criteria-item {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 12px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid #e9ecef;
-    }
+            .verification-criteria-title {
+                font-size: 18px;
+                font-weight: 600;
+                margin-bottom: 15px;
+            }
 
-    .criteria-item:last-child {
-        border-bottom: none;
-        margin-bottom: 0;
-    }
+            .criteria-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
 
-    .criteria-icon {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 10px;
-        font-weight: bold;
-    }
+            .criteria-item {
+                display: flex;
+                align-items: flex-start;
+                margin-bottom: 12px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #e9ecef;
+            }
 
-    .criteria-icon.passed {
-        background-color: #28a745;
-        color: white;
-    }
+            .criteria-item:last-child {
+                border-bottom: none;
+                margin-bottom: 0;
+            }
 
-    .criteria-icon.failed {
-        background-color: #dc3545;
-        color: white;
-    }
+            .criteria-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 10px;
+                font-weight: bold;
+            }
 
-    .criteria-text {
-        flex: 1;
-        font-size: 14px;
-        position: relative;
-    }
+            .criteria-icon.passed {
+                background-color: #28a745;
+                color: white;
+            }
 
-    .criteria-tooltip {
-        cursor: help;
-    }
+            .criteria-icon.failed {
+                background-color: #dc3545;
+                color: white;
+            }
 
-    .criteria-tooltip .tooltip-text {
-        visibility: hidden;
-        width: 250px;
-        background-color: #333;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 8px;
-        position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 0;
-        opacity: 0;
-        transition: opacity 0.3s;
-        font-size: 12px;
-    }
+            .criteria-text {
+                flex: 1;
+                font-size: 14px;
+                position: relative;
+            }
 
-    .criteria-tooltip:hover .tooltip-text {
-        visibility: visible;
-        opacity: 1;
-    }
+            .criteria-tooltip {
+                cursor: help;
+            }
 
-    /* Progress bar styles */
-    .criteria-progress {
-        margin-top: 15px;
-        width: 100%;
-    }
+            .criteria-tooltip .tooltip-text {
+                visibility: hidden;
+                width: 250px;
+                background-color: #333;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 8px;
+                position: absolute;
+                z-index: 1;
+                bottom: 125%;
+                left: 0;
+                opacity: 0;
+                transition: opacity 0.3s;
+                font-size: 12px;
+            }
 
-    .criteria-progress .progress {
-        height: 10px;
-        border-radius: 5px 5px 0 0;
-        background-color: #e9ecef;
-        margin-bottom: 0;
-        overflow: hidden;
-        width: 100%;
-        display: block;
-    }
+            .criteria-tooltip:hover .tooltip-text {
+                visibility: visible;
+                opacity: 1;
+            }
 
-    .criteria-progress .progress-bar {
-        height: 100%;
-        transition: width 0.3s ease;
-        float: left;
-    }
+            /* Progress bar styles */
+            .criteria-progress {
+                margin-top: 15px;
+                width: 100%;
+            }
 
-    .criteria-count {
-        background-color: #f8f9fa;
-        border-radius: 0 0 5px 5px;
-        padding: 5px;
-        text-align: center;
-        border: none;
-        font-size: 12px;
-        color: #495057;
-    }
-</style>
-@endsection
+            .criteria-progress .progress {
+                height: 10px;
+                border-radius: 5px 5px 0 0;
+                background-color: #e9ecef;
+                margin-bottom: 0;
+                overflow: hidden;
+                width: 100%;
+                display: block;
+            }
 
-@section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Xử lý nút duyệt bài viết với SweetAlert2
-        const approveButtons = document.querySelectorAll('.approve-btn');
+            .criteria-progress .progress-bar {
+                height: 100%;
+                transition: width 0.3s ease;
+                float: left;
+            }
 
-        approveButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const articleId = this.getAttribute('data-id');
-                const form = document.getElementById('approveForm' + articleId);
+            .criteria-count {
+                background-color: #f8f9fa;
+                border-radius: 0 0 5px 5px;
+                padding: 5px;
+                text-align: center;
+                border: none;
+                font-size: 12px;
+                color: #495057;
+            }
+        </style>
+    @endsection
 
-                Swal.fire({
-                    title: 'Xác nhận duyệt bài',
-                    text: 'Bạn có chắc chắn muốn duyệt bài viết này không?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Đồng ý, duyệt bài!',
-                    cancelButtonText: 'Hủy'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
+    @section('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Xử lý bộ lọc thời gian
+                $('#apply_date_filter').on('click', function() {
+                    fetchArticlesWithFilters(1);
                 });
+
+                // Xử lý phân trang bằng Ajax
+                $(document).on('click', '#pagination-container .pagination a', function(e) {
+                    e.preventDefault();
+
+                    let page = $(this).attr('href').split('page=')[1];
+                    fetchArticlesWithFilters(page);
+                });
+
+                function getFilterParams() {
+                    let params = {};
+
+                    // Lấy giá trị từ các trường ngày
+                    params.start_date = $('#start_date').val();
+                    params.end_date = $('#end_date').val();
+
+                    return params;
+                }
+
+                function fetchArticlesWithFilters(page) {
+                    const params = getFilterParams();
+                    params.page = page;
+
+                    // Tạo query string từ params
+                    const queryString = Object.keys(params)
+                        .filter(key => params[key] !== '')
+                        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+                        .join('&');
+
+                    $.ajax({
+                        url: '{{ route('admin.articles.approves') }}?' + queryString,
+                        type: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        beforeSend: function() {
+                            // Hiển thị loading nếu cần
+                            $('#articles-container').addClass('opacity-50');
+                        },
+                        success: function(response) {
+                            // Cập nhật nội dung bảng và phân trang
+                            $('#articles-container').html($(response).find('#articles-container').html());
+                            $('#pagination-container').html($(response).find('#pagination-container')
+                            .html());
+
+                            // Khởi tạo lại các sự kiện cho các nút trong bảng mới
+                            initializeEvents();
+
+                            // Cập nhật URL trình duyệt mà không reload trang
+                            window.history.pushState({}, '', '{{ route('admin.articles.approves') }}?' +
+                                queryString);
+                        },
+                        complete: function() {
+                            // Ẩn loading
+                            $('#articles-container').removeClass('opacity-50');
+                        },
+                        error: function(xhr) {
+                            console.error('Lỗi khi tải dữ liệu:', xhr);
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: 'Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại.',
+                                icon: 'error',
+                                confirmButtonText: 'Đóng'
+                            });
+                        }
+                    });
+                }
+
+                // Khởi tạo các sự kiện cho các nút trong bảng
+                function initializeEvents() {
+                    // Xử lý nút duyệt bài viết với SweetAlert2
+                    const approveButtons = document.querySelectorAll('.approve-btn');
+
+                    approveButtons.forEach(button => {
+                        button.addEventListener('click', function() {
+                            const articleId = this.getAttribute('data-id');
+                            const form = document.getElementById('approveForm' + articleId);
+
+                            Swal.fire({
+                                title: 'Xác nhận duyệt bài',
+                                text: 'Bạn có chắc chắn muốn duyệt bài viết này không?',
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Đồng ý, duyệt bài!',
+                                cancelButtonText: 'Hủy'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    form.submit();
+                                }
+                            });
+                        });
+                    });
+
+                    // Xử lý modal xem chi tiết bài viết
+                    const detailModals = document.querySelectorAll('[id^="articleDetailModal"]');
+
+                    detailModals.forEach(modal => {
+                        modal.addEventListener('shown.bs.modal', function() {
+                            const articleId = this.id.replace('articleDetailModal', '');
+                            updateCriteria(articleId);
+                        });
+                    });
+                }
+
+                // Hàm cập nhật tiêu chí xuất bản
+                function updateCriteria(articleId) {
+                    // Kiểm tra tiêu đề
+                    const title = document.querySelector(`#articleDetailModal${articleId} h4`).innerText;
+                    const titleLength = title.length;
+                    const titleCriteria = document.getElementById(`criteria-title-${articleId}`);
+                    const titleLengthSpan = document.getElementById(`current-title-length-${articleId}`);
+                    if (titleLengthSpan) {
+                        titleLengthSpan.textContent = `(${titleLength} ký tự)`;
+                        if (titleLength >= 50 && titleLength <= 60) {
+                            titleLengthSpan.style.color = '#28a745';
+                            updateCriteriaStatus(titleCriteria, true);
+                        } else {
+                            titleLengthSpan.style.color = '#dc3545';
+                            updateCriteriaStatus(titleCriteria, false);
+                        }
+                    }
+
+                    // Kiểm tra danh mục
+                    const categoryCriteria = document.getElementById(`criteria-category-${articleId}`);
+                    const parentCategoryBadge = document.querySelector(
+                        `#articleDetailModal${articleId} .list-group-item:nth-child(2) .badge.bg-info`);
+                    const childCategoryBadge = document.querySelector(
+                        `#articleDetailModal${articleId} .list-group-item:nth-child(3) .badge.bg-secondary`);
+
+                    const hasParentCategory = parentCategoryBadge && parentCategoryBadge.textContent !== 'Không có';
+                    const hasChildCategory = childCategoryBadge && childCategoryBadge.textContent !== 'Không có';
+                    if (categoryCriteria) {
+                        // Chỉ hiển thị tích xanh khi cả hai danh mục đều có
+                        updateCriteriaStatus(categoryCriteria, hasParentCategory && hasChildCategory);
+                    }
+
+                    // Kiểm tra tags
+                    const tagCriteria = document.getElementById(`criteria-tags-${articleId}`);
+                    const tagCountSpan = document.getElementById(`current-tag-count-${articleId}`);
+                    const tagBadges = document.querySelectorAll(
+                    `#articleDetailModal${articleId} .badge.bg-primary.m-1`);
+                    const tagCount = tagBadges.length;
+                    if (tagCountSpan) {
+                        tagCountSpan.textContent = `(${tagCount} thẻ)`;
+                        if (tagCount >= 2 && tagCount <= 5) {
+                            tagCountSpan.style.color = '#28a745';
+                            updateCriteriaStatus(tagCriteria, true);
+                        } else {
+                            tagCountSpan.style.color = '#dc3545';
+                            updateCriteriaStatus(tagCriteria, false);
+                        }
+                    }
+
+                    // Kiểm tra ảnh đại diện
+                    const thumbnailCriteria = document.getElementById(`criteria-thumbnail-${articleId}`);
+                    const thumbnailImg = document.querySelector(
+                        `#articleDetailModal${articleId} .card-body.text-center img`);
+                    if (thumbnailCriteria) {
+                        updateCriteriaStatus(thumbnailCriteria, thumbnailImg !== null);
+                    }
+
+                    // Kiểm tra nội dung
+                    const contentCriteria = document.getElementById(`criteria-content-${articleId}`);
+                    const wordCountSpan = document.getElementById(`current-word-count-${articleId}`);
+                    const content = document.querySelector(`.article-content-${articleId}`).innerText;
+                    const wordCount = countWords(content);
+                    if (wordCountSpan) {
+                        wordCountSpan.textContent = `(${wordCount} từ)`;
+                        if (wordCount >= 800 && wordCount <= 1500) {
+                            wordCountSpan.style.color = '#28a745';
+                            updateCriteriaStatus(contentCriteria, true);
+                        } else {
+                            wordCountSpan.style.color = '#dc3545';
+                            updateCriteriaStatus(contentCriteria, false);
+                        }
+                    }
+
+                    // Cập nhật thanh tiến trình
+                    updateProgressBar(articleId);
+                }
+
+                function updateCriteriaStatus(criteriaElement, isPassed) {
+                    if (!criteriaElement) return;
+
+                    const iconElement = criteriaElement.querySelector('.criteria-icon');
+                    if (isPassed) {
+                        criteriaElement.classList.remove('failed');
+                        criteriaElement.classList.add('passed');
+                        iconElement.textContent = '✓';
+                        iconElement.classList.remove('failed');
+                        iconElement.classList.add('passed');
+                    } else {
+                        criteriaElement.classList.remove('passed');
+                        criteriaElement.classList.add('failed');
+                        iconElement.textContent = '✗';
+                        iconElement.classList.remove('passed');
+                        iconElement.classList.add('failed');
+                    }
+                }
+
+                function updateProgressBar(articleId) {
+                    const criteriaCount = document.querySelectorAll(`#criteria-list-${articleId} .criteria-item.passed`)
+                        .length;
+                    const progressBar = document.getElementById(`criteria-progress-bar-${articleId}`);
+                    const criteriaCountSpan = document.getElementById(`criteria-count-${articleId}`);
+
+                    if (progressBar) {
+                        progressBar.style.width = `${criteriaCount * 20}%`;
+                    }
+
+                    if (criteriaCountSpan) {
+                        criteriaCountSpan.textContent = `${criteriaCount}/5 tiêu chí đạt`;
+                    }
+                }
+
+                function countWords(str) {
+                    // Đếm số từ trong văn bản tiếng Việt
+                    if (!str) return 0;
+                    return str.trim().split(/\s+/).filter(word => word.length > 0).length;
+                }
+
+                // Khởi tạo sự kiện ban đầu
+                initializeEvents();
             });
-        });
-
-        // Xử lý modal xem chi tiết bài viết
-        const detailModals = document.querySelectorAll('[id^="articleDetailModal"]');
-
-        detailModals.forEach(modal => {
-            modal.addEventListener('shown.bs.modal', function() {
-                const articleId = this.id.replace('articleDetailModal', '');
-                updateCriteria(articleId);
-            });
-        });
-
-        // Hàm cập nhật tiêu chí xuất bản
-        function updateCriteria(articleId) {
-            // Kiểm tra tiêu đề
-            const title = document.querySelector(`#articleDetailModal${articleId} h4`).innerText;
-            const titleLength = title.length;
-            const titleCriteria = document.getElementById(`criteria-title-${articleId}`);
-            const titleLengthSpan = document.getElementById(`current-title-length-${articleId}`);
-            if (titleLengthSpan) {
-                titleLengthSpan.textContent = `(${titleLength} ký tự)`;
-                if (titleLength >= 50 && titleLength <= 60) {
-                    titleLengthSpan.style.color = '#28a745';
-                    updateCriteriaStatus(titleCriteria, true);
-                } else {
-                    titleLengthSpan.style.color = '#dc3545';
-                    updateCriteriaStatus(titleCriteria, false);
-                }
-            }
-
-            // Kiểm tra danh mục
-            const categoryCriteria = document.getElementById(`criteria-category-${articleId}`);
-            const parentCategoryBadge = document.querySelector(`#articleDetailModal${articleId} .list-group-item:nth-child(2) .badge.bg-info`);
-            const childCategoryBadge = document.querySelector(`#articleDetailModal${articleId} .list-group-item:nth-child(3) .badge.bg-secondary`);
-
-            const hasParentCategory = parentCategoryBadge && parentCategoryBadge.textContent !== 'Không có';
-            const hasChildCategory = childCategoryBadge && childCategoryBadge.textContent !== 'Không có';
-            if (categoryCriteria) {
-                // Chỉ hiển thị tích xanh khi cả hai danh mục đều có
-                updateCriteriaStatus(categoryCriteria, hasParentCategory && hasChildCategory);
-            }
-
-            // Kiểm tra tags
-            const tagCriteria = document.getElementById(`criteria-tags-${articleId}`);
-            const tagCountSpan = document.getElementById(`current-tag-count-${articleId}`);
-            const tagBadges = document.querySelectorAll(`#articleDetailModal${articleId} .badge.bg-primary.m-1`);
-            const tagCount = tagBadges.length;
-            if (tagCountSpan) {
-                tagCountSpan.textContent = `(${tagCount} thẻ)`;
-                if (tagCount >= 2 && tagCount <= 5) {
-                    tagCountSpan.style.color = '#28a745';
-                    updateCriteriaStatus(tagCriteria, true);
-                } else {
-                    tagCountSpan.style.color = '#dc3545';
-                    updateCriteriaStatus(tagCriteria, false);
-                }
-            }
-
-            // Kiểm tra ảnh đại diện
-            const thumbnailCriteria = document.getElementById(`criteria-thumbnail-${articleId}`);
-            const thumbnailImg = document.querySelector(`#articleDetailModal${articleId} .card-body.text-center img`);
-            if (thumbnailCriteria) {
-                updateCriteriaStatus(thumbnailCriteria, thumbnailImg !== null);
-            }
-
-            // Kiểm tra nội dung
-            const contentCriteria = document.getElementById(`criteria-content-${articleId}`);
-            const wordCountSpan = document.getElementById(`current-word-count-${articleId}`);
-            const content = document.querySelector(`.article-content-${articleId}`).innerText;
-            const wordCount = countWords(content);
-            if (wordCountSpan) {
-                wordCountSpan.textContent = `(${wordCount} từ)`;
-                if (wordCount >= 800 && wordCount <= 1500) {
-                    wordCountSpan.style.color = '#28a745';
-                    updateCriteriaStatus(contentCriteria, true);
-                } else {
-                    wordCountSpan.style.color = '#dc3545';
-                    updateCriteriaStatus(contentCriteria, false);
-                }
-            }
-
-            // Cập nhật thanh tiến trình
-            updateProgressBar(articleId);
-        }
-
-        function updateCriteriaStatus(criteriaElement, isPassed) {
-            if (!criteriaElement) return;
-
-            const iconElement = criteriaElement.querySelector('.criteria-icon');
-            if (isPassed) {
-                criteriaElement.classList.remove('failed');
-                criteriaElement.classList.add('passed');
-                iconElement.textContent = '✓';
-                iconElement.classList.remove('failed');
-                iconElement.classList.add('passed');
-            } else {
-                criteriaElement.classList.remove('passed');
-                criteriaElement.classList.add('failed');
-                iconElement.textContent = '✗';
-                iconElement.classList.remove('passed');
-                iconElement.classList.add('failed');
-            }
-        }
-
-        function updateProgressBar(articleId) {
-            const criteriaCount = document.querySelectorAll(`#criteria-list-${articleId} .criteria-item.passed`).length;
-            const progressBar = document.getElementById(`criteria-progress-bar-${articleId}`);
-            const criteriaCountSpan = document.getElementById(`criteria-count-${articleId}`);
-
-            if (progressBar) {
-                progressBar.style.width = `${criteriaCount * 20}%`;
-            }
-
-            if (criteriaCountSpan) {
-                criteriaCountSpan.textContent = `${criteriaCount}/5 tiêu chí đạt`;
-            }
-        }
-
-        function countWords(str) {
-            // Đếm số từ trong văn bản tiếng Việt
-            if (!str) return 0;
-            return str.trim().split(/\s+/).filter(word => word.length > 0).length;
-        }
-    });
-</script>
-@endsection
+        </script>
+    @endsection
