@@ -77,7 +77,7 @@
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        document.getElementById('searchResultsList').innerHTML = '<p>Có lỗi xảy ra khi tìm kiếm.</p>';
+                        document.getElementById('searchResultsList').innerHTML = '<p>Không có kết quả.</p>';
                     });
             });
 
