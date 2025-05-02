@@ -963,11 +963,12 @@ class ArticleController extends Controller
                     'title' => $article->title,
                     'author_id' => $article->author_id,
                     'category_id' => $article->category_id,
-                    'action' => 'Từ chối bài viết'
+                    'action' => 'Từ chối bài viết',
+                    'reason' => $request->rejection_reason // Thêm lý do từ chối vào details
                 ],
                 $beforeState,
                 $afterState,
-                $request->rejection_reason
+                'medium' // Sửa thành giá trị severity hợp lệ
             );
         } catch (\Exception $e) {
             // Ghi log lỗi nhưng không làm gián đoạn luồng
