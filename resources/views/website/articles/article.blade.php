@@ -323,7 +323,7 @@
                         </div>
                         <div class="col-lg-4" style="margin-top: -4px; margin-left: -200px">
                             <div class="links-side color-000 fsz-13px">
-                                <span class="me-40 d-flex align-items-center">
+                                {{-- <span class="me-40 d-flex align-items-center">
                                     @php
                                         $fullStars = floor($article->rating_star);
                                         $halfStar = $article->rating_star - $fullStars >= 0.5;
@@ -346,7 +346,7 @@
                                     <div class="m-2 small text-muted">
                                         {{ number_format($article->rating_star, 1) }} / 5
                                     </div>
-                                </span>
+                                </span> --}}
                             </div>
                         </div>
                     </div>
@@ -685,7 +685,7 @@
                                                         <?php if ($replyCount > $visibleReplies): ?>
     <button
         class="btn btn-link p-0 text-primary fw-bold show-more-replies-btn mt-2"
-        onclick="toggleReplies(this)" 
+        onclick="toggleReplies(this)"
         data-collapsed="true"
         data-replies-container-id="replies-container-{{ $comment->comment_id }}">
         Xem thêm
@@ -716,7 +716,7 @@
         }
     }
 </script>
- 
+
 
                                                     </div>
                                                     <!-- End danh sách replies -->
@@ -726,7 +726,7 @@
                                         <?php endif; ?>
                                         <?php endforeach; ?>
 
-                                       
+
 
 
 
@@ -910,7 +910,7 @@
                             .then(data => {
                                 console.log("Server data:", data);
                                 showLoading(false);
-                                
+
                                 if (data.success) {
                                     // Hiển thị thông báo thành công với Toastify
                                     Toastify({
@@ -920,12 +920,12 @@
                                         position: "center",
                                         backgroundColor: "#4CAF50", // Màu xanh cho thành công
                                     }).showToast();
-                                    
+
                                     // Đóng modal
                                     const replyModalEl = document.getElementById('replyModal');
                                     const modalInstance = bootstrap.Modal.getInstance(replyModalEl);
                                     modalInstance.hide();
-                                    
+
                                     // Reload page sau 1 giây
                                     setTimeout(function() {
                                         location.reload();
@@ -939,7 +939,7 @@
                                         position: "center",
                                         backgroundColor: "#F44336", // Màu đỏ cho lỗi
                                     }).showToast();
-                                    
+
                                     // Enable lại button
                                     sendReplyBtn.disabled = false;
                                     sendReplyBtn.textContent = "Gửi trả lời";
@@ -947,7 +947,7 @@
                             })
                             .catch(error => {
                                 console.error("Lỗi khi gửi bình luận:", error);
-                                
+
                                 // Hiển thị thông báo lỗi
                                 Toastify({
                                     text: "Đã xảy ra lỗi khi gửi trả lời (network / server).",
@@ -956,7 +956,7 @@
                                     position: "center",
                                     backgroundColor: "#F44336",
                                 }).showToast();
-                                
+
                                 // Ẩn loading, enable lại button
                                 showLoading(false);
                                 sendReplyBtn.disabled = false;
@@ -965,7 +965,7 @@
                     });
                 }
             });
-            
+
             // Make openReplyModal global
             window.openReplyModal = openReplyModal;
         </script>
