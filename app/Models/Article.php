@@ -161,7 +161,7 @@ class Article extends Model
         $views = $this->views ?? 0;
 
         // Tuỳ chỉnh trọng số nếu muốn
-        $score = ($views * 1) + ($likes * 3) + ($comments * 5);
+        $score = ($views * 5) + ($likes * 10) + ($comments * 20);
         return (int) round($score);
     }
 
