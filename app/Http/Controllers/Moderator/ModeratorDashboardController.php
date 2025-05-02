@@ -77,7 +77,8 @@ class ModeratorDashboardController extends Controller
             ->where('moderation_logs.content_type', 'article')
             ->whereBetween('moderation_logs.created_at', [$dateFrom, $dateTo])
             ->selectRaw(($viewType === 'daily' ? 'DATE(moderation_logs.created_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(moderation_logs.created_at, "%Y-%m")' : 'YEAR(moderation_logs.created_at)')) . ' as date,
-                COUNT(DISTINCT articles.article_id) as total')
+                SUM(CASE WHEN moderation_logs.action_type = "approve" THEN 1 ELSE 0 END) as approved,
+                SUM(CASE WHEN moderation_logs.action_type = "reject" THEN 1 ELSE 0 END) as rejected')
             ->groupBy('date')
             ->orderBy('date')
             ->get()
@@ -134,7 +135,8 @@ class ModeratorDashboardController extends Controller
         foreach ($allDates as $date) {
             $timeBasedArticleStats[] = [
                 'date' => $date,
-                'total' => $rawArticleStats[$date]->total ?? 0
+                'approved' => $rawArticleStats[$date]->approved ?? 0,
+                'rejected' => $rawArticleStats[$date]->rejected ?? 0
             ];
         }
 
@@ -168,15 +170,15 @@ class ModeratorDashboardController extends Controller
         }
 
         // Tổng quan bài viết (chỉ những bài viết đã được moderator này duyệt)
-        $articleStatsSummary = [
-            'total' => DB::table('moderation_logs')
-                ->join('articles', 'moderation_logs.content_id', '=', 'articles.article_id')
-                ->where('moderation_logs.moderator_id', $moderatorId)
-                ->where('moderation_logs.content_type', 'article')
-                ->select(DB::raw('COUNT(DISTINCT articles.article_id) as total'))
-                ->first()
-                ->total
-        ];
+        $articleStatsSummary = DB::table('moderation_logs')
+            ->join('articles', 'moderation_logs.content_id', '=', 'articles.article_id')
+            ->where('moderation_logs.moderator_id', $moderatorId)
+            ->where('moderation_logs.content_type', 'article')
+            ->select(
+                DB::raw('SUM(CASE WHEN moderation_logs.action_type = "approve" THEN 1 ELSE 0 END) as approved'),
+                DB::raw('SUM(CASE WHEN moderation_logs.action_type = "reject" THEN 1 ELSE 0 END) as rejected')
+            )
+            ->first();
 
         // Lấy danh sách tag và số lượng bài viết đã xuất bản (chỉ những bài viết đã được moderator này duyệt)
         $tags = Tag::whereHas('articles', function($query) use ($moderatorId) {

@@ -52,22 +52,59 @@
                 </div>
             @endif
 
+            <!-- Tổng quan bài viết -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-15">
+                                            <i class="fa fa-file-text-o fs-40 text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="mb-0">{{ $articleStatsSummary->approved + $articleStatsSummary->rejected }}</h4>
+                                            <p class="text-fade mb-0">Tổng số bài viết đã duyệt</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-15">
+                                            <i class="fa fa-check-circle fs-40 text-success"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="mb-0">{{ $articleStatsSummary->approved }}</h4>
+                                            <p class="text-fade mb-0">Bài viết đã duyệt</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-15">
+                                            <i class="fa fa-times-circle fs-40 text-danger"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="mb-0">{{ $articleStatsSummary->rejected }}</h4>
+                                            <p class="text-fade mb-0">Bài viết bị từ chối</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Biểu đồ -->
             <div class="row">
                 <div class="col-md-6">
                     <div class="box">
-                        <div class="mt-20 mx-30  h-50">
+                        <div class="mt-20 mx-30 h-50">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h4 class="box-title">Thống kê bài viết đã duyệt</h4>
-                                <div class="d-flex align-items-center">
-                                    <div class="me-15">
-                                        <i class="fa fa-file-text-o fs-40 text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="mb-0">{{ $articleStatsSummary['total'] }}</h4>
-                                        <p class="text-fade mb-0">Tổng số bài viết đã duyệt</p>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                         <div class="box-body">
@@ -135,7 +172,8 @@
 
             function renderArticleChart(stats) {
                 const labels = stats.map(stat => stat.date);
-                const totalData = stats.map(stat => stat.total);
+                const approvedData = stats.map(stat => stat.approved);
+                const rejectedData = stats.map(stat => stat.rejected);
 
                 if (articleChart) {
                     articleChart.destroy();
@@ -148,10 +186,21 @@
                         labels: labels,
                         datasets: [
                             {
-                                label: 'Tổng số bài viết đã duyệt',
-                                data: totalData,
-                                borderColor: '#3498DB',
-                                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                                label: 'Bài viết đã duyệt',
+                                data: approvedData,
+                                borderColor: '#4CAF50',
+                                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                                fill: true,
+                                borderWidth: 1,
+                                pointRadius: 1,
+                                pointHoverRadius: 3,
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Bài viết bị từ chối',
+                                data: rejectedData,
+                                borderColor: '#F44336',
+                                backgroundColor: 'rgba(244, 67, 54, 0.1)',
                                 fill: true,
                                 borderWidth: 1,
                                 pointRadius: 1,
