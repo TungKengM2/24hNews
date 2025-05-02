@@ -272,7 +272,7 @@
                                         <div class="info mt-30">
                                             <div class="tags">
                                                 <a class="blue"
-                                                    href="#">{{ $latestPosts->first()->category->name ?? 'Uncategorized' }}</a>
+                                                    href="{{ route('client.category.show', ['slug' => $latestPosts->first()->category->slug]) }}">{{ $latestPosts->first()->category->name ?? 'Uncategorized' }}</a>
                                             </div>
                                             <h4 class="title mt-15">
                                                 <a href="{{ route('articles.article', $latestPosts->first()->slug) }}"
@@ -305,7 +305,7 @@
                                         <div class="info mt-20">
                                             <div class="tags">
                                                 <a class="green"
-                                                    href="#">{{ $post->category->name ?? 'Uncategorized' }}</a>
+                                                    href="{{ route('client.category.show', ['slug' => $post->first()->category->slug]) }}">{{ $post->category->name ?? 'Uncategorized' }}</a>
                                             </div>
                                             <h6 class="title mt-10 ltspc--1">
                                                 <a href="{{ route('articles.article', $post->slug) }}"
@@ -329,7 +329,7 @@
                                         <div class="info mt-20">
                                             <div class="tags">
                                                 <a class="cyan"
-                                                    href="#">{{ $post->category->name ?? 'Uncategorized' }}</a>
+                                                    href="{{ route('client.category.show', ['slug' => $post->first()->category->slug]) }}">{{ $post->category->name ?? 'Uncategorized' }}</a>
                                             </div>
                                             <h6 class="title mt-10 ltspc--1">
                                                 <a href="{{ route('articles.article', $post->slug) }}"
@@ -616,7 +616,7 @@
 
                         <!-- Section title -->
                         <p class="color-000 text-uppercase mb-30 ltspc-1">
-                            <a href="{{ route('categories.show', 'kinh-doanh') }}">Kinh Doanh</a>
+                            <a href="{{ route('client.category.show', 'kinh-doanh') }}">Kinh Doanh</a>
                             <i class="la la-angle-right ms-1"></i>
                         </p>
 
@@ -875,7 +875,7 @@
                                 <div class="col-lg-4">
                                     <p class="color-000 text-uppercase mb-30 ltspc-1">
                                         <a
-                                            href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a>
+                                            href="{{ route('client.category.show', ['slug' => $category->slug]) }}">{{ $category->name }}</a>
                                         <i class="la la-angle-right ms-1"></i>
                                     </p>
 
