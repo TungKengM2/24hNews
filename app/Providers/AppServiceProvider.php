@@ -16,7 +16,10 @@ use Illuminate\Support\Facades\View;
 use App\Services\TinyMCEUploadService;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
-
+//tungkeng bổ sung thêm để chạy lại bảng
+use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\StringType;
+use Illuminate\Support\Facades\DB;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -41,6 +44,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        //Tùng keng bổ sung thêm để chạy lại bảng
+        if (DB::getDriverName() === 'mysql') {
+            if (!Type::hasType('enum')) {
+                Type::addType('enum', StringType::class);
+            }
+
+            DB::getDoctrineConnection()
+                ->getDatabasePlatform()
+                ->registerDoctrineTypeMapping('enum', 'string');
+        }
+
         Article::observe(ArticleObserver::class);
 
         Paginator::useBootstrap();
@@ -81,12 +95,12 @@ class AppServiceProvider extends ServiceProvider
                 // dat them
                 $view->with('categories', Category::where('is_active', 1)->get());
                 $view->with('category2', Category::where('is_active', 1)->get());
-                
+
                 // Thêm biến parentCategories cho top-nav.blade.php
                 $parentCategories = Category::whereNull('parent_id')
                     ->where('is_active', 1)
                     ->get();
-                    
+
                 $view->with('parentCategories', $parentCategories);
                 // dat them
             }

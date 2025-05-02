@@ -117,6 +117,7 @@
                                             <th class="text-center" width="10%">Trạng Thái</th>
                                             <th class="text-center" width="10%">Tác Giả</th>
                                             <th class="text-center" width="10%">Lượt Xem</th>
+                                            <th class="text-center" width="10%">Thời Gian</th>
                                             {{-- <th width="10%">Nội Dung Nhạy Cảm</th> --}}
                                             <th class="text-center" width="10%">Tags</th>
                                             <th class="text-center" width="20%">Thao Tác</th>
@@ -168,6 +169,7 @@
                                                 </td>
                                                 <td>{{ $article->author->username ?? 'Chưa xác định' }}</td>
                                                 <td class="text-center">{{ number_format($article->views) }}</td>
+                                                <td class="text-center">{{ $article->updated_at->format('d/m/Y H:i') }}</td>
                                                 {{-- <td class="text-center">
                                                     @if ($article->contains_sensitive_content)
                                                         <span class="badge bg-danger">Có</span>
@@ -290,7 +292,7 @@
                                             </div>
                                             @empty
                                                 <tr>
-                                                    <td colspan="9" class="text-center">Không có bài viết nào</td>
+                                                    <td colspan="10" class="text-center">Không có bài viết nào</td>
                                                 </tr>
                                             @endforelse
                                         </tbody>
@@ -430,6 +432,10 @@
                                                                             <span class="badge bg-{{ $article->status == 'published' ? 'success' : 'warning' }} rounded-pill">
                                                                                 {{ ucfirst($article->status) }}
                                                                             </span>
+                                                                        </li>
+                                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                            <span><i class="mdi mdi-clock-outline"></i> Cập nhật lúc:</span>
+                                                                            <span class="badge bg-info rounded-pill">{{ $article->updated_at->format('d/m/Y H:i') }}</span>
                                                                         </li>
                                                                         <li class="list-group-item">
                                                                             <span><i class="mdi mdi-tag-multiple"></i> Thẻ:</span>
