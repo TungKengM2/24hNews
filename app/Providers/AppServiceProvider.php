@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //Tùng keng bổ sung thêm để chạy lại bảng
-        if (DB::getDriverName() === 'mysql') {
+        if (DB::getDriverName() === 'mysql' && class_exists('Doctrine\DBAL\Types\Type')) {
             if (!Type::hasType('enum')) {
                 Type::addType('enum', StringType::class);
             }

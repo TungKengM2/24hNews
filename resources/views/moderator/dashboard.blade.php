@@ -3,214 +3,7 @@
 @section('content')
     <div class="content-wrapper">
         <div class="container-full">
-            {{-- <div class="row mt-20">
-               <h3>Tổng Quan Bài Viết</h3>
-                <!-- Tổng số bài viết -->
-                <div class="col-xl-2 col-md-6 col-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="d-flex align-items-center">
-                                <div class="ms-15">
-                                    <h5 class="mb-0">Tổng bài viết</h5>
-
-                                </div>
-                            </div>
-                            <div class="mt-40 d-flex justify-content-between align-items-center">
-                                <h3 class="fw-600">{{ $articleStatsSummary['total'] }}</h3>
-                                <div class="text-primary">
-                                    <i class="fa fa-file-text fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Archived -->
-                <div class="col-xl-2 col-md-6 col-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="d-flex align-items-center">
-                                <div class="ms-15">
-                                    <h5 class="mb-0">Bài viết đã lưu trữ</h5>
-
-                                </div>
-                            </div>
-                            <div class="mt-40 d-flex justify-content-between align-items-center">
-                                <h3 class="fw-600">{{ $articleStatsSummary['archived'] }}</h3>
-                                <div class="text-secondary">
-                                    <i class="fa fa-archive fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pending -->
-                <div class="col-xl-2 col-md-6 col-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="d-flex align-items-center">
-                                <div class="ms-15">
-                                    <h5 class="mb-0">Bài viết đang chờ</h5>
-
-                                </div>
-                            </div>
-                            <div class="mt-40 d-flex justify-content-between align-items-center">
-                                <h3 class="fw-600">{{ $articleStatsSummary['pending'] }}</h3>
-                                <div class="text-warning">
-                                    <i class="fa fa-hourglass-half fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Published -->
-                <div class="col-xl-2 col-md-6 col-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="d-flex align-items-center">
-                                <div class="ms-15">
-                                    <h5 class="mb-0">Bài viết đã xuất bản</h5>
-
-                                </div>
-                            </div>
-                            <div class="mt-40 d-flex justify-content-between align-items-center">
-                                <h3 class="fw-600">{{ $articleStatsSummary['published'] }}</h3>
-                                <div class="text-success">
-                                    <i class="fa fa-check-circle fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Rejected -->
-                <div class="col-xl-2 col-md-6 col-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="d-flex align-items-center">
-                                <div class="ms-15">
-                                    <h5 class="mb-0">Bài viết bị từ chối</h5>
-
-                                </div>
-                            </div>
-                            <div class="mt-40 d-flex justify-content-between align-items-center">
-                                <h3 class="fw-600">{{ $articleStatsSummary['rejected'] }}</h3>
-                                <div class="text-danger">
-                                    <i class="fa fa-times-circle fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Draft -->
-                <div class="col-xl-2 col-md-6 col-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="d-flex align-items-center">
-                                <div class="ms-15">
-                                    <h5 class="mb-0">Bài viết lưu nháp</h5>
-
-                                </div>
-                            </div>
-                            <div class="mt-40 d-flex justify-content-between align-items-center">
-                                <h3 class="fw-600">{{ $articleStatsSummary['draft'] }}</h3>
-                                <div class="text-info">
-                                    <i class="fa fa-pencil-square fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div> --}}
-            <!-- Thống kê người dùng -->
-            {{-- <div class="row">
-                <!-- Tổng số người dùng -->
-                <h3>Tổng Quan Người Dùng</h3>
-                <div class="col-xl-3 col-md-6 col-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="d-flex align-items-center">
-                                <div class="ms-15">
-                                    <h5 class="mb-0">Tổng số người dùng</h5>
-                                    <p class="mb-0 text-fade fs-12">Tất cả vai trò</p>
-                                </div>
-                            </div>
-                            <div class="mt-20 d-flex justify-content-between align-items-center">
-                                <h3 class="fw-600">{{ $userCount['total'] }}</h3>
-                                <div class="text-primary">
-                                    <i class="fa fa-users fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Người dùng -->
-                <div class="col-xl-3 col-md-6 col-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="d-flex align-items-center">
-                                <div class="ms-15">
-                                    <h5 class="mb-0">Người dùng</h5>
-                                    <p class="mb-0 text-fade fs-12">Vai trò: Người dùng</p>
-                                </div>
-                            </div>
-                            <div class="mt-20 d-flex justify-content-between align-items-center">
-                                <h3 class="fw-600">{{ $userCount['user'] }}</h3>
-                                <div class="text-info">
-                                    <i class="fa fa-user fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Kiểm duyệt viên -->
-                <div class="col-xl-3 col-md-6 col-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="d-flex align-items-center">
-                                <div class="ms-15">
-                                    <h5 class="mb-0">Kiểm duyệt viên</h5>
-                                    <p class="mb-0 text-fade fs-12">Vai trò: Kiểm duyệt viên</p>
-                                </div>
-                            </div>
-                            <div class="mt-20 d-flex justify-content-between align-items-center">
-                                <h3 class="fw-600">{{ $userCount['moderators'] }}</h3>
-                                <div class="text-success">
-                                    <i class="fas fa-user-shield fa-2x"></i> <!-- Cập nhật class -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tác giả -->
-                <div class="col-xl-3 col-md-6 col-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="d-flex align-items-center">
-                                <div class="ms-15">
-                                    <h5 class="mb-0">Tác giả</h5>
-                                    <p class="mb-0 text-fade fs-12">Vai trò: Tác giả</p>
-                                </div>
-                            </div>
-                            <div class="mt-20 d-flex justify-content-between align-items-center">
-                                <h3 class="fw-600">{{ $userCount['authors'] }}</h3>
-                                <div class="text-warning">
-                                    <i class="fas fa-user-edit fa-2x"></i> <!-- Cập nhật class -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            </div> --}}
-            <!-- Bộ lọc -->
+            <!-- Bộ lọc thống kê -->
             <div class="box mt-20">
                 <div class="box-header with-border">
                     <h4 class="box-title">Bộ lọc thống kê</h4>
@@ -259,12 +52,60 @@
                 </div>
             @endif
 
+            <!-- Tổng quan bài viết -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-15">
+                                            <i class="fa fa-file-text-o fs-40 text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="mb-0">{{ $articleStatsSummary->approved + $articleStatsSummary->rejected }}</h4>
+                                            <p class="text-fade mb-0">Tổng số bài viết đã duyệt</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-15">
+                                            <i class="fa fa-check-circle fs-40 text-success"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="mb-0">{{ $articleStatsSummary->approved }}</h4>
+                                            <p class="text-fade mb-0">Bài viết đã duyệt</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-15">
+                                            <i class="fa fa-times-circle fs-40 text-danger"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="mb-0">{{ $articleStatsSummary->rejected }}</h4>
+                                            <p class="text-fade mb-0">Bài viết bị từ chối</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Biểu đồ -->
             <div class="row">
                 <div class="col-md-6">
                     <div class="box">
-                        <div class="box-header with-border">
-                            <h4 class="box-title">Thống kê bài viết</h4>
+                        <div class="mt-20 mx-30 h-50">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="box-title">Thống kê bài viết đã duyệt</h4>
+
+                            </div>
                         </div>
                         <div class="box-body">
                             <div class="chart-container" style="position: relative; height: 400px;">
@@ -275,8 +116,8 @@
                 </div>
                 <div class="col-md-6">
                     <div class="box">
-                        <div class="box-header with-border">
-                            <h4 class="box-title">Thống kê tương tác</h4>
+                        <div class="mt-20 mx-30 h-50">
+                            <h4 class="box-title">Thống kê tương tác bài viết đã duyệt</h4>
                         </div>
                         <div class="box-body">
                             <div class="chart-container" style="position: relative; height: 400px;">
@@ -288,14 +129,12 @@
                 <div class="col-6">
                     <div class="box">
                         <div class="box-header">
-                            <h4>Thống kê Tag Theo Số Lượng Bài Viết</h4>
+                            <h4>Thống kê Tag Theo Số Lượng Bài Viết Đã Duyệt</h4>
                         </div>
                         <div class="box-body">
-                            <!-- Chú thích cố định -->
                             <div id="chartLegend" style="text-align: center; margin-bottom: 10px; font-weight: bold;">
                                 Số lượng Tag Theo Số Lượng Bài Viết Đã Xuất Bản
                             </div>
-                            <!-- Biểu đồ có cuộn ngang -->
                             <div style="overflow-x: auto; white-space: nowrap;" id="chartContainer">
                                 <canvas id="tagsChart"></canvas>
                             </div>
@@ -333,11 +172,8 @@
 
             function renderArticleChart(stats) {
                 const labels = stats.map(stat => stat.date);
-                const publishedData = stats.map(stat => stat.published);
-                const pendingData = stats.map(stat => stat.pending);
+                const approvedData = stats.map(stat => stat.approved);
                 const rejectedData = stats.map(stat => stat.rejected);
-                const draftData = stats.map(stat => stat.draft);
-                const archivedData = stats.map(stat => stat.archived);
 
                 if (articleChart) {
                     articleChart.destroy();
@@ -350,10 +186,10 @@
                         labels: labels,
                         datasets: [
                             {
-                                label: 'Đã xuất bản',
-                                data: publishedData,
-                                borderColor: '#2ECC71',
-                                backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                                label: 'Bài viết đã duyệt',
+                                data: approvedData,
+                                borderColor: '#4CAF50',
+                                backgroundColor: 'rgba(76, 175, 80, 0.1)',
                                 fill: true,
                                 borderWidth: 1,
                                 pointRadius: 1,
@@ -361,43 +197,10 @@
                                 tension: 0.3
                             },
                             {
-                                label: 'Đang chờ',
-                                data: pendingData,
-                                borderColor: '#F1C40F',
-                                backgroundColor: 'rgba(241, 196, 15, 0.1)',
-                                fill: true,
-                                borderWidth: 1,
-                                pointRadius: 1,
-                                pointHoverRadius: 3,
-                                tension: 0.3
-                            },
-                            {
-                                label: 'Bị từ chối',
+                                label: 'Bài viết bị từ chối',
                                 data: rejectedData,
-                                borderColor: '#E74C3C',
-                                backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                                fill: true,
-                                borderWidth: 1,
-                                pointRadius: 1,
-                                pointHoverRadius: 3,
-                                tension: 0.3
-                            },
-                            {
-                                label: 'Lưu nháp',
-                                data: draftData,
-                                borderColor: '#3498DB',
-                                backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                                fill: true,
-                                borderWidth: 1,
-                                pointRadius: 1,
-                                pointHoverRadius: 3,
-                                tension: 0.3
-                            },
-                            {
-                                label: 'Đã lưu trữ',
-                                data: archivedData,
-                                borderColor: '#9B59B6',
-                                backgroundColor: 'rgba(155, 89, 182, 0.1)',
+                                borderColor: '#F44336',
+                                backgroundColor: 'rgba(244, 67, 54, 0.1)',
                                 fill: true,
                                 borderWidth: 1,
                                 pointRadius: 1,
@@ -564,9 +367,6 @@
                 const dateTo = document.getElementById('date_to').value;
                 const viewType = document.getElementById('view_type').value;
 
-                // Log để debug
-                console.log('Fetching data with:', { dateFrom, dateTo, viewType });
-
                 fetch(`{{ route('moderator.dashboard') }}?date_from=${dateFrom}&date_to=${dateTo}&view_type=${viewType}`, {
                     method: 'GET',
                     headers: {
@@ -581,7 +381,6 @@
                         return response.json();
                     })
                     .then(data => {
-                        console.log('Received data:', data);
                         if (data.timeBasedArticleStats) {
                             renderArticleChart(data.timeBasedArticleStats);
                         }
@@ -625,7 +424,7 @@
 
             function renderTagsChart(tags) {
                 const labels = tags.map(tag => tag.name.length > 15 ? tag.name.substring(0, 15) + '...' : tag.name);
-                const data = tags.map(tag => tag.published_articles_count);
+                const data = tags.map(tag => tag.articles_count);
 
                 if (tagsChart) {
                     tagsChart.destroy();
