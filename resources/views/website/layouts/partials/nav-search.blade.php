@@ -132,6 +132,10 @@
                         fetchTagSuggestions(keyword)
                     ])
                     .then(([titleData, categoryData, tagData]) => {
+                        // Debug dữ liệu nhận được từ API
+                        console.log('API Response - Title Data:', titleData);
+                        console.log('API Response - Category Data:', categoryData);
+                        console.log('API Response - Tag Data:', tagData);
                         // Lưu trữ kết quả tiêu đề riêng biệt
                         let titleSuggestions = [];
                         // Kết hợp kết quả từ hai nguồn (tag và category)
@@ -151,11 +155,23 @@
                         // Thêm gợi ý danh mục
                         if (categoryData.suggestions && categoryData.suggestions.length > 0) {
                             categoryData.suggestions.forEach(category => {
-                                tagCategorySuggestions.push({
+                                // Log để debug
+                                console.log('Category suggestion data:', category);
+
+                                const categoryItem = {
                                     text: category.name,
                                     type: 'category',
-                                    slug: category.slug
-                                });
+                                    slug: category.slug,
+                                    is_child: category.is_child || false
+                                };
+
+                                // Nếu là danh mục con, thêm thông tin về danh mục cha
+                                if (category.parent_slug) {
+                                    categoryItem.parent_slug = category.parent_slug;
+                                    categoryItem.parent_name = category.parent_name;
+                                }
+
+                                tagCategorySuggestions.push(categoryItem);
                             });
                         }
 
@@ -211,9 +227,30 @@
                                         cssClass += ' tag';
                                     }
 
-                                    html += `<div class="${cssClass}" data-type="${suggestion.type}"
-                                        ${suggestion.slug ? `data-slug="${suggestion.slug}"` : ''}
-                                        ${suggestion.tag_id ? `data-tag-id="${suggestion.tag_id}"` : ''}>${highlightedText}</div>`;
+                                    // Tạo các thuộc tính dữ liệu cho phần tử HTML
+                                    let dataAttributes = `data-type="${suggestion.type}"`;
+
+                                    if (suggestion.slug) {
+                                        dataAttributes += ` data-slug="${suggestion.slug}"`;
+                                    }
+
+                                    if (suggestion.tag_id) {
+                                        dataAttributes += ` data-tag-id="${suggestion.tag_id}"`;
+                                    }
+
+                                    // Xử lý thuộc tính is_child
+                                    if (suggestion.is_child === true) {
+                                        dataAttributes += ` data-is-child="true"`;
+                                    } else {
+                                        dataAttributes += ` data-is-child="false"`;
+                                    }
+
+                                    // Thêm parent_slug nếu có
+                                    if (suggestion.parent_slug) {
+                                        dataAttributes += ` data-parent-slug="${suggestion.parent_slug}"`;
+                                    }
+
+                                    html += `<div class="${cssClass}" ${dataAttributes}>${highlightedText}</div>`;
                                 });
                             }
 
@@ -229,7 +266,32 @@
                                     if (type === 'category') {
                                         // Nếu là danh mục, chuyển hướng đến trang danh mục
                                         const slug = this.getAttribute('data-slug');
-                                        window.location.href = `/danh-muc/${slug}`;
+                                        const isChild = this.getAttribute('data-is-child') === 'true';
+                                        const parentSlug = this.getAttribute('data-parent-slug');
+
+                                        // Debug thông tin
+                                        console.log('Category click:', {
+                                            type,
+                                            slug,
+                                            isChild,
+                                            parentSlug,
+                                            allAttributes: this.getAttributeNames().reduce((obj, name) => {
+                                                obj[name] = this.getAttribute(name);
+                                                return obj;
+                                            }, {})
+                                        });
+
+                                        if (isChild && parentSlug) {
+                                            // Nếu là danh mục con và có parent_slug, sử dụng URL dạng /danh-muc/{parent_slug}/{child_slug}
+                                            const url = `/danh-muc/${parentSlug}/${slug}`;
+                                            console.log('Navigating to child category URL:', url);
+                                            window.location.href = url;
+                                        } else {
+                                            // Nếu là danh mục cha, sử dụng URL dạng /danh-muc/{slug}
+                                            const url = `/danh-muc/${slug}`;
+                                            console.log('Navigating to parent category URL:', url);
+                                            window.location.href = url;
+                                        }
                                     } else if (type === 'tag') {
                                         // Nếu là thẻ tag, chuyển hướng đến trang tag
                                         const tagId = this.getAttribute('data-tag-id');
