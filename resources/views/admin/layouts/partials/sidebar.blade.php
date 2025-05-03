@@ -1,5 +1,23 @@
 
 <body>
+    <ul>
+        @foreach (auth()->user()->notifications as $notification)
+            @php
+                $data = $notification->data;
+                $article = \App\Models\Article::find($data['article_id'] ?? null);
+            @endphp
+
+            @if ($article && $article->status === 'pending')
+                <li>
+                    {{ $data['message'] }}
+                    <a href="{{ route('admin.dashboard') }}"
+                       onclick="event.preventDefault(); markAsRead('{{ $notification->id }}');">
+                       OKE
+                    </a>
+                </li>
+            @endif
+        @endforeach
+    </ul>
 
 
 
@@ -108,7 +126,19 @@
                 </div>
             </div>
         </main>
-
+        <script>
+            function markAsRead(notificationId) {
+                fetch('/mark-notification-read/' + notificationId, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(() => {
+                    location.reload();
+                });
+            }
+        </script>
 
 
 

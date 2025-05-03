@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Pagination\Paginator;
+use App\Models\Category;
+use App\Observers\CategoryObserver;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,6 +23,31 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Paginator::useBootstrapFive();
+        View::composer(
+            [
+                'author.articles.index',
+                'author.articles.show',
+                'author.articles.edit',
+                'author.articles.create',
+                'author.dashboard',
+                'author.profile',
+                'author.layouts.master',
+                'author.layouts.partials.header-top',
+                'user.dashboard',
+                'user.layouts.master',
+                'user.layouts.partials.header-top',
+            ],
+            function ($view) {
+                $user = Auth::user();
+                $view->with('username', $user->username ?? 'Tác Giả');
+                $view->with('avatar',
+                    $user->image ?? '/admin/main/../images/user5-128x128.jpg');
+            }
+        );
+        Category::observe(CategoryObserver::class);
     }
+
+    /**
+     * Bootstrap any application services.
+     */
 }

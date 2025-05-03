@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -13,16 +13,28 @@ return new class extends Migration
     {
         Schema::create('approvals', function (Blueprint $table) {
             $table->id('approval_id');
-            $table->foreignId('article_id')->nullable()->constrained('articles', 'article_id');
-            $table->foreignId('approved_by')->nullable()->constrained('users', 'user_id');
-            $table->enum('type', ['article', 'role_upgrade'])->default('article');
-            $table->string('requested_role')->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->unsignedBigInteger('article_id')->nullable();
+            $table->unsignedBigInteger('approved_by')->nullable();
+            $table->enum('type', ['article', 'role_upgrade'])
+                ->default('article');
+            $table->string('requested_role');
+            $table->enum('status', ['pending', 'approved', 'rejected'])
+                ->default('pending');
             $table->boolean('auto_reviewed')->default(false);
-            $table->text('remarks');
-            $table->timestamp('created_at')->useCurrent();
-        });
+            $table->text('remarks')->nullable();
 
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')
+                ->references('user_id')
+                ->on('users')
+                ->onDelete('cascade');
+            $table->foreign('approved_by')
+                ->references('user_id')
+                ->on('users')
+                ->onDelete('set null');
+
+            $table->timestamps();
+        });
     }
 
     /**

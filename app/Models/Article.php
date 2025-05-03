@@ -2,16 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Notification;
+use App\Models\User;
+use App\Notifications\NewArticleSubmitted;
+
 
 class Article extends Model
 {
+
     use HasFactory;
 
-    protected $table = 'articles'; // Đảm bảo tên bảng đúng
+    protected $table = 'articles';
 
-    protected $primaryKey = 'article_id'; // Khóa chính là 'article_id'
+    protected $primaryKey = 'article_id';
 
     protected $fillable = [
         'title',
@@ -27,6 +32,16 @@ class Article extends Model
         'approved_by',
     ];
 
+    protected $with = ['tags'];
+
+    /**
+     * Lấy danh sách bài viết đã xuất bản
+     */
+    public static function published()
+    {
+        return self::where('status', 'published')->get();
+    }
+
     /**
      * Quan hệ với bảng `users` (tác giả)
      */
@@ -40,7 +55,31 @@ class Article extends Model
      */
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'category_id');
+        return $this->belongsTo(
+            Category::class,
+            'category_id',
+            'category_id'
+        );
+    }
+
+
+    public function getCategoryNameAttribute()
+    {
+        if (!$this->category) {
+            return "Không có danh mục";
+        }
+
+        return $this->category->is_active ? $this->category->name : "Không hoạt động";
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(
+            Tag::class,
+            'article_tags',
+            'article_id',
+            'tag_id'
+        );
     }
 
     /**
@@ -57,12 +96,10 @@ class Article extends Model
         return $this->belongsTo(User::class, 'approved_by');
     }
 
-    /**
-     * Lấy danh sách bài viết đã xuất bản
-     */
-    public static function published()
+    public function notifyAdmins(): void
     {
-        return self::where('status', 'published')->get();
+        $admins = User::where('role_id', 1)->get(); // Lấy danh sách admin
+        Notification::send($admins, new NewArticleSubmitted($this)); // Gửi thông báo
     }
 
     /**
@@ -73,5 +110,10 @@ class Article extends Model
         $this->increment('views');
     }
 
-
+    public function scopeActiveCategory($query)
+    {
+        return $query->whereHas('category', function ($q) {
+            $q->where('is_active', true);
+        });
+    }
 }
