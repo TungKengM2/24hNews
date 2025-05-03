@@ -298,7 +298,7 @@
                                         <img src="<?= !empty($article->author->image) ? asset('storage/' . $article->author->image) : 'https://cdn.sforum.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg' ?>"
                                             alt="User Avatar">
                                     </span>
-                                    <span>By</span>
+                                    <span>Bởi</span>
                                     <a href="{{ route('website.profileAuth', ['id' => $article->author->user_id]) }}"
                                         class="text-decoration-underline text-primary ms-1">{{ $article->author->username }}</a>
                                 </div>
@@ -683,39 +683,38 @@
                                                         <?php endforeach; ?>
 
                                                         <?php if ($replyCount > $visibleReplies): ?>
-    <button
-        class="btn btn-link p-0 text-primary fw-bold show-more-replies-btn mt-2"
-        onclick="toggleReplies(this)"
-        data-collapsed="true"
-        data-replies-container-id="replies-container-{{ $comment->comment_id }}">
-        Xem thêm
-    </button>
-<?php endif; ?>
+                                                        <button
+                                                            class="btn btn-link p-0 text-primary fw-bold show-more-replies-btn mt-2"
+                                                            onclick="toggleReplies(this)" data-collapsed="true"
+                                                            data-replies-container-id="replies-container-{{ $comment->comment_id }}">
+                                                            Xem thêm
+                                                        </button>
+                                                        <?php endif; ?>
 
-<script>
-    function toggleReplies(button) {
-        const repliesContainer = button.closest('.replies');
-        const allReplies = repliesContainer.querySelectorAll('.reply-item');
-        const isCollapsed = button.getAttribute('data-collapsed') === 'true';
-        const visibleCount = 0; // Set this to the number of replies you want visible initially (0 hides all)
+                                                        <script>
+                                                            function toggleReplies(button) {
+                                                                const repliesContainer = button.closest('.replies');
+                                                                const allReplies = repliesContainer.querySelectorAll('.reply-item');
+                                                                const isCollapsed = button.getAttribute('data-collapsed') === 'true';
+                                                                const visibleCount = 0; // Set this to the number of replies you want visible initially (0 hides all)
 
-        if (isCollapsed) {
-            // Show all replies
-            allReplies.forEach(reply => reply.classList.remove('d-none'));
-            button.innerText = 'Thu gọn'; // Change button text to "Collapse"
-            button.setAttribute('data-collapsed', 'false'); // Update the collapsed state
-        } else {
-            // Hide extra replies
-            allReplies.forEach((reply, index) => {
-                if (index >= visibleCount) {
-                    reply.classList.add('d-none'); // Hide replies exceeding the visibleCount
-                }
-            });
-            button.innerText = 'Xem thêm'; // Change button text to "Show more"
-            button.setAttribute('data-collapsed', 'true'); // Update the collapsed state
-        }
-    }
-</script>
+                                                                if (isCollapsed) {
+                                                                    // Show all replies
+                                                                    allReplies.forEach(reply => reply.classList.remove('d-none'));
+                                                                    button.innerText = 'Thu gọn'; // Change button text to "Collapse"
+                                                                    button.setAttribute('data-collapsed', 'false'); // Update the collapsed state
+                                                                } else {
+                                                                    // Hide extra replies
+                                                                    allReplies.forEach((reply, index) => {
+                                                                        if (index >= visibleCount) {
+                                                                            reply.classList.add('d-none'); // Hide replies exceeding the visibleCount
+                                                                        }
+                                                                    });
+                                                                    button.innerText = 'Xem thêm'; // Change button text to "Show more"
+                                                                    button.setAttribute('data-collapsed', 'true'); // Update the collapsed state
+                                                                }
+                                                            }
+                                                        </script>
 
 
                                                     </div>
@@ -979,7 +978,7 @@
                 <div class="content pt-50 pb-50 border-1 border-top border-dark">
                     <div class="row">
                         <div class="col-lg-4 mb-5 mb-lg-0">
-                            <a href="" class="color-000 text-uppercase mb-30 ltspc-1"> Xem thêm từ tác giả này
+                            <a href="{{ route('website.profileAuth', ['id' => $article->author->user_id]) }}" class="color-000 text-uppercase mb-30 ltspc-1"> Xem thêm từ tác giả này
                                 <i class="la la-angle-right ms-1"></i>
                             </a>
                             <div class="row">
@@ -1062,8 +1061,13 @@
 
 
                         <div class="col-lg-4 mb-5 mb-lg-0">
-                            <a href="page-blog.html" class="color-000 text-uppercase mb-30 ltspc-1">
-                                {{ $article->category->name }} <i class="la la-angle-right ms-1"></i> </a>
+                            @if ($article->category)
+                                <a href="{{ route('client.category.show', ['slug' => $article->category->slug]) }}"
+                                    class="color-000 text-uppercase mb-30 ltspc-1">
+                                    {{ $article->category->name }}<i class="la la-angle-right ms-1"></i>
+                                </a>
+                            @endif
+
                             <div class="row">
                                 <div class="col-12 border-1 border-end brd-gray">
                                     @if ($relatedCategoryArticles->isNotEmpty())
@@ -1148,8 +1152,7 @@
 
 
                         <div class="col-lg-4">
-                            <a href="page-blog.html" class="color-000 text-uppercase mb-30 ltspc-1"> Khuyến cáo <i
-                                    class="la la-angle-right ms-1"></i> </a>
+                            <a class="color-000 text-uppercase mb-30 ltspc-1"> Khuyến cáo </a>
                             <div class="row">
                                 <div class="col-12">
                                     @if ($khuyencao->isNotEmpty())

@@ -522,7 +522,8 @@ class HomeController extends Controller
             $lowerKeyword = mb_strtolower($keyword);
 
             // Tìm kiếm danh mục có tên chứa từ khóa
-            $suggestions = Category::where('is_active', 1)
+            $suggestions = Category::with('parent')
+                ->where('is_active', 1)
                 ->where(function ($query) use ($keyword) {
                     $query->where('name', 'LIKE', "{$keyword}%")
                         ->orWhere('name', 'LIKE', "% {$keyword}%")
@@ -549,12 +550,22 @@ class HomeController extends Controller
                     $relevance += min(3, $category->articles_count / 10);
                     $relevance += (mb_strlen($category->name) < 20) ? 1 : 0;
 
-                    return [
+                    // Thêm thông tin về danh mục cha nếu có
+                    $result = [
                         'name' => $category->name,
                         'slug' => $category->slug,
                         'relevance' => $relevance,
-                        'type' => 'category'
+                        'type' => 'category',
+                        'is_child' => !is_null($category->parent_id)
                     ];
+
+                    // Nếu là danh mục con, thêm thông tin về danh mục cha
+                    if ($category->parent) {
+                        $result['parent_slug'] = $category->parent->slug;
+                        $result['parent_name'] = $category->parent->name;
+                    }
+
+                    return $result;
                 })
                 ->sortByDesc('relevance')
                 ->take(5)

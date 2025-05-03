@@ -97,7 +97,7 @@ class ArticleUserController extends Controller
 
         // Lấy bài viết cùng danh mục nhưng không trùng với bài của tác giả trên
         $relatedCategoryArticles = Article::where('category_id', $article->category_id)
-            ->whereNotIn('article_id', $relatedAuthorArticleIds) // Không lấy bài đã có trong danh sách tác giả
+
             ->where('article_id', '!=', $article->article_id) // Loại trừ bài hiện tại
             ->where('status', 'published') // Chỉ lấy bài viết đã xuất bản
             ->whereHas('category', function ($query) {
@@ -231,7 +231,7 @@ class ArticleUserController extends Controller
         $parentCategories = Category::whereNull('parent_id')
             ->where('is_active', 1)
             ->withCount(['articles' => function ($query) {
-                // Chỉ đếm bài viết có is_active = 1
+
                 $query->where('is_active', 1);
             }])
             ->orderBy('articles_count', 'desc') // Sắp xếp theo số lượng bài viết trực tiếp của cha giảm dần
