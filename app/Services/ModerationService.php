@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use App\Services\DeepSeekModerationService;
 
 		class ModerationService
 		{
@@ -51,6 +52,32 @@ use Illuminate\Support\Facades\Storage;
 						}
 
 						self::$last_request_time = microtime(true) * 1000;
+				}
+
+				/**
+				 * Kiểm duyệt nội dung sử dụng DeepSeek API
+				 *
+				 * @param string $inputText Nội dung cần kiểm duyệt
+				 * @param bool $skipModeration Flag để bỏ qua kiểm duyệt nếu cần
+				 * @return array Kết quả kiểm duyệt
+				 */
+				public function moderateContentWithDeepSeek($inputText, bool $skipModeration = false): array
+				{
+						// Nếu flag bỏ qua kiểm duyệt được bật, trả về kết quả an toàn mặc định
+						if ($skipModeration) {
+								Log::info('Đã bỏ qua kiểm duyệt nội dung theo yêu cầu');
+								return [
+										'status' => 'success',
+										'message' => 'Đã bỏ qua kiểm duyệt nội dung',
+										'violation_level' => 'none',
+										'violations' => [],
+										'reason' => [],
+								];
+						}
+
+						// Nếu không bỏ qua, thực hiện kiểm duyệt bình thường
+						$deepSeekService = new DeepSeekModerationService();
+						return $deepSeekService->moderateContent($inputText);
 				}
 
 				public function moderateContent($inputText): array

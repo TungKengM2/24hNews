@@ -78,8 +78,13 @@ class ArticleController extends Controller
 
         // Xử lý tìm kiếm theo danh mục nếu có
         if ($category) {
-            $query->whereHas('category', function ($q) use ($category) {
-                $q->where('name', 'like', $category . '%');
+            $query->where(function($q) use ($category) {
+                $q->whereHas('category', function ($q) use ($category) {
+                    $q->where('name', 'like', $category . '%');
+                })
+                ->orWhereHas('subcategory', function ($q) use ($category) {
+                    $q->where('name', 'like', $category . '%');
+                });
             });
         }
 
@@ -963,11 +968,12 @@ class ArticleController extends Controller
                     'title' => $article->title,
                     'author_id' => $article->author_id,
                     'category_id' => $article->category_id,
-                    'action' => 'Từ chối bài viết'
+                    'action' => 'Từ chối bài viết',
+                    'reason' => $request->rejection_reason // Thêm lý do từ chối vào details
                 ],
                 $beforeState,
                 $afterState,
-                $request->rejection_reason
+                'medium' // Sửa thành giá trị severity hợp lệ
             );
         } catch (\Exception $e) {
             // Ghi log lỗi nhưng không làm gián đoạn luồng

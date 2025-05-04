@@ -247,6 +247,7 @@
         </section>
         <!-- ====== end xu hướng nóng ====== -->
 
+
         <!-- start what's new -->
         <div class="container">
             @if ($latestPosts->isNotEmpty())
@@ -272,7 +273,7 @@
                                         <div class="info mt-30">
                                             <div class="tags">
                                                 <a class="blue"
-                                                    href="#">{{ $latestPosts->first()->category->name ?? 'Uncategorized' }}</a>
+                                                    href="{{ route('client.category.show', ['slug' => $latestPosts->first()->category->slug]) }}">{{ $latestPosts->first()->category->name ?? 'Uncategorized' }}</a>
                                             </div>
                                             <h4 class="title mt-15">
                                                 <a href="{{ route('articles.article', $latestPosts->first()->slug) }}"
@@ -305,7 +306,7 @@
                                         <div class="info mt-20">
                                             <div class="tags">
                                                 <a class="green"
-                                                    href="#">{{ $post->category->name ?? 'Uncategorized' }}</a>
+                                                    href="{{ route('client.category.show', ['slug' => $post->first()->category->slug]) }}">{{ $post->category->name ?? 'Uncategorized' }}</a>
                                             </div>
                                             <h6 class="title mt-10 ltspc--1">
                                                 <a href="{{ route('articles.article', $post->slug) }}"
@@ -329,7 +330,7 @@
                                         <div class="info mt-20">
                                             <div class="tags">
                                                 <a class="cyan"
-                                                    href="#">{{ $post->category->name ?? 'Uncategorized' }}</a>
+                                                    href="{{ route('client.category.show', ['slug' => $post->first()->category->slug]) }}">{{ $post->category->name ?? 'Uncategorized' }}</a>
                                             </div>
                                             <h6 class="title mt-10 ltspc--1">
                                                 <a href="{{ route('articles.article', $post->slug) }}"
@@ -608,6 +609,7 @@
 
 
 
+
         <!-- ====== start Latest news ====== -->
         @if ($businessMainPost)
             <section class="tc-latest-news-style1">
@@ -616,7 +618,7 @@
 
                         <!-- Section title -->
                         <p class="color-000 text-uppercase mb-30 ltspc-1">
-                            <a href="{{ route('categories.show', 'kinh-doanh') }}">Kinh Doanh</a>
+                            <a href="{{ route('client.category.show', 'kinh-doanh') }}">Kinh Doanh</a>
                             <i class="la la-angle-right ms-1"></i>
                         </p>
 
@@ -627,13 +629,13 @@
                                 @if ($businessMainPost)
                                     <div class="tc-post-grid-default">
                                         <div class="item">
-                                            <div class="img img-cover th-330 position-relative">
-                                                <a href="{{ route('articles.article', $businessMainPost->slug) }}">
+                                            <div class="img img-cover w-100 h-full position-relative">
+                                                <a class="img img-cover h-100 w-100" href="{{ route('articles.article', $businessMainPost->slug) }}">
                                                     <img src="{{ asset('storage/' . $businessMainPost->thumbnail_url) }}"
                                                         alt="{{ $businessMainPost->title }}">
                                                 </a>
                                             </div>
-                                            <div class="content pt-30">
+                                            <div class="content pt-50">
                                                 @if ($businessMainPost->category)
                                                     <a href="{{ route('categories.show', $businessMainPost->category->slug) }}"
                                                         class="news-cat color-999 fsz-13px text-uppercase mb-10">
@@ -678,11 +680,11 @@
                                     <div class="tc-post-list-style2">
                                         <div class="items">
                                             @foreach ($businessListPosts as $item)
-                                                <div class="item">
-                                                    <div class="row gx-3 align-items-center">
+                                                <div class="item ">
+                                                    <div class="row gx-3 align-items-center mb-1">
                                                         <div class="col-4">
-                                                            <div class="img th-70 img-cover">
-                                                                <a href="{{ route('articles.article', $item->slug) }}">
+                                                            <div class="img th- img-cover">
+                                                                <a class="img img-cover h-100 w-100" href="{{ route('articles.article', $item->slug) }}">
                                                                     <img src="{{ asset('storage/' . $item->thumbnail_url) }}"
                                                                         alt="{{ $item->title }}">
                                                                 </a>
@@ -723,7 +725,7 @@
                                                         alt="{{ $businessGridPost->title }}">
                                                 </a>
                                             </div>
-                                            <div class="content pt-20">
+                                            <div class="content pt-30">
                                                 @if ($businessGridPost->category)
                                                     <a href="{{ route('categories.show', $businessGridPost->category->slug) }}"
                                                         class="news-cat color-999 fsz-13px text-uppercase mb-10">
@@ -775,7 +777,6 @@
             </section>
         @endif
         <!-- ====== end Latest news ====== -->
-
 
 
         <!-- ====== start columnist ====== -->
@@ -831,10 +832,9 @@
                                                 <small class="fsz-13px color-999">Chuyên đề</small>
                                                 <p class="fsz-13px text-uppercase mb-0">
                                                     @if (!empty($authorData['specializes_slug']))
-                                                        <a href="{{ route('client.category.author.show', ['categorySlug' => $authorData['specializes_slug'], 'authorId' => $authorData['author']->user_id]) }}"
-                                                            class="text-primary">
+                                                        <span href="" class="">
                                                             {{ $authorData['specializes_in'] }}
-                                                        </a>
+                                                        </span>
                                                     @else
                                                         {{ $authorData['specializes_in'] }}
                                                     @endif
@@ -875,7 +875,7 @@
                                 <div class="col-lg-4">
                                     <p class="color-000 text-uppercase mb-30 ltspc-1">
                                         <a
-                                            href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a>
+                                            href="{{ route('client.category.show', ['slug' => $category->slug]) }}">{{ $category->name }}</a>
                                         <i class="la la-angle-right ms-1"></i>
                                     </p>
 
@@ -892,7 +892,7 @@
                                                             @endif
                                                         </div>
                                                         <div class="content pt-20">
-                                                            <a href="{{ route('categories.show', $category->slug) }}"
+                                                            <a href="{{ route('client.category.show', ['slug' => $category->slug]) }}"
                                                                 class="news-cat color-999 fsz-13px text-uppercase mb-10">
                                                                 {{ $category->name }}
                                                             </a>

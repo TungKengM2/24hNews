@@ -49,7 +49,16 @@ class AppServiceProvider extends ServiceProvider
     {
         if (!Type::hasType('enum')) {
             Type::addType('enum', 'Doctrine\DBAL\Types\StringType'); // Hoặc bạn có thể tạo class custom nếu cần
-        }
+        //Tùng keng bổ sung thêm để chạy lại bảng
+        // if (DB::getDriverName() === 'mysql' && class_exists('Doctrine\DBAL\Types\Type')) {
+        //     if (!Type::hasType('enum')) {
+        //         Type::addType('enum', StringType::class);
+        //     }
+
+        //     DB::getDoctrineConnection()
+        //         ->getDatabasePlatform()
+        //         ->registerDoctrineTypeMapping('enum', 'string');
+        // }
         //Tùng keng bổ sung thêm để chạy lại bảng
         // if (DB::getDriverName() === 'mysql') {
         //     if (!Type::hasType('enum')) {

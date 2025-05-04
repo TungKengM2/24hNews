@@ -38,6 +38,8 @@ class ModeratorDashboardController extends Controller
 
     public function index(Request $request)
     {
+        $moderatorId = Auth::id();
+
         // Lấy ngày bắt đầu, ngày kết thúc và kiểu hiển thị
         $dateFrom = $request->input('date_from') ? Carbon::parse($request->input('date_from'))->startOfDay() : now()->subDays(30)->startOfDay();
         $dateTo = $request->input('date_to') ? Carbon::parse($request->input('date_to'))->endOfDay() : now()->endOfDay();
@@ -53,7 +55,6 @@ class ModeratorDashboardController extends Controller
                 $currentDate->addDay();
             }
         } elseif ($viewType === 'monthly') {
-            // Lấy các tháng trong khoảng thời gian được chọn
             $currentDate = $dateFrom->copy()->startOfMonth();
             $endDate = $dateTo->copy()->endOfMonth();
             while ($currentDate->lte($endDate)) {
@@ -61,7 +62,6 @@ class ModeratorDashboardController extends Controller
                 $currentDate->addMonth();
             }
         } elseif ($viewType === 'yearly') {
-            // Lấy các năm trong khoảng thời gian được chọn
             $currentYear = $dateFrom->year;
             $endYear = $dateTo->year;
             while ($currentYear <= $endYear) {
@@ -70,37 +70,43 @@ class ModeratorDashboardController extends Controller
             }
         }
 
-        // Lấy dữ liệu bài viết theo thời gian
-        $rawArticleStats = Article::whereBetween('created_at', [$dateFrom, $dateTo])
-            ->selectRaw(($viewType === 'daily' ? 'DATE(created_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(created_at, "%Y-%m")' : 'YEAR(created_at)')) . ' as date,
-                COUNT(CASE WHEN status = "published" THEN 1 END) as published,
-                COUNT(CASE WHEN status = "pending" THEN 1 END) as pending,
-                COUNT(CASE WHEN status = "rejected" THEN 1 END) as rejected,
-                COUNT(CASE WHEN status = "draft" THEN 1 END) as draft,
-                COUNT(CASE WHEN status = "archived" THEN 1 END) as archived')
+        // Lấy dữ liệu bài viết theo thời gian (chỉ những bài viết đã được moderator này duyệt)
+        $rawArticleStats = DB::table('moderation_logs')
+            ->join('articles', 'moderation_logs.content_id', '=', 'articles.article_id')
+            ->where('moderation_logs.moderator_id', $moderatorId)
+            ->where('moderation_logs.content_type', 'article')
+            ->whereBetween('moderation_logs.created_at', [$dateFrom, $dateTo])
+            ->selectRaw(($viewType === 'daily' ? 'DATE(moderation_logs.created_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(moderation_logs.created_at, "%Y-%m")' : 'YEAR(moderation_logs.created_at)')) . ' as date,
+                SUM(CASE WHEN moderation_logs.action_type = "approve" THEN 1 ELSE 0 END) as approved,
+                SUM(CASE WHEN moderation_logs.action_type = "reject" THEN 1 ELSE 0 END) as rejected')
             ->groupBy('date')
             ->orderBy('date')
             ->get()
             ->keyBy('date');
 
-        // Log dữ liệu bài viết
-        \Log::info('Raw Article Stats:', ['data' => $rawArticleStats->toArray()]);
-        \Log::info('All Dates:', ['dates' => $allDates]);
-
-        // Lấy dữ liệu bình luận theo thời gian
-        $rawCommentsStats = Comment::whereBetween('created_at', [$dateFrom, $dateTo])
+        // Lấy dữ liệu bình luận theo thời gian (chỉ những bài viết đã được moderator này duyệt)
+        $rawCommentsStats = Comment::whereIn('article_id', function($query) use ($moderatorId) {
+                $query->select('content_id')
+                    ->from('moderation_logs')
+                    ->where('moderator_id', $moderatorId)
+                    ->where('content_type', 'article');
+            })
+            ->whereBetween('created_at', [$dateFrom, $dateTo])
             ->selectRaw(($viewType === 'daily' ? 'DATE(created_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(created_at, "%Y-%m")' : 'YEAR(created_at)')) . ' as date, COUNT(*) as comments')
             ->groupBy('date')
             ->orderBy('date')
             ->get()
             ->keyBy('date');
 
-        // Log dữ liệu bình luận
-        \Log::info('Raw Comments Stats:', ['data' => $rawCommentsStats->toArray()]);
-
-        // Lấy dữ liệu lượt thích theo thời gian
+        // Lấy dữ liệu lượt thích theo thời gian (chỉ những bài viết đã được moderator này duyệt)
         if (Schema::hasTable('article_likes')) {
-            $rawLikesStats = ArticleLike::whereBetween('liked_at', [$dateFrom, $dateTo])
+            $rawLikesStats = ArticleLike::whereIn('article_id', function($query) use ($moderatorId) {
+                    $query->select('content_id')
+                        ->from('moderation_logs')
+                        ->where('moderator_id', $moderatorId)
+                        ->where('content_type', 'article');
+                })
+                ->whereBetween('liked_at', [$dateFrom, $dateTo])
                 ->selectRaw(($viewType === 'daily' ? 'DATE(liked_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(liked_at, "%Y-%m")' : 'YEAR(liked_at)')) . ' as date, COUNT(*) as likes')
                 ->groupBy('date')
                 ->orderBy('date')
@@ -110,35 +116,29 @@ class ModeratorDashboardController extends Controller
             $rawLikesStats = collect();
         }
 
-        // Log dữ liệu lượt thích
-        \Log::info('Raw Likes Stats:', ['data' => $rawLikesStats->toArray()]);
-
-        // Lấy dữ liệu tương tác theo thời gian
-        $rawInteractionStats = ArticleView::whereBetween('viewed_at', [$dateFrom, $dateTo])
+        // Lấy dữ liệu tương tác theo thời gian (chỉ những bài viết đã được moderator này duyệt)
+        $rawInteractionStats = ArticleView::whereIn('article_id', function($query) use ($moderatorId) {
+                $query->select('content_id')
+                    ->from('moderation_logs')
+                    ->where('moderator_id', $moderatorId)
+                    ->where('content_type', 'article');
+            })
+            ->whereBetween('viewed_at', [$dateFrom, $dateTo])
             ->selectRaw(($viewType === 'daily' ? 'DATE(viewed_at)' : ($viewType === 'monthly' ? 'DATE_FORMAT(viewed_at, "%Y-%m")' : 'YEAR(viewed_at)')) . ' as date, COUNT(*) as views')
             ->groupBy('date')
             ->orderBy('date')
             ->get()
             ->keyBy('date');
 
-        // Log dữ liệu tương tác
-        \Log::info('Raw Interaction Stats:', ['data' => $rawInteractionStats->toArray()]);
-
         // Tính toán thống kê bài viết
         $timeBasedArticleStats = [];
         foreach ($allDates as $date) {
             $timeBasedArticleStats[] = [
                 'date' => $date,
-                'published' => $rawArticleStats[$date]->published ?? 0,
-                'pending' => $rawArticleStats[$date]->pending ?? 0,
-                'rejected' => $rawArticleStats[$date]->rejected ?? 0,
-                'draft' => $rawArticleStats[$date]->draft ?? 0,
-                'archived' => $rawArticleStats[$date]->archived ?? 0,
+                'approved' => $rawArticleStats[$date]->approved ?? 0,
+                'rejected' => $rawArticleStats[$date]->rejected ?? 0
             ];
         }
-
-        // Log thống kê bài viết
-        \Log::info('Time Based Article Stats:', ['data' => $timeBasedArticleStats]);
 
         // Tính toán thống kê tương tác
         $timeBasedInteractionStats = [];
@@ -150,9 +150,6 @@ class ModeratorDashboardController extends Controller
                 'likes' => $rawLikesStats[$date]->likes ?? 0,
             ];
         }
-
-        // Log thống kê tương tác
-        \Log::info('Time Based Interaction Stats:', ['data' => $timeBasedInteractionStats]);
 
         // Tính toán thống kê bình luận
         $timeBasedCommentsStats = [];
@@ -172,32 +169,35 @@ class ModeratorDashboardController extends Controller
             ];
         }
 
-        // Tổng quan bài viết
-        $articleStatsSummary = [
-            'total' => Article::count(),
-            'archived' => Article::where('status', 'archived')->count(),
-            'pending' => Article::where('status', 'pending')->count(),
-            'published' => Article::where('status', 'published')->count(),
-            'rejected' => Article::where('status', 'rejected')->count(),
-            'draft' => Article::where('status', 'draft')->count(),
-        ];
+        // Tổng quan bài viết (chỉ những bài viết đã được moderator này duyệt)
+        $articleStatsSummary = DB::table('moderation_logs')
+            ->join('articles', 'moderation_logs.content_id', '=', 'articles.article_id')
+            ->where('moderation_logs.moderator_id', $moderatorId)
+            ->where('moderation_logs.content_type', 'article')
+            ->select(
+                DB::raw('SUM(CASE WHEN moderation_logs.action_type = "approve" THEN 1 ELSE 0 END) as approved'),
+                DB::raw('SUM(CASE WHEN moderation_logs.action_type = "reject" THEN 1 ELSE 0 END) as rejected')
+            )
+            ->first();
 
-        // Tổng quan người dùng
-        $userCount = [
-            'total' => User::where('role_id', '!=', 1)->count(), // Exclude admin
-            'user' => User::where('role_id', 4)->count(), // Regular users
-            'moderators' => User::where('role_id', 3)->count(), // Moderators
-            'authors' => User::where('role_id', 2)->count(), // Authors
-        ];
-
-        // Tổng số người theo dõi admin
-        $user = Auth::user();
-        $totalFollowers = $user->followers()->count(); // Count followers of the logged-in admin
-
-        // Lấy danh sách tag và số lượng bài viết đã xuất bản
-        $tags = Tag::whereHas('publishedArticles') // Only tags with published articles
-            ->withCount(['publishedArticles']) // Count published articles
-            ->orderByDesc('published_articles_count') // Sort by count descending
+        // Lấy danh sách tag và số lượng bài viết đã xuất bản (chỉ những bài viết đã được moderator này duyệt)
+        $tags = Tag::whereHas('articles', function($query) use ($moderatorId) {
+                $query->whereIn('articles.article_id', function($q) use ($moderatorId) {
+                    $q->select('content_id')
+                        ->from('moderation_logs')
+                        ->where('moderator_id', $moderatorId)
+                        ->where('content_type', 'article');
+                });
+            })
+            ->withCount(['articles' => function($query) use ($moderatorId) {
+                $query->whereIn('articles.article_id', function($q) use ($moderatorId) {
+                    $q->select('content_id')
+                        ->from('moderation_logs')
+                        ->where('moderator_id', $moderatorId)
+                        ->where('content_type', 'article');
+                })->where('articles.status', 'published');
+            }])
+            ->orderByDesc('articles_count')
             ->get();
 
         // Nếu là AJAX request, trả về JSON
@@ -208,17 +208,13 @@ class ModeratorDashboardController extends Controller
                 'timeBasedCommentsStats' => $timeBasedCommentsStats,
                 'timeBasedLikesStats' => $timeBasedLikesStats,
                 'articleStatsSummary' => $articleStatsSummary,
-                'userCount' => $userCount,
-                'totalFollowers' => $totalFollowers,
                 'tags' => $tags,
             ]);
         }
 
         // Nếu không phải AJAX, trả về view
         return view('moderator.dashboard', compact(
-            'articleStatsSummary', // Renamed to avoid conflict
-            'userCount',
-            'totalFollowers',
+            'articleStatsSummary',
             'tags',
             'timeBasedArticleStats',
             'timeBasedInteractionStats',

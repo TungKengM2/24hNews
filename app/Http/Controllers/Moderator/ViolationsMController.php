@@ -74,36 +74,44 @@ class ViolationsMController extends Controller
 
         // Tăng số lần vi phạm của người dùng (theo cách động)
         $user = User::find($comment->user_id);
-        
 
-            if ($user) {
-                $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
-                $realViolation = max(0, $user->violation_count - $daysSinceLast);
-                $realViolation += 1;
 
-                $user->violation_count = $realViolation;
-                $user->last_violation_at = now();
+        if ($user) {
+            $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
+            $realViolation = max(0, $user->violation_count - $daysSinceLast);
+            $realViolation += 1;
 
-                if ($realViolation >= 5) {
-                    $user->banned_until = now()->addDays(3);
-                } elseif ($realViolation >= 3) {
-                    $user->banned_until = now()->addHours(24);
-                }
-                $user->save();
+            $user->violation_count = $realViolation;
+            $user->last_violation_at = now();
+
+            if ($realViolation >= 5) {
+                $user->banned_until = now()->addDays(3);
+            } elseif ($realViolation >= 3) {
+                $user->banned_until = now()->addHours(24);
             }
-        
+            $user->save();
+        }
 
-            $usersToNotify = User::whereIn('violation_count', [3, 5])->get();
-            foreach ($usersToNotify as $user) {
-                $user->notify(new UserViolationAlert($user));
-            }
 
+        $usersToNotify = User::whereIn('violation_count', [3, 5])->get();
+        foreach ($usersToNotify as $user) {
+            $user->notify(new UserViolationAlert($user));
+        }
         // Xử lý các bình luận con
         $childComments = Comment::where('parent_id', $comment->comment_id)->get();
         if ($childComments->isNotEmpty()) {
             foreach ($childComments as $child) {
                 $child->delete();
             }
+        }
+        // Tìm và xóa tất cả các violations liên quan đến bài viết này
+        $relatedViolations = Violation::where('reference_id', $comment->comment_id)
+            ->where('type', 'comment')
+            ->where('status', 'pending')
+            ->get();
+
+        foreach ($relatedViolations as $relatedViolation) {
+            $relatedViolation->delete();
         }
 
         // Xóa bình luận gốc và vi phạm
@@ -135,24 +143,33 @@ class ViolationsMController extends Controller
 
         // Cập nhật số lần vi phạm và thời gian của user
         $user = User::find($article->author_id);
-    if ($user) {
-        $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
-        $realViolation = max(0, $user->violation_count - $daysSinceLast);
-        $realViolation += 1;
+        if ($user) {
+            $daysSinceLast = $user->last_violation_at ? now()->diffInDays($user->last_violation_at) : 0;
+            $realViolation = max(0, $user->violation_count - $daysSinceLast);
+            $realViolation += 1;
 
-        $user->violation_count = $realViolation;
-        $user->last_violation_at = now();
+            $user->violation_count = $realViolation;
+            $user->last_violation_at = now();
 
-        if ($realViolation >= 5) {
-            $user->banned_until = now()->addDays(3);
-        } elseif ($realViolation >= 3) {
-            $user->banned_until = now()->addHours(24);
+            if ($realViolation >= 5) {
+                $user->banned_until = now()->addDays(3);
+            } elseif ($realViolation >= 3) {
+                $user->banned_until = now()->addHours(24);
+            }
+
+            $user->save();
         }
-
-        $user->save();
-    }
         // Đổi bài viết thành bản nháp
         $article->update(['status' => 'draft']);
+        // Tìm và xóa tất cả các violations liên quan đến bài viết này
+        $relatedViolations = Violation::where('reference_id', $article->article_id)
+            ->where('type', 'article')
+            ->where('status', 'pending')
+            ->get();
+
+        foreach ($relatedViolations as $relatedViolation) {
+            $relatedViolation->delete();
+        }
 
         // Gửi thông báo cho tác giả với lý do
         $author = $article->author;
@@ -168,5 +185,5 @@ class ViolationsMController extends Controller
         // Trả về thông báo thành công
         return back()->with('success', 'Vi phạm đã được giải quyết với lý do: ' . $request->reason);
     }
-    
+
 }

@@ -161,7 +161,7 @@ class Article extends Model
         $views = $this->views ?? 0;
 
         // Tuỳ chỉnh trọng số nếu muốn
-        $score = ($views * 1) + ($likes * 3) + ($comments * 5);
+        $score = ($views * 5) + ($likes * 10) + ($comments * 20);
         return (int) round($score);
     }
 
@@ -181,5 +181,15 @@ class Article extends Model
     public function hasEditRequest()
     {
         return $this->editRequests()->where('status', 'pending')->exists();
+    }
+
+    /**
+     * Quan hệ với bảng moderation_logs
+     */
+    public function moderationLogs()
+    {
+        return $this->hasMany(ModerationLog::class, 'content_id', 'article_id')
+            ->where('content_type', 'article')
+            ->orderBy('created_at', 'desc');
     }
 }

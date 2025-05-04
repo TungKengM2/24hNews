@@ -12,17 +12,38 @@ class CategoryUserController extends Controller
 {
     public function index($slug, $childSlug = null)
     {
+        // Debug thông tin nhận được
+        \Log::info('CategoryUserController::index', [
+            'slug' => $slug,
+            'childSlug' => $childSlug
+        ]);
+
         // 1. Xác định category hiện tại
         if ($childSlug) {
             $category = Category::with(['parent', 'children'])
                 ->where('slug', $childSlug)
                 ->whereHas('parent', fn($q) => $q->where('slug', $slug))
                 ->firstOrFail();
+
+            // Debug thông tin category con
+            \Log::info('Child category found', [
+                'category_id' => $category->category_id,
+                'name' => $category->name,
+                'parent_id' => $category->parent_id,
+                'parent_name' => $category->parent->name ?? 'No parent'
+            ]);
         } else {
             $category = Category::with(['parent', 'children'])
                 ->where('slug', $slug)
                 ->whereNull('parent_id')
                 ->firstOrFail();
+
+            // Debug thông tin category cha
+            \Log::info('Parent category found', [
+                'category_id' => $category->category_id,
+                'name' => $category->name,
+                'children_count' => $category->children->count()
+            ]);
         }
 
         // 2. Lấy IDs của category hiện tại và các con

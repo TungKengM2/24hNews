@@ -98,45 +98,45 @@ class HomeController extends Controller
             ->take(11)
             ->get();
 
-      // Xử lý "Thời Sự"
-      $root = Category::where('name', 'Thời Sự')->first();
-      if ($root) {
-          $catIds = $this->collectCategoryIds($root->category_id);
+        // Xử lý "Thời Sự"
+        $root = Category::where('name', 'Thời Sự')->first();
+        if ($root) {
+            $catIds = $this->collectCategoryIds($root->category_id);
 
-          $posts = Article::with('category', 'author')
-              ->where('status', 'published')
-              ->whereIn('category_id', $catIds)
-              ->orderByDesc('views')
-              ->take(10)
-              ->get();
+            $posts = Article::with('category', 'author')
+                ->where('status', 'published')
+                ->whereIn('category_id', $catIds)
+                ->orderByDesc('views')
+                ->take(10)
+                ->get();
 
-          $mainPost   = $posts->shift();        // 1 bài lớn
-          $listPosts  = $posts->splice(0, 5);   // 5 bài list
-          $gridPost   = $posts->shift();        // 1 bài grid
-          $linkPosts  = $posts;                 // 3 bài link text
-      } else {
-          $mainPost = $listPosts = $gridPost = $linkPosts = null;
-      }
+            $mainPost   = $posts->shift();        // 1 bài lớn
+            $listPosts  = $posts->splice(0, 5);   // 5 bài list
+            $gridPost   = $posts->shift();        // 1 bài grid
+            $linkPosts  = $posts;                 // 3 bài link text
+        } else {
+            $mainPost = $listPosts = $gridPost = $linkPosts = null;
+        }
 
-      // Xử lý "Kinh Doanh"
-      $businessRoot = Category::where('name', 'Kinh Doanh')->first();
-      if ($businessRoot) {
-          $businessCatIds = $this->collectCategoryIds($businessRoot->category_id);
+        // Xử lý "Kinh Doanh"
+        $businessRoot = Category::where('name', 'Kinh Doanh')->first();
+        if ($businessRoot) {
+            $businessCatIds = $this->collectCategoryIds($businessRoot->category_id);
 
-          $businessPosts = Article::with('category', 'author')
-              ->where('status', 'published')
-              ->whereIn('category_id', $businessCatIds)
-              ->orderByDesc('views')
-              ->take(10)
-              ->get();
+            $businessPosts = Article::with('category', 'author')
+                ->where('status', 'published')
+                ->whereIn('category_id', $businessCatIds)
+                ->orderByDesc('views')
+                ->take(10)
+                ->get();
 
-          $businessMainPost   = $businessPosts->shift();       // 1 bài lớn
-          $businessListPosts  = $businessPosts->splice(0, 5);  // 5 bài list
-          $businessGridPost   = $businessPosts->shift();       // 1 bài grid
-          $businessLinkPosts  = $businessPosts;                // 3 bài link text
-      } else {
-          $businessMainPost = $businessListPosts = $businessGridPost = $businessLinkPosts = null;
-      }
+            $businessMainPost   = $businessPosts->shift();       // 1 bài lớn
+            $businessListPosts  = $businessPosts->splice(0, 5);  // 5 bài list
+            $businessGridPost   = $businessPosts->shift();       // 1 bài grid
+            $businessLinkPosts  = $businessPosts;                // 3 bài link text
+        } else {
+            $businessMainPost = $businessListPosts = $businessGridPost = $businessLinkPosts = null;
+        }
 
 
         // 1. Bài viết nổi bật (NewsArticle)
@@ -188,8 +188,9 @@ class HomeController extends Controller
 
         // Lấy 3 danh mục có nhiều bài viết nhất
 
-        // 1) Lấy 3 category hoạt động nhiều bài published nhất
+        // 1) Lấy 3 danh mục cha hoạt động có nhiều bài published nhất
         $topCategories = Category::where('is_active', 1)
+            ->whereNull('parent_id') // chỉ lấy danh mục cha
             ->withCount(['articles' => function ($q) {
                 $q->where('status', 'published');
             }])
@@ -201,14 +202,14 @@ class HomeController extends Controller
         $topCategoriesWithArticles = $topCategories->map(function ($category) {
             $articles = $category->articles()
                 ->where('status', 'published')
-                ->latest()      // thường là orderBy('created_at','desc')
+                ->latest()
                 ->take(3)
                 ->get();
 
             return [
                 'category'     => $category,
-                'main_article' => $articles->first(),     // bài đầu làm nổi bật
-                'sub_articles' => $articles->slice(1),    // 2 bài còn lại
+                'main_article' => $articles->first(),
+                'sub_articles' => $articles->slice(1),
             ];
         });
 
@@ -521,7 +522,8 @@ class HomeController extends Controller
             $lowerKeyword = mb_strtolower($keyword);
 
             // Tìm kiếm danh mục có tên chứa từ khóa
-            $suggestions = Category::where('is_active', 1)
+            $suggestions = Category::with('parent')
+                ->where('is_active', 1)
                 ->where(function ($query) use ($keyword) {
                     $query->where('name', 'LIKE', "{$keyword}%")
                         ->orWhere('name', 'LIKE', "% {$keyword}%")
@@ -548,12 +550,22 @@ class HomeController extends Controller
                     $relevance += min(3, $category->articles_count / 10);
                     $relevance += (mb_strlen($category->name) < 20) ? 1 : 0;
 
-                    return [
+                    // Thêm thông tin về danh mục cha nếu có
+                    $result = [
                         'name' => $category->name,
                         'slug' => $category->slug,
                         'relevance' => $relevance,
-                        'type' => 'category'
+                        'type' => 'category',
+                        'is_child' => !is_null($category->parent_id)
                     ];
+
+                    // Nếu là danh mục con, thêm thông tin về danh mục cha
+                    if ($category->parent) {
+                        $result['parent_slug'] = $category->parent->slug;
+                        $result['parent_name'] = $category->parent->name;
+                    }
+
+                    return $result;
                 })
                 ->sortByDesc('relevance')
                 ->take(5)

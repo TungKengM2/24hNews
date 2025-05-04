@@ -534,11 +534,25 @@
     .criteria-icon.passed {
         background-color: #28a745;
         color: white;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .criteria-icon.failed {
         background-color: #dc3545;
         color: white;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Thêm style cho các item đã pass */
+    .criteria-item.passed .criteria-text {
+        color: #28a745;
+        font-weight: 500;
     }
 
     .criteria-text {
@@ -600,122 +614,250 @@
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Khi modal hiển thị, cập nhật tiêu chí
-        $('.modal').on('shown.bs.modal', function (e) {
-            const articleId = e.target.id.replace('articleDetailModal', '');
-            updateCriteria(articleId);
+        // Xử lý sự kiện khi modal hiển thị
+        $(document).on('shown.bs.modal', '.modal', function(e) {
+            const modalId = $(this).attr('id');
+            if (modalId && modalId.startsWith('articleDetailModal')) {
+                const articleId = modalId.replace('articleDetailModal', '');
+                console.log('Modal shown for article ID:', articleId);
+
+                // Đợi một chút để DOM được render đầy đủ
+                setTimeout(() => {
+                    updateArticleCriteria(articleId);
+                }, 300);
+            }
         });
     });
 
-    function updateCriteria(articleId) {
-        // Kiểm tra tiêu đề
-        const title = document.querySelector(`#articleDetailModal${articleId} h4`).innerText;
-        const titleLength = title.length;
-        const titleCriteria = document.getElementById(`criteria-title-${articleId}`);
-        const titleLengthSpan = document.getElementById(`current-title-length-${articleId}`);
-        if (titleLengthSpan) {
-            titleLengthSpan.textContent = `(${titleLength} ký tự)`;
-            if (titleLength >= 50 && titleLength <= 60) {
-                titleLengthSpan.style.color = '#28a745';
-                updateCriteriaStatus(titleCriteria, true);
-            } else {
-                titleLengthSpan.style.color = '#dc3545';
-                updateCriteriaStatus(titleCriteria, false);
+    // Hàm chính để cập nhật tiêu chí
+    function updateArticleCriteria(articleId) {
+        console.log('Updating article criteria for ID:', articleId);
+
+        try {
+            // Lấy các phần tử cần thiết
+            const modal = document.getElementById(`articleDetailModal${articleId}`);
+            if (!modal) {
+                console.error('Modal not found for article ID:', articleId);
+                return;
             }
-        }
 
-        // Kiểm tra danh mục
-        const categoryCriteria = document.getElementById(`criteria-category-${articleId}`);
-        const parentCategoryBadge = document.querySelector(`#articleDetailModal${articleId} li:nth-child(2) .badge.bg-info`);
-        const childCategoryBadge = document.querySelector(`#articleDetailModal${articleId} li:nth-child(3) .badge.bg-secondary`);
+            // Cập nhật từng tiêu chí
+            updateTitleCriteria(modal, articleId);
+            updateCategoryCriteria(modal, articleId);
+            updateTagsCriteria(modal, articleId);
+            updateThumbnailCriteria(modal, articleId);
+            updateContentCriteria(modal, articleId);
 
-        const hasParentCategory = parentCategoryBadge && parentCategoryBadge.textContent !== 'Không có';
-        const hasChildCategory = childCategoryBadge && childCategoryBadge.textContent !== 'Không có';
+            // Cập nhật thanh tiến trình
+            updateProgressBar(articleId);
 
-        if (categoryCriteria) {
-            // Chỉ hiển thị tích xanh khi cả hai danh mục đều có
-            updateCriteriaStatus(categoryCriteria, hasParentCategory && hasChildCategory);
-        }
-
-        // Kiểm tra tags
-        const tagCriteria = document.getElementById(`criteria-tags-${articleId}`);
-        const tagCountSpan = document.getElementById(`current-tag-count-${articleId}`);
-        const tagBadges = document.querySelectorAll(`#articleDetailModal${articleId} .badge.bg-primary.m-1`);
-        const tagCount = tagBadges.length;
-        if (tagCountSpan) {
-            tagCountSpan.textContent = `(${tagCount} thẻ)`;
-            if (tagCount >= 2 && tagCount <= 5) {
-                tagCountSpan.style.color = '#28a745';
-                updateCriteriaStatus(tagCriteria, true);
-            } else {
-                tagCountSpan.style.color = '#dc3545';
-                updateCriteriaStatus(tagCriteria, false);
-            }
-        }
-
-        // Kiểm tra ảnh đại diện
-        const thumbnailCriteria = document.getElementById(`criteria-thumbnail-${articleId}`);
-        const thumbnailImg = document.querySelector(`#articleDetailModal${articleId} .img-fluid.rounded`);
-        if (thumbnailCriteria) {
-            updateCriteriaStatus(thumbnailCriteria, thumbnailImg !== null);
-        }
-
-        // Kiểm tra nội dung
-        const contentCriteria = document.getElementById(`criteria-content-${articleId}`);
-        const wordCountSpan = document.getElementById(`current-word-count-${articleId}`);
-        const content = document.querySelector(`.article-content-${articleId}`).innerText;
-        const wordCount = countWords(content);
-        if (wordCountSpan) {
-            wordCountSpan.textContent = `(${wordCount} từ)`;
-            if (wordCount >= 800 && wordCount <= 1500) {
-                wordCountSpan.style.color = '#28a745';
-                updateCriteriaStatus(contentCriteria, true);
-            } else {
-                wordCountSpan.style.color = '#dc3545';
-                updateCriteriaStatus(contentCriteria, false);
-            }
-        }
-
-        // Cập nhật thanh tiến trình
-        updateProgressBar(articleId);
-    }
-
-    function updateCriteriaStatus(criteriaElement, isPassed) {
-        if (!criteriaElement) return;
-
-        const iconElement = criteriaElement.querySelector('.criteria-icon');
-        if (isPassed) {
-            criteriaElement.classList.remove('failed');
-            criteriaElement.classList.add('passed');
-            iconElement.textContent = '✓';
-            iconElement.classList.remove('failed');
-            iconElement.classList.add('passed');
-        } else {
-            criteriaElement.classList.remove('passed');
-            criteriaElement.classList.add('failed');
-            iconElement.textContent = '✗';
-            iconElement.classList.remove('passed');
-            iconElement.classList.add('failed');
+        } catch (error) {
+            console.error('Error in updateArticleCriteria:', error);
         }
     }
 
+    // Cập nhật tiêu chí tiêu đề
+    function updateTitleCriteria(modal, articleId) {
+        try {
+            const titleElement = modal.querySelector('h4');
+            if (!titleElement) return;
+
+            const title = titleElement.innerText || '';
+            const titleLength = title.length;
+
+            const criteriaItem = document.getElementById(`criteria-title-${articleId}`);
+            const lengthSpan = document.getElementById(`current-title-length-${articleId}`);
+
+            if (lengthSpan) {
+                lengthSpan.textContent = `(${titleLength} ký tự)`;
+            }
+
+            const isPassed = titleLength >= 50 && titleLength <= 60;
+            updateCriteriaItem(criteriaItem, isPassed);
+
+            if (lengthSpan) {
+                lengthSpan.style.color = isPassed ? '#28a745' : '#dc3545';
+            }
+        } catch (error) {
+            console.error('Error updating title criteria:', error);
+        }
+    }
+
+    // Cập nhật tiêu chí danh mục
+    function updateCategoryCriteria(modal, articleId) {
+        try {
+            const infoCard = modal.querySelector('.card:last-child');
+            if (!infoCard) return;
+
+            const categoryBadge = infoCard.querySelector('li:nth-child(2) .badge.bg-info');
+            const subcategoryBadge = infoCard.querySelector('li:nth-child(3) .badge.bg-secondary');
+
+            const hasCategory = categoryBadge && categoryBadge.textContent !== 'Không có';
+            const hasSubcategory = subcategoryBadge && subcategoryBadge.textContent !== 'Không có';
+
+            const criteriaItem = document.getElementById(`criteria-category-${articleId}`);
+            updateCriteriaItem(criteriaItem, hasCategory && hasSubcategory);
+        } catch (error) {
+            console.error('Error updating category criteria:', error);
+        }
+    }
+
+    // Cập nhật tiêu chí tags
+    function updateTagsCriteria(modal, articleId) {
+        try {
+            const tagContainer = modal.querySelector('li:last-child .mt-2');
+            if (!tagContainer) return;
+
+            const tags = tagContainer.querySelectorAll('.badge.bg-primary');
+            const tagCount = tags.length;
+
+            const criteriaItem = document.getElementById(`criteria-tags-${articleId}`);
+            const countSpan = document.getElementById(`current-tag-count-${articleId}`);
+
+            if (countSpan) {
+                countSpan.textContent = `(${tagCount} thẻ)`;
+            }
+
+            const isPassed = tagCount >= 2 && tagCount <= 5;
+            updateCriteriaItem(criteriaItem, isPassed);
+
+            if (countSpan) {
+                countSpan.style.color = isPassed ? '#28a745' : '#dc3545';
+            }
+        } catch (error) {
+            console.error('Error updating tags criteria:', error);
+        }
+    }
+
+    // Cập nhật tiêu chí ảnh đại diện
+    function updateThumbnailCriteria(modal, articleId) {
+        try {
+            const thumbnailImg = modal.querySelector('.img-fluid.rounded');
+            const criteriaItem = document.getElementById(`criteria-thumbnail-${articleId}`);
+
+            updateCriteriaItem(criteriaItem, thumbnailImg !== null);
+        } catch (error) {
+            console.error('Error updating thumbnail criteria:', error);
+        }
+    }
+
+    // Cập nhật tiêu chí nội dung
+    function updateContentCriteria(modal, articleId) {
+        try {
+            const contentContainer = modal.querySelector(`.article-content-${articleId}`);
+            if (!contentContainer) return;
+
+            const content = contentContainer.innerText || contentContainer.textContent || '';
+            const wordCount = countWords(content);
+
+            const criteriaItem = document.getElementById(`criteria-content-${articleId}`);
+            const countSpan = document.getElementById(`current-word-count-${articleId}`);
+
+            if (countSpan) {
+                countSpan.textContent = `(${wordCount} từ)`;
+            }
+
+            const isPassed = wordCount >= 800 && wordCount <= 1500;
+            updateCriteriaItem(criteriaItem, isPassed);
+
+            if (countSpan) {
+                countSpan.style.color = isPassed ? '#28a745' : '#dc3545';
+            }
+        } catch (error) {
+            console.error('Error updating content criteria:', error);
+        }
+    }
+
+    // Cập nhật trạng thái của một tiêu chí
+    function updateCriteriaItem(criteriaItem, isPassed) {
+        console.log('updateCriteriaItem called:', criteriaItem?.id, isPassed);
+
+        if (!criteriaItem) {
+            console.error('Element not found:', criteriaItem);
+            return;
+        }
+
+        try {
+            const iconElement = criteriaItem.querySelector('.criteria-icon');
+            if (!iconElement) {
+                console.error('Icon element not found in', criteriaItem.id);
+                return;
+            }
+
+            if (isPassed) {
+                criteriaItem.classList.remove('failed');
+                criteriaItem.classList.add('passed');
+                iconElement.textContent = '✓';
+                iconElement.classList.remove('failed');
+                iconElement.classList.add('passed');
+            } else {
+                criteriaItem.classList.remove('passed');
+                criteriaItem.classList.add('failed');
+                iconElement.textContent = '✗';
+                iconElement.classList.remove('passed');
+                iconElement.classList.add('failed');
+            }
+        } catch (error) {
+            console.error('Error in updateCriteriaItem:', error);
+        }
+    }
+
+    // Cập nhật thanh tiến trình
     function updateProgressBar(articleId) {
-        const criteriaCount = document.querySelectorAll(`#criteria-list-${articleId} .criteria-item.passed`).length;
-        const progressBar = document.getElementById(`criteria-progress-bar-${articleId}`);
-        const criteriaCountSpan = document.getElementById(`criteria-count-${articleId}`);
+        try {
+            const criteriaList = document.getElementById(`criteria-list-${articleId}`);
+            if (!criteriaList) {
+                console.error('Criteria list not found for article ID:', articleId);
+                return;
+            }
 
-        if (progressBar) {
-            progressBar.style.width = `${criteriaCount * 20}%`;
-        }
+            const passedItems = criteriaList.querySelectorAll('.criteria-item.passed');
+            const passedCount = passedItems.length;
 
-        if (criteriaCountSpan) {
-            criteriaCountSpan.textContent = `${criteriaCount}/5 tiêu chí đạt`;
+            const progressBar = document.getElementById(`criteria-progress-bar-${articleId}`);
+            const countSpan = document.getElementById(`criteria-count-${articleId}`);
+
+            if (progressBar) {
+                progressBar.style.width = `${passedCount * 20}%`;
+
+                // Cập nhật màu sắc
+                if (passedCount === 5) {
+                    progressBar.className = 'progress-bar bg-success';
+                } else if (passedCount >= 3) {
+                    progressBar.className = 'progress-bar bg-warning';
+                } else {
+                    progressBar.className = 'progress-bar bg-danger';
+                }
+            }
+
+            if (countSpan) {
+                countSpan.textContent = `${passedCount}/5 tiêu chí đạt`;
+            }
+
+            console.log(`Progress updated: ${passedCount}/5 criteria passed`);
+        } catch (error) {
+            console.error('Error updating progress bar:', error);
         }
     }
 
+    // Đếm số từ trong văn bản
     function countWords(str) {
-        // Đếm số từ trong văn bản tiếng Việt
-        return str.trim().split(/\s+/).length;
+        if (!str) return 0;
+
+        try {
+            // Loại bỏ HTML tags
+            const text = str.replace(/<[^>]*>/g, ' ');
+
+            // Loại bỏ ký tự đặc biệt
+            const cleanText = text.replace(/[^\p{L}\p{N}\s]/gu, ' ');
+
+            // Đếm từ
+            const words = cleanText.trim().split(/\s+/).filter(word => word.length > 0);
+            return words.length;
+        } catch (error) {
+            console.error('Error counting words:', error);
+            return 0;
+        }
     }
 </script>
 @endsection
