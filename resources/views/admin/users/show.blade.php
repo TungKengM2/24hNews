@@ -13,9 +13,9 @@
                         <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
                             <i class="fa fa-arrow-left"></i> Quay lại
                         </a>
-                        <a href="{{ route('admin.users.edit', $user->user_id) }}" class="btn btn-warning">
+                        {{-- <a href="{{ route('admin.users.edit', $user->user_id) }}" class="btn btn-warning">
                             <i class="fas fa-edit"></i> Chỉnh sửa
-                        </a>
+                        </a> --}}
                     </div>
                 </div>
 

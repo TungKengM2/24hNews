@@ -635,7 +635,7 @@
                                                         alt="{{ $businessMainPost->title }}">
                                                 </a>
                                             </div>
-                                            <div class="content pt-30">
+                                            <div class="content pt-50">
                                                 @if ($businessMainPost->category)
                                                     <a href="{{ route('categories.show', $businessMainPost->category->slug) }}"
                                                         class="news-cat color-999 fsz-13px text-uppercase mb-10">
@@ -725,7 +725,7 @@
                                                         alt="{{ $businessGridPost->title }}">
                                                 </a>
                                             </div>
-                                            <div class="content pt-20">
+                                            <div class="content pt-30">
                                                 @if ($businessGridPost->category)
                                                     <a href="{{ route('categories.show', $businessGridPost->category->slug) }}"
                                                         class="news-cat color-999 fsz-13px text-uppercase mb-10">

@@ -58,9 +58,9 @@
                                                                     <tr>
                                                                         <th>STT</th>
                                                                         <th>Ảnh Đại Diện</th>
-                                                                        <th>Title</th>
-                                                                        <th>Content</th>
-                                                                        <th>Action</th>
+                                                                        <th>Tiêu Đề</th>
+                                                                        <th>Nội Dung</th>
+                                                                        <th>Hoạt Động</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>

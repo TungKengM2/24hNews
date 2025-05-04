@@ -182,4 +182,14 @@ class Article extends Model
     {
         return $this->editRequests()->where('status', 'pending')->exists();
     }
+
+    /**
+     * Quan hệ với bảng moderation_logs
+     */
+    public function moderationLogs()
+    {
+        return $this->hasMany(ModerationLog::class, 'content_id', 'article_id')
+            ->where('content_type', 'article')
+            ->orderBy('created_at', 'desc');
+    }
 }

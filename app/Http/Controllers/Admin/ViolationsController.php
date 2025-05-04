@@ -103,6 +103,15 @@ class ViolationsController extends Controller
                 $child->delete();
             }
         }
+        // Tìm và xóa tất cả các violations liên quan đến bài viết này
+        $relatedViolations = Violation::where('reference_id', $comment->comment_id)
+            ->where('type', 'comment')
+            ->where('status', 'pending')
+            ->get();
+
+        foreach ($relatedViolations as $relatedViolation) {
+            $relatedViolation->delete();
+        }
 
         // Xóa bình luận gốc và vi phạm
         $comment->delete();
@@ -151,6 +160,15 @@ class ViolationsController extends Controller
         }
         // Đổi bài viết thành bản nháp
         $article->update(['status' => 'draft']);
+        // Tìm và xóa tất cả các violations liên quan đến bài viết này
+        $relatedViolations = Violation::where('reference_id', $article->article_id)
+            ->where('type', 'article')
+            ->where('status', 'pending')
+            ->get();
+
+        foreach ($relatedViolations as $relatedViolation) {
+            $relatedViolation->delete();
+        }
 
         // Gửi thông báo cho tác giả với lý do
         $author = $article->author;
