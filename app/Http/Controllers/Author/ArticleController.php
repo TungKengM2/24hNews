@@ -239,7 +239,8 @@ class ArticleController extends Controller
                 }
             }
 
-            $moderationResult = $this->moderationService->moderateContent($content);
+            $skipModeration = config('moderation.skip_content_moderation', false);
+            $moderationResult = $this->moderationService->moderateContentWithDeepSeek($content, $skipModeration);
 
             if ($moderationResult['status'] === 'error') {
                 return redirect()
@@ -584,7 +585,8 @@ class ArticleController extends Controller
         }
 
         try {
-            $moderationResult = $this->moderationService->moderateContent($content);
+            $skipModeration = config('moderation.skip_content_moderation', false);
+            $moderationResult = $this->moderationService->moderateContentWithDeepSeek($content, $skipModeration);
 
             if ($moderationResult['status'] === 'error') {
                 return redirect()
