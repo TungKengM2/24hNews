@@ -3,6 +3,50 @@
 @section('content')
     <div class="content-wrapper">
         <div class="container-full">
+                <!-- Tổng quan bài viết -->
+                <div class="row mt-20">
+                    <div class="col-12">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-15">
+                                                <i class="fa fa-file-text-o fs-40 text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="mb-0">{{ $articleStatsSummary->approved + $articleStatsSummary->rejected }}</h4>
+                                                <p class="text-fade mb-0">Tổng số bài viết đã duyệt</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-15">
+                                                <i class="fa fa-check-circle fs-40 text-success"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="mb-0">{{ $articleStatsSummary->approved }}</h4>
+                                                <p class="text-fade mb-0">Bài viết đã duyệt</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-15">
+                                                <i class="fa fa-times-circle fs-40 text-danger"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="mb-0">{{ $articleStatsSummary->rejected }}</h4>
+                                                <p class="text-fade mb-0">Bài viết bị từ chối</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <!-- Bộ lọc thống kê -->
             <div class="box mt-20">
                 <div class="box-header with-border">
@@ -52,50 +96,7 @@
                 </div>
             @endif
 
-            <!-- Tổng quan bài viết -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="d-flex align-items-center">
-                                        <div class="me-15">
-                                            <i class="fa fa-file-text-o fs-40 text-primary"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="mb-0">{{ $articleStatsSummary->approved + $articleStatsSummary->rejected }}</h4>
-                                            <p class="text-fade mb-0">Tổng số bài viết đã duyệt</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="d-flex align-items-center">
-                                        <div class="me-15">
-                                            <i class="fa fa-check-circle fs-40 text-success"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="mb-0">{{ $articleStatsSummary->approved }}</h4>
-                                            <p class="text-fade mb-0">Bài viết đã duyệt</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="d-flex align-items-center">
-                                        <div class="me-15">
-                                            <i class="fa fa-times-circle fs-40 text-danger"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="mb-0">{{ $articleStatsSummary->rejected }}</h4>
-                                            <p class="text-fade mb-0">Bài viết bị từ chối</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Biểu đồ -->
             <div class="row">
