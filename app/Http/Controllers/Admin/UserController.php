@@ -146,12 +146,24 @@ class UserController extends Controller
         ]);
 
         $user = User::findOrFail($id);
+        $oldRoleId = $user->role_id;
 
         if ($user->role_id != $request->role_id) {
             $user->role_id = $request->role_id;
             $user->is_promoted = true;
             $user->save();
 
+            if ($request->role_id == 3) {
+                \App\Models\Category::assignModerators();
+            }
+            // Trường hợp 2: Người dùng không còn là kiểm duyệt viên nữa
+            else if ($oldRoleId == 3) {
+                // Xử lý các danh mục do KDV này quản lý
+                $categories = \App\Models\Category::where('moderator_id', $user->user_id)->get();
+                if ($categories->isNotEmpty()) {
+                    \App\Models\Category::assignModerators();
+                }
+            }
             return redirect()->route('admin.users.index')->with('success', 'Cập nhật vai trò người dùng thành công.');
         }
 

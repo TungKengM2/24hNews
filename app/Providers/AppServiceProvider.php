@@ -84,6 +84,7 @@ class AppServiceProvider extends ServiceProvider
                 'author.articles.edit',
                 'author.articles.create',
                 'author.dashboard',
+
                 'author.profile',
                 'author.layouts.master',
                 'author.layouts.partials.header-top',
@@ -130,4 +131,4 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-}
+}}
