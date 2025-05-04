@@ -389,6 +389,7 @@
                                 </a>
 
                                 <!-- Nút Report -->
+                                @if(!auth()->check() || auth()->id() !== $article->author_id)
                                 <button type="button"
                                     class="report-article-btn d-flex flex-column align-items-center gap-1 border-0 bg-transparent"
                                     data-article-id="{{ $article->article_id }}"
@@ -396,6 +397,7 @@
                                     <i class="la la-exclamation-triangle" style="font-size: 28px; color: #777;"></i>
                                     <span style="font-size: 14px; font-weight: bold; color: #777;">Báo cáo</span>
                                 </button>
+                                @endif
                             </div>
                         </div>
 
