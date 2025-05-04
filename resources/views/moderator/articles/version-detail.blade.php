@@ -37,9 +37,11 @@
                             <a href="{{ route('admin.articles.versions', $article) }}" class="btn btn-info btn-sm me-2">
                                 <i class="si-list si"></i> Danh sách phiên bản
                             </a>
-                            <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm me-2">
-                                <i class="si-pencil si"></i> Chỉnh sửa bài viết
-                            </a>
+                            @if (auth()->id() === $article->author_id)
+                                <a href="{{ route('articles.edit', $article) }}" class="btn btn-warning btn-sm me-2">
+                                    <i class="si-pencil si"></i> Chỉnh sửa bài viết
+                                </a>
+                            @endif
                             <a href="{{ route('articles.index') }}" class="btn btn-default btn-sm">
                                 <i class="mdi mdi-arrow-left"></i> Quay lại
                             </a>

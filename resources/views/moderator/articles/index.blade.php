@@ -310,6 +310,12 @@
                                                     <h5 class="modal-title" id="articleDetailModalLabel{{ $article->article_id }}">Chi tiết bài viết: {{ $article->title }}</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
+                                                <div class="m-5">
+                                                    <a href="{{ route('moderator.articles.versions', $article) }}"
+                                                        class="btn btn-info btn-sm">
+                                                        <i class="fas fa-history"></i> Lịch sử phiên bản
+                                                    </a>
+                                                </div>
                                                 <div class="modal-body">
                                                     <div class="row">
                                                         <!-- Thông tin cơ bản -->
@@ -686,17 +692,37 @@
     // Cập nhật tiêu chí danh mục
     function updateCategoryCriteria(modal, articleId) {
         try {
-            const infoCard = modal.querySelector('.card:last-child');
-            if (!infoCard) return;
+            console.log('Updating category criteria for article:', articleId);
 
-            const categoryBadge = infoCard.querySelector('li:nth-child(2) .badge.bg-info');
-            const subcategoryBadge = infoCard.querySelector('li:nth-child(3) .badge.bg-secondary');
+            // Tìm thông tin danh mục trong modal
+            const categoryInfo = modal.querySelector('.list-group-item:nth-child(2) .badge.bg-info');
+            const subcategoryInfo = modal.querySelector('.list-group-item:nth-child(3) .badge.bg-secondary');
 
-            const hasCategory = categoryBadge && categoryBadge.textContent !== 'Không có';
-            const hasSubcategory = subcategoryBadge && subcategoryBadge.textContent !== 'Không có';
+            console.log('Category info:', categoryInfo);
+            console.log('Subcategory info:', subcategoryInfo);
 
-            const criteriaItem = document.getElementById(`criteria-category-${articleId}`);
-            updateCriteriaItem(criteriaItem, hasCategory && hasSubcategory);
+            // Kiểm tra xem có danh mục và danh mục phụ không
+            const hasCategory = categoryInfo && categoryInfo.textContent.trim() !== 'Không có';
+            const hasSubcategory = subcategoryInfo && subcategoryInfo.textContent.trim() !== 'Không có';
+
+            console.log('Has category:', hasCategory);
+            console.log('Has subcategory:', hasSubcategory);
+
+            // Tìm criteria item
+            const criteriaItem = document.querySelector(`#criteria-category-${articleId}`);
+            console.log('Criteria item found:', criteriaItem);
+
+            if (!criteriaItem) {
+                console.warn(`Criteria item not found for article ID: ${articleId}`);
+                return;
+            }
+
+            // Xác định trạng thái pass/fail
+            const isPassed = hasCategory && hasSubcategory;
+            console.log('Category criteria passed:', isPassed);
+
+            // Cập nhật trạng thái
+            updateCriteriaItem(criteriaItem, isPassed);
         } catch (error) {
             console.error('Error updating category criteria:', error);
         }

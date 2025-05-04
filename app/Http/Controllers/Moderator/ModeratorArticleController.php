@@ -194,6 +194,17 @@ class ModeratorArticleController extends Controller
         return view('moderator.articles.versions', compact('article', 'versions'));
     }
 
+    public function showVersion(Article $article, $versionId)
+    {
+
+        $version = ArticleVersion::where('article_id', $article->article_id)
+            ->where('version_id', $versionId)
+            ->with(['user', 'category', 'subcategory'])
+            ->firstOrFail();
+
+        return view('moderator.articles.version-detail', compact('article', 'version'));
+    }
+
     // return redirect()->back()->with('success', 'Bài viết đã được duyệt.');
     public function reject(Request $request, Article $article)
     {

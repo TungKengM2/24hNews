@@ -310,6 +310,12 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
+                                            <div class="m-5">
+                                                <a href="{{ route('admin.articles.versions', $article) }}"
+                                                    class="btn btn-info btn-sm">
+                                                    <i class="fas fa-history"></i> Lịch sử phiên bản
+                                                </a>
+                                            </div>
                                             <div class="modal-body">
                                                 <div class="row">
                                                     <!-- Thông tin cơ bản -->
@@ -722,7 +728,7 @@
                             // Cập nhật nội dung bảng và phân trang
                             $('#articles-container').html($(response).find('#articles-container').html());
                             $('#pagination-container').html($(response).find('#pagination-container')
-                            .html());
+                                .html());
 
                             // Khởi tạo lại các sự kiện cho các nút trong bảng mới
                             initializeEvents();
@@ -821,7 +827,7 @@
                     const tagCriteria = document.getElementById(`criteria-tags-${articleId}`);
                     const tagCountSpan = document.getElementById(`current-tag-count-${articleId}`);
                     const tagBadges = document.querySelectorAll(
-                    `#articleDetailModal${articleId} .badge.bg-primary.m-1`);
+                        `#articleDetailModal${articleId} .badge.bg-primary.m-1`);
                     const tagCount = tagBadges.length;
                     if (tagCountSpan) {
                         tagCountSpan.textContent = `(${tagCount} thẻ)`;
