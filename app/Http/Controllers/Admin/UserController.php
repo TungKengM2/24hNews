@@ -31,6 +31,7 @@ class UserController extends Controller
             compact('users', 'roles', 'role_id')
         );
     }
+
     public function showApprovalDetail($id)
     {
         $approval = Approval::with('user')->findOrFail($id);
@@ -50,7 +51,7 @@ class UserController extends Controller
     }
 
 
-
+    // Hiển thị danh sách yêu cầu nâng cấp vai trò
     public function roleUpgradeRequests(Request $request)
     {
         $roles = Role::all();

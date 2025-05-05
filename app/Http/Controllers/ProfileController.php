@@ -96,7 +96,8 @@ class ProfileController extends Controller
 
         return view('admin.followers', compact('followers'));
     }
-
+    
+    
     public function upgradeToAuthor()
     {
         $user = auth()->user();
@@ -145,7 +146,7 @@ class ProfileController extends Controller
 
         return view('website.profiles.users.upgrade', compact('user'));
     }
-
+    
     public function requestAuthorRole(Request $request)
     {
         $user = auth()->user();

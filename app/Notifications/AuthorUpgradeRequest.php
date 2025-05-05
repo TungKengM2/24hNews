@@ -36,6 +36,7 @@ class AuthorUpgradeRequest extends Notification
      *
      * @return array<string, mixed>
      */
+    
     public function toArray(object $notifiable): array
     {
         return [
